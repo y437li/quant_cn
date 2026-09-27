@@ -20,5 +20,6 @@ A-share quant research project on a local parquet + DuckDB lake fed by Tushare P
 | `.env.example` | template for the git-ignored `.env`: Tushare token, lake root override | `TUSHARE_TOKEN`, `QUANT_CN_LAKE_ROOT` |
 | `.gitignore` | keep lake data, secrets, caches and notebook outputs out of git | |
 | `CLAUDE.md` | agent entry point: reading order and non-negotiable rules | |
+| `README.md` | project overview: layout, layers, lake zones, setup, data rules | |
 
 _Planned (plan 01 phase 1): `pyproject.toml`, `Makefile`, `.pre-commit-config.yaml`. `data/lake/` is git-ignored and created by `LakeCatalog`._
