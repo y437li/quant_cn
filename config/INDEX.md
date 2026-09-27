@@ -2,4 +2,8 @@
 
 Configuration only, no code. Loaded by `core.Config`; secrets never live here (env only).
 
-_Planned (plan 01 phase 1): `base.yaml`, `datasets.yaml`; `local.yaml` (git-ignored); `README.md` (phase 6)._
+## Files
+| File | Purpose | Contains |
+|---|---|---|
+| `base.yaml` | lake root default, Tushare paging/retry settings, download order and start dates, enum key lists | `lake`, `tushare`, `download`, `enum_values` |
+| `datasets.yaml` | one entry per dataset: endpoint, sweep, primary key, known-on column, fields, curated layout | 13 datasets |

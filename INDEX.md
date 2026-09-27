@@ -19,7 +19,11 @@ A-share quant research project on a local parquet + DuckDB lake fed by Tushare P
 |---|---|---|
 | `.env.example` | template for the git-ignored `.env`: Tushare token, lake root override | `TUSHARE_TOKEN`, `QUANT_CN_LAKE_ROOT` |
 | `.gitignore` | keep lake data, secrets, caches and notebook outputs out of git | |
+| `.python-version` | Python version read by uv | `3.12` |
 | `CLAUDE.md` | agent entry point: reading order and non-negotiable rules | |
+| `Makefile` | uv-run targets: setup, lint, test, check, doctor, download, compact, lake-rebuild, lake-backup | |
 | `README.md` | project overview: layout, layers, lake zones, setup, data rules | |
+| `pyproject.toml` | package metadata, dependencies, ruff/mypy/pytest/coverage/import-linter config | |
+| `uv.lock` | exact resolved dependency versions (D-018) | |
 
-_Planned (plan 01 phase 1): `pyproject.toml`, `Makefile`, `.pre-commit-config.yaml`. `data/lake/` is git-ignored and created by `LakeCatalog`._
+_Planned: `.pre-commit-config.yaml`. The lake lives outside the repo (D-021); `.env` is git-ignored._

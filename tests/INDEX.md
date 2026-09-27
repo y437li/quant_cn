@@ -14,4 +14,10 @@ Mirrors `src/quant_cn`; one `test_<module>.py` per module, one test per TC ID (C
 | [`statistic/`](statistic/INDEX.md) | tests for `quant_cn.statistic` |
 | [`visualization/`](visualization/INDEX.md) | tests for `quant_cn.visualization` |
 
-_Planned (plan 01 phase 1): `conftest.py` (mini lake in tmp_path), `test_contracts.py` (contract + index linter)._
+## Files
+| File | Purpose | Contains |
+|---|---|---|
+| `__init__.py` | package marker |  |
+| `conftest.py` | shared fixtures: Config over copied YAML, mini lake in tmp_path | `clock`, `repo`, `config`, `lake` |
+| `support.py` | Test doubles and frame builders shared by all test modules (no network, no real lake) | `FakeClock`, `FakeTushareClient`, `MiniLake`, `Build` |
+| `test_cli.py` | tests for `cli`, one function per TC ID |  |

@@ -1,0 +1,41 @@
+# Committed defaults. Machine overrides: config/local.yaml (git-ignored). Secrets: .env only.
+# Key meanings: config/README.md.
+
+lake:
+  root: ~/quant_cn_lake          # overridden by QUANT_CN_LAKE_ROOT (D-021); never inside the repo
+  allow_inside_repo: false
+  backup_target: null
+
+tushare:
+  url: http://api.tushare.pro
+  timeout_s: 90
+  page_size: 6000
+  retries: 4
+  retry_sleep_s: 6
+  rate_limit_sleep_s: 65
+  max_rate_limit_waits: 30
+  rate_limit_markers: ["每分钟", "频率"]
+  permission_markers: ["权限", "积分"]
+
+download:
+  default_start: "20190101"      # D-015b
+  long_history_start: "20100101"
+  long_history_datasets: [daily, adj_factor, index_daily]
+  end: null                      # null = today
+  order:
+    - trade_cal
+    - stock_basic
+    - namechange
+    - index_daily
+    - daily
+    - adj_factor
+    - daily_basic
+    - moneyflow
+    - stk_limit
+    - fina_indicator_vip
+    - income_vip
+    - balancesheet_vip
+    - cashflow_vip
+
+enum_values:
+  indices: ["000001.SH", "000016.SH", "000300.SH", "000852.SH", "000905.SH", "399001.SZ", "399006.SZ"]

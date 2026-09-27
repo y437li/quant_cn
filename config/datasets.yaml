@@ -1,0 +1,137 @@
+# One entry per dataset (FOLDER_STRUCTURE §2, DATA_CATALOG §1). Fields not in text_fields are numeric.
+# Adding a dataset with a known sweep kind needs no code.
+
+trade_cal:
+  endpoint: trade_cal
+  sweep: {kind: none, range_params: true, extra_params: {exchange: SSE}}
+  start: "19901219"
+  refresh: overwrite
+  primary_key: [cal_date]
+  known_on: null
+  fields: [cal_date, is_open, pretrade_date]
+  text_fields: [cal_date, pretrade_date]
+  curated: {path: reference/trade_cal}
+
+stock_basic:
+  endpoint: stock_basic
+  sweep: {kind: list_status, values: [L, D, P]}
+  refresh: overwrite
+  primary_key: [ts_code]
+  known_on: list_date
+  fields: [ts_code, symbol, name, area, industry, market, list_date, list_status, delist_date]
+  text_fields: [ts_code, symbol, name, area, industry, market, list_date, list_status, delist_date]
+  curated: {path: reference/stock_basic}
+
+namechange:
+  endpoint: namechange
+  sweep: {kind: none}
+  refresh: overwrite
+  primary_key: [ts_code, start_date, name]
+  known_on: ann_date
+  fields: [ts_code, name, start_date, end_date, ann_date, change_reason]
+  text_fields: [ts_code, name, start_date, end_date, ann_date, change_reason]
+  curated: {path: reference/namechange}
+
+index_daily:
+  endpoint: index_daily
+  sweep: {kind: ts_code, values_from: indices, range_params: true}
+  refresh: overwrite
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, open, high, low, close, pre_close, change, pct_chg, vol, amount]
+  text_fields: [ts_code, trade_date]
+  curated: {path: reference/index_daily}
+
+daily:
+  endpoint: daily
+  sweep: {kind: trade_date}
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, open, high, low, close, pre_close, change, pct_chg, vol, amount]
+  text_fields: [ts_code, trade_date]
+  curated: {path: daily, partition_by: trade_date}
+
+adj_factor:
+  endpoint: adj_factor
+  sweep: {kind: trade_date}
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, adj_factor]
+  text_fields: [ts_code, trade_date]
+  curated: {path: adj_factor, partition_by: trade_date}
+
+daily_basic:
+  endpoint: daily_basic
+  sweep: {kind: trade_date}
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, close, turnover_rate, turnover_rate_f, volume_ratio, pe, pe_ttm,
+           pb, ps, ps_ttm, dv_ratio, dv_ttm, total_share, float_share, free_share, total_mv, circ_mv]
+  text_fields: [ts_code, trade_date]
+  curated: {path: daily_basic, partition_by: trade_date}
+
+moneyflow:
+  endpoint: moneyflow
+  sweep: {kind: trade_date}
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date,
+           buy_sm_vol, buy_sm_amount, sell_sm_vol, sell_sm_amount,
+           buy_md_vol, buy_md_amount, sell_md_vol, sell_md_amount,
+           buy_lg_vol, buy_lg_amount, sell_lg_vol, sell_lg_amount,
+           buy_elg_vol, buy_elg_amount, sell_elg_vol, sell_elg_amount,
+           net_mf_vol, net_mf_amount, trade_count]
+  text_fields: [ts_code, trade_date]
+  curated: {path: moneyflow, partition_by: trade_date}
+
+stk_limit:
+  endpoint: stk_limit
+  sweep: {kind: trade_date}
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [trade_date, ts_code, up_limit, down_limit]
+  text_fields: [trade_date, ts_code]
+  curated: {path: stk_limit, partition_by: trade_date}
+
+fina_indicator_vip:
+  endpoint: fina_indicator_vip
+  sweep: {kind: period, refetch_recent: 2}
+  primary_key: [ts_code, end_date, ann_date, update_flag]
+  known_on: ann_date
+  fields: [ts_code, ann_date, end_date, eps, dt_eps, roe, roe_dt, roa, grossprofit_margin,
+           netprofit_margin, netprofit_yoy, dt_netprofit_yoy, or_yoy, tr_yoy, debt_to_assets,
+           current_ratio, quick_ratio, assets_turn, working_capital, retained_earnings, ebit, ebitda,
+           fcff, ocfps, roic, invest_capital, interestdebt, netdebt, profit_dedt, update_flag]
+  text_fields: [ts_code, ann_date, end_date, update_flag]
+  curated: {path: fundamentals/fina_indicator, partition_by: end_date}
+
+income_vip:
+  endpoint: income_vip
+  sweep: {kind: period, refetch_recent: 2}
+  primary_key: [ts_code, end_date, report_type, f_ann_date, ann_date]
+  known_on: f_ann_date
+  fields: [ts_code, ann_date, f_ann_date, end_date, report_type, total_profit, n_income_attr_p,
+           rd_exp, invest_income, income_tax]
+  text_fields: [ts_code, ann_date, f_ann_date, end_date, report_type]
+  curated: {path: fundamentals/income, partition_by: end_date}
+
+balancesheet_vip:
+  endpoint: balancesheet_vip
+  sweep: {kind: period, refetch_recent: 2}
+  primary_key: [ts_code, end_date, report_type, f_ann_date, ann_date]
+  known_on: f_ann_date
+  fields: [ts_code, ann_date, f_ann_date, end_date, report_type, total_assets, total_liab,
+           total_cur_assets, total_cur_liab, accounts_receiv, fix_assets, lt_borr, oth_receiv,
+           prepayment, money_cap, lt_rec, contract_liab, adv_receipts, inventories, goodwill, cip]
+  text_fields: [ts_code, ann_date, f_ann_date, end_date, report_type]
+  curated: {path: fundamentals/balancesheet, partition_by: end_date}
+
+cashflow_vip:
+  endpoint: cashflow_vip
+  sweep: {kind: period, refetch_recent: 2}
+  primary_key: [ts_code, end_date, report_type, f_ann_date, ann_date]
+  known_on: f_ann_date
+  fields: [ts_code, ann_date, f_ann_date, end_date, report_type, n_cashflow_act, free_cashflow,
+           depr_fa_coga_dpba, c_pay_acq_const_fiolta]
+  text_fields: [ts_code, ann_date, f_ann_date, end_date, report_type]
+  curated: {path: fundamentals/cashflow, partition_by: end_date}

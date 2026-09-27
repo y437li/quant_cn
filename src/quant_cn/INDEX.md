@@ -18,3 +18,4 @@ The package. A layer imports only its own layer or lower (CODING_STANDARD §2.1)
 | File | Purpose | Contains |
 |---|---|---|
 | `__init__.py` | package marker |  |
+| `cli.py` | Command-line entry point and composition root (L6): wires config, lake and pipeline | `QuantCnCli` |
