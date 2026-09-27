@@ -23,6 +23,9 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 | D-017 | 2026-09-27 | Project catalog: repo tree + registry + plans queryable in lake DuckDB | proposed | Plans/plans/02_project_catalog.md |
 | D-018 | 2026-09-27 | Packages managed by uv (pyproject + uv.lock, uv run) | accepted | CODING_STANDARD §4.1, FOLDER_STRUCTURE, plan 01 phase 1 |
 | D-019 | 2026-09-27 | `visualization` package at L5, plotly, DataFrame-only inputs | accepted (library: proposed) | FOLDER_STRUCTURE §1, §3; plan 01 phase 6 |
+| D-020 | 2026-09-27 | src architecture: frames between packages, time discipline, config-over-code | proposed | Plans/SRC_DESIGN.md |
+| D-021 | 2026-09-27 | Lake outside the repo; root via env > local.yaml > base default | accepted | DATA_LOADING_DESIGN §1, config/base.yaml |
+| D-022 | 2026-09-27 | Flow monitoring: built-in RunLog + rich; Prefect as optional adapter | accepted | DATA_LOADING_DESIGN §3, SRC_DESIGN §2.4 |
 
 ### D-001 Plan first, standard is binding
 - Context: new repo; user wants no code before an approved plan and a standard agents must follow.
@@ -156,3 +159,24 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Alternatives: matplotlib (rejected as primary: static only in notebooks; may be added later behind the same `BaseChart` for print export); a plotting layer inside `statistic`/`back_testing` (rejected: mixes presentation with computation, breaks independence).
 - Consequences: eighth package and test folder; `plotly` added via `uv add`; first charts (`BaseChart`, `PriceChart`) built in plan 01 phase 6 for `main.ipynb`.
 - Links: FOLDER_STRUCTURE §1, §3, §5; CODING_STANDARD §2.1, §4.1; Plans/plans/01_data_lake.md
+
+### D-020 src architecture: frames between packages, time discipline, config-over-code
+- Context: user asked for the design of `src`.
+- Decision (proposed): `Plans/SRC_DESIGN.md`. Packages exchange only DataFrames with registered `Schema`s (`core.frames`, long format); one place owns the T-close → T+1-open lag (`ExecutionModel`); universe is a computed panel; factors/constructors/costs are selected by name in YAML via factories; `statistic`/`portfolio`/`back_testing`/`visualization` do no I/O; tests use fakes and a synthetic market. Roadmap plans 03–06.
+- Alternatives: rich objects passed between packages (rejected: couples layers, breaks independence contracts, not DuckDB-friendly); a single `strategy` package for portfolio+backtest (rejected: user separated them, independence keeps constructors reusable outside backtests).
+- Consequences: `core.frames` and `core.testing.SyntheticMarket` added to plan 01/03 scope; import-linter independence contracts already cover the L5 trio.
+- Links: Plans/SRC_DESIGN.md, FOLDER_STRUCTURE §3, CODING_STANDARD §2
+
+### D-021 Lake outside the repo; root via env > local.yaml > base default
+- Context: user wants the local machine's config to point the code at a data location so data is never pushed to GitHub.
+- Decision: lake root resolved as `QUANT_CN_LAKE_ROOT` env > `config/local.yaml` > `config/base.yaml` default `~/quant_cn_lake`; `.env` and `local.yaml` git-ignored; `Config` refuses a root inside the repo unless explicitly allowed; `.gitignore` covers `data/`, `*.parquet`, `*.duckdb`; `make doctor` verifies; `make lake-backup` rsyncs `raw/` + fetch log.
+- Alternatives: `data/` inside the repo relying on `.gitignore` alone (rejected: one bad ignore edit leaks gigabytes); symlink `data/` → external disk (rejected: symlinks in git and on the corrupting volume are fragile).
+- Consequences: FOLDER_STRUCTURE drops `data/` from the repo tree; `python-dotenv` added; `Config` gains the guard; this machine's lake: `/Volumes/Treasury/quant_cn_lake`.
+- Links: Plans/DATA_LOADING_DESIGN.md §1
+
+### D-022 Flow monitoring: built-in RunLog + rich; Prefect as optional adapter
+- Context: user asked for a third-party tool to monitor flows, not Airflow or Dagster.
+- Decision: `RunLog` (DuckDB `meta.run_log`) + `rich` progress is the baseline and source of truth; Prefect 3 (local server, open source) is offered through a `PrefectRunner` implementing the same `BaseRunner` interface as `LocalRunner`; steps and fetchers never import Prefect.
+- Alternatives: Hamilton (rejected: functional DAG style conflicts with the OOP standard); Kestra/Windmill (rejected: server platforms heavier than a single-machine job); Grafana/Loki (deferred to unattended server runs); Logfire (rejected: data leaves the machine).
+- Consequences: `BaseRunner`/`LocalRunner`/`RunLog`/`KeyExecutor` in plan 01 phase 4; `PrefectRunner` deferred to a later plan (user, 2026-09-27).
+- Links: Plans/DATA_LOADING_DESIGN.md §3
