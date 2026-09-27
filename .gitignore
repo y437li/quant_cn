@@ -1,0 +1,26 @@
+# data lake and secrets
+data/
+.env
+config/local.yaml
+
+# research outputs
+research_space/**/outputs/
+
+# python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# os / agent runtime
+.DS_Store
+.claude/run/
+.claude/settings.local.json
