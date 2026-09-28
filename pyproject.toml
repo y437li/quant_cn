@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "duckdb==1.5.5",
     "pandas>=2.2",
+    "plotly>=6",
     "pyarrow>=17",
     "pydantic>=2.8",
     "python-dotenv>=1",
@@ -50,7 +51,7 @@ files = ["src/quant_cn", "scripts"]
 plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
-module = ["pyarrow", "pyarrow.*"]
+module = ["pyarrow", "pyarrow.*", "plotly", "plotly.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
@@ -84,7 +85,11 @@ layers = [
 [dependency-groups]
 dev = [
     "import-linter>=2.15",
+    "ipykernel>=7.3.0",
     "mypy>=2.3.1",
+    "nbclient>=0.11.0",
+    "nbconvert>=7.17.1",
+    "nbformat>=5.11.1",
     "pandas-stubs>=3.0.5.260914",
     "pre-commit>=4.6.2",
     "pytest>=9.1.1",

@@ -3,7 +3,7 @@ export UV_PROJECT_ENVIRONMENT ?= $(HOME)/.venvs/quant_cn
 UV_RUN := uv run --env-file .env
 CLI := $(UV_RUN) python -m quant_cn.cli
 
-.PHONY: setup hooks lint lint-contracts test check doctor download download-dry compact curate lake-rebuild lake-backup
+.PHONY: setup hooks lint lint-contracts test check doctor download download-dry compact curate lake-rebuild lake-backup notebook
 
 setup:            ## create the venv from uv.lock; copy .env.example to .env if missing
 	uv sync --all-extras
@@ -48,3 +48,7 @@ lake-rebuild:     ## recreate catalog + fetch log from parquet, then curate (dig
 
 lake-backup:      ## rsync raw/ + fetch log to lake.backup_target (config/local.yaml)
 	$(CLI) backup
+
+notebook:         ## run research_space/main.ipynb top to bottom against the lake (outputs discarded)
+	$(UV_RUN) jupyter nbconvert --to notebook --execute research_space/main.ipynb --stdout > /dev/null
+	@echo "main.ipynb ran top to bottom"

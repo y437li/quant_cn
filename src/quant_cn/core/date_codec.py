@@ -30,6 +30,7 @@ class DateCodec:
         data_loading.FetcherFactory                -- injected type or call
         cli.QuantCnCli                             -- composition root
         lake.PitAligner                            -- injected type or call
+        visualization.PriceChart                   -- injected type or call
 
     Test cases:
         TC-DC-001  to_date/to_str round trip

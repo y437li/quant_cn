@@ -5,4 +5,7 @@ L5: charts for prices, factors, backtest results; plotly, themed, notebook + HTM
 ## Files
 | File | Purpose | Contains |
 |---|---|---|
-| `__init__.py` | package marker | |
+| `__init__.py` | package marker |  |
+| `base_chart.py` | Extension point for charts: DataFrame in, themed plotly figure out (D-019) | `BaseChart` |
+| `chart_theme.py` | Theme tokens for charts: surfaces, ink, grid and the up/down pair, per light or dark mode | `ChartTheme` |
+| `price_chart.py` | Candlestick + volume chart for one ticker from a PRICE_PANEL frame | `PriceChart` |
