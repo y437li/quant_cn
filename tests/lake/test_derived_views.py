@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pandas as pd
 import pytest
 
 from quant_cn.core.config import Config
@@ -49,3 +50,19 @@ def test_tc_dv_002_fundamentals_long(lake: MiniLake, config: Config) -> None:
 def test_tc_dv_003_missing_inputs(lake: MiniLake, config: Config) -> None:
     assert DerivedViews(lake.catalog, lake.query, config.datasets).refresh() == []
     assert not lake.query.has_view("derived.prices_adj")
+
+
+# TC-DV-004
+def test_tc_dv_004_alias_codes_dropped(lake: MiniLake, config: Config) -> None:
+    daily = Sample.build_bars("20260828", ("000043.SZ", "001914.SZ")).assign(
+        open=1.0, high=1.0, low=1.0, pre_close=1.0, change=0.0, pct_chg=0.0, vol=1.0, amount=1.0
+    )
+    lake.writer.write_raw(config.get_dataset("daily"), "20260828", daily)
+    adj = daily[["ts_code", "trade_date"]].assign(adj_factor=1.0)
+    lake.writer.write_raw(config.get_dataset("adj_factor"), "20260828", adj)
+    listed = {f: None for f in config.get_dataset("stock_basic").fields}
+    basic = pd.DataFrame([{**listed, "ts_code": "001914.SZ", "list_status": "L"}])
+    lake.writer.write_raw(config.get_dataset("stock_basic"), "L", basic)
+    rebuild_curated(lake, config, "daily", "adj_factor", "stock_basic")
+    DerivedViews(lake.catalog, lake.query, config.datasets).refresh()
+    assert lake.query.read_prices("20260801", "20260831")["ts_code"].tolist() == ["001914.SZ"]

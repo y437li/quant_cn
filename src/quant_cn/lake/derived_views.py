@@ -22,14 +22,19 @@ SELECT d.trade_date, d.ts_code, d.open, d.high, d.low, d.close, d.pre_close, d.v
        a.adj_factor, d.close * a.adj_factor AS close_adj
 FROM curated.daily d
 JOIN curated.adj_factor a USING (ts_code, trade_date)
-"""
+{{alias_filter}}"""
+# Tushare keeps a retired code's bars AND back-fills that history under the new code (000043 ->
+# 001914, 000022 -> 001872, 300114 -> 302132): codes missing from stock_basic (L + D + P) are
+# retired aliases and are dropped so no company is counted twice (D-053).
+_ALIAS_FILTER = "WHERE d.ts_code IN (SELECT ts_code FROM curated.stock_basic)"
 
 
 class DerivedViews:
     """
     Purpose:
         Create the `derived` schema views built only from curated/: `derived.prices_adj`
-        (daily bars joined to adj_factor, close_adj = close * adj_factor; PRICE_PANEL columns)
+        (daily bars joined to adj_factor, close_adj = close * adj_factor; PRICE_PANEL columns;
+        retired alias codes absent from stock_basic dropped)
         and `derived.fundamentals_long` (every period-swept dataset unpivoted to one row per
         numeric field and announced version; statements filtered to report_type = '1').
 
@@ -53,6 +58,7 @@ class DerivedViews:
         TC-DV-001  prices_adj joins daily and adj_factor with close_adj = close * adj_factor
         TC-DV-002  fundamentals_long keeps report_type 1 only, every version, no null values
         TC-DV-003  views are skipped when their curated inputs are missing
+        TC-DV-004  prices_adj drops codes missing from stock_basic (retired aliases)
     """
 
     def __init__(
@@ -79,7 +85,8 @@ class DerivedViews:
         created: list[str] = []
         self._execute(con, f"CREATE SCHEMA IF NOT EXISTS {SCHEMA}")
         if self._query.has_view("curated.daily") and self._query.has_view("curated.adj_factor"):
-            self._execute(con, _PRICE_SQL)
+            aliases = _ALIAS_FILTER if self._query.has_view("curated.stock_basic") else ""
+            self._execute(con, _PRICE_SQL.format(alias_filter=aliases))
             created.append(PRICES_VIEW)
         else:
             self._execute(con, f"DROP VIEW IF EXISTS {PRICES_VIEW}")
