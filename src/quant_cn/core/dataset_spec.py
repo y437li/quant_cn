@@ -8,7 +8,9 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from quant_cn.core.schema import Schema
 
-SweepKind = Literal["none", "list_status", "ts_code", "trade_date", "ann_date", "period"]
+SweepKind = Literal[
+    "none", "list_status", "ts_code", "exchange", "trade_date", "ann_date", "period"
+]
 
 
 class SweepSpec(BaseModel):
@@ -19,7 +21,7 @@ class SweepSpec(BaseModel):
     Contract:
         Input:
             kind:           SweepKind        -- "none" = one call, key "all"
-            values:         list[str] | None -- explicit keys for list_status/ts_code sweeps
+            values:         list[str] | None -- explicit keys for list_status/ts_code/exchange
             values_from:    str | None       -- name of a list in Config.enum_values instead
             range_params:   bool             -- also pass start_date/end_date to the endpoint
             extra_params:   dict[str, str]   -- constant parameters (e.g. exchange)

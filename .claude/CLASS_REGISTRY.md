@@ -68,7 +68,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `TickerNormalizer` | `quant_cn.core.ticker_normalizer` | 1 | none | Turn common A-share ticker spellings into Tushare `ts_code` and check `ts_code` validity. | 2 | (none yet) | `tests/core/test_ticker_normalizer.py` (TC-TN-001..004) | 2026-09-27 |
 | `FetcherFactory` | `quant_cn.data_loading.fetcher_factory` | 3 | none | Build the right fetcher for a DatasetSpec and inject the shared dependencies. | 1 | `pipeline.DownloadPipeline`, `cli.QuantCnCli` | `tests/data_loading/test_fetcher_factory.py` (TC-FF-001..002) | 2026-09-27 |
 | `SingleCallFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Datasets fetched in one (paged) call, key "all": trade_cal, namechange. | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-SCF-001..001) | 2026-09-27 |
-| `EnumFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Datasets swept over an enumerated list: stock_basic by list_status (L, D, P), index_daily by index ts_code. | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-EF-001..001) | 2026-09-27 |
+| `EnumFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Datasets swept over an enumerated list: stock_basic by list_status (L, D, P), index_daily / fund_daily by ts_code, opt_basic by exchange. | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-EF-001..001) | 2026-09-27 |
 | `DateSweepFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Whole-market daily sweeps: trade_date keys are trading days (daily, adj_factor, daily_basic, moneyflow, stk_limit) | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-DSF-001..002) | 2026-09-27 |
 | `PeriodSweepFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Whole-market report-period sweeps (the *_vip fundamentals): one key per quarter end. | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-PSF-001..001) | 2026-09-27 |
 | `HttpTransport` | `quant_cn.data_loading.http_transport` | 3 | none | Send one JSON POST and return the decoded JSON object. | 1 | `data_loading.TushareClient` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..001) | 2026-09-27 |
@@ -681,7 +681,7 @@ never column lists (those live in section E).
 | `build_params` | Constant parameters, plus the run's date range when configured. | str, str, str -> dict[str, str] | — | as class | see class |
 
 ### `EnumFetcher` — `quant_cn.data_loading.fetchers` (L3)
-- **Purpose:** Datasets swept over an enumerated list: stock_basic by list_status (L, D, P), index_daily by index ts_code.
+- **Purpose:** Datasets swept over an enumerated list: stock_basic by list_status (L, D, P), index_daily / fund_daily by ts_code, opt_basic by exchange.
 - **Base:** BaseFetcher. **Depends on (injected):** DatasetSpec, BaseApiClient, BaseStore, BaseFetchLog, BaseRunLog, Clock, Sequence[str].
 - **Used by:** `data_loading.FetcherFactory.build`.
 - **Tests:** `tests/data_loading/test_fetchers.py` (TC-EF-001..001).

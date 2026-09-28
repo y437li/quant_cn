@@ -73,7 +73,7 @@ class EnumFetcher(BaseFetcher):
     """
     Purpose:
         Datasets swept over an enumerated list: stock_basic by list_status (L, D, P),
-        index_daily by index ts_code.
+        index_daily / fund_daily by ts_code, opt_basic by exchange.
 
     Contract:
         Input:
@@ -85,7 +85,7 @@ class EnumFetcher(BaseFetcher):
             (none)
 
     Used by:
-        data_loading.FetcherFactory.build  -- sweep kinds "list_status", "ts_code"
+        data_loading.FetcherFactory.build  -- sweep kinds "list_status", "ts_code", "exchange"
 
     Test cases:
         TC-EF-001  keys are the configured values; params carry the key and range

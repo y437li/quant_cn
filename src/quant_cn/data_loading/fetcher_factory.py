@@ -75,7 +75,7 @@ class FetcherFactory:
         kind = spec.sweep.kind
         if kind == "none":
             return SingleCallFetcher(spec, *self._deps)
-        if kind in ("list_status", "ts_code"):
+        if kind in ("list_status", "ts_code", "exchange"):
             return EnumFetcher(spec, *self._deps, values=self._list_values(spec))
         if kind in ("trade_date", "ann_date"):
             return DateSweepFetcher(spec, *self._deps, calendar=self._calendar, codec=self._codec)

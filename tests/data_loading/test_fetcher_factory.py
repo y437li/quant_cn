@@ -36,6 +36,7 @@ def build_factory(config: Config, lake: MiniLake) -> FetcherFactory:
         ("trade_cal", SingleCallFetcher),
         ("stock_basic", EnumFetcher),
         ("index_daily", EnumFetcher),
+        ("opt_basic", EnumFetcher),
         ("daily", DateSweepFetcher),
         ("income_vip", PeriodSweepFetcher),
     ],

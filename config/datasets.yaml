@@ -135,3 +135,47 @@ cashflow_vip:
            depr_fa_coga_dpba, c_pay_acq_const_fiolta, update_flag]
   text_fields: [ts_code, ann_date, f_ann_date, end_date, report_type, update_flag]
   curated: {path: fundamentals/cashflow, partition_by: end_date}
+
+# --- options and rates for the VIX calculation (plan 03, CALCULATION_DESIGN §3); not in download.order ---
+
+opt_basic:
+  endpoint: opt_basic
+  sweep: {kind: exchange, values: [SSE, SZSE, CFFEX]}
+  refresh: overwrite
+  primary_key: [ts_code]
+  known_on: list_date
+  fields: [ts_code, exchange, name, opt_code, call_put, exercise_price, per_unit, maturity_date,
+           list_date, delist_date]
+  text_fields: [ts_code, exchange, name, opt_code, call_put, maturity_date, list_date, delist_date]
+  curated: {path: reference/opt_basic}
+
+opt_daily:
+  endpoint: opt_daily
+  sweep: {kind: trade_date}
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, exchange, pre_settle, pre_close, open, high, low, close, settle, vol,
+           amount, oi]
+  text_fields: [ts_code, trade_date, exchange]
+  curated: {path: opt_daily, partition_by: trade_date}
+
+shibor:
+  endpoint: shibor
+  sweep: {kind: none, range_params: true}
+  start: "20150101"
+  refresh: overwrite
+  primary_key: [date]
+  known_on: date
+  fields: [date, "on", 1w, 2w, 1m, 3m, 6m, 9m, 1y]
+  text_fields: [date]
+  curated: {path: reference/shibor}
+
+fund_daily:
+  endpoint: fund_daily
+  sweep: {kind: ts_code, values_from: option_etfs, range_params: true}
+  refresh: overwrite
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, pre_close, open, high, low, close, change, pct_chg, vol, amount]
+  text_fields: [ts_code, trade_date]
+  curated: {path: reference/fund_daily}
