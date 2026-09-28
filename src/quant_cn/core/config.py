@@ -36,8 +36,7 @@ class LakeConfig(BaseModel):
             pydantic.ValidationError
 
     Used by:
-        core.Config                      -- field `lake`
-        cli.QuantCnCli                   -- lake root for every lake class, doctor, backup
+        core.Config  -- field `lake`
 
     Test cases:
         TC-C-001  env > local.yaml > base.yaml precedence for lake.lake_root
@@ -66,8 +65,8 @@ class TushareConfig(BaseModel):
             pydantic.ValidationError
 
     Used by:
-        core.Config                      -- field `tushare`
-        data_loading.TushareClient       -- all settings
+        core.Config                 -- field `tushare`
+        data_loading.TushareClient  -- all settings
 
     Test cases:
         TC-C-002  token read from env, never from YAML, not shown in repr
@@ -105,8 +104,7 @@ class DownloadConfig(BaseModel):
             pydantic.ValidationError
 
     Used by:
-        core.Config                      -- field `download`, `start_for`
-        pipeline.DownloadPipeline.run    -- order and end date
+        core.Config  -- field `download`, `start_for`
 
     Test cases:
         TC-C-004  start_for applies dataset start, long history, then default
@@ -141,9 +139,9 @@ class Config(BaseModel):
             ConfigError  -- see load
 
     Used by:
-        cli.QuantCnCli                   -- composition root
-        data_loading.FetcherFactory      -- enum values
-        pipeline.DownloadPipeline        -- dataset order, start dates
+        cli.QuantCnCli               -- composition root
+        data_loading.FetcherFactory  -- enum values
+        pipeline.DownloadPipeline    -- dataset order, start dates
 
     Test cases:
         TC-C-001  env > local.yaml > base.yaml precedence for lake.lake_root

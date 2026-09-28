@@ -17,23 +17,47 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | Class | Module | Layer | Base | Purpose (one line) | Public methods (count) | Used by | Tests | Added |
 |---|---|---|---|---|---|---|---|---|
 | `QuantCnCli` | `quant_cn.cli` | 6 | none | `python -m quant_cn.cli <command>`: doctor, download, compact, rebuild, backup | 1 | `Makefile targets doctor, download, compact, lake-rebuild, lake-backup` | `tests/test_cli.py` (TC-QCC-001..002) | 2026-09-27 |
-| `BaseApiClient` | `quant_cn.core.base_api_client` | 1 | ABC | Abstract vendor client: one logical query returns all pages as one DataFrame. | 1 | `data_loading.TushareClient`, `core.BaseFetcher`, `data_loading.FetcherFactory` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
-| `BaseFetchLog` | `quant_cn.core.base_fetch_log` | 1 | ABC | Abstract record of which (dataset, key) pairs are fully downloaded. | 5 | `lake.FetchLog`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline` | `tests/lake/test_fetch_log.py` (TC-FL-001..003) | 2026-09-27 |
-| `BaseFetcher` | `quant_cn.core.base_fetcher` | 1 | ABC | Download one dataset as a sequence of keys | 5 | `data_loading.SingleCallFetcher`, `data_loading.EnumFetcher`, `data_loading.DateSweepFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.FetcherFactory.build`, `pipeline.FetchStep`, `pipeline.DownloadPipeline.run` | `tests/core/test_base_fetcher.py` (TC-BF-001..006) | 2026-09-27 |
-| `BaseRunLog` | `quant_cn.core.base_run_log` | 1 | ABC | Abstract append-only log of runs and per-key events | 3 | `lake.RunLog`, `core.BaseFetcher.run`, `pipeline.LocalRunner`, `data_loading.FetcherFactory` | `tests/lake/test_run_log.py` (TC-RL-001..001) | 2026-09-27 |
+| `BaseApiClient` | `quant_cn.core.base_api_client` | 1 | ABC | Abstract vendor client: one logical query returns all pages as one DataFrame. | 1 | `data_loading.TushareClient`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
+| `BaseFetchLog` | `quant_cn.core.base_fetch_log` | 1 | ABC | Abstract record of which (dataset, key) pairs are fully downloaded. | 5 | `lake.FetchLog`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher` | `tests/lake/test_fetch_log.py` (TC-FL-001..003) | 2026-09-27 |
+| `BaseFetcher` | `quant_cn.core.base_fetcher` | 1 | ABC | Download one dataset as a sequence of keys | 5 | `data_loading.SingleCallFetcher`, `data_loading.EnumFetcher`, `data_loading.DateSweepFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.FetcherFactory.build`, `pipeline.FetchStep` | `tests/core/test_base_fetcher.py` (TC-BF-001..006) | 2026-09-27 |
+| `BaseRunLog` | `quant_cn.core.base_run_log` | 1 | ABC | Abstract append-only log of runs and per-key events | 3 | `lake.RunLog`, `core.BaseFetcher.run`, `pipeline.LocalRunner`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher` | `tests/lake/test_run_log.py` (TC-RL-001..001) | 2026-09-27 |
 | `BaseStep` | `quant_cn.core.base_step` | 1 | ABC | Abstract unit of pipeline work: list its units, then run and report. | 3 | `pipeline.FetchStep`, `pipeline.BaseRunner.run`, `pipeline.LocalRunner.run` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
-| `BaseStore` | `quant_cn.core.base_store` | 1 | ABC | Abstract sink for raw fetch results and curated partitions. | 2 | `lake.ParquetWriter`, `core.BaseFetcher`, `lake.Compactor`, `data_loading.FetcherFactory` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
-| `Clock` | `quant_cn.core.clock` | 1 | none | The single source of wall time, monotonic time and sleeping | 4 | `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli` | `tests/core/test_clock.py` (TC-CL-001..002) | 2026-09-27 |
-| `LakeConfig` | `quant_cn.core.config` | 1 | BaseModel | Where the lake lives and whether it may sit inside the repository. | 0 | `core.Config`, `cli.QuantCnCli` | `tests/core/test_config.py` (TC-C-001..001) | 2026-09-27 |
+| `BaseStore` | `quant_cn.core.base_store` | 1 | ABC | Abstract sink for raw fetch results and curated partitions. | 2 | `lake.ParquetWriter`, `core.BaseFetcher`, `lake.Compactor`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
+| `Clock` | `quant_cn.core.clock` | 1 | none | The single source of wall time, monotonic time and sleeping | 4 | `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.FetcherFactory`, `data_loading.PeriodSweepFetcher` | `tests/core/test_clock.py` (TC-CL-001..002) | 2026-09-27 |
+| `LakeConfig` | `quant_cn.core.config` | 1 | BaseModel | Where the lake lives and whether it may sit inside the repository. | 0 | `core.Config` | `tests/core/test_config.py` (TC-C-001..001) | 2026-09-27 |
 | `TushareConfig` | `quant_cn.core.config` | 1 | BaseModel | Tushare endpoint, paging, retry and rate-limit settings | 0 | `core.Config`, `data_loading.TushareClient` | `tests/core/test_config.py` (TC-C-002..002) | 2026-09-27 |
-| `DownloadConfig` | `quant_cn.core.config` | 1 | BaseModel | Which datasets to download, in what order, and from which start dates (D-015b). | 0 | `core.Config`, `pipeline.DownloadPipeline.run` | `tests/core/test_config.py` (TC-C-004..004) | 2026-09-27 |
+| `DownloadConfig` | `quant_cn.core.config` | 1 | BaseModel | Which datasets to download, in what order, and from which start dates (D-015b). | 0 | `core.Config` | `tests/core/test_config.py` (TC-C-004..004) | 2026-09-27 |
 | `Config` | `quant_cn.core.config` | 1 | BaseModel | The typed configuration injected everywhere: YAML defaults, machine overrides, environment. | 3 | `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline` | `tests/core/test_config.py` (TC-C-001..008) | 2026-09-27 |
-| `SweepSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | How a dataset is swept so each call returns the whole market for one key. | 1 | `core.DatasetSpec`, `data_loading.FetcherFactory.build`, `core.BaseFetcher.run` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
-| `CuratedSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Where a dataset lands in `curated/` and which date column drives its yearly partition. | 0 | `core.DatasetSpec`, `lake.ParquetWriter.write_curated`, `lake.Compactor.rebuild`, `lake.LakeCatalog.refresh_view` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
-| `DatasetSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Everything the lake and the fetchers need to know about one dataset, as data (D-012). | 2 | `core.Config`, `core.BaseFetcher`, `core.BaseStore`, `lake.ParquetWriter`, `lake.LakeCatalog`, `lake.Compactor.rebuild`, `data_loading.FetcherFactory.build` | `tests/core/test_dataset_spec.py` (TC-DS-001..004) | 2026-09-27 |
-| `DateCodec` | `quant_cn.core.date_codec` | 1 | none | Validate and convert Tushare `YYYYMMDD` date strings and generate date keys for sweeps. | 5 | `core.Config.load`, `data_loading.DateSweepFetcher.list_keys`, `data_loading.PeriodSweepFetcher.list_keys`, `pipeline.DownloadPipeline.run` | `tests/core/test_date_codec.py` (TC-DC-001..005) | 2026-09-27 |
-| `Schema` | `quant_cn.core.schema` | 1 | none | Declare and enforce a DataFrame shape: text columns are pandas `string`, all other declared columns are `float64`, and the primary key is unique and non-null. | 4 | `core.DatasetSpec.build_schema`, `lake.ParquetWriter.write_raw`, `lake.ParquetWriter.write_curated`, `lake.Compactor.rebuild` | `tests/core/test_schema.py` (TC-S-001..006) | 2026-09-27 |
-| `StepReport` | `quant_cn.core.step_report` | 1 | none | Counts and status of one step (usually one dataset's fetch) so runs can be summarised. | 0 | `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run` | `tests/core/test_base_fetcher.py` (TC-BF-001..001) | 2026-09-27 |
+| `SweepSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | How a dataset is swept so each call returns the whole market for one key. | 1 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
+| `CuratedSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Where a dataset lands in `curated/` and which date column drives its yearly partition. | 0 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
+| `DatasetSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Everything the lake and the fetchers need to know about one dataset, as data (D-012). | 2 | `core.Config`, `core.BaseFetcher`, `core.BaseStore`, `lake.ParquetWriter`, `lake.LakeCatalog`, `lake.Compactor.rebuild`, `data_loading.FetcherFactory.build`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher` | `tests/core/test_dataset_spec.py` (TC-DS-001..004) | 2026-09-27 |
+| `DateCodec` | `quant_cn.core.date_codec` | 1 | none | Validate and convert Tushare `YYYYMMDD` date strings and generate date keys for sweeps. | 5 | `core.Config.load`, `data_loading.DateSweepFetcher.list_keys`, `data_loading.PeriodSweepFetcher.list_keys`, `pipeline.DownloadPipeline.run`, `data_loading.FetcherFactory`, `cli.QuantCnCli` | `tests/core/test_date_codec.py` (TC-DC-001..005) | 2026-09-27 |
+| `Finding` | `quant_cn.core.docs.base_checker` | 1 | none | One rule violation at a location, printable as `path:line [rule] message`. | 1 | `core.docs.BaseChecker.run`, `core.docs.ContractChecker`, `core.docs.IndexChecker`, `core.docs.SizeChecker`, `core.docs.NameChecker`, `core.docs.ContractLinter` | `tests/core/docs/test_base_checker.py` (TC-BCH-001..001) | 2026-09-27 |
+| `BaseChecker` | `quant_cn.core.docs.base_checker` | 1 | ABC | Abstract repository check: inspect the tree, return findings (empty = pass). | 1 | `core.docs.ContractChecker`, `core.docs.IndexChecker`, `core.docs.SizeChecker`, `core.docs.NameChecker`, `core.docs.ContractLinter` | `tests/core/docs/test_base_checker.py` (TC-BCH-001..001) | 2026-09-27 |
+| `MethodInfo` | `quant_cn.core.docs.code_scanner` | 1 | none | One function defined directly in a class body. | 2 | `core.docs.ClassInfo`, `core.docs.CodeScanner.read_module`, `core.docs.ModuleInfo` | `tests/core/docs/test_code_scanner.py` (TC-CS-001..001) | 2026-09-27 |
+| `ClassInfo` | `quant_cn.core.docs.code_scanner` | 1 | none | One top-level class: span, bases, docstring, methods and the names its body references. | 2 | `core.docs.ModuleInfo`, `core.docs.CodeScanner.read_module`, `core.docs.NameChecker`, `core.docs.CodeUnit` | `tests/core/docs/test_code_scanner.py` (TC-CS-001..002) | 2026-09-27 |
+| `ModuleInfo` | `quant_cn.core.docs.code_scanner` | 1 | none | One scanned Python file. | 0 | `core.docs.CodeScanner.read_module`, `core.docs.ContractChecker`, `core.docs.NameChecker`, `core.docs.CodeUnit` | `tests/core/docs/test_code_scanner.py` (TC-CS-001..001) | 2026-09-27 |
+| `CodeScanner` | `quant_cn.core.docs.code_scanner` | 1 | none | Parse Python files with `ast` into ModuleInfo records (no import, no execution). | 1 | `core.docs.ContractChecker`, `core.docs.IndexChecker`, `core.docs.SizeChecker`, `core.docs.NameChecker`, `core.docs.ContractLinter` | `tests/core/docs/test_code_scanner.py` (TC-CS-001..003) | 2026-09-27 |
+| `CodeUnit` | `quant_cn.core.docs.contract_checker` | 1 | none | A class with the module it lives in and its parsed contract. | 0 | `core.docs.ContractChecker` | `tests/core/docs/test_contract_checker.py` (TC-CC-001..001) | 2026-09-27 |
+| `ContractChecker` | `quant_cn.core.docs.contract_checker` | 1 | BaseChecker | Check contracts across the tree: class docstrings carry all sections and public methods Purpose + Contract | 1 | `core.docs.ContractLinter` | `tests/core/docs/test_contract_checker.py` (TC-CC-001..005) | 2026-09-27 |
+| `ContractLinter` | `quant_cn.core.docs.contract_linter` | 1 | none | Build the four checkers (contracts, index, size, names) for one repository and run the selected groups, returning all findings sorted. | 1 | `scripts/lint_contracts.py`, `tests/test_contracts.py` | `tests/test_contracts.py` (TC-CTL-001..002) | 2026-09-27 |
+| `ConventionReader` | `quant_cn.core.docs.convention_reader` | 1 | none | Extract the allowed method-name verb prefixes from the naming convention's §2.1 table. | 1 | `core.docs.ContractLinter` | `tests/core/docs/test_convention_reader.py` (TC-CR-001..002) | 2026-09-27 |
+| `UsedByEntry` | `quant_cn.core.docs.docstring_parser` | 1 | none | One line of a `Used by:` section, split into the caller reference and its note. | 0 | `core.docs.DocContract`, `core.docs.DocstringParser.parse` | `tests/core/docs/test_docstring_parser.py` (TC-DSP-001..001) | 2026-09-27 |
+| `DocContract` | `quant_cn.core.docs.docstring_parser` | 1 | none | The parsed contract of one class, method or module docstring. | 1 | `core.docs.DocstringParser.parse`, `core.docs.CodeUnit` | `tests/core/docs/test_docstring_parser.py` (TC-DSP-001..001) | 2026-09-27 |
+| `DocstringParser` | `quant_cn.core.docs.docstring_parser` | 1 | none | Split a contract docstring into its sections: Purpose, Contract (Input, Output, Raises), Used by, Test cases. | 1 | `core.docs.ContractChecker`, `core.docs.ContractLinter` | `tests/core/docs/test_docstring_parser.py` (TC-DSP-001..004) | 2026-09-27 |
+| `IndexChecker` | `quant_cn.core.docs.index_checker` | 1 | BaseChecker | Every visible folder has an INDEX.md whose folder and file rows equal what is on disk, and whose Contains cell for a .py file lists exactly its top-level classes (fixtures for conftest.py | 1 | `core.docs.ContractLinter` | `tests/core/docs/test_index_checker.py` (TC-IC-001..004) | 2026-09-27 |
+| `IndexEntry` | `quant_cn.core.docs.index_reader` | 1 | none | One row of an INDEX.md table: a subfolder or a file with its purpose and named contents. | 0 | `core.docs.IndexInfo`, `core.docs.IndexReader.read` | `tests/core/docs/test_index_reader.py` (TC-IR-001..001) | 2026-09-27 |
+| `IndexInfo` | `quant_cn.core.docs.index_reader` | 1 | none | Parsed INDEX.md: title line, subfolder entries, file entries. | 0 | `core.docs.IndexReader.read`, `core.docs.IndexChecker` | `tests/core/docs/test_index_reader.py` (TC-IR-001..001) | 2026-09-27 |
+| `IndexReader` | `quant_cn.core.docs.index_reader` | 1 | none | Parse the fixed INDEX.md format: `## Folders` (Folder, Purpose) and `## Files` (File, Purpose, Contains) tables. | 1 | `core.docs.IndexChecker`, `core.docs.ContractLinter` | `tests/core/docs/test_index_reader.py` (TC-IR-001..002) | 2026-09-27 |
+| `MarkdownTable` | `quant_cn.core.docs.markdown_table` | 1 | none | One pipe table with the heading it sits under. | 1 | `core.docs.MarkdownTableReader.read` | `tests/core/docs/test_markdown_table.py` (TC-MTR-001..001) | 2026-09-27 |
+| `MarkdownTableReader` | `quant_cn.core.docs.markdown_table` | 1 | none | Extract every pipe table from markdown text, and backticked names from a cell. | 2 | `core.docs.IndexReader`, `core.docs.RegistryReader`, `core.docs.ConventionReader`, `core.docs.ContractLinter` | `tests/core/docs/test_markdown_table.py` (TC-MTR-001..003) | 2026-09-27 |
+| `NameChecker` | `quant_cn.core.docs.name_checker` | 1 | BaseChecker | Enforce names: lowercase paths (governance `UPPER_SNAKE.md` and tool files excepted), verb-first method and function names from the convention's verb table, no banned verbs, test functions named `test_tc_<id>_<desc>`, and module name matching its primary class. | 2 | `core.docs.ContractLinter` | `tests/core/docs/test_name_checker.py` (TC-NC-001..004) | 2026-09-27 |
+| `RegistryInfo` | `quant_cn.core.docs.registry_reader` | 1 | none | The registry's content as sets and maps the linter can compare with code. | 0 | `core.docs.RegistryReader.read`, `core.docs.ContractChecker` | `tests/core/docs/test_registry_reader.py` (TC-RR-001..001) | 2026-09-27 |
+| `RegistryReader` | `quant_cn.core.docs.registry_reader` | 1 | none | Parse CLASS_REGISTRY.md: section A index, section B detail blocks and their method tables, and the class/schema names of sections C, D, E. | 1 | `core.docs.ContractChecker`, `core.docs.ContractLinter` | `tests/core/docs/test_registry_reader.py` (TC-RR-001..002) | 2026-09-27 |
+| `RepoFiles` | `quant_cn.core.docs.repo_files` | 1 | none | The set of repository files a linter should see: `git ls-files --cached --others --exclude-standard`, so .gitignore (caches, .env, lake guards) decides what is ignored. | 2 | `core.docs.IndexChecker`, `core.docs.ContractLinter` | `tests/core/docs/test_repo_files.py` (TC-RF-001..003) | 2026-09-27 |
+| `SizeChecker` | `quant_cn.core.docs.size_checker` | 1 | BaseChecker | Fail any .py file over 600 lines, class over 300, function or method over 50 (physical lines, docstrings included), and INDEX.md / SKILL.md / execution plan over 300 lines. | 1 | `core.docs.ContractLinter` | `tests/core/docs/test_size_checker.py` (TC-SC-001..002) | 2026-09-27 |
+| `Schema` | `quant_cn.core.schema` | 1 | none | Declare and enforce a DataFrame shape: text columns are pandas `string`, all other declared columns are `float64`, and the primary key is unique and non-null. | 4 | `core.DatasetSpec.build_schema` | `tests/core/test_schema.py` (TC-S-001..006) | 2026-09-27 |
+| `StepReport` | `quant_cn.core.step_report` | 1 | none | Counts and status of one step (usually one dataset's fetch) so runs can be summarised. | 0 | `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `pipeline.FetchStep`, `pipeline.PipelineReport` | `tests/core/test_base_fetcher.py` (TC-BF-001..001) | 2026-09-27 |
 | `TickerNormalizer` | `quant_cn.core.ticker_normalizer` | 1 | none | Turn common A-share ticker spellings into Tushare `ts_code` and check `ts_code` validity. | 2 | (none yet) | `tests/core/test_ticker_normalizer.py` (TC-TN-001..004) | 2026-09-27 |
 | `FetcherFactory` | `quant_cn.data_loading.fetcher_factory` | 3 | none | Build the right fetcher for a DatasetSpec and inject the shared dependencies. | 1 | `pipeline.DownloadPipeline`, `cli.QuantCnCli` | `tests/data_loading/test_fetcher_factory.py` (TC-FF-001..002) | 2026-09-27 |
 | `SingleCallFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Datasets fetched in one (paged) call, key "all": trade_cal, namechange. | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-SCF-001..001) | 2026-09-27 |
@@ -41,19 +65,19 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `DateSweepFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Whole-market daily sweeps: trade_date keys are trading days (daily, adj_factor, daily_basic, moneyflow, stk_limit) | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-DSF-001..002) | 2026-09-27 |
 | `PeriodSweepFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Whole-market report-period sweeps (the *_vip fundamentals): one key per quarter end. | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-PSF-001..001) | 2026-09-27 |
 | `HttpTransport` | `quant_cn.data_loading.http_transport` | 3 | none | Send one JSON POST and return the decoded JSON object. | 1 | `data_loading.TushareClient` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..001) | 2026-09-27 |
-| `TushareClient` | `quant_cn.data_loading.tushare_client` | 3 | BaseApiClient | Query Tushare Pro: one logical query follows limit/offset paging until a short page and returns all rows | 1 | `data_loading.FetcherFactory`, `cli.QuantCnCli` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..007) | 2026-09-27 |
+| `TushareClient` | `quant_cn.data_loading.tushare_client` | 3 | BaseApiClient | Query Tushare Pro: one logical query follows limit/offset paging until a short page and returns all rows | 1 | `cli.QuantCnCli` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..007) | 2026-09-27 |
 | `Compactor` | `quant_cn.lake.compactor` | 2 | none | Rebuild a dataset's curated partitions from its raw files: select declared fields, cast dtypes, drop duplicate primary keys (keeping one), sort by partition date then key, validate, write, and record a manifest in `meta/manifest/<dataset>.json`. | 1 | `cli.QuantCnCli` | `tests/lake/test_compactor.py` (TC-CO-001..005) | 2026-09-27 |
-| `FetchLog` | `quant_cn.lake.fetch_log` | 2 | BaseFetchLog | Record finished (dataset, key) pairs in `meta.fetch_log`, mirror them to `meta/fetch_log.parquet` on save, and rebuild the table after the DuckDB file is lost. | 5 | `core.BaseFetcher.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli` | `tests/lake/test_fetch_log.py` (TC-FL-001..005) | 2026-09-27 |
+| `FetchLog` | `quant_cn.lake.fetch_log` | 2 | BaseFetchLog | Record finished (dataset, key) pairs in `meta.fetch_log`, mirror them to `meta/fetch_log.parquet` on save, and rebuild the table after the DuckDB file is lost. | 5 | `cli.QuantCnCli` | `tests/lake/test_fetch_log.py` (TC-FL-001..005) | 2026-09-27 |
 | `LakeCatalog` | `quant_cn.lake.lake_catalog` | 2 | none | Own the lake's single DuckDB connection (`meta/quant_cn.duckdb`): schemas `raw`, `curated`, `meta` | 8 | `lake.FetchLog`, `lake.RunLog`, `lake.LakeQuery`, `lake.Compactor`, `pipeline.FetchStep.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli` | `tests/lake/test_lake_catalog.py` (TC-LC-001..004) | 2026-09-27 |
 | `LakeQuery` | `quant_cn.lake.lake_query` | 2 | none | Run read queries against the catalog views | 2 | `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli` | `tests/lake/test_lake_query.py` (TC-LQ-001..003) | 2026-09-27 |
-| `ParquetWriter` | `quant_cn.lake.parquet_writer` | 2 | BaseStore | Write raw fetch results and curated partitions as zstd parquet, atomically (write `.tmp`, fsync, rename), so a crash never leaves a half-written file. | 4 | `core.BaseFetcher.run`, `lake.Compactor.rebuild`, `data_loading.FetcherFactory`, `cli.QuantCnCli` | `tests/lake/test_parquet_writer.py` (TC-PW-001..005) | 2026-09-27 |
-| `RunLog` | `quant_cn.lake.run_log` | 2 | BaseRunLog | Append run and per-key events to `meta.run_log` (run_id, started_at, finished_at, kind, dataset, key, status, n_rows, duration_ms, message) and echo them to logging. | 3 | `core.BaseFetcher.run`, `pipeline.LocalRunner`, `cli.QuantCnCli` | `tests/lake/test_run_log.py` (TC-RL-001..002) | 2026-09-27 |
+| `ParquetWriter` | `quant_cn.lake.parquet_writer` | 2 | BaseStore | Write raw fetch results and curated partitions as zstd parquet, atomically (write `.tmp`, fsync, rename), so a crash never leaves a half-written file. | 4 | `cli.QuantCnCli` | `tests/lake/test_parquet_writer.py` (TC-PW-001..005) | 2026-09-27 |
+| `RunLog` | `quant_cn.lake.run_log` | 2 | BaseRunLog | Append run and per-key events to `meta.run_log` (run_id, started_at, finished_at, kind, dataset, key, status, n_rows, duration_ms, message) and echo them to logging. | 3 | `cli.QuantCnCli` | `tests/lake/test_run_log.py` (TC-RL-001..002) | 2026-09-27 |
 | `TradingCalendar` | `quant_cn.lake.trading_calendar` | 2 | none | Answer trading-day questions (sessions in a range, is_open, next, prev) from the SSE calendar in the lake | 5 | `data_loading.DateSweepFetcher.list_keys`, `data_loading.FetcherFactory`, `cli.QuantCnCli` | `tests/lake/test_trading_calendar.py` (TC-TCA-001..004) | 2026-09-27 |
 | `FetchStep` | `quant_cn.pipeline.download_pipeline` | 4 | BaseStep | Adapt one dataset's fetcher to a pipeline step: keys computed in list_units (so the calendar fetched earlier in the run is visible), catalog view refreshed after the run. | 3 | `pipeline.DownloadPipeline.run` | `tests/pipeline/test_download_pipeline.py` (TC-DP-002..002) | 2026-09-27 |
 | `DownloadPipeline` | `quant_cn.pipeline.download_pipeline` | 4 | none | Resolve which datasets and date ranges to download, run one FetchStep per dataset through the runner, and regenerate the lake indexes | 1 | `cli.QuantCnCli` | `tests/pipeline/test_download_pipeline.py` (TC-DP-001..005) | 2026-09-27 |
-| `PipelineReport` | `quant_cn.pipeline.runner` | 4 | none | Result of one pipeline run: its id, overall status and one StepReport per step. | 2 | `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli` | `tests/pipeline/test_runner.py` (TC-LR-001..001) | 2026-09-27 |
+| `PipelineReport` | `quant_cn.pipeline.runner` | 4 | none | Result of one pipeline run: its id, overall status and one StepReport per step. | 2 | `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.BaseRunner` | `tests/pipeline/test_runner.py` (TC-LR-001..001) | 2026-09-27 |
 | `BaseRunner` | `quant_cn.pipeline.runner` | 4 | ABC | Extension point for how steps are executed (local now, Prefect later, D-022) | 1 | `pipeline.LocalRunner`, `pipeline.DownloadPipeline` | `tests/pipeline/test_runner.py` (TC-LR-001..001) | 2026-09-27 |
-| `LocalRunner` | `quant_cn.pipeline.runner` | 4 | BaseRunner | Run steps serially in this process with a rich progress bar per step | 1 | `pipeline.DownloadPipeline`, `cli.QuantCnCli` | `tests/pipeline/test_runner.py` (TC-LR-001..003) | 2026-09-27 |
+| `LocalRunner` | `quant_cn.pipeline.runner` | 4 | BaseRunner | Run steps serially in this process with a rich progress bar per step | 1 | `cli.QuantCnCli` | `tests/pipeline/test_runner.py` (TC-LR-001..003) | 2026-09-27 |
 
 ## B. Class details (one block per class; methods carry their own purpose)
 
@@ -88,7 +112,7 @@ never column lists (those live in section E).
 ### `BaseApiClient` — `quant_cn.core.base_api_client` (L1)
 - **Purpose:** Abstract vendor client: one logical query returns all pages as one DataFrame.
 - **Base:** ABC. **Depends on (injected):** —.
-- **Used by:** `data_loading.TushareClient`, `core.BaseFetcher`, `data_loading.FetcherFactory`.
+- **Used by:** `data_loading.TushareClient`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`.
 - **Tests:** `tests/core/test_base_classes.py` (TC-BAC-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -98,7 +122,7 @@ never column lists (those live in section E).
 ### `BaseFetchLog` — `quant_cn.core.base_fetch_log` (L1)
 - **Purpose:** Abstract record of which (dataset, key) pairs are fully downloaded.
 - **Base:** ABC. **Depends on (injected):** —.
-- **Used by:** `lake.FetchLog`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`.
+- **Used by:** `lake.FetchLog`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`.
 - **Tests:** `tests/lake/test_fetch_log.py` (TC-FL-001..003).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -112,7 +136,7 @@ never column lists (those live in section E).
 ### `BaseFetcher` — `quant_cn.core.base_fetcher` (L1)
 - **Purpose:** Download one dataset as a sequence of keys; subclasses define the keys and the per-key parameters of one sweep pattern, never one endpoint.
 - **Base:** ABC. **Depends on (injected):** DatasetSpec, BaseApiClient, BaseStore, BaseFetchLog, BaseRunLog, Clock.
-- **Used by:** `data_loading.SingleCallFetcher`, `data_loading.EnumFetcher`, `data_loading.DateSweepFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.FetcherFactory.build`, `pipeline.FetchStep`, `pipeline.DownloadPipeline.run`.
+- **Used by:** `data_loading.SingleCallFetcher`, `data_loading.EnumFetcher`, `data_loading.DateSweepFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.FetcherFactory.build`, `pipeline.FetchStep`.
 - **Tests:** `tests/core/test_base_fetcher.py` (TC-BF-001..006).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -127,7 +151,7 @@ never column lists (those live in section E).
 ### `BaseRunLog` — `quant_cn.core.base_run_log` (L1)
 - **Purpose:** Abstract append-only log of runs and per-key events; the source of truth for "what happened".
 - **Base:** ABC. **Depends on (injected):** —.
-- **Used by:** `lake.RunLog`, `core.BaseFetcher.run`, `pipeline.LocalRunner`, `data_loading.FetcherFactory`.
+- **Used by:** `lake.RunLog`, `core.BaseFetcher.run`, `pipeline.LocalRunner`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`.
 - **Tests:** `tests/lake/test_run_log.py` (TC-RL-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -151,7 +175,7 @@ never column lists (those live in section E).
 ### `BaseStore` — `quant_cn.core.base_store` (L1)
 - **Purpose:** Abstract sink for raw fetch results and curated partitions.
 - **Base:** ABC. **Depends on (injected):** —.
-- **Used by:** `lake.ParquetWriter`, `core.BaseFetcher`, `lake.Compactor`, `data_loading.FetcherFactory`.
+- **Used by:** `lake.ParquetWriter`, `core.BaseFetcher`, `lake.Compactor`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`.
 - **Tests:** `tests/core/test_base_classes.py` (TC-BAC-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -162,7 +186,7 @@ never column lists (those live in section E).
 ### `Clock` — `quant_cn.core.clock` (L1)
 - **Purpose:** The single source of wall time, monotonic time and sleeping; tests inject a fake subclass.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`.
+- **Used by:** `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.FetcherFactory`, `data_loading.PeriodSweepFetcher`.
 - **Tests:** `tests/core/test_clock.py` (TC-CL-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -175,7 +199,7 @@ never column lists (those live in section E).
 ### `LakeConfig` — `quant_cn.core.config` (L1)
 - **Purpose:** Where the lake lives and whether it may sit inside the repository.
 - **Base:** BaseModel. **Depends on (injected):** —.
-- **Used by:** `core.Config`, `cli.QuantCnCli`.
+- **Used by:** `core.Config`.
 - **Tests:** `tests/core/test_config.py` (TC-C-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -193,7 +217,7 @@ never column lists (those live in section E).
 ### `DownloadConfig` — `quant_cn.core.config` (L1)
 - **Purpose:** Which datasets to download, in what order, and from which start dates (D-015b).
 - **Base:** BaseModel. **Depends on (injected):** —.
-- **Used by:** `core.Config`, `pipeline.DownloadPipeline.run`.
+- **Used by:** `core.Config`.
 - **Tests:** `tests/core/test_config.py` (TC-C-004..004).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -214,7 +238,7 @@ never column lists (those live in section E).
 ### `SweepSpec` — `quant_cn.core.dataset_spec` (L1)
 - **Purpose:** How a dataset is swept so each call returns the whole market for one key.
 - **Base:** BaseModel. **Depends on (injected):** —.
-- **Used by:** `core.DatasetSpec`, `data_loading.FetcherFactory.build`, `core.BaseFetcher.run`.
+- **Used by:** `core.DatasetSpec`.
 - **Tests:** `tests/core/test_dataset_spec.py` (TC-DS-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -224,7 +248,7 @@ never column lists (those live in section E).
 ### `CuratedSpec` — `quant_cn.core.dataset_spec` (L1)
 - **Purpose:** Where a dataset lands in `curated/` and which date column drives its yearly partition.
 - **Base:** BaseModel. **Depends on (injected):** —.
-- **Used by:** `core.DatasetSpec`, `lake.ParquetWriter.write_curated`, `lake.Compactor.rebuild`, `lake.LakeCatalog.refresh_view`.
+- **Used by:** `core.DatasetSpec`.
 - **Tests:** `tests/core/test_dataset_spec.py` (TC-DS-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -233,7 +257,7 @@ never column lists (those live in section E).
 ### `DatasetSpec` — `quant_cn.core.dataset_spec` (L1)
 - **Purpose:** Everything the lake and the fetchers need to know about one dataset, as data (D-012).
 - **Base:** BaseModel. **Depends on (injected):** —.
-- **Used by:** `core.Config`, `core.BaseFetcher`, `core.BaseStore`, `lake.ParquetWriter`, `lake.LakeCatalog`, `lake.Compactor.rebuild`, `data_loading.FetcherFactory.build`.
+- **Used by:** `core.Config`, `core.BaseFetcher`, `core.BaseStore`, `lake.ParquetWriter`, `lake.LakeCatalog`, `lake.Compactor.rebuild`, `data_loading.FetcherFactory.build`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`.
 - **Tests:** `tests/core/test_dataset_spec.py` (TC-DS-001..004).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -244,7 +268,7 @@ never column lists (those live in section E).
 ### `DateCodec` — `quant_cn.core.date_codec` (L1)
 - **Purpose:** Validate and convert Tushare `YYYYMMDD` date strings and generate date keys for sweeps.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `core.Config.load`, `data_loading.DateSweepFetcher.list_keys`, `data_loading.PeriodSweepFetcher.list_keys`, `pipeline.DownloadPipeline.run`.
+- **Used by:** `core.Config.load`, `data_loading.DateSweepFetcher.list_keys`, `data_loading.PeriodSweepFetcher.list_keys`, `pipeline.DownloadPipeline.run`, `data_loading.FetcherFactory`, `cli.QuantCnCli`.
 - **Tests:** `tests/core/test_date_codec.py` (TC-DC-001..005).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -255,10 +279,263 @@ never column lists (those live in section E).
 | `list_quarter_ends` | Report periods (Mar 31, Jun 30, Sep 30, Dec 31) within [start, end]. | str, str -> list[str] | `ValueError` | as class | see class |
 | `list_weekdays` | Monday-to-Friday dates within [start, end], for announcement-date sweeps. | str, str -> list[str] | `ValueError` | as class | see class |
 
+### `Finding` — `quant_cn.core.docs.base_checker` (L1)
+- **Purpose:** One rule violation at a location, printable as `path:line [rule] message`.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `core.docs.BaseChecker.run`, `core.docs.ContractChecker`, `core.docs.IndexChecker`, `core.docs.SizeChecker`, `core.docs.NameChecker`, `core.docs.ContractLinter`.
+- **Tests:** `tests/core/docs/test_base_checker.py` (TC-BCH-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `to_text` | One-line human form. | — -> str | — | as class | see class |
+
+### `BaseChecker` — `quant_cn.core.docs.base_checker` (L1)
+- **Purpose:** Abstract repository check: inspect the tree, return findings (empty = pass).
+- **Base:** ABC. **Depends on (injected):** —.
+- **Used by:** `core.docs.ContractChecker`, `core.docs.IndexChecker`, `core.docs.SizeChecker`, `core.docs.NameChecker`, `core.docs.ContractLinter`.
+- **Tests:** `tests/core/docs/test_base_checker.py` (TC-BCH-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `run` | Run the check over the repository. | — -> list[Finding] | `OSError`, `SyntaxError` | as class | see class |
+
+### `MethodInfo` — `quant_cn.core.docs.code_scanner` (L1)
+- **Purpose:** One function defined directly in a class body.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `core.docs.ClassInfo`, `core.docs.CodeScanner.read_module`, `core.docs.ModuleInfo`.
+- **Tests:** `tests/core/docs/test_code_scanner.py` (TC-CS-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `n_lines` | Physical lines including docstring and blanks. | — -> int | — | as class | see class |
+| `is_public` | True for names without a leading underscore. | — -> bool | — | as class | see class |
+
+### `ClassInfo` — `quant_cn.core.docs.code_scanner` (L1)
+- **Purpose:** One top-level class: span, bases, docstring, methods and the names its body references.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `core.docs.ModuleInfo`, `core.docs.CodeScanner.read_module`, `core.docs.NameChecker`, `core.docs.CodeUnit`.
+- **Tests:** `tests/core/docs/test_code_scanner.py` (TC-CS-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `n_lines` | Physical lines of the class. | — -> int | — | as class | see class |
+| `list_public_methods` | Methods and properties without a leading underscore, in source order. | — -> list[MethodInfo] | — | as class | see class |
+
+### `ModuleInfo` — `quant_cn.core.docs.code_scanner` (L1)
+- **Purpose:** One scanned Python file.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `core.docs.CodeScanner.read_module`, `core.docs.ContractChecker`, `core.docs.NameChecker`, `core.docs.CodeUnit`.
+- **Tests:** `tests/core/docs/test_code_scanner.py` (TC-CS-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `CodeScanner` — `quant_cn.core.docs.code_scanner` (L1)
+- **Purpose:** Parse Python files with `ast` into ModuleInfo records (no import, no execution).
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `core.docs.ContractChecker`, `core.docs.IndexChecker`, `core.docs.SizeChecker`, `core.docs.NameChecker`, `core.docs.ContractLinter`.
+- **Tests:** `tests/core/docs/test_code_scanner.py` (TC-CS-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `read_module` | Scan one file. | Path, Path -> ModuleInfo | `SyntaxError`, `OSError` | as class | see class |
+
+### `CodeUnit` — `quant_cn.core.docs.contract_checker` (L1)
+- **Purpose:** A class with the module it lives in and its parsed contract.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `core.docs.ContractChecker`.
+- **Tests:** `tests/core/docs/test_contract_checker.py` (TC-CC-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `ContractChecker` — `quant_cn.core.docs.contract_checker` (L1)
+- **Purpose:** Check contracts across the tree: class docstrings carry all sections and public methods Purpose + Contract; docstring TC IDs and `test_tc_*` functions match one-to-one; each src class's `Used by` equals the src classes that reference it; every src class has its registry rows and a method table equal to its public methods; class names are unique; no module-level functions in src outside core/utils.
+- **Base:** BaseChecker. **Depends on (injected):** Path, CodeScanner, DocstringParser, RegistryReader.
+- **Used by:** `core.docs.ContractLinter`.
+- **Tests:** `tests/core/docs/test_contract_checker.py` (TC-CC-001..005).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Path, CodeScanner, DocstringParser, RegistryReader -> None | — | callers of the class | — |
+| `run` | Run every contract rule. | — -> list[Finding] | `SyntaxError`, `OSError` | as class | see class |
+| `_check_tests` (private) | internal helper over 20 lines | list[tuple[str, ModuleInfo]], list[CodeUnit], list[tuple[str, ModuleInfo]] -> list[Finding] | — | internal | — |
+| `_check_used_by` (private) | internal helper over 20 lines | list[CodeUnit], list[CodeUnit] -> list[Finding] | — | internal | — |
+| `_check_registry` (private) | internal helper over 20 lines | list[tuple[str, ModuleInfo]], list[CodeUnit], RegistryInfo -> list[Finding] | — | internal | — |
+| `_check_registry_class` (private) | internal helper over 20 lines | CodeUnit, RegistryInfo -> list[Finding] | — | internal | — |
+
+### `ContractLinter` — `quant_cn.core.docs.contract_linter` (L1)
+- **Purpose:** Build the four checkers (contracts, index, size, names) for one repository and run the selected groups, returning all findings sorted.
+- **Base:** none. **Depends on (injected):** Path.
+- **Used by:** `scripts/lint_contracts.py`, `tests/test_contracts.py`.
+- **Tests:** `tests/test_contracts.py` (TC-CTL-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Path -> None | — | callers of the class | — |
+| `run` | Run the selected checker groups. | Iterable[str] -> list[Finding] | `ValueError`, `RuntimeError`, `SyntaxError` | as class | see class |
+
+### `ConventionReader` — `quant_cn.core.docs.convention_reader` (L1)
+- **Purpose:** Extract the allowed method-name verb prefixes from the naming convention's §2.1 table.
+- **Base:** none. **Depends on (injected):** MarkdownTableReader.
+- **Used by:** `core.docs.ContractLinter`.
+- **Tests:** `tests/core/docs/test_convention_reader.py` (TC-CR-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | MarkdownTableReader -> None | — | callers of the class | — |
+| `read_verbs` | Verb prefixes (e.g. "get_") and bare verbs (e.g. "run") in table order. | Path -> list[str] | `ValueError`, `OSError` | as class | see class |
+
+### `UsedByEntry` — `quant_cn.core.docs.docstring_parser` (L1)
+- **Purpose:** One line of a `Used by:` section, split into the caller reference and its note.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `core.docs.DocContract`, `core.docs.DocstringParser.parse`.
+- **Tests:** `tests/core/docs/test_docstring_parser.py` (TC-DSP-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `DocContract` — `quant_cn.core.docs.docstring_parser` (L1)
+- **Purpose:** The parsed contract of one class, method or module docstring.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `core.docs.DocstringParser.parse`, `core.docs.CodeUnit`.
+- **Tests:** `tests/core/docs/test_docstring_parser.py` (TC-DSP-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `has` | True if every named section is present. | — -> bool | — | as class | see class |
+
+### `DocstringParser` — `quant_cn.core.docs.docstring_parser` (L1)
+- **Purpose:** Split a contract docstring into its sections: Purpose, Contract (Input, Output, Raises), Used by, Test cases.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `core.docs.ContractChecker`, `core.docs.ContractLinter`.
+- **Tests:** `tests/core/docs/test_docstring_parser.py` (TC-DSP-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `parse` | Parse one docstring. | str \| None -> DocContract | — | as class | see class |
+
+### `IndexChecker` — `quant_cn.core.docs.index_checker` (L1)
+- **Purpose:** Every visible folder has an INDEX.md whose folder and file rows equal what is on disk, and whose Contains cell for a .py file lists exactly its top-level classes (fixtures for conftest.py; public constants for modules without classes).
+- **Base:** BaseChecker. **Depends on (injected):** Path, RepoFiles, IndexReader, CodeScanner.
+- **Used by:** `core.docs.ContractLinter`.
+- **Tests:** `tests/core/docs/test_index_checker.py` (TC-IC-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Path, RepoFiles, IndexReader, CodeScanner -> None | — | callers of the class | — |
+| `run` | Check every folder's index. | — -> list[Finding] | `RuntimeError`, `SyntaxError` | as class | see class |
+| `_check_folder` (private) | internal helper over 20 lines | Path, IndexInfo, list[Path], list[Path] -> list[Finding] | — | internal | — |
+
+### `IndexEntry` — `quant_cn.core.docs.index_reader` (L1)
+- **Purpose:** One row of an INDEX.md table: a subfolder or a file with its purpose and named contents.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `core.docs.IndexInfo`, `core.docs.IndexReader.read`.
+- **Tests:** `tests/core/docs/test_index_reader.py` (TC-IR-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `IndexInfo` — `quant_cn.core.docs.index_reader` (L1)
+- **Purpose:** Parsed INDEX.md: title line, subfolder entries, file entries.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `core.docs.IndexReader.read`, `core.docs.IndexChecker`.
+- **Tests:** `tests/core/docs/test_index_reader.py` (TC-IR-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `IndexReader` — `quant_cn.core.docs.index_reader` (L1)
+- **Purpose:** Parse the fixed INDEX.md format: `## Folders` (Folder, Purpose) and `## Files` (File, Purpose, Contains) tables.
+- **Base:** none. **Depends on (injected):** MarkdownTableReader.
+- **Used by:** `core.docs.IndexChecker`, `core.docs.ContractLinter`.
+- **Tests:** `tests/core/docs/test_index_reader.py` (TC-IR-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | MarkdownTableReader -> None | — | callers of the class | — |
+| `read` | Parse one INDEX.md. | Path -> IndexInfo | `OSError` | as class | see class |
+
+### `MarkdownTable` — `quant_cn.core.docs.markdown_table` (L1)
+- **Purpose:** One pipe table with the heading it sits under.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `core.docs.MarkdownTableReader.read`.
+- **Tests:** `tests/core/docs/test_markdown_table.py` (TC-MTR-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `get_column` | All cells of one column. | str -> list[str] | `KeyError` | as class | see class |
+
+### `MarkdownTableReader` — `quant_cn.core.docs.markdown_table` (L1)
+- **Purpose:** Extract every pipe table from markdown text, and backticked names from a cell.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `core.docs.IndexReader`, `core.docs.RegistryReader`, `core.docs.ConventionReader`, `core.docs.ContractLinter`.
+- **Tests:** `tests/core/docs/test_markdown_table.py` (TC-MTR-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `read` | All tables in document order. | str -> list[MarkdownTable] | — | as class | see class |
+| `list_ticked` | Names written in backticks inside a cell. | str -> list[str] | — | as class | see class |
+
+### `NameChecker` — `quant_cn.core.docs.name_checker` (L1)
+- **Purpose:** Enforce names: lowercase paths (governance `UPPER_SNAKE.md` and tool files excepted), verb-first method and function names from the convention's verb table, no banned verbs, test functions named `test_tc_<id>_<desc>`, and module name matching its primary class.
+- **Base:** BaseChecker. **Depends on (injected):** Path, CodeScanner, list[Path], Sequence[str].
+- **Used by:** `core.docs.ContractLinter`.
+- **Tests:** `tests/core/docs/test_name_checker.py` (TC-NC-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Path, CodeScanner, list[Path], Sequence[str] -> None | — | callers of the class | — |
+| `run` | Check every visible path and every code file. | — -> list[Finding] | `SyntaxError`, `OSError` | as class | see class |
+| `is_verb_name` | True if `name` (leading underscores ignored) starts with an allowed, unbanned verb. | str -> bool | — | as class | see class |
+
+### `RegistryInfo` — `quant_cn.core.docs.registry_reader` (L1)
+- **Purpose:** The registry's content as sets and maps the linter can compare with code.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `core.docs.RegistryReader.read`, `core.docs.ContractChecker`.
+- **Tests:** `tests/core/docs/test_registry_reader.py` (TC-RR-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `RegistryReader` — `quant_cn.core.docs.registry_reader` (L1)
+- **Purpose:** Parse CLASS_REGISTRY.md: section A index, section B detail blocks and their method tables, and the class/schema names of sections C, D, E.
+- **Base:** none. **Depends on (injected):** MarkdownTableReader.
+- **Used by:** `core.docs.ContractChecker`, `core.docs.ContractLinter`.
+- **Tests:** `tests/core/docs/test_registry_reader.py` (TC-RR-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | MarkdownTableReader -> None | — | callers of the class | — |
+| `read` | Parse the registry file. | Path -> RegistryInfo | `OSError` | as class | see class |
+
+### `RepoFiles` — `quant_cn.core.docs.repo_files` (L1)
+- **Purpose:** The set of repository files a linter should see: `git ls-files --cached --others --exclude-standard`, so .gitignore (caches, .env, lake guards) decides what is ignored.
+- **Base:** none. **Depends on (injected):** Path.
+- **Used by:** `core.docs.IndexChecker`, `core.docs.ContractLinter`.
+- **Tests:** `tests/core/docs/test_repo_files.py` (TC-RF-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Path -> None | — | callers of the class | — |
+| `list_files` | Relative paths of visible files that exist on disk, spelled as on disk, sorted. | — -> list[Path] | `RuntimeError` | as class | see class |
+| `list_folders` | Every folder that holds at least one visible file, including the root (Path(".")). | — -> list[Path] | `RuntimeError` | as class | see class |
+
+### `SizeChecker` — `quant_cn.core.docs.size_checker` (L1)
+- **Purpose:** Fail any .py file over 600 lines, class over 300, function or method over 50 (physical lines, docstrings included), and INDEX.md / SKILL.md / execution plan over 300 lines.
+- **Base:** BaseChecker. **Depends on (injected):** Path, CodeScanner, list[Path].
+- **Used by:** `core.docs.ContractLinter`.
+- **Tests:** `tests/core/docs/test_size_checker.py` (TC-SC-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Path, CodeScanner, list[Path] -> None | — | callers of the class | — |
+| `run` | Check every code file and governance doc. | — -> list[Finding] | `SyntaxError`, `OSError` | as class | see class |
+
 ### `Schema` — `quant_cn.core.schema` (L1)
 - **Purpose:** Declare and enforce a DataFrame shape: text columns are pandas `string`, all other declared columns are `float64`, and the primary key is unique and non-null.
 - **Base:** none. **Depends on (injected):** str, Sequence[str], Collection[str], Sequence[str].
-- **Used by:** `core.DatasetSpec.build_schema`, `lake.ParquetWriter.write_raw`, `lake.ParquetWriter.write_curated`, `lake.Compactor.rebuild`.
+- **Used by:** `core.DatasetSpec.build_schema`.
 - **Tests:** `tests/core/test_schema.py` (TC-S-001..006).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -272,7 +549,7 @@ never column lists (those live in section E).
 ### `StepReport` — `quant_cn.core.step_report` (L1)
 - **Purpose:** Counts and status of one step (usually one dataset's fetch) so runs can be summarised.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`.
+- **Used by:** `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `pipeline.FetchStep`, `pipeline.PipelineReport`.
 - **Tests:** `tests/core/test_base_fetcher.py` (TC-BF-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -360,7 +637,7 @@ never column lists (those live in section E).
 ### `TushareClient` — `quant_cn.data_loading.tushare_client` (L3)
 - **Purpose:** Query Tushare Pro: one logical query follows limit/offset paging until a short page and returns all rows; rate-limit replies wait and retry without spending retries; permission replies fail fast as PermissionDeniedError; other failures retry up to `retries`.
 - **Base:** BaseApiClient. **Depends on (injected):** TushareConfig, Clock, HttpTransport | None.
-- **Used by:** `data_loading.FetcherFactory`, `cli.QuantCnCli`.
+- **Used by:** `cli.QuantCnCli`.
 - **Tests:** `tests/data_loading/test_tushare_client.py` (TC-TC-001..007).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -383,7 +660,7 @@ never column lists (those live in section E).
 ### `FetchLog` — `quant_cn.lake.fetch_log` (L2)
 - **Purpose:** Record finished (dataset, key) pairs in `meta.fetch_log`, mirror them to `meta/fetch_log.parquet` on save, and rebuild the table after the DuckDB file is lost.
 - **Base:** BaseFetchLog. **Depends on (injected):** LakeCatalog.
-- **Used by:** `core.BaseFetcher.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`.
+- **Used by:** `cli.QuantCnCli`.
 - **Tests:** `tests/lake/test_fetch_log.py` (TC-FL-001..005).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -429,7 +706,7 @@ never column lists (those live in section E).
 ### `ParquetWriter` — `quant_cn.lake.parquet_writer` (L2)
 - **Purpose:** Write raw fetch results and curated partitions as zstd parquet, atomically (write `.tmp`, fsync, rename), so a crash never leaves a half-written file.
 - **Base:** BaseStore. **Depends on (injected):** Path.
-- **Used by:** `core.BaseFetcher.run`, `lake.Compactor.rebuild`, `data_loading.FetcherFactory`, `cli.QuantCnCli`.
+- **Used by:** `cli.QuantCnCli`.
 - **Tests:** `tests/lake/test_parquet_writer.py` (TC-PW-001..005).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -443,7 +720,7 @@ never column lists (those live in section E).
 ### `RunLog` — `quant_cn.lake.run_log` (L2)
 - **Purpose:** Append run and per-key events to `meta.run_log` (run_id, started_at, finished_at, kind, dataset, key, status, n_rows, duration_ms, message) and echo them to logging.
 - **Base:** BaseRunLog. **Depends on (injected):** LakeCatalog, Clock.
-- **Used by:** `core.BaseFetcher.run`, `pipeline.LocalRunner`, `cli.QuantCnCli`.
+- **Used by:** `cli.QuantCnCli`.
 - **Tests:** `tests/lake/test_run_log.py` (TC-RL-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -495,7 +772,7 @@ never column lists (those live in section E).
 ### `PipelineReport` — `quant_cn.pipeline.runner` (L4)
 - **Purpose:** Result of one pipeline run: its id, overall status and one StepReport per step.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`.
+- **Used by:** `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.BaseRunner`.
 - **Tests:** `tests/pipeline/test_runner.py` (TC-LR-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -516,7 +793,7 @@ never column lists (those live in section E).
 ### `LocalRunner` — `quant_cn.pipeline.runner` (L4)
 - **Purpose:** Run steps serially in this process with a rich progress bar per step; a permission failure marks the step blocked and continues; any other project error closes the run as failed and re-raises (finished keys stay done).
 - **Base:** BaseRunner. **Depends on (injected):** BaseRunLog, Console | None, bool.
-- **Used by:** `pipeline.DownloadPipeline`, `cli.QuantCnCli`.
+- **Used by:** `cli.QuantCnCli`.
 - **Tests:** `tests/pipeline/test_runner.py` (TC-LR-001..003).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -534,24 +811,26 @@ never column lists (those live in section E).
 | `BaseRunLog` | `quant_cn.core.base_run_log` | 1 | Abstract append-only log of runs and per-key events | `open_run`: Open a run and return its id.; `record_event`: Append one event (fetched / skipped / empty / failed / blocked).; `close_run`: Close a run with its final status. | `RunLog` | 2026-09-27 |
 | `BaseStep` | `quant_cn.core.base_step` | 1 | Abstract unit of pipeline work: list its units, then run and report. | `name`: Step name shown in progress and reports.; `list_units`: Compute the work units (e.g. keys) just before running.; `run`: Do the work listed by `list_units`. | `FetchStep` | 2026-09-27 |
 | `BaseStore` | `quant_cn.core.base_store` | 1 | Abstract sink for raw fetch results and curated partitions. | `write_raw`: Persist one fetch key's rows atomically.; `write_curated`: Replace one curated partition atomically after validating its schema. | `ParquetWriter` | 2026-09-27 |
+| `BaseChecker` | `quant_cn.core.docs.base_checker` | 1 | Abstract repository check: inspect the tree, return findings (empty = pass). | `run`: Run the check over the repository. | `ContractChecker`, `IndexChecker`, `NameChecker`, `SizeChecker` | 2026-09-27 |
 | `BaseRunner` | `quant_cn.pipeline.runner` | 4 | Extension point for how steps are executed (local now, Prefect later, D-022) | `run`: Execute steps in order under one run id. | `LocalRunner` | 2026-09-27 |
 
 ## D. Exceptions
 
 | Class | Module | Parent | Purpose / raised when | Raised by | Added |
 |---|---|---|---|---|---|
-| `QuantCnError` | `quant_cn.core.exceptions` | `Exception` | Root of every exception the package raises, so callers catch project errors in one place. | `pipeline.LocalRunner.run`, `cli.QuantCnCli.run` | 2026-09-27 |
+| `QuantCnError` | `quant_cn.core.exceptions` | `Exception` | Root of every exception the package raises, so callers catch project errors in one place. | `pipeline.LocalRunner.run`, `cli.QuantCnCli.run`, `core.ConfigError`, `core.DataSourceError`, `core.LakeError`, `core.SchemaError` | 2026-09-27 |
 | `ConfigError` | `quant_cn.core.exceptions` | `QuantCnError` | Configuration is missing, malformed or unsafe (e.g. lake root inside the repository). | `core.Config.load`, `core.Config.get_dataset`, `data_loading.TushareClient`, `data_loading.FetcherFactory.build`, `pipeline.DownloadPipeline.run` | 2026-09-27 |
 | `SchemaError` | `quant_cn.core.exceptions` | `QuantCnError` | A DataFrame does not satisfy its declared Schema (columns, dtypes, primary key). | `core.Schema.normalize`, `core.Schema.validate` | 2026-09-27 |
-| `DataSourceError` | `quant_cn.core.exceptions` | `QuantCnError` | The external data source failed: API error code, retries exhausted, malformed response. | `data_loading.TushareClient.query`, `core.BaseFetcher.run` | 2026-09-27 |
+| `DataSourceError` | `quant_cn.core.exceptions` | `QuantCnError` | The external data source failed: API error code, retries exhausted, malformed response. | `data_loading.TushareClient.query`, `core.BaseFetcher.run`, `core.PermissionDeniedError` | 2026-09-27 |
 | `PermissionDeniedError` | `quant_cn.core.exceptions` | `DataSourceError` | The account lacks permission (points) for an endpoint; the dataset is blocked, not broken. | `data_loading.TushareClient.query`, `pipeline.LocalRunner.run` | 2026-09-27 |
-| `LakeError` | `quant_cn.core.exceptions` | `QuantCnError` | The local lake cannot be read or written: missing dataset, failed atomic write, bad catalog. | `lake.ParquetWriter`, `lake.TradingCalendar`, `lake.LakeQuery.sql`, `cli.QuantCnCli` | 2026-09-27 |
+| `LakeError` | `quant_cn.core.exceptions` | `QuantCnError` | The local lake cannot be read or written: missing dataset, failed atomic write, bad catalog. | `lake.ParquetWriter`, `lake.TradingCalendar`, `lake.LakeQuery.sql`, `cli.QuantCnCli`, `lake.Compactor`, `pipeline.DownloadPipeline`, `lake.FetchLog`, `lake.LakeCatalog`, `lake.RunLog` | 2026-09-27 |
 
 ## E. Schemas (DataFrame / typed records)
 
 | Schema | Module | Purpose | Index | Columns (dtype) | Invariants | Produced by | Consumed by | Added |
 |---|---|---|---|---|---|---|---|---|
-| _(none yet)_ | | | | | | | | |
+| `PRICE_PANEL` | `quant_cn.core.frames` | daily bars with adjustment factor and adjusted close | long; key (trade_date, ts_code) | trade_date (string), ts_code (string), open (float64), high (float64), low (float64), close (float64), pre_close (float64), vol (float64), amount (float64), adj_factor (float64), close_adj (float64) | key unique and non-null | `lake.LakeQuery.prices` (phase 5) | factors, engine, charts (plans 03-04) | 2026-09-27 |
+| `FUNDAMENTALS_PIT` | `quant_cn.core.frames` | point-in-time fundamentals, one value per field per trading day | long; key (trade_date, ts_code, field) | trade_date (string), ts_code (string), field (string), value (float64), end_date (string), ann_date (string) | key unique and non-null | `lake.PitAligner` (phase 5) | `QualityFactor`, `ValueFactor` (plan 03) | 2026-09-27 |
 
 ## F. Allowed standalone functions (`core/utils` only, with justification)
 

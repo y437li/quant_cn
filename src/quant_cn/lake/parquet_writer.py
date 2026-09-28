@@ -31,10 +31,7 @@ class ParquetWriter(BaseStore):
             (none at construction)
 
     Used by:
-        core.BaseFetcher.run             -- via BaseStore.write_raw
-        lake.Compactor.rebuild           -- write_curated
-        data_loading.FetcherFactory      -- injected into every fetcher
-        cli.QuantCnCli                   -- composition root
+        cli.QuantCnCli  -- composition root
 
     Test cases:
         TC-PW-001  raw file lands at raw/<dataset>/<param>=<key>.parquet with coerced dtypes

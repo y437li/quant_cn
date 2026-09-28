@@ -26,6 +26,10 @@ class Clock:
         lake.Compactor.rebuild           -- manifest timestamp
         pipeline.DownloadPipeline        -- default end date (today)
         cli.QuantCnCli                   -- composition root
+        data_loading.DateSweepFetcher    -- injected type or call
+        data_loading.EnumFetcher         -- injected type or call
+        data_loading.FetcherFactory      -- injected type or call
+        data_loading.PeriodSweepFetcher  -- injected type or call
 
     Test cases:
         TC-CL-001  today_str is YYYYMMDD and equals get_now().date()

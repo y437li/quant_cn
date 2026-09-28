@@ -5,7 +5,7 @@ from pathlib import Path
 from quant_cn.core.config import Config
 from quant_cn.lake.fetch_log import FetchLog
 from quant_cn.lake.lake_catalog import LakeCatalog
-from tests.support import Build, MiniLake
+from tests.support import MiniLake, Sample
 
 
 # TC-FL-001
@@ -36,7 +36,7 @@ def test_tc_fl_003_pending_order(lake: MiniLake) -> None:
 
 # TC-FL-004
 def test_tc_fl_004_restore_adds_raw_files(lake: MiniLake, config: Config) -> None:
-    lake.writer.write_raw(config.get_dataset("daily"), "20260828", Build.bars("20260828"))
+    lake.writer.write_raw(config.get_dataset("daily"), "20260828", Sample.build_bars("20260828"))
     assert lake.fetch_log.rebuild_from_mirror() == 1
     assert lake.fetch_log.is_done("daily", "20260828")
 

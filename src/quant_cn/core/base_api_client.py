@@ -25,6 +25,9 @@ class BaseApiClient(ABC):
         data_loading.TushareClient       -- production subclass
         core.BaseFetcher                 -- injected client type
         data_loading.FetcherFactory      -- injected client type
+        data_loading.DateSweepFetcher    -- injected type or call
+        data_loading.EnumFetcher         -- injected type or call
+        data_loading.PeriodSweepFetcher  -- injected type or call
 
     Test cases:
         TC-BAC-001  cannot be instantiated; subclass must implement query

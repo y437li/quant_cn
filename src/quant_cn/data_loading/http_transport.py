@@ -22,7 +22,7 @@ class HttpTransport:
             (none at construction)
 
     Used by:
-        data_loading.TushareClient       -- default transport
+        data_loading.TushareClient  -- default transport
 
     Test cases:
         TC-TC-001  (via fake transport subclass) client pages until a short page

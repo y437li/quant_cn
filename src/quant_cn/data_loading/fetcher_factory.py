@@ -35,8 +35,8 @@ class FetcherFactory:
             (none at construction)
 
     Used by:
-        pipeline.DownloadPipeline        -- one fetcher per requested dataset
-        cli.QuantCnCli                   -- composition root
+        pipeline.DownloadPipeline  -- one fetcher per requested dataset
+        cli.QuantCnCli             -- composition root
 
     Test cases:
         TC-FF-001  each sweep kind maps to its fetcher class

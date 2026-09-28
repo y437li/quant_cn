@@ -3,17 +3,24 @@ export UV_PROJECT_ENVIRONMENT ?= $(HOME)/.venvs/quant_cn
 UV_RUN := uv run --env-file .env
 CLI := $(UV_RUN) python -m quant_cn.cli
 
-.PHONY: setup lint test check doctor download download-dry compact lake-rebuild lake-backup
+.PHONY: setup hooks lint lint-contracts test check doctor download download-dry compact lake-rebuild lake-backup
 
 setup:            ## create the venv from uv.lock; copy .env.example to .env if missing
 	uv sync --all-extras
 	@test -f .env || (cp .env.example .env && echo "created .env: set TUSHARE_TOKEN")
 
-lint:             ## ruff format check, ruff lint, mypy strict, import layers
-	uv run ruff format --check src tests
-	uv run ruff check src tests
+hooks:            ## install the pre-commit hooks (.pre-commit-config.yaml)
+	uv run pre-commit install
+
+lint:             ## ruff format check, ruff lint, mypy strict, import layers, contract linter
+	uv run ruff format --check src tests scripts
+	uv run ruff check src tests scripts
 	uv run mypy
 	uv run lint-imports
+	uv run python scripts/lint_contracts.py
+
+lint-contracts:   ## contract/index/size/names linter only, e.g. make lint-contracts ARGS=--index
+	uv run python scripts/lint_contracts.py $(ARGS)
 
 test:             ## offline test suite with coverage
 	uv run pytest --cov

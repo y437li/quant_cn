@@ -30,9 +30,7 @@ class SweepSpec(BaseModel):
             pydantic.ValidationError  -- unknown kind or wrong types
 
     Used by:
-        core.DatasetSpec                 -- field `sweep`
-        data_loading.FetcherFactory.build  -- dispatch on kind, resolve values
-        core.BaseFetcher.run             -- refetch_recent
+        core.DatasetSpec  -- field `sweep`
 
     Test cases:
         TC-DS-001  datasets.yaml entries parse into DatasetSpec
@@ -79,10 +77,7 @@ class CuratedSpec(BaseModel):
             pydantic.ValidationError
 
     Used by:
-        core.DatasetSpec                 -- field `curated`
-        lake.ParquetWriter.write_curated -- target path
-        lake.Compactor.rebuild           -- partitioning
-        lake.LakeCatalog.refresh_view    -- curated view glob
+        core.DatasetSpec  -- field `curated`
 
     Test cases:
         TC-DS-001  datasets.yaml entries parse into DatasetSpec
@@ -118,13 +113,16 @@ class DatasetSpec(BaseModel):
                                          not in fields
 
     Used by:
-        core.Config                      -- `datasets` mapping and `dataset()`
-        core.BaseFetcher                 -- endpoint, fields, refresh
-        core.BaseStore                   -- write targets
-        lake.ParquetWriter               -- raw filename, schema
-        lake.LakeCatalog                 -- views and dataset_meta
-        lake.Compactor.rebuild           -- schema, partitioning, primary key
+        core.Config                        -- `datasets` mapping and `dataset()`
+        core.BaseFetcher                   -- endpoint, fields, refresh
+        core.BaseStore                     -- write targets
+        lake.ParquetWriter                 -- raw filename, schema
+        lake.LakeCatalog                   -- views and dataset_meta
+        lake.Compactor.rebuild             -- schema, partitioning, primary key
         data_loading.FetcherFactory.build  -- sweep dispatch
+        data_loading.DateSweepFetcher      -- injected type or call
+        data_loading.EnumFetcher           -- injected type or call
+        data_loading.PeriodSweepFetcher    -- injected type or call
 
     Test cases:
         TC-DS-001  datasets.yaml entries parse into DatasetSpec

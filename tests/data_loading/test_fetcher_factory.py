@@ -16,7 +16,7 @@ from quant_cn.lake.trading_calendar import TradingCalendar
 from tests.support import FakeTushareClient, MiniLake
 
 
-def factory(config: Config, lake: MiniLake) -> FetcherFactory:
+def build_factory(config: Config, lake: MiniLake) -> FetcherFactory:
     return FetcherFactory(
         config,
         FakeTushareClient(),
@@ -41,13 +41,13 @@ def factory(config: Config, lake: MiniLake) -> FetcherFactory:
     ],
 )
 def test_tc_ff_001_kind_mapping(config: Config, lake: MiniLake, name: str, cls: type) -> None:
-    assert type(factory(config, lake).build(config.get_dataset(name))) is cls
+    assert type(build_factory(config, lake).build(config.get_dataset(name))) is cls
 
 
 # TC-FF-002
 def test_tc_ff_002_enum_values(config: Config, lake: MiniLake) -> None:
-    built = factory(config, lake).build(config.get_dataset("index_daily"))
+    built = build_factory(config, lake).build(config.get_dataset("index_daily"))
     assert built.list_keys("a", "b") == config.enum_values["indices"]
     broken = config.model_copy(update={"enum_values": {}})
     with pytest.raises(ConfigError):
-        factory(broken, lake).build(config.get_dataset("index_daily"))
+        build_factory(broken, lake).build(config.get_dataset("index_daily"))

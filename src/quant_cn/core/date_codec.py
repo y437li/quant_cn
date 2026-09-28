@@ -23,10 +23,12 @@ class DateCodec:
             ValueError  -- malformed date string or start > end
 
     Used by:
-        core.Config.load                 -- validates configured start dates
+        core.Config.load                           -- validates configured start dates
         data_loading.DateSweepFetcher.list_keys    -- weekdays for ann_date sweeps
         data_loading.PeriodSweepFetcher.list_keys  -- quarter ends for period sweeps
-        pipeline.DownloadPipeline.run    -- validates start/end overrides
+        pipeline.DownloadPipeline.run              -- validates start/end overrides
+        data_loading.FetcherFactory                -- injected type or call
+        cli.QuantCnCli                             -- composition root
 
     Test cases:
         TC-DC-001  to_date/to_str round trip

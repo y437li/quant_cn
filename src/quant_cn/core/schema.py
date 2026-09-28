@@ -31,10 +31,7 @@ class Schema:
             SchemaError  -- text_columns or primary_key not a subset of columns
 
     Used by:
-        core.DatasetSpec.build_schema          -- builds one Schema per dataset
-        lake.ParquetWriter.write_raw     -- coerce dtypes before writing raw files
-        lake.ParquetWriter.write_curated -- validate before writing a curated partition
-        lake.Compactor.rebuild           -- coerce and select declared columns
+        core.DatasetSpec.build_schema  -- builds one Schema per dataset
 
     Test cases:
         TC-S-001  coerce casts text to string and numbers to float64

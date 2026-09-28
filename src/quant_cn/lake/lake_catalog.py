@@ -33,13 +33,13 @@ class LakeCatalog:
             LakeError  -- DuckDB file cannot be opened
 
     Used by:
-        lake.FetchLog                    -- shares the connection
-        lake.RunLog                      -- shares the connection
-        lake.LakeQuery                   -- shares the connection
-        lake.Compactor                   -- raw file listing, view refresh
-        pipeline.FetchStep.run           -- refresh_view after each dataset
-        pipeline.DownloadPipeline.run    -- write_indexes after a run
-        cli.QuantCnCli                   -- composition root, rebuild
+        lake.FetchLog                  -- shares the connection
+        lake.RunLog                    -- shares the connection
+        lake.LakeQuery                 -- shares the connection
+        lake.Compactor                 -- raw file listing, view refresh
+        pipeline.FetchStep.run         -- refresh_view after each dataset
+        pipeline.DownloadPipeline.run  -- write_indexes after a run
+        cli.QuantCnCli                 -- composition root, rebuild
 
     Test cases:
         TC-LC-001  raw and curated views exist after refresh and return the written rows

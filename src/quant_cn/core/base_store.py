@@ -28,6 +28,9 @@ class BaseStore(ABC):
         core.BaseFetcher                 -- injected store type
         lake.Compactor                   -- injected store type
         data_loading.FetcherFactory      -- injected store type
+        data_loading.DateSweepFetcher    -- injected type or call
+        data_loading.EnumFetcher         -- injected type or call
+        data_loading.PeriodSweepFetcher  -- injected type or call
 
     Test cases:
         TC-BAC-001  abstract bases cannot be instantiated

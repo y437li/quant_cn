@@ -31,9 +31,10 @@ class PipelineReport:
             (none)
 
     Used by:
-        pipeline.LocalRunner.run         -- return value
-        pipeline.DownloadPipeline.run    -- return value
-        cli.QuantCnCli                   -- prints the summary table
+        pipeline.LocalRunner.run       -- return value
+        pipeline.DownloadPipeline.run  -- return value
+        cli.QuantCnCli                 -- prints the summary table
+        pipeline.BaseRunner            -- injected type or call
 
     Test cases:
         TC-LR-001  steps run in order and the report lists each
@@ -90,8 +91,8 @@ class BaseRunner(ABC):
             TypeError  -- when instantiated directly
 
     Used by:
-        pipeline.LocalRunner             -- subclass
-        pipeline.DownloadPipeline        -- injected runner type
+        pipeline.LocalRunner       -- subclass
+        pipeline.DownloadPipeline  -- injected runner type
 
     Test cases:
         TC-LR-001  steps run in order and the report lists each
@@ -131,8 +132,7 @@ class LocalRunner(BaseRunner):
             (none at construction)
 
     Used by:
-        pipeline.DownloadPipeline        -- runs fetch steps
-        cli.QuantCnCli                   -- composition root
+        cli.QuantCnCli  -- composition root
 
     Test cases:
         TC-LR-001  steps run in order and the report lists each

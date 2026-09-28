@@ -24,6 +24,9 @@ class BaseRunLog(ABC):
         core.BaseFetcher.run             -- one event per key
         pipeline.LocalRunner             -- run start/finish, blocked steps
         data_loading.FetcherFactory      -- injected type
+        data_loading.DateSweepFetcher    -- injected type or call
+        data_loading.EnumFetcher         -- injected type or call
+        data_loading.PeriodSweepFetcher  -- injected type or call
 
     Test cases:
         TC-RL-001  start/event/finish rows are queryable

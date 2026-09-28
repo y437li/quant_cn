@@ -4,7 +4,7 @@ import pytest
 
 from quant_cn.core.config import Config
 from quant_cn.core.exceptions import LakeError
-from tests.support import Build, MiniLake
+from tests.support import MiniLake, Sample
 
 
 # TC-LQ-001
@@ -22,6 +22,8 @@ def test_tc_lq_002_bad_sql(lake: MiniLake) -> None:
 # TC-LQ-003
 def test_tc_lq_003_has_view(lake: MiniLake, config: Config) -> None:
     assert not lake.query.has_view("raw.trade_cal")
-    lake.writer.write_raw(config.get_dataset("trade_cal"), "all", Build.trade_cal(["20260828"]))
+    lake.writer.write_raw(
+        config.get_dataset("trade_cal"), "all", Sample.build_trade_cal(["20260828"])
+    )
     lake.catalog.refresh_views()
     assert lake.query.has_view("raw.trade_cal")

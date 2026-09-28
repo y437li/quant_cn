@@ -5,7 +5,7 @@ import pytest
 from quant_cn.core.config import Config
 from quant_cn.core.exceptions import LakeError
 from quant_cn.lake.trading_calendar import TradingCalendar
-from tests.support import Build, MiniLake
+from tests.support import MiniLake, Sample
 
 OPEN = ["20260827", "20260828", "20260831"]
 CLOSED = ["20260829", "20260830"]
@@ -13,7 +13,9 @@ CLOSED = ["20260829", "20260830"]
 
 @pytest.fixture
 def calendar(lake: MiniLake, config: Config) -> TradingCalendar:
-    lake.writer.write_raw(config.get_dataset("trade_cal"), "all", Build.trade_cal(OPEN, CLOSED))
+    lake.writer.write_raw(
+        config.get_dataset("trade_cal"), "all", Sample.build_trade_cal(OPEN, CLOSED)
+    )
     lake.catalog.refresh_views()
     return TradingCalendar(lake.query)
 

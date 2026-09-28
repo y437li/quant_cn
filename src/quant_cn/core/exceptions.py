@@ -17,8 +17,12 @@ class QuantCnError(Exception):
             (none)
 
     Used by:
-        pipeline.LocalRunner.run         -- catches any project error to close the run as failed
-        cli.QuantCnCli.run              -- turns project errors into exit code 1
+        pipeline.LocalRunner.run  -- catches any project error to close the run as failed
+        cli.QuantCnCli.run        -- turns project errors into exit code 1
+        core.ConfigError          -- subclass
+        core.DataSourceError      -- subclass
+        core.LakeError            -- subclass
+        core.SchemaError          -- subclass
 
     Test cases:
         TC-QCE-001  every project exception is a QuantCnError subclass
@@ -39,11 +43,11 @@ class ConfigError(QuantCnError):
             (none)
 
     Used by:
-        core.Config.load                 -- bad YAML, unsafe lake root
-        core.Config.get_dataset              -- unknown dataset name
-        data_loading.TushareClient       -- missing token
+        core.Config.load                   -- bad YAML, unsafe lake root
+        core.Config.get_dataset            -- unknown dataset name
+        data_loading.TushareClient         -- missing token
         data_loading.FetcherFactory.build  -- unknown sweep kind
-        pipeline.DownloadPipeline.run    -- unknown dataset requested
+        pipeline.DownloadPipeline.run      -- unknown dataset requested
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError
@@ -64,8 +68,8 @@ class SchemaError(QuantCnError):
             (none)
 
     Used by:
-        core.Schema.normalize               -- value not convertible to the declared dtype
-        core.Schema.validate             -- column set, dtype or primary-key violation
+        core.Schema.normalize  -- value not convertible to the declared dtype
+        core.Schema.validate   -- column set, dtype or primary-key violation
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError
@@ -86,8 +90,9 @@ class DataSourceError(QuantCnError):
             (none)
 
     Used by:
-        data_loading.TushareClient.query -- non-zero code after retries, network failure
-        core.BaseFetcher.run             -- records the failing key, then re-raises
+        data_loading.TushareClient.query  -- non-zero code after retries, network failure
+        core.BaseFetcher.run              -- records the failing key, then re-raises
+        core.PermissionDeniedError        -- subclass
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError
@@ -108,8 +113,8 @@ class PermissionDeniedError(DataSourceError):
             (none)
 
     Used by:
-        data_loading.TushareClient.query -- vendor message matches a permission marker
-        pipeline.LocalRunner.run         -- marks the step blocked and continues with the next
+        data_loading.TushareClient.query  -- vendor message matches a permission marker
+        pipeline.LocalRunner.run          -- marks the step blocked and continues with the next
 
     Test cases:
         TC-QCE-001  subclass of DataSourceError and QuantCnError
@@ -130,10 +135,15 @@ class LakeError(QuantCnError):
             (none)
 
     Used by:
-        lake.ParquetWriter               -- atomic write failed
-        lake.TradingCalendar             -- trade_cal not downloaded yet
-        lake.LakeQuery.sql               -- DuckDB query error
-        cli.QuantCnCli                   -- backup target missing
+        lake.ParquetWriter         -- atomic write failed
+        lake.TradingCalendar       -- trade_cal not downloaded yet
+        lake.LakeQuery.sql         -- DuckDB query error
+        cli.QuantCnCli             -- backup target missing
+        lake.Compactor             -- injected type or call
+        pipeline.DownloadPipeline  -- injected type or call
+        lake.FetchLog              -- injected type or call
+        lake.LakeCatalog           -- injected type or call
+        lake.RunLog                -- injected type or call
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError

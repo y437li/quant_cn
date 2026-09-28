@@ -32,7 +32,7 @@ class FetchStep(BaseStep):
             (none at construction)
 
     Used by:
-        pipeline.DownloadPipeline.run    -- one step per dataset
+        pipeline.DownloadPipeline.run  -- one step per dataset
 
     Test cases:
         TC-DP-002  crash on a key, rerun fetches only the remaining keys
@@ -123,7 +123,7 @@ class DownloadPipeline:
             (none at construction)
 
     Used by:
-        cli.QuantCnCli                   -- `download` command
+        cli.QuantCnCli  -- `download` command
 
     Test cases:
         TC-DP-001  dry run lists keys and pending counts without API calls

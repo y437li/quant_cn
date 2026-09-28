@@ -17,13 +17,13 @@ def schema() -> Schema:
     )
 
 
-def frame(**cols: list[object]) -> pd.DataFrame:
+def build_frame(**cols: list[object]) -> pd.DataFrame:
     return pd.DataFrame(cols)
 
 
 # TC-S-001
 def test_tc_s_001_coerce_dtypes(schema: Schema) -> None:
-    out = schema.normalize(frame(ts_code=["A"], trade_date=["20260828"], close=["10.5"]))
+    out = schema.normalize(build_frame(ts_code=["A"], trade_date=["20260828"], close=["10.5"]))
     assert pd.api.types.is_string_dtype(out["ts_code"])
     assert out["close"].dtype == "float64"
     assert out["close"].iloc[0] == pytest.approx(10.5)
@@ -31,25 +31,25 @@ def test_tc_s_001_coerce_dtypes(schema: Schema) -> None:
 
 # TC-S-002
 def test_tc_s_002_strict_columns(schema: Schema) -> None:
-    out = schema.normalize(frame(trade_date=["20260828"], ts_code=["A"]), strict=True)
+    out = schema.normalize(build_frame(trade_date=["20260828"], ts_code=["A"]), strict=True)
     assert list(out.columns) == ["ts_code", "trade_date", "close"]
     assert out["close"].isna().all()
     with pytest.raises(SchemaError):
         schema.normalize(
-            frame(ts_code=["A"], trade_date=["x"], close=[1.0], extra=[1]), strict=True
+            build_frame(ts_code=["A"], trade_date=["x"], close=[1.0], extra=[1]), strict=True
         )
 
 
 # TC-S-003
 def test_tc_s_003_not_numeric(schema: Schema) -> None:
     with pytest.raises(SchemaError):
-        schema.normalize(frame(ts_code=["A"], trade_date=["x"], close=["abc"]))
+        schema.normalize(build_frame(ts_code=["A"], trade_date=["x"], close=["abc"]))
 
 
 # TC-S-004
 def test_tc_s_004_validate(schema: Schema) -> None:
     good = schema.normalize(
-        frame(ts_code=["A", "B"], trade_date=["1", "1"], close=[1.0, 2.0]), strict=True
+        build_frame(ts_code=["A", "B"], trade_date=["1", "1"], close=[1.0, 2.0]), strict=True
     )
     schema.validate(good)
     with pytest.raises(SchemaError):

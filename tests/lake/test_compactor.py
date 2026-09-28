@@ -7,7 +7,7 @@ import pytest
 
 from quant_cn.core.config import Config
 from quant_cn.lake.compactor import Compactor
-from tests.support import Build, MiniLake
+from tests.support import MiniLake, Sample
 
 
 @pytest.fixture
@@ -20,7 +20,7 @@ def write_days(lake: MiniLake, config: Config, days: list[str]) -> None:
         lake.writer.write_raw(
             config.get_dataset("stk_limit"),
             day,
-            Build.bars(day).rename(columns={"close": "up_limit"}).assign(down_limit=1.0),
+            Sample.build_bars(day).rename(columns={"close": "up_limit"}).assign(down_limit=1.0),
         )
 
 
@@ -51,7 +51,7 @@ def test_tc_co_002_duplicates_dropped(lake: MiniLake, config: Config, compactor:
 # TC-CO-003
 def test_tc_co_003_single_file(lake: MiniLake, config: Config, compactor: Compactor) -> None:
     lake.writer.write_raw(
-        config.get_dataset("trade_cal"), "all", Build.trade_cal(["20260828"], ["20260829"])
+        config.get_dataset("trade_cal"), "all", Sample.build_trade_cal(["20260828"], ["20260829"])
     )
     compactor.rebuild(config.get_dataset("trade_cal"))
     assert (lake.lake_root / "curated" / "reference" / "trade_cal.parquet").exists()

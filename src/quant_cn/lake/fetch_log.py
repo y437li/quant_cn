@@ -30,9 +30,7 @@ class FetchLog(BaseFetchLog):
             LakeError  -- table cannot be created
 
     Used by:
-        core.BaseFetcher.run             -- via BaseFetchLog
-        pipeline.DownloadPipeline.run    -- pending counts in dry runs
-        cli.QuantCnCli                   -- composition root; restore on rebuild
+        cli.QuantCnCli  -- composition root; restore on rebuild
 
     Test cases:
         TC-FL-001  mark_done then is_done round trip

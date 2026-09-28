@@ -11,7 +11,7 @@ from quant_cn.data_loading.fetchers import (
     SingleCallFetcher,
 )
 from quant_cn.lake.trading_calendar import TradingCalendar
-from tests.support import Build, FakeTushareClient, MiniLake
+from tests.support import FakeTushareClient, MiniLake, Sample
 
 
 @pytest.fixture
@@ -52,7 +52,7 @@ def test_tc_dsf_001_trade_date_keys(
     lake.writer.write_raw(
         config.get_dataset("trade_cal"),
         "all",
-        Build.trade_cal(["20260827", "20260828"], ["20260829"]),
+        Sample.build_trade_cal(["20260827", "20260828"], ["20260829"]),
     )
     lake.catalog.refresh_views()
     f = DateSweepFetcher(
@@ -64,7 +64,7 @@ def test_tc_dsf_001_trade_date_keys(
 
 # TC-DSF-002
 def test_tc_dsf_002_ann_date_keys(lake: MiniLake, deps: tuple[object, ...]) -> None:
-    spec = Build.spec(
+    spec = Sample.build_spec(
         sweep={"kind": "ann_date"},
         fields=["ts_code", "ann_date"],
         text_fields=["ts_code", "ann_date"],

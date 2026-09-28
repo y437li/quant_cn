@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from quant_cn.core.config import Config
 from quant_cn.lake.lake_catalog import ZONES, LakeCatalog
-from tests.support import Build, MiniLake
+from tests.support import MiniLake, Sample
 
 
 def write_trade_cal(lake: MiniLake, config: Config) -> None:
     spec = config.get_dataset("trade_cal")
-    lake.writer.write_raw(spec, "all", Build.trade_cal(["20260827", "20260828"]))
+    lake.writer.write_raw(spec, "all", Sample.build_trade_cal(["20260827", "20260828"]))
 
 
 # TC-LC-001
@@ -15,7 +15,7 @@ def test_tc_lc_001_views_return_rows(lake: MiniLake, config: Config) -> None:
     write_trade_cal(lake, config)
     spec = config.get_dataset("trade_cal")
     lake.writer.write_curated(
-        spec, None, spec.build_schema().normalize(Build.trade_cal(["20260828"]), strict=True)
+        spec, None, spec.build_schema().normalize(Sample.build_trade_cal(["20260828"]), strict=True)
     )
     lake.catalog.refresh_views()
     assert lake.query.sql("SELECT count(*) n FROM raw.trade_cal")["n"].iloc[0] == 2

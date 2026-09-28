@@ -24,9 +24,9 @@ class BaseStep(ABC):
             TypeError  -- when instantiated directly
 
     Used by:
-        pipeline.FetchStep               -- production subclass
-        pipeline.BaseRunner.run          -- step type
-        pipeline.LocalRunner.run         -- calls list_units then run
+        pipeline.FetchStep        -- production subclass
+        pipeline.BaseRunner.run   -- step type
+        pipeline.LocalRunner.run  -- calls list_units then run
 
     Test cases:
         TC-BAC-001  abstract bases cannot be instantiated

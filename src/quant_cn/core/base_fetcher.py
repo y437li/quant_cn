@@ -44,13 +44,12 @@ class BaseFetcher(ABC):
             TypeError  -- when instantiated directly
 
     Used by:
-        data_loading.SingleCallFetcher   -- subclass
-        data_loading.EnumFetcher         -- subclass
-        data_loading.DateSweepFetcher    -- subclass
-        data_loading.PeriodSweepFetcher  -- subclass
+        data_loading.SingleCallFetcher     -- subclass
+        data_loading.EnumFetcher           -- subclass
+        data_loading.DateSweepFetcher      -- subclass
+        data_loading.PeriodSweepFetcher    -- subclass
         data_loading.FetcherFactory.build  -- return type
-        pipeline.FetchStep               -- runs one fetcher per dataset
-        pipeline.DownloadPipeline.run    -- dry-run keys
+        pipeline.FetchStep                 -- runs one fetcher per dataset
 
     Test cases:
         TC-BF-001  fetch run counts fetched/skipped/empty correctly

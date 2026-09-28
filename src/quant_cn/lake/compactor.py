@@ -38,7 +38,7 @@ class Compactor:
             (none at construction)
 
     Used by:
-        cli.QuantCnCli                   -- `compact` and `rebuild` commands
+        cli.QuantCnCli  -- `compact` and `rebuild` commands
 
     Test cases:
         TC-CO-001  daily raw files compact into one partition per year, sorted, typed

@@ -35,8 +35,7 @@ class TushareClient(BaseApiClient):
             (none at construction; an empty token fails at query time so dry runs need no token)
 
     Used by:
-        data_loading.FetcherFactory      -- injected into every fetcher as BaseApiClient
-        cli.QuantCnCli                   -- composition root
+        cli.QuantCnCli  -- composition root
 
     Test cases:
         TC-TC-001  pages until a short page and concatenates pages in order

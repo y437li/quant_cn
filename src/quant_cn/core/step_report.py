@@ -30,11 +30,13 @@ class StepReport:
             (none)
 
     Used by:
-        core.BaseFetcher.run             -- returned per dataset run
-        core.BaseStep.run                -- return type
-        lake.Compactor.rebuild           -- returned per dataset compaction
-        pipeline.LocalRunner.run         -- collected into PipelineReport
-        pipeline.DownloadPipeline.run    -- dry-run reports
+        core.BaseFetcher.run           -- returned per dataset run
+        core.BaseStep.run              -- return type
+        lake.Compactor.rebuild         -- returned per dataset compaction
+        pipeline.LocalRunner.run       -- collected into PipelineReport
+        pipeline.DownloadPipeline.run  -- dry-run reports
+        pipeline.FetchStep             -- injected type or call
+        pipeline.PipelineReport        -- injected type or call
 
     Test cases:
         TC-BF-001  fetch run counts fetched/skipped/empty correctly

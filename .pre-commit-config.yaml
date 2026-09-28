@@ -1,0 +1,37 @@
+# Runs the same gates as `make lint` on every commit (CODING_STANDARD §4.1). Install: `make hooks`.
+# Tools run through uv so versions come from uv.lock; the venv lives off the exFAT volume.
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-format
+        name: ruff format
+        entry: env UV_PROJECT_ENVIRONMENT=${HOME}/.venvs/quant_cn uv run ruff format --check
+        language: system
+        types: [python]
+      - id: ruff-check
+        name: ruff check
+        entry: env UV_PROJECT_ENVIRONMENT=${HOME}/.venvs/quant_cn uv run ruff check
+        language: system
+        types: [python]
+      - id: mypy
+        name: mypy --strict
+        entry: env UV_PROJECT_ENVIRONMENT=${HOME}/.venvs/quant_cn uv run mypy
+        language: system
+        pass_filenames: false
+        types: [python]
+      - id: lint-imports
+        name: import layers
+        entry: env UV_PROJECT_ENVIRONMENT=${HOME}/.venvs/quant_cn uv run lint-imports
+        language: system
+        pass_filenames: false
+        types: [python]
+      - id: lint-contracts
+        name: lint_contracts (contracts, index, size, names)
+        entry: env UV_PROJECT_ENVIRONMENT=${HOME}/.venvs/quant_cn uv run python scripts/lint_contracts.py
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: check-added-large-files
+        name: no files over 500 kB
+        entry: env UV_PROJECT_ENVIRONMENT=${HOME}/.venvs/quant_cn uv run python -c "import sys,os; big=[f for f in sys.argv[1:] if os.path.getsize(f)>500_000]; print(*big); sys.exit(1 if big else 0)"
+        language: system

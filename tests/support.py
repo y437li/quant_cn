@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import subprocess
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -49,20 +50,20 @@ class FakeTushareClient(BaseApiClient):
     def add(self, api: str, key: str, df: pd.DataFrame) -> None:
         self.frames[(api, key)] = df
 
-    def fail(self, api: str, key: str, exc: Exception) -> None:
+    def add_failure(self, api: str, key: str, exc: Exception) -> None:
         self.errors[(api, key)] = exc
 
     def query(
         self, api_name: str, params: Mapping[str, str], fields: Sequence[str]
     ) -> pd.DataFrame:
         self.calls.append((api_name, dict(params)))
-        key = self._key(params)
+        key = self._get_key(params)
         if (api_name, key) in self.errors:
             raise self.errors.pop((api_name, key))
         return self.frames.get((api_name, key), pd.DataFrame(columns=list(fields)))
 
     @staticmethod
-    def _key(params: Mapping[str, str]) -> str:
+    def _get_key(params: Mapping[str, str]) -> str:
         for name in ("trade_date", "period", "ann_date", "list_status", "ts_code"):
             if name in params:
                 return params[name]
@@ -80,11 +81,11 @@ class MiniLake:
     clock: FakeClock
 
 
-class Build:
+class Sample:
     """Small deterministic frames and specs built in code."""
 
     @staticmethod
-    def spec(**overrides: object) -> DatasetSpec:
+    def build_spec(**overrides: object) -> DatasetSpec:
         """A small daily-style spec for unit tests."""
         base: dict[str, object] = {
             "name": "bars",
@@ -100,7 +101,9 @@ class Build:
         return DatasetSpec(**base)  # type: ignore[arg-type]
 
     @staticmethod
-    def bars(trade_date: str, codes: Sequence[str] = ("000001.SZ", "600000.SH")) -> pd.DataFrame:
+    def build_bars(
+        trade_date: str, codes: Sequence[str] = ("000001.SZ", "600000.SH")
+    ) -> pd.DataFrame:
         """Daily-style rows for one day."""
         return pd.DataFrame(
             {
@@ -111,9 +114,23 @@ class Build:
         )
 
     @staticmethod
-    def trade_cal(open_days: Sequence[str], closed_days: Sequence[str] = ()) -> pd.DataFrame:
+    def build_trade_cal(open_days: Sequence[str], closed_days: Sequence[str] = ()) -> pd.DataFrame:
         """trade_cal rows: given open and closed days."""
         rows = [(d, 1, "") for d in open_days] + [(d, 0, "") for d in closed_days]
         return pd.DataFrame(rows, columns=["cal_date", "is_open", "pretrade_date"]).sort_values(
             "cal_date"
         )
+
+
+class SampleRepo:
+    """A throwaway git working tree in tmp_path with the given files (for core.docs checkers)."""
+
+    @staticmethod
+    def build_repo(root: Path, files: dict[str, str]) -> Path:
+        root.mkdir(parents=True, exist_ok=True)
+        for rel, text in files.items():
+            path = root / rel
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(text, encoding="utf-8")
+        subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+        return root

@@ -32,9 +32,7 @@ class RunLog(BaseRunLog):
             LakeError  -- table cannot be created
 
     Used by:
-        core.BaseFetcher.run             -- via BaseRunLog
-        pipeline.LocalRunner             -- run start/finish, blocked events
-        cli.QuantCnCli                   -- composition root
+        cli.QuantCnCli  -- composition root
 
     Test cases:
         TC-RL-001  start/event/finish rows are queryable

@@ -25,9 +25,9 @@ class LakeQuery:
             (none at construction)
 
     Used by:
-        lake.TradingCalendar             -- reads raw.trade_cal
-        lake.Compactor.rebuild           -- reads raw files through DuckDB
-        cli.QuantCnCli                   -- composition root
+        lake.TradingCalendar    -- reads raw.trade_cal
+        lake.Compactor.rebuild  -- reads raw files through DuckDB
+        cli.QuantCnCli          -- composition root
 
     Test cases:
         TC-LQ-001  sql returns a DataFrame with parameters bound

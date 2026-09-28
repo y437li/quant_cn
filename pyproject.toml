@@ -46,7 +46,7 @@ known-first-party = ["quant_cn", "tests"]
 strict = true
 python_version = "3.12"
 mypy_path = "src"
-packages = ["quant_cn"]
+files = ["src/quant_cn", "scripts"]
 plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
