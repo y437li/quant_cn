@@ -60,7 +60,7 @@ class QuantCnCli:
         self._config = config
         self._console = console or Console()
 
-    def main(self, argv: Sequence[str] | None = None) -> int:
+    def run(self, argv: Sequence[str] | None = None) -> int:
         """
         Purpose:
             Parse arguments and dispatch to a command.
@@ -73,7 +73,7 @@ class QuantCnCli:
             Raises:
                 SystemExit  -- from argparse on usage errors (code 2)
         """
-        args = self._parser().parse_args(argv)
+        args = self._build_parser().parse_args(argv)
         logging.basicConfig(
             level=logging.DEBUG if args.verbose else logging.INFO,
             format="%(message)s",
@@ -81,13 +81,13 @@ class QuantCnCli:
         )
         try:
             config = self._config or Config.load()
-            handler = getattr(self, f"_cmd_{args.command}")
+            handler = getattr(self, f"_run_{args.command}")
             return int(handler(config, args))
         except QuantCnError as exc:
             self._console.print(f"[red]error:[/red] {exc}")
             return 1
 
-    def _parser(self) -> argparse.ArgumentParser:
+    def _build_parser(self) -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser(prog="quant_cn")
         parser.add_argument("-v", "--verbose", action="store_true")
         sub = parser.add_subparsers(dest="command", required=True)
@@ -105,15 +105,15 @@ class QuantCnCli:
         sub.add_parser("backup", help="rsync raw/ and the fetch log to lake.backup_target")
         return parser
 
-    def _cmd_doctor(self, config: Config, _args: argparse.Namespace) -> int:
+    def _run_doctor(self, config: Config, _args: argparse.Namespace) -> int:
         root = config.lake.root
         exists = root.exists()
         free_gb = shutil.disk_usage(root if exists else root.parent).free / 1e9
         rows = [
             ("lake root", str(root)),
-            ("exists / writable", f"{exists} / {exists and self._writable(root)}"),
+            ("exists / writable", f"{exists} / {exists and self._is_writable(root)}"),
             ("free space", f"{free_gb:.0f} GB" + ("" if free_gb >= MIN_FREE_GB else "  (low)")),
-            ("inside a git tree", str(self._in_git(root))),
+            ("inside a git tree", str(self._is_in_git(root))),
             ("TUSHARE_TOKEN", "set" if config.tushare.token else "MISSING"),
             ("backup target", str(config.lake.backup_target or "not set")),
         ]
@@ -121,15 +121,17 @@ class QuantCnCli:
         for row in rows:
             table.add_row(*row)
         self._console.print(table)
-        ok = exists and bool(config.tushare.token) and not self._in_git(root)
+        ok = exists and bool(config.tushare.token) and not self._is_in_git(root)
         return 0 if ok else 1
 
-    def _cmd_download(self, config: Config, args: argparse.Namespace) -> int:
+    def _run_download(self, config: Config, args: argparse.Namespace) -> int:
         catalog = LakeCatalog(config.lake.root, config.datasets)
         try:
-            pipeline = self._download_pipeline(config, catalog, show_progress=not args.no_progress)
+            pipeline = self._build_download_pipeline(
+                config, catalog, show_progress=not args.no_progress
+            )
             report = pipeline.run(
-                datasets=self._split(args.datasets),
+                datasets=self._parse_list(args.datasets),
                 start=args.start,
                 end=args.end,
                 dry_run=args.dry_run,
@@ -137,37 +139,39 @@ class QuantCnCli:
             )
         finally:
             catalog.close()
-        self._print_report(report)
+        self._render_report(report)
         return 0
 
-    def _cmd_compact(self, config: Config, args: argparse.Namespace) -> int:
+    def _run_compact(self, config: Config, args: argparse.Namespace) -> int:
         clock = Clock()
         catalog = LakeCatalog(config.lake.root, config.datasets)
         try:
             query = LakeQuery(catalog)
             compactor = Compactor(catalog, query, ParquetWriter(config.lake.root), clock)
-            names = self._split(args.datasets) or list(config.datasets)
+            names = self._parse_list(args.datasets) or list(config.datasets)
             report = PipelineReport(run_id="compact", status="ok")
-            report.steps = [compactor.compact(config.dataset(n)) for n in names]
+            report.steps = [compactor.rebuild(config.get_dataset(n)) for n in names]
             catalog.write_indexes()
         finally:
             catalog.close()
-        self._print_report(report)
+        self._render_report(report)
         return 0
 
-    def _cmd_rebuild(self, config: Config, _args: argparse.Namespace) -> int:
+    def _run_rebuild(self, config: Config, _args: argparse.Namespace) -> int:
         catalog = LakeCatalog(config.lake.root, config.datasets)
         try:
             catalog.rebuild()
-            restored = FetchLog(catalog).restore()
+            restored = FetchLog(catalog).rebuild_from_mirror()
             RunLog(catalog, Clock())
             catalog.write_indexes()
         finally:
             catalog.close()
-        self._console.print(f"catalog rebuilt at {catalog.db_path}; fetch_log rows: {restored}")
+        self._console.print(
+            f"catalog rebuilt at {catalog.catalog_path}; fetch_log rows: {restored}"
+        )
         return 0
 
-    def _cmd_backup(self, config: Config, _args: argparse.Namespace) -> int:
+    def _run_backup(self, config: Config, _args: argparse.Namespace) -> int:
         target = config.lake.backup_target
         if target is None:
             raise LakeError("lake.backup_target is not set in config/local.yaml")
@@ -177,7 +181,7 @@ class QuantCnCli:
         self._console.print(" ".join(cmd))
         return subprocess.run(cmd, check=False).returncode
 
-    def _download_pipeline(
+    def _build_download_pipeline(
         self, config: Config, catalog: LakeCatalog, show_progress: bool
     ) -> DownloadPipeline:
         clock, codec = Clock(), DateCodec()
@@ -190,21 +194,21 @@ class QuantCnCli:
         runner = LocalRunner(run_log, show_progress=show_progress)
         return DownloadPipeline(config, factory, runner, catalog, fetch_log, clock, codec)
 
-    def _print_report(self, report: PipelineReport) -> None:
+    def _render_report(self, report: PipelineReport) -> None:
         frame = report.to_frame()
         table = Table(*frame.columns, title=f"run {report.run_id}: {report.status}")
         for row in frame.itertuples(index=False):
             table.add_row(*(str(v) for v in row))
         self._console.print(table)
-        if report.blocked():
-            self._console.print(f"[yellow]blocked (permissions):[/yellow] {report.blocked()}")
+        if report.list_blocked():
+            self._console.print(f"[yellow]blocked (permissions):[/yellow] {report.list_blocked()}")
 
     @staticmethod
-    def _split(value: str | None) -> list[str] | None:
+    def _parse_list(value: str | None) -> list[str] | None:
         return [v.strip() for v in value.split(",") if v.strip()] if value else None
 
     @staticmethod
-    def _writable(path: Path) -> bool:
+    def _is_writable(path: Path) -> bool:
         probe = path / ".doctor_probe"
         try:
             probe.write_text("ok")
@@ -214,9 +218,9 @@ class QuantCnCli:
         return True
 
     @staticmethod
-    def _in_git(path: Path) -> bool:
+    def _is_in_git(path: Path) -> bool:
         return any((p / ".git").exists() for p in (path, *path.parents))
 
 
 if __name__ == "__main__":
-    sys.exit(QuantCnCli().main())
+    sys.exit(QuantCnCli().run())

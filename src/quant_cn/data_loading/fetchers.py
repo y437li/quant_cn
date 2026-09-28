@@ -35,7 +35,7 @@ class SingleCallFetcher(BaseFetcher):
         TC-SCF-001  single key "all"; range params passed when configured
     """
 
-    def keys(self, start: str, end: str) -> list[str]:
+    def list_keys(self, start: str, end: str) -> list[str]:
         """
         Purpose:
             The single key.
@@ -50,7 +50,7 @@ class SingleCallFetcher(BaseFetcher):
         """
         return ["all"]
 
-    def params(self, key: str, start: str, end: str) -> dict[str, str]:
+    def build_params(self, key: str, start: str, end: str) -> dict[str, str]:
         """
         Purpose:
             Constant parameters, plus the run's date range when configured.
@@ -104,7 +104,7 @@ class EnumFetcher(BaseFetcher):
         super().__init__(spec, client, store, fetch_log, run_log, clock)
         self._values = list(values)
 
-    def keys(self, start: str, end: str) -> list[str]:
+    def list_keys(self, start: str, end: str) -> list[str]:
         """
         Purpose:
             The enumerated values.
@@ -119,7 +119,7 @@ class EnumFetcher(BaseFetcher):
         """
         return list(self._values)
 
-    def params(self, key: str, start: str, end: str) -> dict[str, str]:
+    def build_params(self, key: str, start: str, end: str) -> dict[str, str]:
         """
         Purpose:
             Key parameter plus constants and optional date range.
@@ -178,7 +178,7 @@ class DateSweepFetcher(BaseFetcher):
         self._calendar = calendar
         self._codec = codec
 
-    def keys(self, start: str, end: str) -> list[str]:
+    def list_keys(self, start: str, end: str) -> list[str]:
         """
         Purpose:
             Trading days (trade_date) or weekdays (ann_date) in [start, end].
@@ -193,10 +193,10 @@ class DateSweepFetcher(BaseFetcher):
                 ValueError  -- malformed dates
         """
         if self.spec.sweep.kind == "trade_date":
-            return self._calendar.sessions(start, end)
-        return self._codec.weekdays(start, end)
+            return self._calendar.list_sessions(start, end)
+        return self._codec.list_weekdays(start, end)
 
-    def params(self, key: str, start: str, end: str) -> dict[str, str]:
+    def build_params(self, key: str, start: str, end: str) -> dict[str, str]:
         """
         Purpose:
             {param: key} plus constants.
@@ -246,7 +246,7 @@ class PeriodSweepFetcher(BaseFetcher):
         super().__init__(spec, client, store, fetch_log, run_log, clock)
         self._codec = codec
 
-    def keys(self, start: str, end: str) -> list[str]:
+    def list_keys(self, start: str, end: str) -> list[str]:
         """
         Purpose:
             Quarter ends in [start, end].
@@ -259,9 +259,9 @@ class PeriodSweepFetcher(BaseFetcher):
             Raises:
                 ValueError  -- malformed dates
         """
-        return self._codec.quarter_ends(start, end)
+        return self._codec.list_quarter_ends(start, end)
 
-    def params(self, key: str, start: str, end: str) -> dict[str, str]:
+    def build_params(self, key: str, start: str, end: str) -> dict[str, str]:
         """
         Purpose:
             {"period": key} plus constants.

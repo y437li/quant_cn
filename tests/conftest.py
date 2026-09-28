@@ -44,7 +44,7 @@ def config(repo: Path, tmp_path: Path) -> Config:
 def lake(config: Config, clock: FakeClock) -> Iterator[MiniLake]:
     catalog = LakeCatalog(config.lake.root, config.datasets)
     mini = MiniLake(
-        root=config.lake.root,
+        lake_root=config.lake.root,
         catalog=catalog,
         writer=ParquetWriter(config.lake.root),
         fetch_log=FetchLog(catalog),

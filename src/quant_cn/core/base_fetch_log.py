@@ -16,7 +16,7 @@ class BaseFetchLog(ABC):
         Input:
             (subclass-specific constructor)
         Output:
-            instance with `done_keys`, `mark_done`, `flush`, and concrete `is_done`, `pending`
+            `read_done_keys`, `mark_done`, `save`; concrete `is_done`, `list_pending`
         Raises:
             TypeError  -- when instantiated directly
 
@@ -32,7 +32,7 @@ class BaseFetchLog(ABC):
     """
 
     @abstractmethod
-    def done_keys(self, dataset: str) -> set[str]:
+    def read_done_keys(self, dataset: str) -> set[str]:
         """
         Purpose:
             All keys recorded as done for a dataset.
@@ -65,7 +65,7 @@ class BaseFetchLog(ABC):
         """
 
     @abstractmethod
-    def flush(self) -> None:
+    def save(self) -> Path | None:
         """
         Purpose:
             Make recorded keys durable (e.g. write the parquet mirror).
@@ -74,7 +74,7 @@ class BaseFetchLog(ABC):
             Input:
                 (none)
             Output:
-                None
+                Path | None  -- file written, None if the store needs no file
             Raises:
                 LakeError  -- write failed
         """
@@ -93,9 +93,9 @@ class BaseFetchLog(ABC):
             Raises:
                 LakeError  -- storage unreadable
         """
-        return key in self.done_keys(dataset)
+        return key in self.read_done_keys(dataset)
 
-    def pending(self, dataset: str, keys: Sequence[str]) -> list[str]:
+    def list_pending(self, dataset: str, keys: Sequence[str]) -> list[str]:
         """
         Purpose:
             The subset of `keys` not yet done, in input order.
@@ -109,5 +109,5 @@ class BaseFetchLog(ABC):
             Raises:
                 LakeError  -- storage unreadable
         """
-        done = self.done_keys(dataset)
+        done = self.read_done_keys(dataset)
         return [k for k in keys if k not in done]

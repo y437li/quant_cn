@@ -6,16 +6,16 @@ from tests.support import Build, MiniLake
 
 
 def write_trade_cal(lake: MiniLake, config: Config) -> None:
-    spec = config.dataset("trade_cal")
+    spec = config.get_dataset("trade_cal")
     lake.writer.write_raw(spec, "all", Build.trade_cal(["20260827", "20260828"]))
 
 
 # TC-LC-001
 def test_tc_lc_001_views_return_rows(lake: MiniLake, config: Config) -> None:
     write_trade_cal(lake, config)
-    spec = config.dataset("trade_cal")
+    spec = config.get_dataset("trade_cal")
     lake.writer.write_curated(
-        spec, None, spec.frame_schema().coerce(Build.trade_cal(["20260828"]), strict=True)
+        spec, None, spec.build_schema().normalize(Build.trade_cal(["20260828"]), strict=True)
     )
     lake.catalog.refresh_views()
     assert lake.query.sql("SELECT count(*) n FROM raw.trade_cal")["n"].iloc[0] == 2
@@ -37,7 +37,7 @@ def test_tc_lc_003_rebuild(lake: MiniLake, config: Config) -> None:
     write_trade_cal(lake, config)
     lake.catalog.refresh_views()
     lake.catalog.close()
-    lake.catalog.db_path.unlink()
+    lake.catalog.catalog_path.unlink()
     fresh = LakeCatalog(config.lake.root, config.datasets)
     fresh.rebuild()
     assert fresh.connection.execute("SELECT count(*) FROM raw.trade_cal").fetchone() == (2,)
@@ -51,5 +51,5 @@ def test_tc_lc_003_rebuild(lake: MiniLake, config: Config) -> None:
 def test_tc_lc_004_indexes(lake: MiniLake, config: Config) -> None:
     write_trade_cal(lake, config)
     written = lake.catalog.write_indexes()
-    assert {p.parent.name for p in written} == {lake.root.name, *ZONES}
-    assert "trade_cal" in (lake.root / "raw" / "INDEX.md").read_text()
+    assert {p.parent.name for p in written} == {lake.lake_root.name, *ZONES}
+    assert "trade_cal" in (lake.lake_root / "raw" / "INDEX.md").read_text()

@@ -19,13 +19,13 @@ class FetchLog(BaseFetchLog):
     """
     Purpose:
         Record finished (dataset, key) pairs in `meta.fetch_log`, mirror them to
-        `meta/fetch_log.parquet` on flush, and restore the table after the DuckDB file is lost.
+        `meta/fetch_log.parquet` on save, and rebuild the table after the DuckDB file is lost.
 
     Contract:
         Input:
             catalog: LakeCatalog  -- provides the connection and raw file listing
         Output:
-            instance; BaseFetchLog API plus `restore`, `mirror_path`
+            instance; BaseFetchLog API plus `rebuild_from_mirror`, `mirror_path`
         Raises:
             LakeError  -- table cannot be created
 
@@ -56,13 +56,13 @@ class FetchLog(BaseFetchLog):
             Input:
                 (none)
             Output:
-                Path  -- <root>/meta/fetch_log.parquet
+                Path  -- <lake_root>/meta/fetch_log.parquet
             Raises:
                 (none)
         """
-        return self._catalog.root / "meta" / "fetch_log.parquet"
+        return self._catalog.lake_root / "meta" / "fetch_log.parquet"
 
-    def done_keys(self, dataset: str) -> set[str]:
+    def read_done_keys(self, dataset: str) -> set[str]:
         """
         Purpose:
             Keys recorded for `dataset`.
@@ -97,7 +97,7 @@ class FetchLog(BaseFetchLog):
             [dataset, key, n_rows, str(path) if path else None],
         )
 
-    def flush(self) -> None:
+    def save(self) -> Path:
         """
         Purpose:
             Atomically rewrite `meta/fetch_log.parquet` from the table.
@@ -106,7 +106,7 @@ class FetchLog(BaseFetchLog):
             Input:
                 (none)
             Output:
-                None
+                Path  -- the mirror file
             Raises:
                 LakeError  -- write failed
         """
@@ -119,8 +119,9 @@ class FetchLog(BaseFetchLog):
             os.replace(tmp, self.mirror_path)
         except OSError as exc:
             raise LakeError(f"cannot replace {self.mirror_path}: {exc}") from exc
+        return self.mirror_path
 
-    def restore(self) -> int:
+    def rebuild_from_mirror(self) -> int:
         """
         Purpose:
             Rebuild the table from the parquet mirror, then add raw files the mirror does not know.
@@ -139,13 +140,13 @@ class FetchLog(BaseFetchLog):
             src = str(self.mirror_path).replace("'", "''")
             self._query(f"INSERT INTO {_TABLE} SELECT * FROM read_parquet('{src}')")
         for spec in self._catalog.datasets.values():
-            done = self.done_keys(spec.name)
-            for path in self._catalog.raw_files(spec):
+            done = self.read_done_keys(spec.name)
+            for path in self._catalog.list_raw_files(spec):
                 key = path.stem.split("=", 1)[-1]
                 if key not in done:
                     n_rows = pq.ParquetFile(path).metadata.num_rows
                     self.mark_done(spec.name, key, n_rows, path)
-        self.flush()
+        self.save()
         count = self._query(f"SELECT count(*) FROM {_TABLE}")[0][0]
         return int(str(count))
 

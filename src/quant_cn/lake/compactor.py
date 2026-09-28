@@ -56,7 +56,7 @@ class Compactor:
         self._store = store
         self._clock = clock
 
-    def compact(self, spec: DatasetSpec, years: set[int] | None = None) -> StepReport:
+    def rebuild(self, spec: DatasetSpec, years: set[int] | None = None) -> StepReport:
         """
         Purpose:
             Replace the curated partitions of `spec` (all years, or only `years`).
@@ -82,14 +82,14 @@ class Compactor:
         partitions: dict[str, int] = {}
         column = spec.curated.partition_by
         if column is None:
-            df = self._prepare(spec, self._query.sql(f"SELECT * FROM {view}"), report)
+            df = self._normalize_frame(spec, self._query.sql(f"SELECT * FROM {view}"), report)
             self._store.write_curated(spec, None, df)
             partitions["all"] = len(df)
         else:
-            for year in self._years(view, column, years):
+            for year in self._list_years(view, column, years):
                 sql = f"SELECT * FROM {view} WHERE {column} BETWEEN ? AND ?"
                 raw = self._query.sql(sql, [f"{year}0101", f"{year}1231"])
-                df = self._prepare(spec, raw, report)
+                df = self._normalize_frame(spec, raw, report)
                 self._store.write_curated(spec, year, df)
                 partitions[str(year)] = len(df)
         report.keys_total = len(partitions)
@@ -99,13 +99,15 @@ class Compactor:
         logger.info("compacted %s: %s partitions, %s rows", spec.name, len(partitions), report.rows)
         return report
 
-    def _years(self, view: str, column: str, only: set[int] | None) -> list[int]:
+    def _list_years(self, view: str, column: str, only: set[int] | None) -> list[int]:
         found = self._query.sql(f"SELECT DISTINCT substr({column}, 1, 4) AS y FROM {view}")
         years = sorted(int(y) for y in found["y"].dropna())
         return [y for y in years if only is None or y in only]
 
-    def _prepare(self, spec: DatasetSpec, raw: pd.DataFrame, report: StepReport) -> pd.DataFrame:
-        df = spec.frame_schema().coerce(raw, strict=True).drop_duplicates()
+    def _normalize_frame(
+        self, spec: DatasetSpec, raw: pd.DataFrame, report: StepReport
+    ) -> pd.DataFrame:
+        df = spec.build_schema().normalize(raw, strict=True).drop_duplicates()
         before = len(df)
         if spec.primary_key:
             df = df.drop_duplicates(subset=spec.primary_key, keep="last")
@@ -116,11 +118,11 @@ class Compactor:
         return df.reset_index(drop=True)
 
     def _write_manifest(self, spec: DatasetSpec, partitions: dict[str, int], dropped: int) -> None:
-        folder = self._catalog.root / "meta" / "manifest"
+        folder = self._catalog.lake_root / "meta" / "manifest"
         path = folder / f"{spec.name}.json"
         body = {
             "dataset": spec.name,
-            "compacted_at": self._clock.now().isoformat(timespec="seconds"),
+            "compacted_at": self._clock.get_now().isoformat(timespec="seconds"),
             "curated_path": spec.curated.path,
             "partition_by": spec.curated.partition_by,
             "partitions": partitions,

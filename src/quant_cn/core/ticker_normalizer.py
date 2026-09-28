@@ -52,7 +52,7 @@ class TickerNormalizer:
         if prefixed:
             return f"{prefixed.group(2)}.{prefixed.group(1).upper()}"
         if len(text) == _CODE_LEN and text.isdigit():
-            return f"{text}.{self._exchange(text)}"
+            return f"{text}.{self._get_exchange(text)}"
         raise ValueError(f"unrecognised ticker {code!r}")
 
     def is_valid(self, code: str) -> bool:
@@ -70,7 +70,7 @@ class TickerNormalizer:
         """
         return bool(_TS_CODE.match(code))
 
-    def _exchange(self, digits: str) -> str:
+    def _get_exchange(self, digits: str) -> str:
         head = digits[0]
         if head in "69":
             return "SH"

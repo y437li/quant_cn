@@ -58,7 +58,7 @@ class BaseFetcher(ABC):
         TC-BF-003  overwrite datasets refetch every key
         TC-BF-004  refetch_recent always refetches the newest N keys
         TC-BF-005  empty result is marked done with 0 rows and writes no file
-        TC-BF-006  failure on a key re-raises; earlier keys stay done and the log is flushed
+        TC-BF-006  failure on a key re-raises; earlier keys stay done and the log is saved
     """
 
     def __init__(
@@ -78,7 +78,7 @@ class BaseFetcher(ABC):
         self._clock = clock
 
     @abstractmethod
-    def keys(self, start: str, end: str) -> list[str]:
+    def list_keys(self, start: str, end: str) -> list[str]:
         """
         Purpose:
             All fetch keys for [start, end], ascending.
@@ -95,7 +95,7 @@ class BaseFetcher(ABC):
         """
 
     @abstractmethod
-    def params(self, key: str, start: str, end: str) -> dict[str, str]:
+    def build_params(self, key: str, start: str, end: str) -> dict[str, str]:
         """
         Purpose:
             API parameters for one key.
@@ -109,7 +109,7 @@ class BaseFetcher(ABC):
                 (none)
         """
 
-    def to_fetch(self, keys: Sequence[str], force: bool = False) -> list[str]:
+    def list_due_keys(self, keys: Sequence[str], force: bool = False) -> list[str]:
         """
         Purpose:
             Keys that must be fetched: all if forced or overwrite, else pending plus the newest
@@ -127,7 +127,7 @@ class BaseFetcher(ABC):
         if force or self.spec.refresh == "overwrite":
             return list(keys)
         recent = set(keys[len(keys) - self.spec.sweep.refetch_recent :])
-        pending = set(self._fetch_log.pending(self.spec.name, keys))
+        pending = set(self._fetch_log.list_pending(self.spec.name, keys))
         return [k for k in keys if k in pending or k in recent]
 
     def fetch_one(self, key: str, start: str, end: str) -> pd.DataFrame:
@@ -144,7 +144,7 @@ class BaseFetcher(ABC):
                 DataSourceError, PermissionDeniedError
         """
         return self._client.query(
-            self.spec.endpoint, self.params(key, start, end), self.spec.fields
+            self.spec.endpoint, self.build_params(key, start, end), self.spec.fields
         )
 
     def run(
@@ -165,7 +165,7 @@ class BaseFetcher(ABC):
                 run_id:   str
                 start:    str  -- YYYYMMDD
                 end:      str  -- YYYYMMDD
-                keys:     Sequence[str] | None  -- precomputed keys; None = self.keys(start, end)
+                keys:     Sequence[str] | None  -- precomputed; None = self.list_keys(start, end)
                 force:    bool                  -- refetch done keys
                 progress: ProgressHook | None   -- called (key, status) per key
             Output:
@@ -175,8 +175,8 @@ class BaseFetcher(ABC):
                                                           finished keys remain done
                 SchemaError, LakeError                  -- write failed
         """
-        all_keys = list(keys) if keys is not None else self.keys(start, end)
-        todo = self.to_fetch(all_keys, force)
+        all_keys = list(keys) if keys is not None else self.list_keys(start, end)
+        todo = self.list_due_keys(all_keys, force)
         report = StepReport(self.spec.name, keys_total=len(all_keys))
         report.skipped = len(all_keys) - len(todo)
         for key in all_keys:
@@ -188,21 +188,21 @@ class BaseFetcher(ABC):
                 if progress:
                     progress(key, status)
         finally:
-            self._fetch_log.flush()
+            self._fetch_log.save()
         return report
 
     def _fetch_key(self, run_id: str, key: str, start: str, end: str, report: StepReport) -> str:
-        began = self._clock.monotonic()
+        began = self._clock.get_monotonic()
         try:
             df = self.fetch_one(key, start, end)
         except DataSourceError as exc:
-            self._run_log.event(run_id, self.spec.name, key, "failed", message=str(exc))
+            self._run_log.record_event(run_id, self.spec.name, key, "failed", message=str(exc))
             raise
         path = self._store.write_raw(self.spec, key, df)
         self._fetch_log.mark_done(self.spec.name, key, len(df), path)
         status = "fetched" if len(df) else "empty"
-        elapsed = int((self._clock.monotonic() - began) * 1000)
-        self._run_log.event(run_id, self.spec.name, key, status, len(df), elapsed)
+        elapsed = int((self._clock.get_monotonic() - began) * 1000)
+        self._run_log.record_event(run_id, self.spec.name, key, status, len(df), elapsed)
         if len(df):
             report.fetched += 1
             report.rows += len(df)

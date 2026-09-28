@@ -13,10 +13,10 @@ DAYS = ["20260826", "20260827", "20260828"]
 class ListFetcher(BaseFetcher):
     """Keys are a fixed list; params carry the key as trade_date."""
 
-    def keys(self, start: str, end: str) -> list[str]:
+    def list_keys(self, start: str, end: str) -> list[str]:
         return [d for d in DAYS if start <= d <= end]
 
-    def params(self, key: str, start: str, end: str) -> dict[str, str]:
+    def build_params(self, key: str, start: str, end: str) -> dict[str, str]:
         return {"trade_date": key}
 
 
@@ -83,7 +83,7 @@ def test_tc_bf_005_empty_marked_done_without_file(
 ) -> None:
     fetcher(lake, client).run("r1", DAYS[2], DAYS[2])
     assert lake.fetch_log.is_done("bars", DAYS[2])
-    assert not (lake.root / "raw" / "bars").exists()
+    assert not (lake.lake_root / "raw" / "bars").exists()
 
 
 # TC-BF-006
@@ -91,7 +91,7 @@ def test_tc_bf_006_failure_keeps_progress(lake: MiniLake, client: FakeTushareCli
     client.fail("daily", DAYS[1], DataSourceError("boom"))
     with pytest.raises(DataSourceError):
         fetcher(lake, client).run("r1", DAYS[0], DAYS[-1])
-    assert lake.fetch_log.done_keys("bars") == {DAYS[0]}
+    assert lake.fetch_log.read_done_keys("bars") == {DAYS[0]}
     assert lake.fetch_log.mirror_path.exists()
     failed = lake.query.sql("SELECT key FROM meta.run_log WHERE status = 'failed'")
     assert failed["key"].tolist() == [DAYS[1]]

@@ -61,7 +61,7 @@ class BaseStore(ABC):
             Input:
                 spec: DatasetSpec
                 year: int | None  -- partition year; None for unpartitioned datasets
-                df:   DataFrame   -- must satisfy spec.frame_schema()
+                df:   DataFrame   -- must satisfy spec.build_schema()
             Output:
                 Path  -- written file
             Raises:

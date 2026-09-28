@@ -26,7 +26,7 @@ class TushareClient(BaseApiClient):
 
     Contract:
         Input:
-            config:    TushareConfig        -- url, token (non-empty), paging and retry settings
+            tushare_config: TushareConfig   -- url, token, paging and retry settings
             clock:     Clock                -- sleeps
             transport: HttpTransport | None -- default HttpTransport()
         Output:
@@ -49,9 +49,9 @@ class TushareClient(BaseApiClient):
     """
 
     def __init__(
-        self, config: TushareConfig, clock: Clock, transport: HttpTransport | None = None
+        self, tushare_config: TushareConfig, clock: Clock, transport: HttpTransport | None = None
     ) -> None:
-        self._config = config
+        self._config = tushare_config
         self._clock = clock
         self._transport = transport or HttpTransport()
 
@@ -79,7 +79,7 @@ class TushareClient(BaseApiClient):
         columns: list[str] = list(fields)
         offset = 0
         while True:
-            data = self._call(api_name, {**params, "limit": page, "offset": offset}, fields)
+            data = self._fetch_page(api_name, {**params, "limit": page, "offset": offset}, fields)
             columns = list(data.get("fields") or columns)
             items = data.get("items") or []
             rows.extend(items)
@@ -88,7 +88,7 @@ class TushareClient(BaseApiClient):
             offset += page
         return pd.DataFrame(rows, columns=columns)
 
-    def _call(
+    def _fetch_page(
         self, api_name: str, params: Mapping[str, object], fields: Sequence[str]
     ) -> dict[str, Any]:
         payload = {
@@ -100,12 +100,12 @@ class TushareClient(BaseApiClient):
         failures = 0
         waits = 0
         while True:
-            message = self._attempt(payload)
+            message = self._fetch_once(payload)
             if isinstance(message, dict):
                 return message
-            if self._matches(message, self._config.permission_markers):
+            if self._is_match(message, self._config.permission_markers):
                 raise PermissionDeniedError(f"{api_name}: {message}")
-            if self._matches(message, self._config.rate_limit_markers):
+            if self._is_match(message, self._config.rate_limit_markers):
                 waits += 1
                 if waits > self._config.max_rate_limit_waits:
                     raise DataSourceError(f"{api_name}: rate limited {waits} times: {message}")
@@ -120,10 +120,10 @@ class TushareClient(BaseApiClient):
             logger.warning("%s attempt %s failed: %s", api_name, failures, message)
             self._clock.sleep(self._config.retry_sleep_s)
 
-    def _attempt(self, payload: dict[str, Any]) -> dict[str, Any] | str:
+    def _fetch_once(self, payload: dict[str, Any]) -> dict[str, Any] | str:
         """Return the `data` object on success, else the error message."""
         try:
-            response = self._transport.post(self._config.url, payload, self._config.timeout_s)
+            response = self._transport.fetch_json(self._config.url, payload, self._config.timeout_s)
         except (OSError, ValueError) as exc:
             return f"transport error: {exc}"
         if response.get("code") != 0:
@@ -134,5 +134,5 @@ class TushareClient(BaseApiClient):
         return data
 
     @staticmethod
-    def _matches(message: str, markers: Sequence[str]) -> bool:
+    def _is_match(message: str, markers: Sequence[str]) -> bool:
         return any(marker in message for marker in markers)

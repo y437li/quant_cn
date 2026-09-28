@@ -5,9 +5,9 @@ from tests.support import MiniLake
 
 # TC-RL-001
 def test_tc_rl_001_rows_queryable(lake: MiniLake) -> None:
-    run = lake.run_log.start_run("download")
-    lake.run_log.event(run, "daily", "20260828", "fetched", 10, 5)
-    lake.run_log.finish_run(run, "ok")
+    run = lake.run_log.open_run("download")
+    lake.run_log.record_event(run, "daily", "20260828", "fetched", 10, 5)
+    lake.run_log.close_run(run, "ok")
     df = lake.query.sql(
         "SELECT dataset, status, n_rows FROM meta.run_log WHERE run_id = ? "
         "ORDER BY dataset NULLS FIRST",
@@ -19,9 +19,9 @@ def test_tc_rl_001_rows_queryable(lake: MiniLake) -> None:
 
 # TC-RL-002
 def test_tc_rl_002_unique_ids_and_finish(lake: MiniLake) -> None:
-    a, b = lake.run_log.start_run("x"), lake.run_log.start_run("x")
+    a, b = lake.run_log.open_run("x"), lake.run_log.open_run("x")
     assert a != b
-    lake.run_log.finish_run(a, "failed", "boom")
+    lake.run_log.close_run(a, "failed", "boom")
     row = lake.query.sql(
         "SELECT status, message, finished_at FROM meta.run_log WHERE run_id = ?", [a]
     )

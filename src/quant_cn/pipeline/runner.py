@@ -43,7 +43,7 @@ class PipelineReport:
     status: str
     steps: list[StepReport] = field(default_factory=list)
 
-    def blocked(self) -> list[str]:
+    def list_blocked(self) -> list[str]:
         """
         Purpose:
             Names of steps blocked by missing permissions.
@@ -160,7 +160,7 @@ class LocalRunner(BaseRunner):
             Raises:
                 QuantCnError  -- first non-permission failure, after closing the run
         """
-        run_id = self._run_log.start_run(kind)
+        run_id = self._run_log.open_run(kind)
         report = PipelineReport(run_id=run_id, status="ok")
         progress = Progress(
             TextColumn("{task.description:<20}"),
@@ -176,17 +176,17 @@ class LocalRunner(BaseRunner):
                     report.steps.append(self._run_step(run_id, step, progress))
         except QuantCnError as exc:
             report.status = "failed"
-            self._run_log.finish_run(run_id, "failed", str(exc))
+            self._run_log.close_run(run_id, "failed", str(exc))
             raise
-        blocked = report.blocked()
-        self._run_log.finish_run(run_id, "ok", f"blocked: {blocked}" if blocked else "")
+        blocked = report.list_blocked()
+        self._run_log.close_run(run_id, "ok", f"blocked: {blocked}" if blocked else "")
         return report
 
     def _run_step(self, run_id: str, step: BaseStep, progress: Progress) -> StepReport:
         try:
-            total = step.prepare()
-            task = progress.add_task(step.name, total=total)
+            units = step.list_units()
+            task = progress.add_task(step.name, total=len(units))
             return step.run(run_id, lambda _key, _status: progress.advance(task))
         except PermissionDeniedError as exc:
-            self._run_log.event(run_id, step.name, "*", "blocked", message=str(exc))
+            self._run_log.record_event(run_id, step.name, "*", "blocked", message=str(exc))
             return StepReport(step.name, status="blocked", message=str(exc))

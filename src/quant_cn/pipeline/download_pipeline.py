@@ -20,7 +20,7 @@ from quant_cn.pipeline.runner import BaseRunner, PipelineReport
 class FetchStep(BaseStep):
     """
     Purpose:
-        Adapt one dataset's fetcher to a pipeline step: keys computed at prepare time (so the
+        Adapt one dataset's fetcher to a pipeline step: keys computed in list_units (so the
         calendar fetched earlier in the run is visible), catalog view refreshed after the run.
 
     Contract:
@@ -64,7 +64,7 @@ class FetchStep(BaseStep):
         """
         return self._fetcher.spec.name
 
-    def prepare(self) -> int:
+    def list_units(self) -> list[str]:
         """
         Purpose:
             Compute the dataset's keys for the range.
@@ -73,12 +73,12 @@ class FetchStep(BaseStep):
             Input:
                 (none)
             Output:
-                int  -- number of keys
+                list[str]  -- the keys
             Raises:
                 LakeError  -- calendar missing for trade_date sweeps
         """
-        self._keys = self._fetcher.keys(self._start, self._end)
-        return len(self._keys)
+        self._keys = self._fetcher.list_keys(self._start, self._end)
+        return list(self._keys)
 
     def run(self, run_id: str, progress: ProgressHook | None = None) -> StepReport:
         """
@@ -177,14 +177,14 @@ class DownloadPipeline:
                 ValueError       -- malformed dates or end before start
                 DataSourceError  -- non-permission fetch failure (progress kept)
         """
-        names = self._select(datasets)
-        stop = self._codec.validate(end or self._config.download.end or self._clock.today_str())
-        ranges = {n: self._range(n, start, stop) for n in names}
+        names = self._list_datasets(datasets)
+        stop = self._codec.validate(end or self._config.download.end or self._clock.get_today())
+        ranges = {n: self._parse_range(n, start, stop) for n in names}
         if dry_run:
-            return self._dry_run(ranges)
+            return self._build_dry_run(ranges)
         steps = [
             FetchStep(
-                self._factory.build(self._config.dataset(n)), self._catalog, *ranges[n], force
+                self._factory.build(self._config.get_dataset(n)), self._catalog, *ranges[n], force
             )
             for n in names
         ]
@@ -192,7 +192,7 @@ class DownloadPipeline:
         self._catalog.write_indexes()
         return report
 
-    def _select(self, datasets: Sequence[str] | None) -> list[str]:
+    def _list_datasets(self, datasets: Sequence[str] | None) -> list[str]:
         if not datasets:
             return list(self._config.download.order)
         unknown = [d for d in datasets if d not in self._config.datasets]
@@ -201,22 +201,22 @@ class DownloadPipeline:
         ordered = [n for n in self._config.download.order if n in datasets]
         return ordered + [d for d in datasets if d not in ordered]
 
-    def _range(self, name: str, start: str | None, end: str) -> tuple[str, str]:
-        begin = self._codec.validate(start or self._config.start_for(name))
+    def _parse_range(self, name: str, start: str | None, end: str) -> tuple[str, str]:
+        begin = self._codec.validate(start or self._config.get_start(name))
         if begin > end:
             raise ValueError(f"{name}: start {begin} is after end {end}")
         return begin, end
 
-    def _dry_run(self, ranges: dict[str, tuple[str, str]]) -> PipelineReport:
+    def _build_dry_run(self, ranges: dict[str, tuple[str, str]]) -> PipelineReport:
         report = PipelineReport(run_id="dry-run", status="dry_run")
         for name, (begin, stop) in ranges.items():
-            fetcher = self._factory.build(self._config.dataset(name))
+            fetcher = self._factory.build(self._config.get_dataset(name))
             try:
-                keys = fetcher.keys(begin, stop)
+                keys = fetcher.list_keys(begin, stop)
             except LakeError as exc:
                 report.steps.append(StepReport(name, status="dry_run", message=str(exc)))
                 continue
-            todo = fetcher.to_fetch(keys)
+            todo = fetcher.list_due_keys(keys)
             report.steps.append(
                 StepReport(
                     name,

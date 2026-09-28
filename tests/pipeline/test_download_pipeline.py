@@ -52,7 +52,7 @@ def test_tc_dp_001_dry_run(config: Config, lake: MiniLake, client: FakeTushareCl
     assert report.status == "dry_run" and client.calls == []
     income = next(s for s in report.steps if s.name == "income_vip")
     assert income.keys_total == len(
-        DateCodec().quarter_ends(config.start_for("income_vip"), "20260828")
+        DateCodec().list_quarter_ends(config.get_start("income_vip"), "20260828")
     )
 
 
@@ -80,7 +80,7 @@ def test_tc_dp_003_blocked_continues(
     report = pipeline(config, lake, client).run(
         ["income_vip", "trade_cal"], start="20260601", end="20260828"
     )
-    assert report.blocked() == ["income_vip"]
+    assert report.list_blocked() == ["income_vip"]
     assert [s.name for s in report.steps] == ["trade_cal", "income_vip"]
     assert lake.query.has_view("raw.trade_cal")
 

@@ -81,7 +81,7 @@ class CuratedSpec(BaseModel):
     Used by:
         core.DatasetSpec                 -- field `curated`
         lake.ParquetWriter.write_curated -- target path
-        lake.Compactor.compact           -- partitioning
+        lake.Compactor.rebuild           -- partitioning
         lake.LakeCatalog.refresh_view    -- curated view glob
 
     Test cases:
@@ -123,7 +123,7 @@ class DatasetSpec(BaseModel):
         core.BaseStore                   -- write targets
         lake.ParquetWriter               -- raw filename, schema
         lake.LakeCatalog                 -- views and dataset_meta
-        lake.Compactor.compact           -- schema, partitioning, primary key
+        lake.Compactor.rebuild           -- schema, partitioning, primary key
         data_loading.FetcherFactory.build  -- sweep dispatch
 
     Test cases:
@@ -147,7 +147,7 @@ class DatasetSpec(BaseModel):
     curated: CuratedSpec
 
     @model_validator(mode="after")
-    def _columns_declared(self) -> DatasetSpec:
+    def _check_columns(self) -> DatasetSpec:
         declared = set(self.fields)
         used = set(self.primary_key) | set(self.text_fields)
         if self.known_on:
@@ -159,7 +159,7 @@ class DatasetSpec(BaseModel):
             raise ValueError(f"{self.name}: columns not in fields: {sorted(missing)}")
         return self
 
-    def raw_filename(self, key: str) -> str:
+    def get_raw_filename(self, key: str) -> str:
         """
         Purpose:
             Hive-style raw file name for one fetch key.
@@ -175,7 +175,7 @@ class DatasetSpec(BaseModel):
         param = self.sweep.param
         return "all.parquet" if param is None else f"{param}={key}.parquet"
 
-    def frame_schema(self) -> Schema:
+    def build_schema(self) -> Schema:
         """
         Purpose:
             The dataset's Schema (fields, text fields, primary key).

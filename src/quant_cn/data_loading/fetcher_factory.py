@@ -76,12 +76,12 @@ class FetcherFactory:
         if kind == "none":
             return SingleCallFetcher(spec, *self._deps)
         if kind in ("list_status", "ts_code"):
-            return EnumFetcher(spec, *self._deps, values=self._values(spec))
+            return EnumFetcher(spec, *self._deps, values=self._list_values(spec))
         if kind in ("trade_date", "ann_date"):
             return DateSweepFetcher(spec, *self._deps, calendar=self._calendar, codec=self._codec)
         return PeriodSweepFetcher(spec, *self._deps, codec=self._codec)
 
-    def _values(self, spec: DatasetSpec) -> list[str]:
+    def _list_values(self, spec: DatasetSpec) -> list[str]:
         if spec.sweep.values:
             return list(spec.sweep.values)
         name = spec.sweep.values_from

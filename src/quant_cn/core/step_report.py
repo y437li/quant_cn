@@ -32,7 +32,7 @@ class StepReport:
     Used by:
         core.BaseFetcher.run             -- returned per dataset run
         core.BaseStep.run                -- return type
-        lake.Compactor.compact           -- returned per dataset compaction
+        lake.Compactor.rebuild           -- returned per dataset compaction
         pipeline.LocalRunner.run         -- collected into PipelineReport
         pipeline.DownloadPipeline.run    -- dry-run reports
 

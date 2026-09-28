@@ -24,7 +24,7 @@ class ParquetWriter(BaseStore):
 
     Contract:
         Input:
-            root: Path  -- lake root (Config.lake.root); created on first write
+            lake_root: Path  -- Config.lake.root; created on first write
         Output:
             instance; `write_raw`, `write_curated`, `raw_path`, `curated_path`
         Raises:
@@ -32,7 +32,7 @@ class ParquetWriter(BaseStore):
 
     Used by:
         core.BaseFetcher.run             -- via BaseStore.write_raw
-        lake.Compactor.compact           -- write_curated
+        lake.Compactor.rebuild           -- write_curated
         data_loading.FetcherFactory      -- injected into every fetcher
         cli.QuantCnCli                   -- composition root
 
@@ -44,10 +44,10 @@ class ParquetWriter(BaseStore):
         TC-PW-005  curated write refuses a frame violating the schema
     """
 
-    def __init__(self, root: Path) -> None:
-        self.root = root
+    def __init__(self, lake_root: Path) -> None:
+        self.lake_root = lake_root
 
-    def raw_path(self, spec: DatasetSpec, key: str) -> Path:
+    def get_raw_path(self, spec: DatasetSpec, key: str) -> Path:
         """
         Purpose:
             Target path of one raw fetch key.
@@ -56,13 +56,13 @@ class ParquetWriter(BaseStore):
             Input:
                 spec: DatasetSpec; key: str
             Output:
-                Path  -- <root>/raw/<name>/<raw_filename>
+                Path  -- <lake_root>/raw/<name>/<raw_filename>
             Raises:
                 (none)
         """
-        return self.root / "raw" / spec.name / spec.raw_filename(key)
+        return self.lake_root / "raw" / spec.name / spec.get_raw_filename(key)
 
-    def curated_path(self, spec: DatasetSpec, year: int | None) -> Path:
+    def get_curated_path(self, spec: DatasetSpec, year: int | None) -> Path:
         """
         Purpose:
             Target path of one curated partition.
@@ -71,11 +71,11 @@ class ParquetWriter(BaseStore):
             Input:
                 spec: DatasetSpec; year: int | None
             Output:
-                Path  -- <root>/curated/<path>/year=YYYY/part-0.parquet, or <path>.parquet
+                Path  -- <lake_root>/curated/<path>/year=YYYY/part-0.parquet, or <path>.parquet
             Raises:
                 (none)
         """
-        base = self.root / "curated" / spec.curated.path
+        base = self.lake_root / "curated" / spec.curated.path
         if year is None:
             return base.with_name(base.name + ".parquet")
         return base / f"year={year}" / "part-0.parquet"
@@ -96,9 +96,9 @@ class ParquetWriter(BaseStore):
         """
         if df.empty:
             return None
-        coerced = spec.frame_schema().coerce(df)
-        path = self.raw_path(spec, key)
-        self._atomic_write(coerced, path)
+        coerced = spec.build_schema().normalize(df)
+        path = self.get_raw_path(spec, key)
+        self._write_atomic(coerced, path)
         return path
 
     def write_curated(self, spec: DatasetSpec, year: int | None, df: pd.DataFrame) -> Path:
@@ -108,19 +108,19 @@ class ParquetWriter(BaseStore):
 
         Contract:
             Input:
-                spec: DatasetSpec; year: int | None; df: DataFrame satisfying spec.frame_schema()
+                spec: DatasetSpec; year: int | None; df: DataFrame satisfying spec.build_schema()
             Output:
                 Path
             Raises:
                 SchemaError  -- schema violation; nothing written
                 LakeError    -- write failed
         """
-        spec.frame_schema().validate(df)
-        path = self.curated_path(spec, year)
-        self._atomic_write(df, path)
+        spec.build_schema().validate(df)
+        path = self.get_curated_path(spec, year)
+        self._write_atomic(df, path)
         return path
 
-    def _atomic_write(self, df: pd.DataFrame, path: Path) -> None:
+    def _write_atomic(self, df: pd.DataFrame, path: Path) -> None:
         tmp = path.with_name(path.name + ".tmp")
         try:
             path.parent.mkdir(parents=True, exist_ok=True)

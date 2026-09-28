@@ -25,7 +25,7 @@ class LakeCatalog:
 
     Contract:
         Input:
-            root:     Path                      -- lake root; zone folders created if missing
+            lake_root: Path                     -- zone folders created if missing
             datasets: Mapping[str, DatasetSpec] -- Config.datasets
         Output:
             instance; `connection`, `refresh_view(s)`, `rebuild`, `write_indexes`, `close`
@@ -48,13 +48,13 @@ class LakeCatalog:
         TC-LC-004  write_indexes writes INDEX.md in the lake root and every zone
     """
 
-    def __init__(self, root: Path, datasets: Mapping[str, DatasetSpec]) -> None:
-        self.root = root
+    def __init__(self, lake_root: Path, datasets: Mapping[str, DatasetSpec]) -> None:
+        self.lake_root = lake_root
         self.datasets = dict(datasets)
         self._con: duckdb.DuckDBPyConnection | None = None
 
     @property
-    def db_path(self) -> Path:
+    def catalog_path(self) -> Path:
         """
         Purpose:
             Location of the DuckDB catalog file.
@@ -63,11 +63,11 @@ class LakeCatalog:
             Input:
                 (none)
             Output:
-                Path  -- <root>/meta/quant_cn.duckdb
+                Path  -- <lake_root>/meta/quant_cn.duckdb
             Raises:
                 (none)
         """
-        return self.root / "meta" / DB_NAME
+        return self.lake_root / "meta" / DB_NAME
 
     @property
     def connection(self) -> duckdb.DuckDBPyConnection:
@@ -85,17 +85,17 @@ class LakeCatalog:
         """
         if self._con is None:
             for zone in ZONES:
-                (self.root / zone).mkdir(parents=True, exist_ok=True)
+                (self.lake_root / zone).mkdir(parents=True, exist_ok=True)
             try:
-                self._con = duckdb.connect(str(self.db_path))
+                self._con = duckdb.connect(str(self.catalog_path))
             except duckdb.Error as exc:
-                raise LakeError(f"cannot open catalog {self.db_path}: {exc}") from exc
+                raise LakeError(f"cannot open catalog {self.catalog_path}: {exc}") from exc
             for schema in ("raw", "curated", "meta"):
                 self._con.execute(f"CREATE SCHEMA IF NOT EXISTS {schema}")
             self._write_dataset_meta(self._con)
         return self._con
 
-    def raw_files(self, spec: DatasetSpec) -> list[Path]:
+    def list_raw_files(self, spec: DatasetSpec) -> list[Path]:
         """
         Purpose:
             Raw parquet files of a dataset, sorted by name.
@@ -108,7 +108,7 @@ class LakeCatalog:
             Raises:
                 (none)
         """
-        folder = self.root / "raw" / spec.name
+        folder = self.lake_root / "raw" / spec.name
         return sorted(folder.glob("*.parquet")) if folder.exists() else []
 
     def refresh_view(self, spec: DatasetSpec) -> None:
@@ -125,16 +125,18 @@ class LakeCatalog:
                 LakeError  -- DuckDB rejects the view
         """
         con = self.connection
-        raw_glob = self.root / "raw" / spec.name / "*.parquet"
-        self._view(con, f"raw.{spec.name}", raw_glob, bool(self.raw_files(spec)), hive=False)
-        curated = self.root / "curated" / spec.curated.path
+        raw_glob = self.lake_root / "raw" / spec.name / "*.parquet"
+        self._refresh_one_view(
+            con, f"raw.{spec.name}", raw_glob, bool(self.list_raw_files(spec)), hive=False
+        )
+        curated = self.lake_root / "curated" / spec.curated.path
         if spec.curated.partition_by:
             glob = curated / "year=*" / "*.parquet"
             present = any(curated.glob("year=*/*.parquet")) if curated.exists() else False
-            self._view(con, f"curated.{spec.name}", glob, present, hive=True)
+            self._refresh_one_view(con, f"curated.{spec.name}", glob, present, hive=True)
         else:
             single = curated.with_name(curated.name + ".parquet")
-            self._view(con, f"curated.{spec.name}", single, single.exists(), hive=False)
+            self._refresh_one_view(con, f"curated.{spec.name}", single, single.exists(), hive=False)
 
     def refresh_views(self) -> None:
         """
@@ -167,7 +169,7 @@ class LakeCatalog:
                 LakeError  -- file cannot be removed or reopened
         """
         self.close()
-        for path in (self.db_path, self.db_path.with_name(DB_NAME + ".wal")):
+        for path in (self.catalog_path, self.catalog_path.with_name(DB_NAME + ".wal")):
             try:
                 path.unlink(missing_ok=True)
             except OSError as exc:
@@ -187,9 +189,9 @@ class LakeCatalog:
             Raises:
                 LakeError  -- a file cannot be written
         """
-        written = [self._write_index(self.root, self._root_index())]
+        written = [self._write_index(self.lake_root, self._build_root_index())]
         for zone in ZONES:
-            written.append(self._write_index(self.root / zone, self._zone_index(zone)))
+            written.append(self._write_index(self.lake_root / zone, self._build_zone_index(zone)))
         return written
 
     def close(self) -> None:
@@ -209,7 +211,7 @@ class LakeCatalog:
             self._con.close()
             self._con = None
 
-    def _view(
+    def _refresh_one_view(
         self, con: duckdb.DuckDBPyConnection, name: str, glob: Path, present: bool, hive: bool
     ) -> None:
         try:
@@ -249,7 +251,7 @@ class LakeCatalog:
                 "INSERT INTO meta.dataset_meta VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", rows
             )
 
-    def _root_index(self) -> str:
+    def _build_root_index(self) -> str:
         lines = [
             "# lake/",
             "",
@@ -265,8 +267,8 @@ class LakeCatalog:
         ]
         return "\n".join(lines) + "\n"
 
-    def _zone_index(self, zone: str) -> str:
-        base = self.root / zone
+    def _build_zone_index(self, zone: str) -> str:
+        base = self.lake_root / zone
         stamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M")
         lines = [
             f"# lake/{zone}/",

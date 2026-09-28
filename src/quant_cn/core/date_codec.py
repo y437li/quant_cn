@@ -24,8 +24,8 @@ class DateCodec:
 
     Used by:
         core.Config.load                 -- validates configured start dates
-        data_loading.DateSweepFetcher.keys    -- weekdays for ann_date sweeps
-        data_loading.PeriodSweepFetcher.keys  -- quarter ends for period sweeps
+        data_loading.DateSweepFetcher.list_keys    -- weekdays for ann_date sweeps
+        data_loading.PeriodSweepFetcher.list_keys  -- quarter ends for period sweeps
         pipeline.DownloadPipeline.run    -- validates start/end overrides
 
     Test cases:
@@ -84,7 +84,7 @@ class DateCodec:
         """
         return value.strftime(_FMT)
 
-    def quarter_ends(self, start: str, end: str) -> list[str]:
+    def list_quarter_ends(self, start: str, end: str) -> list[str]:
         """
         Purpose:
             Report periods (Mar 31, Jun 30, Sep 30, Dec 31) within [start, end].
@@ -98,7 +98,7 @@ class DateCodec:
             Raises:
                 ValueError  -- malformed dates or start > end
         """
-        lo, hi = self._range(start, end)
+        lo, hi = self._parse_range(start, end)
         out = []
         for year in range(lo.year, hi.year + 1):
             for month, day in ((3, 31), (6, 30), (9, 30), (12, 31)):
@@ -107,7 +107,7 @@ class DateCodec:
                     out.append(self.to_str(q))
         return out
 
-    def weekdays(self, start: str, end: str) -> list[str]:
+    def list_weekdays(self, start: str, end: str) -> list[str]:
         """
         Purpose:
             Monday-to-Friday dates within [start, end], for announcement-date sweeps.
@@ -121,12 +121,12 @@ class DateCodec:
             Raises:
                 ValueError  -- malformed dates or start > end
         """
-        lo, hi = self._range(start, end)
+        lo, hi = self._parse_range(start, end)
         days = (hi - lo).days + 1
         dates = (lo + dt.timedelta(days=i) for i in range(days))
         return [self.to_str(d) for d in dates if d.weekday() < _SATURDAY]
 
-    def _range(self, start: str, end: str) -> tuple[dt.date, dt.date]:
+    def _parse_range(self, start: str, end: str) -> tuple[dt.date, dt.date]:
         lo, hi = self.to_date(start), self.to_date(end)
         if lo > hi:
             raise ValueError(f"start {start} is after end {end}")

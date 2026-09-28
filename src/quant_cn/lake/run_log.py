@@ -44,13 +44,13 @@ class RunLog(BaseRunLog):
     def __init__(self, catalog: LakeCatalog, clock: Clock) -> None:
         self._catalog = catalog
         self._clock = clock
-        self._exec(
+        self._query(
             f"CREATE TABLE IF NOT EXISTS {_TABLE} (run_id VARCHAR, started_at TIMESTAMP, "
             "finished_at TIMESTAMP, kind VARCHAR, dataset VARCHAR, key VARCHAR, status VARCHAR, "
             "n_rows BIGINT, duration_ms BIGINT, message VARCHAR)"
         )
 
-    def start_run(self, kind: str) -> str:
+    def open_run(self, kind: str) -> str:
         """
         Purpose:
             Insert the run row (dataset and key NULL, status "running").
@@ -64,14 +64,14 @@ class RunLog(BaseRunLog):
                 LakeError
         """
         run_id = uuid.uuid4().hex[:12]
-        self._exec(
+        self._query(
             f"INSERT INTO {_TABLE} VALUES (?, ?, NULL, ?, NULL, NULL, 'running', 0, 0, '')",
-            [run_id, self._clock.now(), kind],
+            [run_id, self._clock.get_now(), kind],
         )
         logger.info("run %s started (%s)", run_id, kind)
         return run_id
 
-    def event(
+    def record_event(
         self,
         run_id: str,
         dataset: str,
@@ -87,21 +87,21 @@ class RunLog(BaseRunLog):
 
         Contract:
             Input:
-                see BaseRunLog.event
+                see BaseRunLog.record_event
             Output:
                 None
             Raises:
                 LakeError
         """
-        now = self._clock.now()
-        self._exec(
+        now = self._clock.get_now()
+        self._query(
             f"INSERT INTO {_TABLE} VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?)",
             [run_id, now, now, dataset, key, status, n_rows, duration_ms, message],
         )
         level = logging.WARNING if status in ("failed", "blocked") else logging.DEBUG
         logger.log(level, "%s %s %s rows=%s %s", dataset, key, status, n_rows, message)
 
-    def finish_run(self, run_id: str, status: str, message: str = "") -> None:
+    def close_run(self, run_id: str, status: str, message: str = "") -> None:
         """
         Purpose:
             Set status, message and finished_at on the run row.
@@ -114,14 +114,14 @@ class RunLog(BaseRunLog):
             Raises:
                 LakeError
         """
-        self._exec(
+        self._query(
             f"UPDATE {_TABLE} SET finished_at = ?, status = ?, message = ? "
             "WHERE run_id = ? AND dataset IS NULL",
-            [self._clock.now(), status, message, run_id],
+            [self._clock.get_now(), status, message, run_id],
         )
         logger.info("run %s finished: %s %s", run_id, status, message)
 
-    def _exec(self, sql: str, params: list[object] | None = None) -> None:
+    def _query(self, sql: str, params: list[object] | None = None) -> None:
         try:
             self._catalog.connection.execute(sql, params or [])
         except duckdb.Error as exc:

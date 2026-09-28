@@ -25,7 +25,7 @@ class TradingCalendar:
             (none at construction)
 
     Used by:
-        data_loading.DateSweepFetcher.keys  -- trading days for trade_date sweeps
+        data_loading.DateSweepFetcher.list_keys  -- trading days for trade_date sweeps
         data_loading.FetcherFactory      -- injected into DateSweepFetcher
         cli.QuantCnCli                   -- composition root
 
@@ -40,7 +40,7 @@ class TradingCalendar:
         self._query = query
         self._days: list[str] | None = None
 
-    def reload(self) -> None:
+    def refresh(self) -> None:
         """
         Purpose:
             Drop the cached calendar so the next call re-reads trade_cal.
@@ -55,7 +55,7 @@ class TradingCalendar:
         """
         self._days = None
 
-    def sessions(self, start: str, end: str) -> list[str]:
+    def list_sessions(self, start: str, end: str) -> list[str]:
         """
         Purpose:
             Trading days within [start, end].
@@ -88,7 +88,7 @@ class TradingCalendar:
         i = bisect.bisect_left(days, date)
         return i < len(days) and days[i] == date
 
-    def next(self, date: str) -> str:
+    def get_next(self, date: str) -> str:
         """
         Purpose:
             First trading day strictly after `date`.
@@ -107,7 +107,7 @@ class TradingCalendar:
             raise LakeError(f"no trading day after {date} in trade_cal")
         return days[i]
 
-    def prev(self, date: str) -> str:
+    def get_prev(self, date: str) -> str:
         """
         Purpose:
             Last trading day strictly before `date`.

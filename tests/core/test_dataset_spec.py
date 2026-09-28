@@ -10,16 +10,16 @@ from tests.support import Build
 
 # TC-DS-001
 def test_tc_ds_001_yaml_entries_parse(config: Config) -> None:
-    daily = config.dataset("daily")
+    daily = config.get_dataset("daily")
     assert daily.sweep.kind == "trade_date" and daily.curated.partition_by == "trade_date"
-    assert config.dataset("stock_basic").sweep.values == ["L", "D", "P"]
-    assert config.dataset("fina_indicator_vip").sweep.refetch_recent == 2
+    assert config.get_dataset("stock_basic").sweep.values == ["L", "D", "P"]
+    assert config.get_dataset("fina_indicator_vip").sweep.refetch_recent == 2
 
 
 # TC-DS-002
 def test_tc_ds_002_raw_filename() -> None:
-    assert Build.spec().raw_filename("20260828") == "trade_date=20260828.parquet"
-    assert Build.spec(sweep=SweepSpec(kind="none")).raw_filename("all") == "all.parquet"
+    assert Build.spec().get_raw_filename("20260828") == "trade_date=20260828.parquet"
+    assert Build.spec(sweep=SweepSpec(kind="none")).get_raw_filename("all") == "all.parquet"
 
 
 # TC-DS-003
@@ -32,7 +32,7 @@ def test_tc_ds_003_columns_must_be_declared() -> None:
 
 # TC-DS-004
 def test_tc_ds_004_schema_mirrors_spec() -> None:
-    schema = Build.spec().frame_schema()
+    schema = Build.spec().build_schema()
     assert schema.columns == ["ts_code", "trade_date", "close"]
     assert schema.primary_key == ["ts_code", "trade_date"]
-    assert schema.dtype("close") == "float64" and schema.dtype("ts_code") == "string"
+    assert schema.get_dtype("close") == "float64" and schema.get_dtype("ts_code") == "string"

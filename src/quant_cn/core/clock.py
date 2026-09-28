@@ -23,16 +23,16 @@ class Clock:
         data_loading.TushareClient       -- retry and rate-limit sleeps
         core.BaseFetcher.run             -- per-key duration
         lake.RunLog                      -- event timestamps
-        lake.Compactor.compact           -- manifest timestamp
+        lake.Compactor.rebuild           -- manifest timestamp
         pipeline.DownloadPipeline        -- default end date (today)
         cli.QuantCnCli                   -- composition root
 
     Test cases:
-        TC-CL-001  today_str is YYYYMMDD and equals now().date()
+        TC-CL-001  today_str is YYYYMMDD and equals get_now().date()
         TC-CL-002  sleep(0) returns immediately; monotonic is non-decreasing
     """
 
-    def now(self) -> dt.datetime:
+    def get_now(self) -> dt.datetime:
         """
         Purpose:
             Current local wall time.
@@ -47,7 +47,7 @@ class Clock:
         """
         return dt.datetime.now()
 
-    def today_str(self) -> str:
+    def get_today(self) -> str:
         """
         Purpose:
             Today's date as a Tushare `YYYYMMDD` string.
@@ -60,9 +60,9 @@ class Clock:
             Raises:
                 (none)
         """
-        return self.now().strftime("%Y%m%d")
+        return self.get_now().strftime("%Y%m%d")
 
-    def monotonic(self) -> float:
+    def get_monotonic(self) -> float:
         """
         Purpose:
             Monotonic seconds for measuring durations.

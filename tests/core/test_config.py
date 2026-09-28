@@ -40,15 +40,15 @@ def test_tc_c_003_inside_repo_refused(repo: Path) -> None:
 
 # TC-C-004
 def test_tc_c_004_start_for(config: Config) -> None:
-    assert config.start_for("trade_cal") == "19901219"
-    assert config.start_for("daily") == config.download.long_history_start
-    assert config.start_for("daily_basic") == config.download.default_start
+    assert config.get_start("trade_cal") == "19901219"
+    assert config.get_start("daily") == config.download.long_history_start
+    assert config.get_start("daily_basic") == config.download.default_start
 
 
 # TC-C-005
 def test_tc_c_005_unknown_dataset(config: Config) -> None:
     with pytest.raises(ConfigError):
-        config.dataset("nope")
+        config.get_dataset("nope")
 
 
 # TC-C-006

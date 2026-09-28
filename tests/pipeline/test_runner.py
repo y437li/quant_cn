@@ -19,8 +19,8 @@ class ScriptStep(BaseStep):
     def name(self) -> str:
         return self._name
 
-    def prepare(self) -> int:
-        return 1
+    def list_units(self) -> list[str]:
+        return ["k"]
 
     def run(self, run_id: str, progress: ProgressHook | None = None) -> StepReport:
         self.ran = True
@@ -45,7 +45,7 @@ def test_tc_lr_002_blocked_continues(lake: MiniLake) -> None:
     report = LocalRunner(lake.run_log, show_progress=False).run(
         "t", [ScriptStep("vip", PermissionDeniedError("no points")), later]
     )
-    assert report.blocked() == ["vip"] and later.ran
+    assert report.list_blocked() == ["vip"] and later.ran
     events = lake.query.sql("SELECT dataset FROM meta.run_log WHERE status = 'blocked'")
     assert events["dataset"].tolist() == ["vip"]
 

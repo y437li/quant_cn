@@ -31,10 +31,10 @@ class Schema:
             SchemaError  -- text_columns or primary_key not a subset of columns
 
     Used by:
-        core.DatasetSpec.frame_schema          -- builds one Schema per dataset
+        core.DatasetSpec.build_schema          -- builds one Schema per dataset
         lake.ParquetWriter.write_raw     -- coerce dtypes before writing raw files
         lake.ParquetWriter.write_curated -- validate before writing a curated partition
-        lake.Compactor.compact           -- coerce and select declared columns
+        lake.Compactor.rebuild           -- coerce and select declared columns
 
     Test cases:
         TC-S-001  coerce casts text to string and numbers to float64
@@ -63,7 +63,7 @@ class Schema:
         self.text_columns = frozenset(text_columns)
         self.primary_key = list(primary_key)
 
-    def dtype(self, column: str) -> str:
+    def get_dtype(self, column: str) -> str:
         """
         Purpose:
             Declared dtype name of `column`.
@@ -78,7 +78,7 @@ class Schema:
         """
         return TEXT_DTYPE if column in self.text_columns else NUMBER_DTYPE
 
-    def coerce(self, df: pd.DataFrame, strict: bool = False) -> pd.DataFrame:
+    def normalize(self, df: pd.DataFrame, strict: bool = False) -> pd.DataFrame:
         """
         Purpose:
             Return a copy of `df` cast to the declared dtypes.
@@ -103,10 +103,10 @@ class Schema:
                     out[col] = pd.NA
             out = out[self.columns]
         for col in out.columns:
-            out[col] = self._cast(out[col], str(col))
+            out[col] = self._normalize_column(out[col], str(col))
         return out
 
-    def validate(self, df: pd.DataFrame) -> None:
+    def validate(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Purpose:
             Check `df` satisfies the schema exactly.
@@ -115,7 +115,7 @@ class Schema:
             Input:
                 df: DataFrame
             Output:
-                None
+                DataFrame  -- the same frame, unchanged
             Raises:
                 SchemaError  -- column set differs, a dtype differs, or the primary key has
                                 nulls or duplicates
@@ -129,15 +129,18 @@ class Schema:
                 else pd.api.types.is_float_dtype(df[col])
             )
             if not ok:
-                raise SchemaError(f"{self.name}.{col}: dtype {df[col].dtype} != {self.dtype(col)}")
+                raise SchemaError(
+                    f"{self.name}.{col}: dtype {df[col].dtype} != {self.get_dtype(col)}"
+                )
         if self.primary_key:
             key = df[self.primary_key]
             if key.isna().any().any():
                 raise SchemaError(f"{self.name}: null in primary key {self.primary_key}")
             if key.duplicated().any():
                 raise SchemaError(f"{self.name}: duplicate primary key {self.primary_key}")
+        return df
 
-    def empty(self) -> pd.DataFrame:
+    def build_empty(self) -> pd.DataFrame:
         """
         Purpose:
             A zero-row frame with the declared columns and dtypes.
@@ -150,9 +153,9 @@ class Schema:
             Raises:
                 (none)
         """
-        return pd.DataFrame({c: pd.Series(dtype=self.dtype(c)) for c in self.columns})
+        return pd.DataFrame({c: pd.Series(dtype=self.get_dtype(c)) for c in self.columns})
 
-    def _cast(self, series: pd.Series, column: str) -> pd.Series:
+    def _normalize_column(self, series: pd.Series, column: str) -> pd.Series:
         if column in self.text_columns:
             text: pd.Series = series.astype("string")
             return text

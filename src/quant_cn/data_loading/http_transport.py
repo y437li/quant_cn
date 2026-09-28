@@ -28,7 +28,7 @@ class HttpTransport:
         TC-TC-001  (via fake transport subclass) client pages until a short page
     """
 
-    def post(self, url: str, payload: Mapping[str, Any], timeout: float) -> dict[str, Any]:
+    def fetch_json(self, url: str, payload: Mapping[str, Any], timeout: float) -> dict[str, Any]:
         """
         Purpose:
             POST `payload` as JSON to `url`.

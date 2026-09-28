@@ -15,7 +15,7 @@ class BaseRunLog(ABC):
         Input:
             (subclass-specific constructor)
         Output:
-            instance with `start_run`, `event`, `finish_run`
+            instance with `open_run`, `record_event`, `close_run`
         Raises:
             TypeError  -- when instantiated directly
 
@@ -30,7 +30,7 @@ class BaseRunLog(ABC):
     """
 
     @abstractmethod
-    def start_run(self, kind: str) -> str:
+    def open_run(self, kind: str) -> str:
         """
         Purpose:
             Open a run and return its id.
@@ -45,7 +45,7 @@ class BaseRunLog(ABC):
         """
 
     @abstractmethod
-    def event(
+    def record_event(
         self,
         run_id: str,
         dataset: str,
@@ -70,7 +70,7 @@ class BaseRunLog(ABC):
         """
 
     @abstractmethod
-    def finish_run(self, run_id: str, status: str, message: str = "") -> None:
+    def close_run(self, run_id: str, status: str, message: str = "") -> None:
         """
         Purpose:
             Close a run with its final status.

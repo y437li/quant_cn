@@ -40,7 +40,7 @@ class LakeConfig(BaseModel):
         cli.QuantCnCli                   -- lake root for every lake class, doctor, backup
 
     Test cases:
-        TC-C-001  env > local.yaml > base.yaml precedence for lake.root
+        TC-C-001  env > local.yaml > base.yaml precedence for lake.lake_root
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -146,7 +146,7 @@ class Config(BaseModel):
         pipeline.DownloadPipeline        -- dataset order, start dates
 
     Test cases:
-        TC-C-001  env > local.yaml > base.yaml precedence for lake.root
+        TC-C-001  env > local.yaml > base.yaml precedence for lake.lake_root
         TC-C-002  token read from env, never from YAML, not shown in repr
         TC-C-003  lake root inside the repo is refused unless allow_inside_repo
         TC-C-004  start_for applies dataset start, long history, then default
@@ -181,22 +181,22 @@ class Config(BaseModel):
                 repo_root: Path | None           -- default: the repository holding this package
                 env:       Mapping[str, str] | None  -- default: `.env` overlaid by os.environ
             Output:
-                Config  -- lake.root absolute; token from env ("" if unset)
+                Config  -- lake.lake_root absolute; token from env ("" if unset)
             Raises:
                 ConfigError  -- missing/malformed YAML, validation failure, bad dates, dataset
                                 name mismatch, lake root inside the repo without opt-in
         """
         root = (repo_root or REPO_ROOT).resolve()
-        environ = dict(env) if env is not None else cls._environment(root)
+        environ = dict(env) if env is not None else cls._read_environment(root)
         base = cls._read_yaml(root / "config" / "base.yaml", required=True)
         local = cls._read_yaml(root / "config" / "local.yaml", required=False)
-        merged = cls._merge(base, local)
+        merged = cls._build_merged(base, local)
         datasets = cls._read_yaml(root / "config" / "datasets.yaml", required=True)
 
         lake = dict(merged.get("lake", {}))
         if environ.get(ENV_LAKE_ROOT):
             lake["root"] = environ[ENV_LAKE_ROOT]
-        lake["root"] = cls._resolve_root(root, str(lake.get("root", "")))
+        lake["root"] = cls._normalize_root(root, str(lake.get("root", "")))
         tushare = {**merged.get("tushare", {}), "token": environ.get(ENV_TOKEN, "")}
         try:
             config = cls(
@@ -212,7 +212,7 @@ class Config(BaseModel):
         config._check()
         return config
 
-    def dataset(self, name: str) -> DatasetSpec:
+    def get_dataset(self, name: str) -> DatasetSpec:
         """
         Purpose:
             Look up one dataset spec by name.
@@ -230,7 +230,7 @@ class Config(BaseModel):
         except KeyError:
             raise ConfigError(f"unknown dataset {name!r}") from None
 
-    def start_for(self, name: str) -> str:
+    def get_start(self, name: str) -> str:
         """
         Purpose:
             Download start date for a dataset: its own `start`, else long-history start if listed,
@@ -244,7 +244,7 @@ class Config(BaseModel):
             Raises:
                 ConfigError  -- unknown name
         """
-        spec = self.dataset(name)
+        spec = self.get_dataset(name)
         if spec.start:
             return spec.start
         if name in self.download.long_history_datasets:
@@ -272,7 +272,7 @@ class Config(BaseModel):
             )
 
     @staticmethod
-    def _environment(root: Path) -> dict[str, str]:
+    def _read_environment(root: Path) -> dict[str, str]:
         values = {k: v for k, v in dotenv_values(root / ".env").items() if v is not None}
         values.update(os.environ)
         return values
@@ -292,18 +292,18 @@ class Config(BaseModel):
         return data
 
     @classmethod
-    def _merge(cls, base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
+    def _build_merged(cls, base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
         out = dict(base)
         for key, value in override.items():
             if isinstance(value, dict) and isinstance(out.get(key), dict):
-                out[key] = cls._merge(out[key], value)
+                out[key] = cls._build_merged(out[key], value)
             else:
                 out[key] = value
         return out
 
     @staticmethod
-    def _resolve_root(repo_root: Path, raw: str) -> Path:
+    def _normalize_root(repo_root: Path, raw: str) -> Path:
         if not raw:
-            raise ConfigError("lake.root is empty")
+            raise ConfigError("lake.lake_root is empty")
         path = Path(raw).expanduser()
         return (path if path.is_absolute() else repo_root / path).resolve()

@@ -22,6 +22,6 @@ def test_tc_lq_002_bad_sql(lake: MiniLake) -> None:
 # TC-LQ-003
 def test_tc_lq_003_has_view(lake: MiniLake, config: Config) -> None:
     assert not lake.query.has_view("raw.trade_cal")
-    lake.writer.write_raw(config.dataset("trade_cal"), "all", Build.trade_cal(["20260828"]))
+    lake.writer.write_raw(config.get_dataset("trade_cal"), "all", Build.trade_cal(["20260828"]))
     lake.catalog.refresh_views()
     assert lake.query.has_view("raw.trade_cal")

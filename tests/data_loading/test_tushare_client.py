@@ -19,7 +19,7 @@ class ScriptedTransport(HttpTransport):
         self.script = list(script)
         self.payloads: list[Mapping[str, Any]] = []
 
-    def post(self, url: str, payload: Mapping[str, Any], timeout: float) -> dict[str, Any]:
+    def fetch_json(self, url: str, payload: Mapping[str, Any], timeout: float) -> dict[str, Any]:
         self.payloads.append(payload)
         item = self.script.pop(0)
         if isinstance(item, Exception):

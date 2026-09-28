@@ -28,24 +28,24 @@ def test_tc_dc_002_malformed_raises(codec: DateCodec, bad: str) -> None:
 
 # TC-DC-003
 def test_tc_dc_003_quarter_ends(codec: DateCodec) -> None:
-    assert codec.quarter_ends("20250331", "20251231") == [
+    assert codec.list_quarter_ends("20250331", "20251231") == [
         "20250331",
         "20250630",
         "20250930",
         "20251231",
     ]
-    assert codec.quarter_ends("20250401", "20250629") == []
+    assert codec.list_quarter_ends("20250401", "20250629") == []
 
 
 # TC-DC-004
 def test_tc_dc_004_weekdays(codec: DateCodec) -> None:
     # 2026-08-28 is a Friday
-    assert codec.weekdays("20260828", "20260831") == ["20260828", "20260831"]
+    assert codec.list_weekdays("20260828", "20260831") == ["20260828", "20260831"]
 
 
 # TC-DC-005
 def test_tc_dc_005_start_after_end(codec: DateCodec) -> None:
     with pytest.raises(ValueError):
-        codec.quarter_ends("20260101", "20250101")
+        codec.list_quarter_ends("20260101", "20250101")
     with pytest.raises(ValueError):
-        codec.weekdays("20260101", "20250101")
+        codec.list_weekdays("20260101", "20250101")

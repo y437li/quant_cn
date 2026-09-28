@@ -27,10 +27,10 @@ class FakeClock(Clock):
         self._tick = 0.0
         self.sleeps: list[float] = []
 
-    def now(self) -> dt.datetime:
+    def get_now(self) -> dt.datetime:
         return self._now
 
-    def monotonic(self) -> float:
+    def get_monotonic(self) -> float:
         self._tick += 0.001
         return self._tick
 
@@ -71,7 +71,7 @@ class FakeTushareClient(BaseApiClient):
 
 @dataclass
 class MiniLake:
-    root: Path
+    lake_root: Path
     catalog: LakeCatalog
     writer: ParquetWriter
     fetch_log: FetchLog

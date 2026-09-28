@@ -26,7 +26,7 @@ class LakeQuery:
 
     Used by:
         lake.TradingCalendar             -- reads raw.trade_cal
-        lake.Compactor.compact           -- reads raw files through DuckDB
+        lake.Compactor.rebuild           -- reads raw files through DuckDB
         cli.QuantCnCli                   -- composition root
 
     Test cases:

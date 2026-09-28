@@ -18,7 +18,7 @@ class QuantCnError(Exception):
 
     Used by:
         pipeline.LocalRunner.run         -- catches any project error to close the run as failed
-        cli.QuantCnCli.main              -- turns project errors into exit code 1
+        cli.QuantCnCli.run              -- turns project errors into exit code 1
 
     Test cases:
         TC-QCE-001  every project exception is a QuantCnError subclass
@@ -40,7 +40,7 @@ class ConfigError(QuantCnError):
 
     Used by:
         core.Config.load                 -- bad YAML, unsafe lake root
-        core.Config.dataset              -- unknown dataset name
+        core.Config.get_dataset              -- unknown dataset name
         data_loading.TushareClient       -- missing token
         data_loading.FetcherFactory.build  -- unknown sweep kind
         pipeline.DownloadPipeline.run    -- unknown dataset requested
@@ -64,7 +64,7 @@ class SchemaError(QuantCnError):
             (none)
 
     Used by:
-        core.Schema.coerce               -- value not convertible to the declared dtype
+        core.Schema.normalize               -- value not convertible to the declared dtype
         core.Schema.validate             -- column set, dtype or primary-key violation
 
     Test cases:
