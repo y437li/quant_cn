@@ -125,6 +125,7 @@ class DatasetSpec(BaseModel):
         data_loading.PeriodSweepFetcher    -- injected type or call
         pipeline.CompactStep               -- injected type or call
         lake.DerivedViews                  -- injected type or call
+        lake.ProjectCatalog                -- injected type or call
 
     Test cases:
         TC-DS-001  datasets.yaml entries parse into DatasetSpec

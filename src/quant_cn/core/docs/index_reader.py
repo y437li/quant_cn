@@ -58,6 +58,7 @@ class IndexInfo:
     Used by:
         core.docs.IndexReader.read  -- return type
         core.docs.IndexChecker      -- compares with disk and code
+        core.docs.DocTableBuilder   -- injected type or call
 
     Test cases:
         TC-IR-001  folder and file rows parsed with contains names
@@ -83,8 +84,10 @@ class IndexReader:
             (none at construction)
 
     Used by:
-        core.docs.IndexChecker    -- one read per folder
-        core.docs.ContractLinter  -- injected type or call
+        core.docs.IndexChecker     -- one read per folder
+        core.docs.ContractLinter   -- injected type or call
+        core.docs.DocTableBuilder  -- injected type or call
+        cli.QuantCnCli             -- injected type or call
 
     Test cases:
         TC-IR-001  folder and file rows parsed with contains names

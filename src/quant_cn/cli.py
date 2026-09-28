@@ -18,6 +18,17 @@ from rich.table import Table
 from quant_cn.core.clock import Clock
 from quant_cn.core.config import Config
 from quant_cn.core.date_codec import DateCodec
+from quant_cn.core.docs.code_scanner import CodeScanner
+from quant_cn.core.docs.code_table_builder import CodeTableBuilder
+from quant_cn.core.docs.contract_linter import ContractLinter
+from quant_cn.core.docs.decisions_reader import DecisionsReader
+from quant_cn.core.docs.doc_table_builder import DocTableBuilder
+from quant_cn.core.docs.docstring_parser import DocstringParser
+from quant_cn.core.docs.index_reader import IndexReader
+from quant_cn.core.docs.markdown_table import MarkdownTableReader
+from quant_cn.core.docs.plan_reader import PlanReader
+from quant_cn.core.docs.registry_reader import RegistryReader
+from quant_cn.core.docs.repo_files import RepoFiles
 from quant_cn.core.exceptions import LakeError, QuantCnError
 from quant_cn.data_loading.fetcher_factory import FetcherFactory
 from quant_cn.data_loading.tushare_client import TushareClient
@@ -28,6 +39,7 @@ from quant_cn.lake.lake_catalog import LakeCatalog
 from quant_cn.lake.lake_query import LakeQuery
 from quant_cn.lake.parquet_writer import ParquetWriter
 from quant_cn.lake.pit_aligner import PitAligner
+from quant_cn.lake.project_catalog import ProjectCatalog
 from quant_cn.lake.run_log import RunLog
 from quant_cn.lake.trading_calendar import TradingCalendar
 from quant_cn.pipeline.curate_pipeline import DIGEST_FILE, CuratePipeline
@@ -40,7 +52,8 @@ MIN_FREE_GB = 20
 class QuantCnCli:
     """
     Purpose:
-        `python -m quant_cn.cli <command>`: doctor, download, compact, curate, rebuild, backup.
+        `python -m quant_cn.cli <command>`: doctor, download, compact, curate, rebuild, backup,
+        project-catalog, query.
         Builds every service from Config (the only place objects are wired) and prints summaries.
 
     Contract:
@@ -59,6 +72,7 @@ class QuantCnCli:
         TC-QCC-001  doctor reports lake root and token presence without printing the token
         TC-QCC-002  download --dry-run on an empty lake exits 0 and lists datasets
         TC-QCC-003  curate on a mini lake exits 0 and reports derived digests unchanged on rerun
+        TC-QCC-004  query runs read-only SQL and prints rows; a write statement fails with exit 1
     """
 
     def __init__(self, config: Config | None = None, console: Console | None = None) -> None:
@@ -86,7 +100,7 @@ class QuantCnCli:
         )
         try:
             config = self._config or Config.load()
-            handler = getattr(self, f"_run_{args.command}")
+            handler = getattr(self, f"_run_{args.command.replace('-', '_')}")
             return int(handler(config, args))
         except QuantCnError as exc:
             self._console.print(f"[red]error:[/red] {exc}")
@@ -111,6 +125,11 @@ class QuantCnCli:
         cu.add_argument("--no-progress", action="store_true")
         sub.add_parser("rebuild", help="recreate the DuckDB catalog and fetch log from parquet")
         sub.add_parser("backup", help="rsync raw/ and the fetch log to lake.backup_target")
+        pc = sub.add_parser("project-catalog", help="rebuild schema project from repo + markdown")
+        pc.add_argument("--no-lint", action="store_true", help="skip lint_findings")
+        qy = sub.add_parser("query", help="run read-only SQL against the lake catalog")
+        qy.add_argument("sql", help='SQL, e.g. "SELECT * FROM project.todo"')
+        qy.add_argument("--limit", type=int, default=50)
         return parser
 
     def _run_doctor(self, config: Config, _args: argparse.Namespace) -> int:
@@ -203,6 +222,39 @@ class QuantCnCli:
             return {}
         data = json.loads(path.read_text(encoding="utf-8"))
         return {str(k): str(v) for k, v in data.items()}
+
+    def _run_project_catalog(self, config: Config, args: argparse.Namespace) -> int:
+        root = config.repo_root
+        tables, scanner = MarkdownTableReader(), CodeScanner()
+        code = CodeTableBuilder(root, scanner, DocstringParser(), RegistryReader(tables))
+        files = RepoFiles(root)
+        docs = DocTableBuilder(
+            root, files, IndexReader(tables), DecisionsReader(tables), PlanReader(tables)
+        )
+        catalog = LakeCatalog(config.lake.root, config.datasets)
+        try:
+            project = ProjectCatalog(
+                catalog, code, docs, config.datasets, ContractLinter(root), Clock()
+            )
+            counts = project.rebuild(run_lint=not args.no_lint)
+            stale = LakeQuery(catalog).sql("SELECT count(*) AS n FROM project.stale")["n"].iloc[0]
+        finally:
+            catalog.close()
+        self._console.print(", ".join(f"{k} {v}" for k, v in counts.items()))
+        self._console.print(f"project.stale: {stale} row(s)")
+        return 0 if stale == 0 else 1
+
+    def _run_query(self, config: Config, args: argparse.Namespace) -> int:
+        catalog = LakeCatalog(config.lake.root, config.datasets, read_only=True)
+        try:
+            frame = LakeQuery(catalog).sql(args.sql)
+        finally:
+            catalog.close()
+        table = Table(*[str(c) for c in frame.columns], title=f"{len(frame)} row(s)")
+        for row in frame.head(args.limit).itertuples(index=False):
+            table.add_row(*(str(v) for v in row))
+        self._console.print(table)
+        return 0
 
     def _run_rebuild(self, config: Config, _args: argparse.Namespace) -> int:
         catalog = LakeCatalog(config.lake.root, config.datasets)

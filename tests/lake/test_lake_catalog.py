@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import duckdb
+import pytest
+
 from quant_cn.core.config import Config
 from quant_cn.lake.lake_catalog import ZONES, LakeCatalog
 from tests.support import MiniLake, Sample
@@ -53,3 +56,15 @@ def test_tc_lc_004_indexes(lake: MiniLake, config: Config) -> None:
     written = lake.catalog.write_indexes()
     assert {p.parent.name for p in written} == {lake.lake_root.name, *ZONES}
     assert "trade_cal" in (lake.lake_root / "raw" / "INDEX.md").read_text()
+
+
+# TC-LC-005
+def test_tc_lc_005_read_only(lake: MiniLake, config: Config) -> None:
+    write_trade_cal(lake, config)
+    lake.catalog.refresh_views()
+    lake.catalog.close()
+    reader = LakeCatalog(config.lake.root, config.datasets, read_only=True)
+    assert reader.connection.execute("SELECT count(*) FROM raw.trade_cal").fetchone() == (2,)
+    with pytest.raises(duckdb.Error):
+        reader.connection.execute("CREATE TABLE meta.x (a INT)")
+    reader.close()

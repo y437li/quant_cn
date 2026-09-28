@@ -27,6 +27,7 @@ class LakeCatalog:
         Input:
             lake_root: Path                     -- zone folders created if missing
             datasets: Mapping[str, DatasetSpec] -- Config.datasets
+            read_only: bool                     -- open read-only: no writes; readers share the file
         Output:
             instance; `connection`, `refresh_view(s)`, `rebuild`, `write_indexes`, `close`
         Raises:
@@ -43,17 +44,22 @@ class LakeCatalog:
         pipeline.CuratePipeline        -- injected type or call
         lake.DerivedViews              -- injected type or call
         lake.PitAligner                -- injected type or call
+        lake.ProjectCatalog            -- injected type or call
 
     Test cases:
         TC-LC-001  raw and curated views exist after refresh and return the written rows
         TC-LC-002  datasets without files get no view; refresh is idempotent
         TC-LC-003  rebuild after deleting the DuckDB file restores views and dataset_meta
         TC-LC-004  write_indexes writes INDEX.md in the lake root and every zone
+        TC-LC-005  read_only opens an existing catalog for reads and rejects writes
     """
 
-    def __init__(self, lake_root: Path, datasets: Mapping[str, DatasetSpec]) -> None:
+    def __init__(
+        self, lake_root: Path, datasets: Mapping[str, DatasetSpec], read_only: bool = False
+    ) -> None:
         self.lake_root = lake_root
         self.datasets = dict(datasets)
+        self.read_only = read_only
         self._con: duckdb.DuckDBPyConnection | None = None
 
     @property
@@ -86,6 +92,11 @@ class LakeCatalog:
             Raises:
                 LakeError  -- the file cannot be opened
         """
+        if self._con is None and self.read_only:
+            try:
+                self._con = duckdb.connect(str(self.catalog_path), read_only=True)
+            except duckdb.Error as exc:
+                raise LakeError(f"cannot open catalog {self.catalog_path}: {exc}") from exc
         if self._con is None:
             for zone in ZONES:
                 (self.lake_root / zone).mkdir(parents=True, exist_ok=True)

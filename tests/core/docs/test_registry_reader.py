@@ -64,3 +64,11 @@ def test_tc_rr_002_method_names(tmp_path: Path) -> None:
     path.write_text(REGISTRY)
     info = RegistryReader(MarkdownTableReader()).read(path)
     assert info.methods["Foo"] == ["__init__", "run", "_helper"]
+
+
+# TC-RR-003
+def test_tc_rr_003_method_rows(tmp_path: Path) -> None:
+    path = tmp_path / "CLASS_REGISTRY.md"
+    path.write_text(REGISTRY)
+    rows = RegistryReader(MarkdownTableReader()).read(path).method_rows["Foo"]
+    assert rows[1] == {"Method": "`run`", "Purpose": "go"}

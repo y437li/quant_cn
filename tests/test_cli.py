@@ -38,3 +38,16 @@ def test_tc_qcc_003_curate(config: Config) -> None:
     second = Console(record=True, width=200)
     assert QuantCnCli(config, second).run(["curate", "--no-progress"]) == 0
     assert "CHANGED" not in second.export_text()
+
+
+# TC-QCC-004
+def test_tc_qcc_004_query(config: Config) -> None:
+    catalog = LakeCatalog(config.lake.root, config.datasets)
+    assert catalog.connection is not None
+    catalog.close()
+    console = Console(record=True, width=200)
+    assert QuantCnCli(config, console).run(["query", "SELECT 41 + 1 AS answer"]) == 0
+    assert "42" in console.export_text()
+    assert (
+        QuantCnCli(config, Console(record=True)).run(["query", "CREATE TABLE meta.t (a INT)"]) == 1
+    )

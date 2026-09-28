@@ -97,6 +97,7 @@ class ClassInfo:
         core.docs.CodeScanner.read_module  -- builds records
         core.docs.NameChecker              -- method names, module-class match
         core.docs.CodeUnit                 -- injected type or call
+        core.docs.CodeTableBuilder         -- injected type or call
 
     Test cases:
         TC-CS-001  classes, methods and module functions are listed with line spans
@@ -168,6 +169,7 @@ class ModuleInfo:
         core.docs.ContractChecker          -- whole-tree checks
         core.docs.NameChecker              -- file and method names
         core.docs.CodeUnit                 -- injected type or call
+        core.docs.CodeTableBuilder         -- injected type or call
 
     Test cases:
         TC-CS-001  classes, methods and module functions are listed with line spans
@@ -196,11 +198,13 @@ class CodeScanner:
             (none at construction)
 
     Used by:
-        core.docs.ContractChecker  -- scans src/ and scripts/
-        core.docs.IndexChecker     -- scans .py files listed in indexes
-        core.docs.SizeChecker      -- scans src/, tests/, scripts/
-        core.docs.NameChecker      -- scans src/, tests/, scripts/
-        core.docs.ContractLinter   -- injected type or call
+        core.docs.ContractChecker   -- scans src/ and scripts/
+        core.docs.IndexChecker      -- scans .py files listed in indexes
+        core.docs.SizeChecker       -- scans src/, tests/, scripts/
+        core.docs.NameChecker       -- scans src/, tests/, scripts/
+        core.docs.ContractLinter    -- injected type or call
+        core.docs.CodeTableBuilder  -- injected type or call
+        cli.QuantCnCli              -- injected type or call
 
     Test cases:
         TC-CS-001  classes, methods and module functions are listed with line spans

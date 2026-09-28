@@ -72,6 +72,9 @@ class MarkdownTableReader:
         core.docs.RegistryReader    -- parses CLASS_REGISTRY.md
         core.docs.ConventionReader  -- parses NAMING_CONVENTION.md
         core.docs.ContractLinter    -- injected type or call
+        core.docs.DecisionsReader   -- injected type or call
+        core.docs.PlanReader        -- injected type or call
+        cli.QuantCnCli              -- injected type or call
 
     Test cases:
         TC-MTR-001  tables are read with their headings and cells

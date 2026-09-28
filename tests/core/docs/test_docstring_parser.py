@@ -65,3 +65,11 @@ def test_tc_dsp_003_missing_sections(parser: DocstringParser, text: str | None) 
 def test_tc_dsp_004_ids_outside_section_ignored(parser: DocstringParser) -> None:
     doc = parser.parse("Purpose:\n    see TC-XY-009\n\nTest cases:\n    TC-XY-001 a\n")
     assert doc.test_cases == ("TC-XY-001",)
+
+
+# TC-DSP-005
+def test_tc_dsp_005_blocks_and_descriptions(parser: DocstringParser) -> None:
+    doc = parser.parse(FULL)
+    assert doc.inputs == "start: str  -- inclusive" and doc.outputs == "DataFrame"
+    assert doc.raises == "LakeError  -- missing"
+    assert doc.test_descriptions == {"TC-AB-001": "happy", "TC-AB-002": "failure"}

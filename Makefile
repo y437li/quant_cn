@@ -3,7 +3,7 @@ export UV_PROJECT_ENVIRONMENT ?= $(HOME)/.venvs/quant_cn
 UV_RUN := uv run --env-file .env
 CLI := $(UV_RUN) python -m quant_cn.cli
 
-.PHONY: setup hooks lint lint-contracts test check doctor download download-dry compact curate lake-rebuild lake-backup notebook
+.PHONY: setup hooks lint lint-contracts test check doctor download download-dry compact curate lake-rebuild lake-backup notebook project-catalog query
 
 setup:            ## create the venv from uv.lock; copy .env.example to .env if missing
 	uv sync --all-extras
@@ -25,7 +25,7 @@ lint-contracts:   ## contract/index/size/names linter only, e.g. make lint-contr
 test:             ## offline test suite with coverage
 	uv run pytest --cov
 
-check: lint test  ## everything a change must pass
+check: lint test project-catalog  ## everything a change must pass; refreshes schema project
 
 doctor:           ## lake root, free space, token presence
 	$(CLI) doctor
@@ -52,3 +52,9 @@ lake-backup:      ## rsync raw/ + fetch log to lake.backup_target (config/local.
 notebook:         ## run research_space/main.ipynb top to bottom against the lake (outputs discarded)
 	$(UV_RUN) jupyter nbconvert --to notebook --execute research_space/main.ipynb --stdout > /dev/null
 	@echo "main.ipynb ran top to bottom"
+
+project-catalog:  ## rebuild schema `project` (repo tree, registry, plans, decisions, lint) in the lake catalog
+	$(CLI) project-catalog $(ARGS)
+
+query:            ## read-only SQL against the lake catalog, e.g. make query SQL="SELECT * FROM project.todo"
+	$(CLI) query "$(SQL)"

@@ -148,6 +148,7 @@ class LakeError(QuantCnError):
         pipeline.DeriveStep        -- injected type or call
         lake.DerivedViews          -- injected type or call
         lake.PitAligner            -- injected type or call
+        lake.ProjectCatalog        -- injected type or call
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError

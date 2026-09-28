@@ -54,6 +54,8 @@ class DocContract:
             purpose:    str                -- Purpose text joined into one line; "" if absent
             used_by:    tuple[UsedByEntry] -- entries; empty for "(none yet)"
             test_cases: tuple[str]         -- TC IDs in the Test cases section, in order
+            inputs, outputs, raises: str   -- Input / Output / Raises blocks, lines joined by "; "
+            test_descriptions: dict[str, str]  -- TC ID -> its description text
         Output:
             frozen dataclass; `has`
         Raises:
@@ -71,6 +73,10 @@ class DocContract:
     purpose: str = ""
     used_by: tuple[UsedByEntry, ...] = ()
     test_cases: tuple[str, ...] = field(default_factory=tuple)
+    inputs: str = ""
+    outputs: str = ""
+    raises: str = ""
+    test_descriptions: dict[str, str] = field(default_factory=dict)
 
     def has(self, *names: str) -> bool:
         """
@@ -103,14 +109,17 @@ class DocstringParser:
             (none)
 
     Used by:
-        core.docs.ContractChecker  -- every class, method and module docstring
-        core.docs.ContractLinter   -- injected type or call
+        core.docs.ContractChecker   -- every class, method and module docstring
+        core.docs.ContractLinter    -- injected type or call
+        core.docs.CodeTableBuilder  -- injected type or call
+        cli.QuantCnCli              -- injected type or call
 
     Test cases:
         TC-DSP-001  full contract docstring parses every section
         TC-DSP-002  "(none yet)" yields no Used by entries; non-class callers keep cls None
         TC-DSP-003  missing sections are absent; empty or None docstring gives an empty contract
         TC-DSP-004  TC IDs outside the Test cases section are ignored
+        TC-DSP-005  Input/Output/Raises text and TC descriptions are kept
     """
 
     def parse(self, text: str | None) -> DocContract:
@@ -130,12 +139,17 @@ class DocstringParser:
         entries = tuple(
             self._parse_entry(line) for line in blocks.get("Used by", []) if line != "(none yet)"
         )
-        cases = tuple(_TC_ID.findall("\n".join(blocks.get("Test cases", []))))
+        case_lines = blocks.get("Test cases", [])
+        cases = tuple(_TC_ID.findall("\n".join(case_lines)))
         return DocContract(
             sections=frozenset(blocks),
             purpose=" ".join(blocks.get("Purpose", [])),
             used_by=entries,
             test_cases=cases,
+            inputs="; ".join(blocks.get("Input", [])),
+            outputs="; ".join(blocks.get("Output", [])),
+            raises="; ".join(blocks.get("Raises", [])),
+            test_descriptions=self._parse_descriptions(case_lines),
         )
 
     def _parse_sections(self, text: str) -> dict[str, list[str]]:
@@ -151,6 +165,14 @@ class DocstringParser:
             if current and line:
                 blocks[current].append(line)
         return blocks
+
+    def _parse_descriptions(self, lines: list[str]) -> dict[str, str]:
+        out: dict[str, str] = {}
+        for line in lines:
+            ids = _TC_ID.findall(line)
+            if ids and line.startswith(ids[0]):
+                out[ids[0]] = line[len(ids[0]) :].strip()
+        return out
 
     def _parse_entry(self, line: str) -> UsedByEntry:
         ref, _, note = line.partition("--")

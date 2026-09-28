@@ -24,6 +24,7 @@ class RegistryInfo:
             abstract:   set[str]                   -- section C classes
             exceptions: set[str]                   -- section D classes
             schemas:    set[str]                   -- section E schema names
+            method_rows: dict[str, list[dict[str, str]]]  -- section B method rows (column -> cell)
         Output:
             frozen dataclass
         Raises:
@@ -32,6 +33,7 @@ class RegistryInfo:
     Used by:
         core.docs.RegistryReader.read  -- return type
         core.docs.ContractChecker      -- registry parity
+        core.docs.CodeTableBuilder     -- injected type or call
 
     Test cases:
         TC-RR-001  sections A-E parsed; template block ignored
@@ -42,6 +44,7 @@ class RegistryInfo:
     abstract: set[str] = field(default_factory=set)
     exceptions: set[str] = field(default_factory=set)
     schemas: set[str] = field(default_factory=set)
+    method_rows: dict[str, list[dict[str, str]]] = field(default_factory=dict)
 
 
 class RegistryReader:
@@ -59,12 +62,15 @@ class RegistryReader:
             (none at construction)
 
     Used by:
-        core.docs.ContractChecker  -- registry row, block and method parity
-        core.docs.ContractLinter   -- injected type or call
+        core.docs.ContractChecker   -- registry row, block and method parity
+        core.docs.ContractLinter    -- injected type or call
+        core.docs.CodeTableBuilder  -- injected type or call
+        cli.QuantCnCli              -- injected type or call
 
     Test cases:
         TC-RR-001  sections A-E parsed; template block ignored
         TC-RR-002  method names strip "(private)" markers and argument lists
+        TC-RR-003  full method rows are kept per class
     """
 
     def __init__(self, tables: MarkdownTableReader) -> None:
@@ -90,22 +96,26 @@ class RegistryReader:
                 name = self._parse_name(row[0])
                 if name:
                     info.index[name] = dict(zip(table.header, row, strict=True))
-        info.methods.update(self._read_blocks(self._get_section(text, "## B.", "## C.")))
+        rows = self._read_blocks(self._get_section(text, "## B.", "## C."))
+        info.method_rows.update(rows)
+        info.methods.update(
+            {cls: [self._parse_name(r["Method"]) for r in items] for cls, items in rows.items()}
+        )
         info.abstract.update(self._list_names(self._get_section(text, "## C.", "## D.")))
         info.exceptions.update(self._list_names(self._get_section(text, "## D.", "## E.")))
         info.schemas.update(self._list_names(self._get_section(text, "## E.", "## F.")))
         return info
 
-    def _read_blocks(self, text: str) -> dict[str, list[str]]:
-        blocks: dict[str, list[str]] = {}
+    def _read_blocks(self, text: str) -> dict[str, list[dict[str, str]]]:
+        blocks: dict[str, list[dict[str, str]]] = {}
         starts = list(_BLOCK.finditer(text))
         for i, match in enumerate(starts):
             end = starts[i + 1].start() if i + 1 < len(starts) else len(text)
-            names: list[str] = []
+            rows: list[dict[str, str]] = []
             for table in self._tables.read(text[match.end() : end]):
                 if table.header[:1] == ("Method",):
-                    names += [self._parse_name(cell) for cell in table.get_column("Method")]
-            blocks[match.group(1)] = [n for n in names if n]
+                    rows += [dict(zip(table.header, r, strict=True)) for r in table.rows]
+            blocks[match.group(1)] = [r for r in rows if self._parse_name(r["Method"])]
         return blocks
 
     def _list_names(self, text: str) -> set[str]:

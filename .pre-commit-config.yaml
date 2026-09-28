@@ -35,3 +35,9 @@ repos:
         name: no files over 500 kB
         entry: env UV_PROJECT_ENVIRONMENT=${HOME}/.venvs/quant_cn uv run python -c "import sys,os; big=[f for f in sys.argv[1:] if os.path.getsize(f)>500_000]; print(*big); sys.exit(1 if big else 0)"
         language: system
+      - id: project-catalog
+        name: refresh schema project (fails when project.stale has rows)
+        entry: env UV_PROJECT_ENVIRONMENT=${HOME}/.venvs/quant_cn uv run --env-file .env python -m quant_cn.cli project-catalog --no-lint
+        language: system
+        pass_filenames: false
+        always_run: true

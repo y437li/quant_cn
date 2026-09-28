@@ -21,8 +21,10 @@ class RepoFiles:
             (none at construction)
 
     Used by:
-        core.docs.IndexChecker    -- folders and files that need index rows
-        core.docs.ContractLinter  -- injected type or call
+        core.docs.IndexChecker     -- folders and files that need index rows
+        core.docs.ContractLinter   -- injected type or call
+        core.docs.DocTableBuilder  -- injected type or call
+        cli.QuantCnCli             -- injected type or call
 
     Test cases:
         TC-RF-001  tracked + untracked files; ignored and deleted skipped; disk case reported
