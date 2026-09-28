@@ -1,12 +1,12 @@
 ---
 name: test-cases
-description: Derive a test-case table and a pytest scaffold from a class's docstring contract (Purpose / Contract / Test cases) as required by Plans/CODING_STANDARD.md. Use whenever a new class is being designed, a class contract changes, or the user asks to "write tests", "add test cases", or "cover this class". Also use to audit that every TC ID in a docstring has a matching test.
+description: Derive a test-case table and a pytest scaffold from a class's docstring contract (Purpose / Contract / Test cases) as required by plans/standards/CODING_STANDARD.md. Use whenever a new class is being designed, a class contract changes, or the user asks to "write tests", "add test cases", or "cover this class". Also use to audit that every TC ID in a docstring has a matching test.
 ---
 
 # test-cases
 
 Turn a class contract into concrete, numbered test cases and a pytest file that follows
-`Plans/CODING_STANDARD.md` Sections 3 and 6.
+`plans/standards/CODING_STANDARD.md` Sections 3 and 6.
 
 ## Inputs
 - A target class (module path + class name), or a docstring contract pasted by the user.
@@ -36,33 +36,37 @@ Turn a class contract into concrete, numbered test cases and a pytest file that 
    | TC-PL-002 | failure | end < start | load(...) | raises ValueError |
 
    ID rule: `TC-<ClassAbbrev>-<3 digits>`, abbreviation = capital letters of the class name.
-   Reuse existing IDs; append new ones; never renumber.
+   Reuse existing IDs; append new ones; never renumber. Prefixes already taken (check before choosing,
+   collisions get an extra letter, e.g. `Compactor` → `CO` because `Config` is `C`, `TradingCalendar` → `TCA`
+   because `TushareClient` is `TC`): `grep -rhoE 'TC-[A-Z]+-' src | sort -u`.
+   One ID may appear in several docstrings (a base and its subclasses, a model and its sub-models); it still
+   maps to exactly one test function.
 
 4. **Scaffold the pytest file.** Path mirrors the package: `tests/<layer>/test_<module>.py`.
+   Reuse the shared test kit before writing any fixture:
+   - `tests/conftest.py` fixtures: `clock` (FakeClock), `repo` (tmp repo with copies of `config/*.yaml`),
+     `config` (Config over that repo, lake in `tmp_path`, token `test-token`), `lake` (MiniLake: `lake_root`,
+     `catalog`, `writer`, `fetch_log`, `run_log`, `query`, `clock` — a real parquet + DuckDB lake in tmp_path).
+   - `tests/support.py`: `FakeClock` (fixed now, records sleeps), `FakeTushareClient` (`add(api, key, frame)`,
+     `fail(api, key, exc)`, `calls`), `Sample.build_spec(**overrides)`, `Sample.build_bars(trade_date)`, `Sample.build_trade_cal(open, closed)`.
+     New shared doubles go here (`Fake<Noun>`, builders on `Sample`), never duplicated per test file.
+   - pytest runs with `--import-mode=importlib` and `pythonpath = ["."]`: import the kit as `from tests.support import ...`.
    Template:
 
    ```python
    from __future__ import annotations
 
-   import datetime as dt
-
    import pandas as pd
    import pytest
-   from pandas.testing import assert_frame_equal
 
    from quant_cn.<layer>.<module> import <ClassName>
    from quant_cn.core.exceptions import <ExceptionsUsed>
+   from tests.support import Build, FakeTushareClient, MiniLake
 
 
    @pytest.fixture
-   def sample_store(tmp_path):
-       """Small deterministic fixture built in code; no external files, no network."""
-       ...
-
-
-   @pytest.fixture
-   def loader(sample_store):
-       return <ClassName>(store=sample_store)   # inject fakes via __init__
+   def loader(lake: MiniLake) -> <ClassName>:
+       return <ClassName>(lake.catalog, lake.clock)   # inject real mini-lake parts or fakes via __init__
 
 
    # TC-PL-001
@@ -78,12 +82,13 @@ Turn a class contract into concrete, numbered test cases and a pytest file that 
 
    Rules: one test function per TC ID, named `test_<tc_id_lower>_<short_desc>`; a `# TC-XXX-NNN`
    comment above each; `parametrize` for input variations; fakes subclass the same base class as the
-   real dependency; no `==` on floats; DataFrames compared with `assert_frame_equal`.
+   real dependency; no `==` on floats (`pytest.approx`); DataFrames compared with `assert_frame_equal`;
+   text dtype checked with `pd.api.types.is_string_dtype` (pandas 3 `string`/`str`, not `object`).
 
 5. **Sync the docstring.** Write the final ID list back into the class docstring `Test cases:` section
    so docstring and test file match one-to-one.
 
-6. **Run and report.** Run `pytest <file> -q`. If the class is not implemented yet, tests must fail
+6. **Run and report.** Run `UV_PROJECT_ENVIRONMENT=$HOME/.venvs/quant_cn uv run pytest <file> -q`, then `make check`. If the class is not implemented yet, tests must fail
    with a clear reason (not import errors). Paste real output. Then update the `Tests` column of the
    class's row in `.claude/CLASS_REGISTRY.md`.
 

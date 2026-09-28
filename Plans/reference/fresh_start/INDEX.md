@@ -1,4 +1,4 @@
-# Plans/fresh_start/
+# plans/reference/fresh_start/
 
 Handbook for rebuilding the A-share dataset from scratch, distilled from the old project. Authoritative
 on data semantics (CLAUDE.md reading order item 3).

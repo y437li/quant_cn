@@ -1,13 +1,13 @@
 # quant_cn/
 
 A-share quant research project on a local parquet + DuckDB lake fed by Tushare Pro. Agents start at
-`CLAUDE.md`; the coding standard is binding. Structure: `Plans/FOLDER_STRUCTURE.md`.
+`CLAUDE.md`; the coding standard is binding. Structure: `plans/architecture/FOLDER_STRUCTURE.md`.
 
 ## Folders
 | Folder | Purpose |
 |---|---|
 | [`.claude/`](.claude/INDEX.md) | agent tooling: class registry, skills, settings |
-| [`Plans/`](Plans/INDEX.md) | standards, plans, decisions, data handbook |
+| [`plans/`](plans/INDEX.md) | governance by document type: standards, architecture, plans + roadmap, decisions, reference |
 | [`config/`](config/INDEX.md) | YAML configuration loaded by `core.Config`, no code |
 | [`research_space/`](research_space/INDEX.md) | notebooks that import `quant_cn`; never imported by it |
 | [`scripts/`](scripts/INDEX.md) | dev tooling: contract linter, lint runner |

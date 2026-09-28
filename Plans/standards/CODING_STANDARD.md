@@ -6,7 +6,7 @@ points here. Deviations require an explicit note in the plan and user approval.
 
 Stack: Python 3.12, managed by **uv** (`pyproject.toml` + `uv.lock`, D-018); `pandas`, `pyarrow` (parquet),
 `duckdb` (catalog + SQL), `pydantic`, `pytest`, `ruff`, `mypy`, `import-linter`; type hints everywhere.
-Data vendor: Tushare Pro. Domain rules and data traps live in `Plans/fresh_start/` (`README.md`, `DATA_CATALOG.md`, `TUSHARE_API.md`); this standard defers to them on data semantics.
+Data vendor: Tushare Pro. Domain rules and data traps live in `plans/reference/fresh_start/` (`README.md`, `DATA_CATALOG.md`, `TUSHARE_API.md`); this standard defers to them on data semantics.
 
 ---
 
@@ -25,15 +25,17 @@ Data vendor: Tushare Pro. Domain rules and data traps live in `Plans/fresh_start
 
 ### 2.1 Layering
 Code is organised in layers. A layer may import only from itself or layers below it.
-Package names follow `Plans/FOLDER_STRUCTURE.md` §3 (D-007, D-012).
+Package names follow `plans/architecture/FOLDER_STRUCTURE.md` §3 (D-007, D-012).
 
 | Layer | Packages (`src/quant_cn/...`) | Holds |
 |---|---|---|
-| 6 | `research_space/`, CLI entry points | Notebooks, orchestration; import only, never define |
-| 5 | `back_testing`, `portfolio`, `visualization` | Engine, fills, costs; sizing, constraints, rebalancing; charts over DataFrames and schemas (mutually independent) |
-| 4 | `pipeline`, `statistic` | Resumable download/curate/feature steps; factor and descriptive statistics |
+| 8 | `cli.py`, `research_space/` | Composition root; notebooks (import only, never define) |
+| 7 | `back_testing`, `portfolio`, `visualization` | Engine, fills, costs; sizing, constraints, rebalancing; charts (mutually independent) |
+| 6 | `pipeline` | Resumable download / curate / universe / feature steps |
+| 5 | `factor` | `BaseFactor`, factor library, preprocessing, evaluation, signal combination |
+| 4 | `statistic`, `calculation` | Generic math on frames; domain financial computations (VIX, curves, option chains). Mutually independent |
 | 3 | `data_loading` | Tushare client and fetchers; writes into the lake |
-| 2 | `lake` | Parquet writer, DuckDB catalog, fetch log, compactor, query API, PIT aligner |
+| 2 | `lake` | Parquet writer, DuckDB catalog, fetch log, run log, compactor, query API, PIT aligner, calendar |
 | 1 | `core` | Base classes, exceptions, config, logging, schemas, date/ticker codecs |
 
 ### 2.2 Extension points
@@ -49,12 +51,24 @@ No hardcoded paths, tickers, dates, tokens or thresholds inside classes. They co
 - A single exception hierarchy rooted at `QuantCnError` in `core/exceptions.py`. Raise specific subclasses (`DataSourceError`, `SchemaError`, `ConfigError`, ...).
 - Use `logging.getLogger(__name__)`. `print` is forbidden outside `app` entry points.
 
-### 2.6 Size limits
-- A file: at most ~400 lines. A class: at most ~300 lines. A method: at most ~50 lines. Split when exceeded.
+### 2.6 Size limits (D-030)
+| Unit | Hard limit (linter fails) | Target | Applies to |
+|---|---|---|---|
+| file | **600 lines** | ≤ 400 | every `.py` under `src/`, `tests/`, `scripts/`; notebooks measured as code cells |
+| class | 300 lines | ≤ 200 | all classes |
+| method / function | 50 lines | ≤ 30 | all callables; `__init__` included |
+| `INDEX.md`, `SKILL.md`, plan file | 300 lines | | docs stay scannable |
+
+- Lines are counted as physical lines including docstrings and blank lines (`wc -l`), so a long contract
+  docstring is a reason to split behaviour, not to shorten the contract.
+- Over a hard limit: split by responsibility (a family module → one module per class; a class → composition;
+  a method → named steps). Never silence the check.
+- Enforced by `scripts/lint_contracts.py --size` (fails `make check`); the `standard-review` skill reports
+  sizes (check 8).
 - No circular imports. If one appears, the layering is wrong; fix the design, not the import order.
 
 ### 2.7 Point-in-time (PIT) and data rules
-These come from `Plans/fresh_start/DATA_CATALOG.md` and are enforced in code, not left to memory.
+These come from `plans/reference/fresh_start/DATA_CATALOG.md` and are enforced in code, not left to memory.
 - Every dataset class declares its **primary key** and its **known-on column** (e.g. `trade_date`,
   `f_ann_date`, `ann_date`) as class attributes. A dataset without a known-on column cannot be used
   by any alignment or feature class.
@@ -139,6 +153,8 @@ Test case IDs follow `TC-<ClassAbbrev>-<3 digits>`. The abbreviation is the clas
 
 ## 4. Naming and style
 
+File, folder, document, config, lake and git names: `plans/standards/NAMING_CONVENTION.md` (binding). Identifier rules below are the summary.
+
 - Classes `PascalCase`; methods, functions, variables `snake_case`; constants `UPPER_SNAKE`; private members `_leading_underscore`.
 - Modules are nouns: `price_loader.py` holds `PriceLoader`. One primary class per module; helpers that only serve that class may live beside it.
 - Type hints on every signature. `from __future__ import annotations` at the top of every module.
@@ -153,8 +169,8 @@ Test case IDs follow `TC-<ClassAbbrev>-<3 digits>`. The abbreviation is the clas
 | `ruff format` | formatting, line length 100 | `pyproject.toml [tool.ruff]` |
 | `ruff check` | rules `E,F,W,I,N,UP,B,SIM,PL,RUF,D1` (D1 = docstring *present* on every public class/method; our own format replaces pydocstyle style rules D2-D4, which are disabled) | `pyproject.toml` |
 | `mypy --strict` | types on every signature; no `Any` leaks from pandas boundaries without a typed `Schema` | `pyproject.toml [tool.mypy]` |
-| `import-linter` (`lint-imports`) | layer contract from `FOLDER_STRUCTURE.md`: `core` < `lake` < `data_loading` < `pipeline`/`statistic` < `back_testing`/`portfolio`/`visualization`; `pipeline`/`statistic` independent; `back_testing`/`portfolio`/`visualization` independent; no `research_space` imports inside `src/` | `pyproject.toml [tool.importlinter]` |
-| `scripts/lint_contracts.py` (project linter) | every public class/method has `Purpose`, `Contract` (Input, Output, Raises), `Used by`, `Test cases`; each TC ID has a test function and vice versa; `Used by` matches `grep` over `src/` and `research_space/`; every class has a registry row + detail block whose method table matches the code; no duplicate class names across packages; no module-level functions outside `core/utils`; `--index`: every folder has `INDEX.md`, entries match disk, `Contains` matches classes | none; also runs as `tests/test_contracts.py` so `pytest` fails on violations |
+| `import-linter` (`lint-imports`) | layer contract from `FOLDER_STRUCTURE.md`: `core` < `lake` < `data_loading` < `statistic`/`calculation` < `factor` < `pipeline` < `back_testing`/`portfolio`/`visualization` < `cli`; `statistic`/`calculation` independent; `back_testing`/`portfolio`/`visualization` independent; no `research_space` imports inside `src/` | `pyproject.toml [tool.importlinter]` |
+| `scripts/lint_contracts.py` (project linter) | every public class/method has `Purpose`, `Contract` (Input, Output, Raises), `Used by`, `Test cases`; each TC ID has a test function and vice versa; `Used by` matches `grep` over `src/` and `research_space/`; every class has a registry row + detail block whose method table matches the code; no duplicate class names across packages; no module-level functions outside `core/utils`; `--index`: every folder has `INDEX.md`, entries match disk, `Contains` matches classes; `--size`: file ≤ 600, class ≤ 300, method ≤ 50 lines (§2.6); `--names`: method verb prefixes and file names per NAMING_CONVENTION | none; also runs as `tests/test_contracts.py` so `pytest` fails on violations |
 | `pytest --cov` | coverage targets in §6 | `pyproject.toml [tool.pytest]`, `[tool.coverage]` |
 
 How they run:
@@ -199,7 +215,7 @@ checks that every public method in code has a row and vice versa.
 ### 5.1 Folder indexes (file-level map)
 
 Every folder in the repository, at every depth, contains an `INDEX.md`: packages and sub-packages, each
-test folder, each skill folder, `config/`, `scripts/`, `research_space/notebooks/`, `Plans/plans/` and so on
+test folder, each skill folder, `config/`, `scripts/`, `research_space/notebooks/`, `plans/execution/` and so on
 (format and the short ignore list: `.claude/skills/index/SKILL.md`). Lake folders under `data/` are git-ignored,
 so their indexes are generated by `LakeCatalog.write_indexes()` instead of hand-written.
 It lists the folder's purpose, its subfolders (linking to their own `INDEX.md`) and its files with a
@@ -232,7 +248,7 @@ one-line purpose and what each contains (classes for `.py`, fixtures for `confte
 ## 7. Agent workflow (mandatory order)
 
 1. Read `CLAUDE.md`, this standard, and `.claude/CLASS_REGISTRY.md`.
-2. Use the `plan` skill to write or update the plan in `Plans/plans/` (classes created, extended, reused). Record choices with the `decisions` skill. Wait for approval on anything non-trivial.
+2. Use the `plan` skill to write or update the plan in `plans/execution/` (classes created, extended, reused), keeping `plans/execution/ROADMAP.md` current. Record choices with the `decisions` skill. Wait for approval on anything non-trivial.
 3. Write the class docstring contract first (Purpose, Contract, Used by, Test cases). Add the new class to the Used by of everything it calls. The `new-class` skill drives steps 3–7.
 4. Run the `test-cases` skill to produce the test file from the contract. Tests should fail at this point.
 5. Implement the class until the tests pass.
@@ -254,11 +270,11 @@ one-line purpose and what each contains (classes for `.py`, fixtures for `confte
 - [ ] `make lint` clean: ruff, mypy, import-linter, contract linter (§4.1)
 - [ ] Registry row and detail block added or updated
 - [ ] Parent folder `INDEX.md` updated (new folder: its own `INDEX.md` created)
-- [ ] Plan in `Plans/` updated to reflect what was actually built
+- [ ] Plan in `plans/` updated to reflect what was actually built
 
 ---
 
-## 9. Decisions taken from `Plans/fresh_start/` (override if wrong)
+## 9. Decisions taken from `plans/reference/fresh_start/` (override if wrong)
 
 - Vendor: Tushare Pro via raw HTTP POST (no SDK dependency), token from `TUSHARE_TOKEN`.
 - Storage: local data lake, parquet per dataset partitioned by `year=YYYY`, DuckDB catalog on top (D-009).

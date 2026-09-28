@@ -1,15 +1,15 @@
-# `src/quant_cn` Design (DRAFT v0.1, 2026-09-27, decision D-020 proposed)
+# `src/quant_cn` Design (v1.2, 2026-09-27; D-020, D-028, D-032, D-041 read API)
 
-How the eight packages fit together, what each owns, where the extension points are, and the shared
+How the ten packages fit together, what each owns, where the extension points are, and the shared
 frames that let independent packages talk without importing each other. Plan-level detail lives in
-`Plans/plans/`; this document is the map.
+`plans/execution/`; this document is the map.
 
 ## 1. Data flow
 
 ```
 Tushare ──► data_loading ──► lake.raw ──► lake.curated / derived ──► LakeQuery (SQL, PIT-safe)
                                                                           │
-              pipeline.FeaturePipeline ◄── statistic.BaseFactor ◄─────────┤  PricePanel, FundamentalsPIT
+              pipeline.FeaturePipeline ◄── factor.BaseFactor ◄── statistic ─┤  PricePanel, FundamentalsPIT
                        │                                                  │
                        ▼ FactorPanel, UniversePanel                        │
               portfolio.BasePortfolioConstructor ──► TargetWeightPanel     │
@@ -21,7 +21,7 @@ Tushare ──► data_loading ──► lake.raw ──► lake.curated / deriv
               visualization.BaseChart / ReportBuilder ◄───────────────────┘
 ```
 Everything between packages is a **DataFrame with a registered Schema** (§3). Objects never cross a
-package boundary except `core` types.
+package boundary except `core` types. `cli` (L6) is the composition root that assembles concrete classes.
 
 ## 2. Packages
 
@@ -50,6 +50,25 @@ package boundary except `core` types.
 | `TradingCalendar` | trading-day arithmetic from `trade_cal`: `next()`, `prev()`, `sessions(start,end)`, `is_open()`; used by every layer above |
 | `ProjectCatalog` | repo tree / registry / plans as SQL (plan 02) |
 
+### 2.2b Lake read API — the loading engine (D-041)
+`LakeQuery` is the only way code above the lake reads data. Built today: `sql`, `has_view`, `read_prices`.
+Completed to this surface in plan 04 phase 1 (factors and the universe step are its first consumers):
+
+| Method | Purpose | Output |
+|---|---|---|
+| `sql(query, params)` | any read against catalog views | DataFrame |
+| `read_panel(dataset, start, end, tickers=None, columns=None)` | one curated dataset as a long panel, PK-sorted | DataFrame in the dataset's curated schema |
+| `read_prices(start, end, tickers=None, adjusted=True, dense=False)` | prices; `dense=True` reindexes to `TradingCalendar` sessions with suspended days as NaN rows (closes the phase-5 deferral) | `PRICE_PANEL` |
+| `read_fundamentals_pit(fields, start, end, tickers=None)` | PIT-aligned fundamentals via `PitAligner` | `FUNDAMENTALS_PIT` |
+| `read_reference(name)` | `stock_basic`, `namechange`, `trade_cal`, `index_daily` as frames | curated schema |
+| `read_universe(start, end)` | the `UniversePanel` once `UniverseStep` exists | `UNIVERSE_PANEL` |
+| `register_frame(name, frame)` | expose a notebook/in-memory frame as a DuckDB view for joins | view name |
+| `list_views()` / `has_view(name)` | discovery | list[str] / bool |
+
+`PanelCache` (lake): optional in-memory Arrow cache keyed by (method, args) with a size cap, injected into
+`LakeQuery`; on by default in notebooks, off in pipelines. All methods validate their output with the
+frame's `Schema` before returning. Names follow the verb table (`read_`, `list_`, `register_`).
+
 ### 2.3 `data_loading` (L3) — getting bytes from Tushare
 | Class | Purpose |
 |---|---|
@@ -57,27 +76,50 @@ package boundary except `core` types.
 | `SingleCallFetcher` (none), `EnumFetcher` (list_status, ts_code), `DateSweepFetcher` (trade_date, ann_date), `PeriodSweepFetcher` (period), later `MonthWindowFetcher` (month) | one class per **sweep pattern**, not per endpoint; the endpoint comes from `DatasetSpec` (DATA_LOADING_DESIGN §2.2) |
 | `FetcherFactory` | `spec.sweep.kind` → fetcher instance; adding a dataset with a known pattern needs no new class |
 
-### 2.4 `pipeline` (L4) — ordered, resumable steps
+### 2.4 `statistic` (L4) — generic math on frames, no I/O, no factor knowledge
+| Class | Purpose |
+|---|---|
+| `Winsorizer`, `Standardizer` (z-score, rank) | cross-sectional per-date transforms on a long panel |
+| `Neutralizer` | residualise a value column against industry dummies / size per date |
+| `ICCalculator` | Spearman/Pearson IC per date between any value column and forward returns |
+| `QuantileReturns` | per-date quantile buckets of a value column and their forward returns |
+| `ReturnStats` | annualized return/vol, Sharpe, max drawdown, hit rate over an `EquityCurve` |
+| `CrossSectionalRegression` | per-date OLS of returns on columns, t-stats, R² |
+
+### 2.4b `calculation` (L4) — domain financial computations (D-032, `CALCULATION_DESIGN.md`)
+| Class | Purpose |
+|---|---|
+| `BaseCalculation` | `name`, `inputs`, `output_schema`; `compute(panels) -> DataFrame`; pure |
+| `RiskFreeCurve`, `OptionChainBuilder`, `TermSelector`, `ForwardPriceEstimator`, `VarianceStripCalculator`, `TermInterpolator` | CBOE VIX building blocks, one module each |
+| `VixCalculator` | 30-day volatility index per underlying → `VIX_PANEL` |
+| `CalculationFactory` | name → instance from `config/calculations.yaml` |
+Later: implied-vol surface, greeks, term-structure calculators. `calculation` and `statistic` never import each other; `factor` may use both (e.g. a VIX-regime factor).
+
+### 2.5 `factor` (L5) — factor definitions and factor research (D-028)
+| Class | Purpose |
+|---|---|
+| `BaseFactor` | declares `name`, `inputs` (datasets), `lookback`; `compute(panels) -> FactorPanel`; value at date T uses only data known by close of T |
+| `MomentumFactor`, `VolatilityFactor`, `TurnoverFactor`, `SizeFactor`, `ValueFactor` (pe/pb from `daily_basic`), `QualityFactor` (roe, margins via PIT fundamentals) | first concrete factors, one module each under `factor/library/` |
+| `FactorPreprocessor` | ordered chain of `statistic` transforms (winsorize → standardize → neutralize), each step optional and logged |
+| `FactorEvaluator` | IC / ICIR, quantile ladder, long-short, turnover, decay via `statistic` → `FactorReport` frames |
+| `SignalCombiner` | weighted sum of z-scored factors → one score column (`FactorPanel` with `factor == "score"`) |
+| `FactorFactory` | resolves factor names from YAML to instances (reads the package's registered classes) |
+
+Folder shape: `factor/base_factor.py`, `factor/factor_preprocessor.py`, `factor/factor_evaluator.py`,
+`factor/signal_combiner.py`, `factor/factor_factory.py`, `factor/library/<name>_factor.py` (one class each),
+`factor/library/INDEX.md`. Adding a factor = one module in `library/` + registry block + one YAML line.
+
+### 2.6 `pipeline` (L6) — ordered, resumable steps
 | Class | Purpose |
 |---|---|
 | `BaseRunner` → `LocalRunner` (now), `PrefectRunner` (deferred, D-022) | runs `BaseStep`s in dependency order through a pluggable runner; steps never import the runner's backend |
-| `KeyExecutor` | iterates a fetcher's keys (serial now, thread pool later, D-015g); the writer is the only sink |
 | `DownloadPipeline` | reference → daily sweeps → period sweeps, per `config.download` |
 | `CuratePipeline` | compact → derived (adjusted prices, fundamentals PIT) → indexes |
 | `UniverseStep` | investable universe per date → `UniversePanel` (listed, not ST, not suspended, ≥ N days since listing, exchange filter); reasons kept per exclusion |
-| `FeaturePipeline` | runs configured `BaseFactor`s over `LakeQuery` panels → `FactorPanel` partitions in `curated/derived/features/` |
+| `FeaturePipeline` | runs configured `factor.BaseFactor`s over `LakeQuery` panels → `FactorPanel` partitions in `curated/derived/features/` |
+| `CalculationStep` | runs a configured `calculation.BaseCalculation` → `curated/derived/<name>/` (plan 03) |
 
-### 2.5 `statistic` (L4) — computation, no I/O, no plotting
-| Class | Purpose |
-|---|---|
-| `BaseFactor` | declares `inputs` (datasets), `lookback`, `name`; `compute(panels) -> FactorPanel`; value at date T uses only data known by close of T |
-| `MomentumFactor`, `VolatilityFactor`, `TurnoverFactor`, `SizeFactor`, `ValueFactor` (pe/pb from `daily_basic`), `QualityFactor` (roe, margins via PIT fundamentals) | first concrete factors, one class each |
-| `FactorPreprocessor` | winsorize, z-score, industry/size neutralize; every step optional and logged |
-| `FactorEvaluator` | IC / ICIR, quantile returns, long-short, turnover, decay → `FactorReport` frames |
-| `ReturnStats` | annualized return/vol, Sharpe, max drawdown, hit rate over an `EquityCurve` |
-| `CrossSectionalRegression` | per-date OLS of returns on factors, t-stats, R² |
-
-### 2.6 `portfolio` (L5) — from scores to target weights
+### 2.7 `portfolio` (L7) — from scores to target weights
 | Class | Purpose |
 |---|---|
 | `BasePortfolioConstructor` | `construct(scores: FactorPanel, universe: UniversePanel, date) -> TargetWeightPanel` |
@@ -85,7 +127,7 @@ package boundary except `core` types.
 | `ConstraintSet` | max single weight, sector cap, turnover cap, long-only; applied after construction |
 | `RebalanceSchedule` | monthly / weekly / N-day via `TradingCalendar` |
 
-### 2.7 `back_testing` (L5) — simulate target weights
+### 2.8 `back_testing` (L7) — simulate target weights
 | Class | Purpose |
 |---|---|
 | `BacktestEngine` | daily loop: at open of T+1 trade toward weights decided at close of T; holds cash, positions, NAV |
@@ -94,7 +136,7 @@ package boundary except `core` types.
 | `BacktestResult` | `EquityCurve`, `TradeLog`, `PositionPanel`; `to_frame()` per component; benchmark from `index_daily` |
 | `PerformanceAnalyzer` | metrics vs benchmark using `statistic.ReturnStats`; exposure, turnover, cost drag |
 
-### 2.8 `visualization` (L5) — charts over frames only
+### 2.9 `visualization` (L7) — charts over frames only
 | Class | Purpose |
 |---|---|
 | `BaseChart` | theme tokens, size, `show()`, `to_html()`, `to_png()`; plotly figure inside |
@@ -104,6 +146,11 @@ package boundary except `core` types.
 | `PositionChart` | weight heatmap, sector exposure over time |
 | `ReportBuilder` | one HTML report from a list of charts and metric tables |
 
+### 2.10 `cli` (L8) — composition root
+| Class | Purpose |
+|---|---|
+| `Cli` (`src/quant_cn/cli.py`) | wires `Config` and concrete classes together and exposes `doctor`, `download`, `compact`, `rebuild`, `backup` sub-commands; the only place concrete classes are instantiated together; top import-linter layer, imports anything, imported by nothing |
+
 ## 3. Shared frames (`core.frames`, all long/tidy, dates `YYYYMMDD` strings, tickers `ts_code`)
 
 | Schema | Primary key | Columns | Produced by | Consumed by |
@@ -111,11 +158,12 @@ package boundary except `core` types.
 | `PRICE_PANEL` | `trade_date, ts_code` | open, high, low, close, pre_close, vol, amount, adj_factor, close_adj | `LakeQuery.prices` | factors, engine, charts |
 | `FUNDAMENTALS_PIT` | `trade_date, ts_code, field` | value, end_date, ann_date | `PitAligner` | `QualityFactor`, `ValueFactor` |
 | `UNIVERSE_PANEL` | `trade_date, ts_code` | in_universe, reason | `UniverseStep` | constructors, evaluator |
-| `FACTOR_PANEL` | `trade_date, ts_code, factor` | value, value_raw | `BaseFactor`, `FactorPreprocessor` | evaluator, constructors |
+| `FACTOR_PANEL` | `trade_date, ts_code, factor` | value, value_raw | `factor.BaseFactor`, `factor.FactorPreprocessor`, `factor.SignalCombiner` | evaluator, constructors |
 | `TARGET_WEIGHT_PANEL` | `trade_date, ts_code` | weight | constructors | `BacktestEngine` |
 | `TRADE_LOG` | `trade_date, ts_code, side` | qty, price, cost, reason (filled / rejected_limit / rejected_suspended) | engine | analyzer, charts |
 | `POSITION_PANEL` | `trade_date, ts_code` | qty, weight, market_value | engine | analyzer, `PositionChart` |
 | `EQUITY_CURVE` | `trade_date` | nav, benchmark_nav, cash, exposure, turnover, cost | engine | `ReturnStats`, `EquityCurveChart` |
+| `VIX_PANEL` | `trade_date, underlying` | vix, var_near, var_next, days_near/next, f_near/next, k0_near/next, n_options_near/next, rate_near/next, quality_flag | `VixCalculator` | `SeriesChart`, regime factors, notebooks |
 
 Rules: long format only (DuckDB- and parquet-friendly); pivot inside a method, never across a boundary.
 Every producer validates with `Schema.validate()` before returning; every consumer trusts the schema.
@@ -134,12 +182,14 @@ Every producer validates with `Schema.validate()` before returning; every consum
 | 00 | model roles (agent, hook, settings) | — | drafted |
 | 01 | `core`, `lake`, `data_loading`, `DownloadPipeline`, `CuratePipeline`, `PitAligner`, `BaseChart`/`PriceChart`, `main.ipynb` | 00 | approved |
 | 02 | `ProjectCatalog` (project schema in DuckDB) | 01 ph3 | drafted |
-| 03 | `TradingCalendar`, `UniverseStep`, `BaseFactor` + six factors, `FactorPreprocessor`, `FactorEvaluator`, `FeaturePipeline`, `FactorChart` | 01 | to draft |
-| 04 | `portfolio` (constructors, constraints, schedule), `back_testing` (engine, execution, costs, result, analyzer), `EquityCurveChart`, `PositionChart`, `ReportBuilder` | 03 | to draft |
-| 05 | events datasets (forecast, express, holdertrade, share_float) + event factors | 01, 03 | to draft |
-| 06 | walk-forward / parameter search, multi-strategy portfolios | 04 | to draft |
+| 03 | `calculation` package: CBOE-method VIX (`opt_basic`, `opt_daily`, `shibor` datasets, `DateWindowFetcher`, `CalculationStep`, `SeriesChart`, iVIX replication) | 01 | drafted |
+| 04 | `statistic` primitives, `factor` package (`BaseFactor` + six factors in `library/`, `FactorPreprocessor`, `FactorEvaluator`, `SignalCombiner`, `FactorFactory`), `UniverseStep`, `FeaturePipeline`, `FactorChart` | 01 | to draft |
+| 05 | `portfolio` (constructors, constraints, schedule), `back_testing` (engine, execution, costs, result, analyzer), `EquityCurveChart`, `PositionChart`, `ReportBuilder` | 04 | to draft |
+| 06 | events datasets (forecast, express, holdertrade, share_float) + event factors; Shenwan industries | 01, 04 | to draft |
+| 07 | walk-forward / parameter search, multi-strategy portfolios; `PrefectRunner` | 05 | to draft |
 
 ## 6. Open questions
-1. Backtest granularity: daily bars only (recommended for plan 04) or design `ExecutionModel` for intraday from the start?
-2. Industry classification for neutralization: Shenwan (`index_classify`, needs extra endpoint in plan 05) or `stock_basic.industry` (free, coarser)? Recommendation: start with `stock_basic.industry`, upgrade in plan 05.
-3. Should `portfolio` consume raw `FactorPanel` or a combined `ScorePanel` produced by a `SignalCombiner` in `statistic`? Recommendation: add `SignalCombiner` (weighted sum of z-scored factors) to plan 03.
+None. Closed 2026-09-27 with the recommended defaults (user: "approve"):
+- Backtests are daily-bar only in plan 04; `ExecutionModel` is the single seam if intraday is added later.
+- Industry neutralization starts with `stock_basic.industry`; Shenwan classification arrives with plan 05.
+- `SignalCombiner` in `factor` produces the score consumed by `portfolio` (already in §2.5).

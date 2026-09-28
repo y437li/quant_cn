@@ -1,29 +1,64 @@
-# data lake and secrets (the lake lives outside the repo, D-021; these are guards)
+# quant_cn .gitignore — guards, not the primary control. The lake lives OUTSIDE the repo (D-021),
+# the venv lives in ~/.venvs/quant_cn (D-025), secrets live in .env (D-003). NAMING_CONVENTION §4.
+
+# ---- data lake and secrets (never commit, even if a path is misconfigured) ----
 data/
 *.parquet
 *.duckdb
 *.duckdb.wal
+*.duckdb.tmp
+*.tmp
 .env
+.env.*
+!.env.example
 config/local.yaml
+config/local.*.yaml
+*.pem
+*.key
 
-# research outputs
+# ---- research outputs (regenerable) ----
 research_space/**/outputs/
+.ipynb_checkpoints/
 
-# python
+# ---- python / uv ----
 .venv/
 __pycache__/
 *.py[cod]
 *.egg-info/
 build/
 dist/
+.python-version.local
+
+# ---- tool caches and reports ----
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
+.import_linter_cache/
+.hypothesis/
 .coverage
+.coverage.*
+coverage.xml
 htmlcov/
-.ipynb_checkpoints/
+*.log
+logs/
 
-# os / agent runtime
+# ---- macOS and exFAT volume artifacts ----
 .DS_Store
+._*
+.Spotlight-V100
+.fseventsd
+.Trashes
+.TemporaryItems
+
+# ---- editors ----
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.bak
+*.orig
+
+# ---- agent runtime (Claude Code) ----
 .claude/run/
 .claude/settings.local.json

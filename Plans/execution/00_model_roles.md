@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | proposed, awaiting approval |
+| Status | approved 2026-09-27, not applied (config-only change; awaiting "apply 00") |
 | Owner | user (approve) / Fable main session (apply: config only, no code) |
 | Created | 2026-09-27 |
 | Notion | pending |
@@ -38,7 +38,7 @@ marker from the main session can bypass it; accidents cannot.
 |---|---|---|---|---|---|
 | 1 | Executor agent | `.claude/agents/executor.md`: `model: opus`; tools Read, Edit, Write, Bash, Grep, Glob; system prompt = follow CODING_STANDARD §7, edit only `src/ tests/ scripts/ config/ research_space/`, `INDEX.md`, `CLASS_REGISTRY.md`, and the plan's Log table; create `.claude/run/executor.lock` at start, remove at end; report real `make check` output | agent appears in the agent list; a dry task (create a scratch file under `src/`) succeeds via the agent and is refused from the main session | — | todo |
 | 2 | Session defaults | `.claude/settings.json`: `"model": "claude-fable-5-1"`, `"availableModels": ["claude-fable-5-1", "claude-opus-5-5"]` | new session in this project starts on Fable; `/model` offers only the two | — | todo |
-| 3 | Edit guard hook | `.claude/hooks/guard_code_paths.sh` + `PreToolUse` entry (matcher `Edit|Write|MultiEdit|NotebookEdit`): deny when target path is under `src/ tests/ scripts/ config/ research_space/` and `.claude/run/executor.lock` is absent; always allow `Plans/`, `.claude/`, `INDEX.md`, `CLAUDE.md` | main-session Edit to `src/x.py` is denied with a reason naming this plan; the same edit inside the executor succeeds | 1 | todo |
+| 3 | Edit guard hook | `.claude/hooks/guard_code_paths.sh` + `PreToolUse` entry (matcher `Edit|Write|MultiEdit|NotebookEdit`): deny when target path is under `src/ tests/ scripts/ config/ research_space/` and `.claude/run/executor.lock` is absent; always allow `plans/`, `.claude/`, `INDEX.md`, `CLAUDE.md` | main-session Edit to `src/x.py` is denied with a reason naming this plan; the same edit inside the executor succeeds | 1 | todo |
 | 4 | Skill routing | `new-class` and `test-cases` gain `context: fork`, `agent: executor`; `plan` skill: execute mode says "delegate the phase to the executor agent; run `standard-review` only when the user asks"; `standard-review`, `decisions`, `plan` (create/update), `registry` lookup stay in the main session | invoking `new-class` shows it running in the executor; `standard-review` runs in main | 1 | todo |
 | 5 | Documentation | CLAUDE.md role rule; CODING_STANDARD §7 step list names the model for each step; D-016 accepted; INDEX.md for `.claude/agents/`, `.claude/hooks/`, `.claude/run/` | `index` skill check clean; D-016 accepted | 1–4 | todo |
 
@@ -52,11 +52,11 @@ description: Opus execution agent. Implements an approved plan phase the quant_c
 model: opus
 tools: Read, Edit, Write, Bash, Grep, Glob
 ---
-You execute one approved plan phase from Plans/plans/NN_*.md. Before anything: read CLAUDE.md,
-Plans/CODING_STANDARD.md, .claude/CLASS_REGISTRY.md, the plan. Then `mkdir -p .claude/run && touch .claude/run/executor.lock`.
+You execute one approved plan phase from plans/execution/NN_*.md. Before anything: read CLAUDE.md,
+plans/standards/CODING_STANDARD.md, .claude/CLASS_REGISTRY.md, the plan. Then `mkdir -p .claude/run && touch .claude/run/executor.lock`.
 Follow CODING_STANDARD §7 for every class (new-class skill). You may edit only: src/, tests/, scripts/,
 config/, research_space/, any INDEX.md, .claude/CLASS_REGISTRY.md, and the Log table of the plan you execute.
-You never edit Plans/*.md bodies, DECISIONS.md, CLAUDE.md or skills; if a plan is wrong, stop and report.
+You never edit plans/*.md bodies, DECISIONS.md, CLAUDE.md or skills; if a plan is wrong, stop and report.
 Finish with `make check` (paste real output), update registry and indexes, `rm .claude/run/executor.lock`,
 and report: files touched, classes created/extended/reused, test output, anything left out.
 ```
@@ -93,5 +93,6 @@ None. Closed 2026-09-27:
 
 | Date | Phase | Change |
 |---|---|---|
+| 2026-09-27 | — | Plan approved by user ("approve"); application waits for an explicit instruction |
 | 2026-09-27 | 4 | User: review only on request, not per phase; skill routing text updated |
 | 2026-09-27 | — | Drafted after verifying mechanisms against Claude Code docs (sub-agents, skills, hooks, settings-reference) |

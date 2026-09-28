@@ -1,4 +1,4 @@
-# Folder Structure Plan (v1.1, 2026-09-27; D-007, D-009, D-012, D-014, D-015, D-021)
+# Folder Structure Plan (v1.3, 2026-09-27; D-007, D-009, D-012, D-014, D-015, D-021, D-028, D-032)
 
 Three areas from the user (config, package, research space) plus the data lake (D-009), a `core`
 layer the standard needs, tests mirroring the package, and data kept out of git.
@@ -19,7 +19,8 @@ quant_cn/
 ├── .pre-commit-config.yaml
 ├── .env                          # git-ignored: TUSHARE_TOKEN, QUANT_CN_LAKE_ROOT (D-021)
 ├── .env.example                  # same keys, empty values
-├── .gitignore                    # data/, *.parquet, *.duckdb, .env, config/local.yaml, .venv/, research_space/**/outputs/
+├── .gitignore                    # data/, *.parquet, *.duckdb, .env, config/local.yaml, research_space/**/outputs/
+│                                 # (no .venv in the repo: UV_PROJECT_ENVIRONMENT=~/.venvs/quant_cn, exFAT volume has no symlinks, D-025)
 │
 ├── config/                       # 1. configuration, no code
 │   ├── INDEX.md
@@ -35,11 +36,13 @@ quant_cn/
 │       ├── core/INDEX.md         #    L1  Config, exceptions, BaseFetcher/BaseStore, Schema, DateCodec, TickerNormalizer, logging
 │       ├── lake/INDEX.md         #    L2  ParquetWriter, LakeCatalog (DuckDB), FetchLog, Compactor, LakeQuery, PitAligner
 │       ├── data_loading/INDEX.md #    L3  TushareClient, one fetcher class per sweep pattern; writes into the lake
-│       ├── pipeline/INDEX.md     #    L4  resumable steps: download -> compact -> curate -> features
-│       ├── statistic/INDEX.md    #    L4  factor stats (IC, quantile returns), descriptive stats, regressions
-│       ├── back_testing/INDEX.md #    L5  engine, fills constrained by stk_limit, costs, results
-│       ├── portfolio/INDEX.md    #    L5  position sizing, constraints, rebalancing schedules
-│       └── visualization/INDEX.md#    L5  charts for prices, factors, backtest results; plotly, themed, notebook + HTML export
+│       ├── statistic/INDEX.md    #    L4  generic math on frames: winsorize, standardize, neutralize, IC, return stats, regressions
+│       ├── calculation/INDEX.md  #    L4  domain financial computations: VIX (CBOE method), risk-free curve, option chains; later IV, greeks (D-032)
+│       ├── factor/INDEX.md       #    L5  BaseFactor + concrete factors, FactorPreprocessor, FactorEvaluator, SignalCombiner (D-028)
+│       ├── pipeline/INDEX.md     #    L6  resumable steps: download -> compact -> curate -> features (runs factors)
+│       ├── back_testing/INDEX.md #    L7  engine, fills constrained by stk_limit, costs, results
+│       ├── portfolio/INDEX.md    #    L7  position sizing, constraints, rebalancing schedules
+│       └── visualization/INDEX.md#    L7  charts for prices, factors, backtest results; plotly, themed, notebook + HTML export
 │                                 #    (each package folder: INDEX.md + __init__.py + one module per class)
 │
 ├── scripts/                      # dev tooling, not part of the package
@@ -57,16 +60,18 @@ quant_cn/
 │   ├── INDEX.md
 │   ├── conftest.py
 │   ├── test_contracts.py         #    runs the contract + index linter as a test
-│   ├── core/INDEX.md  lake/INDEX.md  data_loading/INDEX.md  pipeline/INDEX.md
-│   └── statistic/INDEX.md  back_testing/INDEX.md  portfolio/INDEX.md  visualization/INDEX.md
+│   ├── core/INDEX.md  lake/INDEX.md  data_loading/INDEX.md  statistic/INDEX.md  calculation/INDEX.md  factor/INDEX.md
+│   └── pipeline/INDEX.md  back_testing/INDEX.md  portfolio/INDEX.md  visualization/INDEX.md
 │
 │   (no data/ folder in the repo: the lake lives OUTSIDE it, see §2 and D-021)
 │
-├── Plans/                        # standards, plans, decisions, handbook
-│   ├── INDEX.md
-│   ├── CODING_STANDARD.md  DECISIONS.md  FOLDER_STRUCTURE.md
-│   ├── plans/INDEX.md            #    NN_<slug>.md, one row per plan with status
-│   └── fresh_start/INDEX.md
+├── plans/                        # governance by document type (D-023)
+│   ├── INDEX.md                  #    what each type answers and its lifecycle
+│   ├── standards/INDEX.md        #    CODING_STANDARD.md (binding)
+│   ├── architecture/INDEX.md     #    FOLDER_STRUCTURE.md, SRC_DESIGN.md, DATA_LOADING_DESIGN.md (versioned designs)
+│   ├── execution/INDEX.md        #    ROADMAP.md (status board) + NN_<slug>.md execution plans
+│   ├── decisions/INDEX.md        #    DECISIONS.md (append-only log)
+│   └── reference/INDEX.md        #    fresh_start/ Tushare handbook + data catalog
 │
 └── .claude/                      # agent tooling
     ├── INDEX.md
@@ -155,16 +160,18 @@ Four zones. Data only flows downward; each zone can be rebuilt from the one abov
 | L1 | `core` | stdlib, pandas, pyarrow, duckdb |
 | L2 | `lake` | L1 |
 | L3 | `data_loading` | L1, L2 |
-| L4 | `pipeline`, `statistic` | L1–L3 |
-| L5 | `back_testing`, `portfolio`, `visualization` | L1–L4 |
-| L6 | `research_space`, CLI entry points | anything in the package |
+| L4 | `statistic`, `calculation` | L1–L3 (pure computation on frames; mutually independent) |
+| L5 | `factor` | L1–L4 (may use both `statistic` and `calculation`) |
+| L6 | `pipeline` | L1–L5 |
+| L7 | `back_testing`, `portfolio`, `visualization` | L1–L6 |
+| L8 | `cli.py`, `research_space` | anything in the package |
 
-`pipeline` and `statistic` do not import each other. `back_testing`, `portfolio` and `visualization` are
+`statistic` and `calculation` never import each other or `factor`. `back_testing`, `portfolio` and `visualization` are
 mutually independent: `visualization` plots DataFrames and `core` schemas only, so a backtest result is
 plotted via its `to_frame()` output, never by importing `back_testing`. Nothing in `src/` imports `research_space`. Enforced by `import-linter` (D-011).
 
 ## 4. Why these choices
-- **uv-managed (D-018)**: `uv sync` builds `.venv` from `uv.lock`; `uv run` executes every tool; `uv add` is the only way a dependency enters the project.
+- **uv-managed (D-018, D-025)**: `uv sync` builds the venv at `~/.venvs/quant_cn` (outside the exFAT volume) from `uv.lock`; `uv run` executes every tool; `uv add` is the only way a dependency enters the project.
 - **`src/` layout**: tests and notebooks import the same installed package.
 - **`lake` separate from `data_loading` (D-012)**: storing/querying and fetching change for different reasons; `statistic`/`back_testing` need the lake but must never import Tushare code.
 - **`core` added**: base classes must sit below every package.
@@ -180,7 +187,10 @@ plotted via its `to_frame()` output, never by importing `back_testing`. Nothing 
 | lake | `ParquetWriter`, `LakeCatalog`, `FetchLog`, `RunLog`, `Compactor`, `LakeQuery`, `PitAligner`, `TradingCalendar` |
 | data_loading | `TushareClient`, `FetcherFactory`, `SingleCallFetcher`, `EnumFetcher`, `DateSweepFetcher`, `PeriodSweepFetcher` (one per sweep pattern, DATA_LOADING_DESIGN §2.2) |
 | pipeline | `BaseRunner`, `LocalRunner`, `KeyExecutor`, `DownloadPipeline`, `CuratePipeline` (`PrefectRunner` deferred, D-022) |
-| statistic, back_testing, portfolio | base classes only until the data layer is done |
+| statistic | `Winsorizer`, `Standardizer`, `Neutralizer`, `ICCalculator`, `ReturnStats` (plan 04) |
+| calculation | `BaseCalculation`, `RiskFreeCurve`, `OptionChainBuilder`, `TermSelector`, `ForwardPriceEstimator`, `VarianceStripCalculator`, `TermInterpolator`, `VixCalculator`, `CalculationFactory` (plan 03) |
+| factor | `BaseFactor`, six concrete factors, `FactorPreprocessor`, `FactorEvaluator`, `SignalCombiner`, `FactorFactory` (plan 04) |
+| back_testing, portfolio | base classes only until plan 05 |
 | visualization | `BaseChart` (theme, size, export), `PriceChart` (candles + volume, adjusted), `PanelChart` (many tickers, small multiples); factor and equity-curve charts follow their producers (D-019) |
 
 ## 6. Open questions

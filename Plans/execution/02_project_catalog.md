@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | proposed, awaiting approval |
+| Status | doing — phase 1 delivered (D-033); phases 2–4 started 2026-09-27 by quant-cn-b7 |
 | Owner | user (approve) / executor (build) |
 | Created | 2026-09-27 |
 | Notion | pending |
@@ -14,7 +14,7 @@ An agent can answer "what exists, where, why, who calls it, what is planned" wit
 DuckDB catalog, rebuilt from the markdown sources on every change. Markdown stays the source of truth.
 
 ## Scope
-- In: parsers for `INDEX.md`, `CLASS_REGISTRY.md`, `DECISIONS.md`, `Plans/plans/*.md`, `config/datasets.yaml`, and the Python AST (classes, methods, docstring sections); a `project` schema in `meta/quant_cn.duckdb`; rebuild command and hook; SQL recipes for agents.
+- In: parsers for `INDEX.md`, `CLASS_REGISTRY.md`, `DECISIONS.md`, `plans/execution/*.md`, `config/datasets.yaml`, and the Python AST (classes, methods, docstring sections); a `project` schema in `meta/quant_cn.duckdb`; rebuild command and hook; SQL recipes for agents.
 - Out: editing markdown from SQL (one-way only); indexing notebooks' cell contents.
 
 ## Tables (schema `project`, all rebuildable)
@@ -42,7 +42,7 @@ ways), `stale` (files on disk missing from `files`, classes in AST missing from 
 
 | # | Phase | Deliverable | Done criterion | Depends on | Status |
 |---|---|---|---|---|---|
-| 1 | Parsers in `core.docs` | `IndexParser`, `RegistryParser`, `DecisionsParser`, `PlanParser`, `DocstringParser`, `AstScanner` returning typed records; shared by `lint_contracts.py` (which stops having its own parsers) | each parser round-trips today's files; linter output unchanged | 01 phase 1 | todo |
+| 1 | Parsers in `core.docs` | `IndexParser`, `RegistryParser`, `DecisionsParser`, `PlanParser`, `DocstringParser`, `AstScanner` returning typed records; shared by `lint_contracts.py` (which stops having its own parsers) | each parser round-trips today's files; linter output unchanged | 01 phase 1 | done (via 01 ph1, D-033) |
 | 2 | `ProjectCatalog` in `lake` | builds/refreshes schema `project` in the catalog DuckDB from parsers + disk; `rebuild()`, `refresh(paths)`; views above; `make project-catalog` | `SELECT count(*) FROM project.classes` equals registry rows; `tree` view reproduces the INDEX tree; rebuild is idempotent | 01 phase 3, 1 | todo |
 | 3 | Keep it fresh | pre-commit hook and `make check` call `refresh`; executor agent prompt ends with refresh; `stale` view empty after `make check` | edit a file -> `make check` -> `stale` returns 0 rows | 2 | todo |
 | 4 | Agent access | `.claude/skills/project-query/SKILL.md`: how to query (`duckdb data/lake/meta/quant_cn.duckdb -readonly`), 12 recipe queries (find class by purpose, who calls X, what is not done, which decisions touch a file, tree of a folder); CLAUDE.md reading order gains "or query `project.*`" | each recipe runs and returns the expected rows on the phase-2 build | 2 | todo |
@@ -69,5 +69,8 @@ None. Closed 2026-09-27:
 
 | Date | Phase | Change |
 |---|---|---|
+| 2026-09-27 | 2–4 | Started by quant-cn-b7 after plan 01 completed |
+| 2026-09-27 | 1 | Phase 1 (parsers in `core.docs`) delivered by plan 01 phase 1 via D-033 (7bd9b36); phase 2 can start after 01 phase 5 |
+| 2026-09-27 | — | Plan approved by user ("approve") |
 | 2026-09-27 | 2 | User approved same-file / separate-schema layout |
 | 2026-09-27 | — | Drafted from user request: keep the project tree in the lake so agents read the project through DuckDB |

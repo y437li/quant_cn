@@ -1,4 +1,4 @@
-# Data Loading Design (v1.0, approved 2026-09-27; decisions D-021, D-022 accepted)
+# Data Loading Design (v1.2, 2026-09-27; D-021, D-022; execution adjustments D-026; method names per D-031)
 
 Design for plan 01 phases 1–4: where the data lives on this machine, how bytes get from Tushare into the
 lake, and how a run is monitored. No code until approved.
@@ -55,13 +55,13 @@ DownloadPipeline.run(datasets?, start?, end?)
   for each dataset in config.download.order:
      spec     = config.dataset(name)                     # DatasetSpec from datasets.yaml
      fetcher  = FetcherFactory.build(spec)               # by spec.sweep.kind
-     keys     = fetcher.keys(start, end)                 # e.g. trading days from TradingCalendar
+     keys     = fetcher.list_keys(start, end)            # e.g. trading days from TradingCalendar
      for key in keys:                                    # BaseFetcher.run() template
         if fetch_log.is_done(name, key): skip
         df   = fetcher.fetch_one(key)                    # TushareClient.query(...), paged
         path = parquet_writer.write_raw(spec, key, df)   # atomic; empty df -> no file
         fetch_log.mark_done(name, key, len(df), path)
-        run_log.event(...)                               # progress / monitoring (§3)
+        run_log.record_event(...)                        # progress / monitoring (§3)
   lake_catalog.refresh_views(); lake_catalog.write_indexes()
 ```
 
@@ -71,16 +71,16 @@ DownloadPipeline.run(datasets?, start?, end?)
 |---|---|---|---|---|
 | `TushareClient` (`BaseApiClient`) | one JSON POST per call; paging; retry; rate-limit sleep | `query(api_name, params, fields) → DataFrame` (all pages concatenated, Tushare column names) | `DataSourceError` on `code != 0` after retries, permission errors, exhausted retries | token from env only; `page_size`, `retries`, `retry_sleep_s`, `rate_limit_sleep_s`, `rate_limit_markers` from `config.tushare`; injected `Clock` for sleeps so tests run instantly |
 | `FakeTushareClient` (`BaseApiClient`, tests) | canned responses, scripted errors (rate-limit once, permission denied, short page) | same as above | same | drives every fetcher/pipeline test; no network in tests |
-| `BaseFetcher` (core) | template: `keys()` → loop → `fetch_one()` → write → log | `run(start, end, keys=None) → FetchReport(fetched, skipped, empty, failed)` | re-raises `DataSourceError` after logging the key as failed | one subclass **per sweep pattern**, not per endpoint |
+| `BaseFetcher` (core) | template: `keys()` → loop → `fetch_one()` → write → log | `run(start, end, keys=None) → FetchReport(fetched, skipped, empty, failed)`; `list_keys(start, end)`; `fetch_one(key)` | re-raises `DataSourceError` after logging the key as failed | one subclass **per sweep pattern**, not per endpoint |
 | `SingleCallFetcher` | `sweep.kind: none` (trade_cal, namechange) | one key `"all"` | | overwrites the single raw file on refresh |
 | `EnumFetcher` | `sweep.kind: list_status | ts_code` (stock_basic L/D/P, index_daily) | one key per enumerated value | | values from `spec.sweep.values` or `values_from` config path |
 | `DateSweepFetcher` | `sweep.kind: trade_date | ann_date` (daily, adj_factor, daily_basic, moneyflow, stk_limit, stk_holdertrade) | keys = trading days (or weekdays for `ann_date`) in [start, end] from `TradingCalendar` | | one raw file per day (~5.5k rows) |
-| `PeriodSweepFetcher` | `sweep.kind: period` (`*_vip` fundamentals) | keys = quarter ends via `DateCodec.quarter_ends` | | one raw file per quarter |
+| `PeriodSweepFetcher` | `sweep.kind: period` (`*_vip` fundamentals) | keys = quarter ends via `DateCodec.list_quarter_ends` | | one raw file per quarter |
 | `MonthWindowFetcher` | `sweep.kind: month` (share_float; offset paging broken) | keys = `YYYYMM`; passes `start_date`/`end_date` of the month | | plan 05 |
 | `FetcherFactory` | map `sweep.kind` → fetcher class, inject client/writer/log/calendar | `build(spec) → BaseFetcher` | `ConfigError` unknown kind | adding a dataset with a known kind needs **no code** |
 | `ParquetWriter` (lake) | atomic hive-named write (`tmp` → fsync → rename), zstd | `write_raw(spec, key, df) → Path`; `write_curated(spec, year, df) → Path` | `LakeError` | dtypes coerced by `Schema` only in curated; raw keeps Tushare dtypes with dates as strings |
-| `FetchLog` (lake, `BaseFetchLog`) | done-keys; DuckDB table + `meta/fetch_log.parquet` mirror | `is_done(dataset, key) → bool`; `mark_done(dataset, key, n_rows, path)`; `pending(dataset, keys) → list` | `LakeError` | rebuilt from `raw/` listing if the DuckDB file is lost |
-| `RunLog` (lake) | append-only run/step/key events for monitoring (§3) | `start_run(kind) → run_id`; `event(run_id, dataset, key, status, n_rows, ms, msg)`; `finish_run` | | DuckDB table `meta.run_log`, also streamed to logging |
+| `FetchLog` (lake, `BaseFetchLog`) | done-keys; DuckDB table + `meta/fetch_log.parquet` mirror | `is_done(dataset, key) → bool`; `mark_done(dataset, key, n_rows, path)`; `list_pending(dataset, keys) → list`; `save()`; `rebuild_from_mirror()` | `LakeError` | rebuilt from `raw/` listing if the DuckDB file is lost |
+| `RunLog` (lake) | append-only run/step/key events for monitoring (§3) | `open_run(kind) → run_id`; `record_event(run_id, dataset, key, status, n_rows, ms, msg)`; `close_run` | | DuckDB table `meta.run_log`, also streamed to logging |
 | `DownloadPipeline` (pipeline) | order datasets, resolve date ranges (default vs long-history), run fetchers, refresh catalog | `run(datasets=None, start=None, end=None, dry_run=False) → PipelineReport` | propagates `DataSourceError`; partial progress is preserved by `FetchLog` | `dry_run` lists keys per dataset without calling the API |
 
 ### 2.3 Behaviour rules
@@ -97,8 +97,14 @@ DownloadPipeline.run(datasets?, start?, end?)
   whole-history); sweep datasets are append-only, re-fetch a key only with `--force key`.
 - **Long history**: datasets in `download.long_history_datasets` start at `long_history_start`, others at
   `default_start` (D-015b).
-- **Concurrency**: single-threaded first (D-015g). Design leaves a seam: `BaseFetcher.run` iterates keys via
-  a `KeyExecutor` (serial now, thread pool later) with the writer as the only sink.
+- **Concurrency**: single-threaded first (D-015g). The key loop stays inside `BaseFetcher.run` (core cannot import
+  `pipeline`); a `KeyExecutor` seam is introduced only when concurrency is added (D-026).
+- **Late filers**: period datasets re-fetch their most recent `sweep.refetch_recent` quarters on every run so
+  restatements and late annual reports are captured; older quarters stay append-only (D-026).
+- **Dedupe**: `Compactor` drops duplicate primary keys (keeps the last) and records the dropped count in the
+  partition manifest (D-026).
+- **Permission failures**: `PermissionDeniedError(DataSourceError)` lets the pipeline mark a dataset `blocked`
+  in its `StepReport` and continue (D-026).
 
 ### 2.4 Configuration touched
 `config/base.yaml` gains `download.order` (list of dataset names in dependency order) and
@@ -142,11 +148,18 @@ research notebook read it directly; the Prefect UI is a convenience view over th
 
 ---
 
+## 3b. Implementation notes (from execution, 2026-09-27, commit a62bef1)
+- `DatasetSpec.schema()` is named `build_schema()`: pydantic's `BaseModel.schema` occupies the name (was `frame_schema` before the D-031 rename).
+- The token is read at query time, not at construction, so dry runs and tests need no `TUSHARE_TOKEN`.
+- `TushareClient` delegates I/O to an `HttpTransport`; tests script the transport instead of mocking HTTP.
+- Curated partitions are sorted by partition date first, then primary key.
+- The three statement datasets (`income_vip`, `balancesheet_vip`, `cashflow_vip`) carry an original and a corrected version per filing, distinguished by `update_flag`; it is part of their primary key and must be requested in every backfill (D-038). `fina_indicator_vip` already included it.
+
 ## 4. Changes applied to other documents on approval (2026-09-27)
 - `config/base.yaml`: `lake.root: ~/quant_cn_lake`, `lake.allow_inside_repo: false`, `lake.backup_target`, `download.order`.
 - `FOLDER_STRUCTURE.md`: `data/` folder removed from the repo tree; lake shown as a sibling path; `.env` and `local.yaml` rows.
 - `SRC_DESIGN.md` §2.4: `BaseRunner`, `LocalRunner`, `PrefectRunner`, `RunLog`, `KeyExecutor`.
-- Plan 01: phase 1 adds `python-dotenv`, `rich`, `make doctor`; phase 3 adds `RunLog`; phase 4 adds `FetcherFactory`, `SingleCallFetcher`, `EnumFetcher`, `DateSweepFetcher` (replacing the per-endpoint fetcher names), `LocalRunner`; a new optional phase 4b adds `PrefectRunner`.
+- Plan 01: phase 1 adds `python-dotenv`, `rich`, `make doctor`, `BaseRunLog`, `StepReport`, `PermissionDeniedError`; phase 3 adds `RunLog`; phase 4 adds `FetcherFactory`, `SingleCallFetcher`, `EnumFetcher`, `DateSweepFetcher`, `LocalRunner`, `TradingCalendar` (moved from phase 5); `KeyExecutor` and `PrefectRunner` deferred.
 
 ## 5. Open questions
 None. Closed 2026-09-27 (user approved the recommendations):

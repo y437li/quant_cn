@@ -1,6 +1,6 @@
 ---
 name: new-class
-description: Design and build a class the quant_cn way — search before write, pick layer and base, write the Purpose / Contract / Used by / Test cases docstring first, then tests, then code, as required by Plans/CODING_STANDARD.md §1-§7. Use whenever a class, base class, exception, schema or public method is about to be created or its contract changed, or the user says "add a class", "implement X", "build the fetcher", "start phase N" of a plan.
+description: Design and build a class the quant_cn way — search before write, pick layer and base, write the Purpose / Contract / Used by / Test cases docstring first, then tests, then code, as required by plans/standards/CODING_STANDARD.md §1-§7. Use whenever a class, base class, exception, schema or public method is about to be created or its contract changed, or the user says "add a class", "implement X", "build the fetcher", "start phase N" of a plan.
 ---
 
 # new-class
@@ -8,7 +8,7 @@ description: Design and build a class the quant_cn way — search before write, 
 Contract first, code last. Every step below is mandatory; skipping one means the class is not done.
 
 ## Inputs
-- The concept to build (name or purpose), and the plan phase it belongs to (`Plans/plans/NN_*.md`).
+- The concept to build (name or purpose), and the plan phase it belongs to (`plans/execution/NN_*.md`).
 - No approved plan phase covering it -> stop and use the `plan` skill first.
 
 ## Procedure
@@ -17,10 +17,16 @@ Contract first, code last. Every step below is mandatory; skipping one means the
    - `registry` skill, lookup mode: name, synonyms, purpose keywords.
    - `grep -rniE "<name>|<synonym>" src/ tests/ research_space/`.
    - Near-match found -> extend / subclass / refactor it. Say which in the plan's Classes table (`extend` / `reuse`). Only if nothing matches -> `new`.
+   - Existing extension points to subclass first: `BaseApiClient`, `BaseStore`, `BaseFetchLog`, `BaseRunLog`,
+     `BaseFetcher`, `BaseStep` (core), `BaseRunner` (pipeline).
+   - A new **dataset** is not a class: add an entry to `config/datasets.yaml` (endpoint, sweep, primary_key,
+     known_on, fields, text_fields, curated). Write a fetcher subclass only for a new sweep kind, and register
+     it in `FetcherFactory.build`.
 
 2. **Place it** (§2.1, FOLDER_STRUCTURE layer table).
    - Choose the lowest layer that can hold it. It may import only its own layer or lower.
    - Module = noun, one primary class: `src/quant_cn/<package>/<snake_name>.py` holds `<PascalName>`.
+     Pick every name (class, module, methods, parameters) with the `naming` skill before writing.
    - Family of interchangeable things -> abstract base in `core` (or owning layer) first; the concrete class overrides only abstract methods.
    - Loose function -> only in `core/utils`, with a registry justification. Otherwise it is a method.
 
@@ -44,7 +50,7 @@ Contract first, code last. Every step below is mandatory; skipping one means the
            Input:
                <name>: <type>  -- <format / range>; <empty/None allowed?>
            Output:
-               <type or core.schemas.<Schema> by name>
+               <type, or a Schema by name (core.schema.Schema / DatasetSpec.build_schema())>
                    guarantees: <sorted / unique / no NaN in ... / units>
            Raises:
                <ProjectError>  -- <when>
@@ -63,8 +69,13 @@ Contract first, code last. Every step below is mandatory; skipping one means the
    - Dependencies (config, client, store, clock, logger) come in through `__init__`, typed as their base class. Nothing created inside methods, no globals.
    - No literal paths, tickers, dates, thresholds or tokens; read them from the injected `Config`. Secrets from env only.
    - Dates are `YYYYMMDD` strings, tickers are `ts_code`; conversions only via `DateCodec` / `TickerNormalizer`.
-   - Data classes declare `primary_key` and `known_on` class attributes (§2.7). Any fundamentals/event alignment goes through `PitAligner`, never a local join.
+   - Datasets declare `primary_key` and `known_on` in `config/datasets.yaml` (§2.7, read via `DatasetSpec`). Any fundamentals/event alignment goes through `PitAligner`, never a local join.
    - Raise only subclasses of `QuantCnError`; add a new subclass in `core/exceptions.py` (and the registry) if none fits.
+   - Time and sleeping only through the injected `Clock` (tests use `FakeClock`); never `datetime.now()`/`time.sleep`.
+   - Objects are wired only in the composition root `cli.QuantCnCli`; add the new class's construction there.
+   - Pydantic models (`Config`, `DatasetSpec`, ...): never name a method after a `BaseModel` attribute
+     (`schema`, `json`, `dict`, `copy`, `model_*`); mypy flags it as an incompatible override.
+   - DataFrame text columns are pandas `string` dtype (pandas 3); cast through `Schema.normalize`, not `astype(object)`.
    - Public methods get their own contract block when their inputs/outputs differ from the class-level one.
 
 4. **Wire the dependency map** (§3 Used by, D-010).
@@ -76,12 +87,14 @@ Contract first, code last. Every step below is mandatory; skipping one means the
 6. **Implement** until tests pass. Respect size limits (file ~400, class ~300, method ~50 lines); split instead of growing.
    New behaviour for an existing family = new subclass, not an `if/else` in an existing class.
 
-7. **Verify with real output.**
+7. **Verify with real output.** Tools run through uv; the venv lives off the exFAT volume
+   (`UV_PROJECT_ENVIRONMENT=$HOME/.venvs/quant_cn`, exported by the Makefile).
    ```bash
-   ruff format src tests && ruff check src tests
-   pytest tests/<layer>/test_<module>.py -q
+   UV_PROJECT_ENVIRONMENT=$HOME/.venvs/quant_cn uv run pytest tests/<layer>/test_<module>.py -q   # while iterating
+   make check        # ruff format --check, ruff check, mypy --strict, lint-imports, pytest --cov
    ```
-   Paste the actual output. Failure -> fix, do not report done.
+   Paste the actual summary lines. Failure -> fix, do not report done. Never add a `# noqa` / `# type: ignore`
+   or relax `pyproject.toml` rules to pass (§4.1; existing ignores are D-027).
 
 8. **Close out.**
    - `registry` skill, update mode: row for this class (and base / exception / schema rows if added).
@@ -97,7 +110,7 @@ Contract first, code last. Every step below is mandatory; skipping one means the
 ## Report
 - Class(es) created / extended / reused, with module paths.
 - `Used by` edits made in other classes.
-- ruff + pytest output (real).
+- `make check` summary lines (real).
 - Anything deferred, and why.
 
 Registry note: the `registry` skill update must include the section B detail block with one row per public method (purpose, input -> output, raises, used by, TC IDs), not just the index row.

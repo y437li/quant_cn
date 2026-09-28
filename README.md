@@ -15,7 +15,7 @@ scripts/          dev tooling: contract linter, lint runner
 research_space/   notebooks that import quant_cn; never imported by it
 tests/            pytest suite mirroring src/quant_cn
 data/lake/        local lake, git-ignored: raw/ curated/ meta/ external/
-Plans/            coding standard, decisions, plans, data handbook
+plans/            coding standard, decisions, plans, data handbook
 .claude/          class registry and agent skills
 ```
 
@@ -44,7 +44,7 @@ A layer imports only from itself or layers below it.
 | `external/` | files not downloaded here (read-only) | n/a |
 
 Only `raw/` (and `meta/fetch_log.parquet`) is expensive; back those up, everything else is rebuildable.
-Full design: [`Plans/FOLDER_STRUCTURE.md`](Plans/FOLDER_STRUCTURE.md).
+Full design: [`plans/architecture/FOLDER_STRUCTURE.md`](plans/architecture/FOLDER_STRUCTURE.md).
 
 ## Setup
 
@@ -60,7 +60,7 @@ Secrets live only in environment variables or the git-ignored `.env`.
 
 ## Data rules
 
-From the handbook in [`Plans/fresh_start/`](Plans/fresh_start/README.md):
+From the handbook in [`plans/reference/fresh_start/`](plans/reference/fresh_start/README.md):
 
 1. Sweep by date, not by stock.
 2. Include delisted and paused stocks (`list_status` L, D and P).
@@ -73,11 +73,11 @@ Dates stay `YYYYMMDD` strings and tickers stay Tushare `ts_code` in stored data.
 ## Working in this repo
 
 Plan first, contract first. Read [`CLAUDE.md`](CLAUDE.md) and
-[`Plans/CODING_STANDARD.md`](Plans/CODING_STANDARD.md) before changing code.
+[`plans/standards/CODING_STANDARD.md`](plans/standards/CODING_STANDARD.md) before changing code.
 
 | Document | Purpose |
 |---|---|
-| [`Plans/CODING_STANDARD.md`](Plans/CODING_STANDARD.md) | binding standard: OOP, docstring contracts, layering, tests, workflow |
-| [`Plans/DECISIONS.md`](Plans/DECISIONS.md) | append-only decision log |
-| [`Plans/plans/`](Plans/plans/INDEX.md) | execution plans with phases and status |
+| [`plans/standards/CODING_STANDARD.md`](plans/standards/CODING_STANDARD.md) | binding standard: OOP, docstring contracts, layering, tests, workflow |
+| [`plans/decisions/DECISIONS.md`](plans/decisions/DECISIONS.md) | append-only decision log |
+| [`plans/execution/`](plans/execution/INDEX.md) | execution plans with phases and status |
 | [`.claude/CLASS_REGISTRY.md`](.claude/CLASS_REGISTRY.md) | every class, base, exception and schema; search before writing |
