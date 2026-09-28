@@ -27,6 +27,9 @@ class BaseStep(ABC):
         pipeline.FetchStep        -- production subclass
         pipeline.BaseRunner.run   -- step type
         pipeline.LocalRunner.run  -- calls list_units then run
+        pipeline.CompactStep      -- subclass
+        pipeline.CuratePipeline   -- injected type or call
+        pipeline.DeriveStep       -- subclass
 
     Test cases:
         TC-BAC-001  abstract bases cannot be instantiated

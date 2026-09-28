@@ -37,6 +37,8 @@ class StepReport:
         pipeline.DownloadPipeline.run  -- dry-run reports
         pipeline.FetchStep             -- injected type or call
         pipeline.PipelineReport        -- injected type or call
+        pipeline.CompactStep           -- injected type or call
+        pipeline.DeriveStep            -- injected type or call
 
     Test cases:
         TC-BF-001  fetch run counts fetched/skipped/empty correctly

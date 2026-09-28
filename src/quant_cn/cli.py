@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import shutil
 import subprocess
@@ -21,12 +22,15 @@ from quant_cn.core.exceptions import LakeError, QuantCnError
 from quant_cn.data_loading.fetcher_factory import FetcherFactory
 from quant_cn.data_loading.tushare_client import TushareClient
 from quant_cn.lake.compactor import Compactor
+from quant_cn.lake.derived_views import DerivedViews
 from quant_cn.lake.fetch_log import FetchLog
 from quant_cn.lake.lake_catalog import LakeCatalog
 from quant_cn.lake.lake_query import LakeQuery
 from quant_cn.lake.parquet_writer import ParquetWriter
+from quant_cn.lake.pit_aligner import PitAligner
 from quant_cn.lake.run_log import RunLog
 from quant_cn.lake.trading_calendar import TradingCalendar
+from quant_cn.pipeline.curate_pipeline import DIGEST_FILE, CuratePipeline
 from quant_cn.pipeline.download_pipeline import DownloadPipeline
 from quant_cn.pipeline.runner import LocalRunner, PipelineReport
 
@@ -36,8 +40,8 @@ MIN_FREE_GB = 20
 class QuantCnCli:
     """
     Purpose:
-        `python -m quant_cn.cli <command>`: doctor, download, compact, rebuild, backup. Builds every
-        service from Config (the only place objects are wired together) and prints summaries.
+        `python -m quant_cn.cli <command>`: doctor, download, compact, curate, rebuild, backup.
+        Builds every service from Config (the only place objects are wired) and prints summaries.
 
     Contract:
         Input:
@@ -54,6 +58,7 @@ class QuantCnCli:
     Test cases:
         TC-QCC-001  doctor reports lake root and token presence without printing the token
         TC-QCC-002  download --dry-run on an empty lake exits 0 and lists datasets
+        TC-QCC-003  curate on a mini lake exits 0 and reports derived digests unchanged on rerun
     """
 
     def __init__(self, config: Config | None = None, console: Console | None = None) -> None:
@@ -101,6 +106,9 @@ class QuantCnCli:
         dl.add_argument("--no-progress", action="store_true")
         cp = sub.add_parser("compact", help="rebuild curated partitions from raw")
         cp.add_argument("--datasets", help="comma-separated subset (default: all)")
+        cu = sub.add_parser("curate", help="compact, build derived views and PIT states, digests")
+        cu.add_argument("--datasets", help="comma-separated subset to compact (default: all)")
+        cu.add_argument("--no-progress", action="store_true")
         sub.add_parser("rebuild", help="recreate the DuckDB catalog and fetch log from parquet")
         sub.add_parser("backup", help="rsync raw/ and the fetch log to lake.backup_target")
         return parser
@@ -156,6 +164,45 @@ class QuantCnCli:
             catalog.close()
         self._render_report(report)
         return 0
+
+    def _run_curate(self, config: Config, args: argparse.Namespace) -> int:
+        catalog = LakeCatalog(config.lake.root, config.datasets)
+        digest_path = config.lake.root / "meta" / "manifest" / DIGEST_FILE
+        before = self._read_digests(digest_path)
+        try:
+            pipeline = self._build_curate_pipeline(config, catalog, not args.no_progress)
+            report = pipeline.run(self._parse_list(args.datasets))
+        finally:
+            catalog.close()
+        self._render_report(report)
+        after = self._read_digests(digest_path)
+        for view, digest in sorted(after.items()):
+            state = (
+                "new"
+                if view not in before
+                else "unchanged"
+                if before[view] == digest
+                else "CHANGED"
+            )
+            self._console.print(f"{view}: {digest} ({state})")
+        return 0
+
+    def _build_curate_pipeline(
+        self, config: Config, catalog: LakeCatalog, show_progress: bool
+    ) -> CuratePipeline:
+        clock, query = Clock(), LakeQuery(catalog)
+        compactor = Compactor(catalog, query, ParquetWriter(config.lake.root), clock)
+        views = DerivedViews(catalog, query, config.datasets)
+        aligner = PitAligner(catalog, query, DateCodec())
+        runner = LocalRunner(RunLog(catalog, clock), show_progress=show_progress)
+        return CuratePipeline(config, compactor, views, aligner, query, catalog, runner)
+
+    @staticmethod
+    def _read_digests(path: Path) -> dict[str, str]:
+        if not path.exists():
+            return {}
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return {str(k): str(v) for k, v in data.items()}
 
     def _run_rebuild(self, config: Config, _args: argparse.Namespace) -> int:
         catalog = LakeCatalog(config.lake.root, config.datasets)

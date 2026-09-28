@@ -40,6 +40,9 @@ class LakeCatalog:
         pipeline.FetchStep.run         -- refresh_view after each dataset
         pipeline.DownloadPipeline.run  -- write_indexes after a run
         cli.QuantCnCli                 -- composition root, rebuild
+        pipeline.CuratePipeline        -- injected type or call
+        lake.DerivedViews              -- injected type or call
+        lake.PitAligner                -- injected type or call
 
     Test cases:
         TC-LC-001  raw and curated views exist after refresh and return the written rows

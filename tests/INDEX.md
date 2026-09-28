@@ -20,6 +20,6 @@ Mirrors `src/quant_cn`; one `test_<module>.py` per module, one test per TC ID (C
 |---|---|---|
 | `__init__.py` | package marker |  |
 | `conftest.py` | shared fixtures: Config over copied YAML, mini lake in tmp_path | `clock`, `repo`, `config`, `lake` |
-| `support.py` | Test doubles and frame builders shared by all test modules (no network, no real lake) | `FakeClock`, `FakeTushareClient`, `MiniLake`, `Sample`, `SampleRepo` |
+| `support.py` | Test doubles and frame builders shared by all test modules (no network, no real lake) | `FakeClock`, `FakeTushareClient`, `MiniLake`, `Sample`, `SampleRepo`, `SampleLake` |
 | `test_cli.py` | tests for `cli`, one function per TC ID |  |
 | `test_contracts.py` | the whole repository passes lint_contracts (every group) |  |

@@ -48,6 +48,7 @@ class ConfigError(QuantCnError):
         data_loading.TushareClient         -- missing token
         data_loading.FetcherFactory.build  -- unknown sweep kind
         pipeline.DownloadPipeline.run      -- unknown dataset requested
+        pipeline.CuratePipeline            -- injected type or call
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError
@@ -144,6 +145,9 @@ class LakeError(QuantCnError):
         lake.FetchLog              -- injected type or call
         lake.LakeCatalog           -- injected type or call
         lake.RunLog                -- injected type or call
+        pipeline.DeriveStep        -- injected type or call
+        lake.DerivedViews          -- injected type or call
+        lake.PitAligner            -- injected type or call
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError

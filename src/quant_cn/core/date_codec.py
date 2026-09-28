@@ -29,6 +29,7 @@ class DateCodec:
         pipeline.DownloadPipeline.run              -- validates start/end overrides
         data_loading.FetcherFactory                -- injected type or call
         cli.QuantCnCli                             -- composition root
+        lake.PitAligner                            -- injected type or call
 
     Test cases:
         TC-DC-001  to_date/to_str round trip

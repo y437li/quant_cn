@@ -3,7 +3,7 @@ export UV_PROJECT_ENVIRONMENT ?= $(HOME)/.venvs/quant_cn
 UV_RUN := uv run --env-file .env
 CLI := $(UV_RUN) python -m quant_cn.cli
 
-.PHONY: setup hooks lint lint-contracts test check doctor download download-dry compact lake-rebuild lake-backup
+.PHONY: setup hooks lint lint-contracts test check doctor download download-dry compact curate lake-rebuild lake-backup
 
 setup:            ## create the venv from uv.lock; copy .env.example to .env if missing
 	uv sync --all-extras
@@ -39,9 +39,12 @@ download-dry:     ## list keys to fetch without calling the API
 compact:          ## raw -> curated partitions
 	$(CLI) compact $(ARGS)
 
-lake-rebuild:     ## recreate DuckDB catalog + fetch log from parquet, then recompact
+curate:           ## compact raw -> curated, derived views, PIT states, indexes, digests
+	$(CLI) curate $(ARGS)
+
+lake-rebuild:     ## recreate catalog + fetch log from parquet, then curate (digests "unchanged" = identical)
 	$(CLI) rebuild
-	$(CLI) compact
+	$(CLI) curate --no-progress
 
 lake-backup:      ## rsync raw/ + fetch log to lake.backup_target (config/local.yaml)
 	$(CLI) backup

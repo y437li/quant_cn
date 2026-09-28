@@ -134,3 +134,45 @@ class SampleRepo:
             path.write_text(text, encoding="utf-8")
         subprocess.run(["git", "init", "-q"], cwd=root, check=True)
         return root
+
+
+class SampleLake:
+    """Raw inputs for derived-view and PIT tests, written through the real writer."""
+
+    OPEN = (
+        "20260105",
+        "20260106",
+        "20260320",
+        "20260323",
+        "20260410",
+        "20260413",
+        "20260415",
+        "20260416",
+        "20260424",
+        "20260427",
+        "20260428",
+    )
+
+    @staticmethod
+    def write_calendar(lake: MiniLake, spec: DatasetSpec) -> None:
+        lake.writer.write_raw(spec, "all", Sample.build_trade_cal(SampleLake.OPEN))
+
+    @staticmethod
+    def write_income(
+        lake: MiniLake, spec: DatasetSpec, rows: list[tuple[str, str, str, float]]
+    ) -> None:
+        """rows: (end_date, f_ann_date, report_type, total_profit) for 000001.SZ."""
+        records = []
+        for end_date, f_ann_date, report_type, profit in rows:
+            record: dict[str, object] = {f: None for f in spec.fields}
+            record.update(
+                ts_code="000001.SZ",
+                end_date=end_date,
+                ann_date=f_ann_date,
+                f_ann_date=f_ann_date,
+                update_flag="1",
+                report_type=report_type,
+                total_profit=profit,
+            )
+            records.append(record)
+        lake.writer.write_raw(spec, "20260331", pd.DataFrame(records))

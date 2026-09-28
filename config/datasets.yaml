@@ -108,30 +108,30 @@ fina_indicator_vip:
 income_vip:
   endpoint: income_vip
   sweep: {kind: period, refetch_recent: 2}
-  primary_key: [ts_code, end_date, report_type, f_ann_date, ann_date]
+  primary_key: [ts_code, end_date, report_type, f_ann_date, ann_date, update_flag]
   known_on: f_ann_date
   fields: [ts_code, ann_date, f_ann_date, end_date, report_type, total_profit, n_income_attr_p,
-           rd_exp, invest_income, income_tax]
-  text_fields: [ts_code, ann_date, f_ann_date, end_date, report_type]
+           rd_exp, invest_income, income_tax, update_flag]
+  text_fields: [ts_code, ann_date, f_ann_date, end_date, report_type, update_flag]
   curated: {path: fundamentals/income, partition_by: end_date}
 
 balancesheet_vip:
   endpoint: balancesheet_vip
   sweep: {kind: period, refetch_recent: 2}
-  primary_key: [ts_code, end_date, report_type, f_ann_date, ann_date]
+  primary_key: [ts_code, end_date, report_type, f_ann_date, ann_date, update_flag]
   known_on: f_ann_date
   fields: [ts_code, ann_date, f_ann_date, end_date, report_type, total_assets, total_liab,
            total_cur_assets, total_cur_liab, accounts_receiv, fix_assets, lt_borr, oth_receiv,
-           prepayment, money_cap, lt_rec, contract_liab, adv_receipts, inventories, goodwill, cip]
-  text_fields: [ts_code, ann_date, f_ann_date, end_date, report_type]
+           prepayment, money_cap, lt_rec, contract_liab, adv_receipts, inventories, goodwill, cip, update_flag]
+  text_fields: [ts_code, ann_date, f_ann_date, end_date, report_type, update_flag]
   curated: {path: fundamentals/balancesheet, partition_by: end_date}
 
 cashflow_vip:
   endpoint: cashflow_vip
   sweep: {kind: period, refetch_recent: 2}
-  primary_key: [ts_code, end_date, report_type, f_ann_date, ann_date]
+  primary_key: [ts_code, end_date, report_type, f_ann_date, ann_date, update_flag]
   known_on: f_ann_date
   fields: [ts_code, ann_date, f_ann_date, end_date, report_type, n_cashflow_act, free_cashflow,
-           depr_fa_coga_dpba, c_pay_acq_const_fiolta]
-  text_fields: [ts_code, ann_date, f_ann_date, end_date, report_type]
+           depr_fa_coga_dpba, c_pay_acq_const_fiolta, update_flag]
+  text_fields: [ts_code, ann_date, f_ann_date, end_date, report_type, update_flag]
   curated: {path: fundamentals/cashflow, partition_by: end_date}
