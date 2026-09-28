@@ -18,6 +18,7 @@ LAYERS = {
     "data_loading": 3,
     "pipeline": 4,
     "statistic": 4,
+    "calculation": 4,
     "back_testing": 5,
     "portfolio": 5,
     "visualization": 5,

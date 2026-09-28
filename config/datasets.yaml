@@ -5,6 +5,7 @@ trade_cal:
   endpoint: trade_cal
   sweep: {kind: none, range_params: true, extra_params: {exchange: SSE}}
   start: "19901219"
+  extend_days: 400
   refresh: overwrite
   primary_key: [cal_date]
   known_on: null

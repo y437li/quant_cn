@@ -59,15 +59,12 @@ def test_tc_dp_001_dry_run(config: Config, lake: MiniLake, client: FakeTushareCl
 # TC-DP-002
 def test_tc_dp_002_crash_resume(config: Config, lake: MiniLake, client: FakeTushareClient) -> None:
     client.add_failure("daily", OPEN[2], DataSourceError("network"))
+    build_pipeline(config, lake, client).run(["trade_cal"], end="20260828")
     with pytest.raises(DataSourceError):
-        build_pipeline(config, lake, client).run(
-            ["trade_cal", "daily"], start="20260826", end="20260828"
-        )
+        build_pipeline(config, lake, client).run(["daily"], start="20260826", end="20260828")
     assert list_daily_calls(client) == OPEN
     client.calls.clear()
-    report = build_pipeline(config, lake, client).run(
-        ["trade_cal", "daily"], start="20260826", end="20260828"
-    )
+    report = build_pipeline(config, lake, client).run(["daily"], start="20260826", end="20260828")
     assert list_daily_calls(client) == [OPEN[2]]
     daily = next(s for s in report.steps if s.name == "daily")
     assert (daily.skipped, daily.fetched) == (2, 1)
@@ -79,9 +76,7 @@ def test_tc_dp_003_blocked_continues(
     config: Config, lake: MiniLake, client: FakeTushareClient
 ) -> None:
     client.add_failure("income_vip", "20260630", PermissionDeniedError("no points"))
-    report = build_pipeline(config, lake, client).run(
-        ["income_vip", "trade_cal"], start="20260601", end="20260828"
-    )
+    report = build_pipeline(config, lake, client).run(["income_vip", "trade_cal"], end="20260828")
     assert report.list_blocked() == ["income_vip"]
     assert [s.name for s in report.steps] == ["trade_cal", "income_vip"]
     assert lake.query.has_view("raw.trade_cal")
@@ -106,3 +101,22 @@ def test_tc_dp_005_bad_input(config: Config, lake: MiniLake, client: FakeTushare
         build_pipeline(config, lake, client).run(["nope"])
     with pytest.raises(ValueError):
         build_pipeline(config, lake, client).run(["daily"], start="20260901", end="20260828")
+
+
+# TC-DP-006
+def test_tc_dp_006_overwrite_range_guard(
+    config: Config, lake: MiniLake, client: FakeTushareClient
+) -> None:
+    with pytest.raises(ConfigError):
+        build_pipeline(config, lake, client).run(["index_daily"], start="20260101", end="20260828")
+    report = build_pipeline(config, lake, client).run(
+        ["index_daily"], start="20000101", end="20260828", dry_run=True
+    )
+    assert report.steps[0].keys_total == len(config.enum_values["indices"])
+
+
+# TC-DP-007
+def test_tc_dp_007_extend_days(config: Config, lake: MiniLake, client: FakeTushareClient) -> None:
+    build_pipeline(config, lake, client).run(["trade_cal"], end="20260828")
+    params = next(p for api, p in client.calls if api == "trade_cal")
+    assert params["end_date"] == "20271002"

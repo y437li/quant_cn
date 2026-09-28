@@ -107,6 +107,8 @@ class DatasetSpec(BaseModel):
             fields:      list[str]     -- requested columns, non-empty
             text_fields: list[str]     -- subset stored as text; all other fields are numeric
             start:       str | None    -- dataset-specific download start (YYYYMMDD)
+            extend_days: int >= 0      -- fetch this many calendar days past the run end
+                                          (trade_cal: future sessions for expiry and next-day maths)
             curated:     CuratedSpec
         Output:
             frozen pydantic model
@@ -147,6 +149,7 @@ class DatasetSpec(BaseModel):
     fields: list[str]
     text_fields: list[str]
     start: str | None = None
+    extend_days: int = Field(default=0, ge=0)
     curated: CuratedSpec
 
     @model_validator(mode="after")

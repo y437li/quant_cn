@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import datetime as dt
 from collections.abc import Sequence
 
 from quant_cn.core.base_fetch_log import BaseFetchLog
@@ -131,6 +132,8 @@ class DownloadPipeline:
         TC-DP-003  permission-blocked dataset does not stop later datasets
         TC-DP-004  long-history datasets start at long_history_start; others at default_start
         TC-DP-005  unknown dataset raises ConfigError; end before start raises ValueError
+        TC-DP-006  start after the configured one on an overwrite range dataset raises ConfigError
+        TC-DP-007  extend_days pushes a dataset's end past the run end (future calendar)
     """
 
     def __init__(
@@ -173,7 +176,8 @@ class DownloadPipeline:
             Output:
                 PipelineReport  -- status "dry_run" for dry runs
             Raises:
-                ConfigError      -- unknown dataset
+                ConfigError      -- unknown dataset, or a start that would shrink an overwrite
+                                    range dataset's stored history (D-049)
                 ValueError       -- malformed dates or end before start
                 DataSourceError  -- non-permission fetch failure (progress kept)
         """
@@ -202,9 +206,19 @@ class DownloadPipeline:
         return ordered + [d for d in datasets if d not in ordered]
 
     def _parse_range(self, name: str, start: str | None, end: str) -> tuple[str, str]:
-        begin = self._codec.validate(start or self._config.get_start(name))
+        configured = self._config.get_start(name)
+        begin = self._codec.validate(start or configured)
+        spec = self._config.get_dataset(name)
+        if spec.extend_days:
+            end = self._codec.to_str(self._codec.to_date(end) + dt.timedelta(days=spec.extend_days))
         if begin > end:
             raise ValueError(f"{name}: start {begin} is after end {end}")
+        if spec.refresh == "overwrite" and spec.sweep.range_params and begin > configured:
+            raise ConfigError(
+                f"{name} is refreshed by overwrite over its date range; start {begin} after the "
+                f"configured {configured} would replace its stored history (D-049). Omit --start "
+                "or change the dataset start in config."
+            )
         return begin, end
 
     def _build_dry_run(self, ranges: dict[str, tuple[str, str]]) -> PipelineReport:

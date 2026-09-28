@@ -76,7 +76,7 @@ type = "layers"
 layers = [
     "quant_cn.cli",
     "quant_cn.back_testing | quant_cn.portfolio | quant_cn.visualization",
-    "quant_cn.pipeline | quant_cn.statistic",
+    "quant_cn.pipeline | quant_cn.statistic | quant_cn.calculation",
     "quant_cn.data_loading",
     "quant_cn.lake",
     "quant_cn.core",

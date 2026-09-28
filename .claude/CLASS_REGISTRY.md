@@ -16,6 +16,15 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 
 | Class | Module | Layer | Base | Purpose (one line) | Public methods (count) | Used by | Tests | Added |
 |---|---|---|---|---|---|---|---|---|
+| `Black76Model` | `quant_cn.calculation.black76_model` | 4 | none | Price European options on a forward (Black-76, discounted at the continuous rate) and invert a price to implied volatility | 2 | `research_space/notebooks/20260927_vix_calculation.ipynb` | `tests/calculation/test_black76_model.py` (TC-BM-001..003) | 2026-09-27 |
+| `ExpiryClock` | `quant_cn.calculation.expiry_clock` | 4 | none | Convert (trade_date, expiry) to the time units the VIX formulas use | 3 | `calculation.VixCalculator` | `tests/calculation/test_expiry_clock.py` (TC-EC-001..003) | 2026-09-27 |
+| `ForwardPriceEstimator` | `quant_cn.calculation.forward_price_estimator` | 4 | none | Per term: F = K* + e^{RT}(C - P) at the strike K* with the smallest /C - P/, and K0 the largest strike at or below F. | 1 | `calculation.VixCalculator` | `tests/calculation/test_forward_price_estimator.py` (TC-FPE-001..002) | 2026-09-27 |
+| `OptionChainBuilder` | `quant_cn.calculation.option_chain_builder` | 4 | none | Join the option master (opt_basic) with daily prices (opt_daily) into one tidy chain per underlying, and turn one expiry of it into a strike x (call, put) quote table. | 2 | `calculation.VixCalculator` | `tests/calculation/test_option_chain_builder.py` (TC-OCB-001..003) | 2026-09-27 |
+| `RiskFreeCurve` | `quant_cn.calculation.risk_free_curve` | 4 | none | Continuously compounded risk-free rate for a tenor in calendar days, from the latest SHIBOR fixing on or before the date, linearly interpolated between tenors and clamped outside them. | 1 | `calculation.VixCalculator` | `tests/calculation/test_risk_free_curve.py` (TC-RFC-001..003) | 2026-09-27 |
+| `TermInterpolator` | `quant_cn.calculation.term_interpolator` | 4 | none | VIX = 100 * sqrt([T1 s1^2 (N2 - Nt)/(N2 - N1) + T2 s2^2 (Nt - N1)/(N2 - N1)] * Ny / Nt), with N in the clock's unit (minutes or sessions) and Ny one year in that unit. | 1 | `calculation.VixCalculator` | `tests/calculation/test_term_interpolator.py` (TC-TI-001..002) | 2026-09-27 |
+| `TermSelector` | `quant_cn.calculation.term_selector` | 4 | none | Choose the two nearest expiries with at least `min_days` calendar days to expiry. | 1 | `calculation.VixCalculator` | `tests/calculation/test_term_selector.py` (TC-TS-001..002) | 2026-09-27 |
+| `VarianceStripCalculator` | `quant_cn.calculation.variance_strip_calculator` | 4 | none | sigma^2 = (2/T) sum(dK/K^2 e^{RT} Q(K)) - (1/T)(F/K0 - 1)^2 over puts below K0, calls above K0 and the call/put average at K0 | 1 | `calculation.VixCalculator` | `tests/calculation/test_variance_strip_calculator.py` (TC-VSC-001..003) | 2026-09-27 |
+| `VixCalculator` | `quant_cn.calculation.vix_calculator` | 4 | none | Orchestrate the white-paper steps per trading day: select near/next terms, rate per term, forward and K0, variance strip, interpolation on the chosen clock | 1 | `research_space/notebooks/20260927_vix_calculation.ipynb` | `tests/calculation/test_vix_calculator.py` (TC-VC-001..003) | 2026-09-27 |
 | `QuantCnCli` | `quant_cn.cli` | 6 | none | `python -m quant_cn.cli <command>`: doctor, download, compact, curate, rebuild, backup, project-catalog, query | 1 | `Makefile targets doctor, download, compact, lake-rebuild, lake-backup` | `tests/test_cli.py` (TC-QCC-001..004) | 2026-09-27 |
 | `BaseApiClient` | `quant_cn.core.base_api_client` | 1 | ABC | Abstract vendor client: one logical query returns all pages as one DataFrame. | 1 | `data_loading.TushareClient`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
 | `BaseFetchLog` | `quant_cn.core.base_fetch_log` | 1 | ABC | Abstract record of which (dataset, key) pairs are fully downloaded. | 5 | `lake.FetchLog`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher` | `tests/lake/test_fetch_log.py` (TC-FL-001..003) | 2026-09-27 |
@@ -87,7 +96,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `DeriveStep` | `quant_cn.pipeline.curate_pipeline` | 4 | BaseStep | Build the derived views and the PIT states view, then record a digest per derived view. | 4 | `pipeline.CuratePipeline` | `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..002) | 2026-09-27 |
 | `CuratePipeline` | `quant_cn.pipeline.curate_pipeline` | 4 | none | Rebuild everything below raw/: compact every dataset, create derived views and PIT states, regenerate lake indexes, and record digests in meta/manifest/derived_digests.json. | 1 | `cli.QuantCnCli` | `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..003) | 2026-09-27 |
 | `FetchStep` | `quant_cn.pipeline.download_pipeline` | 4 | BaseStep | Adapt one dataset's fetcher to a pipeline step: keys computed in list_units (so the calendar fetched earlier in the run is visible), catalog view refreshed after the run. | 3 | `pipeline.DownloadPipeline.run` | `tests/pipeline/test_download_pipeline.py` (TC-DP-002..002) | 2026-09-27 |
-| `DownloadPipeline` | `quant_cn.pipeline.download_pipeline` | 4 | none | Resolve which datasets and date ranges to download, run one FetchStep per dataset through the runner, and regenerate the lake indexes | 1 | `cli.QuantCnCli` | `tests/pipeline/test_download_pipeline.py` (TC-DP-001..005) | 2026-09-27 |
+| `DownloadPipeline` | `quant_cn.pipeline.download_pipeline` | 4 | none | Resolve which datasets and date ranges to download, run one FetchStep per dataset through the runner, and regenerate the lake indexes | 1 | `cli.QuantCnCli` | `tests/pipeline/test_download_pipeline.py` (TC-DP-001..007) | 2026-09-27 |
 | `PipelineReport` | `quant_cn.pipeline.runner` | 4 | none | Result of one pipeline run: its id, overall status and one StepReport per step. | 2 | `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.BaseRunner`, `pipeline.CuratePipeline` | `tests/pipeline/test_runner.py` (TC-LR-001..001) | 2026-09-27 |
 | `BaseRunner` | `quant_cn.pipeline.runner` | 4 | ABC | Extension point for how steps are executed (local now, Prefect later, D-022) | 1 | `pipeline.LocalRunner`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline` | `tests/pipeline/test_runner.py` (TC-LR-001..001) | 2026-09-27 |
 | `LocalRunner` | `quant_cn.pipeline.runner` | 4 | BaseRunner | Run steps serially in this process with a rich progress bar per step | 1 | `cli.QuantCnCli` | `tests/pipeline/test_runner.py` (TC-LR-001..003) | 2026-09-27 |
@@ -113,6 +122,107 @@ Template. Copy verbatim; keep headings so `lint_contracts.py` can parse them.
 Rules: every public method gets a row; private helpers (`_name`) are listed only if longer than 20
 lines, so a reader knows they exist. `Input -> Output` uses type names or a registered `Schema` name,
 never column lists (those live in section E).
+
+### `Black76Model` — `quant_cn.calculation.black76_model` (L4)
+- **Purpose:** Price European options on a forward (Black-76, discounted at the continuous rate) and invert a price to implied volatility; used for ATM-IV checks and known-answer chains.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `research_space/notebooks/20260927_vix_calculation.ipynb`.
+- **Tests:** `tests/calculation/test_black76_model.py` (TC-BM-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `compute_price` | Black-76 price. | float, float, float, float, float, Side -> float | — | as class | see class |
+| `compute_implied_vol` | Volatility that reproduces `price` (bisection on [1e-4, 5]). | float, float, float, float, float, Side -> float | `ValueError` | as class | see class |
+
+### `ExpiryClock` — `quant_cn.calculation.expiry_clock` (L4)
+- **Purpose:** Convert (trade_date, expiry) to the time units the VIX formulas use. "calendar" is the CBOE white paper: minutes, 30-day target, 365-day year. "trading" counts exchange sessions after the trade date up to expiry: 21-session target, 244-session year, so holidays inside a term add no time (the Mid-Autumn / National Day roll artefact disappears).
+- **Base:** none. **Depends on (injected):** ClockMode, Sequence[str].
+- **Used by:** `calculation.VixCalculator`.
+- **Tests:** `tests/calculation/test_expiry_clock.py` (TC-EC-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | ClockMode, Sequence[str] -> None | `ValueError` | callers of the class | — |
+| `get_units` | Time to expiry in the clock's unit (minutes or sessions). | str, str, int -> float | `ValueError` | as class | see class |
+| `get_target` | The constant-maturity target in the clock's unit. | — -> float | — | as class | see class |
+| `get_year` | One year in the clock's unit. | — -> float | — | as class | see class |
+
+### `ForwardPriceEstimator` — `quant_cn.calculation.forward_price_estimator` (L4)
+- **Purpose:** Per term: F = K* + e^{RT}(C - P) at the strike K* with the smallest /C - P/, and K0 the largest strike at or below F.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `calculation.VixCalculator`.
+- **Tests:** `tests/calculation/test_forward_price_estimator.py` (TC-FPE-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `compute` | (F, K0) for one term. | pd.DataFrame, float, float -> tuple[float, float] | `ValueError` | as class | see class |
+
+### `OptionChainBuilder` — `quant_cn.calculation.option_chain_builder` (L4)
+- **Purpose:** Join the option master (opt_basic) with daily prices (opt_daily) into one tidy chain per underlying, and turn one expiry of it into a strike x (call, put) quote table.
+- **Base:** none. **Depends on (injected):** bool.
+- **Used by:** `calculation.VixCalculator`.
+- **Tests:** `tests/calculation/test_option_chain_builder.py` (TC-OCB-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | bool -> None | — | callers of the class | — |
+| `build_chain` | The chain of one underlying over the dates present in `daily`. | pd.DataFrame, pd.DataFrame, str -> pd.DataFrame | `KeyError` | as class | see class |
+| `build_quotes` | Strike x side table of prices and volumes for one expiry on one day. | pd.DataFrame -> tuple[pd.DataFrame, bool] | `KeyError` | as class | see class |
+
+### `RiskFreeCurve` — `quant_cn.calculation.risk_free_curve` (L4)
+- **Purpose:** Continuously compounded risk-free rate for a tenor in calendar days, from the latest SHIBOR fixing on or before the date, linearly interpolated between tenors and clamped outside them.
+- **Base:** none. **Depends on (injected):** pd.DataFrame.
+- **Used by:** `calculation.VixCalculator`.
+- **Tests:** `tests/calculation/test_risk_free_curve.py` (TC-RFC-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | pd.DataFrame -> None | `ValueError` | callers of the class | — |
+| `get_rate` | Continuous annual rate for `days` calendar days as of `trade_date`. | str, int -> float | `ValueError` | as class | see class |
+
+### `TermInterpolator` — `quant_cn.calculation.term_interpolator` (L4)
+- **Purpose:** VIX = 100 * sqrt([T1 s1^2 (N2 - Nt)/(N2 - N1) + T2 s2^2 (Nt - N1)/(N2 - N1)] * Ny / Nt), with N in the clock's unit (minutes or sessions) and Ny one year in that unit.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `calculation.VixCalculator`.
+- **Tests:** `tests/calculation/test_term_interpolator.py` (TC-TI-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `compute` | The interpolated (or extrapolated) index level. | float, float, float, float, float, float -> float | `ValueError` | as class | see class |
+
+### `TermSelector` — `quant_cn.calculation.term_selector` (L4)
+- **Purpose:** Choose the two nearest expiries with at least `min_days` calendar days to expiry.
+- **Base:** none. **Depends on (injected):** int.
+- **Used by:** `calculation.VixCalculator`.
+- **Tests:** `tests/calculation/test_term_selector.py` (TC-TS-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | int -> None | — | callers of the class | — |
+| `list_terms` | (near, next) maturity dates for one day's chain. | pd.DataFrame -> tuple[str, str] | `ValueError` | as class | see class |
+
+### `VarianceStripCalculator` — `quant_cn.calculation.variance_strip_calculator` (L4)
+- **Purpose:** sigma^2 = (2/T) sum(dK/K^2 e^{RT} Q(K)) - (1/T)(F/K0 - 1)^2 over puts below K0, calls above K0 and the call/put average at K0; walking away from K0 stops after two consecutive "zero" strikes (zero price, or with price_or_volume also zero volume: no bid/ask, D-048).
+- **Base:** none. **Depends on (injected):** ZeroRule.
+- **Used by:** `calculation.VixCalculator`.
+- **Tests:** `tests/calculation/test_variance_strip_calculator.py` (TC-VSC-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | ZeroRule -> None | — | callers of the class | — |
+| `compute` | Variance and number of strikes used for one term. | pd.DataFrame, float, float, float, float -> tuple[float, int] | `KeyError` | as class | see class |
+
+### `VixCalculator` — `quant_cn.calculation.vix_calculator` (L4)
+- **Purpose:** Orchestrate the white-paper steps per trading day: select near/next terms, rate per term, forward and K0, variance strip, interpolation on the chosen clock; one VIX_PANEL row per (trade_date, underlying). A day that cannot be computed gets vix NaN and a "failed: <reason>" quality_flag instead of stopping the run.
+- **Base:** none. **Depends on (injected):** RiskFreeCurve, OptionChainBuilder, TermSelector, ForwardPriceEstimator, VarianceStripCalculator, TermInterpolator, ExpiryClock.
+- **Used by:** `research_space/notebooks/20260927_vix_calculation.ipynb`.
+- **Tests:** `tests/calculation/test_vix_calculator.py` (TC-VC-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | RiskFreeCurve, OptionChainBuilder, TermSelector, ForwardPriceEstimator, VarianceStripCalculator, TermInterpolator, ExpiryClock -> None | — | callers of the class | — |
+| `compute` | The index for every trading day in `chain`. | pd.DataFrame, str -> pd.DataFrame | `SchemaError` | as class | see class |
+| `_compute_day` (private) | internal helper over 20 lines | pd.DataFrame, str, str -> dict[str, object] | — | internal | — |
 
 ### `QuantCnCli` — `quant_cn.cli` (L6)
 - **Purpose:** `python -m quant_cn.cli <command>`: doctor, download, compact, curate, rebuild, backup, project-catalog, query. Builds every service from Config (the only place objects are wired) and prints summaries.
@@ -927,7 +1037,7 @@ never column lists (those live in section E).
 - **Purpose:** Resolve which datasets and date ranges to download, run one FetchStep per dataset through the runner, and regenerate the lake indexes; `dry_run` lists pending keys without calling the API.
 - **Base:** none. **Depends on (injected):** Config, FetcherFactory, BaseRunner, LakeCatalog, BaseFetchLog, Clock, DateCodec.
 - **Used by:** `cli.QuantCnCli`.
-- **Tests:** `tests/pipeline/test_download_pipeline.py` (TC-DP-001..005).
+- **Tests:** `tests/pipeline/test_download_pipeline.py` (TC-DP-001..007).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -1030,8 +1140,9 @@ never column lists (those live in section E).
 
 | Schema | Module | Purpose | Index | Columns (dtype) | Invariants | Produced by | Consumed by | Added |
 |---|---|---|---|---|---|---|---|---|
-| `PRICE_PANEL` | `quant_cn.core.frames` | daily bars with adjustment factor and adjusted close | long; key (trade_date, ts_code) | trade_date (string), ts_code (string), open (float64), high (float64), low (float64), close (float64), pre_close (float64), vol (float64), amount (float64), adj_factor (float64), close_adj (float64) | key unique and non-null | `lake.LakeQuery.prices` (phase 5) | factors, engine, charts (plans 03-04) | 2026-09-27 |
-| `FUNDAMENTALS_PIT` | `quant_cn.core.frames` | point-in-time fundamentals, one value per field per trading day | long; key (trade_date, ts_code, field) | trade_date (string), ts_code (string), field (string), value (float64), end_date (string), ann_date (string) | key unique and non-null | `lake.PitAligner` (phase 5) | `QualityFactor`, `ValueFactor` (plan 03) | 2026-09-27 |
+| `PRICE_PANEL` | `quant_cn.core.frames` | daily bars with adjustment factor and adjusted close | long; key (trade_date, ts_code) | trade_date (string), ts_code (string), open (float64), high (float64), low (float64), close (float64), pre_close (float64), vol (float64), amount (float64), adj_factor (float64), close_adj (float64) | key unique and non-null | `lake.LakeQuery.read_prices` | `visualization.PriceChart`, factors, engine | 2026-09-27 |
+| `FUNDAMENTALS_PIT` | `quant_cn.core.frames` | point-in-time fundamentals, one value per field per trading day | long; key (trade_date, ts_code, field) | trade_date (string), ts_code (string), field (string), value (float64), end_date (string), ann_date (string) | key unique and non-null | `lake.PitAligner.read_aligned` | factors (plan 04) | 2026-09-27 |
+| `VIX_PANEL` | `quant_cn.core.frames` | CBOE-method volatility index per day and option underlying, with per-term inputs | long; key (trade_date, underlying) | trade_date (string), underlying (string), clock (string), vix (float64), var_near (float64), var_next (float64), days_near (float64), days_next (float64), t_near (float64), t_next (float64), f_near (float64), f_next (float64), k0_near (float64), k0_next (float64), n_options_near (float64), n_options_next (float64), rate_near (float64), rate_next (float64), quality_flag (string) | key unique and non-null | `calculation.VixCalculator.compute` | VIX notebook; `pipeline.CalculationStep` (plan 03 ph4) | 2026-09-27 |
 
 ## F. Allowed standalone functions (`core/utils` only, with justification)
 

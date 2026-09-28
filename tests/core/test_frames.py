@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 from quant_cn.core.exceptions import SchemaError
-from quant_cn.core.frames import FUNDAMENTALS_PIT, PRICE_PANEL
+from quant_cn.core.frames import FUNDAMENTALS_PIT, PRICE_PANEL, VIX_PANEL
 from quant_cn.core.schema import Schema
 
 
@@ -22,3 +22,10 @@ def test_tc_fr_002_duplicate_key_fails() -> None:
     frame = PRICE_PANEL.normalize(pd.DataFrame([row, row]), strict=True)
     with pytest.raises(SchemaError):
         PRICE_PANEL.validate(frame)
+
+
+# TC-FR-003
+def test_tc_fr_003_vix_panel() -> None:
+    assert set(VIX_PANEL.primary_key) == {"trade_date", "underlying"}
+    assert VIX_PANEL.text_columns == {"trade_date", "underlying", "clock", "quality_flag"}
+    VIX_PANEL.validate(VIX_PANEL.build_empty())

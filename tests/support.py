@@ -10,6 +10,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from quant_cn.calculation.black76_model import Black76Model
 from quant_cn.core.base_api_client import BaseApiClient
 from quant_cn.core.clock import Clock
 from quant_cn.core.dataset_spec import CuratedSpec, DatasetSpec, SweepSpec
@@ -176,3 +177,43 @@ class SampleLake:
             )
             records.append(record)
         lake.writer.write_raw(spec, "20260331", pd.DataFrame(records))
+
+
+class SampleOptions:
+    """Synthetic option data priced with Black-76 at a flat volatility (known-answer VIX inputs)."""
+
+    SHIBOR = pd.DataFrame(
+        [["20260801", 1.4, 1.4, 1.4, 1.4, 1.45, 1.5, 1.5, 1.5]],
+        columns=["date", "on", "1w", "2w", "1m", "3m", "6m", "9m", "1y"],
+    )
+
+    @staticmethod
+    def build_chain(
+        trade_date: str = "20260828",
+        expiries: tuple[tuple[str, int], ...] = (("20260923", 26), ("20261028", 61)),
+        strikes: Sequence[float] = tuple(round(1.5 + 0.05 * i, 2) for i in range(71)),
+        sigma: float = 0.20,
+        forward: float = 3.04,
+    ) -> pd.DataFrame:
+        model, rows = Black76Model(), []
+        for expiry, days in expiries:
+            for k in strikes:
+                for side in ("C", "P"):
+                    price = model.compute_price(forward, k, days / 365, 0.014, sigma, side)
+                    rows.append(
+                        {
+                            "trade_date": trade_date,
+                            "opt_code": "OPTEST",
+                            "ts_code": f"{expiry}{side}{k}",
+                            "call_put": side,
+                            "strike": k,
+                            "maturity_date": expiry,
+                            "days": days,
+                            "close": price,
+                            "settle": float("nan"),
+                            "vol": 1.0,
+                            "oi": 1.0,
+                            "adjusted": False,
+                        }
+                    )
+        return pd.DataFrame(rows)

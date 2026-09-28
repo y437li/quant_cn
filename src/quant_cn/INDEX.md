@@ -6,6 +6,7 @@ The package. A layer imports only its own layer or lower (CODING_STANDARD §2.1)
 | Folder | Purpose |
 |---|---|
 | [`back_testing/`](back_testing/INDEX.md) | L5 engine, fills constrained by stk_limit, costs, results |
+| [`calculation/`](calculation/INDEX.md) | L4 calculation: CBOE VIX, Black-76, rate curve, option chains |
 | [`core/`](core/INDEX.md) | L1 base classes, exceptions, Config, Schema, DateCodec, TickerNormalizer, logging |
 | [`data_loading/`](data_loading/INDEX.md) | L3 Tushare client and one fetcher per sweep pattern; writes into the lake |
 | [`lake/`](lake/INDEX.md) | L2 parquet writer, DuckDB catalog, fetch log, compactor, query API, PIT aligner |

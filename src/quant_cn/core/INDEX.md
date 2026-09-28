@@ -22,7 +22,7 @@ L1: base classes, exceptions, Config, Schema, DateCodec, TickerNormalizer, loggi
 | `dataset_spec.py` | Typed view of one `config/datasets.yaml` entry: endpoint, sweep, keys, curated layout | `SweepSpec`, `CuratedSpec`, `DatasetSpec` |
 | `date_codec.py` | The only place that converts between `YYYYMMDD` strings and dates (D-005) | `DateCodec` |
 | `exceptions.py` | Project exception hierarchy; every raised error is a `QuantCnError` (CODING_STANDARD §2.5) | `QuantCnError`, `ConfigError`, `SchemaError`, `DataSourceError`, `PermissionDeniedError`, `LakeError` |
-| `frames.py` | Shared panel schemas that cross package boundaries (SRC_DESIGN §3); long format, YYYYMMDD dates | `PRICE_PANEL`, `FUNDAMENTALS_PIT` |
+| `frames.py` | Shared panel schemas that cross package boundaries (SRC_DESIGN §3); long format, YYYYMMDD dates | `PRICE_PANEL`, `FUNDAMENTALS_PIT`, `VIX_PANEL` |
 | `schema.py` | DataFrame contract: columns, dtypes and primary key, enforced at lake boundaries | `Schema` |
 | `step_report.py` | Outcome record of one pipeline step or fetcher run | `StepReport` |
 | `ticker_normalizer.py` | The only place that converts other ticker spellings to Tushare `ts_code` (CODING_STANDARD §4) | `TickerNormalizer` |
