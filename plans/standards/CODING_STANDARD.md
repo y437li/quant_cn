@@ -32,7 +32,7 @@ Package names follow `plans/architecture/FOLDER_STRUCTURE.md` §3 (D-007, D-012)
 | 8 | `cli.py`, `research_space/` | Composition root; notebooks (import only, never define) |
 | 7 | `back_testing`, `portfolio`, `visualization` | Engine, fills, costs; sizing, constraints, rebalancing; charts (mutually independent) |
 | 6 | `pipeline` | Resumable download / curate / universe / feature steps |
-| 5 | `factor` | `BaseFactor`, factor library, preprocessing, evaluation, signal combination |
+| 5 | `factor`, `risk` | Factor library, preprocessing, evaluation, signals; Barra-style risk model. Mutually independent |
 | 4 | `statistic`, `calculation` | Generic math on frames; domain financial computations (VIX, curves, option chains). Mutually independent |
 | 3 | `data_loading` | Tushare client and fetchers; writes into the lake |
 | 2 | `lake` | Parquet writer, DuckDB catalog, fetch log, run log, compactor, query API, PIT aligner, calendar |
@@ -169,7 +169,7 @@ File, folder, document, config, lake and git names: `plans/standards/NAMING_CONV
 | `ruff format` | formatting, line length 100 | `pyproject.toml [tool.ruff]` |
 | `ruff check` | rules `E,F,W,I,N,UP,B,SIM,PL,RUF,D1` (D1 = docstring *present* on every public class/method; our own format replaces pydocstyle style rules D2-D4, which are disabled) | `pyproject.toml` |
 | `mypy --strict` | types on every signature; no `Any` leaks from pandas boundaries without a typed `Schema` | `pyproject.toml [tool.mypy]` |
-| `import-linter` (`lint-imports`) | layer contract from `FOLDER_STRUCTURE.md`: `core` < `lake` < `data_loading` < `statistic`/`calculation` < `factor` < `pipeline` < `back_testing`/`portfolio`/`visualization` < `cli`; `statistic`/`calculation` independent; `back_testing`/`portfolio`/`visualization` independent; no `research_space` imports inside `src/` | `pyproject.toml [tool.importlinter]` |
+| `import-linter` (`lint-imports`) | layer contract from `FOLDER_STRUCTURE.md`: `core` < `lake` < `data_loading` < `statistic`/`calculation` < `factor`/`risk` < `pipeline` < `back_testing`/`portfolio`/`visualization` < `cli`; `statistic`/`calculation` independent; `factor`/`risk` independent; `back_testing`/`portfolio`/`visualization` independent; no `research_space` imports inside `src/` | `pyproject.toml [tool.importlinter]` |
 | `scripts/lint_contracts.py` (project linter) | every public class/method has `Purpose`, `Contract` (Input, Output, Raises), `Used by`, `Test cases`; each TC ID has a test function and vice versa; `Used by` matches `grep` over `src/` and `research_space/`; every class has a registry row + detail block whose method table matches the code; no duplicate class names across packages; no module-level functions outside `core/utils`; `--index`: every folder has `INDEX.md`, entries match disk, `Contains` matches classes; `--size`: file ≤ 600, class ≤ 300, method ≤ 50 lines (§2.6); `--names`: method verb prefixes and file names per NAMING_CONVENTION | none; also runs as `tests/test_contracts.py` so `pytest` fails on violations |
 | `pytest --cov` | coverage targets in §6 | `pyproject.toml [tool.pytest]`, `[tool.coverage]` |
 

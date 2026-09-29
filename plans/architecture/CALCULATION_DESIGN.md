@@ -1,4 +1,4 @@
-# Calculation Package Design (v1.0, approved 2026-09-27; decision D-032 accepted)
+# Calculation Package Design (v1.1, 2026-09-27; D-032; execution findings D-046–D-052)
 
 `src/quant_cn/calculation/` (L4, beside `statistic`) holds **domain financial computations** that turn lake
 panels into derived market series: volatility indices, implied volatilities, term structures, greeks.
@@ -67,6 +67,15 @@ Sweep kinds `exchange` and `date_window` are new `DatasetSpec.sweep.kind`s: `Enu
 | `TermInterpolator` | white-paper example reproduces the published VIX (13.69 in the 2019 paper's example) |
 | `VixCalculator` | end-to-end on a synthetic chain with known answer; missing rate → `SchemaError`; empty date → no row |
 Known-answer fixtures come from the CBOE white paper tables, typed into `tests/calculation/fixtures/`.
+
+## 5b. Findings from the prototype notebook (2026-09-27, 4add2d4)
+- `opt_daily` is swept by `trade_date` with **no exchange filter** (all 8 exchanges incl. commodities, ~24k rows/day) because a composite (date, exchange) sweep key is not supported; the chain builder filters by underlying (D-047).
+- Adjusted ETF contracts are identified by a contract **name ending in "A"**; `per_unit != 10000` is not usable because CFFEX index options have multiplier 100 (D-048).
+- ETF spot comes from `fund_daily` (new dataset, enum `option_etfs`); index-option spot from `index_daily`.
+- Pre-set sanity bands: forward/spot ∈ [0.99, 1.01] missed on 7 rows (CSI500 / STAR ETFs, futures-basis discount); VIX − ATM IV ∈ [−2, +5] missed on 5 STAR50 ETF skew days; the notebook lists them rather than widening the bands. Package phases must reproduce these before changing any rule.
+- Twelve underlyings work with one code path: 5 SSE ETFs, 4 SZSE ETFs, CFFEX IH/IO/IM.
+- **Expiry clock** (D-052): the white-paper calendar clock (minutes to expiry) makes the index drop when the near term rolls onto an expiry that spans long exchange holidays (CSI 300 on 20260917: Mid-Autumn + National Day). `ExpiryClock` offers `calendar` (published convention) and `trading` (21 sessions / 244-session year); both are computed and stored; `VIX_PANEL.quality_flag` records the clock. Default for the headline series: to be decided in phase 5 validation against iVIX (which used the calendar clock).
+- `trade_cal` is fetched 400 days ahead (`DatasetSpec.extend_days`, D-050) so future sessions exist for expiry and next-day arithmetic.
 
 ## 6. Open questions
 None. Closed 2026-09-27 (user approved the recommendations): default underlying `510050.SH`, `510300.SH` also configured; one `VIX_PANEL` table with an `underlying` column; acceptance threshold mean |ours − iVIX| ≤ 0.5 vol points over the 2015-02 → 2018-02 overlap.

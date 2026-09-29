@@ -25,7 +25,7 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 | D-019 | 2026-09-27 | `visualization` package at L5, plotly, DataFrame-only inputs | accepted (library: proposed) | FOLDER_STRUCTURE §1, §3; plan 01 phase 6 |
 | D-020 | 2026-09-27 | src architecture: frames between packages, time discipline, config-over-code | accepted | plans/architecture/SRC_DESIGN.md |
 | D-021 | 2026-09-27 | Lake outside the repo; root via env > local.yaml > base default | accepted | DATA_LOADING_DESIGN §1, config/base.yaml |
-| D-022 | 2026-09-27 | Flow monitoring: built-in RunLog + rich; Prefect as optional adapter | accepted | DATA_LOADING_DESIGN §3, SRC_DESIGN §2.4 |
+| D-022 | 2026-09-27 | Flow monitoring: built-in RunLog + rich; Prefect as optional adapter | accepted; adapter timing amended by D-064 | DATA_LOADING_DESIGN §3, SRC_DESIGN §2.4 |
 | D-023 | 2026-09-27 | plans/ organised by document type; ROADMAP.md is the status board | accepted | plans/INDEX.md, plan skill |
 | D-024 | 2026-09-27 | Config = pydantic v2 + PyYAML; DataFrame contracts = core.Schema | accepted by execution | core.config, core.schema |
 | D-025 | 2026-09-27 | uv venv outside the repo (UV_PROJECT_ENVIRONMENT=~/.venvs/quant_cn) | accepted by execution | Makefile, FOLDER_STRUCTURE |
@@ -45,6 +45,30 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 | D-039 | 2026-09-27 | Chart palette = dataviz reference via ChartTheme; red-up/green-down hollow-up candles; PNG export and PanelChart deferred | accepted by execution | visualization, D-019 |
 | D-040 | 2026-09-27 | Notebooks committed without outputs; `make notebook` executes and discards | accepted by execution | Makefile, research_space |
 | D-041 | 2026-09-27 | Lake read API surface on LakeQuery + PanelCache; built in plan 04 phase 1 | accepted | SRC_DESIGN §2.2b, plan 04 |
+| D-042 | 2026-09-27 | `project` schema rebuilt whole in one transaction; no incremental refresh | accepted by execution | lake.ProjectCatalog |
+| D-043 | 2026-09-27 | `make check` includes `project-catalog` (needs lake root); `make lint test` stays lake-free | accepted by execution | Makefile |
+| D-044 | 2026-09-27 | Queries open DuckDB read-only; retry after a writer finishes | accepted by execution | cli query, project-query skill |
+| D-045 | 2026-09-27 | `risk` package (L5, beside `factor`): Barra/CNE5-style risk model on Shenwan L1 industries | accepted | RISK_MODEL_DESIGN, SRC_DESIGN §2.5b, plan 05 |
+| D-046 | 2026-09-27 | VIX prototype notebook defines its own functions (exception to "notebooks import, never define"); promoted in plan 03 ph2–4 | accepted by execution | research_space/notebooks/20260927_vix_calculation.ipynb |
+| D-047 | 2026-09-27 | Sweep kind `exchange` (EnumFetcher); `opt_daily` swept by trade_date across all exchanges | accepted by execution | config/datasets.yaml, data_loading |
+| D-048 | 2026-09-27 | Adjusted ETF option contracts identified by name suffix "A", not by `per_unit` | accepted by execution | CALCULATION_DESIGN §2, §5b |
+| D-049 | 2026-09-27 | `download` refuses `--start` later than configured start for overwrite + range datasets | accepted by execution | cli download, DownloadPipeline |
+| D-050 | 2026-09-27 | `DatasetSpec.extend_days`; `trade_cal` fetched +400 days ahead | accepted by execution | config/datasets.yaml, TradingCalendar |
+| D-051 | 2026-09-27 | VIX notebook committed WITH outputs (user request); exception to D-040 for this notebook | accepted by execution | research_space/notebooks/20260927_vix_calculation.ipynb |
+| D-052 | 2026-09-27 | `ExpiryClock`: calendar (white paper) and trading-session modes, both stored | accepted by execution | calculation.ExpiryClock, VIX_PANEL.quality_flag |
+| D-053 | 2026-09-28 | `derived.prices_adj` drops codes absent from `stock_basic` (retired aliases); backtests read prices only through it | accepted by execution | lake.DerivedViews, LakeQuery.read_prices, DATA_CATALOG §3b |
+| D-054 | 2026-09-28 | BJ stocks lack stk_limit/daily_basic before BJ listing; universes exclude BJ or start at list_date | accepted by execution | UniverseStep (plan 04), DATA_CATALOG §3b |
+| D-055 | 2026-09-28 | Factor library catalogue as the input to plan 04; first six selected | accepted (plan 04 approved) | FACTOR_LIBRARY.md |
+| D-056 | 2026-09-28 | ETF pairs trading as a research track; short legs = borrowable ETFs or index futures | accepted | ETF_PAIRS_DESIGN.md, ROADMAP 06b |
+| D-057 | 2026-09-28 | GEX dealer-sign default: dealers long calls, short puts; sign is a parameter, OI changes shown | accepted | calculation.GammaExposureCalculator, plan 09 |
+| D-058 | 2026-09-28 | Margin vintages FIFO at entry close; liquidation = entry·1.3/(1+1.0), parameters flagged | accepted | calculation.MarginLadderEstimator, plan 09 |
+| D-059 | 2026-09-28 | `fut_holding` treated as gross top-20 broker aggregate, not client intent | accepted | calculation.FuturesPositioning, plan 09 |
+| D-065 | 2026-09-28 | Data sources: AkShare gap-filler, official exchange lists, BaoStock verification, NBS/PBOC release dates; candidates documented | accepted | plans/reference/DATA_SOURCES.md, plan 11 ph10 |
+| D-064 | 2026-09-28 | Prefect 3 chosen as the flow tool now; `PrefectRunner` built, `--runner local\|prefect`, optional extra `flows` | accepted (user choice via executor) | pipeline.PrefectRunner, Makefile, .env.example |
+| D-063 | 2026-09-28 | Multi-source data loading (`DatasetSpec.source`, FRED client, date-window fetcher, known-on rules); plan 11 consolidates all dataset additions | accepted (user assignment) | DATA_LOADING_DESIGN §3c, plan 11 |
+| D-062 | 2026-09-28 | Commodity, macro and sector data: Tushare futures/SGE/yields/FX/macro + FRED second source; continuous futures; gated macro-beta risk descriptors | proposed | MACRO_COMMODITY_DESIGN, plan 10 |
+| D-061 | 2026-09-28 | Risk factor sets: v1 six / v2 CNE5 ten with published weights / v3 CNE6 additions; analyst descriptors renormalised when absent | proposed | RISK_FACTOR_LIST, RISK_MODEL_DESIGN §3, plan 05 |
+| D-060 | 2026-09-28 | Factor significance: NW t, block bootstrap, HLZ t ≥ 3, BHY FDR, Romano-Wolf, SPA, DSR, CSCV PBO in `statistic`; acceptance bar redefined | accepted (plan 04 approved) | FACTOR_TESTING_DESIGN, FACTOR_LIBRARY §7, plan 04 |
 
 ### D-001 Plan first, standard is binding
 - Context: new repo; user wants no code before an approved plan and a standard agents must follow.
@@ -332,3 +356,171 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Alternatives: separate `DataLoader` facade above the lake (rejected: two read paths); notebooks writing SQL (rejected as the only path: repetitive and unvalidated).
 - Consequences: SRC_DESIGN §2.2b; ROADMAP plan 04 phase 1; `PanelCache` registered in lake.
 - Links: plans/architecture/SRC_DESIGN.md §2.2b, plans/execution/ROADMAP.md
+
+### D-042 `project` schema rebuilt whole
+- Context: plan 02 phase 2 named `rebuild()` and `refresh(paths)`; a full rebuild takes about one second on this tree.
+- Decision: `ProjectCatalog.rebuild()` drops schema `project` (CASCADE) and recreates all 12 tables and 4 views in one transaction; no incremental mode. Accepted by execution (855585f).
+- Alternatives: per-path incremental refresh (rejected for now: complexity for no measurable gain at this size; revisit if rebuild exceeds ~10 s).
+- Consequences: plan 02 phase 2 deliverable narrowed; the `stale` view still detects drift between runs.
+- Links: plans/execution/02_project_catalog.md
+
+### D-043 `make check` includes `project-catalog`
+- Context: keeping the catalog fresh on every check requires the lake DuckDB file, hence a lake root.
+- Decision: `make check` = lint + test + project-catalog and therefore needs `.env`/lake root; `make lint test` remains lake-free for clones without data. Accepted by execution.
+- Alternatives: catalog in a repo-local DuckDB (rejected: D-017 chose the lake file so one query joins data and project); skip catalog in check (rejected: staleness would go unnoticed).
+- Consequences: CI without a lake runs `make lint test`; `make doctor` explains a missing root.
+- Links: Makefile, D-017
+
+### D-044 Read-only query access
+- Context: DuckDB allows one writer; agents and notebooks query while pipelines may be writing.
+- Decision: `quant_cn query` / `make query` open the catalog read-only; DuckDB refuses a read-only open while a writer holds the file, so callers retry after downloads/curate finish. Accepted by execution.
+- Alternatives: a query server process (rejected: overkill for a single machine).
+- Consequences: project-query skill documents the retry; pipelines close connections promptly.
+- Links: .claude/skills/project-query/SKILL.md
+
+### D-045 `risk` package: Barra-style multi-factor risk model
+- Context: user asked for a Barra-style risk management model.
+- Decision: `src/quant_cn/risk/` at L5 beside `factor`, mutually independent (frames only). CNE5-style specification adapted to A-shares: country + 31 Shenwan L1 industry factors + CNE5 style factors (six in v1, ten in a second pass), constrained WLS with √cap weights, EWMA + Newey-West covariance with eigenfactor and volatility-regime adjustments, EWMA specific risk with structural fallback and Bayesian shrinkage, bias-statistic validation. Datasets `index_classify`, `index_member_all`, `index_weight` added. Six frames in `core.frames`. Plans renumbered: risk 05, portfolio+backtest 06, events 07, research ops 08.
+- Alternatives: statistical (PCA) risk model (rejected for v1: less interpretable, no industry/style attribution; can be added as another `BaseRiskModel`); risk inside `portfolio` (rejected: risk is consumed by both portfolio and backtesting, and must not import either); vendor model (none available).
+- Consequences: `portfolio` optimiser (plan 06) consumes `FACTOR_COV`/`SPECIFIC_RISK`; `factor.Neutralizer` may consume `RISK_EXPOSURE`; import-linter gains `factor`/`risk` independence.
+- Links: plans/architecture/RISK_MODEL_DESIGN.md, plans/execution/05_risk_model.md, SRC_DESIGN §2.5b
+
+### D-046 VIX prototype in a research notebook
+- Context: user asked quant-cn-b7 for the VIX calculation in a notebook before the package existed, then for all underlyings and the latest CSI 300 values.
+- Decision: `research_space/notebooks/20260927_vix_calculation.ipynb` defines its own calculation functions, an explicit exception to SRC_DESIGN §4 ("notebooks import, never define"). Plan 03 phases 2–4 promote them into `calculation` classes with tests and the notebook is then rewritten to import. Accepted by execution (4add2d4).
+- Alternatives: build the package first (rejected by the user's sequencing); leave the prototype as the product (rejected: violates the standard permanently).
+- Consequences: plan 03 phase 1 partly delivered; package phases must reproduce the notebook's numbers (468 underlying-days, latest IO 17.28 / 159919 17.05 / 510300 16.96) as a regression check.
+- Links: plans/execution/03_vix_calculation.md, CALCULATION_DESIGN §5b
+
+### D-047 Sweep kind `exchange`; `opt_daily` across all exchanges
+- Context: `opt_basic` is fetched per exchange; `opt_daily` per trade_date returns all exchanges (~24k rows/day incl. commodities) and a composite (date, exchange) sweep key is not supported.
+- Decision: new `sweep.kind: exchange` handled by `EnumFetcher` (SSE, SZSE, CFFEX); `opt_daily` swept by `trade_date` without exchange filter; the chain builder filters by underlying. Accepted by execution.
+- Alternatives: composite sweep keys (deferred: more fetcher complexity, ~5× more calls); per-exchange daily sweeps (rejected: same data, more calls).
+- Consequences: `opt_daily` raw is ~1M rows per 39 days; curated partitioning by year unchanged; commodity options are available for free.
+- Links: config/datasets.yaml, DATA_LOADING_DESIGN §2.2
+
+### D-048 Adjusted contracts by name suffix
+- Context: dividend-adjusted ETF option contracts must be excluded from the strip (CALCULATION_DESIGN §2); `per_unit != 10000` misclassifies CFFEX index options (multiplier 100).
+- Decision: an adjusted contract is one whose `opt_basic.name` ends in "A". Accepted by execution.
+- Alternatives: `per_unit` rule (rejected: wrong for CFFEX); exercise-price grid detection (deferred: heuristic).
+- Consequences: `OptionChainBuilder` implements the rule with an `include_adjusted` flag.
+- Links: CALCULATION_DESIGN §2, §5b
+
+### D-049 `download` refuses a narrower `--start` on overwrite datasets
+- Context: `index_daily --start 20260101` overwrote the full raw history because reference datasets refresh by overwrite.
+- Decision: for overwrite + range datasets, `download` refuses a `--start` later than the configured start unless `--force`. Accepted by execution (dda0409).
+- Alternatives: append semantics for reference datasets (rejected: they are whole-history snapshots by design).
+- Consequences: partial refreshes of reference data are impossible by accident.
+- Links: plans/execution/03_vix_calculation.md Log (incident)
+
+### D-050 `trade_cal` fetched 400 days ahead
+- Context: expiry maths (days to expiry, next trading session after an announcement) needs sessions beyond today.
+- Decision: `DatasetSpec.extend_days` (per dataset); `trade_cal` uses +400 days so `TradingCalendar` knows future sessions. Accepted by execution.
+- Alternatives: derive future sessions from weekday rules (rejected: Chinese holidays are irregular).
+- Consequences: calendar refreshes must run at least yearly; `make doctor` could warn when the horizon is < 90 days (follow-up).
+- Links: config/datasets.yaml, lake.TradingCalendar
+
+### D-051 VIX notebook committed with outputs
+- Context: user asked that the notebook "should have the results as well".
+- Decision: `20260927_vix_calculation.ipynb` is committed with executed outputs, overriding D-040 for this notebook only; all other notebooks stay output-free. Accepted by execution.
+- Alternatives: export results to `outputs/` HTML (rejected by the user's request); strip and re-run on demand (that remains the default elsewhere).
+- Consequences: repo grows by the plotly JSON of this notebook; re-executions must be committed deliberately.
+- Links: D-040
+
+### D-052 `ExpiryClock` with calendar and trading-session modes
+- Context: the CSI 300 VIX fell on 20260917 when the near term rolled onto an expiry spanning the Mid-Autumn and National Day holidays; the white-paper calendar clock counts those days as time, the market does not.
+- Decision: `ExpiryClock` implements `calendar` (white paper, what iVIX published) and `trading` (21 sessions / 244-session year); `VixCalculator` computes and stores both, `quality_flag` records the clock; the headline default is chosen in plan 03 phase 5 against iVIX. Accepted by execution.
+- Alternatives: calendar only (rejected: holiday artifacts mislead users); trading only (rejected: breaks comparability with published indices).
+- Consequences: `VIX_PANEL` carries both series; notebooks show both.
+- Links: CALCULATION_DESIGN §5b, plans/execution/03_vix_calculation.md
+
+### D-053 Retired code aliases dropped from adjusted prices
+- Context: Tushare double-lists code-changed stocks (000043→001914, 000022→001872, 300114→302132), so the same company appeared twice on 7,637 bars.
+- Decision: `derived.prices_adj` (and therefore `LakeQuery.read_prices`) keeps only codes present in `stock_basic`; `curated.daily` is left complete. Backtests and factors read prices only through `prices_adj`/`read_prices`, never `curated.daily`. An old→new alias map joins plan 04 phase 1 so the retired code's history and limits can be attached to the surviving code. Accepted by execution (7970a13, TC-DV-004).
+- Alternatives: dedupe on (date, close) fingerprints (rejected: fragile); drop the old code from raw (rejected: raw is immutable).
+- Consequences: three companies lose pre-change history in `prices_adj` until the alias map exists; documented in DATA_CATALOG §3b.
+- Links: plans/reference/fresh_start/DATA_CATALOG.md §3b, plan 04
+
+### D-054 Beijing-exchange history before BJ listing
+- Context: 58k `.BJ` bars from the NEEQ era have no `stk_limit` or `daily_basic`.
+- Decision: backtest universes exclude `.BJ`, or start each BJ stock at its BJ `list_date`; the `UniverseStep` (plan 04) implements the choice as config (`universe.exchanges`, `universe.bj_from_list_date`). Accepted by execution.
+- Alternatives: back-fill limits by rule (rejected: BJ limit rules differ and changed over time).
+- Consequences: default universe excludes BJ (consistent with RISK_MODEL_DESIGN §7 recommendation).
+- Links: DATA_CATALOG §3b, plans/execution/05_risk_model.md
+
+### D-055 Factor library catalogue
+- Context: user wants a construction list of fundamental, momentum, quality and value factors before plan 04 is drafted.
+- Decision: `plans/architecture/FACTOR_LIBRARY.md` catalogues ~55 candidate factors in six families with construction, Tushare data mapping, PIT notes and an evaluation protocol; the acceptance bar for `factor/library/` is |ICIR| ≥ 0.3 at 20 sessions with stable sign across sub-periods. First six for plan 04: EP or BP, ROE TTM, net profit TTM yoy, 12-1 momentum, 1-month reversal, turnover. Two statement fields added to `datasets.yaml` before the next refetch. Analyst revision family (§3b) depends on `report_rc` (broker earnings forecasts; permission tier to verify) and lands with plan 07; it also supplies the forward earnings yield the CNE5 model lacks.
+- Alternatives: build factors ad hoc as ideas come (rejected: no shared evaluation bar, duplicates).
+- Consequences: plan 04 phases 4–5 take their scope from §8; the catalogue is a living document updated with each accepted or rejected factor.
+- Links: plans/architecture/FACTOR_LIBRARY.md, plan 04 (to draft)
+
+### D-056 ETF pairs trading as a research track
+- Context: user wants to find long/short pair trades among ETFs.
+- Decision: research-first per `ETF_PAIRS_DESIGN.md`; short legs restricted to margin-eligible ETFs, T+0 ETF duplicates and CFFEX index futures; pair families and a cointegration/OU/z-score method defined; new datasets (`fund_basic`, `fund_daily` by trade_date, `fund_nav`, `fund_share`, margin targets, `fut_basic`, `fut_daily`); promotion to `portfolio.PairsConstructor` and a short-leg/futures `CostModel` only if out-of-sample Sharpe ≥ 1.0 after costs on ≥ 3 pairs in 2 families. Roadmap row 06b.
+- Alternatives: single-stock pairs (rejected: shorting single A-shares is impractical); build strategy classes first (rejected: plan-first, and the bar may not be met).
+- Consequences: `fund_daily` sweep changes from an ETF enum to `trade_date`; futures datasets arrive earlier than otherwise planned.
+- Links: plans/architecture/ETF_PAIRS_DESIGN.md, plans/execution/ROADMAP.md
+
+### D-057 GEX dealer-sign default
+- Context: dealer gamma exposure needs a sign convention for who holds which side; A-share option chains have no dealer-position data.
+- Decision: default dealers long calls and short puts (customers buy puts, sell calls); the sign is a constructor parameter; signed and unsigned GEX are both stored and open-interest changes are shown next to levels so the assumption can be judged. Confirmed by the user in this session on 2026-09-28.
+- Alternatives: infer sign per strike from OI vs price changes (deferred to after the event study); unsigned only (rejected: no flip level).
+- Consequences: gamma-flip level depends on the default; validation phase tests it.
+- Links: POSITIONING_FLOWS_DESIGN §1, plan 09
+
+### D-058 Margin vintages FIFO; liquidation parameters
+- Context: `margin_detail` gives balances and flows per stock, not per account; liquidation prices need an entry price and a maintenance rule.
+- Decision: daily net new financing opens a vintage at that day's close; repayments retire vintages first-in-first-out; liquidation price = entry × maintenance 1.3 / (1 + initial margin 1.0); both parameters in config and flagged as assumptions, with a sensitivity table in the notebook. Confirmed by the user in this session on 2026-09-28.
+- Alternatives: LIFO or pro-rata retirement (rejected: FIFO matches typical forced-close ordering by age); per-broker parameter mixture (deferred to sensitivity).
+- Consequences: aggregate ladder is the deliverable; per-stock liquidation prices are indicative only.
+- Links: POSITIONING_FLOWS_DESIGN §3, plan 09
+
+### D-059 `fut_holding` as gross broker aggregate
+- Context: CFFEX publishes top-20 member firms' long/short volume and OI; these mix client and proprietary books.
+- Decision: treat as a gross aggregate: net = Σ long OI − Σ short OI over listed brokers, with a top-5 concentration column; never described as "client positioning". Confirmed by the user in this session on 2026-09-28.
+- Alternatives: attribute intent by broker type (rejected: no data).
+- Consequences: regime classification uses total OI and price; the broker net is a secondary indicator.
+- Links: POSITIONING_FLOWS_DESIGN §2, plan 09
+
+### D-060 Factor significance testing in `statistic`
+- Context: user: "statistic need the IC/IR ... newest significant test"; the evaluation protocol reported IC/ICIR without inference, and a 55-factor catalogue invites false discoveries.
+- Decision: `statistic` gains `ICCalculator`, `HacVariance`, `BlockBootstrap`, `ICSignificance` (Newey-West t on mean IC, block-bootstrap CIs, Pesaran-Timmermann, sub-period/regime consistency, Bai-Perron break, decay), `MultipleTestingAdjuster` (Holm, Benjamini-Hochberg-Yekutieli, Romano-Wolf; Harvey-Liu-Zhu t ≥ 3 hurdle), `DataSnoopingTest` (White Reality Check, Hansen SPA), `DeflatedSharpe` (PSR/DSR, minimum backtest length), `BacktestOverfitting` (CSCV PBO), `SharpeRatioTest` (Ledoit-Wolf), `TrialLog`. Acceptance into `factor/library/` = FACTOR_TESTING_DESIGN §6. Built in plan 04 phase 2 (core set) and later phases (backtest-level tests).
+- Alternatives: ICIR threshold only (rejected: ignores autocorrelation and the search); vendor library (none covers HLZ/DSR/CSCV together; formulas are short and testable).
+- Consequences: every factor report carries t, p, CI and adjusted p; a `TrialLog` per campaign is mandatory so DSR can be computed honestly; tests-for-the-tests (§7) are part of the definition of done.
+- Links: plans/architecture/FACTOR_TESTING_DESIGN.md, FACTOR_LIBRARY §7, SRC_DESIGN §2.4
+
+### D-061 Risk factor sets from the public Barra models
+- Context: user asked for the list of Barra risk factors, preferring the China model, else the public US one.
+- Decision (proposed): `RISK_FACTOR_LIST.md` compiles CNE5 (10 factors, 21 descriptors, published weights), CNE6 (9 groups, ~20 factors, ~46 descriptors, weights not public) and USE4 (12 factors) with the Tushare mapping. Plan 05 builds v1 (Size, Beta, Momentum, Residual Volatility, Book-to-Price, Liquidity), then v2 = CNE5's ten with published weights, then v3 = CNE6 additions in a follow-up plan. Analyst-based descriptors (EPFWD, EGRLF, EGRSF, sentiment) depend on `report_rc`; when absent the remaining descriptor weights are renormalised and the factor flagged `no_analyst`. CNE6 descriptor weights start equal and are estimated by the validator.
+- Alternatives: invent a custom factor set (rejected: comparability with published models and with broker replications is worth more); Fama-French style factors as the risk model (rejected: too few factors for attribution; kept as sanity checks).
+- Consequences: RISK_MODEL_DESIGN §3 replaced by a pointer with corrected CNE5 weights; six balance-sheet/income fields added to `datasets.yaml` before the next refetch; plan 05 phase 6 = v2.
+- Links: plans/architecture/RISK_FACTOR_LIST.md, RISK_MODEL_DESIGN §3, plans/execution/05_risk_model.md
+
+### D-062 Commodity, macro and sector data
+- Context: user asked to add oil, gold and other commodity prices, and sectors.
+- Decision (proposed): plan 10 adds domestic commodity futures (INE, SHFE, DCE, CZCE) with `fut_mapping` for main contracts, SGE gold, China yields and FX, monthly macro with a release-date PIT rule, and Shenwan/CSI sector indices; international benchmarks (Brent, WTI, LBMA gold, DGS10, DXY) come from FRED through a second `BaseApiClient` (`DatasetSpec.source`), AkShare only for series FRED lacks. `calculation` gains `ContinuousFutures` (ratio back-adjusted, roll log), `TermStructure`, `MacroSeries`, `SectorIndexPanel`. Uses: gated macro-beta risk descriptors (RISK_FACTOR_LIST §4b), commodity-spillover and sector-momentum factors, regime variables, commodity ETF/futures pairs. Start with a small product set (oil, gold, copper, iron ore, 10y, USDCNY) and extend on demand.
+- Alternatives: Tushare only (rejected: no international benchmarks); AkShare only (rejected: scraping fragility, keep as fallback); embed commodity exposure only via industries (rejected: misses within-industry differences and the regime uses).
+- Consequences: `data_loading` becomes multi-source; four new frames; monthly-macro PIT approximated by a documented lag rule; FRED key in `.env`.
+- Links: plans/architecture/MACRO_COMMODITY_DESIGN.md, plans/execution/10_macro_commodity_sectors.md, FACTOR_LIBRARY §5b, RISK_FACTOR_LIST §4b
+
+### D-063 Multi-source data loading and the consolidated lake expansion
+- Context: the research asks (factors, risk model, ETF pairs, positioning, commodities/macro/sectors, analysts) each added datasets to their own plans; the user asked for the data-loading lake to be designed for all of them and assigned to the executor.
+- Decision: DATA_LOADING_DESIGN §3c: `DatasetSpec.source` selects the client (`tushare`, `fred`, optional `akshare`); `FredClient` for international benchmarks; `DateWindowFetcher`; `values_from_dataset`; `known_on_rule` (`next_session`) and `release_lag_days` for series without announce dates. Plan 11 consolidates every dataset addition into nine ordered phases with a one-call permission check per new endpoint, reconciliations, PIT tests, byte-identical rebuilds and DATA_CATALOG rows; the data phases of plans 05 and 10 become verification-only. Accepted by user instruction.
+- Alternatives: keep dataset additions inside each research plan (rejected: repeated lake-busy windows and no single view of coverage); single-source Tushare (rejected: no international benchmarks).
+- Consequences: lake grows ~3–4 GB raw; `.env` gains `FRED_API_KEY`; two long download phases (futures, analysts) to run overnight; `fund_daily` raw key changes.
+- Links: plans/architecture/DATA_LOADING_DESIGN.md §3c, plans/execution/11_lake_expansion.md
+
+### D-064 Prefect 3 as the flow tool, built now
+- Context: D-022 chose RunLog + rich as the baseline and Prefect as an optional adapter, deferred. The user picked Prefect 3 when asked by quant-cn-b7 (AskUserQuestion) during plan 09.
+- Decision: `pipeline.PrefectRunner` implements `BaseRunner`; flow "quant_cn <kind>" named by the RunLog run id, each step a task with a progress artifact over its keys, permission-blocked steps non-fatal; `RunLog` stays the source of truth. `--runner local|prefect` on `download` and `curate`; `make prefect-server` (UI 127.0.0.1:4200), `make download RUNNER=prefect`; Prefect is the optional extra `flows` (`uv sync --all-extras`); `PREFECT_API_URL` in `.env.example`; tests TC-PFR-001..003 run real flows in Prefect's harness. Steps and fetchers still never import Prefect. Amends the deferral in D-022.
+- Alternatives: keep deferring (rejected by the user's choice); Prefect as a hard dependency (rejected: `make lint test` stays lake- and Prefect-free).
+- Consequences: roadmap plan 08's `PrefectRunner` item is delivered early; DATA_LOADING_DESIGN §3 monitoring table updated.
+- Links: D-022, plans/architecture/DATA_LOADING_DESIGN.md §3, plans/execution/09_positioning_flows.md
+
+### D-065 Additional data sources
+- Context: user asked whether other data sources exist and said "add them".
+- Decision: `plans/reference/DATA_SOURCES.md` records every source with role and caveats. Plan 11 gains phase 10: `AkShareClient` as gap-filler (LME if needed, official macro release calendars, exchange member position files), SSE/SZSE margin-target lists loaded with provenance (closes the ETF pairs short-leg eligibility question), `BaoStockClient` as a verification-only source feeding a nightly price cross-check view, NBS/PBOC release dates replacing lag rules. Paid options (Wind/iFinD/Choice, Go-Goal, JoinQuant/RiceQuant, CSMAR/CNRDS, Hibor) documented as candidates; the analyst-data choice waits for the `report_rc` tier check.
+- Alternatives: integrate a paid terminal now (rejected: cost before need); rely on Tushare alone (rejected: release dates, lending lists and cross-checks are cheap and valuable).
+- Consequences: verification sources never overwrite primaries (`raw/<source>_<dataset>/` + quality view); licence terms recorded before integration.
+- Links: plans/reference/DATA_SOURCES.md, plans/execution/11_lake_expansion.md phase 10, ETF_PAIRS_DESIGN §7

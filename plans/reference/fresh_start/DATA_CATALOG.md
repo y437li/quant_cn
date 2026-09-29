@@ -93,6 +93,22 @@ Verify any unit you rely on against the endpoint's doc page before building on i
 - The old volume/disk silently corrupted `.venv` and `.git`. Keep downloaded data somewhere
   reliable and back it up; the raw data is expensive (days) to re-pull.
 
+## 3b. Traps found in the 2026-09 rebuild (added by the new project)
+
+- **Code changes double-list a company.** Tushare keeps the retired code's bars *and* back-fills the same
+  history under the new code (000043→001914, 000022→001872, 300114→302132: identical closes on 7,637 bars).
+  `curated.daily` keeps both; `derived.prices_adj` / `LakeQuery.read_prices` keep only codes present in
+  `stock_basic` (D-053). A backtest must never read `curated.daily` directly. An old→new alias map is planned
+  (plan 04) so the old code's full history and limits can be attached to the surviving code.
+- **Beijing exchange history.** `daily` includes NEEQ-era bars for `.BJ` stocks (58k bars) that have no
+  `stk_limit` or `daily_basic`. Exclude `.BJ` from backtest universes or start each at its BJ `list_date` (D-054).
+- **001914.SZ** has 221 bars in 2019 without `stk_limit`; the limits sit under the old code 000043.
+- **Moves above 31%** on ~150 SH/SZ bars after a stock's first five sessions are resumptions after long
+  suspensions, not errors; `stk_limit` does not apply on the resumption day for some regimes.
+- **`stock_basic(list_status='P')`** returned empty in 2026-09: no currently paused listings; keep requesting it.
+- **Statements** carry an original and a corrected version per filing (`update_flag`); it must be requested and
+  is part of the primary key (D-038), otherwise compaction drops real data.
+
 ## 4. Storage suggestion for the new project
 
 The old project ended up with SQLite as a landing zone plus a parquet copy for analysis. Simpler for

@@ -1,7 +1,7 @@
 # quant_cn — agent instructions
 
 Read these before any work, in this order:
-0. `INDEX.md` — root of the folder index tree; follow it down to find any file.
+0. `INDEX.md` — root of the folder index tree; follow it down to find any file. Or query the project catalog: `make query SQL="..."` against schema `project.*` (recipes in the `project-query` skill).
 1. `plans/standards/CODING_STANDARD.md` — binding coding standard (OOP, contracts, tests, layering).
 2. `.claude/CLASS_REGISTRY.md` — what already exists. Search it before writing any class or function.
 3. `plans/reference/fresh_start/` — domain handbook: Tushare API rules, data catalog, point-in-time traps. Data semantics there win over guesses.

@@ -1,4 +1,4 @@
-# Data Loading Design (v1.2, 2026-09-27; D-021, D-022; execution adjustments D-026; method names per D-031)
+# Data Loading Design (v2.0, 2026-09-28; D-021, D-022, D-026, D-031; multi-source expansion D-063)
 
 Design for plan 01 phases 1–4: where the data lives on this machine, how bytes get from Tushare into the
 lake, and how a run is monitored. No code until approved.
@@ -136,8 +136,8 @@ and retry visibility, not a scheduler cluster.
 | **Grafana + Loki** | dashboards over our logs/metrics | Docker, config | later, if the pipeline runs unattended on a server |
 | **Logfire (Pydantic)** | hosted tracing with pydantic integration | SaaS, data leaves the machine | not for now |
 
-Decision proposed (D-022): the built-in `RunLog` + `rich` is the baseline and the source of truth for
-"what happened". Prefect is added as an **adapter**, not a dependency of the engine: `PrefectRunner`
+Decision (D-022, amended by D-064): the built-in `RunLog` + `rich` is the baseline and the source of truth for
+"what happened". Prefect 3 is the chosen UI, built 2026-09-28 as an **adapter**, not a dependency of the engine: `PrefectRunner`
 implements the same `BaseRunner` interface as `LocalRunner` and wraps each `BaseStep.run`/fetch key as a
 Prefect task, so the UI shows the same runs. Steps and fetchers never import Prefect. `make download`
 uses `LocalRunner`; `make download RUNNER=prefect` uses the adapter with a local Prefect server.
@@ -154,6 +154,54 @@ research notebook read it directly; the Prefect UI is a convenience view over th
 - `TushareClient` delegates I/O to an `HttpTransport`; tests script the transport instead of mocking HTTP.
 - Curated partitions are sorted by partition date first, then primary key.
 - The three statement datasets (`income_vip`, `balancesheet_vip`, `cashflow_vip`) carry an original and a corrected version per filing, distinguished by `update_flag`; it is part of their primary key and must be requested in every backfill (D-038). `fina_indicator_vip` already included it.
+
+## 3c. Multi-source loading and the dataset expansion (D-063, plan 11)
+
+### Sources
+`DatasetSpec.source` (default `tushare`) selects the `BaseApiClient` the `FetcherFactory` injects:
+| Source | Client | Auth | Notes |
+|---|---|---|---|
+| `tushare` | `TushareClient` (have) | `TUSHARE_TOKEN` | all domestic data |
+| `fred` | `FredClient` (new): `https://api.stlouisfed.org/fred/series/observations`, JSON, one call per series and date range | `FRED_API_KEY` in `.env` | Brent (`DCOILBRENTEU`), WTI (`DCOILWTICO`), gold LBMA (`GOLDAMGBD228NLBM`), US 10y (`DGS10`), dollar index (`DTWEXBGS`); observation date = US day → visible on the next China session |
+| `akshare` | `AkShareClient` (optional, only if a series is unavailable on FRED) | none | scraping-based; raw copy kept; each series needs an explicit decision |
+Clients share `HttpTransport`, retry and rate-limit handling; permission/limit errors map to `PermissionDeniedError` / `DataSourceError` as today.
+
+### New sweep kinds and spec fields
+| Field / kind | Meaning | Used by |
+|---|---|---|
+| `sweep.kind: exchange` (have, D-047) | one call per exchange code | `fut_basic`, `opt_basic`, `index_classify` |
+| `sweep.kind: date_window` + `window_days` | one call per calendar window (offset paging broken or range-only endpoints) → `DateWindowFetcher` | `share_float` (monthly), `fund_nav` (per code range), FRED series (yearly windows) |
+| `sweep.kind: trade_date` + `extra_params` (have, plan 09) | fixed params added to each call | `fut_daily`/`fut_holding` per exchange |
+| `sweep.kind: ts_code` with `values_from` | enumerate codes from config or from another dataset (`values_from_dataset: fund_basic.ts_code where fund_type = 'ETF'`) | `fund_nav` per ETF, `sw_daily` per index if range-only |
+| `release_lag_days` | known-on = period end + lag when the endpoint has no announce date | monthly macro (`cn_cpi` ~10, `cn_ppi` ~10, `cn_pmi` ~0/last day, `cn_m` ~12) |
+| `known_on_rule: next_session` | value visible from the next China session | FRED series, `report_rc` |
+| `refresh: overwrite \| append` (have) with D-049 guard | | |
+
+### Datasets added by plan 11 (summary; full rows in `config/datasets.yaml`, catalogue rows in DATA_CATALOG §1)
+| Group | Datasets | Sweep | From |
+|---|---|---|---|
+| Sectors and index composition | `index_classify` (SW2021 L1–L3), `index_member_all`, `sw_daily` (tier check; fallback member-computed), `index_weight` (CSI 300/500/1000/50) | exchange / l1_code / trade_date / index_code + month window | 2019 (weights 2010) |
+| ETF and funds | `fund_basic` (market E), `fund_daily` by `trade_date` (replaces the enum), `fund_nav`, `fund_share`, `margin_secs` (verify) | list / trade_date / ts_code range / trade_date | 2019 |
+| Futures and gold | `fut_basic` all exchanges, `fut_daily` + `fut_holding` INE/SHFE/DCE/CZCE (CFFEX have), `fut_mapping`, `sge_basic`, `sge_daily` | exchange / trade_date + extra_params / trade_date | 2019 (CFFEX 2025 have) |
+| Macro | `yc_cb` (1001.CB), `fx_daily`, `shibor_lpr`, `cn_cpi`, `cn_ppi`, `cn_pmi`, `cn_m` | trade_date / date window / month | 2015 |
+| International (FRED) | `fred_brent`, `fred_wti`, `fred_gold_lbma`, `fred_dgs10`, `fred_dxy` | date_window yearly | 2010 |
+| Analysts and events | `report_rc` (tier check first), `stk_surv`, `broker_recommend`, `hk_hold`, `forecast`, `express`, `stk_holdertrade`, `share_float`, `disclosure_date`, `stk_holdernumber` | report_date / trade_date / ann_date / month window / period | 2019 (report_rc 2019 if tier allows, else skipped) |
+| Statement fields | `income_vip.revenue`, `operate_profit`, `oper_cost`; `balancesheet_vip.total_hldr_eqy_exc_min_int`, `bond_payable`, `st_borr`; `cashflow_vip.c_recp_cap_contrib` | refetch 30 quarters (period sweep, `--force`) | |
+| Optional | `cyq_perf`, `margin_detail` 2019+ extension, `ths_index`/`ths_daily` | | on request |
+
+### Lake layout for the new data
+Zones unchanged (raw / curated / derived / meta). Raw keys follow the sweep (`exchange=SHFE.parquet`,
+`trade_date=…`, `window=2024-01.parquet`, `l1_code=801010.SI.parquet`). Curated partitions by year of the primary
+date as before; FRED and macro series are small single-file curated tables. `meta/manifest/<dataset>.json` gains
+`source` and `known_on_rule`. `LakeCatalog.write_indexes()` lists the new datasets. Size estimate for the whole
+expansion: ~3–4 GB raw (fut_daily all exchanges ~1M rows/yr, report_rc ~300k rows/yr, fund_daily ~250k rows/yr).
+
+### Verification per group (done criteria in plan 11)
+Dry-run key counts before every live pull; permission check with one call per new endpoint; row counts vs
+expected sessions; reconciliation where a second view exists (`fut_holding` share of `fut_daily` OI,
+`fund_share × nav` vs market cap, `sw_daily` vs member-computed index within 10 bp/day); PIT test per
+`known_on_rule`; `make lake-rebuild` byte-identical after each group; DATA_CATALOG §1 rows added; lake INDEX
+regenerated.
 
 ## 4. Changes applied to other documents on approval (2026-09-27)
 - `config/base.yaml`: `lake.root: ~/quant_cn_lake`, `lake.allow_inside_repo: false`, `lake.backup_target`, `download.order`.

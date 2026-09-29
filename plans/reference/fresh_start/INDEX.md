@@ -6,6 +6,6 @@ on data semantics (CLAUDE.md reading order item 3).
 ## Files
 | File | Purpose | Contains |
 |---|---|---|
-| `DATA_CATALOG.md` | every dataset: key, known-on date, coverage, units, traps, storage suggestion | §1–§4 |
+| `DATA_CATALOG.md` | every dataset: key, known-on date, coverage, units, traps (incl. §3b found in the 2026-09 rebuild), storage suggestion | §1–§4 |
 | `README.md` | where to start, download order, five hard-learned rules, security note | |
 | `TUSHARE_API.md` | auth, request/response format, limits, minimal client, endpoint reference | §1–§5 |

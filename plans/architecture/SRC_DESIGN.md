@@ -1,6 +1,6 @@
-# `src/quant_cn` Design (v1.2, 2026-09-27; D-020, D-028, D-032, D-041 read API)
+# `src/quant_cn` Design (v1.4, 2026-09-28; D-020, D-028, D-032, D-041, D-045, D-060 factor testing)
 
-How the ten packages fit together, what each owns, where the extension points are, and the shared
+How the eleven packages fit together, what each owns, where the extension points are, and the shared
 frames that let independent packages talk without importing each other. Plan-level detail lives in
 `plans/execution/`; this document is the map.
 
@@ -81,7 +81,11 @@ frame's `Schema` before returning. Names follow the verb table (`read_`, `list_`
 |---|---|
 | `Winsorizer`, `Standardizer` (z-score, rank) | cross-sectional per-date transforms on a long panel |
 | `Neutralizer` | residualise a value column against industry dummies / size per date |
-| `ICCalculator` | Spearman/Pearson IC per date between any value column and forward returns |
+| `ICCalculator` | Spearman/Pearson IC per date and horizon between any value column and forward returns → `IC_SERIES` |
+| `HacVariance`, `BlockBootstrap` | Newey-West variance; stationary/circular block bootstrap (shared by tests and the risk validator) |
+| `ICSignificance` | NW t, bootstrap CI, Pesaran-Timmermann, sub-period/regime consistency, structural break, decay (FACTOR_TESTING_DESIGN §2) |
+| `MultipleTestingAdjuster`, `DataSnoopingTest` | Holm / BHY / Romano-Wolf adjusted p, HLZ t ≥ 3 hurdle; White RC / Hansen SPA over a factor family (§3) |
+| `DeflatedSharpe`, `BacktestOverfitting`, `SharpeRatioTest`, `TrialLog` | PSR/DSR, CSCV PBO, Ledoit-Wolf Sharpe difference; append-only trial log feeding them (§4) |
 | `QuantileReturns` | per-date quantile buckets of a value column and their forward returns |
 | `ReturnStats` | annualized return/vol, Sharpe, max drawdown, hit rate over an `EquityCurve` |
 | `CrossSectionalRegression` | per-date OLS of returns on columns, t-stats, R² |
@@ -109,6 +113,17 @@ Folder shape: `factor/base_factor.py`, `factor/factor_preprocessor.py`, `factor/
 `factor/signal_combiner.py`, `factor/factor_factory.py`, `factor/library/<name>_factor.py` (one class each),
 `factor/library/INDEX.md`. Adding a factor = one module in `library/` + registry block + one YAML line.
 
+### 2.5b `risk` (L5) — Barra-style multi-factor risk model (D-045, `RISK_MODEL_DESIGN.md`)
+| Class | Purpose |
+|---|---|
+| `BaseRiskModel`, `RiskModel`, `RiskModelFactory` | fit country + industry + style model per date; predict portfolio risk |
+| `IndustryClassifier`, `DescriptorBuilder`, `ExposureStandardizer` | Shenwan L1 membership (PIT); CNE5 descriptors; winsorise / standardise / orthogonalise |
+| `FactorReturnEstimator` | constrained WLS per date (√cap weights, industry constraint) |
+| `FactorCovarianceEstimator`, `EigenfactorAdjuster`, `VolatilityRegimeAdjuster` | EWMA + Newey-West covariance with CNE5 adjustments |
+| `SpecificRiskEstimator`, `StructuralSpecificRisk`, `BayesianShrinker` | stock-specific risk |
+| `RiskDecomposer`, `RiskModelValidator` | attribution; bias and Q statistics |
+`risk` and `factor` never import each other: `risk` reads exposures and returns as frames; `factor` may consume `RISK_EXPOSURE` for neutralisation. `portfolio` consumes `FACTOR_COV`/`SPECIFIC_RISK` frames.
+
 ### 2.6 `pipeline` (L6) — ordered, resumable steps
 | Class | Purpose |
 |---|---|
@@ -118,6 +133,7 @@ Folder shape: `factor/base_factor.py`, `factor/factor_preprocessor.py`, `factor/
 | `UniverseStep` | investable universe per date → `UniversePanel` (listed, not ST, not suspended, ≥ N days since listing, exchange filter); reasons kept per exclusion |
 | `FeaturePipeline` | runs configured `factor.BaseFactor`s over `LakeQuery` panels → `FactorPanel` partitions in `curated/derived/features/` |
 | `CalculationStep` | runs a configured `calculation.BaseCalculation` → `curated/derived/<name>/` (plan 03) |
+| `RiskModelStep` | fits `risk.RiskModel` per date → `curated/derived/risk/<model>/` (plan 05) |
 
 ### 2.7 `portfolio` (L7) — from scores to target weights
 | Class | Purpose |
@@ -163,6 +179,7 @@ Folder shape: `factor/base_factor.py`, `factor/factor_preprocessor.py`, `factor/
 | `TRADE_LOG` | `trade_date, ts_code, side` | qty, price, cost, reason (filled / rejected_limit / rejected_suspended) | engine | analyzer, charts |
 | `POSITION_PANEL` | `trade_date, ts_code` | qty, weight, market_value | engine | analyzer, `PositionChart` |
 | `EQUITY_CURVE` | `trade_date` | nav, benchmark_nav, cash, exposure, turnover, cost | engine | `ReturnStats`, `EquityCurveChart` |
+| `RISK_EXPOSURE`, `FACTOR_RETURN`, `FACTOR_COV`, `SPECIFIC_RISK`, `RISK_DECOMP`, `RISK_VALIDATION` | see RISK_MODEL_DESIGN §4 | risk model frames | `risk` | `portfolio`, `back_testing`, `RiskChart` |
 | `VIX_PANEL` | `trade_date, underlying` | vix, var_near, var_next, days_near/next, f_near/next, k0_near/next, n_options_near/next, rate_near/next, quality_flag | `VixCalculator` | `SeriesChart`, regime factors, notebooks |
 
 Rules: long format only (DuckDB- and parquet-friendly); pivot inside a method, never across a boundary.
@@ -183,10 +200,11 @@ Every producer validates with `Schema.validate()` before returning; every consum
 | 01 | `core`, `lake`, `data_loading`, `DownloadPipeline`, `CuratePipeline`, `PitAligner`, `BaseChart`/`PriceChart`, `main.ipynb` | 00 | approved |
 | 02 | `ProjectCatalog` (project schema in DuckDB) | 01 ph3 | drafted |
 | 03 | `calculation` package: CBOE-method VIX (`opt_basic`, `opt_daily`, `shibor` datasets, `DateWindowFetcher`, `CalculationStep`, `SeriesChart`, iVIX replication) | 01 | drafted |
-| 04 | `statistic` primitives, `factor` package (`BaseFactor` + six factors in `library/`, `FactorPreprocessor`, `FactorEvaluator`, `SignalCombiner`, `FactorFactory`), `UniverseStep`, `FeaturePipeline`, `FactorChart` | 01 | to draft |
-| 05 | `portfolio` (constructors, constraints, schedule), `back_testing` (engine, execution, costs, result, analyzer), `EquityCurveChart`, `PositionChart`, `ReportBuilder` | 04 | to draft |
-| 06 | events datasets (forecast, express, holdertrade, share_float) + event factors; Shenwan industries | 01, 04 | to draft |
-| 07 | walk-forward / parameter search, multi-strategy portfolios; `PrefectRunner` | 05 | to draft |
+| 04 | `statistic` primitives incl. IC significance and multiple-testing (FACTOR_TESTING_DESIGN), `factor` package (`BaseFactor` + six factors in `library/`, `FactorPreprocessor`, `FactorEvaluator`, `SignalCombiner`, `FactorFactory`), `UniverseStep`, `FeaturePipeline`, `FactorChart` | 01 | to draft |
+| 05 | `risk` package: Barra-style model (Shenwan industries, CNE5 styles, constrained WLS, EWMA + NW + eigen + regime covariance, specific risk, validation), `RiskModelStep`, `RiskChart` | 04 | drafted |
+| 06 | `portfolio` (constructors, constraints, schedule, risk-aware optimiser using `FACTOR_COV`), `back_testing` (engine, execution, costs, result, analyzer with risk attribution), `EquityCurveChart`, `PositionChart`, `ReportBuilder` | 04, 05 | to draft |
+| 07 | events datasets (forecast, express, holdertrade, share_float) + event factors | 01, 04 | to draft |
+| 08 | walk-forward / parameter search, multi-strategy portfolios; `PrefectRunner` | 06 | to draft |
 
 ## 6. Open questions
 None. Closed 2026-09-27 with the recommended defaults (user: "approve"):

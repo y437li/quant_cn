@@ -1,4 +1,4 @@
-# Folder Structure Plan (v1.3, 2026-09-27; D-007, D-009, D-012, D-014, D-015, D-021, D-028, D-032)
+# Folder Structure Plan (v1.4, 2026-09-27; D-007, D-009, D-012, D-014, D-015, D-021, D-028, D-032, D-045)
 
 Three areas from the user (config, package, research space) plus the data lake (D-009), a `core`
 layer the standard needs, tests mirroring the package, and data kept out of git.
@@ -39,6 +39,7 @@ quant_cn/
 │       ├── statistic/INDEX.md    #    L4  generic math on frames: winsorize, standardize, neutralize, IC, return stats, regressions
 │       ├── calculation/INDEX.md  #    L4  domain financial computations: VIX (CBOE method), risk-free curve, option chains; later IV, greeks (D-032)
 │       ├── factor/INDEX.md       #    L5  BaseFactor + concrete factors, FactorPreprocessor, FactorEvaluator, SignalCombiner (D-028)
+│       ├── risk/INDEX.md         #    L5  Barra-style risk model: industries, descriptors, factor returns, covariance, specific risk, validation (D-045)
 │       ├── pipeline/INDEX.md     #    L6  resumable steps: download -> compact -> curate -> features (runs factors)
 │       ├── back_testing/INDEX.md #    L7  engine, fills constrained by stk_limit, costs, results
 │       ├── portfolio/INDEX.md    #    L7  position sizing, constraints, rebalancing schedules
@@ -60,7 +61,7 @@ quant_cn/
 │   ├── INDEX.md
 │   ├── conftest.py
 │   ├── test_contracts.py         #    runs the contract + index linter as a test
-│   ├── core/INDEX.md  lake/INDEX.md  data_loading/INDEX.md  statistic/INDEX.md  calculation/INDEX.md  factor/INDEX.md
+│   ├── core/INDEX.md  lake/INDEX.md  data_loading/INDEX.md  statistic/INDEX.md  calculation/INDEX.md  factor/INDEX.md  risk/INDEX.md
 │   └── pipeline/INDEX.md  back_testing/INDEX.md  portfolio/INDEX.md  visualization/INDEX.md
 │
 │   (no data/ folder in the repo: the lake lives OUTSIDE it, see §2 and D-021)
@@ -161,12 +162,12 @@ Four zones. Data only flows downward; each zone can be rebuilt from the one abov
 | L2 | `lake` | L1 |
 | L3 | `data_loading` | L1, L2 |
 | L4 | `statistic`, `calculation` | L1–L3 (pure computation on frames; mutually independent) |
-| L5 | `factor` | L1–L4 (may use both `statistic` and `calculation`) |
+| L5 | `factor`, `risk` | L1–L4 (mutually independent; exchange frames only) |
 | L6 | `pipeline` | L1–L5 |
 | L7 | `back_testing`, `portfolio`, `visualization` | L1–L6 |
 | L8 | `cli.py`, `research_space` | anything in the package |
 
-`statistic` and `calculation` never import each other or `factor`. `back_testing`, `portfolio` and `visualization` are
+`statistic` and `calculation` never import each other, `factor` or `risk`; `factor` and `risk` never import each other. `back_testing`, `portfolio` and `visualization` are
 mutually independent: `visualization` plots DataFrames and `core` schemas only, so a backtest result is
 plotted via its `to_frame()` output, never by importing `back_testing`. Nothing in `src/` imports `research_space`. Enforced by `import-linter` (D-011).
 
@@ -190,7 +191,8 @@ plotted via its `to_frame()` output, never by importing `back_testing`. Nothing 
 | statistic | `Winsorizer`, `Standardizer`, `Neutralizer`, `ICCalculator`, `ReturnStats` (plan 04) |
 | calculation | `BaseCalculation`, `RiskFreeCurve`, `OptionChainBuilder`, `TermSelector`, `ForwardPriceEstimator`, `VarianceStripCalculator`, `TermInterpolator`, `VixCalculator`, `CalculationFactory` (plan 03) |
 | factor | `BaseFactor`, six concrete factors, `FactorPreprocessor`, `FactorEvaluator`, `SignalCombiner`, `FactorFactory` (plan 04) |
-| back_testing, portfolio | base classes only until plan 05 |
+| risk | `IndustryClassifier`, `DescriptorBuilder`, `ExposureStandardizer`, `FactorReturnEstimator`, `FactorCovarianceEstimator`, `SpecificRiskEstimator`, `RiskModel`, `RiskDecomposer`, `RiskModelValidator` (plan 05) |
+| back_testing, portfolio | base classes only until plan 06 |
 | visualization | `BaseChart` (theme, size, export), `PriceChart` (candles + volume, adjusted), `PanelChart` (many tickers, small multiples); factor and equity-curve charts follow their producers (D-019) |
 
 ## 6. Open questions

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | doing — phase 1 delivered (D-033); phases 2–4 started 2026-09-27 by quant-cn-b7 |
+| Status | done 2026-09-27 (855585f); deviation: whole-schema rebuild only, no incremental refresh (D-042) |
 | Owner | user (approve) / executor (build) |
 | Created | 2026-09-27 |
 | Notion | pending |
@@ -43,9 +43,9 @@ ways), `stale` (files on disk missing from `files`, classes in AST missing from 
 | # | Phase | Deliverable | Done criterion | Depends on | Status |
 |---|---|---|---|---|---|
 | 1 | Parsers in `core.docs` | `IndexParser`, `RegistryParser`, `DecisionsParser`, `PlanParser`, `DocstringParser`, `AstScanner` returning typed records; shared by `lint_contracts.py` (which stops having its own parsers) | each parser round-trips today's files; linter output unchanged | 01 phase 1 | done (via 01 ph1, D-033) |
-| 2 | `ProjectCatalog` in `lake` | builds/refreshes schema `project` in the catalog DuckDB from parsers + disk; `rebuild()`, `refresh(paths)`; views above; `make project-catalog` | `SELECT count(*) FROM project.classes` equals registry rows; `tree` view reproduces the INDEX tree; rebuild is idempotent | 01 phase 3, 1 | todo |
-| 3 | Keep it fresh | pre-commit hook and `make check` call `refresh`; executor agent prompt ends with refresh; `stale` view empty after `make check` | edit a file -> `make check` -> `stale` returns 0 rows | 2 | todo |
-| 4 | Agent access | `.claude/skills/project-query/SKILL.md`: how to query (`duckdb data/lake/meta/quant_cn.duckdb -readonly`), 12 recipe queries (find class by purpose, who calls X, what is not done, which decisions touch a file, tree of a folder); CLAUDE.md reading order gains "or query `project.*`" | each recipe runs and returns the expected rows on the phase-2 build | 2 | todo |
+| 2 | `ProjectCatalog` in `lake` | builds/refreshes schema `project` in the catalog DuckDB from parsers + disk; `rebuild()`, `refresh(paths)`; views above; `make project-catalog` | `SELECT count(*) FROM project.classes` equals registry rows; `tree` view reproduces the INDEX tree; rebuild is idempotent | 01 phase 3, 1 | done |
+| 3 | Keep it fresh | pre-commit hook and `make check` call `refresh`; executor agent prompt ends with refresh; `stale` view empty after `make check` | edit a file -> `make check` -> `stale` returns 0 rows | 2 | done |
+| 4 | Agent access | `.claude/skills/project-query/SKILL.md`: how to query (`duckdb data/lake/meta/quant_cn.duckdb -readonly`), 12 recipe queries (find class by purpose, who calls X, what is not done, which decisions touch a file, tree of a folder); CLAUDE.md reading order gains "or query `project.*`" | each recipe runs and returns the expected rows on the phase-2 build | 2 | done |
 
 ## Classes
 
@@ -69,6 +69,9 @@ None. Closed 2026-09-27:
 
 | Date | Phase | Change |
 |---|---|---|
+| 2026-09-27 | 2 | `ProjectCatalog` (lake) builds schema `project`: 12 tables + views tree/class_graph/stale/todo in one transaction; `CodeTableBuilder`/`DocTableBuilder`, `DecisionsReader`/`PlanReader` in `core.docs`; `cli project-catalog` + read-only `query`; `LakeCatalog` read_only mode (855585f, quant-cn-b7). Evidence: project.classes 84 rows = registry A + D; tree view 44 rows = 44 folders; rebuild idempotent (TC-PJC-002) |
+| 2026-09-27 | 3 | `make check` ends with `project-catalog`; pre-commit hook `project-catalog`; exits 1 while `project.stale` has rows (TC-PJC-003); live stale = 0 |
+| 2026-09-27 | 4 | `.claude/skills/project-query/SKILL.md`: 14 recipes verified against the live catalog ("who calls LakeQuery" → 7; "todo" → 13 open phases). `make check`: ruff passed; mypy 64 files; Layers KEPT; lint_contracts 0; coverage 95%; 190 passed. Catalog counts: classes 84, methods 134, used_by 252, contracts 218, test_cases 161, folders 44, files 197, decisions 40, plans 4, phases 20, datasets 13. **Plan 02 done**; deviation: `rebuild()` whole-schema only (~1 s), no `refresh(paths)` |
 | 2026-09-27 | 2–4 | Started by quant-cn-b7 after plan 01 completed |
 | 2026-09-27 | 1 | Phase 1 (parsers in `core.docs`) delivered by plan 01 phase 1 via D-033 (7bd9b36); phase 2 can start after 01 phase 5 |
 | 2026-09-27 | — | Plan approved by user ("approve") |
