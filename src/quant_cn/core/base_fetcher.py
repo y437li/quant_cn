@@ -57,7 +57,8 @@ class BaseFetcher(ABC):
         TC-BF-002  done keys are skipped for append datasets; force refetches them
         TC-BF-003  overwrite datasets refetch every key
         TC-BF-004  refetch_recent always refetches the newest N keys
-        TC-BF-005  empty result is marked done with 0 rows and writes no file
+        TC-BF-005  empty result is marked done with 0 rows and writes no file (unless the
+                   subclass reports the key as recent: TC-DSF-004)
         TC-BF-006  failure on a key re-raises; earlier keys stay done and the log is saved
     """
 
@@ -191,6 +192,10 @@ class BaseFetcher(ABC):
             self._fetch_log.save()
         return report
 
+    def _is_recent(self, _key: str) -> bool:
+        """Whether an empty result for `key` may only mean "not published yet" (D-078)."""
+        return False
+
     def _fetch_key(self, run_id: str, key: str, start: str, end: str, report: StepReport) -> str:
         began = self._clock.get_monotonic()
         try:
@@ -199,8 +204,11 @@ class BaseFetcher(ABC):
             self._run_log.record_event(run_id, self.spec.name, key, "failed", message=str(exc))
             raise
         path = self._store.write_raw(self.spec, key, df)
-        self._fetch_log.mark_done(self.spec.name, key, len(df), path)
-        status = "fetched" if len(df) else "empty"
+        if len(df) or not self._is_recent(key):
+            self._fetch_log.mark_done(self.spec.name, key, len(df), path)
+            status = "fetched" if len(df) else "empty"
+        else:
+            status = "empty_recent"  # maybe not published yet: retried next run (D-078)
         elapsed = int((self._clock.get_monotonic() - began) * 1000)
         self._run_log.record_event(run_id, self.spec.name, key, status, len(df), elapsed)
         if len(df):

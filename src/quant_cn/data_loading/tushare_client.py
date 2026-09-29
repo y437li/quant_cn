@@ -14,6 +14,8 @@ from quant_cn.core.config import TushareConfig
 from quant_cn.core.exceptions import ConfigError, DataSourceError, PermissionDeniedError
 from quant_cn.data_loading.http_transport import HttpTransport
 
+CAP_STEP = 1000  # Tushare per-call caps are multiples of 1000 (2000, 4000, 6000 ...)
+
 logger = logging.getLogger(__name__)
 
 
@@ -45,6 +47,7 @@ class TushareClient(BaseApiClient):
         TC-TC-005  network error retried with retry_sleep_s, then succeeds
         TC-TC-006  empty result returns zero rows with the requested columns
         TC-TC-007  query with an empty token raises ConfigError
+        TC-TC-008  a short page of a round size (endpoint cap < limit) keeps paging by rows received
     """
 
     def __init__(
@@ -82,10 +85,16 @@ class TushareClient(BaseApiClient):
             columns = list(data.get("fields") or columns)
             items = data.get("items") or []
             rows.extend(items)
-            if len(items) < page:
+            if not self._has_more(len(items), page):
                 break
-            offset += page
+            offset += len(items)
         return pd.DataFrame(rows, columns=columns)
+
+    @staticmethod
+    def _has_more(n_items: int, page: int) -> bool:
+        # A full page means more; so does a short page of a round size: several endpoints cap a
+        # call below `limit` (fut_holding 4000, fund_share 2000) and look finished otherwise (D-076)
+        return n_items > 0 and (n_items >= page or n_items % CAP_STEP == 0)
 
     def _fetch_page(
         self, api_name: str, params: Mapping[str, object], fields: Sequence[str]

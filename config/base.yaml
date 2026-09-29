@@ -44,7 +44,9 @@ download:
     - fund_share
     - margin_secs
     - opt_daily
+    - fut_basic
     - fut_daily
+    - fut_mapping
     - fut_holding
     - margin
     - margin_detail
@@ -52,6 +54,8 @@ download:
     - index_member_all
     - index_weight
     - sw_daily
+    - sge_basic
+    - sge_daily
 
 enum_values:
   indices: ["000001.SH", "000016.SH", "000300.SH", "000852.SH", "000905.SH", "399001.SZ", "399006.SZ"]

@@ -144,3 +144,20 @@ def test_tc_dsf_003_nav_date_keys(lake: MiniLake, config: Config, deps: tuple[ob
     )  # type: ignore[arg-type]
     assert f.list_keys("20260827", "20260831") == ["20260827", "20260828"]
     assert f.build_params("20260828", "", "") == {"market": "E", "nav_date": "20260828"}
+
+
+# TC-DSF-004
+def test_tc_dsf_004_recent_empty_not_done(
+    lake: MiniLake, config: Config, deps: tuple[object, ...]
+) -> None:
+    days = ["20260824", "20260825", "20260826", "20260827", "20260828"]
+    lake.writer.write_raw(config.get_dataset("trade_cal"), "all", Sample.build_trade_cal(days))
+    lake.catalog.refresh_views()
+    f = DateSweepFetcher(
+        config.get_dataset("daily"), *deps, calendar=TradingCalendar(lake.query), codec=DateCodec()
+    )  # type: ignore[arg-type]
+    report = f.run("r1", "20260824", "20260828")  # clock: 2026-08-30; every key comes back empty
+    assert report.empty == 5
+    assert lake.fetch_log.read_done_keys("daily") == {"20260824", "20260825"}
+    events = lake.query.sql("SELECT key, status FROM meta.run_log WHERE dataset = 'daily'")
+    assert sorted(events[events.status == "empty_recent"].key) == days[2:]

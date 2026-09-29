@@ -102,3 +102,13 @@ def test_tc_tc_007_empty_token(settings: TushareConfig, clock: FakeClock) -> Non
     c, _ = build_client(settings.model_copy(update={"token": ""}), [], clock)
     with pytest.raises(ConfigError):
         c.query("daily", {}, [])
+
+
+# TC-TC-008
+def test_tc_tc_008_capped_page(settings: TushareConfig, clock: FakeClock) -> None:
+    wide = settings.model_copy(update={"page_size": 6000})
+    first = [[f"S{i}", i] for i in range(2000)]  # endpoint caps at 2000 < limit 6000
+    c, t = build_client(wide, [build_ok(first), build_ok([["X", 1], ["Y", 2]])], clock)
+    df = c.query("fund_share", {"trade_date": "20260924"}, ["ts_code", "close"])
+    assert len(df) == 2002
+    assert [p["params"]["offset"] for p in t.payloads] == [0, 2000]

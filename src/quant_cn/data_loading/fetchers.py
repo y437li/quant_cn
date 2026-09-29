@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import calendar
+import datetime as dt
 from collections.abc import Sequence
 
 from quant_cn.core.base_api_client import BaseApiClient
@@ -14,6 +15,9 @@ from quant_cn.core.clock import Clock
 from quant_cn.core.dataset_spec import DatasetSpec
 from quant_cn.core.date_codec import DateCodec
 from quant_cn.lake.trading_calendar import TradingCalendar
+
+RECENT_SESSIONS = 3  # D-078: an empty key this recent may just be unpublished
+LOOKBACK_DAYS = 30  # calendar days searched for those sessions (covers Golden Week)
 
 
 class SingleCallFetcher(BaseFetcher):
@@ -145,7 +149,8 @@ class DateSweepFetcher(BaseFetcher):
     Purpose:
         Whole-market daily sweeps: trade_date and nav_date keys are trading days (daily,
         adj_factor, daily_basic, moneyflow, stk_limit, fund_nav); ann_date keys are weekdays
-        (event datasets).
+        (event datasets). An empty key within the last RECENT_SESSIONS trading sessions is
+        logged `empty_recent` and retried next run instead of being marked done (D-078).
 
     Contract:
         Input:
@@ -164,6 +169,7 @@ class DateSweepFetcher(BaseFetcher):
         TC-DSF-001  trade_date keys are calendar sessions in range
         TC-DSF-002  ann_date keys are weekdays in range
         TC-DSF-003  nav_date keys are trading days, passed as nav_date + extra params
+        TC-DSF-004  an empty key within the last 3 sessions is not marked done (D-078)
     """
 
     def __init__(
@@ -198,6 +204,14 @@ class DateSweepFetcher(BaseFetcher):
         if self.spec.sweep.kind in ("trade_date", "nav_date"):
             return self._calendar.list_sessions(start, end)
         return self._codec.list_weekdays(start, end)
+
+    def _is_recent(self, key: str) -> bool:
+        today = self._clock.get_today()
+        if key > today:
+            return True
+        lookback = self._codec.to_str(self._codec.to_date(today) - dt.timedelta(days=LOOKBACK_DAYS))
+        sessions = self._calendar.list_sessions(lookback, today)[-RECENT_SESSIONS:]
+        return not sessions or key >= sessions[0]
 
     def build_params(self, key: str, start: str, end: str) -> dict[str, str]:
         """

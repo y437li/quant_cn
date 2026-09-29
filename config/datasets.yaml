@@ -187,8 +187,9 @@ fund_daily:
 
 fut_daily:
   endpoint: fut_daily
-  sweep: {kind: trade_date, extra_params: {exchange: CFFEX}}
-  start: "20250101"
+  # every exchange in one call per date (D-077); CFFEX-only 2025 files replaced
+  sweep: {kind: trade_date}
+  start: "20190101"
   primary_key: [ts_code, trade_date]
   known_on: trade_date
   fields: [ts_code, trade_date, pre_close, pre_settle, open, high, low, close, settle, change1,
@@ -198,12 +199,14 @@ fut_daily:
 
 fut_holding:
   endpoint: fut_holding
-  sweep: {kind: trade_date, extra_params: {exchange: CFFEX}}
-  start: "20250101"
-  primary_key: [trade_date, symbol, broker]
+  # all exchanges per date; the endpoint caps a call at 4,000 rows, paged past by D-076
+  sweep: {kind: trade_date}
+  start: "20190101"
+  primary_key: [trade_date, exchange, symbol, broker]
   known_on: trade_date
-  fields: [trade_date, symbol, broker, vol, vol_chg, long_hld, long_chg, short_hld, short_chg]
-  text_fields: [trade_date, symbol, broker]
+  fields: [trade_date, symbol, broker, vol, vol_chg, long_hld, long_chg, short_hld, short_chg,
+           exchange]
+  text_fields: [trade_date, symbol, broker, exchange]
   curated: {path: fut_holding, partition_by: trade_date}
 
 margin:
@@ -324,3 +327,50 @@ margin_secs:
   fields: [trade_date, ts_code, name, exchange]
   text_fields: [trade_date, ts_code, name, exchange]
   curated: {path: margin_secs, partition_by: trade_date}
+
+# --- futures and gold (plan 11 phase 4, D-077) ---
+
+fut_basic:
+  endpoint: fut_basic
+  sweep: {kind: exchange, values: [CFFEX, SHFE, DCE, CZCE, INE, GFEX]}
+  refresh: overwrite
+  primary_key: [ts_code]
+  known_on: list_date
+  fields: [ts_code, symbol, exchange, name, fut_code, multiplier, trade_unit, per_unit, quote_unit,
+           list_date, delist_date, d_month, last_ddate]
+  text_fields: [ts_code, symbol, exchange, name, fut_code, trade_unit, quote_unit, list_date,
+                delist_date, d_month, last_ddate]
+  curated: {path: reference/fut_basic}
+
+fut_mapping:
+  endpoint: fut_mapping
+  # continuous code (e.g. AGL.SHF) -> the contract it maps to that day
+  sweep: {kind: trade_date}
+  start: "20190101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, mapping_ts_code]
+  text_fields: [ts_code, trade_date, mapping_ts_code]
+  curated: {path: fut_mapping, partition_by: trade_date}
+
+sge_basic:
+  endpoint: sge_basic
+  sweep: {kind: none}
+  refresh: overwrite
+  primary_key: [ts_code]
+  known_on: null
+  fields: [ts_code, ts_name, trade_type, t_unit, p_unit, min_change, price_limit, min_vol, max_vol,
+           trade_mode]
+  text_fields: [ts_code, ts_name, trade_type, t_unit, p_unit, trade_mode]
+  curated: {path: reference/sge_basic}
+
+sge_daily:
+  endpoint: sge_daily
+  sweep: {kind: trade_date}
+  start: "20190101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, close, open, high, low, price_avg, change, pct_change, vol, amount,
+           oi, settle_vol, settle_dire]
+  text_fields: [ts_code, trade_date, settle_dire]
+  curated: {path: sge_daily, partition_by: trade_date}

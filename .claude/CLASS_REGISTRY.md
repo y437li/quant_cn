@@ -83,11 +83,11 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `FetcherFactory` | `quant_cn.data_loading.fetcher_factory` | 3 | none | Build the right fetcher for a DatasetSpec and inject the shared dependencies. | 1 | `pipeline.DownloadPipeline`, `cli.ServiceBuilder` | `tests/data_loading/test_fetcher_factory.py` (TC-FF-001..004) | 2026-09-27 |
 | `SingleCallFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Datasets fetched in one (paged) call, key "all": trade_cal, namechange. | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-SCF-001..001) | 2026-09-27 |
 | `EnumFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Datasets swept over an enumerated list: stock_basic by list_status (L, D, P), index_daily / fund_daily by ts_code, opt_basic by exchange. | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-EF-001..001) | 2026-09-27 |
-| `DateSweepFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Whole-market daily sweeps: trade_date and nav_date keys are trading days (daily, adj_factor, daily_basic, moneyflow, stk_limit, fund_nav) | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-DSF-001..003) | 2026-09-27 |
+| `DateSweepFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Whole-market daily sweeps: trade_date and nav_date keys are trading days (daily, adj_factor, daily_basic, moneyflow, stk_limit, fund_nav) | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-DSF-001..004) | 2026-09-27 |
 | `PeriodSweepFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Whole-market report-period sweeps (the *_vip fundamentals): one key per quarter end. | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-PSF-001..001) | 2026-09-27 |
 | `DateWindowFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Range-only endpoints swept by calendar window (D-063): one call per month ("YYYYMM" keys) or year ("YYYY" keys) with start_date / end_date clipped to the run range | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-DWF-001..003) | 2026-09-27 |
 | `HttpTransport` | `quant_cn.data_loading.http_transport` | 3 | none | Send one JSON POST and return the decoded JSON object. | 1 | `data_loading.TushareClient` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..001) | 2026-09-27 |
-| `TushareClient` | `quant_cn.data_loading.tushare_client` | 3 | BaseApiClient | Query Tushare Pro: one logical query follows limit/offset paging until a short page and returns all rows | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..007) | 2026-09-27 |
+| `TushareClient` | `quant_cn.data_loading.tushare_client` | 3 | BaseApiClient | Query Tushare Pro: one logical query follows limit/offset paging until a short page and returns all rows | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..008) | 2026-09-27 |
 | `Compactor` | `quant_cn.lake.compactor` | 2 | none | Rebuild a dataset's curated partitions from its raw files: select declared fields, cast dtypes, drop duplicate primary keys (keeping one), sort by partition date then key, validate, write, and record a manifest in `meta/manifest/<dataset>.json`. | 1 | `cli.QuantCnCli`, `pipeline.CompactStep`, `pipeline.CuratePipeline`, `cli.ServiceBuilder` | `tests/lake/test_compactor.py` (TC-CO-001..005) | 2026-09-27 |
 | `DerivedViews` | `quant_cn.lake.derived_views` | 2 | none | Create the `derived` schema views built only from curated/: `derived.prices_adj` (daily bars joined to adj_factor, close_adj = close * adj_factor | 1 | `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `cli.ServiceBuilder` | `tests/lake/test_derived_views.py` (TC-DV-001..004) | 2026-09-27 |
 | `EffectiveDateResolver` | `quant_cn.lake.effective_date_resolver` | 2 | none | Turn a dataset's `known_on` value into `effective_date`, the first China trading session the row may be used (FACTOR_TESTING_DESIGN §11): as_is          -> that session, or the next one if the day is closed (same-day data) | 2 | (none yet) | `tests/lake/test_effective_date_resolver.py` (TC-EDR-001..004) | 2026-09-27 |
@@ -337,6 +337,7 @@ never column lists (those live in section E).
 | `list_due_keys` | Keys that must be fetched: all if forced or overwrite, else pending plus the newest `refetch_recent` keys. | Sequence[str], bool -> list[str] | `LakeError` | as class | see class |
 | `fetch_one` | Query the endpoint for one key. | str, str, str -> pd.DataFrame | `DataSourceError`, `PermissionDeniedError` | as class | see class |
 | `run` | Fetch every key that needs fetching, writing and logging each before the next. | str, str, str, Sequence[str] \| None, bool, ProgressHook \| None -> StepReport | `DataSourceError`, `PermissionDeniedError`, `SchemaError`, `LakeError` | as class | see class |
+| `_fetch_key` (private) | internal helper over 20 lines | str, str, str, str, StepReport -> str | — | internal | — |
 
 ### `BaseRunLog` — `quant_cn.core.base_run_log` (L1)
 - **Purpose:** Abstract append-only log of runs and per-key events; the source of truth for "what happened".
@@ -875,10 +876,10 @@ never column lists (those live in section E).
 | `build_params` | Key parameter plus constants and optional date range. | str, str, str -> dict[str, str] | — | as class | see class |
 
 ### `DateSweepFetcher` — `quant_cn.data_loading.fetchers` (L3)
-- **Purpose:** Whole-market daily sweeps: trade_date and nav_date keys are trading days (daily, adj_factor, daily_basic, moneyflow, stk_limit, fund_nav); ann_date keys are weekdays (event datasets).
+- **Purpose:** Whole-market daily sweeps: trade_date and nav_date keys are trading days (daily, adj_factor, daily_basic, moneyflow, stk_limit, fund_nav); ann_date keys are weekdays (event datasets). An empty key within the last RECENT_SESSIONS trading sessions is logged `empty_recent` and retried next run instead of being marked done (D-078).
 - **Base:** BaseFetcher. **Depends on (injected):** DatasetSpec, BaseApiClient, BaseStore, BaseFetchLog, BaseRunLog, Clock, TradingCalendar, DateCodec.
 - **Used by:** `data_loading.FetcherFactory.build`.
-- **Tests:** `tests/data_loading/test_fetchers.py` (TC-DSF-001..003).
+- **Tests:** `tests/data_loading/test_fetchers.py` (TC-DSF-001..004).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -924,7 +925,7 @@ never column lists (those live in section E).
 - **Purpose:** Query Tushare Pro: one logical query follows limit/offset paging until a short page and returns all rows; rate-limit replies wait and retry without spending retries; permission replies fail fast as PermissionDeniedError; other failures retry up to `retries`.
 - **Base:** BaseApiClient. **Depends on (injected):** TushareConfig, Clock, HttpTransport | None.
 - **Used by:** `cli.ServiceBuilder`.
-- **Tests:** `tests/data_loading/test_tushare_client.py` (TC-TC-001..007).
+- **Tests:** `tests/data_loading/test_tushare_client.py` (TC-TC-001..008).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
