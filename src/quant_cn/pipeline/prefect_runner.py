@@ -8,6 +8,7 @@ from uuid import UUID
 
 from prefect import flow, task
 from prefect.artifacts import create_progress_artifact, update_progress_artifact
+from prefect.cache_policies import NO_CACHE
 
 from quant_cn.core.base_run_log import BaseRunLog
 from quant_cn.core.base_step import BaseStep
@@ -78,7 +79,10 @@ class PrefectRunner(BaseRunner):
     def _run_steps(self, run_id: str, steps: list[BaseStep]) -> list[StepReport]:
         reports = []
         for step in steps:
-            step_task = task(name=step.name, task_run_name=step.name, retries=0)(self._run_step)
+            # NO_CACHE: steps are not hashable and RunLog, not Prefect, holds state (D-022)
+            step_task = task(
+                name=step.name, task_run_name=step.name, retries=0, cache_policy=NO_CACHE
+            )(self._run_step)
             reports.append(step_task(run_id, step))
         return reports
 

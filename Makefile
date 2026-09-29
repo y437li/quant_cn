@@ -2,6 +2,9 @@
 export UV_PROJECT_ENVIRONMENT ?= $(HOME)/.venvs/quant_cn
 UV_RUN := uv run --env-file .env
 CLI := $(UV_RUN) python -m quant_cn.cli
+# D-067: RUNNER=prefect reports to the local UI; precedence shell env > .env > this default
+PREFECT_API_DEFAULT := http://127.0.0.1:4200/api
+PREFECT_ENV = $(if $(filter prefect,$(RUNNER)),PREFECT_API_URL="$${PREFECT_API_URL:-$$(sed -n 's/^PREFECT_API_URL=//p' .env 2>/dev/null)}" && export PREFECT_API_URL="$${PREFECT_API_URL:-$(PREFECT_API_DEFAULT)}" &&)
 
 .PHONY: setup hooks lint lint-contracts test check doctor download download-dry compact curate lake-rebuild lake-backup notebook project-catalog query prefect-server
 
@@ -31,7 +34,7 @@ doctor:           ## lake root, free space, token presence
 	$(CLI) doctor
 
 download:         ## e.g. make download ARGS="--datasets daily --start 20260801" [RUNNER=prefect]
-	$(CLI) download $(if $(RUNNER),--runner $(RUNNER)) $(ARGS)
+	$(PREFECT_ENV) $(CLI) download $(if $(RUNNER),--runner $(RUNNER)) $(ARGS)
 
 download-dry:     ## list keys to fetch without calling the API
 	$(CLI) download --dry-run $(ARGS)
@@ -40,7 +43,7 @@ compact:          ## raw -> curated partitions
 	$(CLI) compact $(ARGS)
 
 curate:           ## compact raw -> curated, derived views, PIT states, indexes, digests [RUNNER=prefect]
-	$(CLI) curate $(if $(RUNNER),--runner $(RUNNER)) $(ARGS)
+	$(PREFECT_ENV) $(CLI) curate $(if $(RUNNER),--runner $(RUNNER)) $(ARGS)
 
 lake-rebuild:     ## recreate catalog + fetch log from parquet, then curate (digests "unchanged" = identical)
 	$(CLI) rebuild

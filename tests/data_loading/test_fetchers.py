@@ -106,3 +106,23 @@ def test_tc_dwf_002_yearly(deps: tuple[object, ...]) -> None:
         "start_date": "20250101",
         "end_date": "20251231",
     }
+
+
+# TC-DWF-003
+def test_tc_dwf_003_value_param(deps: tuple[object, ...]) -> None:
+    sweep = {
+        "kind": "date_window",
+        "window": "year",
+        "value_param": "index_code",
+        "values": ["000300.SH", "000852.SH"],
+        "range_params": True,
+    }
+    spec = Sample.build_spec(sweep=sweep)
+    f = DateWindowFetcher(spec, *deps, codec=DateCodec(), values=["000300.SH", "000852.SH"])  # type: ignore[arg-type]
+    keys = f.list_keys("20250301", "20260930")
+    assert keys == ["2025_000300.SH", "2025_000852.SH", "2026_000300.SH", "2026_000852.SH"]
+    assert f.build_params("2025_000852.SH", "20250301", "20260930") == {
+        "index_code": "000852.SH",
+        "start_date": "20250301",
+        "end_date": "20251231",
+    }

@@ -11,7 +11,7 @@ from quant_cn.core.base_run_log import BaseRunLog
 from quant_cn.core.base_store import BaseStore
 from quant_cn.core.clock import Clock
 from quant_cn.core.config import Config
-from quant_cn.core.dataset_spec import DatasetSpec
+from quant_cn.core.dataset_spec import ENUM_KINDS, DatasetSpec
 from quant_cn.core.date_codec import DateCodec
 from quant_cn.core.exceptions import ConfigError
 from quant_cn.data_loading.fetchers import (
@@ -92,8 +92,9 @@ class FetcherFactory:
         if kind == "none":
             return SingleCallFetcher(spec, *deps)
         if kind == "date_window":
-            return DateWindowFetcher(spec, *deps, codec=self._codec)
-        if kind in ("list_status", "ts_code", "exchange"):
+            values = self._list_values(spec) if spec.sweep.value_param else None
+            return DateWindowFetcher(spec, *deps, codec=self._codec, values=values)
+        if kind in ENUM_KINDS:
             return EnumFetcher(spec, *deps, values=self._list_values(spec))
         if kind in ("trade_date", "ann_date"):
             return DateSweepFetcher(spec, *deps, calendar=self._calendar, codec=self._codec)

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pytest
 from rich.console import Console
 
 from quant_cn.cli import QuantCnCli
@@ -62,3 +63,12 @@ def test_tc_qcc_005_calendar_horizon(config: Config) -> None:
     QuantCnCli(config, console).run(["doctor"])
     text = console.export_text()
     assert "calendar horizon" in text and "20260105" in text and "refresh trade_cal" in text
+
+
+# TC-QCC-006
+def test_tc_qcc_006_prefect_unreachable(config: Config, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("PREFECT_API_URL", "http://127.0.0.1:9/api")
+    console = Console(record=True, width=200)
+    code = QuantCnCli(config, console).run(["doctor"])
+    assert "unreachable" in console.export_text()
+    assert code == QuantCnCli(config, Console(record=True)).run(["doctor"])

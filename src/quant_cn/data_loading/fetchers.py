@@ -283,14 +283,19 @@ class DateWindowFetcher(BaseFetcher):
     Purpose:
         Range-only endpoints swept by calendar window (D-063): one call per month ("YYYYMM" keys)
         or year ("YYYY" keys) with start_date / end_date clipped to the run range. Used where offset
-        paging is broken (share_float) or the API takes ranges only (FRED series, fund_nav ranges).
+        paging is broken or capped (share_float; index_weight past 100k rows) or the API takes
+        ranges only (FRED series, fund_nav ranges). With `sweep.value_param` and values, each
+        window is fetched once per value: keys "<window>_<value>", window-major so the newest
+        `refetch_recent` keys are the latest window of every value (D-069).
 
     Contract:
         Input:
             BaseFetcher dependencies
-            codec: DateCodec
+            codec:  DateCodec
+            values: list[str] | None  -- required exactly when sweep.value_param is set
         Output:
-            instance; keys -> windows in [start, end]; params -> start_date, end_date + extra
+            instance; keys -> windows in [start, end] (x values); params -> start_date, end_date,
+            value_param + extra
         Raises:
             (none)
 
@@ -300,6 +305,7 @@ class DateWindowFetcher(BaseFetcher):
     Test cases:
         TC-DWF-001  monthly windows cover the range and clip the first and last month
         TC-DWF-002  yearly windows use YYYY keys and full-year bounds inside the range
+        TC-DWF-003  with value_param: window-major "<window>_<value>" keys, value passed as param
     """
 
     def __init__(
@@ -311,9 +317,11 @@ class DateWindowFetcher(BaseFetcher):
         run_log: BaseRunLog,
         clock: Clock,
         codec: DateCodec,
+        values: list[str] | None = None,
     ) -> None:
         super().__init__(spec, client, store, fetch_log, run_log, clock)
         self._codec = codec
+        self._values = values or []
 
     def list_keys(self, start: str, end: str) -> list[str]:
         """
@@ -324,10 +332,37 @@ class DateWindowFetcher(BaseFetcher):
             Input:
                 start: str; end: str  -- YYYYMMDD
             Output:
-                list[str]  -- "YYYYMM" (month) or "YYYY" (year), ascending
+                list[str]  -- "YYYYMM" (month) or "YYYY" (year), ascending; with values,
+                              "<window>_<value>" for every value inside each window
             Raises:
                 ValueError  -- malformed dates or start > end
         """
+        windows = self._list_windows(start, end)
+        if not self.spec.sweep.value_param:
+            return windows
+        return [f"{w}_{v}" for w in windows for v in self._values]
+
+    def build_params(self, key: str, start: str, end: str) -> dict[str, str]:
+        """
+        Purpose:
+            start_date / end_date of the window, clipped to the run range (+ the swept value).
+
+        Contract:
+            Input:
+                key: str  -- window key or "<window>_<value>"; start, end: str  -- run range
+            Output:
+                dict[str, str]
+            Raises:
+                (none)
+        """
+        window, _, value = key.partition("_")
+        extra = dict(self.spec.sweep.extra_params)
+        if self.spec.sweep.value_param:
+            extra[self.spec.sweep.value_param] = value
+        first, last = self._get_bounds(window)
+        return {**extra, "start_date": max(first, start), "end_date": min(last, end)}
+
+    def _list_windows(self, start: str, end: str) -> list[str]:
         lo, hi = self._codec.to_date(start), self._codec.to_date(end)
         if lo > hi:
             raise ValueError(f"start {start} is after end {end}")
@@ -339,27 +374,9 @@ class DateWindowFetcher(BaseFetcher):
             year, month = (year + 1, 1) if month == 12 else (year, month + 1)  # noqa: PLR2004 -- December
         return keys
 
-    def build_params(self, key: str, start: str, end: str) -> dict[str, str]:
-        """
-        Purpose:
-            start_date / end_date of the window, clipped to the run range.
-
-        Contract:
-            Input:
-                key: str  -- window key; start, end: str  -- run range
-            Output:
-                dict[str, str]
-            Raises:
-                (none)
-        """
-        if len(key) == 4:  # noqa: PLR2004 -- YYYY
-            first, last = f"{key}0101", f"{key}1231"
-        else:
-            year, month = int(key[:4]), int(key[4:])
-            last_day = calendar.monthrange(year, month)[1]
-            first, last = f"{key}01", f"{key}{last_day:02d}"
-        return {
-            **self.spec.sweep.extra_params,
-            "start_date": max(first, start),
-            "end_date": min(last, end),
-        }
+    @staticmethod
+    def _get_bounds(window: str) -> tuple[str, str]:
+        if len(window) == 4:  # noqa: PLR2004 -- YYYY
+            return f"{window}0101", f"{window}1231"
+        year, month = int(window[:4]), int(window[4:])
+        return f"{window}01", f"{window}{calendar.monthrange(year, month)[1]:02d}"

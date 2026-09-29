@@ -9,8 +9,17 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from quant_cn.core.schema import Schema
 
 SweepKind = Literal[
-    "none", "list_status", "ts_code", "exchange", "trade_date", "ann_date", "period", "date_window"
+    "none",
+    "list_status",
+    "ts_code",
+    "exchange",
+    "is_new",
+    "trade_date",
+    "ann_date",
+    "period",
+    "date_window",
 ]
+ENUM_KINDS = ("list_status", "ts_code", "exchange", "is_new")
 Source = Literal["tushare", "fred", "akshare"]
 KnownOnRule = Literal["as_is", "next_session", "period_end_lag"]
 Window = Literal["month", "year"]
@@ -53,13 +62,15 @@ class SweepSpec(BaseModel):
     Contract:
         Input:
             kind:           SweepKind        -- "none" = one call, key "all"
-            values:         list[str] | None -- explicit keys for list_status/ts_code/exchange
+            values:         list[str] | None -- explicit keys for the enum kinds (ENUM_KINDS)
             values_from:    str | None       -- name of a list in Config.enum_values instead
             range_params:   bool             -- also pass start_date/end_date to the endpoint
             extra_params:   dict[str, str]   -- constant parameters (e.g. exchange)
             refetch_recent: int >= 0         -- always refetch the newest N keys (late filers)
             values_from_dataset: ValuesFromDataset | None -- keys from another curated dataset
             window:         "month" | "year" | None  -- calendar window for kind date_window
+            value_param:    str | None       -- date_window only: API parameter swept per window
+                                                with the values (keys "<window>_<value>", D-069)
         Output:
             frozen pydantic model
         Raises:
@@ -82,11 +93,17 @@ class SweepSpec(BaseModel):
     refetch_recent: int = Field(default=0, ge=0)
     values_from_dataset: ValuesFromDataset | None = None
     window: Window | None = None
+    value_param: str | None = None
 
     @model_validator(mode="after")
     def _check_window(self) -> SweepSpec:
         if (self.kind == "date_window") != (self.window is not None):
             raise ValueError("sweep.window is required exactly when kind is date_window")
+        if self.value_param and self.kind != "date_window":
+            raise ValueError("sweep.value_param is only valid with kind date_window")
+        has_values = bool(self.values or self.values_from or self.values_from_dataset)
+        if self.kind == "date_window" and has_values != bool(self.value_param):
+            raise ValueError("date_window: sweep.value_param and a values source go together")
         return self
 
     @property

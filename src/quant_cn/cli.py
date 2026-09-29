@@ -5,9 +5,11 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import shutil
 import subprocess
 import sys
+import urllib.request
 from collections.abc import Sequence
 from pathlib import Path
 
@@ -48,6 +50,7 @@ from quant_cn.pipeline.runner import BaseRunner, LocalRunner, PipelineReport
 
 MIN_FREE_GB = 20
 MIN_CALENDAR_DAYS = 90
+DEFAULT_PREFECT_API_URL = "http://127.0.0.1:4200/api"  # D-067
 
 
 class QuantCnCli:
@@ -75,6 +78,7 @@ class QuantCnCli:
         TC-QCC-003  curate on a mini lake exits 0 and reports derived digests unchanged on rerun
         TC-QCC-004  query runs read-only SQL and prints rows; a write statement fails with exit 1
         TC-QCC-005  doctor reports the trade_cal horizon and warns under 90 days
+        TC-QCC-006  doctor warns (exit code unchanged) when the Prefect API is unreachable
     """
 
     def __init__(self, config: Config | None = None, console: Console | None = None) -> None:
@@ -148,6 +152,7 @@ class QuantCnCli:
             ("TUSHARE_TOKEN", "set" if config.tushare.token else "MISSING"),
             ("backup target", str(config.lake.backup_target or "not set")),
             ("calendar horizon", self._get_calendar_horizon(config)),
+            ("prefect server", self._get_prefect_status()),
         ]
         table = Table("check", "value", title="quant_cn doctor")
         for row in rows:
@@ -176,6 +181,15 @@ class QuantCnCli:
         days = (DateCodec().to_date(last) - Clock().get_now().date()).days
         warn = "" if days >= MIN_CALENDAR_DAYS else "  (low: refresh trade_cal)"
         return f"{last} ({days} days ahead){warn}"
+
+    @staticmethod
+    def _get_prefect_status() -> str:
+        url = os.environ.get("PREFECT_API_URL") or DEFAULT_PREFECT_API_URL
+        try:
+            with urllib.request.urlopen(f"{url.rstrip('/')}/health", timeout=2):
+                return f"{url} reachable"
+        except (OSError, ValueError):
+            return f"{url} unreachable  (RUNNER=prefect needs: make prefect-server)"
 
     def _run_download(self, config: Config, args: argparse.Namespace) -> int:
         catalog = LakeCatalog(config.lake.root, config.datasets)

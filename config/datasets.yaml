@@ -163,9 +163,9 @@ opt_daily:
 
 shibor:
   endpoint: shibor
-  sweep: {kind: none, range_params: true}
+  # yearly windows: one range call silently stops at 2,000 rows (D-070)
+  sweep: {kind: date_window, window: year, refetch_recent: 1}
   start: "20150101"
-  refresh: overwrite
   primary_key: [date]
   known_on: date
   fields: [date, "on", 1w, 2w, 1m, 3m, 6m, 9m, 1y]
@@ -224,3 +224,51 @@ margin_detail:
   fields: [trade_date, ts_code, rzye, rqye, rzmre, rqyl, rzche, rqchl, rqmcl, rzrqye]
   text_fields: [trade_date, ts_code]
   curated: {path: margin_detail, partition_by: trade_date}
+
+# --- sectors and index composition (plan 11 phase 2) ---
+# Shenwan 2021 history before 2021-07 is reconstructed by the vendor (in_date earlier than the
+# scheme itself): usable for grouping, not as a record of what investors saw then (D-068).
+
+index_classify:
+  endpoint: index_classify
+  sweep: {kind: none, extra_params: {src: SW2021}}
+  refresh: overwrite
+  primary_key: [index_code]
+  known_on: null
+  fields: [index_code, industry_name, level, industry_code, is_pub, parent_code, src]
+  text_fields: [index_code, industry_name, level, industry_code, is_pub, parent_code, src]
+  curated: {path: reference/index_classify}
+
+index_member_all:
+  endpoint: index_member_all
+  sweep: {kind: is_new, values: ["Y", "N"]}
+  refresh: overwrite
+  primary_key: [ts_code, l3_code, in_date]
+  known_on: in_date
+  fields: [l1_code, l1_name, l2_code, l2_name, l3_code, l3_name, ts_code, name, in_date, out_date,
+           is_new]
+  text_fields: [l1_code, l1_name, l2_code, l2_name, l3_code, l3_name, ts_code, name, in_date,
+                out_date, is_new]
+  curated: {path: reference/index_member_all}
+
+index_weight:
+  endpoint: index_weight
+  # yearly windows per index: one range call pages past Tushare's 100k offset cap for CSI 1000 (D-069)
+  sweep: {kind: date_window, window: year, value_param: index_code, values_from: weight_indices,
+          refetch_recent: 4}
+  start: "20100101"
+  primary_key: [index_code, con_code, trade_date]
+  known_on: trade_date
+  fields: [index_code, con_code, trade_date, weight]
+  text_fields: [index_code, con_code, trade_date]
+  curated: {path: index_weight, partition_by: trade_date}
+
+sw_daily:
+  endpoint: sw_daily
+  sweep: {kind: trade_date}
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, name, open, low, high, close, change, pct_change, vol, amount, pe,
+           pb, float_mv, total_mv]
+  text_fields: [ts_code, trade_date, name]
+  curated: {path: sw_daily, partition_by: trade_date}
