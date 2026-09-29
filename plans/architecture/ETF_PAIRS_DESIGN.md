@@ -26,8 +26,8 @@ index future. Single-stock shorting is out of scope.
 | Bond ETFs | 511010 (treasury) vs 511260 (10y) | duration | duration-neutral spreads |
 
 ## 3. Method
-1. **Universe**: ETFs from `fund_basic` (market `E`), ≥ 250 sessions history, average daily amount ≥ 20m CNY,
-   short-leg eligibility flag (margin target list) or an index-future proxy.
+1. **Universe**: ETFs per D-075 (`fund_basic` market `E`, name contains "ETF", has a `fund_daily` bar), ≥ 250 sessions history, average daily amount ≥ 20m CNY,
+   short-leg eligibility flag (`margin_secs`; SSE list unreliable before 2024-04, so prefer the official exchange lists from plan 11 ph10) or an index-future proxy.
 2. **Candidate screening** (per rolling 2-year window): correlation of daily returns ≥ 0.7; Engle-Granger
    cointegration p ≤ 0.05 on log prices; Johansen as cross-check; spread half-life (OU fit) between 3 and 60
    sessions; Hurst exponent < 0.5. Same-index duplicates skip cointegration and use the NAV premium.

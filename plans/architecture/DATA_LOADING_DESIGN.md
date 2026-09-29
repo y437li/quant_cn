@@ -1,4 +1,4 @@
-# Data Loading Design (v2.0, 2026-09-28; D-021, D-022, D-026, D-031; multi-source expansion D-063)
+# Data Loading Design (v2.1, 2026-09-29; D-021, D-022, D-026, D-031, D-063; paging D-076; recent-empty D-078)
 
 Design for plan 01 phases 1–4: where the data lives on this machine, how bytes get from Tushare into the
 lake, and how a run is monitored. No code until approved.
@@ -91,8 +91,13 @@ DownloadPipeline.run(datasets?, start?, end?)
   counting against `retries`; other errors → `retry_sleep_s`, up to `retries`.
 - **Permission error** (points): raise `DataSourceError` with the endpoint name; pipeline marks the dataset
   `blocked` and continues with the next dataset; report lists blocked datasets.
-- **Paging**: `limit = page_size`, `offset += page_size` until a short page; concatenated before writing so a
-  key is all-or-nothing.
+- **Paging** (amended by D-076): endpoints cap a call below `limit` (fut_holding 4,000, fund_share 2,000, others 6,000).
+  Keep paging while the page is full **or its size is a multiple of 1,000**; advance the offset by the rows actually
+  received; stop on a page that is neither. Concatenated before writing so a key is all-or-nothing. Never treat
+  "shorter than limit" as "complete".
+- **Empty keys near the present** (D-078): an empty result for a key within the last 3 sessions is written to the
+  run log but **not** marked done, so a run before the vendor publishes the day does not lose it; older empty
+  keys are marked done as before.
 - **Refresh semantics**: `trade_cal`, `stock_basic`, `namechange` are overwritten on every run (small,
   whole-history); sweep datasets are append-only, re-fetch a key only with `--force key`.
 - **Long history**: datasets in `download.long_history_datasets` start at `long_history_start`, others at

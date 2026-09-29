@@ -593,3 +593,33 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Alternatives: `fund_nav` per ETF over a range (per-code `date_window`, D-069): ~2,000 codes × 8 years of calls; rejected, the by-date call covers every exchange fund.
 - Consequences: ~7,500 calls (~4 h) for the 2019+ backfill; `fund_daily` grows from 16 k to ~3 M rows. `report_rc` on 2026-09-24: 177 rows, 66 stocks, 21 brokers (the earlier 66-row check was on the holiday) — row volume still to be judged in phase 7.
 - Links: D-063, D-069, plan 11 phase 3, ETF_PAIRS_DESIGN
+
+### D-075 ETF universe by name
+- Context: plan 11 phase 3 criterion (1) counts ETFs per date; `fund_share.fund_type` is NULL for almost all rows before 2026, so it cannot define the set.
+- Decision: an ETF on date t is a `fund_basic` row (market E) whose `name` contains "ETF" and which has a `fund_daily` bar on t. Year-end counts 269 (2019) → 1,705 (2026-09) accepted as plausible. Size = `fd_share × 1e4 × unit_nav` (`net_asset` is sparse). Accepted.
+- Alternatives: `fund_type` label (rejected: unusable); index-tracking flag from `fund_basic.benchmark` (deferred: useful to classify ETFs by underlying for pairs, add in the pairs research).
+- Consequences: ETF_PAIRS_DESIGN §3 universe rule uses this definition; premium/discount uses `unit_nav`.
+- Links: plan 11 ph3, plans/architecture/ETF_PAIRS_DESIGN.md
+
+### D-076 Paging past per-endpoint caps below `limit`
+- Status: accepted by execution (2026-09-29).
+- Context: `TushareClient` requested `limit=6000` pages and stopped at the first page shorter than 6,000. Several endpoints cap one call lower: `fut_holding` returns at most 4,000 rows (a no-exchange call on 2026-09-24 returned exactly 4,000, DCE + SHFE only), `fund_share` at most 2,000. A scan of `meta.fetch_log` (a cap C means no single page ever exceeds C) found one affected dataset: `fund_share`, 21 quarter-end dates at exactly 2,000 rows whose true size is 8,400–26,000 rows (off-exchange funds report at quarter-ends). All other round counts are below a page size the same endpoint has already exceeded, so they are genuine.
+- Decision: keep paging while a page is non-empty and either full or a multiple of 1,000 (`CAP_STEP`; Tushare caps are 2,000 / 4,000 / 6,000 …); advance `offset` by the rows received. Costs one extra call only for keys whose size is a round number. The 21 `fund_share` dates were refetched with `--force` (2019-09-30: 8,422 rows; 2026-06-30: 26,003). With the fix a no-exchange `fut_holding` call returns all exchanges (10,259 rows on 2026-09-24 = the sum of the per-exchange calls).
+- Alternatives: per-dataset `page_size` (needs every cap known in advance; rejected); always fetch until an empty page (doubles calls).
+- Consequences: truncation at an unknown cap is detected for any endpoint whose cap is a multiple of 1,000. The coverage notebook (phase 9) repeats the round-count scan.
+- Links: D-069, D-070, plan 11 phases 3–4
+
+### D-077 Futures and gold datasets (plan 11 phase 4)
+- Status: accepted by execution (2026-09-29).
+- Context: one-call checks on 2026-09-24: `fut_basic` per exchange (CFFEX 728, SHFE 3,632, DCE 3,335, CZCE 2,954, INE 489, GFEX 149 contracts); `fut_daily(trade_date)` without `exchange` returns all six (1,075 rows); `fut_holding` see D-076 — INE has no top-20 rows under its own code, and bc/lu/nr appear under SHFE while `sc` and `ec` have none; `fut_mapping(trade_date)` 202 continuous codes; `sge_basic` 13 contracts; `sge_daily(trade_date)` 41 rows (incl. forward quotes).
+- Decision: `fut_daily`, `fut_holding` drop the CFFEX filter and start 2019 (`fut_holding` gains `exchange`, key `trade_date, exchange, symbol, broker`); the plan-09 CFFEX-only raw files for 2025–2026 are moved out and refetched (checked as a subset before deletion). `fut_basic` swept by exchange (6 values, overwrite); `fut_mapping`, `sge_daily` by `trade_date` from 2019; `sge_basic` one call. All `as_is` on `trade_date`.
+- Risk found: an empty key is marked done permanently (TC-BF-005), so a run before a day's data is published loses that day. This backfill ends at 2026-09-28 explicitly. Proposal for a decision: empty keys within the last N sessions (N = 3) are not marked done (or are always refetched like `refetch_recent`).
+- Consequences: ~7,500 calls (~4–5 h); `fut_daily` ~1.7 M rows, `fut_holding` ~15 M rows.
+- Links: D-076, plan 09, plan 11 phase 4
+
+### D-078 Empty keys near the present are not marked done
+- Context: an empty result marks a key done permanently (plan 01 rule "empty is not an error"); a download run before the vendor has published a day's data therefore loses that day for good. Raised by quant-cn-b7 inside D-077.
+- Decision: `BaseFetcher.run` marks an empty key done only if its date is more than 3 trading sessions before today (`TradingCalendar`); more recent empty keys are logged in `run_log` with status `empty_recent` and retried on the next run. Non-date keys (enum, single-call) keep the old behaviour. Accepted.
+- Alternatives: never mark empty keys done (rejected: holidays and no-event days would be refetched forever); a per-dataset publication-lag table (deferred: 3 sessions covers Tushare's observed lags; revisit if a dataset needs more).
+- Consequences: `make download` on the same day is safe to rerun; `FetchLog.list_pending` includes recent empties; one test on a fake clock.
+- Links: DATA_LOADING_DESIGN §2.3, D-077, plan 11 ph4

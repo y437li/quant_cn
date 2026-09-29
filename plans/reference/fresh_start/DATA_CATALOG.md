@@ -50,8 +50,12 @@ history is realistic to pull, not something the new project reads.
 | Fund NAV | `fund_nav` (`market=E`, by `nav_date`) | `ts_code, nav_date` | next session after `nav_date` | 2019-01-02 → 2026-09-28 | 2.33 M | D-074 |
 | Fund shares | `fund_share` (by date) | `ts_code, trade_date` | next session after `trade_date` | 2019-01-02 → 2026-09-28 | 1.67 M | D-074 |
 | Margin-eligible list | `margin_secs` (SSE/SZSE/BSE) | `trade_date, ts_code` | `trade_date` (before the open) | 2019-01-02 → 2026-09-28 | 6.50 M | D-074 |
-| CFFEX futures bars | `fut_daily` | `ts_code, trade_date` | `trade_date` close | 2025-01-02 → 2026-09-28 | 27 k | plan 09 |
-| CFFEX top-20 holdings | `fut_holding` | `trade_date, symbol, broker` | `trade_date` evening | 2025-01-02 → 2026-09-28 | 306 k | plan 09 |
+| Futures bars (6 exchanges) | `fut_daily` | `ts_code, trade_date` | `trade_date` close | 2019-01-02 → 2026-09-28 | 1.65 M | D-077 |
+| Futures contracts | `fut_basic` (6 exchanges) | `ts_code` | `list_date` | listed 1995 → 2026 | 11,287 | D-077 |
+| Main / continuous mapping | `fut_mapping` | `ts_code, trade_date` | `trade_date` | 2019-01-02 → 2026-09-28 | 312 k | D-077 |
+| SGE spot contracts | `sge_basic` | `ts_code` | — (reference) | 13 contracts | 13 | D-077 |
+| SGE spot bars | `sge_daily` | `ts_code, trade_date` | `trade_date` close | 2019-01-02 → 2026-09-28 | 53 k | D-077 |
+| Futures top-20 holdings | `fut_holding` (all exchanges) | `trade_date, exchange, symbol, broker` | `trade_date` evening | 2019-01-02 → 2026-09-28 | 15.2 M | D-076, D-077 |
 | Margin totals | `margin` | `trade_date, exchange_id` | `trade_date` (published next morning) | 2025-01-02 → 2026-09-28 | 1,266 | plan 09 |
 | Margin by stock | `margin_detail` | `ts_code, trade_date` | `trade_date` (published next morning) | 2024-01-02 → 2026-09-28 | 2.73 M | plan 09 |
 
@@ -146,6 +150,21 @@ Verify any unit you rely on against the endpoint's doc page before building on i
   official exchange lists (plan 11 phase 10). On a holiday the endpoint returns the SSE list only.
 - **Holidays in date checks.** A by-date call on a non-session (2026-09-25, Mid-Autumn) returns 0 rows or a partial
   list; always check against `trade_cal` before calling a result "missing".
+- **Commodity OI and volume were two-sided before 2020.** SHFE, DCE, CZCE (and INE) reported `oi` and `vol` as
+  long + short until 2019-12-31 and one-sided from 2020-01-02 (CU2003.SHF oi 210,762 → 111,621 overnight;
+  M2005.DCE 3.39 M → 1.68 M); CFFEX was always one-sided. Halve pre-2020 commodity `oi`/`vol` before comparing
+  across the break (top-20 coverage looks like ~30% in 2019 and ~60–70% after for this reason alone).
+- **`fut_holding` mixes category totals with brokers.** Rows whose `broker` is a member category, not a firm:
+  CFFEX `期货公司` / `非期货公司` (to 2020-03), `非期货公司结算会员` (2020-09 → 2023-04); DCE `期货公司会员` (to 2024-05);
+  SHFE `期货公司` / `非期货公司` (to 2025-08-12), then `期货公司会员/境外特殊经纪参与者` /
+  `非期货公司会员/境外特殊非经纪参与者`. Exclude them before summing brokers (with them DCE "top-20 long" exceeds
+  total OI, 141% in 2021). Product-level symbols (`AG`, `AL` …) sit beside contract symbols. Top-20 share of OI
+  after exclusion, 2020–2026: long 60–80%, short 64–86% (CFFEX highest). On 2020-03-18 CZCE rows are labelled `ZCE`.
+- **No top-20 data for INE crude and EC.** INE rows are filed under SHFE for bc/lu/nr; `sc` and `ec` have none, so
+  holding-based positioning must not assume every product has holdings.
+- **`SCTAS.INE`** (crude trade-at-settlement) trades on 24 sessions without a main-contract mapping; every other
+  product has one on every session it trades. SGE Au99.99 vs SHFE AU main contract: median gap 0.29%, 95.9% of days
+  within 1% (the gap is carry on a months-out contract: 0.6% in 2019–20, ~0.15–0.35% since).
 - **Statements** carry an original and a corrected version per filing (`update_flag`); it must be requested and
   is part of the primary key (D-038), otherwise compaction drops real data.
 

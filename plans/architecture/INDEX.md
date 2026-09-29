@@ -6,7 +6,7 @@ Design documents: what is built and why it is shaped this way. Each names the pl
 | File | Purpose | Contains |
 |---|---|---|
 | `CALCULATION_DESIGN.md` | v1.1 (D-032, D-046–D-052): calculation package, CBOE VIX method mapped to Tushare option/SHIBOR data, deviations and quality flags, datasets to add, tests | §1–§6; implemented by plan 03 |
-| `DATA_LOADING_DESIGN.md` | v2.0 (§3c multi-source expansion, D-063): local env config keeping the lake outside the repo, fetcher/pipeline classes and run behaviour, flow monitoring | §1–§5; implemented by plan 01 ph1–4 |
+| `DATA_LOADING_DESIGN.md` | v2.1 (§3c multi-source, paging rule D-076, recent-empty rule D-078): local env config keeping the lake outside the repo, fetcher/pipeline classes and run behaviour, flow monitoring | §1–§5; implemented by plan 01 ph1–4 |
 | `ETF_PAIRS_DESIGN.md` | v1.0 (D-056): long/short ETF pairs research track: shortable legs in A-shares, pair families, cointegration method, costs, datasets, promotion criteria | §1–§7 |
 | `FACTOR_LIBRARY.md` | v0.4 (D-055 proposed): catalogue of value, quality, growth, analyst-revision, momentum/reversal, risk-style factors with construction, data mapping, evaluation protocol, first-six selection | §1–§9; input to plan 04 |
 | `FACTOR_TESTING_DESIGN.md` | v1.0 (D-060): binding formulas (§10) and end-to-end point-in-time control (§11); IC/ICIR estimands; single-factor tests (Newey-West t, block bootstrap, Pesaran-Timmermann, breaks, decay); multiple-testing (Holm, BHY, Romano-Wolf, HLZ hurdle, White/Hansen SPA, Harvey-Liu); backtest tests (PSR/DSR, CSCV PBO, Ledoit-Wolf); classes; acceptance bar | §1–§9; implemented in plan 04 |
