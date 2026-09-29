@@ -58,7 +58,7 @@ class DecisionsReader:
 
     Used by:
         core.docs.DocTableBuilder  -- decisions table
-        cli.QuantCnCli             -- injected type or call
+        cli.ServiceBuilder         -- injected type or call
 
     Test cases:
         TC-DR-001  table rows joined with detail bullets

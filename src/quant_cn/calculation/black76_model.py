@@ -18,17 +18,19 @@ class Black76Model:
         Input:
             (none)
         Output:
-            instance; `compute_price`, `compute_implied_vol`
+            instance; `compute_price`, `compute_implied_vol`, `compute_gamma`
         Raises:
             (none at construction)
 
     Used by:
         research_space/notebooks/20260927_vix_calculation.ipynb  -- ATM IV check, synthetic chain
+        calculation.GammaExposureCalculator                      -- implied vol and gamma per option
 
     Test cases:
         TC-BM-001  put-call parity holds: C - P = e^{-rT}(F - K)
         TC-BM-002  implied vol recovers the pricing vol for calls and puts
         TC-BM-003  a price outside the no-arbitrage bounds raises ValueError
+        TC-BM-004  gamma matches a finite-difference second derivative of the price
     """
 
     def compute_price(
@@ -77,6 +79,23 @@ class Black76Model:
             mid = (lo + hi) / 2
             lo, hi = (mid, hi) if self.compute_price(f, k, t, r, mid, side) < price else (lo, mid)
         return (lo + hi) / 2
+
+    def compute_gamma(self, f: float, k: float, t: float, r: float, sigma: float) -> float:
+        """
+        Purpose:
+            Black-76 gamma with respect to the forward (same for calls and puts).
+
+        Contract:
+            Input:
+                f, k > 0; t > 0 years; r continuous; sigma > 0
+            Output:
+                float  -- d2 price / dF2
+            Raises:
+                (none)
+        """
+        d1 = (math.log(f / k) + sigma**2 * t / 2) / (sigma * math.sqrt(t))
+        pdf = math.exp(-(d1**2) / 2) / math.sqrt(2 * math.pi)
+        return math.exp(-r * t) * pdf / (f * sigma * math.sqrt(t))
 
     @staticmethod
     def _get_cdf(x: float) -> float:

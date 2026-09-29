@@ -31,7 +31,8 @@ class ParquetWriter(BaseStore):
             (none at construction)
 
     Used by:
-        cli.QuantCnCli  -- composition root
+        cli.QuantCnCli      -- composition root
+        cli.ServiceBuilder  -- injected type or call
 
     Test cases:
         TC-PW-001  raw file lands at raw/<dataset>/<param>=<key>.parquet with coerced dtypes

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import calendar
 from collections.abc import Sequence
 
 from quant_cn.core.base_api_client import BaseApiClient
@@ -275,3 +276,90 @@ class PeriodSweepFetcher(BaseFetcher):
                 (none)
         """
         return {**self.spec.sweep.extra_params, "period": key}
+
+
+class DateWindowFetcher(BaseFetcher):
+    """
+    Purpose:
+        Range-only endpoints swept by calendar window (D-063): one call per month ("YYYYMM" keys)
+        or year ("YYYY" keys) with start_date / end_date clipped to the run range. Used where offset
+        paging is broken (share_float) or the API takes ranges only (FRED series, fund_nav ranges).
+
+    Contract:
+        Input:
+            BaseFetcher dependencies
+            codec: DateCodec
+        Output:
+            instance; keys -> windows in [start, end]; params -> start_date, end_date + extra
+        Raises:
+            (none)
+
+    Used by:
+        data_loading.FetcherFactory.build  -- sweep kind "date_window"
+
+    Test cases:
+        TC-DWF-001  monthly windows cover the range and clip the first and last month
+        TC-DWF-002  yearly windows use YYYY keys and full-year bounds inside the range
+    """
+
+    def __init__(
+        self,
+        spec: DatasetSpec,
+        client: BaseApiClient,
+        store: BaseStore,
+        fetch_log: BaseFetchLog,
+        run_log: BaseRunLog,
+        clock: Clock,
+        codec: DateCodec,
+    ) -> None:
+        super().__init__(spec, client, store, fetch_log, run_log, clock)
+        self._codec = codec
+
+    def list_keys(self, start: str, end: str) -> list[str]:
+        """
+        Purpose:
+            Window keys covering [start, end].
+
+        Contract:
+            Input:
+                start: str; end: str  -- YYYYMMDD
+            Output:
+                list[str]  -- "YYYYMM" (month) or "YYYY" (year), ascending
+            Raises:
+                ValueError  -- malformed dates or start > end
+        """
+        lo, hi = self._codec.to_date(start), self._codec.to_date(end)
+        if lo > hi:
+            raise ValueError(f"start {start} is after end {end}")
+        if self.spec.sweep.window == "year":
+            return [str(y) for y in range(lo.year, hi.year + 1)]
+        keys, year, month = [], lo.year, lo.month
+        while (year, month) <= (hi.year, hi.month):
+            keys.append(f"{year}{month:02d}")
+            year, month = (year + 1, 1) if month == 12 else (year, month + 1)  # noqa: PLR2004 -- December
+        return keys
+
+    def build_params(self, key: str, start: str, end: str) -> dict[str, str]:
+        """
+        Purpose:
+            start_date / end_date of the window, clipped to the run range.
+
+        Contract:
+            Input:
+                key: str  -- window key; start, end: str  -- run range
+            Output:
+                dict[str, str]
+            Raises:
+                (none)
+        """
+        if len(key) == 4:  # noqa: PLR2004 -- YYYY
+            first, last = f"{key}0101", f"{key}1231"
+        else:
+            year, month = int(key[:4]), int(key[4:])
+            last_day = calendar.monthrange(year, month)[1]
+            first, last = f"{key}01", f"{key}{last_day:02d}"
+        return {
+            **self.spec.sweep.extra_params,
+            "start_date": max(first, start),
+            "end_date": min(last, end),
+        }

@@ -64,7 +64,7 @@ class CodeTableBuilder:
 
     Used by:
         lake.ProjectCatalog  -- code tables
-        cli.QuantCnCli       -- injected type or call
+        cli.ServiceBuilder   -- injected type or call
 
     Test cases:
         TC-CTB-001  classes, methods, used_by, contracts and test_cases built from a sample repo

@@ -50,6 +50,7 @@ class BaseFetcher(ABC):
         data_loading.PeriodSweepFetcher    -- subclass
         data_loading.FetcherFactory.build  -- return type
         pipeline.FetchStep                 -- runs one fetcher per dataset
+        data_loading.DateWindowFetcher     -- subclass
 
     Test cases:
         TC-BF-001  fetch run counts fetched/skipped/empty correctly

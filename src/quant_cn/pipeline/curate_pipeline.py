@@ -239,7 +239,7 @@ class CuratePipeline:
             (none at construction)
 
     Used by:
-        cli.QuantCnCli  -- `curate` command, `make lake-rebuild`
+        cli.ServiceBuilder  -- injected type or call
 
     Test cases:
         TC-CP-001  curate compacts, builds derived views, PIT states and writes digests

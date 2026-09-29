@@ -65,7 +65,7 @@ class RegistryReader:
         core.docs.ContractChecker   -- registry row, block and method parity
         core.docs.ContractLinter    -- injected type or call
         core.docs.CodeTableBuilder  -- injected type or call
-        cli.QuantCnCli              -- injected type or call
+        cli.ServiceBuilder          -- injected type or call
 
     Test cases:
         TC-RR-001  sections A-E parsed; template block ignored

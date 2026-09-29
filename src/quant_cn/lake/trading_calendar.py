@@ -27,7 +27,8 @@ class TradingCalendar:
     Used by:
         data_loading.DateSweepFetcher.list_keys  -- trading days for trade_date sweeps
         data_loading.FetcherFactory              -- injected into DateSweepFetcher
-        cli.QuantCnCli                           -- composition root
+        cli.ServiceBuilder                       -- injected type or call
+        lake.EffectiveDateResolver               -- injected type or call
 
     Test cases:
         TC-TCA-001  sessions returns open days in range, inclusive, ascending

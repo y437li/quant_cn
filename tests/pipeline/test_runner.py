@@ -2,33 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from quant_cn.core.base_step import BaseStep, ProgressHook
-from quant_cn.core.exceptions import DataSourceError, PermissionDeniedError, QuantCnError
-from quant_cn.core.step_report import StepReport
+from quant_cn.core.exceptions import DataSourceError, PermissionDeniedError
 from quant_cn.pipeline.runner import LocalRunner
-from tests.support import MiniLake
-
-
-class ScriptStep(BaseStep):
-    def __init__(self, name: str, error: QuantCnError | None = None) -> None:
-        self._name = name
-        self._error = error
-        self.ran = False
-
-    @property
-    def name(self) -> str:
-        return self._name
-
-    def list_units(self) -> list[str]:
-        return ["k"]
-
-    def run(self, run_id: str, progress: ProgressHook | None = None) -> StepReport:
-        self.ran = True
-        if self._error:
-            raise self._error
-        if progress:
-            progress("k", "fetched")
-        return StepReport(self._name, fetched=1)
+from tests.support import MiniLake, ScriptStep
 
 
 # TC-LR-001

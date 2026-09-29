@@ -51,8 +51,7 @@ class DerivedViews:
     Used by:
         pipeline.CuratePipeline  -- after compaction
         pipeline.DeriveStep      -- injected type or call
-        cli.QuantCnCli           -- composition root
-        cli.QuantCnCli           -- composition root
+        cli.ServiceBuilder       -- injected type or call
 
     Test cases:
         TC-DV-001  prices_adj joins daily and adj_factor with close_adj = close * adj_factor

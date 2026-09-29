@@ -74,7 +74,7 @@ class MarkdownTableReader:
         core.docs.ContractLinter    -- injected type or call
         core.docs.DecisionsReader   -- injected type or call
         core.docs.PlanReader        -- injected type or call
-        cli.QuantCnCli              -- injected type or call
+        cli.ServiceBuilder          -- injected type or call
 
     Test cases:
         TC-MTR-001  tables are read with their headings and cells

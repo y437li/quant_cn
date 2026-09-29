@@ -29,3 +29,13 @@ def test_tc_bm_002_implied_vol(side: str) -> None:
 def test_tc_bm_003_out_of_bounds() -> None:
     with pytest.raises(ValueError):
         Black76Model().compute_implied_vol(10.0, 3.04, 3.0, 0.2, 0.014, "C")
+
+
+# TC-BM-004
+def test_tc_bm_004_gamma() -> None:
+    model, h = Black76Model(), 1e-3
+    up = model.compute_price(3.04 + h, 3.0, 0.2, 0.014, 0.2, "C")
+    mid = model.compute_price(3.04, 3.0, 0.2, 0.014, 0.2, "C")
+    down = model.compute_price(3.04 - h, 3.0, 0.2, 0.014, 0.2, "C")
+    numeric = (up - 2 * mid + down) / h**2
+    assert model.compute_gamma(3.04, 3.0, 0.2, 0.014, 0.2) == pytest.approx(numeric, rel=1e-4)

@@ -41,6 +41,7 @@ class Compactor:
         cli.QuantCnCli           -- `compact` and `rebuild` commands
         pipeline.CompactStep     -- injected type or call
         pipeline.CuratePipeline  -- injected type or call
+        cli.ServiceBuilder       -- injected type or call
 
     Test cases:
         TC-CO-001  daily raw files compact into one partition per year, sorted, typed

@@ -26,13 +26,15 @@ class LakeQuery:
             (none at construction)
 
     Used by:
-        lake.TradingCalendar     -- reads raw.trade_cal
-        lake.Compactor.rebuild   -- reads raw files through DuckDB
-        cli.QuantCnCli           -- composition root
-        pipeline.CuratePipeline  -- injected type or call
-        pipeline.DeriveStep      -- injected type or call
-        lake.DerivedViews        -- injected type or call
-        lake.PitAligner          -- injected type or call
+        lake.TradingCalendar         -- reads raw.trade_cal
+        lake.Compactor.rebuild       -- reads raw files through DuckDB
+        cli.QuantCnCli               -- composition root
+        pipeline.CuratePipeline      -- injected type or call
+        pipeline.DeriveStep          -- injected type or call
+        lake.DerivedViews            -- injected type or call
+        lake.PitAligner              -- injected type or call
+        cli.ServiceBuilder           -- injected type or call
+        data_loading.FetcherFactory  -- injected type or call
 
     Test cases:
         TC-LQ-001  sql returns a DataFrame with parameters bound

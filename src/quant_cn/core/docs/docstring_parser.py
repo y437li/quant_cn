@@ -112,7 +112,7 @@ class DocstringParser:
         core.docs.ContractChecker   -- every class, method and module docstring
         core.docs.ContractLinter    -- injected type or call
         core.docs.CodeTableBuilder  -- injected type or call
-        cli.QuantCnCli              -- injected type or call
+        cli.ServiceBuilder          -- injected type or call
 
     Test cases:
         TC-DSP-001  full contract docstring parses every section

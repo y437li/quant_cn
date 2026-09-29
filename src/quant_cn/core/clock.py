@@ -31,6 +31,8 @@ class Clock:
         data_loading.FetcherFactory      -- injected type or call
         data_loading.PeriodSweepFetcher  -- injected type or call
         lake.ProjectCatalog              -- injected type or call
+        cli.ServiceBuilder               -- injected type or call
+        data_loading.DateWindowFetcher   -- injected type or call
 
     Test cases:
         TC-CL-001  today_str is YYYYMMDD and equals get_now().date()

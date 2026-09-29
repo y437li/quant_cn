@@ -9,6 +9,9 @@ L4: domain financial computations over lake frames (CBOE VIX, Black-76); pure, n
 | `black76_model.py` | Black-76 option prices on a forward and implied volatility by bisection | `Black76Model` |
 | `expiry_clock.py` | How time to expiry is measured: calendar minutes (CBOE) or trading sessions | `ExpiryClock` |
 | `forward_price_estimator.py` | Forward price and K0 from put-call parity (CBOE white paper step 1) | `ForwardPriceEstimator` |
+| `futures_positioning.py` | Index-futures positioning: open interest regimes, top-20 broker nets, basis (plan 09) | `FuturesPositioning` |
+| `gamma_exposure_calculator.py` | Dealer gamma exposure by strike and across spot levels (plan 09): hedging-flow map | `GammaExposureCalculator` |
+| `margin_ladder_estimator.py` | Margin-financing liquidation ladder from per-stock margin data (plan 09) | `MarginLadderEstimator` |
 | `option_chain_builder.py` | Tidy option chains from opt_basic + opt_daily, and per-term strike quote tables | `OptionChainBuilder` |
 | `risk_free_curve.py` | Risk-free rate for any tenor from SHIBOR fixings (CALCULATION_DESIGN §2 step 2) | `RiskFreeCurve` |
 | `term_interpolator.py` | Blend two term variances to the constant-maturity index (CBOE white paper step 4) | `TermInterpolator` |

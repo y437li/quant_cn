@@ -9,8 +9,40 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from quant_cn.core.schema import Schema
 
 SweepKind = Literal[
-    "none", "list_status", "ts_code", "exchange", "trade_date", "ann_date", "period"
+    "none", "list_status", "ts_code", "exchange", "trade_date", "ann_date", "period", "date_window"
 ]
+Source = Literal["tushare", "fred", "akshare"]
+KnownOnRule = Literal["as_is", "next_session", "period_end_lag"]
+Window = Literal["month", "year"]
+
+
+class ValuesFromDataset(BaseModel):
+    """
+    Purpose:
+        Enumerate sweep keys from another curated dataset (e.g. every ETF code in fund_basic).
+
+    Contract:
+        Input:
+            dataset: str        -- curated dataset name
+            column:  str        -- column holding the keys
+            where:   str | None -- optional SQL filter on that dataset, e.g. "fund_type = 'ETF'"
+        Output:
+            frozen pydantic model
+        Raises:
+            pydantic.ValidationError
+
+    Used by:
+        core.SweepSpec  -- field `values_from_dataset`
+
+    Test cases:
+        TC-FF-003  values_from_dataset keys resolved from a curated dataset with a filter
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    dataset: str
+    column: str
+    where: str | None = None
 
 
 class SweepSpec(BaseModel):
@@ -26,6 +58,8 @@ class SweepSpec(BaseModel):
             range_params:   bool             -- also pass start_date/end_date to the endpoint
             extra_params:   dict[str, str]   -- constant parameters (e.g. exchange)
             refetch_recent: int >= 0         -- always refetch the newest N keys (late filers)
+            values_from_dataset: ValuesFromDataset | None -- keys from another curated dataset
+            window:         "month" | "year" | None  -- calendar window for kind date_window
         Output:
             frozen pydantic model
         Raises:
@@ -46,6 +80,14 @@ class SweepSpec(BaseModel):
     range_params: bool = False
     extra_params: dict[str, str] = Field(default_factory=dict)
     refetch_recent: int = Field(default=0, ge=0)
+    values_from_dataset: ValuesFromDataset | None = None
+    window: Window | None = None
+
+    @model_validator(mode="after")
+    def _check_window(self) -> SweepSpec:
+        if (self.kind == "date_window") != (self.window is not None):
+            raise ValueError("sweep.window is required exactly when kind is date_window")
+        return self
 
     @property
     def param(self) -> str | None:
@@ -61,7 +103,9 @@ class SweepSpec(BaseModel):
             Raises:
                 (none)
         """
-        return None if self.kind == "none" else self.kind
+        if self.kind == "none":
+            return None
+        return "window" if self.kind == "date_window" else self.kind
 
 
 class CuratedSpec(BaseModel):
@@ -107,6 +151,11 @@ class DatasetSpec(BaseModel):
             fields:      list[str]     -- requested columns, non-empty
             text_fields: list[str]     -- subset stored as text; all other fields are numeric
             start:       str | None    -- dataset-specific download start (YYYYMMDD)
+            source:      "tushare" | "fred" | "akshare"  -- which API client fetches it (D-063)
+            known_on_rule: "as_is" | "next_session" | "period_end_lag"  -- how known_on becomes
+                                          the first usable session (EffectiveDateResolver)
+            release_lag_days: int >= 0 -- days after period end a value is published
+                                          (period_end_lag rule; monthly macro)
             extend_days: int >= 0      -- fetch this many calendar days past the run end
                                           (trade_cal: future sessions for expiry and next-day maths)
             curated:     CuratedSpec
@@ -130,12 +179,15 @@ class DatasetSpec(BaseModel):
         pipeline.CompactStep               -- injected type or call
         lake.DerivedViews                  -- injected type or call
         lake.ProjectCatalog                -- injected type or call
+        data_loading.DateWindowFetcher     -- injected type or call
+        lake.EffectiveDateResolver         -- injected type or call
 
     Test cases:
         TC-DS-001  datasets.yaml entries parse into DatasetSpec
         TC-DS-002  raw_filename is "all.parquet" for single calls, "<param>=<key>.parquet" otherwise
         TC-DS-003  primary key or known_on outside fields raises ValidationError
-        TC-DS-004  frame_schema() mirrors fields, text_fields and primary_key
+        TC-DS-004  build_schema() mirrors fields, text_fields and primary_key
+        TC-DS-005  source / known_on_rule / release_lag_days / date_window validation
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -149,6 +201,9 @@ class DatasetSpec(BaseModel):
     fields: list[str]
     text_fields: list[str]
     start: str | None = None
+    source: Source = "tushare"
+    known_on_rule: KnownOnRule = "as_is"
+    release_lag_days: int = Field(default=0, ge=0)
     extend_days: int = Field(default=0, ge=0)
     curated: CuratedSpec
 
@@ -163,6 +218,10 @@ class DatasetSpec(BaseModel):
         missing = used - declared
         if missing:
             raise ValueError(f"{self.name}: columns not in fields: {sorted(missing)}")
+        if self.known_on_rule != "as_is" and not self.known_on:
+            raise ValueError(f"{self.name}: known_on_rule {self.known_on_rule} needs known_on")
+        if self.release_lag_days and self.known_on_rule != "period_end_lag":
+            raise ValueError(f"{self.name}: release_lag_days needs known_on_rule period_end_lag")
         return self
 
     def get_raw_filename(self, key: str) -> str:

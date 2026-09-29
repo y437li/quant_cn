@@ -23,6 +23,7 @@ class QuantCnError(Exception):
         core.DataSourceError      -- subclass
         core.LakeError            -- subclass
         core.SchemaError          -- subclass
+        pipeline.PrefectRunner    -- injected type or call
 
     Test cases:
         TC-QCE-001  every project exception is a QuantCnError subclass
@@ -116,6 +117,7 @@ class PermissionDeniedError(DataSourceError):
     Used by:
         data_loading.TushareClient.query  -- vendor message matches a permission marker
         pipeline.LocalRunner.run          -- marks the step blocked and continues with the next
+        pipeline.PrefectRunner            -- injected type or call
 
     Test cases:
         TC-QCE-001  subclass of DataSourceError and QuantCnError

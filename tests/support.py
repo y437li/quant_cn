@@ -12,8 +12,11 @@ import pandas as pd
 
 from quant_cn.calculation.black76_model import Black76Model
 from quant_cn.core.base_api_client import BaseApiClient
+from quant_cn.core.base_step import BaseStep, ProgressHook
 from quant_cn.core.clock import Clock
 from quant_cn.core.dataset_spec import CuratedSpec, DatasetSpec, SweepSpec
+from quant_cn.core.exceptions import QuantCnError
+from quant_cn.core.step_report import StepReport
 from quant_cn.lake.fetch_log import FetchLog
 from quant_cn.lake.lake_catalog import LakeCatalog
 from quant_cn.lake.lake_query import LakeQuery
@@ -217,3 +220,25 @@ class SampleOptions:
                         }
                     )
         return pd.DataFrame(rows)
+
+
+class ScriptStep(BaseStep):
+    def __init__(self, name: str, error: QuantCnError | None = None) -> None:
+        self._name = name
+        self._error = error
+        self.ran = False
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    def list_units(self) -> list[str]:
+        return ["k"]
+
+    def run(self, run_id: str, progress: ProgressHook | None = None) -> StepReport:
+        self.ran = True
+        if self._error:
+            raise self._error
+        if progress:
+            progress("k", "fetched")
+        return StepReport(self._name, fetched=1)

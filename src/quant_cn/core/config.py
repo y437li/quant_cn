@@ -143,6 +143,7 @@ class Config(BaseModel):
         data_loading.FetcherFactory  -- enum values
         pipeline.DownloadPipeline    -- dataset order, start dates
         pipeline.CuratePipeline      -- injected type or call
+        cli.ServiceBuilder           -- injected type or call
 
     Test cases:
         TC-C-001  env > local.yaml > base.yaml precedence for lake.lake_root

@@ -87,7 +87,7 @@ class ProjectCatalog:
             (none at construction)
 
     Used by:
-        cli.QuantCnCli  -- `project-catalog` (make project-catalog, make check)
+        cli.ServiceBuilder  -- injected type or call
 
     Test cases:
         TC-PJC-001  every table and view exists after rebuild; class count equals registry rows

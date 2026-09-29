@@ -204,7 +204,7 @@ class CodeScanner:
         core.docs.NameChecker       -- scans src/, tests/, scripts/
         core.docs.ContractLinter    -- injected type or call
         core.docs.CodeTableBuilder  -- injected type or call
-        cli.QuantCnCli              -- injected type or call
+        cli.ServiceBuilder          -- injected type or call
 
     Test cases:
         TC-CS-001  classes, methods and module functions are listed with line spans

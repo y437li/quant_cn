@@ -30,7 +30,8 @@ class FetchLog(BaseFetchLog):
             LakeError  -- table cannot be created
 
     Used by:
-        cli.QuantCnCli  -- composition root; restore on rebuild
+        cli.QuantCnCli      -- composition root; restore on rebuild
+        cli.ServiceBuilder  -- injected type or call
 
     Test cases:
         TC-FL-001  mark_done then is_done round trip

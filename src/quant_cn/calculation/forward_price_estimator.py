@@ -22,7 +22,8 @@ class ForwardPriceEstimator:
             (none at construction)
 
     Used by:
-        calculation.VixCalculator  -- F and K0 per term
+        calculation.VixCalculator            -- F and K0 per term
+        calculation.GammaExposureCalculator  -- injected type or call
 
     Test cases:
         TC-FPE-001  parity-consistent quotes return the true forward; K0 is the strike just below F

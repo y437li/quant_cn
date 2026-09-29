@@ -7,6 +7,7 @@ Tests for `quant_cn.lake`. No network, no files outside `tmp_path`.
 |---|---|---|
 | `test_compactor.py` | tests for `compactor`, one function per TC ID |  |
 | `test_derived_views.py` | tests for `derived_views`, one function per TC ID |  |
+| `test_effective_date_resolver.py` | tests for `effective_date_resolver`, one function per TC ID |  |
 | `test_fetch_log.py` | tests for `fetch_log`, one function per TC ID |  |
 | `test_lake_catalog.py` | tests for `lake_catalog`, one function per TC ID |  |
 | `test_lake_query.py` | tests for `lake_query`, one function per TC ID |  |

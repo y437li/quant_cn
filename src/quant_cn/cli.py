@@ -44,9 +44,10 @@ from quant_cn.lake.run_log import RunLog
 from quant_cn.lake.trading_calendar import TradingCalendar
 from quant_cn.pipeline.curate_pipeline import DIGEST_FILE, CuratePipeline
 from quant_cn.pipeline.download_pipeline import DownloadPipeline
-from quant_cn.pipeline.runner import LocalRunner, PipelineReport
+from quant_cn.pipeline.runner import BaseRunner, LocalRunner, PipelineReport
 
 MIN_FREE_GB = 20
+MIN_CALENDAR_DAYS = 90
 
 
 class QuantCnCli:
@@ -73,6 +74,7 @@ class QuantCnCli:
         TC-QCC-002  download --dry-run on an empty lake exits 0 and lists datasets
         TC-QCC-003  curate on a mini lake exits 0 and reports derived digests unchanged on rerun
         TC-QCC-004  query runs read-only SQL and prints rows; a write statement fails with exit 1
+        TC-QCC-005  doctor reports the trade_cal horizon and warns under 90 days
     """
 
     def __init__(self, config: Config | None = None, console: Console | None = None) -> None:
@@ -118,11 +120,13 @@ class QuantCnCli:
         dl.add_argument("--dry-run", action="store_true")
         dl.add_argument("--force", action="store_true", help="refetch keys already done")
         dl.add_argument("--no-progress", action="store_true")
+        dl.add_argument("--runner", choices=["local", "prefect"], default="local")
         cp = sub.add_parser("compact", help="rebuild curated partitions from raw")
         cp.add_argument("--datasets", help="comma-separated subset (default: all)")
         cu = sub.add_parser("curate", help="compact, build derived views and PIT states, digests")
         cu.add_argument("--datasets", help="comma-separated subset to compact (default: all)")
         cu.add_argument("--no-progress", action="store_true")
+        cu.add_argument("--runner", choices=["local", "prefect"], default="local")
         sub.add_parser("rebuild", help="recreate the DuckDB catalog and fetch log from parquet")
         sub.add_parser("backup", help="rsync raw/ and the fetch log to lake.backup_target")
         pc = sub.add_parser("project-catalog", help="rebuild schema project from repo + markdown")
@@ -143,6 +147,7 @@ class QuantCnCli:
             ("inside a git tree", str(self._is_in_git(root))),
             ("TUSHARE_TOKEN", "set" if config.tushare.token else "MISSING"),
             ("backup target", str(config.lake.backup_target or "not set")),
+            ("calendar horizon", self._get_calendar_horizon(config)),
         ]
         table = Table("check", "value", title="quant_cn doctor")
         for row in rows:
@@ -151,11 +156,32 @@ class QuantCnCli:
         ok = exists and bool(config.tushare.token) and not self._is_in_git(root)
         return 0 if ok else 1
 
+    @staticmethod
+    def _get_calendar_horizon(config: Config) -> str:
+        catalog = LakeCatalog(config.lake.root, config.datasets, read_only=True)
+        try:
+            if not catalog.catalog_path.exists():
+                return "no catalog yet"
+            last = (
+                LakeQuery(catalog)
+                .sql("SELECT max(cal_date) AS d FROM curated.trade_cal")["d"]
+                .iloc[0]
+            )
+        except LakeError as exc:
+            return f"unknown ({str(exc)[:40]})"
+        finally:
+            catalog.close()
+        if not isinstance(last, str):
+            return "trade_cal not curated"
+        days = (DateCodec().to_date(last) - Clock().get_now().date()).days
+        warn = "" if days >= MIN_CALENDAR_DAYS else "  (low: refresh trade_cal)"
+        return f"{last} ({days} days ahead){warn}"
+
     def _run_download(self, config: Config, args: argparse.Namespace) -> int:
         catalog = LakeCatalog(config.lake.root, config.datasets)
         try:
-            pipeline = self._build_download_pipeline(
-                config, catalog, show_progress=not args.no_progress
+            pipeline = ServiceBuilder().build_download_pipeline(
+                config, catalog, show_progress=not args.no_progress, runner=args.runner
             )
             report = pipeline.run(
                 datasets=self._parse_list(args.datasets),
@@ -189,7 +215,9 @@ class QuantCnCli:
         digest_path = config.lake.root / "meta" / "manifest" / DIGEST_FILE
         before = self._read_digests(digest_path)
         try:
-            pipeline = self._build_curate_pipeline(config, catalog, not args.no_progress)
+            pipeline = ServiceBuilder().build_curate_pipeline(
+                config, catalog, not args.no_progress, args.runner
+            )
             report = pipeline.run(self._parse_list(args.datasets))
         finally:
             catalog.close()
@@ -206,16 +234,6 @@ class QuantCnCli:
             self._console.print(f"{view}: {digest} ({state})")
         return 0
 
-    def _build_curate_pipeline(
-        self, config: Config, catalog: LakeCatalog, show_progress: bool
-    ) -> CuratePipeline:
-        clock, query = Clock(), LakeQuery(catalog)
-        compactor = Compactor(catalog, query, ParquetWriter(config.lake.root), clock)
-        views = DerivedViews(catalog, query, config.datasets)
-        aligner = PitAligner(catalog, query, DateCodec())
-        runner = LocalRunner(RunLog(catalog, clock), show_progress=show_progress)
-        return CuratePipeline(config, compactor, views, aligner, query, catalog, runner)
-
     @staticmethod
     def _read_digests(path: Path) -> dict[str, str]:
         if not path.exists():
@@ -224,18 +242,9 @@ class QuantCnCli:
         return {str(k): str(v) for k, v in data.items()}
 
     def _run_project_catalog(self, config: Config, args: argparse.Namespace) -> int:
-        root = config.repo_root
-        tables, scanner = MarkdownTableReader(), CodeScanner()
-        code = CodeTableBuilder(root, scanner, DocstringParser(), RegistryReader(tables))
-        files = RepoFiles(root)
-        docs = DocTableBuilder(
-            root, files, IndexReader(tables), DecisionsReader(tables), PlanReader(tables)
-        )
         catalog = LakeCatalog(config.lake.root, config.datasets)
         try:
-            project = ProjectCatalog(
-                catalog, code, docs, config.datasets, ContractLinter(root), Clock()
-            )
+            project = ServiceBuilder().build_project_catalog(config, catalog)
             counts = project.rebuild(run_lint=not args.no_lint)
             stale = LakeQuery(catalog).sql("SELECT count(*) AS n FROM project.stale")["n"].iloc[0]
         finally:
@@ -280,19 +289,6 @@ class QuantCnCli:
         self._console.print(" ".join(cmd))
         return subprocess.run(cmd, check=False).returncode
 
-    def _build_download_pipeline(
-        self, config: Config, catalog: LakeCatalog, show_progress: bool
-    ) -> DownloadPipeline:
-        clock, codec = Clock(), DateCodec()
-        writer = ParquetWriter(config.lake.root)
-        fetch_log = FetchLog(catalog)
-        run_log = RunLog(catalog, clock)
-        calendar = TradingCalendar(LakeQuery(catalog))
-        client = TushareClient(config.tushare, clock)
-        factory = FetcherFactory(config, client, writer, fetch_log, run_log, clock, calendar, codec)
-        runner = LocalRunner(run_log, show_progress=show_progress)
-        return DownloadPipeline(config, factory, runner, catalog, fetch_log, clock, codec)
-
     def _render_report(self, report: PipelineReport) -> None:
         frame = report.to_frame()
         table = Table(*frame.columns, title=f"run {report.run_id}: {report.status}")
@@ -319,6 +315,118 @@ class QuantCnCli:
     @staticmethod
     def _is_in_git(path: Path) -> bool:
         return any((p / ".git").exists() for p in (path, *path.parents))
+
+
+class ServiceBuilder:
+    """
+    Purpose:
+        Wire services for the CLI commands (the composition root's constructors): download and
+        curate pipelines with the chosen runner, and the project catalog.
+
+    Contract:
+        Input:
+            (none)
+        Output:
+            instance; `build_download_pipeline`, `build_curate_pipeline`, `build_runner`,
+            `build_project_catalog`
+        Raises:
+            (none at construction)
+
+    Used by:
+        cli.QuantCnCli  -- download, curate, project-catalog commands
+
+    Test cases:
+        TC-QCC-002  download --dry-run on an empty lake exits 0 and lists datasets
+        TC-QCC-003  curate on a mini lake exits 0 and reports derived digests unchanged on rerun
+    """
+
+    def build_download_pipeline(
+        self, config: Config, catalog: LakeCatalog, show_progress: bool, runner: str = "local"
+    ) -> DownloadPipeline:
+        """
+        Purpose:
+            DownloadPipeline wired to the lake, Tushare client and chosen runner.
+
+        Contract:
+            Input:
+                config, catalog; show_progress: bool; runner: "local" | "prefect"
+            Output:
+                DownloadPipeline
+            Raises:
+                (none)
+        """
+        clock, codec = Clock(), DateCodec()
+        writer = ParquetWriter(config.lake.root)
+        fetch_log = FetchLog(catalog)
+        run_log = RunLog(catalog, clock)
+        calendar = TradingCalendar(LakeQuery(catalog))
+        client = TushareClient(config.tushare, clock)
+        factory = FetcherFactory(config, client, writer, fetch_log, run_log, clock, calendar, codec)
+        executor = self.build_runner(run_log, runner, show_progress)
+        return DownloadPipeline(config, factory, executor, catalog, fetch_log, clock, codec)
+
+    def build_curate_pipeline(
+        self, config: Config, catalog: LakeCatalog, show_progress: bool, runner_name: str = "local"
+    ) -> CuratePipeline:
+        """
+        Purpose:
+            CuratePipeline wired to compactor, derived views, PIT aligner and chosen runner.
+
+        Contract:
+            Input:
+                config, catalog; show_progress: bool; runner_name: "local" | "prefect"
+            Output:
+                CuratePipeline
+            Raises:
+                (none)
+        """
+        clock, query = Clock(), LakeQuery(catalog)
+        compactor = Compactor(catalog, query, ParquetWriter(config.lake.root), clock)
+        views = DerivedViews(catalog, query, config.datasets)
+        aligner = PitAligner(catalog, query, DateCodec())
+        runner = self.build_runner(RunLog(catalog, clock), runner_name, show_progress)
+        return CuratePipeline(config, compactor, views, aligner, query, catalog, runner)
+
+    def build_runner(self, run_log: RunLog, name: str, show_progress: bool) -> BaseRunner:
+        """
+        Purpose:
+            LocalRunner, or PrefectRunner for name "prefect" (optional extra "flows", D-022).
+
+        Contract:
+            Input:
+                run_log: RunLog; name: "local" | "prefect"; show_progress: bool
+            Output:
+                BaseRunner
+            Raises:
+                ModuleNotFoundError  -- prefect requested but the "flows" extra is not installed
+        """
+        if name == "prefect":
+            from quant_cn.pipeline import prefect_runner  # noqa: PLC0415 -- optional extra (D-022)
+
+            return prefect_runner.PrefectRunner(run_log)
+        return LocalRunner(run_log, show_progress=show_progress)
+
+    def build_project_catalog(self, config: Config, catalog: LakeCatalog) -> ProjectCatalog:
+        """
+        Purpose:
+            ProjectCatalog over the repository with the contract linter.
+
+        Contract:
+            Input:
+                config, catalog
+            Output:
+                ProjectCatalog
+            Raises:
+                (none)
+        """
+        root = config.repo_root
+        tables, scanner = MarkdownTableReader(), CodeScanner()
+        code = CodeTableBuilder(root, scanner, DocstringParser(), RegistryReader(tables))
+        files = RepoFiles(root)
+        docs = DocTableBuilder(
+            root, files, IndexReader(tables), DecisionsReader(tables), PlanReader(tables)
+        )
+        return ProjectCatalog(catalog, code, docs, config.datasets, ContractLinter(root), Clock())
 
 
 if __name__ == "__main__":

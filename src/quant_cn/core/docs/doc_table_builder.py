@@ -52,7 +52,7 @@ class DocTableBuilder:
 
     Used by:
         lake.ProjectCatalog  -- document tables
-        cli.QuantCnCli       -- injected type or call
+        cli.ServiceBuilder   -- injected type or call
 
     Test cases:
         TC-DTB-001  folders and files carry purposes from their indexes; unindexed files flagged

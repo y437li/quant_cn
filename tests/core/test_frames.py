@@ -4,7 +4,15 @@ import pandas as pd
 import pytest
 
 from quant_cn.core.exceptions import SchemaError
-from quant_cn.core.frames import FUNDAMENTALS_PIT, PRICE_PANEL, VIX_PANEL
+from quant_cn.core.frames import (
+    FUNDAMENTALS_PIT,
+    FUTURES_POSITIONING,
+    GEX_PANEL,
+    MARGIN_LADDER,
+    MARGIN_VINTAGES,
+    PRICE_PANEL,
+    VIX_PANEL,
+)
 from quant_cn.core.schema import Schema
 
 
@@ -29,3 +37,10 @@ def test_tc_fr_003_vix_panel() -> None:
     assert set(VIX_PANEL.primary_key) == {"trade_date", "underlying"}
     assert VIX_PANEL.text_columns == {"trade_date", "underlying", "clock", "quality_flag"}
     VIX_PANEL.validate(VIX_PANEL.build_empty())
+
+
+# TC-FR-004
+@pytest.mark.parametrize("frame", [GEX_PANEL, FUTURES_POSITIONING, MARGIN_VINTAGES, MARGIN_LADDER])
+def test_tc_fr_004_plan09_frames(frame: Schema) -> None:
+    assert set(frame.primary_key) <= set(frame.columns)
+    frame.validate(frame.build_empty())

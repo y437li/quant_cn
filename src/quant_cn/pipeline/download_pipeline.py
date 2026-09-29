@@ -124,7 +124,7 @@ class DownloadPipeline:
             (none at construction)
 
     Used by:
-        cli.QuantCnCli  -- `download` command
+        cli.ServiceBuilder  -- injected type or call
 
     Test cases:
         TC-DP-001  dry run lists keys and pending counts without API calls

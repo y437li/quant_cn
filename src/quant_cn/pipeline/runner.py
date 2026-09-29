@@ -36,6 +36,7 @@ class PipelineReport:
         cli.QuantCnCli                 -- prints the summary table
         pipeline.BaseRunner            -- injected type or call
         pipeline.CuratePipeline        -- injected type or call
+        pipeline.PrefectRunner         -- injected type or call
 
     Test cases:
         TC-LR-001  steps run in order and the report lists each
@@ -95,6 +96,8 @@ class BaseRunner(ABC):
         pipeline.LocalRunner       -- subclass
         pipeline.DownloadPipeline  -- injected runner type
         pipeline.CuratePipeline    -- injected type or call
+        pipeline.PrefectRunner     -- subclass
+        cli.ServiceBuilder         -- injected type or call
 
     Test cases:
         TC-LR-001  steps run in order and the report lists each
@@ -134,7 +137,7 @@ class LocalRunner(BaseRunner):
             (none at construction)
 
     Used by:
-        cli.QuantCnCli  -- composition root
+        cli.ServiceBuilder  -- injected type or call
 
     Test cases:
         TC-LR-001  steps run in order and the report lists each

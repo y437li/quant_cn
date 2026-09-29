@@ -26,7 +26,8 @@ class RiskFreeCurve:
             ValueError  -- empty frame or missing tenor columns
 
     Used by:
-        calculation.VixCalculator  -- rate per term
+        calculation.VixCalculator            -- rate per term
+        calculation.GammaExposureCalculator  -- injected type or call
 
     Test cases:
         TC-RFC-001  exact tenor hit converts percent ACT/360 simple to continuous

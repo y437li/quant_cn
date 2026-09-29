@@ -8,6 +8,9 @@ Tests for `quant_cn.calculation`; known answers from Black-76 synthetic chains (
 | `test_black76_model.py` | tests for `black76_model`, one function per TC ID |  |
 | `test_expiry_clock.py` | tests for `expiry_clock`, one function per TC ID |  |
 | `test_forward_price_estimator.py` | tests for `forward_price_estimator`, one function per TC ID |  |
+| `test_futures_positioning.py` | tests for `futures_positioning`, one function per TC ID |  |
+| `test_gamma_exposure_calculator.py` | tests for `gamma_exposure_calculator`, one function per TC ID |  |
+| `test_margin_ladder_estimator.py` | tests for `margin_ladder_estimator`, one function per TC ID |  |
 | `test_option_chain_builder.py` | tests for `option_chain_builder`, one function per TC ID |  |
 | `test_risk_free_curve.py` | tests for `risk_free_curve`, one function per TC ID |  |
 | `test_term_interpolator.py` | tests for `term_interpolator`, one function per TC ID |  |

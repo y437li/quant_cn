@@ -90,7 +90,7 @@ class PlanReader:
 
     Used by:
         core.docs.DocTableBuilder  -- plans and phases tables
-        cli.QuantCnCli             -- injected type or call
+        cli.ServiceBuilder         -- injected type or call
 
     Test cases:
         TC-PR-001  header, decisions and phases are read from a plan file

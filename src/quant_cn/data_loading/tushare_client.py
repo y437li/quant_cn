@@ -35,7 +35,7 @@ class TushareClient(BaseApiClient):
             (none at construction; an empty token fails at query time so dry runs need no token)
 
     Used by:
-        cli.QuantCnCli  -- composition root
+        cli.ServiceBuilder  -- injected type or call
 
     Test cases:
         TC-TC-001  pages until a short page and concatenates pages in order

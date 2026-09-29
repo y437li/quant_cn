@@ -3,7 +3,7 @@ export UV_PROJECT_ENVIRONMENT ?= $(HOME)/.venvs/quant_cn
 UV_RUN := uv run --env-file .env
 CLI := $(UV_RUN) python -m quant_cn.cli
 
-.PHONY: setup hooks lint lint-contracts test check doctor download download-dry compact curate lake-rebuild lake-backup notebook project-catalog query
+.PHONY: setup hooks lint lint-contracts test check doctor download download-dry compact curate lake-rebuild lake-backup notebook project-catalog query prefect-server
 
 setup:            ## create the venv from uv.lock; copy .env.example to .env if missing
 	uv sync --all-extras
@@ -30,8 +30,8 @@ check: lint test project-catalog  ## everything a change must pass; refreshes sc
 doctor:           ## lake root, free space, token presence
 	$(CLI) doctor
 
-download:         ## e.g. make download ARGS="--datasets daily --start 20260801"
-	$(CLI) download $(ARGS)
+download:         ## e.g. make download ARGS="--datasets daily --start 20260801" [RUNNER=prefect]
+	$(CLI) download $(if $(RUNNER),--runner $(RUNNER)) $(ARGS)
 
 download-dry:     ## list keys to fetch without calling the API
 	$(CLI) download --dry-run $(ARGS)
@@ -39,8 +39,8 @@ download-dry:     ## list keys to fetch without calling the API
 compact:          ## raw -> curated partitions
 	$(CLI) compact $(ARGS)
 
-curate:           ## compact raw -> curated, derived views, PIT states, indexes, digests
-	$(CLI) curate $(ARGS)
+curate:           ## compact raw -> curated, derived views, PIT states, indexes, digests [RUNNER=prefect]
+	$(CLI) curate $(if $(RUNNER),--runner $(RUNNER)) $(ARGS)
 
 lake-rebuild:     ## recreate catalog + fetch log from parquet, then curate (digests "unchanged" = identical)
 	$(CLI) rebuild
@@ -58,3 +58,6 @@ project-catalog:  ## rebuild schema `project` (repo tree, registry, plans, decis
 
 query:            ## read-only SQL against the lake catalog, e.g. make query SQL="SELECT * FROM project.todo"
 	$(CLI) query "$(SQL)"
+
+prefect-server:   ## start the local Prefect UI (http://127.0.0.1:4200); then use RUNNER=prefect
+	$(UV_RUN) prefect server start

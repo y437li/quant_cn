@@ -40,7 +40,7 @@ class ContractLinter:
         scripts/lint_contracts.py  -- command line (`make lint`, pre-commit)
         tests/test_contracts.py    -- the tree must pass
         lake.ProjectCatalog        -- injected type or call
-        cli.QuantCnCli             -- injected type or call
+        cli.ServiceBuilder         -- injected type or call
 
     Test cases:
         TC-CTL-001  the repository passes every group

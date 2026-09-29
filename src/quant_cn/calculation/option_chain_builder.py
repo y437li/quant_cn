@@ -35,7 +35,8 @@ class OptionChainBuilder:
             (none at construction)
 
     Used by:
-        calculation.VixCalculator  -- quotes per term
+        calculation.VixCalculator            -- quotes per term
+        calculation.GammaExposureCalculator  -- injected type or call
 
     Test cases:
         TC-OCB-001  join keeps only contracts with a master row; days = maturity - trade date

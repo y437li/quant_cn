@@ -36,3 +36,18 @@ def test_tc_ds_004_schema_mirrors_spec() -> None:
     assert schema.columns == ["ts_code", "trade_date", "close"]
     assert schema.primary_key == ["ts_code", "trade_date"]
     assert schema.get_dtype("close") == "float64" and schema.get_dtype("ts_code") == "string"
+
+
+# TC-DS-005
+def test_tc_ds_005_new_fields() -> None:
+    spec = Sample.build_spec(source="fred", known_on_rule="next_session")
+    assert spec.source == "fred" and spec.release_lag_days == 0
+    window = SweepSpec(kind="date_window", window="month")
+    assert window.param == "window"
+    assert Sample.build_spec(sweep=window).get_raw_filename("202608") == "window=202608.parquet"
+    with pytest.raises(ValidationError):
+        SweepSpec(kind="date_window")
+    with pytest.raises(ValidationError):
+        Sample.build_spec(release_lag_days=10)
+    with pytest.raises(ValidationError):
+        Sample.build_spec(known_on=None, known_on_rule="next_session")

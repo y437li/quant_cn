@@ -153,6 +153,7 @@ opt_basic:
 opt_daily:
   endpoint: opt_daily
   sweep: {kind: trade_date}
+  start: "20260801"
   primary_key: [ts_code, trade_date]
   known_on: trade_date
   fields: [ts_code, trade_date, exchange, pre_settle, pre_close, open, high, low, close, settle, vol,
@@ -180,3 +181,46 @@ fund_daily:
   fields: [ts_code, trade_date, pre_close, open, high, low, close, change, pct_chg, vol, amount]
   text_fields: [ts_code, trade_date]
   curated: {path: reference/fund_daily}
+
+# --- positioning and forced flows (plan 09): futures, top-20 holdings, margin; explicit starts ---
+
+fut_daily:
+  endpoint: fut_daily
+  sweep: {kind: trade_date, extra_params: {exchange: CFFEX}}
+  start: "20250101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, pre_close, pre_settle, open, high, low, close, settle, change1,
+           change2, vol, amount, oi, oi_chg]
+  text_fields: [ts_code, trade_date]
+  curated: {path: fut_daily, partition_by: trade_date}
+
+fut_holding:
+  endpoint: fut_holding
+  sweep: {kind: trade_date, extra_params: {exchange: CFFEX}}
+  start: "20250101"
+  primary_key: [trade_date, symbol, broker]
+  known_on: trade_date
+  fields: [trade_date, symbol, broker, vol, vol_chg, long_hld, long_chg, short_hld, short_chg]
+  text_fields: [trade_date, symbol, broker]
+  curated: {path: fut_holding, partition_by: trade_date}
+
+margin:
+  endpoint: margin
+  sweep: {kind: trade_date}
+  start: "20250101"
+  primary_key: [trade_date, exchange_id]
+  known_on: trade_date
+  fields: [trade_date, exchange_id, rzye, rzmre, rzche, rqye, rqmcl, rzrqye, rqyl]
+  text_fields: [trade_date, exchange_id]
+  curated: {path: margin, partition_by: trade_date}
+
+margin_detail:
+  endpoint: margin_detail
+  sweep: {kind: trade_date}
+  start: "20240101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [trade_date, ts_code, rzye, rqye, rzmre, rqyl, rzche, rqchl, rqmcl, rzrqye]
+  text_fields: [trade_date, ts_code]
+  curated: {path: margin_detail, partition_by: trade_date}

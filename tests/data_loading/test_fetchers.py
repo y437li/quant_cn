@@ -6,6 +6,7 @@ from quant_cn.core.config import Config
 from quant_cn.core.date_codec import DateCodec
 from quant_cn.data_loading.fetchers import (
     DateSweepFetcher,
+    DateWindowFetcher,
     EnumFetcher,
     PeriodSweepFetcher,
     SingleCallFetcher,
@@ -81,3 +82,27 @@ def test_tc_psf_001_period(config: Config, deps: tuple[object, ...]) -> None:
     f = PeriodSweepFetcher(config.get_dataset("income_vip"), *deps, codec=DateCodec())  # type: ignore[arg-type]
     assert f.list_keys("20250101", "20250930") == ["20250331", "20250630", "20250930"]
     assert f.build_params("20250630", "", "") == {"period": "20250630"}
+
+
+# TC-DWF-001
+def test_tc_dwf_001_monthly(deps: tuple[object, ...]) -> None:
+    spec = Sample.build_spec(sweep={"kind": "date_window", "window": "month"})
+    f = DateWindowFetcher(spec, *deps, codec=DateCodec())  # type: ignore[arg-type]
+    assert f.list_keys("20260115", "20260310") == ["202601", "202602", "202603"]
+    assert f.build_params("202601", "20260115", "20260310") == {
+        "start_date": "20260115",
+        "end_date": "20260131",
+    }
+    assert f.build_params("202602", "20260115", "20260310")["end_date"] == "20260228"
+    assert f.build_params("202603", "20260115", "20260310")["end_date"] == "20260310"
+
+
+# TC-DWF-002
+def test_tc_dwf_002_yearly(deps: tuple[object, ...]) -> None:
+    spec = Sample.build_spec(sweep={"kind": "date_window", "window": "year"})
+    f = DateWindowFetcher(spec, *deps, codec=DateCodec())  # type: ignore[arg-type]
+    assert f.list_keys("20240601", "20260930") == ["2024", "2025", "2026"]
+    assert f.build_params("2025", "20240601", "20260930") == {
+        "start_date": "20250101",
+        "end_date": "20251231",
+    }

@@ -51,3 +51,14 @@ def test_tc_qcc_004_query(config: Config) -> None:
     assert (
         QuantCnCli(config, Console(record=True)).run(["query", "CREATE TABLE meta.t (a INT)"]) == 1
     )
+
+
+# TC-QCC-005
+def test_tc_qcc_005_calendar_horizon(config: Config) -> None:
+    writer = ParquetWriter(config.lake.root)
+    writer.write_raw(config.get_dataset("trade_cal"), "all", Sample.build_trade_cal(["20260105"]))
+    QuantCnCli(config, Console(record=True)).run(["curate", "--no-progress"])
+    console = Console(record=True, width=200)
+    QuantCnCli(config, console).run(["doctor"])
+    text = console.export_text()
+    assert "calendar horizon" in text and "20260105" in text and "refresh trade_cal" in text
