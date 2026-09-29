@@ -34,6 +34,23 @@ history is realistic to pull, not something the new project reads.
 | Lock-up expiries | `share_float` | `ts_code, float_date, holder_name` | `ann_date` | 2018 → ~2035 | 13 k |
 | Shareholder count | `stk_holdernumber` | `ts_code, end_date` | `ann_date` | 2018Q1+ | 162 k |
 
+### 1b. Datasets added by the new project (lake coverage as of 2026-09-28)
+
+| Dataset | Endpoint | Primary key | "Known on" date (PIT) | Lake coverage | Rows | Decision |
+|---|---|---|---|---|---|---|
+| Shenwan 2021 tree | `index_classify` (`src=SW2021`) | `index_code` | — (reference) | L1 31, L2 134, L3 346 | 511 | D-068 |
+| Shenwan membership | `index_member_all` (`is_new` Y + N) | `ts_code, l3_code, in_date` | `in_date` (member while `in_date <= d < out_date`) | in_date 1984 → 2026-09-24 | 7,920 | D-068 |
+| Index weights | `index_weight` (300/500/1000/50) | `index_code, con_code, trade_date` | `trade_date` (month-end snapshot) | 2010-01-29 → 2026-08-31 | 313 k | D-069 |
+| Shenwan index bars | `sw_daily` | `ts_code, trade_date` | `trade_date` close | 2019-01-02 → 2026-09-28, 439 indices | 930 k | D-068 |
+| Option contracts | `opt_basic` (SSE/SZSE/CFFEX) | `ts_code` | `list_date` | listed 2015-02-09 → 2026-09-24 | 31 k | plan 03 |
+| Option bars | `opt_daily` | `ts_code, trade_date` | `trade_date` close | 2026-08-03 → 2026-09-28 | 1.03 M | plan 03 |
+| SHIBOR | `shibor` | `date` | `date` (11:00 fixing) | 2015-01-04 → 2026-09-28 | 2,907 | D-070 |
+| Option-ETF bars | `fund_daily` (9 option ETFs) | `ts_code, trade_date` | `trade_date` close | 2019-01-02 → 2026-09-28 | 16 k | plan 03 |
+| CFFEX futures bars | `fut_daily` | `ts_code, trade_date` | `trade_date` close | 2025-01-02 → 2026-09-28 | 27 k | plan 09 |
+| CFFEX top-20 holdings | `fut_holding` | `trade_date, symbol, broker` | `trade_date` evening | 2025-01-02 → 2026-09-28 | 306 k | plan 09 |
+| Margin totals | `margin` | `trade_date, exchange_id` | `trade_date` (published next morning) | 2025-01-02 → 2026-09-28 | 1,266 | plan 09 |
+| Margin by stock | `margin_detail` | `ts_code, trade_date` | `trade_date` (published next morning) | 2024-01-02 → 2026-09-28 | 2.73 M | plan 09 |
+
 Rough size: one full-market daily table since 2019 ≈ 9 M rows ≈ 400–600 MB as zstd parquet.
 
 ## 2. Units (Tushare conventions — easy to get wrong)
@@ -106,6 +123,16 @@ Verify any unit you rely on against the endpoint's doc page before building on i
 - **Moves above 31%** on ~150 SH/SZ bars after a stock's first five sessions are resumptions after long
   suspensions, not errors; `stk_limit` does not apply on the resumption day for some regimes.
 - **`stock_basic(list_status='P')`** returned empty in 2026-09: no currently paused listings; keep requesting it.
+- **Tushare row caps.** `shibor` returns at most 2,000 rows per call and does not page (lake silently started
+  2018-08 instead of 2015; D-070). Paged endpoints refuse `offset > 100000` (`index_weight` for CSI 1000 since 2014;
+  D-069). Sweep long ranges by yearly `date_window`; treat a round-number row count as truncated until checked.
+- **Shenwan 2021 history is reconstructed.** The scheme was published in 2021-07; earlier `in_date`s are vendor
+  back-fills, and ~2% of listed SH/SZ stocks have no membership before their first record (36 of 49 such stocks on
+  2019-06-28 start exactly at 2021-07, the rest at a July annual review). 0 unmapped on 2026-09-24. Grouping before
+  2021-07 is usable but not PIT (D-068).
+- **`sw_daily` weighting.** Member returns weighted by previous-day free-float cap (`close × free_share`) match the
+  Shenwan L1 indices within 2.5 bp median, 90% of L1-days within 10 bp, 98% within 25 bp (2024–2026); weighting by
+  `circ_mv` is off by 9.5 bp median. Shenwan uses tiered free-float weights.
 - **Statements** carry an original and a corrected version per filing (`update_flag`); it must be requested and
   is part of the primary key (D-038), otherwise compaction drops real data.
 

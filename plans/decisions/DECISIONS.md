@@ -63,6 +63,8 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 | D-057 | 2026-09-28 | GEX dealer-sign default: dealers long calls, short puts; sign is a parameter, OI changes shown | accepted | calculation.GammaExposureCalculator, plan 09 |
 | D-058 | 2026-09-28 | Margin vintages FIFO at entry close; liquidation = entry·1.3/(1+1.0), parameters flagged | accepted | calculation.MarginLadderEstimator, plan 09 |
 | D-059 | 2026-09-28 | `fut_holding` treated as gross top-20 broker aggregate, not client intent | accepted | calculation.FuturesPositioning, plan 09 |
+| D-067 | 2026-09-28 | `RUNNER=prefect` defaults `PREFECT_API_URL` to the local server in the Makefile; `.env` may override | accepted | Makefile, .env.example |
+| D-066 | 2026-09-28 | FIFO margin vintages accepted as-is; seeded pre-window balance retires within weeks, ladder driven by 2024+ entries | accepted | calculation.MarginLadderEstimator, plan 09 |
 | D-065 | 2026-09-28 | Data sources: AkShare gap-filler, official exchange lists, BaoStock verification, NBS/PBOC release dates; candidates documented | accepted | plans/reference/DATA_SOURCES.md, plan 11 ph10 |
 | D-064 | 2026-09-28 | Prefect 3 chosen as the flow tool now; `PrefectRunner` built, `--runner local\|prefect`, optional extra `flows` | accepted (user choice via executor) | pipeline.PrefectRunner, Makefile, .env.example |
 | D-063 | 2026-09-28 | Multi-source data loading (`DatasetSpec.source`, FRED client, date-window fetcher, known-on rules); plan 11 consolidates all dataset additions | accepted (user assignment) | DATA_LOADING_DESIGN §3c, plan 11 |
@@ -524,3 +526,41 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Alternatives: integrate a paid terminal now (rejected: cost before need); rely on Tushare alone (rejected: release dates, lending lists and cross-checks are cheap and valuable).
 - Consequences: verification sources never overwrite primaries (`raw/<source>_<dataset>/` + quality view); licence terms recorded before integration.
 - Links: plans/reference/DATA_SOURCES.md, plans/execution/11_lake_expansion.md phase 10, ETF_PAIRS_DESIGN §7
+
+### D-066 FIFO margin vintages accepted as-is
+- Context: with FIFO retirement (D-058), the balance existing before the `margin_detail` window (2024-01) is retired within weeks, so by 2026-09 every open vintage has an entry price from 2024-01 onward; results do not depend on an unknown pre-window cost basis.
+- Decision: keep FIFO and the (1.3, 1.0) parameters as the default; the notebook keeps the parameter sensitivity table; extending `margin_detail` to 2019 is optional and only for a longer event-study window. Accepted (user can reverse).
+- Alternatives: pro-rata retirement (rejected: keeps a stale seeded basis alive indefinitely).
+- Consequences: none for code; documented in plan 09 log.
+- Links: D-058, plans/execution/09_positioning_flows.md
+
+### D-067 Prefect API URL default
+- Context: without `PREFECT_API_URL` the CLI starts a throwaway Prefect server and the run does not appear in the UI.
+- Decision: when `RUNNER=prefect`, the Makefile exports `PREFECT_API_URL=http://127.0.0.1:4200/api` unless `.env` sets it; `.env.example` keeps the line commented as an override; `make doctor` warns if `RUNNER=prefect` and the server is unreachable. Accepted.
+- Alternatives: require users to copy the line into `.env` (rejected: one more manual step to forget).
+- Consequences: `make download RUNNER=prefect` always lands in the local UI when `make prefect-server` is running.
+- Links: D-064, Makefile
+
+### D-068 Sector and index-composition datasets (plan 11 phase 2)
+- Context: tier checks on 2026-09-28 (one call each): `index_classify`, `index_member_all`, `index_weight`, `sw_daily` all accessible. `index_member_all` returns current members only by default; historical members (with `out_date`) need `is_new=N`. `index_weight` pages correctly over a 2010–2026 range (CSI 300: 60,000 rows, 300 per month-end, 200 months).
+- Decision: new enum sweep kinds `index_code` and `is_new` (kind name = API parameter, as `exchange`/`list_status`). `index_classify` one call `src=SW2021`; `index_member_all` swept by `is_new` Y/N, key `(ts_code, l3_code, in_date)`, known-on `in_date`; `index_weight` per index (300/500/1000/50) over the whole range from 2010 with `refresh: overwrite` (EnumFetcher skips done keys, so append would never pick up new months); `sw_daily` swept by `trade_date` from 2019. `sw_daily` is fetched directly, so the member-computed fallback is not built; the 10 bp/day reconciliation is still run. Accepted.
+- PIT caveat: Shenwan 2021 was published in 2021-07; earlier `in_date`s are vendor reconstructions. Industry history before 2021-07 is usable for grouping and neutralisation but is not what investors saw then; factor tests before 2021-07 must say so.
+- Alternatives: `index_weight` by monthly date window (needs a second key dimension per index; rejected for now); `index_member_all` swept by `l1_code` (31 × 2 calls instead of 2).
+- Consequences: each download refetches ~150k `index_weight` rows (~4 paged calls per index); `sw_daily` adds ~440 rows per session.
+- Links: D-047, D-049, D-063, plan 11 phase 2
+
+### D-069 `index_weight` by index × yearly window (supersedes the index_weight part of D-068)
+- Status: accepted by execution (2026-09-28).
+- Context: the first live run failed on CSI 1000: Tushare refuses `offset > 100000` ("offset不能大于100000"), and 000852.SH has ~150k weight rows since 2014. One range call per index only works below 100k rows (CSI 300: 60k).
+- Decision: `sweep.value_param` (date_window only) adds a second key dimension: `DateWindowFetcher` fetches each window once per value, keys `<window>_<value>` (e.g. `2025_000852.SH`), window-major. `index_weight` uses yearly windows × `weight_indices` (≤ 12k rows per call), `refresh: append` with `refetch_recent: 4` (current year of each index). The `index_code` enum kind from D-068 is dropped (unused); `is_new` stays. Raw files of the failed run (`index_code=000300.SH`, `=000905.SH`) moved out of the lake before the rerun; `make lake-rebuild` drops their fetch-log rows.
+- Alternatives: monthly windows (4× the calls, no benefit); keep overwrite (68 calls every run).
+- Consequences: 68 keys for the backfill, 4 per later run. The same mechanism serves `fund_nav` per ETF (phase 3).
+- Links: D-063, D-068, plan 11 phase 2
+
+### D-070 `shibor` by yearly window (row cap without paging)
+- Status: accepted by execution (2026-09-28).
+- Context: `shibor` was one range call from 2015 (`kind: none`, `range_params`). The endpoint returns at most 2,000 rows and does not page, so the lake held 2018-08-21 → 2026-09-28 only (exactly 2,000 rows), silently missing 2015–2018. Found in the phase 2 coverage check.
+- Decision: `shibor` swept by `date_window` (year), `refresh: append`, `refetch_recent: 1`. The old `raw/shibor/all.parquet` moved out of the lake; refetched 12 windows, 2,907 rows from 2015-01-04. Rule for new datasets: any single range call whose row count is a round number (2,000 / 5,000 / 6,000 …) is treated as truncated until proven otherwise; the coverage notebook (phase 9) checks first date against `start` for every dataset.
+- Alternatives: none needed; date_window already exists (D-063).
+- Consequences: VIX rates before 2018-08 now available; `derived` digests unaffected (shibor is not in derived views).
+- Links: D-063, D-069, plan 03, plan 11 phase 9

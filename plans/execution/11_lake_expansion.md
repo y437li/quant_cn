@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | doing (phase 1 code complete) — approved 2026-09-28 by user instruction ("design the data_loading lake for my asks and assign to the executor"); assigned to quant-cn-b7 (Opus) |
+| Status | doing — phase 1 done (5e7c06f); phases 2–10 next — approved 2026-09-28 by user instruction ("design the data_loading lake for my asks and assign to the executor"); assigned to quant-cn-b7 (Opus) |
 | Owner | executor quant-cn-b7 (build) / quant-cn-a1 (design, record, monitor) |
 | Created | 2026-09-28 |
 | Notion | pending |
@@ -23,8 +23,8 @@ layer is multi-source and every new endpoint is permission-checked before any ba
 
 | # | Phase | Deliverable | Done criterion | Depends on | Status |
 |---|---|---|---|---|---|
-| 1 | Loader features | `DatasetSpec.source`, `known_on_rule`, `release_lag_days`, `values_from_dataset`; `DateWindowFetcher`; `FetcherFactory` source-aware; curated schemas for the plan-03 option/rate datasets and `download.order` completed | tests for each new kind/rule (incl. a FRED-style next-session rule and a monthly release lag); `make check` green | — | doing: code complete, uncommitted; commit + catalog refresh pending lake free |
-| 2 | Sectors and composition | `index_classify` (SW2021 L1–L3), `index_member_all`, `index_weight` (300/500/1000/50, 2010+), `sw_daily` after a one-call tier check (fallback: member-computed L1 returns as a derived view) | every universe stock maps to one L1 industry on 3 sample dates; membership PIT test on an `out_date`; `sw_daily` vs member-computed within 10 bp/day or fallback documented | 1 | todo |
+| 1 | Loader features | `DatasetSpec.source`, `known_on_rule`, `release_lag_days`, `values_from_dataset`; `DateWindowFetcher`; `FetcherFactory` source-aware; curated schemas for the plan-03 option/rate datasets and `download.order` completed | tests for each new kind/rule (incl. a FRED-style next-session rule and a monthly release lag); `make check` green | — | done (5e7c06f) |
+| 2 | Sectors and composition | `index_classify` (SW2021 L1–L3), `index_member_all`, `index_weight` (300/500/1000/50, 2010+), `sw_daily` after a one-call tier check (fallback: member-computed L1 returns as a derived view) | every universe stock maps to one L1 industry on 3 sample dates; membership PIT test on an `out_date`; `sw_daily` vs member-computed within 10 bp/day or fallback documented | 1 | doing: downloads running (~1 h) |
 | 3 | ETFs and funds | `fund_basic` (E), `fund_daily` by `trade_date` (drop the `option_etfs` enum, keep raw), `fund_nav`, `fund_share`, `margin_secs` (verify endpoint name; if absent, document) | ETF count per date plausible; `fund_share × nav` vs `fund_daily` market value within 2% on a sample; premium/discount computable for 510300 | 1 | todo |
 | 4 | Futures and gold | `fut_basic` all exchanges; `fut_daily`, `fut_holding` for INE/SHFE/DCE/CZCE 2019+; `fut_mapping`; `sge_basic`, `sge_daily` | every product has a main-contract mapping each session; top-20 coverage share per exchange reported; SGE Au99.99 vs SHFE AU front within 1% on a sample | 1 | todo |
 | 5 | Domestic macro | `yc_cb`, `fx_daily`, `shibor_lpr`, `cn_cpi`, `cn_ppi`, `cn_pmi`, `cn_m` with `release_lag_days` | PIT test: a CPI print is not visible before period end + lag; yield curve has every session | 1 | todo |
@@ -53,6 +53,10 @@ layer is multi-source and every new endpoint is permission-checked before any ba
 - Monthly macro release dates are approximated by lag rules; flagged in `known_on`.
 - `fund_daily` by date replaces the enum: existing raw files stay; the raw key changes from `ts_code=` to `trade_date=`, so the catalog view must union both or the old files move to `external/`.
 
+## Open items
+- `report_rc`: access OK but 66 rows for 20260925; verify paging/row caps and coverage (compare a few well-covered stocks) before scheduling the 2019+ backfill in phase 7.
+- `FRED_API_KEY` missing from `.env`; needed before phase 6 (user).
+
 ## Open questions
 None at assignment; DATA_LOADING_DESIGN §3c recommendations adopted (FRED first, AkShare only on proven need; small commodity set first, all exchanges' `fut_daily` anyway since it is one sweep).
 
@@ -60,6 +64,8 @@ None at assignment; DATA_LOADING_DESIGN §3c recommendations adopted (FRED first
 
 | Date | Phase | Change |
 |---|---|---|
-| 2026-09-28 | 1 | Executor: phase 1 code complete, uncommitted: `DatasetSpec.source/known_on_rule/release_lag_days`, `DateWindowFetcher` (`date_window` sweep), `values_from_dataset`, source-aware `FetcherFactory`, `lake.EffectiveDateResolver` (as_is / next_session / period_end_lag), plan 09 datasets in `download.order` with explicit starts, `FRED_API_KEY` in `.env.example`. `make check`: ruff/mypy clean, lint_contracts 0, 251 passed; project-catalog step blocked only by the margin_detail download lock (475/~665 sessions). Lake busy |
+| 2026-09-28 | 2 | Phase 2 started: index_classify, index_member_all, index_weight, sw_daily (1,878 sessions from 2019) downloading; tier checks all OK; new sweep kinds is_new / index_code; SW2021 classification PIT caveat before 2021-07 (D-068, appended by quant-cn-b7). D-067 implemented (PREFECT_ENV precedence shell > .env > default, doctor row TC-QCC-006), uncommitted |
+| 2026-09-28 | 7 | report_rc tier check (one call, report_date=20260925): ACCESS OK, 66 rows, columns ts_code, name, report_date, org_name, quarter, eps, np, tp, rating. 66 rows for one Friday is suspiciously low: check per-call row capping / paging and coverage before any backfill (open item) |
+| 2026-09-28 | 1 | Phase 1 done and committed (5e7c06f): `DatasetSpec.source/known_on_rule/release_lag_days`, `DateWindowFetcher` (`date_window` sweep), `values_from_dataset`, source-aware `FetcherFactory`, `lake.EffectiveDateResolver` (as_is / next_session / period_end_lag), plan 09 datasets in `download.order` with explicit starts, `FRED_API_KEY` in `.env.example`. `make check`: ruff/mypy clean, lint_contracts 0, 251 passed; project-catalog step blocked only by the margin_detail download lock (475/~665 sessions). Lake busy |
 | 2026-09-28 | 10 | Phase 10 added (D-065): AkShare gap-filler, official lending lists, BaoStock verification, official release dates; DATA_SOURCES.md reference |
 | 2026-09-28 | — | Designed and assigned to quant-cn-b7 by user instruction; monitored by quant-cn-a1 |
