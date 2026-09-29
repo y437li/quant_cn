@@ -25,7 +25,7 @@ class FetchLog(BaseFetchLog):
         Input:
             catalog: LakeCatalog  -- provides the connection and raw file listing
         Output:
-            instance; BaseFetchLog API plus `rebuild_from_mirror`, `mirror_path`
+            instance; BaseFetchLog API plus `rebuild_from_mirror`, `remove_orphans`, `mirror_path`
         Raises:
             LakeError  -- table cannot be created
 
@@ -39,6 +39,7 @@ class FetchLog(BaseFetchLog):
         TC-FL-003  pending keeps input order and drops done keys
         TC-FL-004  restore adds raw files missing from the mirror
         TC-FL-005  mark_done twice for a key keeps one row with the latest values
+        TC-FL-006  remove_orphans drops rows with rows > 0 whose raw file is gone, keeps empty keys
     """
 
     def __init__(self, catalog: LakeCatalog) -> None:
@@ -148,6 +149,37 @@ class FetchLog(BaseFetchLog):
         self.save()
         count = self._query(f"SELECT count(*) FROM {_TABLE}")[0][0]
         return int(str(count))
+
+    def remove_orphans(self) -> dict[str, list[str]]:
+        """
+        Purpose:
+            Drop done-rows whose raw file no longer exists (D-073): keys of a replaced sweep layout
+            or raw files moved out of the lake. Empty keys (n_rows = 0, no file by design) and
+            datasets no longer configured are kept. Saves the mirror when anything was removed.
+
+        Contract:
+            Input:
+                (none)
+            Output:
+                dict[str, list[str]]  -- dataset -> removed keys (sorted); empty when clean
+            Raises:
+                LakeError  -- query or mirror write failed
+        """
+        removed: dict[str, list[str]] = {}
+        for spec in self._catalog.datasets.values():
+            on_disk = {p.stem.split("=", 1)[-1] for p in self._catalog.list_raw_files(spec)}
+            rows = self._query(
+                f"SELECT key FROM {_TABLE} WHERE dataset = ? AND n_rows > 0 ORDER BY key",
+                [spec.name],
+            )
+            orphans = [str(r[0]) for r in rows if str(r[0]) not in on_disk]
+            for key in orphans:
+                self._query(f"DELETE FROM {_TABLE} WHERE dataset = ? AND key = ?", [spec.name, key])
+            if orphans:
+                removed[spec.name] = orphans
+        if removed:
+            self.save()
+        return removed
 
     def _ensure_table(self) -> None:
         self._query(

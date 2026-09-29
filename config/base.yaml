@@ -38,7 +38,11 @@ download:
     - cashflow_vip
     - shibor
     - opt_basic
+    - fund_basic
     - fund_daily
+    - fund_nav
+    - fund_share
+    - margin_secs
     - opt_daily
     - fut_daily
     - fut_holding
@@ -53,6 +57,3 @@ enum_values:
   indices: ["000001.SH", "000016.SH", "000300.SH", "000852.SH", "000905.SH", "399001.SZ", "399006.SZ"]
   # index_weight constituents (plan 11 phase 2): CSI 300 / 500 / 1000, SSE 50
   weight_indices: ["000300.SH", "000905.SH", "000852.SH", "000016.SH"]
-  # ETFs with listed options (SSE + SZSE): underlying prices for the VIX checks
-  option_etfs: ["510050.SH", "510300.SH", "510500.SH", "588000.SH", "588080.SH",
-                "159901.SZ", "159915.SZ", "159919.SZ", "159922.SZ"]

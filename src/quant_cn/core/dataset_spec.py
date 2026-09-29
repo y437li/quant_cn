@@ -16,9 +16,11 @@ SweepKind = Literal[
     "is_new",
     "trade_date",
     "ann_date",
+    "nav_date",
     "period",
     "date_window",
 ]
+DATE_KINDS = ("trade_date", "ann_date", "nav_date")
 ENUM_KINDS = ("list_status", "ts_code", "exchange", "is_new")
 Source = Literal["tushare", "fred", "akshare"]
 KnownOnRule = Literal["as_is", "next_session", "period_end_lag"]

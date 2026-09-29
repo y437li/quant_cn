@@ -143,8 +143,9 @@ class EnumFetcher(BaseFetcher):
 class DateSweepFetcher(BaseFetcher):
     """
     Purpose:
-        Whole-market daily sweeps: trade_date keys are trading days (daily, adj_factor,
-        daily_basic, moneyflow, stk_limit); ann_date keys are weekdays (event datasets).
+        Whole-market daily sweeps: trade_date and nav_date keys are trading days (daily,
+        adj_factor, daily_basic, moneyflow, stk_limit, fund_nav); ann_date keys are weekdays
+        (event datasets).
 
     Contract:
         Input:
@@ -157,11 +158,12 @@ class DateSweepFetcher(BaseFetcher):
             (none)
 
     Used by:
-        data_loading.FetcherFactory.build  -- sweep kinds "trade_date", "ann_date"
+        data_loading.FetcherFactory.build  -- sweep kinds in DATE_KINDS
 
     Test cases:
         TC-DSF-001  trade_date keys are calendar sessions in range
         TC-DSF-002  ann_date keys are weekdays in range
+        TC-DSF-003  nav_date keys are trading days, passed as nav_date + extra params
     """
 
     def __init__(
@@ -182,7 +184,7 @@ class DateSweepFetcher(BaseFetcher):
     def list_keys(self, start: str, end: str) -> list[str]:
         """
         Purpose:
-            Trading days (trade_date) or weekdays (ann_date) in [start, end].
+            Trading days (trade_date, nav_date) or weekdays (ann_date) in [start, end].
 
         Contract:
             Input:
@@ -193,7 +195,7 @@ class DateSweepFetcher(BaseFetcher):
                 LakeError   -- trade_cal missing (trade_date sweeps)
                 ValueError  -- malformed dates
         """
-        if self.spec.sweep.kind == "trade_date":
+        if self.spec.sweep.kind in ("trade_date", "nav_date"):
             return self._calendar.list_sessions(start, end)
         return self._codec.list_weekdays(start, end)
 

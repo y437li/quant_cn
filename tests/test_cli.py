@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import json
+
 import pytest
 from rich.console import Console
 
 from quant_cn.cli import QuantCnCli
 from quant_cn.core.config import Config
+from quant_cn.lake.fetch_log import FetchLog
 from quant_cn.lake.lake_catalog import LakeCatalog
 from quant_cn.lake.parquet_writer import ParquetWriter
 from tests.support import Sample
@@ -72,3 +75,21 @@ def test_tc_qcc_006_prefect_unreachable(config: Config, monkeypatch: pytest.Monk
     code = QuantCnCli(config, console).run(["doctor"])
     assert "unreachable" in console.export_text()
     assert code == QuantCnCli(config, Console(record=True)).run(["doctor"])
+
+
+# TC-QCC-007
+def test_tc_qcc_007_rebuild_orphans(config: Config) -> None:
+    writer = ParquetWriter(config.lake.root)
+    writer.write_raw(config.get_dataset("trade_cal"), "all", Sample.build_trade_cal(["20260105"]))
+    QuantCnCli(config, Console(record=True)).run(["curate", "--no-progress"])
+    catalog = LakeCatalog(config.lake.root, config.datasets)
+    FetchLog(catalog).mark_done("trade_cal", "gone", 3, None)
+    FetchLog(catalog).save()
+    catalog.close()
+    console = Console(record=True, width=200)
+    assert QuantCnCli(config, console).run(["rebuild"]) == 0
+    assert "1 orphan rows" in console.export_text()
+    record = json.loads(
+        (config.lake.root / "meta" / "manifest" / "fetch_log_orphans.json").read_text()
+    )
+    assert record["removed"] == {"trade_cal": ["gone"]}

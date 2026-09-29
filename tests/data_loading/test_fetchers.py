@@ -126,3 +126,21 @@ def test_tc_dwf_003_value_param(deps: tuple[object, ...]) -> None:
         "start_date": "20250301",
         "end_date": "20251231",
     }
+
+
+# TC-DSF-003
+def test_tc_dsf_003_nav_date_keys(lake: MiniLake, config: Config, deps: tuple[object, ...]) -> None:
+    lake.writer.write_raw(
+        config.get_dataset("trade_cal"),
+        "all",
+        Sample.build_trade_cal(["20260827", "20260828"], ["20260829"]),
+    )
+    lake.catalog.refresh_views()
+    f = DateSweepFetcher(
+        config.get_dataset("fund_nav"),
+        *deps,
+        calendar=TradingCalendar(lake.query),
+        codec=DateCodec(),
+    )  # type: ignore[arg-type]
+    assert f.list_keys("20260827", "20260831") == ["20260827", "20260828"]
+    assert f.build_params("20260828", "", "") == {"market": "E", "nav_date": "20260828"}

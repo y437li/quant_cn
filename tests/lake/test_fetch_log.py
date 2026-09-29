@@ -47,3 +47,15 @@ def test_tc_fl_005_upsert(lake: MiniLake) -> None:
     lake.fetch_log.mark_done("daily", "k", 7, None)
     rows = lake.query.sql("SELECT n_rows FROM meta.fetch_log WHERE key = 'k'")
     assert rows["n_rows"].tolist() == [7]
+
+
+# TC-FL-006
+def test_tc_fl_006_remove_orphans(lake: MiniLake, config: Config) -> None:
+    daily = config.get_dataset("daily")
+    path = lake.writer.write_raw(daily, "20260828", Sample.build_bars("20260828"))
+    lake.fetch_log.mark_done("daily", "20260828", 2, path)
+    lake.fetch_log.mark_done("daily", "20260827", 5, None)  # file never written / moved out
+    lake.fetch_log.mark_done("daily", "20260826", 0, None)  # empty key: kept
+    assert lake.fetch_log.remove_orphans() == {"daily": ["20260827"]}
+    assert lake.fetch_log.read_done_keys("daily") == {"20260828", "20260826"}
+    assert lake.fetch_log.remove_orphans() == {}

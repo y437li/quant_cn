@@ -51,6 +51,7 @@ from quant_cn.pipeline.runner import BaseRunner, LocalRunner, PipelineReport
 MIN_FREE_GB = 20
 MIN_CALENDAR_DAYS = 90
 DEFAULT_PREFECT_API_URL = "http://127.0.0.1:4200/api"  # D-067
+ORPHAN_FILE = "fetch_log_orphans.json"  # D-073
 
 
 class QuantCnCli:
@@ -79,6 +80,7 @@ class QuantCnCli:
         TC-QCC-004  query runs read-only SQL and prints rows; a write statement fails with exit 1
         TC-QCC-005  doctor reports the trade_cal horizon and warns under 90 days
         TC-QCC-006  doctor warns (exit code unchanged) when the Prefect API is unreachable
+        TC-QCC-007  rebuild removes fetch-log orphans and writes fetch_log_orphans.json
     """
 
     def __init__(self, config: Config | None = None, console: Console | None = None) -> None:
@@ -283,15 +285,27 @@ class QuantCnCli:
         catalog = LakeCatalog(config.lake.root, config.datasets)
         try:
             catalog.rebuild()
-            restored = FetchLog(catalog).rebuild_from_mirror()
+            fetch_log = FetchLog(catalog)
+            restored = fetch_log.rebuild_from_mirror()
+            orphans = fetch_log.remove_orphans()
+            self._write_orphan_manifest(config, orphans)
             RunLog(catalog, Clock())
             catalog.write_indexes()
         finally:
             catalog.close()
+        removed = sum(len(keys) for keys in orphans.values())
         self._console.print(
-            f"catalog rebuilt at {catalog.catalog_path}; fetch_log rows: {restored}"
+            f"catalog rebuilt at {catalog.catalog_path}; fetch_log rows: {restored - removed}"
+            f" ({removed} orphan rows removed)"
         )
         return 0
+
+    @staticmethod
+    def _write_orphan_manifest(config: Config, orphans: dict[str, list[str]]) -> None:
+        folder = config.lake.root / "meta" / "manifest"
+        folder.mkdir(parents=True, exist_ok=True)
+        record = {"checked_at": Clock().get_now().isoformat(timespec="seconds"), "removed": orphans}
+        (folder / ORPHAN_FILE).write_text(json.dumps(record, indent=2, sort_keys=True) + "\n")
 
     def _run_backup(self, config: Config, _args: argparse.Namespace) -> int:
         target = config.lake.backup_target
