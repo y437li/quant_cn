@@ -564,3 +564,32 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Alternatives: none needed; date_window already exists (D-063).
 - Consequences: VIX rates before 2018-08 now available; `derived` digests unaffected (shibor is not in derived views).
 - Links: D-063, D-069, plan 03, plan 11 phase 9
+
+### D-071 Industry grouping before the SW2021 start
+- Context: Shenwan 2021 membership begins 2021-07 for many stocks; 70 of 3,612 SH/SZ stocks had no L1 on 2019-06-28 (phase 2 criterion 1). Point-in-time classification is correct as delivered; neutralisation and grouping still need an industry for every stock on every date.
+- Decision: `IndustryClassifier` exposes two columns: `l1_pit` (membership as of the date, NULL when unknown) and `l1_grouping` = `l1_pit` when known, else the stock's **first known** L1 back-filled, with `industry_backfilled = true`. Factor neutralisation and the risk model's industry dummies use `l1_grouping`; anything claiming PIT purity reports the backfilled share. Criterion (1) is met as delivered.
+- Alternatives: leave pre-2021-07 stocks unclassified (rejected: drops them from neutralised factors and the risk model); map `stock_basic.industry` to L1 for the gap (deferred: adds a second scheme; use if the backfilled share matters).
+- Consequences: one extra column and flag; RISK_MODEL_DESIGN §1 estimation universe uses `l1_grouping`.
+- Links: plan 11 ph2, plans/execution/04_factors.md ph5, plans/execution/05_risk_model.md ph1, DATA_CATALOG §3b
+
+### D-072 Index-replication criterion restated
+- Context: member-computed Shenwan L1 returns vs published `sw_daily`: median 2.5 bp, 89.7% within 10 bp, 98.1% within 25 bp on free-float weights; the residual is Shenwan's tiered weighting, which we do not reproduce.
+- Decision: the criterion becomes median ≤ 5 bp, ≥ 85% of industry-days within 10 bp, ≥ 95% within 25 bp, on free-float (`close × free_share`, previous day) weights. Met. The member-computed series is the documented fallback only when `sw_daily` is unavailable; `sw_daily` is the primary.
+- Alternatives: implement Shenwan tiered weights (deferred: rules are published but add complexity for a fallback path).
+- Consequences: plan 10 `SectorIndexPanel` reads `sw_daily` first.
+- Links: plan 11 ph2, plans/execution/10_macro_commodity_sectors.md
+
+### D-073 Fetch-log orphan cleanup
+- Context: three orphan fetch-log rows (shibor "all", index_weight "000300.SH"/"000905.SH") survive `rebuild` because it restores from the parquet mirror and nothing removes rows whose raw file is gone.
+- Decision: `FetchLog.remove_orphans()` drops rows whose raw file does not exist; `rebuild` calls it after restoring; the count is logged and appears in the manifest. Accepted.
+- Alternatives: leave orphans (rejected: fetch log must equal the raw files, plan 01 verification rule).
+- Consequences: rebuild output shows "orphans removed: n".
+- Links: lake.FetchLog, D-037
+
+### D-074 ETF and fund datasets (plan 11 phase 3)
+- Status: accepted by execution (2026-09-28).
+- Context: one-call checks on 2026-09-24 (2026-09-25 is the Mid-Autumn holiday, which is why date calls on it came back empty): `fund_basic(market=E)` 2,961 funds in one call (L 2,238 / D 677); `fund_daily(trade_date)` 2,163 rows (567 on 2019-01-02); `fund_nav(nav_date, market=E)` 2,116 rows (25,189 without `market`, mostly off-exchange `.OF`); `fund_share(trade_date)` 1,774 rows; `margin_secs(trade_date)` 4,479 rows (SZSE 2,106 / SSE 2,002 / BSE 371) — endpoint exists, one call covers all exchanges. On a holiday `margin_secs` still returns the SSE list only.
+- Decision: `fund_basic` one call `market=E`, overwrite; `fund_daily` swept by `trade_date` from 2019, partitioned (replaces the `option_etfs` enum, which is removed); `fund_nav` swept by new date kind `nav_date` (trading sessions, `market=E`), key `(ts_code, nav_date)`, `known_on_rule: next_session` (NAV of T is published that evening); `fund_share` by `trade_date`, `next_session` (share count after the close); `margin_secs` by `trade_date`, `as_is` (list effective before the open). The plan-03 per-ETF `fund_daily` raw files (`ts_code=*.parquet`) are checked to be a subset of the new data, then moved to `external/tushare_fund_daily_option_etfs/` with `PROVENANCE.md`; the old curated `reference/fund_daily` folder is removed (rebuildable).
+- Alternatives: `fund_nav` per ETF over a range (per-code `date_window`, D-069): ~2,000 codes × 8 years of calls; rejected, the by-date call covers every exchange fund.
+- Consequences: ~7,500 calls (~4 h) for the 2019+ backfill; `fund_daily` grows from 16 k to ~3 M rows. `report_rc` on 2026-09-24: 177 rows, 66 stocks, 21 brokers (the earlier 66-row check was on the holiday) — row volume still to be judged in phase 7.
+- Links: D-063, D-069, plan 11 phase 3, ETF_PAIRS_DESIGN

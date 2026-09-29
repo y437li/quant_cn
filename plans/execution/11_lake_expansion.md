@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | doing — phase 1 done (5e7c06f); phases 2–10 next — approved 2026-09-28 by user instruction ("design the data_loading lake for my asks and assign to the executor"); assigned to quant-cn-b7 (Opus) |
+| Status | doing — phases 1–2 done (5e7c06f, 962d603); phase 3 next — approved 2026-09-28 by user instruction ("design the data_loading lake for my asks and assign to the executor"); assigned to quant-cn-b7 (Opus) |
 | Owner | executor quant-cn-b7 (build) / quant-cn-a1 (design, record, monitor) |
 | Created | 2026-09-28 |
 | Notion | pending |
@@ -24,8 +24,8 @@ layer is multi-source and every new endpoint is permission-checked before any ba
 | # | Phase | Deliverable | Done criterion | Depends on | Status |
 |---|---|---|---|---|---|
 | 1 | Loader features | `DatasetSpec.source`, `known_on_rule`, `release_lag_days`, `values_from_dataset`; `DateWindowFetcher`; `FetcherFactory` source-aware; curated schemas for the plan-03 option/rate datasets and `download.order` completed | tests for each new kind/rule (incl. a FRED-style next-session rule and a monthly release lag); `make check` green | — | done (5e7c06f) |
-| 2 | Sectors and composition | `index_classify` (SW2021 L1–L3), `index_member_all`, `index_weight` (300/500/1000/50, 2010+), `sw_daily` after a one-call tier check (fallback: member-computed L1 returns as a derived view) | every universe stock maps to one L1 industry on 3 sample dates; membership PIT test on an `out_date`; `sw_daily` vs member-computed within 10 bp/day or fallback documented | 1 | doing: downloads running (~1 h) |
-| 3 | ETFs and funds | `fund_basic` (E), `fund_daily` by `trade_date` (drop the `option_etfs` enum, keep raw), `fund_nav`, `fund_share`, `margin_secs` (verify endpoint name; if absent, document) | ETF count per date plausible; `fund_share × nav` vs `fund_daily` market value within 2% on a sample; premium/discount computable for 510300 | 1 | todo |
+| 2 | Sectors and composition | `index_classify` (SW2021 L1–L3), `index_member_all`, `index_weight` (300/500/1000/50, 2010+), `sw_daily` after a one-call tier check (fallback: member-computed L1 returns as a derived view) | every universe stock maps to one L1 industry on 3 sample dates; membership PIT test on an `out_date`; `sw_daily` vs member-computed within 10 bp/day or fallback documented | 1 | done (962d603); criterion 3 restated per D-072 |
+| 3 | ETFs and funds | `fund_basic` (E), `fund_daily` by `trade_date` (drop the `option_etfs` enum, keep raw), `fund_nav`, `fund_share`, `margin_secs` (verify endpoint name; if absent, document) | ETF count per date plausible; `fund_share × nav` vs `fund_daily` market value within 2% on a sample; premium/discount computable for 510300 | 1 | doing: backfill from 2019 running (~4 h, ~7,500 calls) |
 | 4 | Futures and gold | `fut_basic` all exchanges; `fut_daily`, `fut_holding` for INE/SHFE/DCE/CZCE 2019+; `fut_mapping`; `sge_basic`, `sge_daily` | every product has a main-contract mapping each session; top-20 coverage share per exchange reported; SGE Au99.99 vs SHFE AU front within 1% on a sample | 1 | todo |
 | 5 | Domestic macro | `yc_cb`, `fx_daily`, `shibor_lpr`, `cn_cpi`, `cn_ppi`, `cn_pmi`, `cn_m` with `release_lag_days` | PIT test: a CPI print is not visible before period end + lag; yield curve has every session | 1 | todo |
 | 6 | FRED | `FredClient`, `FRED_API_KEY` in `.env.example`, five series 2010+, next-session visibility | five series curated; a US Friday observation is visible from the following China session; raw copies kept | 1 | todo |
@@ -54,7 +54,7 @@ layer is multi-source and every new endpoint is permission-checked before any ba
 - `fund_daily` by date replaces the enum: existing raw files stay; the raw key changes from `ts_code=` to `trade_date=`, so the catalog view must union both or the old files move to `external/`.
 
 ## Open items
-- `report_rc`: access OK but 66 rows for 20260925; verify paging/row caps and coverage (compare a few well-covered stocks) before scheduling the 2019+ backfill in phase 7.
+- ~~`report_rc` 66 rows~~ explained: 20260925 was the Mid-Autumn holiday; 20260924 returns 177 rows (66 stocks, 21 brokers). Coverage per day still to be sized on a normal week before the phase-7 backfill.
 - `FRED_API_KEY` missing from `.env`; needed before phase 6 (user).
 
 ## Open questions
@@ -64,6 +64,9 @@ None at assignment; DATA_LOADING_DESIGN §3c recommendations adopted (FRED first
 
 | Date | Phase | Change |
 |---|---|---|
+| 2026-09-28 | 3 | Phase 3 started: fund_basic, fund_daily (by trade_date; option_etfs enum removed), fund_nav (new `nav_date` kind, 2,116 rows/session, next_session known-on), fund_share (next_session), margin_secs (exists; one call covers SSE/SZSE/BSE, 4,479 rows; as_is) — backfill 2019+ ~7,500 calls, lake busy ~4 h (D-074, appended by executor). D-073 implemented (remove_orphans keeps empty keys; manifest fetch_log_orphans.json; TC-FL-006, TC-QCC-007), uncommitted. Old per-ETF fund_daily raw files to be verified as a subset then moved to external/tushare_fund_daily_option_etfs/ with PROVENANCE.md. report_rc 66-row puzzle explained by the holiday |
+| 2026-09-28 | 2 | Phase 2 done (962d603, da69eb2). Run 747880eac2d8 via Prefect (first run 0c6841f828de failed on the CSI 1000 offset cap, fixed by D-069): index_classify 511 rows (L1 31 / L2 134 / L3 346); index_member_all 7,920; index_weight 68 keys, 64 fetched, 4 empty (CSI 1000 pre-2014), 313,000 rows; sw_daily 1,878 sessions, 930,263 rows. D-070: shibor had been silently capped at 2,000 rows (started 2018-08-21); yearly windows now give 2,907 rows from 2015-01-04. Criteria: (1) no stock ever maps to two L1s; unclassified SH/SZ stocks 70/3,612 on 2019-06-28, 6/4,898 on 2022-12-30, 0/5,210 on 2026-09-24 (pre-2021-07 gaps documented, DATA_CATALOG §3b); (2) PIT membership test on 603466.SH passes; (3) sw_daily vs member-computed L1 over 20,553 industry-days: free-float weights median 2.5 bp, 89.7% within 10 bp, 98.1% within 25 bp (Shenwan tiered weights explain the residual). lake-rebuild digests unchanged; make check 257 passed, 25 datasets, stale 0 |
+| 2026-09-28 | 2 | Decisions: D-071 first-known L1 backfill as a flagged non-PIT grouping variable for neutralisation before 2021-07; D-072 criterion (3) restated (median ≤ 5 bp, ≥ 85% within 10 bp, ≥ 95% within 25 bp on free-float weights); D-073 FetchLog.remove_orphans() run by rebuild |
 | 2026-09-28 | 2 | Phase 2 started: index_classify, index_member_all, index_weight, sw_daily (1,878 sessions from 2019) downloading; tier checks all OK; new sweep kinds is_new / index_code; SW2021 classification PIT caveat before 2021-07 (D-068, appended by quant-cn-b7). D-067 implemented (PREFECT_ENV precedence shell > .env > default, doctor row TC-QCC-006), uncommitted |
 | 2026-09-28 | 7 | report_rc tier check (one call, report_date=20260925): ACCESS OK, 66 rows, columns ts_code, name, report_date, org_name, quarter, eps, np, tp, rating. 66 rows for one Friday is suspiciously low: check per-call row capping / paging and coverage before any backfill (open item) |
 | 2026-09-28 | 1 | Phase 1 done and committed (5e7c06f): `DatasetSpec.source/known_on_rule/release_lag_days`, `DateWindowFetcher` (`date_window` sweep), `values_from_dataset`, source-aware `FetcherFactory`, `lake.EffectiveDateResolver` (as_is / next_session / period_end_lag), plan 09 datasets in `download.order` with explicit starts, `FRED_API_KEY` in `.env.example`. `make check`: ruff/mypy clean, lint_contracts 0, 251 passed; project-catalog step blocked only by the margin_detail download lock (475/~665 sessions). Lake busy |

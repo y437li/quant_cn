@@ -45,7 +45,11 @@ history is realistic to pull, not something the new project reads.
 | Option contracts | `opt_basic` (SSE/SZSE/CFFEX) | `ts_code` | `list_date` | listed 2015-02-09 → 2026-09-24 | 31 k | plan 03 |
 | Option bars | `opt_daily` | `ts_code, trade_date` | `trade_date` close | 2026-08-03 → 2026-09-28 | 1.03 M | plan 03 |
 | SHIBOR | `shibor` | `date` | `date` (11:00 fixing) | 2015-01-04 → 2026-09-28 | 2,907 | D-070 |
-| Option-ETF bars | `fund_daily` (9 option ETFs) | `ts_code, trade_date` | `trade_date` close | 2019-01-02 → 2026-09-28 | 16 k | plan 03 |
+| Exchange fund bars | `fund_daily` (all ETFs/LOFs, by date) | `ts_code, trade_date` | `trade_date` close | 2019-01-02 → 2026-09-28 | 2.21 M | D-074 |
+| Exchange fund list | `fund_basic` (`market=E`) | `ts_code` | `list_date` | 2,961 funds (L 2,238 / D 677) | 2,961 | D-074 |
+| Fund NAV | `fund_nav` (`market=E`, by `nav_date`) | `ts_code, nav_date` | next session after `nav_date` | 2019-01-02 → 2026-09-28 | 2.33 M | D-074 |
+| Fund shares | `fund_share` (by date) | `ts_code, trade_date` | next session after `trade_date` | 2019-01-02 → 2026-09-28 | 1.67 M | D-074 |
+| Margin-eligible list | `margin_secs` (SSE/SZSE/BSE) | `trade_date, ts_code` | `trade_date` (before the open) | 2019-01-02 → 2026-09-28 | 6.50 M | D-074 |
 | CFFEX futures bars | `fut_daily` | `ts_code, trade_date` | `trade_date` close | 2025-01-02 → 2026-09-28 | 27 k | plan 09 |
 | CFFEX top-20 holdings | `fut_holding` | `trade_date, symbol, broker` | `trade_date` evening | 2025-01-02 → 2026-09-28 | 306 k | plan 09 |
 | Margin totals | `margin` | `trade_date, exchange_id` | `trade_date` (published next morning) | 2025-01-02 → 2026-09-28 | 1,266 | plan 09 |
@@ -133,6 +137,15 @@ Verify any unit you rely on against the endpoint's doc page before building on i
 - **`sw_daily` weighting.** Member returns weighted by previous-day free-float cap (`close × free_share`) match the
   Shenwan L1 indices within 2.5 bp median, 90% of L1-days within 10 bp, 98% within 25 bp (2024–2026); weighting by
   `circ_mv` is off by 9.5 bp median. Shenwan uses tiered free-float weights.
+- **Fund fields that look useful but are empty.** `fund_share.fund_type` is mostly NULL before 2026 (0 "ETF" labels
+  at end-2019, 1,686 at 2026-09): identify ETFs by `fund_basic.name LIKE '%ETF%'` (269 at end-2019 → 1,705 at
+  2026-09-28). `fund_nav.net_asset` / `total_netasset` are filled on ~1–2% of rows: size an ETF as `fd_share` (万份)
+  × 1e4 × `unit_nav`. Close vs NAV: 98–99% of ETFs within 2%, median |premium| ~10 bp; 510300.SH median −4.3 bp.
+- **`margin_secs` SSE history is frozen.** The SSE list has exactly 1,956 names from 2019-01 to 2024-03 apart from
+  one-day blips (SZSE grows 819 → 2,105 over the same years), so SSE eligibility before 2024-04 is not reliable; use the
+  official exchange lists (plan 11 phase 10). On a holiday the endpoint returns the SSE list only.
+- **Holidays in date checks.** A by-date call on a non-session (2026-09-25, Mid-Autumn) returns 0 rows or a partial
+  list; always check against `trade_cal` before calling a result "missing".
 - **Statements** carry an original and a corrected version per filing (`update_flag`); it must be requested and
   is part of the primary key (D-038), otherwise compaction drops real data.
 
