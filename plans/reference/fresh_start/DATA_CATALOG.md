@@ -56,6 +56,15 @@ history is realistic to pull, not something the new project reads.
 | SGE spot contracts | `sge_basic` | `ts_code` | — (reference) | 13 contracts | 13 | D-077 |
 | SGE spot bars | `sge_daily` | `ts_code, trade_date` | `trade_date` close | 2019-01-02 → 2026-09-28 | 53 k | D-077 |
 | Futures top-20 holdings | `fut_holding` (all exchanges) | `trade_date, exchange, symbol, broker` | `trade_date` evening | 2019-01-02 → 2026-09-28 | 15.2 M | D-076, D-077 |
+| CPI | `cn_cpi` | `month` | month end + 12 days (next session on/after) | 2015-01 → 2026-08 | 140 | D-080 |
+| PPI | `cn_ppi` | `month` | month end + 12 days | 2015-01 → 2026-08 | 140 | D-080 |
+| PMI (NBS) | `cn_pmi` | `MONTH` | month end + 1 day | 2015-01 → 2026-08 | 140 | D-080 |
+| Money supply | `cn_m` | `month` | month end + 15 days | 2015-01 → 2026-08 | 140 | D-080 |
+| LPR | `shibor_lpr` | `date` | `date` (09:15 fixing) | 2015-01-04 → 2026-08-20 | 1,234 | D-080 |
+| FX, metals, CFDs (FXCM) | `fx_daily` (14 codes) | `ts_code, trade_date` | next session after `trade_date` | FX/metals 2015 →, CFDs 2022-07 → 2026-09-28 | 27 k | D-080 |
+| Derived: futures holdings | `derived.fut_holding_brokers` | `trade_date, exchange, symbol, broker` | as `fut_holding` | contract rows, no category totals | 13.65 M | D-079 |
+| Derived: one-sided futures | `derived.fut_daily_one_sided` | `ts_code, trade_date` | as `fut_daily` | vol/amount/oi halved pre-2020 (SHF/DCE/ZCE/INE) | 1.65 M | D-079 |
+| Derived: Shenwan L1 intervals | `derived.industry_l1` | `ts_code, valid_from` | `valid_from` (back-filled rows flagged) | 1984 → open | ~10 k | D-071 |
 | Margin totals | `margin` | `trade_date, exchange_id` | `trade_date` (published next morning) | 2025-01-02 → 2026-09-28 | 1,266 | plan 09 |
 | Margin by stock | `margin_detail` | `ts_code, trade_date` | `trade_date` (published next morning) | 2024-01-02 → 2026-09-28 | 2.73 M | plan 09 |
 
@@ -165,6 +174,14 @@ Verify any unit you rely on against the endpoint's doc page before building on i
 - **`SCTAS.INE`** (crude trade-at-settlement) trades on 24 sessions without a main-contract mapping; every other
   product has one on every session it trades. SGE Au99.99 vs SHFE AU main contract: median gap 0.29%, 95.9% of days
   within 1% (the gap is carry on a months-out contract: 0.6% in 2019–20, ~0.15–0.35% since).
+- **`yc_cb` is not permitted** on this account (tier); China yield curves come from ChinaBond (plan 11 phase 10).
+- **FXCM dating.** `fx_daily` bars carry the Beijing date of the New York 17:00 close: Friday's bar is dated Saturday
+  and a short Sunday bar opens the week. Use `next_session`; never align FX by weekday. The CFDs (UKOIL, USOIL,
+  COPPER, 10USNOTE, USDOLLAR, SPX500, NAS100, HKG33, CHN50) only start in 2022-07.
+- **`cn_pmi` ignores `fields`** and always returns `ID`, `CREATE_BY`, `CREATE_TIME`, `UPDATE_BY`, `UPDATE_TIME`;
+  its month column is upper-case `MONTH`.
+- **Amount was two-sided too.** Before 2020 `amount / (vol × close)` is unchanged across the break, so
+  `derived.fut_daily_one_sided` halves `amount` and `oi_chg` as well as `vol` and `oi`.
 - **Statements** carry an original and a corrected version per filing (`update_flag`); it must be requested and
   is part of the primary key (D-038), otherwise compaction drops real data.
 

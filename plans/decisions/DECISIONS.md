@@ -623,3 +623,18 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Alternatives: never mark empty keys done (rejected: holidays and no-event days would be refetched forever); a per-dataset publication-lag table (deferred: 3 sessions covers Tushare's observed lags; revisit if a dataset needs more).
 - Consequences: `make download` on the same day is safe to rerun; `FetchLog.list_pending` includes recent empties; one test on a fake clock.
 - Links: DATA_LOADING_DESIGN §2.3, D-077, plan 11 ph4
+
+### D-079 Futures cleaning views in the lake
+- Context: `fut_holding` mixes member-category totals and product-level symbols with broker/contract rows (exchange- and period-specific labels), and commodity-exchange oi/vol are two-sided before 2020-01-02; a stray "ZCE" label exists. Three consumers need clean data: `FuturesPositioning` (plan 09), `ContinuousFutures`/`TermStructure` (plan 10), pairs research.
+- Decision: cleaning lives in the lake as derived views, not in calculators: `derived.fut_holding_brokers` drops category rows (label list per exchange and period in `config/futures_categories.yaml`), keeps only contract symbols (`^[A-Z]{1,2}\d{3,4}$` per exchange convention), normalises exchange labels (ZCE → CZCE); `derived.fut_daily_one_sided` halves oi and vol for SHFE/DCE/CZCE/INE before 2020-01-02 and flags rows `two_sided_adjusted`. Raw and curated stay untouched. `FuturesPositioning` switches to the views. Accepted.
+- Alternatives: clean inside each calculator (rejected: three copies of the same rules); modify curated (rejected: curated mirrors the vendor, D-012).
+- Consequences: two views + a config file; digests for new views recorded; DATA_CATALOG §3b lists the traps.
+- Links: plan 11 ph4, plans/execution/09_positioning_flows.md, plans/execution/10_macro_commodity_sectors.md
+
+### D-080 Domestic macro and FX datasets (plan 11 phase 5)
+- Status: accepted by execution (2026-09-29).
+- Context: one-call checks on 2026-09-29: `yc_cb` (ChinaBond curves) is **not permitted** on this account ("没有接口(yc_cb)访问权限"); `cn_cpi`, `cn_ppi`, `cn_m`, `cn_pmi` return 140 months 2015-01 → 2026-08 in one call (`start_m`); `cn_pmi` ignores `fields` and always adds `ID`, `CREATE_BY`, `CREATE_TIME`, `UPDATE_BY`, `UPDATE_TIME` (a numeric schema rejected `UPDATE_TIME`); `shibor_lpr` 1,234 rows since 2015; `fx_daily(trade_date)` returns 272 FXCM instruments including stock CFDs.
+- Decision: the four monthly series are one call each (overwrite) with `known_on_rule: period_end_lag` and conservative lags until phase 10 brings the official NBS/PBOC calendars: CPI 12, PPI 12, M0–M2 15, PMI 1 day (released the last day of the month at 09:30). `cn_pmi` keeps its metadata columns as text. `shibor_lpr` by yearly `date_window`. `fx_daily` by yearly window × 14 codes (`value_param: ts_code`, `enum_values.fx_codes`: USDCNH, USDOLLAR, EURUSD, USDJPY, XAUUSD, XAGUSD, UKOIL, USOIL, COPPER, 10USNOTE, SPX500, NAS100, HKG33, CHN50), `next_session`. The yield curve criterion of phase 5 cannot be met from Tushare: China government yields come from phase 10 (ChinaBond via AkShare) and US 10y from FRED (phase 6).
+- Findings: the FXCM CFDs (oil, copper, US notes, dollar index, equity indices) start only in 2022-07 in Tushare; currency pairs and metals go back to 2015. FXCM bars are dated by the Beijing date of the New York close: Friday's bar carries Saturday's date and a short Sunday bar opens the week, so a `next_session` effective date is never early (at most one day late).
+- Consequences: macro effective dates check out (CPI 2026-08 → 2026-09-14; M 2026-01 → 2026-02-24 after the Spring Festival); ~185 calls in total.
+- Links: D-063, D-065, D-069, plan 11 phases 5, 6, 10
