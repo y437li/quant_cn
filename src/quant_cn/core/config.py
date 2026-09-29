@@ -119,6 +119,38 @@ class DownloadConfig(BaseModel):
     end: str | None = None
 
 
+class FuturesCategory(BaseModel):
+    """
+    Purpose:
+        One member-category label that `fut_holding` lists among real brokers (D-079).
+
+    Contract:
+        Input:
+            exchange: str        -- CFFEX, SHFE, DCE, CZCE, GFEX
+            broker:   str        -- the category label as the vendor spells it
+            first:    str | None -- first date seen (documentation)
+            last:     str | None -- last date seen (documentation)
+        Output:
+            frozen pydantic model
+        Raises:
+            pydantic.ValidationError
+
+    Used by:
+        core.Config        -- field `futures_categories`
+        lake.DerivedViews  -- excluded from derived.fut_holding_brokers
+
+    Test cases:
+        TC-C-009  config/futures_categories.yaml loads; a missing file gives an empty list
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    exchange: str
+    broker: str
+    first: str | None = None
+    last: str | None = None
+
+
 class Config(BaseModel):
     """
     Purpose:
@@ -133,6 +165,7 @@ class Config(BaseModel):
             download:    DownloadConfig
             enum_values: dict[str, list[str]]  -- named key lists for enum sweeps (e.g. indices)
             datasets:    dict[str, DatasetSpec]
+            futures_categories: list[FuturesCategory]  -- config/futures_categories.yaml (D-079)
         Output:
             frozen pydantic model
         Raises:
@@ -154,6 +187,7 @@ class Config(BaseModel):
         TC-C-006  "~" and relative roots are resolved (relative = repo root)
         TC-C-007  the committed config/ files load and every ordered dataset exists
         TC-C-008  malformed YAML or a dataset whose key differs from its name raises ConfigError
+        TC-C-009  config/futures_categories.yaml loads; a missing file gives an empty list
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -164,6 +198,7 @@ class Config(BaseModel):
     download: DownloadConfig
     enum_values: dict[str, list[str]] = Field(default_factory=dict)
     datasets: dict[str, DatasetSpec]
+    futures_categories: list[FuturesCategory] = Field(default_factory=list)
 
     @classmethod
     def load(
@@ -192,6 +227,7 @@ class Config(BaseModel):
         local = cls._read_yaml(root / "config" / "local.yaml", required=False)
         merged = cls._build_merged(base, local)
         datasets = cls._read_yaml(root / "config" / "datasets.yaml", required=True)
+        categories = cls._read_yaml(root / "config" / "futures_categories.yaml", required=False)
 
         lake = dict(merged.get("lake", {}))
         if environ.get(ENV_LAKE_ROOT):
@@ -206,6 +242,7 @@ class Config(BaseModel):
                 download=DownloadConfig(**merged.get("download", {})),
                 enum_values=merged.get("enum_values", {}),
                 datasets={name: DatasetSpec(name=name, **spec) for name, spec in datasets.items()},
+                futures_categories=[FuturesCategory(**c) for c in categories.get("categories", [])],
             )
         except (ValidationError, TypeError) as exc:
             raise ConfigError(f"invalid configuration: {exc}") from exc

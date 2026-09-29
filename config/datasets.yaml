@@ -374,3 +374,95 @@ sge_daily:
            oi, settle_vol, settle_dire]
   text_fields: [ts_code, trade_date, settle_dire]
   curated: {path: sge_daily, partition_by: trade_date}
+
+# --- domestic macro and FX (plan 11 phase 5, D-080) ---
+# Monthly prints have no announce date: known-on = month end + release_lag_days (conservative until
+# the official NBS/PBOC calendars of phase 10 replace the lags). yc_cb is not permitted (D-080).
+
+cn_cpi:
+  endpoint: cn_cpi
+  sweep: {kind: none, extra_params: {start_m: "201501"}}
+  refresh: overwrite
+  primary_key: [month]
+  known_on: month
+  known_on_rule: period_end_lag
+  release_lag_days: 12
+  fields: [month, nt_val, nt_yoy, nt_mom, nt_accu, town_val, town_yoy, town_mom, town_accu, cnt_val,
+           cnt_yoy, cnt_mom, cnt_accu]
+  text_fields: [month]
+  curated: {path: macro/cn_cpi}
+
+cn_ppi:
+  endpoint: cn_ppi
+  sweep: {kind: none, extra_params: {start_m: "201501"}}
+  refresh: overwrite
+  primary_key: [month]
+  known_on: month
+  known_on_rule: period_end_lag
+  release_lag_days: 12
+  fields: [month, ppi_yoy, ppi_mp_yoy, ppi_mp_qm_yoy, ppi_mp_rm_yoy, ppi_mp_p_yoy, ppi_cg_yoy,
+           ppi_cg_f_yoy, ppi_cg_c_yoy, ppi_cg_adu_yoy, ppi_cg_dcg_yoy, ppi_mom, ppi_mp_mom,
+           ppi_mp_qm_mom, ppi_mp_rm_mom, ppi_mp_p_mom, ppi_cg_mom, ppi_cg_f_mom, ppi_cg_c_mom,
+           ppi_cg_adu_mom, ppi_cg_dcg_mom, ppi_accu, ppi_mp_accu, ppi_mp_qm_accu, ppi_mp_rm_accu,
+           ppi_mp_p_accu, ppi_cg_accu, ppi_cg_f_accu, ppi_cg_c_accu, ppi_cg_adu_accu,
+           ppi_cg_dcg_accu]
+  text_fields: [month]
+  curated: {path: macro/cn_ppi}
+
+cn_pmi:
+  endpoint: cn_pmi
+  # NBS PMI is released on the last day of the month (09:30): usable from the next session.
+  # The endpoint ignores `fields` and always adds its metadata columns, kept as text.
+  sweep: {kind: none, extra_params: {start_m: "201501"}}
+  refresh: overwrite
+  primary_key: [MONTH]
+  known_on: MONTH
+  known_on_rule: period_end_lag
+  release_lag_days: 1
+  fields: [MONTH, ID, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, PMI010000, PMI010100, PMI010200, PMI010300, PMI010400, PMI010401, PMI010402,
+           PMI010403, PMI010500, PMI010501, PMI010502, PMI010503, PMI010600, PMI010601,
+           PMI010602, PMI010603, PMI010700, PMI010701, PMI010702, PMI010703, PMI010800,
+           PMI010801, PMI010802, PMI010803, PMI010900, PMI011000, PMI011100, PMI011200,
+           PMI011300, PMI011400, PMI011500, PMI011600, PMI011700, PMI011800, PMI011900,
+           PMI012000, PMI020100, PMI020101, PMI020102, PMI020200, PMI020201, PMI020202,
+           PMI020300, PMI020301, PMI020302, PMI020400, PMI020401, PMI020402, PMI020500,
+           PMI020501, PMI020502, PMI020600, PMI020601, PMI020602, PMI020700, PMI020800,
+           PMI020900, PMI021000, PMI030000]
+  text_fields: [MONTH, ID, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME]
+  curated: {path: macro/cn_pmi}
+
+cn_m:
+  endpoint: cn_m
+  sweep: {kind: none, extra_params: {start_m: "201501"}}
+  refresh: overwrite
+  primary_key: [month]
+  known_on: month
+  known_on_rule: period_end_lag
+  release_lag_days: 15
+  fields: [month, m0, m0_yoy, m0_mom, m1, m1_yoy, m1_mom, m2, m2_yoy, m2_mom]
+  text_fields: [month]
+  curated: {path: macro/cn_m}
+
+shibor_lpr:
+  endpoint: shibor_lpr
+  sweep: {kind: date_window, window: year, refetch_recent: 1}
+  start: "20150101"
+  primary_key: [date]
+  known_on: date
+  fields: [date, 1y, 5y]
+  text_fields: [date]
+  curated: {path: macro/shibor_lpr}
+
+fx_daily:
+  endpoint: fx_daily
+  # FXCM daily bars close at 17:00 New York: usable from the next China session
+  sweep: {kind: date_window, window: year, value_param: ts_code, values_from: fx_codes,
+          refetch_recent: 14}
+  start: "20150101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  known_on_rule: next_session
+  fields: [ts_code, trade_date, bid_open, bid_close, bid_high, bid_low, ask_open, ask_close, ask_high,
+           ask_low, tick_qty]
+  text_fields: [ts_code, trade_date]
+  curated: {path: fx_daily, partition_by: trade_date}

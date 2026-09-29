@@ -80,3 +80,11 @@ def test_tc_c_008_malformed_config(repo: Path, tmp_path: Path) -> None:
     )
     with pytest.raises(ConfigError):
         Config.load(repo, env=env)
+
+
+# TC-C-009
+def test_tc_c_009_futures_categories(config: Config, tmp_path: Path) -> None:
+    committed = Config.load(REPO, env={"QUANT_CN_LAKE_ROOT": str(tmp_path)})
+    pairs = {(c.exchange, c.broker) for c in committed.futures_categories}
+    assert ("DCE", "期货公司会员") in pairs and len(pairs) == len(committed.futures_categories)
+    assert config.futures_categories == []  # fixture repo has no futures_categories.yaml

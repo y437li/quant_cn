@@ -56,8 +56,10 @@ class FuturesPositioning:
 
         Contract:
             Input:
-                daily:   DataFrame  -- fut_daily rows (ts_code, trade_date, close, oi, ...)
-                holding: DataFrame  -- fut_holding (trade_date, symbol, broker, long_hld, short_hld)
+                daily:   DataFrame  -- derived.fut_daily_one_sided rows (ts_code, trade_date,
+                                       close, oi, ...; D-079)
+                holding: DataFrame  -- derived.fut_holding_brokers (trade_date, symbol, broker,
+                                       long_hld, short_hld; no category rows, D-079)
                 spot:    Series     -- index close by trade_date (YYYYMMDD)
             Output:
                 DataFrame  -- FUTURES_POSITIONING sorted by trade_date; first day has NaN changes

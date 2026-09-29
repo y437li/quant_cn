@@ -56,8 +56,17 @@ download:
     - sw_daily
     - sge_basic
     - sge_daily
+    - cn_cpi
+    - cn_ppi
+    - cn_pmi
+    - cn_m
+    - shibor_lpr
+    - fx_daily
 
 enum_values:
   indices: ["000001.SH", "000016.SH", "000300.SH", "000852.SH", "000905.SH", "399001.SZ", "399006.SZ"]
+  # fx_daily instruments (plan 11 phase 5): CNH, dollar index, majors, metals, oil, copper, US rates, indices
+  fx_codes: ["USDCNH.FXCM", "USDOLLAR", "EURUSD.FXCM", "USDJPY.FXCM", "XAUUSD.FXCM", "XAGUSD.FXCM",
+             "UKOIL", "USOIL", "COPPER", "10USNOTE", "SPX500", "NAS100", "HKG33", "CHN50"]
   # index_weight constituents (plan 11 phase 2): CSI 300 / 500 / 1000, SSE 50
   weight_indices: ["000300.SH", "000905.SH", "000852.SH", "000016.SH"]

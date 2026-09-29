@@ -7,7 +7,7 @@ L2: parquet writer, DuckDB catalog, fetch log, compactor, query API, PIT aligner
 |---|---|---|
 | `__init__.py` | package marker |  |
 | `compactor.py` | raw/ -> curated/: typed, deduplicated, yearly partitions with manifests (D-012) | `Compactor` |
-| `derived_views.py` | Derived DuckDB views over curated/ (D-015c, views first): adjusted prices, fundamentals | `DerivedViews` |
+| `derived_views.py` | Derived DuckDB views over curated/ (D-015c): prices, fundamentals, futures, industry | `DerivedViews` |
 | `effective_date_resolver.py` | First trading session a row may be used, from its known-on column and rule (D-063, §11) | `EffectiveDateResolver` |
 | `fetch_log.py` | Done-keys for resumable downloads: `meta.fetch_log` + a durable parquet mirror (D-012) | `FetchLog` |
 | `lake_catalog.py` | The DuckDB catalog over the lake: views per dataset and zone, metadata, generated indexes | `LakeCatalog` |

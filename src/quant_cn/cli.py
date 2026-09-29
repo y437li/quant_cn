@@ -410,7 +410,7 @@ class ServiceBuilder:
         """
         clock, query = Clock(), LakeQuery(catalog)
         compactor = Compactor(catalog, query, ParquetWriter(config.lake.root), clock)
-        views = DerivedViews(catalog, query, config.datasets)
+        views = DerivedViews(catalog, query, config.datasets, config.futures_categories)
         aligner = PitAligner(catalog, query, DateCodec())
         runner = self.build_runner(RunLog(catalog, clock), runner_name, show_progress)
         return CuratePipeline(config, compactor, views, aligner, query, catalog, runner)
