@@ -111,3 +111,17 @@ def test_tc_c_012_factors(config: Config, tmp_path: Path) -> None:
     names = {f.name: f.class_name for f in committed.factors}
     assert len(names) == 6 and names["momentum_12_1"] == "MomentumFactor"
     assert config.factors == []
+
+
+# TC-C-013
+def test_tc_c_013_campaign(config: Config, tmp_path: Path) -> None:
+    committed = Config.load(REPO, env={"QUANT_CN_LAKE_ROOT": str(tmp_path)})
+    assert committed.campaign.id == "factor_campaign_01" and committed.campaign.horizons == [
+        1,
+        5,
+        10,
+        20,
+        60,
+    ]
+    assert len(committed.campaign.weights) == 6
+    assert config.campaign.weights == {}  # fixture repo has no factors.yaml: defaults

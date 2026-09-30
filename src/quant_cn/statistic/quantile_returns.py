@@ -24,7 +24,7 @@ class QuantileReturns:
             ValueError  -- n_quantiles < 2
 
     Used by:
-        (none yet)
+        factor.FactorEvaluator  -- injected type or call
 
     Test cases:
         TC-QR-001  a monotone factor gives an increasing ladder and a positive long-short

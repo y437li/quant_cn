@@ -31,7 +31,7 @@ class MultipleTestingAdjuster:
             (none at construction)
 
     Used by:
-        (none yet)
+        factor.FactorEvaluator  -- injected type or call
 
     Test cases:
         TC-MTA-001  known answer: Holm/BH/BHY on a hand-worked 4-value example

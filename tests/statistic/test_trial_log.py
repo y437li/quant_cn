@@ -34,3 +34,13 @@ def test_tc_tl_003_resume() -> None:
     assert resumed.add_trial("rev", {}, 5, None, -0.01) == "c01-00002"
     with pytest.raises(ValueError):
         TrialLog.from_frame("c02", log.build_frame())
+
+
+# TC-TL-004
+def test_tc_tl_004_find() -> None:
+    log = TrialLog("c01")
+    tid = log.add_trial("mom", {"window": 252}, 20, 0.1, 0.02)
+    assert log.find_trial("mom", {"window": 252}, 20) == tid
+    assert (
+        log.find_trial("mom", {"window": 252}, 5) is None and log.find_trial("mom", {}, 20) is None
+    )

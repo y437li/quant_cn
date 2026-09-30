@@ -28,7 +28,7 @@ class Winsorizer:
             ValueError  -- k <= 0 or q outside (0, 0.5)
 
     Used by:
-        (none yet)
+        factor.FactorPreprocessor  -- injected type or call
 
     Test cases:
         TC-WZ-001  MAD method clips to median +- k * 1.4826 * MAD per date; NaN stays NaN

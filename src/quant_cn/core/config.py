@@ -149,6 +149,44 @@ class FactorSpec(BaseModel):
     params: dict[str, Any] = Field(default_factory=dict)
 
 
+class CampaignConfig(BaseModel):
+    """
+    Purpose:
+        Settings of one factor campaign (config/factors.yaml `campaign`, plan 04 phase 5).
+
+    Contract:
+        Input:
+            id:          str                -- campaign id (TrialLog, reports)
+            start:       str                -- first feature date (YYYYMMDD)
+            horizons:    list[int]          -- forward-return horizons in sessions
+            winsorize_k: float | None       -- MAD multiple; None skips winsorising
+            standardize: bool; neutralize: bool  -- D-093 (Shenwan L1 + log market cap)
+            weights:     dict[str, float]   -- factor -> weight of the combined score
+            min_factors: int >= 1           -- factors a stock needs for a score
+        Output:
+            frozen pydantic model
+        Raises:
+            pydantic.ValidationError
+
+    Used by:
+        core.Config  -- field `campaign`
+
+    Test cases:
+        TC-C-013  config/factors.yaml campaign loads; missing section gives the defaults
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    id: str = "factor_campaign_01"
+    start: str = "20190101"
+    horizons: list[int] = Field(default_factory=lambda: [1, 5, 10, 20, 60])
+    winsorize_k: float | None = 5.0
+    standardize: bool = True
+    neutralize: bool = True
+    weights: dict[str, float] = Field(default_factory=dict)
+    min_factors: int = Field(default=3, ge=1)
+
+
 class UniverseConfig(BaseModel):
     """
     Purpose:
@@ -258,6 +296,7 @@ class Config(BaseModel):
             ticker_aliases: list[TickerAlias]  -- config/ticker_aliases.yaml (D-089)
             universe:    UniverseConfig          -- base.yaml `universe` (plan 04 phase 3)
             factors:     list[FactorSpec]        -- config/factors.yaml (plan 04 phase 4)
+            campaign:    CampaignConfig          -- config/factors.yaml `campaign` (phase 5)
         Output:
             frozen pydantic model
         Raises:
@@ -283,6 +322,7 @@ class Config(BaseModel):
         TC-C-010  config/ticker_aliases.yaml loads the three known pairs; missing file = []
         TC-C-011  base.yaml universe section loads; missing section gives the defaults
         TC-C-012  config/factors.yaml loads six factors with their classes; missing file = []
+        TC-C-013  config/factors.yaml campaign loads; missing section gives the defaults
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -297,6 +337,7 @@ class Config(BaseModel):
     ticker_aliases: list[TickerAlias] = Field(default_factory=list)
     universe: UniverseConfig = Field(default_factory=UniverseConfig)
     factors: list[FactorSpec] = Field(default_factory=list)
+    campaign: CampaignConfig = Field(default_factory=CampaignConfig)
 
     @classmethod
     def load(
@@ -417,6 +458,7 @@ class Config(BaseModel):
             "futures_categories": [FuturesCategory(**c) for c in categories.get("categories", [])],
             "ticker_aliases": [TickerAlias(**a) for a in aliases.get("aliases", [])],
             "factors": [FactorSpec(**f) for f in factors.get("factors", [])],
+            "campaign": CampaignConfig(**factors.get("campaign", {})),
         }
 
     @staticmethod

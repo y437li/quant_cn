@@ -59,6 +59,7 @@ def test_tc_fr_005_plan04_frames() -> None:
         "campaign": "c01",
         "trial_id": "t1",
         "params": "{}",
+        "l1_code": "801010.SI",
     }
     schemas = [
         frames.UNIVERSE_PANEL,
@@ -68,6 +69,7 @@ def test_tc_fr_005_plan04_frames() -> None:
         frames.TRIAL_LOG,
         frames.FORWARD_RETURN,
         frames.QUANTILE_RETURNS,
+        frames.EXPOSURE_PANEL,
     ]
     for schema in schemas:
         row = {c: sample.get(c, 1.0) for c in schema.columns}

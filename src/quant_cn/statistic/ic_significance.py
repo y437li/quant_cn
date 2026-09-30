@@ -43,7 +43,7 @@ class IcSignificance:
             (none at construction)
 
     Used by:
-        (none yet)
+        factor.FactorEvaluator  -- injected type or call
 
     Test cases:
         TC-ICS-001  compute returns ic_mean (NW t, bootstrap CI), icir, fisher_z and one row per

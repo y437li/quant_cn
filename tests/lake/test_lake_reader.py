@@ -10,6 +10,7 @@ from quant_cn.core.date_codec import DateCodec
 from quant_cn.core.exceptions import LakeError
 from quant_cn.lake.compactor import Compactor
 from quant_cn.lake.derived_views import DerivedViews
+from quant_cn.lake.exposure_reader import ExposureReader
 from quant_cn.lake.lake_reader import LakeReader
 from quant_cn.lake.panel_cache import PanelCache
 from quant_cn.lake.pit_aligner import PitAligner
@@ -144,3 +145,40 @@ def test_tc_lrd_007_read_universe(lake: MiniLake, config: Config) -> None:
     assert len(reader.read_universe(DAYS[0], DAYS[0])) == 2
     members = reader.read_universe(DAYS[0], DAYS[3], members_only=True)
     assert members["ts_code"].tolist() == [NEW, NEW]
+
+
+# TC-EXR-001
+def test_tc_exr_001_exposures(lake: MiniLake, config: Config) -> None:
+    build_reader(lake, config)
+    write(
+        lake,
+        config,
+        "daily_basic",
+        "x",
+        [{"ts_code": NEW, "trade_date": DAYS[0], "total_mv": 100.0}],
+    )
+    write(
+        lake,
+        config,
+        "index_member_all",
+        "Y",
+        [{"ts_code": NEW, "l1_code": "801010.SI", "l3_code": "850001.SI", "in_date": DAYS[1]}],
+    )
+    universe = pd.DataFrame(
+        {
+            "trade_date": [DAYS[0], DAYS[1], DAYS[1]],
+            "ts_code": [NEW, NEW, OTHER],
+            "in_universe": [1.0, 1.0, 0.0],
+            "reason": ["", "", "suspended"],
+        }
+    )
+    lake.writer.write_derived("universe", 2026, universe)
+    DerivedViews(lake.catalog, lake.query, config.datasets, aliases=ALIASES).refresh()
+    out = ExposureReader(lake.query).read_exposures(DAYS[0], DAYS[3])
+    assert out["ts_code"].tolist() == [NEW, NEW]  # members only
+    first, second = out.iloc[0], out.iloc[1]
+    assert first["l1_code"] == "801010.SI" and first["industry_backfilled"] == 1.0  # before in_date
+    assert second["industry_backfilled"] == 0.0
+    assert first["log_mcap"] == pytest.approx(math.log(100.0 * 1e4)) and math.isnan(
+        second["log_mcap"]
+    )

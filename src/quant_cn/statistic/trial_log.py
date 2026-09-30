@@ -23,17 +23,18 @@ class TrialLog:
         Input:
             campaign: str  -- campaign id, e.g. "factor_campaign_01"
         Output:
-            instance; `add_trial`, `build_frame`, `from_frame`; `n_trials`
+            instance; `add_trial`, `find_trial`, `build_frame`, `from_frame`; `n_trials`
         Raises:
             ValueError  -- empty campaign id
 
     Used by:
-        (none yet)
+        factor.FactorEvaluator  -- injected type or call
 
     Test cases:
         TC-TL-001  trials get sequential ids and appear in build_frame as TRIAL_LOG
         TC-TL-002  append-only: modifying a built frame does not change the log; no remove
         TC-TL-003  from_frame resumes numbering; a frame from another campaign raises
+        TC-TL-004  find_trial returns the id of an identical variant, None otherwise
     """
 
     def __init__(self, campaign: str) -> None:
@@ -95,6 +96,30 @@ class TrialLog:
             }
         )
         return trial_id
+
+    def find_trial(self, factor: str, params: Mapping[str, object], horizon: int) -> str | None:
+        """
+        Purpose:
+            The id of an already recorded identical variant (re-running a campaign does not
+            inflate N).
+
+        Contract:
+            Input:
+                factor: str; params: Mapping[str, object]; horizon: int
+            Output:
+                str | None  -- trial id, or None when this variant was never recorded
+            Raises:
+                TypeError  -- params not JSON-serialisable
+        """
+        key = json.dumps(dict(params), sort_keys=True, default=str)
+        for row in self._rows:
+            if (
+                row["factor"] == factor
+                and row["params"] == key
+                and row["horizon"] == float(horizon)
+            ):
+                return str(row["trial_id"])
+        return None
 
     def build_frame(self) -> pd.DataFrame:
         """

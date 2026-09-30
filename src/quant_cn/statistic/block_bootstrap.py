@@ -32,6 +32,7 @@ class BlockBootstrap:
 
     Used by:
         statistic.IcSignificance  -- CI of mean IC and ICIR, bootstrap p
+        factor.FactorEvaluator    -- injected type or call
 
     Test cases:
         TC-BB-001  indices have shape (B, T), values in [0, T); same seed -> same draws

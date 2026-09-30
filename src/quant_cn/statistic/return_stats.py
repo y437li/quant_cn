@@ -29,7 +29,7 @@ class ReturnStats:
             (none)
 
     Used by:
-        (none yet)
+        factor.FactorEvaluator  -- injected type or call
 
     Test cases:
         TC-RS-001  known answer: constant returns give zero volatility, no drawdown, Sharpe inf

@@ -22,7 +22,8 @@ class Standardizer:
             (none)
 
     Used by:
-        (none yet)
+        factor.FactorPreprocessor  -- injected type or call
+        factor.SignalCombiner      -- injected type or call
 
     Test cases:
         TC-STD-001  per date: mean 0, standard deviation 1; NaN rows stay NaN

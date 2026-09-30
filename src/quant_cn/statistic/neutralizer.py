@@ -25,7 +25,7 @@ class Neutralizer:
             (none)
 
     Used by:
-        (none yet)
+        factor.FactorPreprocessor  -- injected type or call
 
     Test cases:
         TC-NEU-001  residuals are orthogonal to each industry dummy and to the numeric exposure

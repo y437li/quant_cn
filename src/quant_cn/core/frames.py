@@ -24,6 +24,7 @@ Contract:
         FORWARD_RETURN    -- key (trade_date, ts_code, horizon); fwd_return (open t+1 -> close t+h)
         QUANTILE_RETURNS  -- key (trade_date, factor, horizon, quantile); ret, n
                              (quantile 0 = long-short)
+        EXPOSURE_PANEL    -- key (trade_date, ts_code); Shenwan L1 group, backfilled flag, log mcap
     Raises:
         (none)
 
@@ -35,7 +36,7 @@ Test cases:
     TC-FR-004  plan 09 frames (GEX_PANEL, FUTURES_POSITIONING, MARGIN_*) validate empty frames
     TC-FR-001  each frame's key and text columns are declared columns; empty frames validate
     TC-FR-002  a frame with a duplicate key fails validation
-    TC-FR-005  plan 04 frames (UNIVERSE_PANEL ... TRIAL_LOG) validate a one-row frame
+    TC-FR-005  plan 04 frames (UNIVERSE_PANEL ... EXPOSURE_PANEL) validate a one-row frame
 """
 
 from __future__ import annotations
@@ -229,4 +230,11 @@ QUANTILE_RETURNS: Final = Schema(
     columns=["trade_date", "factor", "horizon", "quantile", "ret", "n"],
     text_columns=["trade_date", "factor"],
     primary_key=["trade_date", "factor", "horizon", "quantile"],
+)
+
+EXPOSURE_PANEL: Final = Schema(
+    "EXPOSURE_PANEL",
+    columns=["trade_date", "ts_code", "l1_code", "industry_backfilled", "log_mcap"],
+    text_columns=["trade_date", "ts_code", "l1_code"],
+    primary_key=["trade_date", "ts_code"],
 )
