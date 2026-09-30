@@ -12,6 +12,7 @@ from quant_cn.core.dataset_spec import DatasetSpec
 from quant_cn.core.exceptions import LakeError
 from quant_cn.lake.lake_catalog import LakeCatalog
 from quant_cn.lake.lake_query import LakeQuery
+from quant_cn.lake.quality_views import QualityViews
 
 logger = logging.getLogger(__name__)
 SCHEMA = "derived"
@@ -20,6 +21,7 @@ FUNDAMENTALS_VIEW = f"{SCHEMA}.fundamentals_long"
 HOLDING_VIEW = f"{SCHEMA}.fut_holding_brokers"
 ONE_SIDED_VIEW = f"{SCHEMA}.fut_daily_one_sided"
 INDUSTRY_VIEW = f"{SCHEMA}.industry_l1"
+MARGIN_VIEW = f"{SCHEMA}.margin_targets"
 # statements only: event datasets are period-swept too (forecast_vip, disclosure_date; D-081)
 FUNDAMENTALS_PREFIX = "fundamentals/"
 _PRICE_SQL = f"""
@@ -83,6 +85,20 @@ FROM ordered o JOIN first_l1 f USING (ts_code)
 WHERE o.out_date IS NOT NULL AND o.next_in > {_NEXT_DAY.format("o.out_date")}"""
 
 
+# D-084: SZSE official eligibility list plus an SSE proxy (a margin_detail row = had margin
+# activity, rqye > 0 = short sellable): no official SSE history exists and Tushare margin_secs
+# SSE is frozen before 2024-04.
+_MARGIN_SQL = f"""
+CREATE OR REPLACE VIEW {MARGIN_VIEW} AS
+SELECT trade_date, code || '.SZ' AS ts_code, fin_target = 'Y' AS margin_eligible,
+       sec_target = 'Y' AS short_eligible, 'szse_official' AS source
+FROM curated.szse_margin_targets
+UNION ALL
+SELECT trade_date, ts_code, TRUE AS margin_eligible, coalesce(rqye, 0) > 0 AS short_eligible,
+       'sse_margin_detail_proxy' AS source
+FROM curated.margin_detail WHERE ts_code LIKE '%.SH'"""
+
+
 class DerivedViews:
     """
     Purpose:
@@ -97,7 +113,9 @@ class DerivedViews:
         `derived.fut_daily_one_sided` (fut_daily with vol, amount, oi, oi_chg halved for
         SHFE/DCE/CZCE/INE before 2020-01-02, flagged two_sided_adjusted; D-079);
         `derived.industry_l1` (Shenwan L1 validity intervals per stock, PIT rows plus back-filled
-        rows flagged industry_backfilled; l1_pit = rows not back-filled, l1_grouping = any; D-071).
+        rows flagged industry_backfilled; l1_pit = rows not back-filled, l1_grouping = any; D-071);
+        `derived.margin_targets` (SZSE official list + SSE proxy from margin_detail, source
+        column; D-084); then the `quality` schema through QualityViews.
 
     Contract:
         Input:
@@ -123,6 +141,7 @@ class DerivedViews:
         TC-DV-005  fut_holding_brokers drops category rows and product symbols, maps ZCE to CZCE
         TC-DV-006  fut_daily_one_sided halves two-sided commodity rows before 2020 only
         TC-DV-007  industry_l1 gives PIT intervals plus back-filled rows before and between them
+        TC-DV-008  margin_targets unions SZSE flags and the SSE proxy (agreement: QualityViews)
     """
 
     def __init__(
@@ -169,6 +188,7 @@ class DerivedViews:
             ),
             (ONE_SIDED_VIEW, ["fut_daily"], _ONE_SIDED_SQL),
             (INDUSTRY_VIEW, ["index_member_all"], _INDUSTRY_SQL),
+            (MARGIN_VIEW, ["szse_margin_targets", "margin_detail"], _MARGIN_SQL),
         ]
         created: list[str] = []
         for view, inputs, sql in plan:
@@ -178,7 +198,7 @@ class DerivedViews:
             else:
                 self._execute(con, f"DROP VIEW IF EXISTS {view}")
         logger.info("derived views: %s", created)
-        return created
+        return created + QualityViews(self._catalog, self._query).refresh()
 
     def _build_category_filter(self) -> str:
         if not self._categories:

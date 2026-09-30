@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pandas as pd
 import pytest
 
 from quant_cn.core.base_fetcher import BaseFetcher
@@ -95,3 +96,16 @@ def test_tc_bf_006_failure_keeps_progress(lake: MiniLake, client: FakeTushareCli
     assert lake.fetch_log.mirror_path.exists()
     failed = lake.query.sql("SELECT key FROM meta.run_log WHERE status = 'failed'")
     assert failed["key"].tolist() == [DAYS[1]]
+
+
+# TC-BF-007
+def test_tc_bf_007_rename_and_key_field(lake: MiniLake) -> None:
+    fake = FakeTushareClient()
+    fake.add("daily", DAYS[0], pd.DataFrame({"ts_code": ["000001.SZ"], "收盘": [10.0]}))
+    spec = Sample.build_spec(
+        rename={"收盘": "close"}, sweep={"kind": "trade_date", "key_field": "trade_date"}
+    )
+    out = build_fetcher(lake, fake, spec).fetch_one(DAYS[0], DAYS[0], DAYS[0])
+    assert out.to_dict("records") == [
+        {"ts_code": "000001.SZ", "close": 10.0, "trade_date": DAYS[0]}
+    ]

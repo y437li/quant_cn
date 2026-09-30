@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 
+import pandas as pd
 import pytest
 from rich.console import Console
 
@@ -93,3 +94,25 @@ def test_tc_qcc_007_rebuild_orphans(config: Config) -> None:
         (config.lake.root / "meta" / "manifest" / "fetch_log_orphans.json").read_text()
     )
     assert record["removed"] == {"trade_cal": ["gone"]}
+
+
+# TC-QCC-008
+def test_tc_qcc_008_release_lags(config: Config) -> None:
+    spec = config.get_dataset("macro_release_pmi")
+    rows = pd.DataFrame(
+        [
+            {
+                "series": "pmi",
+                "release_date": "20221007",
+                "actual": 50.1,
+                "forecast": None,
+                "previous": None,
+            }
+        ]
+    )
+    ParquetWriter(config.lake.root).write_raw(spec, "all", rows)
+    QuantCnCli(config, Console(record=True)).run(["curate", "--no-progress"])
+    console = Console(record=True, width=200)
+    assert QuantCnCli(config, console).run(["release-lags"]) == 0
+    text = console.export_text()
+    assert "cn_pmi: rule 7d, observed max 7d over 1 releases -> ok" in text

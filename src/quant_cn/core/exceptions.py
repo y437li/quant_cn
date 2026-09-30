@@ -95,6 +95,8 @@ class DataSourceError(QuantCnError):
         data_loading.TushareClient.query  -- non-zero code after retries, network failure
         core.BaseFetcher.run              -- records the failing key, then re-raises
         core.PermissionDeniedError        -- subclass
+        data_loading.AkshareClient        -- injected type or call
+        data_loading.BaostockClient       -- injected type or call
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError
@@ -151,6 +153,7 @@ class LakeError(QuantCnError):
         lake.DerivedViews          -- injected type or call
         lake.PitAligner            -- injected type or call
         lake.ProjectCatalog        -- injected type or call
+        lake.QualityViews          -- injected type or call
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError

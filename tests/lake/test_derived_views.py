@@ -152,3 +152,36 @@ def test_tc_dv_007_industry_l1(lake: MiniLake, config: Config) -> None:
         ["801010.SI", "20200701", "20210729", True],
         ["801020.SI", "20210730", None, False],
     ]
+
+
+def write_rows(lake: MiniLake, config: Config, name: str, rows: list[dict[str, object]]) -> None:
+    base = {f: None for f in config.get_dataset(name).fields}
+    lake.writer.write_raw(config.get_dataset(name), "x", pd.DataFrame([base | r for r in rows]))
+
+
+# TC-DV-008
+def test_tc_dv_008_margin_targets(lake: MiniLake, config: Config) -> None:
+    d = "20240430"
+    szse = [{"trade_date": d, "code": "000001", "fin_target": "Y", "sec_target": "N"}]
+    write_rows(lake, config, "szse_margin_targets", szse)
+    detail = [  # the SZ row is ignored: SZSE eligibility comes from the official list
+        {"trade_date": d, "ts_code": "600000.SH", "rqye": 5.0},
+        {"trade_date": d, "ts_code": "600001.SH", "rqye": 0.0},
+        {"trade_date": d, "ts_code": "000001.SZ", "rqye": 1.0},
+    ]
+    write_rows(lake, config, "margin_detail", detail)
+    secs = [{"trade_date": d, "ts_code": c, "exchange": "SSE"} for c in ("600000.SH", "600002.SH")]
+    write_rows(lake, config, "margin_secs", secs)
+    rebuild_curated(lake, config, "szse_margin_targets", "margin_detail", "margin_secs")
+    DerivedViews(lake.catalog, lake.query, config.datasets).refresh()
+    out = lake.query.sql(
+        "SELECT ts_code, margin_eligible, short_eligible, source"
+        " FROM derived.margin_targets ORDER BY ts_code"
+    )
+    assert out.values.tolist() == [
+        ["000001.SZ", True, False, "szse_official"],
+        ["600000.SH", True, True, "sse_margin_detail_proxy"],
+        ["600001.SH", True, False, "sse_margin_detail_proxy"],
+    ]
+    agree = lake.query.sql("SELECT * FROM quality.margin_targets_agreement").to_dict("records")[0]
+    assert (agree["both_lists"], agree["proxy_only"], agree["margin_secs_only"]) == (1, 1, 1)

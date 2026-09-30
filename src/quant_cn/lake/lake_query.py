@@ -35,6 +35,8 @@ class LakeQuery:
         lake.PitAligner              -- injected type or call
         cli.ServiceBuilder           -- injected type or call
         data_loading.FetcherFactory  -- injected type or call
+        lake.QualityViews            -- injected type or call
+        lake.ReleaseLagChecker       -- injected type or call
 
     Test cases:
         TC-LQ-001  sql returns a DataFrame with parameters bound

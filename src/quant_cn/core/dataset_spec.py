@@ -22,7 +22,7 @@ SweepKind = Literal[
 ]
 DATE_KINDS = ("trade_date", "ann_date", "nav_date")
 ENUM_KINDS = ("list_status", "ts_code", "exchange", "is_new")
-Source = Literal["tushare", "fred", "akshare"]
+Source = Literal["tushare", "fred", "akshare", "baostock"]
 KnownOnRule = Literal["as_is", "next_session", "period_end_lag", "period_start_lag"]
 Days = Literal["sessions", "weekdays", "all"]
 Window = Literal["month", "year"]
@@ -78,6 +78,8 @@ class SweepSpec(BaseModel):
             days:           "sessions" | "weekdays" | "all" | None  -- date sweeps: which days;
                                                 None = sessions for trade_date/nav_date, else
                                                 weekdays (event data also publishes on weekends)
+            key_field:      str | None       -- column set to the sweep key when the response
+                                                lacks it (SZSE margin list has no date; D-087)
             value_param:    str | None       -- date_window only: API parameter swept per window
                                                 with the values (keys "<window>_<value>", D-069)
         Output:
@@ -105,6 +107,7 @@ class SweepSpec(BaseModel):
     value_param: str | None = None
     param_name: str | None = None
     days: Days | None = None
+    key_field: str | None = None
 
     @model_validator(mode="after")
     def _check_window(self) -> SweepSpec:
@@ -185,10 +188,14 @@ class DatasetSpec(BaseModel):
             fields:      list[str]     -- requested columns, non-empty
             text_fields: list[str]     -- subset stored as text; all other fields are numeric
             start:       str | None    -- dataset-specific download start (YYYYMMDD)
-            source:      "tushare" | "fred" | "akshare"  -- which API client fetches it (D-063)
+            source:      "tushare" | "fred" | "akshare" | "baostock"  -- API client (D-063)
             known_on_rule: "as_is" | "next_session" | "period_end_lag" | "period_start_lag"  --
                                           how known_on becomes
                                           the first usable session (EffectiveDateResolver)
+            release_dates: str | None  -- dataset of observed release dates that checks the
+                                          period_end_lag rule (ReleaseLagChecker, D-086)
+            rename:       dict[str, str] -- vendor column -> field, applied before the raw write
+                                          (AkShare / BaoStock columns; D-087)
             key_defaults: dict[str, str] -- value filled into a NULL text primary-key column before
                                           validation (report_rc: rating-only reports, quarter "")
             lag_sessions: int >= 1     -- next_session rule: usable from the N-th session after
@@ -220,6 +227,7 @@ class DatasetSpec(BaseModel):
         lake.ProjectCatalog                -- injected type or call
         data_loading.DateWindowFetcher     -- injected type or call
         lake.EffectiveDateResolver         -- injected type or call
+        lake.ReleaseLagChecker             -- injected type or call
 
     Test cases:
         TC-DS-001  datasets.yaml entries parse into DatasetSpec
@@ -230,6 +238,7 @@ class DatasetSpec(BaseModel):
         TC-DS-006  param_name renames the key parameter; days only with date kinds
         TC-DS-007  lag_sessions other than 1 requires known_on_rule next_session
         TC-DS-008  key_defaults only on text primary-key columns
+        TC-DS-009  rename targets and sweep.key_field must be declared fields
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -248,6 +257,8 @@ class DatasetSpec(BaseModel):
     release_lag_days: int = Field(default=0, ge=0)
     lag_sessions: int = Field(default=1, ge=1)
     key_defaults: dict[str, str] = Field(default_factory=dict)
+    rename: dict[str, str] = Field(default_factory=dict)
+    release_dates: str | None = None
     extend_days: int = Field(default=0, ge=0)
     curated: CuratedSpec
 
@@ -262,10 +273,15 @@ class DatasetSpec(BaseModel):
         missing = used - declared
         if missing:
             raise ValueError(f"{self.name}: columns not in fields: {sorted(missing)}")
+        if self.sweep.key_field and self.sweep.key_field not in declared:
+            raise ValueError(f"{self.name}: sweep.key_field {self.sweep.key_field} not in fields")
         if self.known_on_rule != "as_is" and not self.known_on:
             raise ValueError(f"{self.name}: known_on_rule {self.known_on_rule} needs known_on")
         if self.release_lag_days and not self.known_on_rule.startswith("period_"):
             raise ValueError(f"{self.name}: release_lag_days needs a period_*_lag known_on_rule")
+        unknown = set(self.rename.values()) - declared
+        if unknown:
+            raise ValueError(f"{self.name}: rename targets not in fields: {sorted(unknown)}")
         bad_defaults = set(self.key_defaults) - (set(self.primary_key) & set(self.text_fields))
         if bad_defaults:
             raise ValueError(

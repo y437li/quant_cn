@@ -46,6 +46,7 @@ class LakeCatalog:
         lake.PitAligner                -- injected type or call
         lake.ProjectCatalog            -- injected type or call
         cli.ServiceBuilder             -- injected type or call
+        lake.QualityViews              -- injected type or call
 
     Test cases:
         TC-LC-001  raw and curated views exist after refresh and return the written rows

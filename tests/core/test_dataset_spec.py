@@ -83,3 +83,12 @@ def test_tc_ds_007_lag_sessions() -> None:
 def test_tc_ds_008_key_defaults() -> None:
     with pytest.raises(ValidationError):
         Sample.build_spec(key_defaults={"close": "0"})  # numeric, not a key column
+
+
+# TC-DS-009
+def test_tc_ds_009_rename_and_key_field() -> None:
+    assert Sample.build_spec(rename={"收盘": "close"}).rename == {"收盘": "close"}
+    with pytest.raises(ValidationError):
+        Sample.build_spec(rename={"x": "not_a_field"})
+    with pytest.raises(ValidationError):
+        Sample.build_spec(sweep={"kind": "trade_date", "key_field": "not_a_field"})

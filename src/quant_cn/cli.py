@@ -32,6 +32,8 @@ from quant_cn.core.docs.plan_reader import PlanReader
 from quant_cn.core.docs.registry_reader import RegistryReader
 from quant_cn.core.docs.repo_files import RepoFiles
 from quant_cn.core.exceptions import LakeError, QuantCnError
+from quant_cn.data_loading.akshare_client import AkshareClient
+from quant_cn.data_loading.baostock_client import BaostockClient
 from quant_cn.data_loading.fetcher_factory import FetcherFactory
 from quant_cn.data_loading.tushare_client import TushareClient
 from quant_cn.lake.compactor import Compactor
@@ -42,6 +44,7 @@ from quant_cn.lake.lake_query import LakeQuery
 from quant_cn.lake.parquet_writer import ParquetWriter
 from quant_cn.lake.pit_aligner import PitAligner
 from quant_cn.lake.project_catalog import ProjectCatalog
+from quant_cn.lake.release_lag_checker import ReleaseLagChecker
 from quant_cn.lake.run_log import RunLog
 from quant_cn.lake.trading_calendar import TradingCalendar
 from quant_cn.pipeline.curate_pipeline import DIGEST_FILE, CuratePipeline
@@ -81,6 +84,7 @@ class QuantCnCli:
         TC-QCC-005  doctor reports the trade_cal horizon and warns under 90 days
         TC-QCC-006  doctor warns (exit code unchanged) when the Prefect API is unreachable
         TC-QCC-007  rebuild removes fetch-log orphans and writes fetch_log_orphans.json
+        TC-QCC-008  release-lags prints one line per checked dataset and exits 0 on warnings
     """
 
     def __init__(self, config: Config | None = None, console: Console | None = None) -> None:
@@ -140,6 +144,7 @@ class QuantCnCli:
         qy = sub.add_parser("query", help="run read-only SQL against the lake catalog")
         qy.add_argument("sql", help='SQL, e.g. "SELECT * FROM project.todo"')
         qy.add_argument("--limit", type=int, default=50)
+        sub.add_parser("release-lags", help="warn when a release-lag rule is earlier than observed")
         return parser
 
     def _run_doctor(self, config: Config, _args: argparse.Namespace) -> int:
@@ -281,6 +286,15 @@ class QuantCnCli:
         self._console.print(table)
         return 0
 
+    def _run_release_lags(self, config: Config, _args: argparse.Namespace) -> int:
+        catalog = LakeCatalog(config.lake.root, config.datasets, read_only=True)
+        try:
+            frame = ReleaseLagChecker(LakeQuery(catalog), config.datasets).compute()
+        finally:
+            catalog.close()
+        self._console.print("\n".join(ReleaseLagChecker.build_lines(frame)))
+        return 0  # a warning, not a failure (D-086)
+
     def _run_rebuild(self, config: Config, _args: argparse.Namespace) -> int:
         catalog = LakeCatalog(config.lake.root, config.datasets)
         try:
@@ -389,7 +403,18 @@ class ServiceBuilder:
         run_log = RunLog(catalog, clock)
         calendar = TradingCalendar(LakeQuery(catalog))
         client = TushareClient(config.tushare, clock)
-        factory = FetcherFactory(config, client, writer, fetch_log, run_log, clock, calendar, codec)
+        factory = FetcherFactory(
+            config,
+            client,
+            writer,
+            fetch_log,
+            run_log,
+            clock,
+            calendar,
+            codec,
+            extra_clients={"akshare": AkshareClient(clock), "baostock": BaostockClient(clock)},
+            query=LakeQuery(catalog),
+        )
         executor = self.build_runner(run_log, runner, show_progress)
         return DownloadPipeline(config, factory, executor, catalog, fetch_log, clock, codec)
 

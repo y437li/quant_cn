@@ -6,7 +6,7 @@ CLI := $(UV_RUN) python -m quant_cn.cli
 PREFECT_API_DEFAULT := http://127.0.0.1:4200/api
 PREFECT_ENV = $(if $(filter prefect,$(RUNNER)),PREFECT_API_URL="$${PREFECT_API_URL:-$$(sed -n 's/^PREFECT_API_URL=//p' .env 2>/dev/null)}" && export PREFECT_API_URL="$${PREFECT_API_URL:-$(PREFECT_API_DEFAULT)}" &&)
 
-.PHONY: setup hooks lint lint-contracts test check doctor download download-dry compact curate lake-rebuild lake-backup notebook project-catalog query prefect-server
+.PHONY: release-lags verify-prices setup hooks lint lint-contracts test check doctor download download-dry compact curate lake-rebuild lake-backup notebook project-catalog query prefect-server
 
 setup:            ## create the venv from uv.lock; copy .env.example to .env if missing
 	uv sync --all-extras
@@ -28,7 +28,7 @@ lint-contracts:   ## contract/index/size/names linter only, e.g. make lint-contr
 test:             ## offline test suite with coverage
 	uv run pytest --cov
 
-check: lint test project-catalog  ## everything a change must pass; refreshes schema project
+check: lint test project-catalog release-lags  ## everything a change must pass; refreshes schema project
 
 doctor:           ## lake root, free space, token presence
 	$(CLI) doctor
@@ -64,3 +64,12 @@ query:            ## read-only SQL against the lake catalog, e.g. make query SQL
 
 prefect-server:   ## start the local Prefect UI (http://127.0.0.1:4200); then use RUNNER=prefect
 	$(UV_RUN) prefect server start
+
+release-lags:     ## warn when a macro release-lag rule is earlier than an observed release (D-086)
+	$(CLI) release-lags
+
+VERIFY_START ?= $(shell python3 -c "import datetime as d; print((d.date.today() - d.timedelta(days=10)).strftime('%Y%m%d'))")
+verify-prices:    ## BaoStock cross-check of the last ~5 sessions (D-085): refetch, curate, report mismatch rate
+	$(CLI) download --datasets baostock_daily_recent --start $(VERIFY_START) --force --no-progress
+	$(CLI) curate --datasets baostock_daily_recent --no-progress
+	$(CLI) query "SELECT * FROM quality.price_crosscheck WHERE trade_date >= '$(VERIFY_START)' ORDER BY trade_date"

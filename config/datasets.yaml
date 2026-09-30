@@ -223,7 +223,7 @@ margin:
 margin_detail:
   endpoint: margin_detail
   sweep: {kind: trade_date}
-  start: "20240101"
+  start: "20190101"  # extended for the SSE eligibility proxy (D-084)
   primary_key: [ts_code, trade_date]
   known_on: trade_date
   fields: [trade_date, ts_code, rzye, rqye, rzmre, rqyl, rzche, rqchl, rqmcl, rzrqye]
@@ -387,7 +387,8 @@ cn_cpi:
   primary_key: [month]
   known_on: month
   known_on_rule: period_end_lag
-  release_lag_days: 12
+  release_lag_days: 20  # observed max since 2010 (D-086; was 12)
+  release_dates: macro_release_cpi
   fields: [month, nt_val, nt_yoy, nt_mom, nt_accu, town_val, town_yoy, town_mom, town_accu, cnt_val,
            cnt_yoy, cnt_mom, cnt_accu]
   text_fields: [month]
@@ -400,7 +401,8 @@ cn_ppi:
   primary_key: [month]
   known_on: month
   known_on_rule: period_end_lag
-  release_lag_days: 12
+  release_lag_days: 20  # observed max since 2010 (D-086; was 12)
+  release_dates: macro_release_ppi
   fields: [month, ppi_yoy, ppi_mp_yoy, ppi_mp_qm_yoy, ppi_mp_rm_yoy, ppi_mp_p_yoy, ppi_cg_yoy,
            ppi_cg_f_yoy, ppi_cg_c_yoy, ppi_cg_adu_yoy, ppi_cg_dcg_yoy, ppi_mom, ppi_mp_mom,
            ppi_mp_qm_mom, ppi_mp_rm_mom, ppi_mp_p_mom, ppi_cg_mom, ppi_cg_f_mom, ppi_cg_c_mom,
@@ -419,7 +421,8 @@ cn_pmi:
   primary_key: [MONTH]
   known_on: MONTH
   known_on_rule: period_end_lag
-  release_lag_days: 1
+  release_lag_days: 7  # observed max since 2010 (D-086; was 1)
+  release_dates: macro_release_pmi
   fields: [MONTH, ID, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, PMI010000, PMI010100, PMI010200, PMI010300, PMI010400, PMI010401, PMI010402,
            PMI010403, PMI010500, PMI010501, PMI010502, PMI010503, PMI010600, PMI010601,
            PMI010602, PMI010603, PMI010700, PMI010701, PMI010702, PMI010703, PMI010800,
@@ -439,7 +442,8 @@ cn_m:
   primary_key: [month]
   known_on: month
   known_on_rule: period_end_lag
-  release_lag_days: 15
+  release_lag_days: 20  # observed max since 2010 (D-086; was 15)
+  release_dates: macro_release_m2
   fields: [month, m0, m0_yoy, m0_mom, m1, m1_yoy, m1_mom, m2, m2_yoy, m2_mom]
   text_fields: [month]
   curated: {path: macro/cn_m}
@@ -589,3 +593,145 @@ stk_holdernumber:
   fields: [ts_code, ann_date, end_date, holder_num]
   text_fields: [ts_code, ann_date, end_date]
   curated: {path: events/stk_holdernumber, partition_by: end_date}
+
+# --- third source (plan 11 phase 10): AkShare (D-065, D-084, D-086, D-087) ---
+# Columns are renamed to English fields before the raw write; the client normalises dates.
+
+cn_bond_yield:
+  source: akshare
+  endpoint: bond_china_yield
+  # ChinaBond curves (government, AAA bank, AAA notes); replaces the denied Tushare yc_cb (D-080)
+  sweep: {kind: date_window, window: year, refetch_recent: 1}
+  start: "20100101"
+  primary_key: [curve_name, trade_date]
+  known_on: trade_date
+  known_on_rule: next_session
+  rename: {曲线名称: curve_name, 日期: trade_date, 3月: y_3m, 6月: y_6m, 1年: y_1y, 3年: y_3y, 5年: y_5y,
+           7年: y_7y, 10年: y_10y, 30年: y_30y}
+  fields: [curve_name, trade_date, y_3m, y_6m, y_1y, y_3y, y_5y, y_7y, y_10y, y_30y]
+  text_fields: [curve_name, trade_date]
+  curated: {path: macro/cn_bond_yield}
+
+lme_copper:
+  source: akshare
+  endpoint: futures_foreign_hist
+  # LME 3-month copper (Sina); FRED has only a monthly copper price. London closes after China
+  sweep: {kind: none, extra_params: {symbol: CAD}}
+  refresh: overwrite
+  primary_key: [trade_date]
+  known_on: trade_date
+  known_on_rule: next_session
+  rename: {date: trade_date, position: oi, s: settle}
+  fields: [trade_date, open, high, low, close, volume, oi, settle]
+  text_fields: [trade_date]
+  curated: {path: macro/lme_copper}
+
+# Jin10 macro series carry the actual release date (feed ends 2025-09): used to check the lag rules
+
+macro_release_cpi:
+  source: akshare
+  endpoint: macro_china_cpi_yearly
+  sweep: {kind: none}
+  refresh: overwrite
+  primary_key: [release_date]
+  known_on: release_date
+  rename: {商品: series, 日期: release_date, 今值: actual, 预测值: forecast, 前值: previous}
+  fields: [series, release_date, actual, forecast, previous]
+  text_fields: [series, release_date]
+  curated: {path: macro/release_cpi}
+
+macro_release_ppi:
+  source: akshare
+  endpoint: macro_china_ppi_yearly
+  sweep: {kind: none}
+  refresh: overwrite
+  primary_key: [release_date]
+  known_on: release_date
+  rename: {商品: series, 日期: release_date, 今值: actual, 预测值: forecast, 前值: previous}
+  fields: [series, release_date, actual, forecast, previous]
+  text_fields: [series, release_date]
+  curated: {path: macro/release_ppi}
+
+macro_release_pmi:
+  source: akshare
+  endpoint: macro_china_pmi_yearly
+  sweep: {kind: none}
+  refresh: overwrite
+  primary_key: [release_date]
+  known_on: release_date
+  rename: {商品: series, 日期: release_date, 今值: actual, 预测值: forecast, 前值: previous}
+  fields: [series, release_date, actual, forecast, previous]
+  text_fields: [series, release_date]
+  curated: {path: macro/release_pmi}
+
+macro_release_m2:
+  source: akshare
+  endpoint: macro_china_m2_yearly
+  sweep: {kind: none}
+  refresh: overwrite
+  primary_key: [release_date]
+  known_on: release_date
+  rename: {商品: series, 日期: release_date, 今值: actual, 预测值: forecast, 前值: previous}
+  fields: [series, release_date, actual, forecast, previous]
+  text_fields: [series, release_date]
+  curated: {path: macro/release_m2}
+
+szse_margin_targets:
+  source: akshare
+  endpoint: stock_margin_underlying_info_szse
+  # official SZSE list of margin-eligible securities per day (flags for margin buy / short sell)
+  sweep: {kind: trade_date, param_name: date, key_field: trade_date}
+  start: "20190101"
+  primary_key: [trade_date, code]
+  known_on: trade_date
+  rename: {证券代码: code, 证券简称: name, 融资标的: fin_target, 融券标的: sec_target, 当日可融资: fin_today,
+           当日可融券: sec_today, 融券卖出价格限制: short_price_limit, 涨跌幅限制: limit_pct}
+  fields: [trade_date, code, name, fin_target, sec_target, fin_today, sec_today, short_price_limit,
+           limit_pct]
+  text_fields: [trade_date, code, name, fin_target, sec_target, fin_today, sec_today,
+                short_price_limit, limit_pct]
+  curated: {path: szse_margin_targets, partition_by: trade_date}
+
+# --- BaoStock: verification only (D-065, D-085); written to raw/baostock_*, never replaces Tushare ---
+
+baostock_daily:
+  source: baostock
+  endpoint: query_history_k_data_plus
+  # unadjusted bars per stock, full history once (about 5 s per stock); SH/SZ only
+  sweep: {kind: ts_code, range_params: true, extra_params: {frequency: d, adjustflag: "3"},
+          values_from_dataset: {dataset: stock_basic, column: ts_code, where: "ts_code NOT LIKE '%.BJ'"}}
+  start: "20190101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  rename: {date: trade_date}
+  fields: [ts_code, trade_date, open, high, low, close, preclose, volume, amount, tradestatus]
+  text_fields: [ts_code, trade_date]
+  curated: {path: verification/baostock_daily, partition_by: trade_date}
+
+baostock_daily_recent:
+  source: baostock
+  endpoint: query_history_k_data_plus
+  # the last sessions per stock, rewritten by `make verify-prices` (force); overrides the backfill
+  sweep: {kind: ts_code, range_params: true, extra_params: {frequency: d, adjustflag: "3"},
+          values_from_dataset: {dataset: stock_basic, column: ts_code, where: "ts_code NOT LIKE '%.BJ'"}}
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  rename: {date: trade_date}
+  fields: [ts_code, trade_date, open, high, low, close, preclose, volume, amount, tradestatus]
+  text_fields: [ts_code, trade_date]
+  curated: {path: verification/baostock_daily_recent}
+
+baostock_adj_factor:
+  source: baostock
+  endpoint: query_adjust_factor
+  # factors only on dividend dates (back factor = cumulative, compared step by step with adj_factor)
+  sweep: {kind: ts_code, range_params: true,
+          values_from_dataset: {dataset: stock_basic, column: ts_code, where: "ts_code NOT LIKE '%.BJ'"}}
+  start: "20190101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  rename: {dividOperateDate: trade_date, foreAdjustFactor: fore_adjust_factor,
+           backAdjustFactor: back_adjust_factor, adjustFactor: adjust_factor}
+  fields: [ts_code, trade_date, fore_adjust_factor, back_adjust_factor, adjust_factor]
+  text_fields: [ts_code, trade_date]
+  curated: {path: verification/baostock_adj_factor}

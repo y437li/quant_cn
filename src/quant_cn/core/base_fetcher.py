@@ -60,6 +60,7 @@ class BaseFetcher(ABC):
         TC-BF-005  empty result is marked done with 0 rows and writes no file (unless the
                    subclass reports the key as recent: TC-DSF-004)
         TC-BF-006  failure on a key re-raises; earlier keys stay done and the log is saved
+        TC-BF-007  spec.rename renames vendor columns; sweep.key_field is filled with the key
     """
 
     def __init__(
@@ -140,13 +141,20 @@ class BaseFetcher(ABC):
             Input:
                 key: str; start: str; end: str
             Output:
-                DataFrame  -- vendor columns; may be empty
+                DataFrame  -- vendor columns after spec.rename, plus sweep.key_field = key when
+                              the response lacks it; may be empty
             Raises:
                 DataSourceError, PermissionDeniedError
         """
-        return self._client.query(
+        df = self._client.query(
             self.spec.endpoint, self.build_params(key, start, end), self.spec.fields
         )
+        if self.spec.rename:
+            df = df.rename(columns=self.spec.rename)
+        key_field = self.spec.sweep.key_field
+        if key_field and len(df) and key_field not in df.columns:
+            df[key_field] = key.partition("_")[0]
+        return df
 
     def run(
         self,
