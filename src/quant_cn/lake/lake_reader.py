@@ -46,9 +46,11 @@ class LakeReader:
             (none at construction)
 
     Used by:
-        cli.ServiceBuilder    -- build_reader
-        (none yet)            -- UniverseStep, factors (plan 04 phases 3-4), notebooks
-        factor.FactorFactory  -- injected type or call
+        cli.ServiceBuilder       -- build_reader
+        (none yet)               -- UniverseStep, factors (plan 04 phases 3-4), notebooks
+        factor.FactorFactory     -- injected type or call
+        pipeline.EvaluationStep  -- injected type or call
+        pipeline.FeatureStep     -- injected type or call
 
     Test cases:
         TC-LRD-001  read_panel filters dates and tickers, validates, maps old-code rows (new wins)

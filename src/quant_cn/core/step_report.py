@@ -41,6 +41,8 @@ class StepReport:
         pipeline.DeriveStep            -- injected type or call
         pipeline.PrefectRunner         -- injected type or call
         pipeline.UniverseStep          -- injected type or call
+        pipeline.EvaluationStep        -- injected type or call
+        pipeline.FeatureStep           -- injected type or call
 
     Test cases:
         TC-BF-001  fetch run counts fetched/skipped/empty correctly

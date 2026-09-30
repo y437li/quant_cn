@@ -25,6 +25,7 @@ class QuantileReturns:
 
     Used by:
         factor.FactorEvaluator  -- injected type or call
+        cli.ServiceBuilder      -- injected type or call
 
     Test cases:
         TC-QR-001  a monotone factor gives an increasing ladder and a positive long-short

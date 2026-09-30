@@ -33,9 +33,11 @@ class ParquetWriter(BaseStore):
             (none at construction)
 
     Used by:
-        cli.QuantCnCli         -- composition root
-        cli.ServiceBuilder     -- injected type or call
-        pipeline.UniverseStep  -- injected type or call
+        cli.QuantCnCli           -- composition root
+        cli.ServiceBuilder       -- injected type or call
+        pipeline.UniverseStep    -- injected type or call
+        pipeline.EvaluationStep  -- injected type or call
+        pipeline.FeatureStep     -- injected type or call
 
     Test cases:
         TC-PW-001  raw file lands at raw/<dataset>/<param>=<key>.parquet with coerced dtypes
@@ -45,6 +47,7 @@ class ParquetWriter(BaseStore):
         TC-PW-005  curated write refuses a frame violating the schema
         TC-PW-006  rewriting a raw file keeps the first previous version as <file>.prev
         TC-PW-007  write_derived lands at derived/<name>/year=<year>/part-0.parquet
+        TC-PW-008  write_table writes under derived/ or meta/ only
     """
 
     def __init__(self, lake_root: Path) -> None:
@@ -146,6 +149,28 @@ class ParquetWriter(BaseStore):
                 LakeError  -- write failed
         """
         path = self.lake_root / "derived" / name / f"year={year}" / "part-0.parquet"
+        self._write_atomic(df, path)
+        return path
+
+    def write_table(self, zone: str, rel_path: str, df: pd.DataFrame) -> Path:
+        """
+        Purpose:
+            Persist a whole small table (reports under derived/, logs under meta/).
+
+        Contract:
+            Input:
+                zone:     str  -- "derived" or "meta"
+                rel_path: str  -- path below the zone ending in .parquet
+                df:       DataFrame
+            Output:
+                Path  -- <lake_root>/<zone>/<rel_path> (atomic replace)
+            Raises:
+                ValueError  -- other zone, or a path escaping the zone
+                LakeError   -- write failed
+        """
+        if zone not in ("derived", "meta") or ".." in Path(rel_path).parts:
+            raise ValueError(f"cannot write {zone}/{rel_path}")
+        path = self.lake_root / zone / rel_path
         self._write_atomic(df, path)
         return path
 

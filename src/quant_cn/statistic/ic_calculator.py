@@ -35,6 +35,7 @@ class IcCalculator:
 
     Used by:
         factor.FactorEvaluator  -- injected type or call
+        cli.ServiceBuilder      -- injected type or call
 
     Test cases:
         TC-ICC-001  open entry: r = close_adj(t+h) / open_adj(t+1) - 1; the last h dates are NaN

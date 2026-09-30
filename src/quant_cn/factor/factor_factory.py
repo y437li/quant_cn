@@ -41,7 +41,9 @@ class FactorFactory:
             (none at construction)
 
     Used by:
-        notebooks  -- factor campaign
+        notebooks             -- factor campaign
+        pipeline.FeatureStep  -- injected type or call
+        cli.ServiceBuilder    -- injected type or call
 
     Test cases:
         TC-FAF-001  build_all returns the configured classes with names and params

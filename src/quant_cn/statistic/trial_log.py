@@ -28,7 +28,8 @@ class TrialLog:
             ValueError  -- empty campaign id
 
     Used by:
-        factor.FactorEvaluator  -- injected type or call
+        factor.FactorEvaluator   -- injected type or call
+        pipeline.EvaluationStep  -- injected type or call
 
     Test cases:
         TC-TL-001  trials get sequential ids and appear in build_frame as TRIAL_LOG

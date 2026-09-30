@@ -24,6 +24,12 @@ ONE_SIDED_VIEW = f"{SCHEMA}.fut_daily_one_sided"
 INDUSTRY_VIEW = f"{SCHEMA}.industry_l1"
 MARGIN_VIEW = f"{SCHEMA}.margin_targets"
 UNIVERSE_VIEW = f"{SCHEMA}.universe"
+FEATURES_VIEW = f"{SCHEMA}.features"
+# materialised tables under derived/<name>/year=YYYY/part-0.parquet -> view columns
+_TABLES = {
+    "universe": "trade_date, ts_code, in_universe, reason",
+    "features": "trade_date, ts_code, factor, value, value_raw",
+}
 # statements only: event datasets are period-swept too (forecast_vip, disclosure_date; D-081)
 FUNDAMENTALS_PREFIX = "fundamentals/"
 BASE_VIEW = f"{SCHEMA}.fundamentals_base"
@@ -167,7 +173,8 @@ class DerivedViews:
         `derived.industry_l1` (Shenwan L1 validity intervals per stock, PIT rows plus back-filled
         rows flagged industry_backfilled; l1_pit = rows not back-filled, l1_grouping = any; D-071);
         `derived.margin_targets` (SZSE official list + SSE proxy from margin_detail, source
-        column; D-084); `derived.universe` over derived/universe (UniverseStep output);
+        column; D-084); `derived.universe` / `derived.features` over the UniverseStep /
+        FeatureStep year files (refresh_tables);
         `derived.ticker_alias` through TickerAliasMap (D-089); then the `quality`
         schema through QualityViews.
 
@@ -179,7 +186,7 @@ class DerivedViews:
             categories: Sequence[FuturesCategory]    -- Config.futures_categories
             aliases:    Sequence[TickerAlias]        -- Config.ticker_aliases (derived.ticker_alias)
         Output:
-            instance; `refresh() -> list[str]` views created
+            instance; `refresh() -> list[str]` views created, `refresh_tables`
         Raises:
             (none at construction)
 
@@ -187,6 +194,7 @@ class DerivedViews:
         pipeline.CuratePipeline  -- after compaction
         pipeline.DeriveStep      -- injected type or call
         cli.ServiceBuilder       -- injected type or call
+        pipeline.FeatureStep     -- injected type or call
 
     Test cases:
         TC-DV-001  prices_adj joins daily and adj_factor with close_adj = close * adj_factor
@@ -197,7 +205,7 @@ class DerivedViews:
         TC-DV-006  fut_daily_one_sided halves two-sided commodity rows before 2020 only
         TC-DV-007  industry_l1 gives PIT intervals plus back-filled rows before and between them
         TC-DV-008  margin_targets unions SZSE flags and the SSE proxy (agreement: QualityViews)
-        TC-DV-009  derived.universe reads the materialised universe files; absent without them
+        TC-DV-009  derived.universe / derived.features read the year files; absent without them
         TC-DV-010  TTM = YTD + prior FY - prior same period from versions known at each
                    announcement; a restated FY yields a new TTM row; yoy from prior TTM
     """
@@ -239,7 +247,7 @@ class DerivedViews:
                 created.append(view)
             else:
                 self._execute(con, f"DROP VIEW IF EXISTS {view}")
-        created += self._refresh_universe(con)
+        created += self.refresh_tables()
         alias_view = TickerAliasMap(self._catalog, self._query, self._aliases).refresh()
         created += [alias_view] if alias_view else []
         logger.info("derived views: %s", created)
@@ -272,18 +280,36 @@ class DerivedViews:
             (MARGIN_VIEW, ["szse_margin_targets", "margin_detail"], _MARGIN_SQL),
         ]
 
-    def _refresh_universe(self, con: duckdb.DuckDBPyConnection) -> list[str]:
-        folder = self._catalog.lake_root / "derived" / "universe"
-        if not any(folder.glob("year=*/part-0.parquet")):
-            self._execute(con, f"DROP VIEW IF EXISTS {UNIVERSE_VIEW}")
-            return []
-        files = str(folder / "year=*" / "part-0.parquet").replace("'", "''")
-        self._execute(
-            con,
-            f"CREATE OR REPLACE VIEW {UNIVERSE_VIEW} AS SELECT trade_date, ts_code, in_universe, "
-            f"reason FROM read_parquet('{files}', hive_partitioning = false)",
-        )
-        return [UNIVERSE_VIEW]
+    def refresh_tables(self) -> list[str]:
+        """
+        Purpose:
+            (Re)create the views over materialised tables (UniverseStep, FeatureStep outputs).
+
+        Contract:
+            Input:
+                (none)
+            Output:
+                list[str]  -- views created: derived.universe / derived.features when their
+                              year files exist; dropped otherwise
+            Raises:
+                LakeError  -- DuckDB rejects a view
+        """
+        con, created = self._catalog.connection, []
+        self._execute(con, f"CREATE SCHEMA IF NOT EXISTS {SCHEMA}")
+        for name, columns in _TABLES.items():
+            view = f"{SCHEMA}.{name}"
+            folder = self._catalog.lake_root / "derived" / name
+            if not any(folder.glob("year=*/part-0.parquet")):
+                self._execute(con, f"DROP VIEW IF EXISTS {view}")
+                continue
+            files = str(folder / "year=*" / "part-0.parquet").replace("'", "''")
+            self._execute(
+                con,
+                f"CREATE OR REPLACE VIEW {view} AS SELECT {columns} "
+                f"FROM read_parquet('{files}', hive_partitioning = false)",
+            )
+            created.append(view)
+        return created
 
     def _build_category_filter(self) -> str:
         if not self._categories:

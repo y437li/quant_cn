@@ -35,6 +35,7 @@ class HacVariance:
 
     Used by:
         statistic.IcSignificance  -- NW t on mean IC, sub-periods, break test
+        cli.ServiceBuilder        -- injected type or call
 
     Test cases:
         TC-HAC-001  lag rule: max(h - 1, floor(4 (T/100)^(2/9)))

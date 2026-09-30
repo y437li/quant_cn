@@ -84,3 +84,13 @@ def test_tc_pw_007_write_derived(lake: MiniLake) -> None:
     path = lake.writer.write_derived("universe", 2026, pd.DataFrame({"x": [1.0]}))
     assert path == lake.lake_root / "derived" / "universe" / "year=2026" / "part-0.parquet"
     assert pd.read_parquet(path)["x"].tolist() == [1.0]
+
+
+# TC-PW-008
+def test_tc_pw_008_write_table(lake: MiniLake) -> None:
+    path = lake.writer.write_table("meta", "trials/c01.parquet", pd.DataFrame({"x": [1.0]}))
+    assert path == lake.lake_root / "meta" / "trials" / "c01.parquet" and path.exists()
+    with pytest.raises(ValueError):
+        lake.writer.write_table("raw", "x.parquet", pd.DataFrame())
+    with pytest.raises(ValueError):
+        lake.writer.write_table("meta", "../raw/x.parquet", pd.DataFrame())

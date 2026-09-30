@@ -29,6 +29,7 @@ class Winsorizer:
 
     Used by:
         factor.FactorPreprocessor  -- injected type or call
+        cli.ServiceBuilder         -- injected type or call
 
     Test cases:
         TC-WZ-001  MAD method clips to median +- k * 1.4826 * MAD per date; NaN stays NaN

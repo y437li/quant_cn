@@ -36,6 +36,7 @@ class Clock:
         data_loading.AkshareClient       -- injected type or call
         data_loading.BaostockClient      -- injected type or call
         lake.RebuildAudit                -- injected type or call
+        cli.ResearchCommands             -- injected type or call
 
     Test cases:
         TC-CL-001  today_str is YYYYMMDD and equals get_now().date()

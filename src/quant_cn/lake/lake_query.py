@@ -45,6 +45,9 @@ class LakeQuery:
         lake.TickerAliasMap          -- injected type or call
         pipeline.UniverseStep        -- injected type or call
         lake.ExposureReader          -- injected type or call
+        pipeline.EvaluationStep      -- injected type or call
+        pipeline.FeatureStep         -- injected type or call
+        cli.ResearchCommands         -- injected type or call
 
     Test cases:
         TC-LQ-001  sql returns a DataFrame with parameters bound

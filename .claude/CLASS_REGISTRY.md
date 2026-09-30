@@ -28,15 +28,15 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `TermSelector` | `quant_cn.calculation.term_selector` | 4 | none | Choose the two nearest expiries with at least `min_days` calendar days to expiry. | 1 | `calculation.VixCalculator` | `tests/calculation/test_term_selector.py` (TC-TS-001..002) | 2026-09-27 |
 | `VarianceStripCalculator` | `quant_cn.calculation.variance_strip_calculator` | 4 | none | sigma^2 = (2/T) sum(dK/K^2 e^{RT} Q(K)) - (1/T)(F/K0 - 1)^2 over puts below K0, calls above K0 and the call/put average at K0 | 1 | `calculation.VixCalculator` | `tests/calculation/test_variance_strip_calculator.py` (TC-VSC-001..003) | 2026-09-27 |
 | `VixCalculator` | `quant_cn.calculation.vix_calculator` | 4 | none | Orchestrate the white-paper steps per trading day: select near/next terms, rate per term, forward and K0, variance strip, interpolation on the chosen clock | 1 | `research_space/notebooks/20260927_vix_calculation.ipynb` | `tests/calculation/test_vix_calculator.py` (TC-VC-001..003) | 2026-09-27 |
-| `QuantCnCli` | `quant_cn.cli` | 8 | none | `python -m quant_cn.cli <command>`: doctor, download, compact, curate, rebuild, backup, project-catalog, query | 1 | `Makefile targets doctor, download, compact, lake-rebuild, lake-backup` | `tests/test_cli.py` (TC-QCC-001..008) | 2026-09-27 |
-| `ServiceBuilder` | `quant_cn.cli` | 8 | none | Wire services for the CLI commands (the composition root's constructors): download and curate pipelines with the chosen runner, and the project catalog. | 5 | `cli.QuantCnCli` | `tests/test_cli.py` (TC-QCC-002..003) | 2026-09-27 |
+| `QuantCnCli` | `quant_cn.cli` | 8 | none | `python -m quant_cn.cli <command>`: doctor, download, compact, curate, rebuild, backup, project-catalog, query | 1 | `Makefile targets doctor, download, compact, lake-rebuild, lake-backup` | `tests/test_cli.py` (TC-QCC-001..007) | 2026-09-27 |
+| `ResearchCommands` | `quant_cn.cli` | 8 | none | The research-side CLI commands, kept apart so QuantCnCli stays within its size limit: `release-lags` (D-086) and `evaluate` (factor campaign reports and trial log, plan 04 phase 5) | 0 | `cli.QuantCnCli` | `tests/test_cli.py` (TC-QCC-008..009) | 2026-09-27 |
 | `BaseApiClient` | `quant_cn.core.base_api_client` | 1 | ABC | Abstract vendor client: one logical query returns all pages as one DataFrame. | 1 | `data_loading.TushareClient`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
 | `BaseFetchLog` | `quant_cn.core.base_fetch_log` | 1 | ABC | Abstract record of which (dataset, key) pairs are fully downloaded. | 5 | `lake.FetchLog`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher` | `tests/lake/test_fetch_log.py` (TC-FL-001..003) | 2026-09-27 |
 | `BaseFetcher` | `quant_cn.core.base_fetcher` | 1 | ABC | Download one dataset as a sequence of keys | 5 | `data_loading.SingleCallFetcher`, `data_loading.EnumFetcher`, `data_loading.DateSweepFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.FetcherFactory.build`, `pipeline.FetchStep`, `data_loading.DateWindowFetcher` | `tests/core/test_base_fetcher.py` (TC-BF-001..007) | 2026-09-27 |
 | `BaseRunLog` | `quant_cn.core.base_run_log` | 1 | ABC | Abstract append-only log of runs and per-key events | 3 | `lake.RunLog`, `core.BaseFetcher.run`, `pipeline.LocalRunner`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `pipeline.PrefectRunner`, `data_loading.DateWindowFetcher` | `tests/lake/test_run_log.py` (TC-RL-001..001) | 2026-09-27 |
-| `BaseStep` | `quant_cn.core.base_step` | 1 | ABC | Abstract unit of pipeline work: list its units, then run and report. | 3 | `pipeline.FetchStep`, `pipeline.BaseRunner.run`, `pipeline.LocalRunner.run`, `pipeline.CompactStep`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
+| `BaseStep` | `quant_cn.core.base_step` | 1 | ABC | Abstract unit of pipeline work: list its units, then run and report. | 3 | `pipeline.FetchStep`, `pipeline.BaseRunner.run`, `pipeline.LocalRunner.run`, `pipeline.CompactStep`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep`, `pipeline.EvaluationStep`, `pipeline.FeatureStep` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
 | `BaseStore` | `quant_cn.core.base_store` | 1 | ABC | Abstract sink for raw fetch results and curated partitions. | 2 | `lake.ParquetWriter`, `core.BaseFetcher`, `lake.Compactor`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
-| `Clock` | `quant_cn.core.clock` | 1 | none | The single source of wall time, monotonic time and sleeping | 4 | `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.FetcherFactory`, `data_loading.PeriodSweepFetcher`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `lake.RebuildAudit` | `tests/core/test_clock.py` (TC-CL-001..002) | 2026-09-27 |
+| `Clock` | `quant_cn.core.clock` | 1 | none | The single source of wall time, monotonic time and sleeping | 4 | `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.FetcherFactory`, `data_loading.PeriodSweepFetcher`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `lake.RebuildAudit`, `cli.ResearchCommands` | `tests/core/test_clock.py` (TC-CL-001..002) | 2026-09-27 |
 | `LakeConfig` | `quant_cn.core.config` | 1 | BaseModel | Where the lake lives and whether it may sit inside the repository. | 0 | `core.Config` | `tests/core/test_config.py` (TC-C-001..001) | 2026-09-27 |
 | `TushareConfig` | `quant_cn.core.config` | 1 | BaseModel | Tushare endpoint, paging, retry and rate-limit settings | 0 | `core.Config`, `data_loading.TushareClient` | `tests/core/test_config.py` (TC-C-002..002) | 2026-09-27 |
 | `DownloadConfig` | `quant_cn.core.config` | 1 | BaseModel | Which datasets to download, in what order, and from which start dates (D-015b). | 0 | `core.Config` | `tests/core/test_config.py` (TC-C-004..004) | 2026-09-27 |
@@ -45,7 +45,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `UniverseConfig` | `quant_cn.core.config` | 1 | BaseModel | Rules of the tradeable universe per session (FACTOR_TESTING_DESIGN §11, D-054). | 0 | `core.Config`, `pipeline.UniverseStep` | `tests/core/test_config.py` (TC-C-011..011) | 2026-09-27 |
 | `FuturesCategory` | `quant_cn.core.config` | 1 | BaseModel | One member-category label that `fut_holding` lists among real brokers (D-079). | 0 | `core.Config`, `lake.DerivedViews` | `tests/core/test_config.py` (TC-C-009..009) | 2026-09-27 |
 | `TickerAlias` | `quant_cn.core.config` | 1 | BaseModel | One retired code and the code its company trades on afterwards (D-053, D-089). | 0 | `core.Config`, `lake.TickerAliasMap`, `lake.DerivedViews` | `tests/core/test_config.py` (TC-C-010..010) | 2026-09-27 |
-| `Config` | `quant_cn.core.config` | 1 | BaseModel | The typed configuration injected everywhere: YAML defaults, machine overrides, environment. | 3 | `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder` | `tests/core/test_config.py` (TC-C-001..013) | 2026-09-27 |
+| `Config` | `quant_cn.core.config` | 1 | BaseModel | The typed configuration injected everywhere: YAML defaults, machine overrides, environment. | 3 | `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands` | `tests/core/test_config.py` (TC-C-001..013) | 2026-09-27 |
 | `ValuesFromDataset` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Enumerate sweep keys from another curated dataset (e.g | 0 | `core.SweepSpec` | `tests/data_loading/test_fetcher_factory.py` (TC-FF-003..003) | 2026-09-27 |
 | `SweepSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | How a dataset is swept so each call returns the whole market for one key. | 1 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
 | `CuratedSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Where a dataset lands in `curated/` and which date column drives its yearly partition. | 0 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
@@ -83,7 +83,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `RepoFiles` | `quant_cn.core.docs.repo_files` | 1 | none | The set of repository files a linter should see: `git ls-files --cached --others --exclude-standard`, so .gitignore (caches, .env, lake guards) decides what is ignored. | 2 | `core.docs.IndexChecker`, `core.docs.ContractLinter`, `core.docs.DocTableBuilder`, `cli.ServiceBuilder` | `tests/core/docs/test_repo_files.py` (TC-RF-001..003) | 2026-09-27 |
 | `SizeChecker` | `quant_cn.core.docs.size_checker` | 1 | BaseChecker | Fail any .py file over 600 lines, class over 300, function or method over 50 (physical lines, docstrings included), and INDEX.md / SKILL.md / execution plan over 300 lines. | 1 | `core.docs.ContractLinter` | `tests/core/docs/test_size_checker.py` (TC-SC-001..002) | 2026-09-27 |
 | `Schema` | `quant_cn.core.schema` | 1 | none | Declare and enforce a DataFrame shape: text columns are pandas `string`, all other declared columns are `float64`, and the primary key is unique and non-null. | 4 | `core.DatasetSpec.build_schema`, `lake.LakeReader` | `tests/core/test_schema.py` (TC-S-001..006) | 2026-09-27 |
-| `StepReport` | `quant_cn.core.step_report` | 1 | none | Counts and status of one step (usually one dataset's fetch) so runs can be summarised. | 0 | `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `pipeline.FetchStep`, `pipeline.PipelineReport`, `pipeline.CompactStep`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep` | `tests/core/test_base_fetcher.py` (TC-BF-001..001) | 2026-09-27 |
+| `StepReport` | `quant_cn.core.step_report` | 1 | none | Counts and status of one step (usually one dataset's fetch) so runs can be summarised. | 0 | `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `pipeline.FetchStep`, `pipeline.PipelineReport`, `pipeline.CompactStep`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep`, `pipeline.EvaluationStep`, `pipeline.FeatureStep` | `tests/core/test_base_fetcher.py` (TC-BF-001..001) | 2026-09-27 |
 | `TickerNormalizer` | `quant_cn.core.ticker_normalizer` | 1 | none | Turn common A-share ticker spellings into Tushare `ts_code` and check `ts_code` validity. | 2 | (none yet) | `tests/core/test_ticker_normalizer.py` (TC-TN-001..004) | 2026-09-27 |
 | `AkshareClient` | `quant_cn.data_loading.akshare_client` | 3 | BaseApiClient | Call one AkShare function per query (`api_name` = function name, `params` = its keyword arguments) and return its frame with dates normalised to YYYYMMDD strings, so the lake's schema and PIT rules apply unchanged | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_akshare_client.py` (TC-AKC-001..002) | 2026-09-27 |
 | `BaostockClient` | `quant_cn.data_loading.baostock_client` | 3 | BaseApiClient | Call one BaoStock query per request (`api_name` = method, e.g | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_baostock_client.py` (TC-BSC-001..003) | 2026-09-27 |
@@ -96,57 +96,60 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `HttpTransport` | `quant_cn.data_loading.http_transport` | 3 | none | Send one JSON POST and return the decoded JSON object. | 1 | `data_loading.TushareClient` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..001) | 2026-09-27 |
 | `TushareClient` | `quant_cn.data_loading.tushare_client` | 3 | BaseApiClient | Query Tushare Pro: one logical query follows limit/offset paging until a short page and returns all rows | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..009) | 2026-09-27 |
 | `FactorInputs` | `quant_cn.factor.base_factor` | 5 | none | The panels a factor may read, loaded once by FactorFactory for all factors of a run | 1 | `factor.BaseFactor`, `factor.FactorFactory`, `factor.library.EarningsYieldFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor` | `tests/factor/test_base_factor.py` (TC-FIN-001..001) | 2026-09-27 |
-| `BaseFactor` | `quant_cn.factor.base_factor` | 5 | ABC | Abstract factor: declares which inputs, fundamentals fields and daily_basic columns it needs and how many sessions of price history before the first output date | 3 | `factor.FactorFactory`, `factor.library.*`, `factor.library.EarningsYieldFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor` | `tests/factor/test_base_factor.py` (TC-BFA-001..002) | 2026-09-27 |
+| `BaseFactor` | `quant_cn.factor.base_factor` | 5 | ABC | Abstract factor: declares which inputs, fundamentals fields and daily_basic columns it needs and how many sessions of price history before the first output date | 3 | `factor.FactorFactory`, `factor.library.*`, `factor.library.EarningsYieldFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor`, `pipeline.FeatureStep` | `tests/factor/test_base_factor.py` (TC-BFA-001..002) | 2026-09-27 |
 | `FactorReport` | `quant_cn.factor.factor_evaluator` | 5 | none | The evaluation of one campaign: IC series, every test result, quantile ladders. | 0 | `factor.FactorEvaluator` | `tests/factor/test_factor_evaluator.py` (TC-FEV-001..001) | 2026-09-27 |
-| `FactorEvaluator` | `quant_cn.factor.factor_evaluator` | 5 | none | Evaluate every factor of a campaign (FACTOR_TESTING_DESIGN §2, §3, §6): tradeable forward returns from the open of t+1, IC series per horizon, the IcSignificance tests, decay across horizons (half-life), rank autocorrelation (turnover proxy), quantile ladders and long-short statistics on non-overlapping samples, then the campaign-level Holm / BHY / Romano-Wolf adjustment and HLZ flag over all factor x horizon mean-IC tests | 1 | `notebooks` | `tests/factor/test_factor_evaluator.py` (TC-FEV-001..003) | 2026-09-27 |
-| `FactorFactory` | `quant_cn.factor.factor_factory` | 5 | none | Resolve config/factors.yaml entries to BaseFactor instances (every module under factor/library/ is imported so its classes register themselves | 2 | `notebooks` | `tests/factor/test_factor_factory.py` (TC-FAF-001..003) | 2026-09-27 |
-| `FactorPreprocessor` | `quant_cn.factor.factor_preprocessor` | 5 | none | The ordered chain applied to every raw factor, each step optional and logged: winsorise (median +- k * 1.4826 * MAD per date) -> standardise (z per date) -> neutralise (per-date OLS residual on Shenwan L1 dummies and log market cap, D-093) -> standardise again, so the processed value is a unit-dispersion, industry- and size-neutral z-score | 2 | (none yet) | `tests/factor/test_factor_preprocessor.py` (TC-FPP-001..002) | 2026-09-27 |
+| `FactorEvaluator` | `quant_cn.factor.factor_evaluator` | 5 | none | Evaluate every factor of a campaign (FACTOR_TESTING_DESIGN §2, §3, §6): tradeable forward returns from the open of t+1, IC series per horizon, the IcSignificance tests, decay across horizons (half-life), rank autocorrelation (turnover proxy), quantile ladders and long-short statistics on non-overlapping samples, then the campaign-level Holm / BHY / Romano-Wolf adjustment and HLZ flag over all factor x horizon mean-IC tests | 2 | `notebooks`, `pipeline.EvaluationStep`, `cli.ServiceBuilder` | `tests/factor/test_factor_evaluator.py` (TC-FEV-001..003) | 2026-09-27 |
+| `FactorFactory` | `quant_cn.factor.factor_factory` | 5 | none | Resolve config/factors.yaml entries to BaseFactor instances (every module under factor/library/ is imported so its classes register themselves | 2 | `notebooks`, `pipeline.FeatureStep`, `cli.ServiceBuilder` | `tests/factor/test_factor_factory.py` (TC-FAF-001..003) | 2026-09-27 |
+| `FactorPreprocessor` | `quant_cn.factor.factor_preprocessor` | 5 | none | The ordered chain applied to every raw factor, each step optional and logged: winsorise (median +- k * 1.4826 * MAD per date) -> standardise (z per date) -> neutralise (per-date OLS residual on Shenwan L1 dummies and log market cap, D-093) -> standardise again, so the processed value is a unit-dispersion, industry- and size-neutral z-score | 2 | `pipeline.FeatureStep`, `cli.ServiceBuilder` | `tests/factor/test_factor_preprocessor.py` (TC-FPP-001..002) | 2026-09-27 |
 | `EarningsYieldFactor` | `quant_cn.factor.library.earnings_yield_factor` | 5 | BaseFactor | Earnings yield EP_TTM = net profit attributable to parent over the trailing twelve months (PIT, D-092) / total market value at the close of t | 1 | (none yet) | `tests/factor/test_fundamental_factors.py` (TC-EYF-001..001) | 2026-09-27 |
 | `MomentumFactor` | `quant_cn.factor.library.momentum_factor` | 5 | BaseFactor | MOM_{12-1} = P_adj(t - skip) / P_adj(t - window) - 1 on the backward-adjusted close (ratios are PIT-safe, FACTOR_TESTING_DESIGN §11), skipping the most recent month to avoid the short-term reversal (Jegadeesh & Titman 1993) | 2 | (none yet) | `tests/factor/test_price_factors.py` (TC-MOM-001..001) | 2026-09-27 |
 | `ProfitGrowthFactor` | `quant_cn.factor.library.profit_growth_factor` | 5 | BaseFactor | Growth = (NI_TTM(P) - NI_TTM(P - 1 year)) / /NI_TTM(P - 1 year)/ for the latest PIT-visible period P, both TTMs from the versions known at the announcement (the lake's `n_income_attr_p_ttm_yoy`, D-092) | 1 | (none yet) | `tests/factor/test_fundamental_factors.py` (TC-PGF-001..001) | 2026-09-27 |
 | `ReversalFactor` | `quant_cn.factor.library.reversal_factor` | 5 | BaseFactor | REV = -(P_adj(t) / P_adj(t - window) - 1): last month's losers tend to rebound, strongly so in China's retail-driven market (Jegadeesh 1990 | 2 | (none yet) | `tests/factor/test_price_factors.py` (TC-REV-001..001) | 2026-09-27 |
 | `RoeFactor` | `quant_cn.factor.library.roe_factor` | 5 | BaseFactor | Return on equity ROE_TTM = net profit attributable to parent over the trailing twelve months / equity attributable to parent in the latest PIT-visible balance sheet (both D-092 PIT) | 1 | (none yet) | `tests/factor/test_fundamental_factors.py` (TC-ROE-001..001) | 2026-09-27 |
 | `TurnoverFactor` | `quant_cn.factor.library.turnover_factor` | 5 | BaseFactor | TURN = -mean(turnover_rate_f over the last `window` sessions, at least `min_obs` traded): heavily traded stocks underperform, a liquidity / attention effect that is strong in China (Datar, Naik & Radcliffe 1998 | 2 | (none yet) | `tests/factor/test_price_factors.py` (TC-TRN-001..001) | 2026-09-27 |
-| `SignalCombiner` | `quant_cn.factor.signal_combiner` | 5 | none | score_{i,t} = sum_f w_f z_{f,i,t} / sum_{f available} /w_f/ over the processed factors a stock has at t (at least `min_factors`), then standardised per date: an equal-risk blend of z-scores that tolerates a missing factor instead of dropping the stock. | 1 | (none yet) | `tests/factor/test_signal_combiner.py` (TC-SGC-001..002) | 2026-09-27 |
+| `SignalCombiner` | `quant_cn.factor.signal_combiner` | 5 | none | score_{i,t} = sum_f w_f z_{f,i,t} / sum_{f available} /w_f/ over the processed factors a stock has at t (at least `min_factors`), then standardised per date: an equal-risk blend of z-scores that tolerates a missing factor instead of dropping the stock. | 1 | `pipeline.FeatureStep`, `cli.ServiceBuilder` | `tests/factor/test_signal_combiner.py` (TC-SGC-001..002) | 2026-09-27 |
 | `Compactor` | `quant_cn.lake.compactor` | 2 | none | Rebuild a dataset's curated partitions from its raw files: select declared fields, cast dtypes, fill `key_defaults` into NULL key columns, drop duplicate primary keys (keeping one), sort by partition date then key, validate, write, and record a manifest in `meta/manifest/<dataset>.json`. | 1 | `cli.QuantCnCli`, `pipeline.CompactStep`, `pipeline.CuratePipeline`, `cli.ServiceBuilder` | `tests/lake/test_compactor.py` (TC-CO-001..006) | 2026-09-27 |
-| `DerivedViews` | `quant_cn.lake.derived_views` | 2 | none | Create the `derived` schema views built only from curated/: `derived.prices_adj` (daily bars joined to adj_factor, close_adj = close * adj_factor | 1 | `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `cli.ServiceBuilder` | `tests/lake/test_derived_views.py` (TC-DV-001..010) | 2026-09-27 |
+| `DerivedViews` | `quant_cn.lake.derived_views` | 2 | none | Create the `derived` schema views built only from curated/: `derived.prices_adj` (daily bars joined to adj_factor, close_adj = close * adj_factor | 2 | `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `cli.ServiceBuilder`, `pipeline.FeatureStep` | `tests/lake/test_derived_views.py` (TC-DV-001..010) | 2026-09-27 |
 | `EffectiveDateResolver` | `quant_cn.lake.effective_date_resolver` | 2 | none | Turn a dataset's `known_on` value into `effective_date`, the first China trading session the row may be used (FACTOR_TESTING_DESIGN §11): as_is          -> that session, or the next one if the day is closed (same-day data) | 2 | (none yet) | `tests/lake/test_effective_date_resolver.py` (TC-EDR-001..006) | 2026-09-27 |
-| `ExposureReader` | `quant_cn.lake.exposure_reader` | 2 | none | Per universe member and session: the Shenwan L1 group in effect (derived.industry_l1, l1_grouping = the PIT row or the back-filled first-known L1, flagged | 1 | (none yet) | `tests/lake/test_lake_reader.py` (TC-EXR-001..001) | 2026-09-27 |
+| `ExposureReader` | `quant_cn.lake.exposure_reader` | 2 | none | Per universe member and session: the Shenwan L1 group in effect (derived.industry_l1, l1_grouping = the PIT row or the back-filled first-known L1, flagged | 1 | `pipeline.FeatureStep`, `cli.ServiceBuilder` | `tests/lake/test_lake_reader.py` (TC-EXR-001..001) | 2026-09-27 |
 | `FetchLog` | `quant_cn.lake.fetch_log` | 2 | BaseFetchLog | Record finished (dataset, key) pairs in `meta.fetch_log`, mirror them to `meta/fetch_log.parquet` on save, and rebuild the table after the DuckDB file is lost. | 6 | `cli.QuantCnCli`, `cli.ServiceBuilder` | `tests/lake/test_fetch_log.py` (TC-FL-001..006) | 2026-09-27 |
-| `LakeCatalog` | `quant_cn.lake.lake_catalog` | 2 | none | Own the lake's single DuckDB connection (`meta/quant_cn.duckdb`): schemas `raw`, `curated`, `meta` | 8 | `lake.FetchLog`, `lake.RunLog`, `lake.LakeQuery`, `lake.Compactor`, `pipeline.FetchStep.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `lake.DerivedViews`, `lake.PitAligner`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `lake.QualityViews`, `lake.LakeReader`, `lake.TickerAliasMap` | `tests/lake/test_lake_catalog.py` (TC-LC-001..005) | 2026-09-27 |
-| `LakeQuery` | `quant_cn.lake.lake_query` | 2 | none | Run read queries against the catalog views | 5 | `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader` | `tests/lake/test_lake_query.py` (TC-LQ-001..005) | 2026-09-27 |
-| `LakeReader` | `quant_cn.lake.lake_reader` | 2 | none | The read API factors, the universe step and notebooks use (SRC_DESIGN §2.2b, D-089): one curated dataset as a panel, dense or sparse prices, point-in-time fundamentals, reference tables (in-memory frames and view discovery: LakeQuery) | 5 | `cli.ServiceBuilder`, (none yet), `factor.FactorFactory` | `tests/lake/test_lake_reader.py` (TC-LRD-001..007) | 2026-09-27 |
+| `LakeCatalog` | `quant_cn.lake.lake_catalog` | 2 | none | Own the lake's single DuckDB connection (`meta/quant_cn.duckdb`): schemas `raw`, `curated`, `meta` | 8 | `lake.FetchLog`, `lake.RunLog`, `lake.LakeQuery`, `lake.Compactor`, `pipeline.FetchStep.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `lake.DerivedViews`, `lake.PitAligner`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `lake.QualityViews`, `lake.LakeReader`, `lake.TickerAliasMap`, `cli.ResearchCommands` | `tests/lake/test_lake_catalog.py` (TC-LC-001..005) | 2026-09-27 |
+| `LakeQuery` | `quant_cn.lake.lake_query` | 2 | none | Run read queries against the catalog views | 5 | `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `cli.ResearchCommands` | `tests/lake/test_lake_query.py` (TC-LQ-001..005) | 2026-09-27 |
+| `LakeReader` | `quant_cn.lake.lake_reader` | 2 | none | The read API factors, the universe step and notebooks use (SRC_DESIGN §2.2b, D-089): one curated dataset as a panel, dense or sparse prices, point-in-time fundamentals, reference tables (in-memory frames and view discovery: LakeQuery) | 5 | `cli.ServiceBuilder`, (none yet), `factor.FactorFactory`, `pipeline.EvaluationStep`, `pipeline.FeatureStep` | `tests/lake/test_lake_reader.py` (TC-LRD-001..007) | 2026-09-27 |
 | `PanelCache` | `quant_cn.lake.panel_cache` | 2 | none | Keep recently read panels in memory, keyed by (method, arguments), least recently used evicted first once the total size exceeds `max_bytes` | 4 | `lake.LakeReader`, `cli.ServiceBuilder` | `tests/lake/test_panel_cache.py` (TC-PCH-001..003) | 2026-09-27 |
-| `ParquetWriter` | `quant_cn.lake.parquet_writer` | 2 | BaseStore | Write raw fetch results and curated partitions as zstd parquet, atomically (write `.tmp`, fsync, rename), so a crash never leaves a half-written file. | 5 | `cli.QuantCnCli`, `cli.ServiceBuilder`, `pipeline.UniverseStep` | `tests/lake/test_parquet_writer.py` (TC-PW-001..007) | 2026-09-27 |
+| `ParquetWriter` | `quant_cn.lake.parquet_writer` | 2 | BaseStore | Write raw fetch results and curated partitions as zstd parquet, atomically (write `.tmp`, fsync, rename), so a crash never leaves a half-written file. | 6 | `cli.QuantCnCli`, `cli.ServiceBuilder`, `pipeline.UniverseStep`, `pipeline.EvaluationStep`, `pipeline.FeatureStep` | `tests/lake/test_parquet_writer.py` (TC-PW-001..008) | 2026-09-27 |
 | `PitAligner` | `quant_cn.lake.pit_aligner` | 2 | none | Align fundamentals to trading days without look-ahead | 2 | `pipeline.CuratePipeline`, `research_space/main.ipynb`, `pipeline.DeriveStep`, `cli.ServiceBuilder`, `lake.LakeReader` | `tests/lake/test_pit_aligner.py` (TC-PA-001..005) | 2026-09-27 |
 | `ProjectCatalog` | `quant_cn.lake.project_catalog` | 2 | none | Rebuild schema `project` in the lake's DuckDB from the repository: folders, files, classes, methods, used_by, contracts, test_cases, decisions, plans, phases, datasets, lint_findings, plus views tree, class_graph, stale and todo | 1 | `cli.ServiceBuilder` | `tests/lake/test_project_catalog.py` (TC-PJC-001..004) | 2026-09-27 |
 | `QualityViews` | `quant_cn.lake.quality_views` | 2 | none | Create the `quality` schema: cross-source comparisons that report, never overwrite (D-065) | 1 | `lake.DerivedViews.refresh` | `tests/lake/test_quality_views.py` (TC-QV-001..003) | 2026-09-27 |
 | `RebuildAudit` | `quant_cn.lake.rebuild_audit` | 2 | none | Record, on `rebuild`, what changed below raw/ since the last one | 2 | `cli.QuantCnCli` | `tests/lake/test_rebuild_audit.py` (TC-RA-001..002) | 2026-09-27 |
-| `ReleaseLagChecker` | `quant_cn.lake.release_lag_checker` | 2 | none | For every dataset with `known_on_rule: period_end_lag` and `release_dates` set, measure the observed lag (release date - period end) in that curated release-date dataset and count releases that came later than the rule | 2 | `cli.QuantCnCli` | `tests/lake/test_release_lag_checker.py` (TC-RLC-001..003) | 2026-09-27 |
-| `RunLog` | `quant_cn.lake.run_log` | 2 | BaseRunLog | Append run and per-key events to `meta.run_log` (run_id, started_at, finished_at, kind, dataset, key, status, n_rows, duration_ms, message) and echo them to logging. | 3 | `cli.QuantCnCli`, `cli.ServiceBuilder` | `tests/lake/test_run_log.py` (TC-RL-001..002) | 2026-09-27 |
+| `ReleaseLagChecker` | `quant_cn.lake.release_lag_checker` | 2 | none | For every dataset with `known_on_rule: period_end_lag` and `release_dates` set, measure the observed lag (release date - period end) in that curated release-date dataset and count releases that came later than the rule | 2 | `cli.ResearchCommands` | `tests/lake/test_release_lag_checker.py` (TC-RLC-001..003) | 2026-09-27 |
+| `RunLog` | `quant_cn.lake.run_log` | 2 | BaseRunLog | Append run and per-key events to `meta.run_log` (run_id, started_at, finished_at, kind, dataset, key, status, n_rows, duration_ms, message) and echo them to logging. | 3 | `cli.QuantCnCli`, `cli.ServiceBuilder`, `cli.ResearchCommands` | `tests/lake/test_run_log.py` (TC-RL-001..002) | 2026-09-27 |
 | `TickerAliasMap` | `quant_cn.lake.ticker_alias_map` | 2 | none | Map retired codes to their surviving codes so a company has one history | 4 | `lake.DerivedViews`, `lake.LakeReader`, `cli.ServiceBuilder` | `tests/lake/test_ticker_alias_map.py` (TC-TAM-001..004) | 2026-09-27 |
 | `TradingCalendar` | `quant_cn.lake.trading_calendar` | 2 | none | Answer trading-day questions (sessions in a range, is_open, next, prev) from the SSE calendar in the lake | 5 | `data_loading.DateSweepFetcher.list_keys`, `data_loading.FetcherFactory`, `cli.ServiceBuilder`, `lake.EffectiveDateResolver`, `lake.LakeReader`, `factor.FactorFactory` | `tests/lake/test_trading_calendar.py` (TC-TCA-001..004) | 2026-09-27 |
 | `CompactStep` | `quant_cn.pipeline.curate_pipeline` | 6 | BaseStep | Adapt Compactor to a pipeline step: one unit per dataset. | 3 | `pipeline.CuratePipeline` | `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..001) | 2026-09-27 |
-| `DeriveStep` | `quant_cn.pipeline.curate_pipeline` | 6 | BaseStep | Build the derived views and the PIT states view, then record a digest per derived view. | 4 | `pipeline.CuratePipeline` | `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..002) | 2026-09-27 |
+| `DeriveStep` | `quant_cn.pipeline.curate_pipeline` | 6 | BaseStep | Build the derived views and the PIT states view, then record a digest per derived view. | 5 | `pipeline.CuratePipeline`, `pipeline.FeatureStep`, `cli.ServiceBuilder` | `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..004) | 2026-09-27 |
 | `CuratePipeline` | `quant_cn.pipeline.curate_pipeline` | 6 | none | Rebuild everything below raw/: compact every dataset, create derived views and PIT states, regenerate lake indexes, and record digests in meta/manifest/derived_digests.json. | 1 | `cli.ServiceBuilder` | `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..003) | 2026-09-27 |
 | `FetchStep` | `quant_cn.pipeline.download_pipeline` | 6 | BaseStep | Adapt one dataset's fetcher to a pipeline step: keys computed in list_units (so the calendar fetched earlier in the run is visible), catalog view refreshed after the run. | 3 | `pipeline.DownloadPipeline.run` | `tests/pipeline/test_download_pipeline.py` (TC-DP-002..002) | 2026-09-27 |
 | `DownloadPipeline` | `quant_cn.pipeline.download_pipeline` | 6 | none | Resolve which datasets and date ranges to download, run one FetchStep per dataset through the runner, and regenerate the lake indexes | 1 | `cli.ServiceBuilder` | `tests/pipeline/test_download_pipeline.py` (TC-DP-001..007) | 2026-09-27 |
+| `EvaluationStep` | `quant_cn.pipeline.evaluation_step` | 6 | BaseStep | Evaluate every factor in derived.features (FactorEvaluator, one factor at a time to bound memory, forward returns from the open of t+1 on dense prices), apply the campaign-level adjustment once over all factor x horizon tests, and write derived/reports/<campaign>/ ic_series, ic_test and quantiles | 3 | `cli.ServiceBuilder` | `tests/pipeline/test_evaluation_step.py` (TC-ES-001..002) | 2026-09-27 |
+| `FeatureStep` | `quant_cn.pipeline.feature_step` | 6 | BaseStep | Build derived/features, one file per year from the campaign start: the six library factors (FactorFactory, PIT inputs from LakeReader), restricted to universe members, preprocessed (winsorise -> standardise -> neutralise on Shenwan L1 + log market cap, D-093) and the combined "score" (SignalCombiner), as FACTOR_PANEL | 3 | `cli.ServiceBuilder` | `tests/pipeline/test_feature_step.py` (TC-FS-001..002) | 2026-09-27 |
 | `PrefectRunner` | `quant_cn.pipeline.prefect_runner` | 6 | BaseRunner | Same contract as LocalRunner, executed as a Prefect flow named "quant_cn <kind>" whose run name is the RunLog run id | 1 | `cli.ServiceBuilder` | `tests/pipeline/test_prefect_runner.py` (TC-PFR-001..003) | 2026-09-27 |
 | `PipelineReport` | `quant_cn.pipeline.runner` | 6 | none | Result of one pipeline run: its id, overall status and one StepReport per step. | 2 | `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.BaseRunner`, `pipeline.CuratePipeline`, `pipeline.PrefectRunner` | `tests/pipeline/test_runner.py` (TC-LR-001..001) | 2026-09-27 |
 | `BaseRunner` | `quant_cn.pipeline.runner` | 6 | ABC | Extension point for how steps are executed (local now, Prefect later, D-022) | 1 | `pipeline.LocalRunner`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `pipeline.PrefectRunner`, `cli.ServiceBuilder` | `tests/pipeline/test_runner.py` (TC-LR-001..001) | 2026-09-27 |
 | `LocalRunner` | `quant_cn.pipeline.runner` | 6 | BaseRunner | Run steps serially in this process with a rich progress bar per step | 1 | `cli.ServiceBuilder` | `tests/pipeline/test_runner.py` (TC-LR-001..003) | 2026-09-27 |
 | `UniverseStep` | `quant_cn.pipeline.universe_step` | 6 | BaseStep | Build UNIVERSE_PANEL: one row per stock listed on each session (list_date <= t < delist_date | 3 | `cli.ServiceBuilder` | `tests/core/docs/test_contract_checker.py`, `tests/pipeline/test_universe_step.py` (TC-US-001..004) | 2026-09-27 |
-| `BlockBootstrap` | `quant_cn.statistic.block_bootstrap` | 4 | none | Resample a time series (or several aligned series with the same draws) in blocks so serial correlation survives: stationary bootstrap with geometric block lengths (Politis & Romano 1994) or circular block bootstrap with fixed blocks (Politis & Romano 1992) | 4 | `statistic.IcSignificance`, `factor.FactorEvaluator` | `tests/statistic/test_block_bootstrap.py` (TC-BB-001..004) | 2026-09-27 |
-| `HacVariance` | `quant_cn.statistic.hac_variance` | 4 | none | Heteroskedasticity- and autocorrelation-consistent variance of a sample mean with the Bartlett kernel (Newey & West 1987 | 4 | `statistic.IcSignificance` | `tests/statistic/test_hac_variance.py` (TC-HAC-001..004) | 2026-09-27 |
-| `IcCalculator` | `quant_cn.statistic.ic_calculator` | 4 | none | Per-date information coefficient between factor values and forward returns across the universe: IC_t = corr_rank(f_{i,t}, r_{i,t->t+h}) (Spearman | 2 | `factor.FactorEvaluator` | `tests/statistic/test_ic_calculator.py` (TC-ICC-001..004) | 2026-09-27 |
-| `IcSignificance` | `quant_cn.statistic.ic_significance` | 4 | none | The §2 tests for one factor at one horizon: Newey-West t on mean IC (Newey & West 1987, 1994, prewhitened per D-090), stationary block-bootstrap CI of mean IC and ICIR (Politis & Romano 1994), Fisher-z / Stouffer screen, sign consistency per sub-period, single break in mean (Bai & Perron 1998 | 4 | `factor.FactorEvaluator` | `tests/statistic/test_ic_significance.py` (TC-ICS-001..004) | 2026-09-27 |
-| `MultipleTestingAdjuster` | `quant_cn.statistic.multiple_testing_adjuster` | 4 | none | Adjust the p-values of many factor tests run in one campaign: Holm step-down FWER (Holm 1979), Benjamini-Hochberg FDR (1995), Benjamini-Hochberg-Yekutieli FDR under arbitrary dependence (2001), Romano-Wolf bootstrap step-down FWER (Romano & Wolf 2005, 2016), and the Harvey-Liu-Zhu (2016) /t/ >= 3.0 hurdle | 5 | `factor.FactorEvaluator` | `tests/statistic/test_multiple_testing_adjuster.py` (TC-MTA-001..005) | 2026-09-27 |
-| `Neutralizer` | `quant_cn.statistic.neutralizer` | 4 | none | Remove what industry membership and numeric exposures (e.g | 1 | `factor.FactorPreprocessor` | `tests/statistic/test_neutralizer.py` (TC-NEU-001..002) | 2026-09-27 |
-| `QuantileReturns` | `quant_cn.statistic.quantile_returns` | 4 | none | Sort names into n quantiles of the factor within each date and horizon, and report each quantile's equal-weighted mean forward return plus the long-short spread (top minus bottom, stored as quantile 0): the monotone "ladder" that complements the IC. | 1 | `factor.FactorEvaluator` | `tests/statistic/test_quantile_returns.py` (TC-QR-001..002) | 2026-09-27 |
-| `ReturnStats` | `quant_cn.statistic.return_stats` | 4 | none | Summarise a series of period returns: annualised mean and volatility, Sharpe (per period and annualised with sqrt(244 / h)), maximum drawdown of the compounded path, hit rate, skewness and non-excess kurtosis (the PSR / DSR inputs of Bailey & López de Prado 2012). | 1 | `factor.FactorEvaluator` | `tests/statistic/test_return_stats.py` (TC-RS-001..002) | 2026-09-27 |
-| `Standardizer` | `quant_cn.statistic.standardizer` | 4 | none | Put factor values on a common scale within each date: z = (x - m) / s with m the equal-weighted mean (or a weighted mean, e.g | 1 | `factor.FactorPreprocessor`, `factor.SignalCombiner` | `tests/statistic/test_standardizer.py` (TC-STD-001..002) | 2026-09-27 |
-| `TrialLog` | `quant_cn.statistic.trial_log` | 4 | none | Record every factor / parameter / horizon variant evaluated in a campaign, including the failures, because the deflated Sharpe ratio (Bailey & López de Prado 2014) and the multiple-testing adjusters need the number and dispersion of all trials, not just the winners | 5 | `factor.FactorEvaluator` | `tests/statistic/test_trial_log.py` (TC-TL-001..004) | 2026-09-27 |
-| `Winsorizer` | `quant_cn.statistic.winsorizer` | 4 | none | Clip extreme factor values within each date so a few outliers do not dominate ranks, z-scores or regressions: median +- k * 1.4826 * MAD (robust default) or the q / 1 - q cross-sectional quantiles. | 1 | `factor.FactorPreprocessor` | `tests/statistic/test_winsorizer.py` (TC-WZ-001..002) | 2026-09-27 |
+| `ServiceBuilder` | `quant_cn.service_builder` | 8 | none | Wire services for the CLI commands (the composition root's constructors): download and curate pipelines with the chosen runner, and the project catalog. | 7 | `cli.QuantCnCli`, `cli.ResearchCommands` | `tests/test_cli.py` (TC-QCC-002..003) | 2026-09-27 |
+| `BlockBootstrap` | `quant_cn.statistic.block_bootstrap` | 4 | none | Resample a time series (or several aligned series with the same draws) in blocks so serial correlation survives: stationary bootstrap with geometric block lengths (Politis & Romano 1994) or circular block bootstrap with fixed blocks (Politis & Romano 1992) | 4 | `statistic.IcSignificance`, `factor.FactorEvaluator`, `cli.ServiceBuilder` | `tests/statistic/test_block_bootstrap.py` (TC-BB-001..004) | 2026-09-27 |
+| `HacVariance` | `quant_cn.statistic.hac_variance` | 4 | none | Heteroskedasticity- and autocorrelation-consistent variance of a sample mean with the Bartlett kernel (Newey & West 1987 | 4 | `statistic.IcSignificance`, `cli.ServiceBuilder` | `tests/statistic/test_hac_variance.py` (TC-HAC-001..004) | 2026-09-27 |
+| `IcCalculator` | `quant_cn.statistic.ic_calculator` | 4 | none | Per-date information coefficient between factor values and forward returns across the universe: IC_t = corr_rank(f_{i,t}, r_{i,t->t+h}) (Spearman | 2 | `factor.FactorEvaluator`, `cli.ServiceBuilder` | `tests/statistic/test_ic_calculator.py` (TC-ICC-001..004) | 2026-09-27 |
+| `IcSignificance` | `quant_cn.statistic.ic_significance` | 4 | none | The §2 tests for one factor at one horizon: Newey-West t on mean IC (Newey & West 1987, 1994, prewhitened per D-090), stationary block-bootstrap CI of mean IC and ICIR (Politis & Romano 1994), Fisher-z / Stouffer screen, sign consistency per sub-period, single break in mean (Bai & Perron 1998 | 4 | `factor.FactorEvaluator`, `cli.ServiceBuilder` | `tests/statistic/test_ic_significance.py` (TC-ICS-001..004) | 2026-09-27 |
+| `MultipleTestingAdjuster` | `quant_cn.statistic.multiple_testing_adjuster` | 4 | none | Adjust the p-values of many factor tests run in one campaign: Holm step-down FWER (Holm 1979), Benjamini-Hochberg FDR (1995), Benjamini-Hochberg-Yekutieli FDR under arbitrary dependence (2001), Romano-Wolf bootstrap step-down FWER (Romano & Wolf 2005, 2016), and the Harvey-Liu-Zhu (2016) /t/ >= 3.0 hurdle | 5 | `factor.FactorEvaluator`, `cli.ServiceBuilder` | `tests/statistic/test_multiple_testing_adjuster.py` (TC-MTA-001..005) | 2026-09-27 |
+| `Neutralizer` | `quant_cn.statistic.neutralizer` | 4 | none | Remove what industry membership and numeric exposures (e.g | 1 | `factor.FactorPreprocessor`, `cli.ServiceBuilder` | `tests/statistic/test_neutralizer.py` (TC-NEU-001..002) | 2026-09-27 |
+| `QuantileReturns` | `quant_cn.statistic.quantile_returns` | 4 | none | Sort names into n quantiles of the factor within each date and horizon, and report each quantile's equal-weighted mean forward return plus the long-short spread (top minus bottom, stored as quantile 0): the monotone "ladder" that complements the IC. | 1 | `factor.FactorEvaluator`, `cli.ServiceBuilder` | `tests/statistic/test_quantile_returns.py` (TC-QR-001..002) | 2026-09-27 |
+| `ReturnStats` | `quant_cn.statistic.return_stats` | 4 | none | Summarise a series of period returns: annualised mean and volatility, Sharpe (per period and annualised with sqrt(244 / h)), maximum drawdown of the compounded path, hit rate, skewness and non-excess kurtosis (the PSR / DSR inputs of Bailey & López de Prado 2012). | 1 | `factor.FactorEvaluator`, `cli.ServiceBuilder` | `tests/statistic/test_return_stats.py` (TC-RS-001..002) | 2026-09-27 |
+| `Standardizer` | `quant_cn.statistic.standardizer` | 4 | none | Put factor values on a common scale within each date: z = (x - m) / s with m the equal-weighted mean (or a weighted mean, e.g | 1 | `factor.FactorPreprocessor`, `factor.SignalCombiner`, `cli.ServiceBuilder` | `tests/statistic/test_standardizer.py` (TC-STD-001..002) | 2026-09-27 |
+| `TrialLog` | `quant_cn.statistic.trial_log` | 4 | none | Record every factor / parameter / horizon variant evaluated in a campaign, including the failures, because the deflated Sharpe ratio (Bailey & López de Prado 2014) and the multiple-testing adjusters need the number and dispersion of all trials, not just the winners | 5 | `factor.FactorEvaluator`, `pipeline.EvaluationStep` | `tests/statistic/test_trial_log.py` (TC-TL-001..004) | 2026-09-27 |
+| `Winsorizer` | `quant_cn.statistic.winsorizer` | 4 | none | Clip extreme factor values within each date so a few outliers do not dominate ranks, z-scores or regressions: median +- k * 1.4826 * MAD (robust default) or the q / 1 - q cross-sectional quantiles. | 1 | `factor.FactorPreprocessor`, `cli.ServiceBuilder` | `tests/statistic/test_winsorizer.py` (TC-WZ-001..002) | 2026-09-27 |
 | `BaseChart` | `quant_cn.visualization.base_chart` | 7 | ABC | Abstract chart: subclasses build a plotly figure from a DataFrame (frames only, never objects from other packages) | 4 | `visualization.PriceChart` | `tests/visualization/test_charts.py` (TC-BCA-001..002) | 2026-09-27 |
 | `ChartTheme` | `quant_cn.visualization.chart_theme` | 7 | none | The colour and font tokens every chart reads, so charts are written against roles, never raw hex | 1 | `visualization.BaseChart`, `visualization.PriceChart` | `tests/visualization/test_charts.py` (TC-CT-001..001) | 2026-09-27 |
 | `PriceChart` | `quant_cn.visualization.price_chart` | 7 | BaseChart | Daily candles (backward-adjusted by default: OHLC x adj_factor) over a volume panel for one ticker | 1 | `research_space/main.ipynb` | `tests/visualization/test_charts.py` (TC-PC-001..003) | 2026-09-27 |
@@ -316,7 +319,7 @@ never column lists (those live in section E).
 - **Purpose:** `python -m quant_cn.cli <command>`: doctor, download, compact, curate, rebuild, backup, project-catalog, query. Builds every service from Config (the only place objects are wired) and prints summaries.
 - **Base:** none. **Depends on (injected):** Config | None, Console | None.
 - **Used by:** `Makefile targets doctor, download, compact, lake-rebuild, lake-backup`.
-- **Tests:** `tests/test_cli.py` (TC-QCC-001..008).
+- **Tests:** `tests/test_cli.py` (TC-QCC-001..007).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -325,19 +328,15 @@ never column lists (those live in section E).
 | `_build_parser` (private) | internal helper over 20 lines | — -> argparse.ArgumentParser | — | internal | — |
 | `_run_curate` (private) | internal helper over 20 lines | Config, argparse.Namespace -> int | — | internal | — |
 
-### `ServiceBuilder` — `quant_cn.cli` (L8)
-- **Purpose:** Wire services for the CLI commands (the composition root's constructors): download and curate pipelines with the chosen runner, and the project catalog.
-- **Base:** none. **Depends on (injected):** —.
+### `ResearchCommands` — `quant_cn.cli` (L8)
+- **Purpose:** The research-side CLI commands, kept apart so QuantCnCli stays within its size limit: `release-lags` (D-086) and `evaluate` (factor campaign reports and trial log, plan 04 phase 5). QuantCnCli parses the arguments and dispatches here.
+- **Base:** none. **Depends on (injected):** Console.
 - **Used by:** `cli.QuantCnCli`.
-- **Tests:** `tests/test_cli.py` (TC-QCC-002..003).
+- **Tests:** `tests/test_cli.py` (TC-QCC-008..009).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
-| `build_download_pipeline` | DownloadPipeline wired to the lake, Tushare client and chosen runner. | Config, LakeCatalog, bool, str -> DownloadPipeline | — | as class | see class |
-| `build_curate_pipeline` | CuratePipeline wired to compactor, derived views, PIT aligner and chosen runner. | Config, LakeCatalog, bool, str -> CuratePipeline | — | as class | see class |
-| `build_runner` | LocalRunner, or PrefectRunner for name "prefect" (optional extra "flows", D-022). | RunLog, str, bool -> BaseRunner | `ModuleNotFoundError` | as class | see class |
-| `build_reader` | The lake read API (D-089): PIT aligner, alias map, calendar and an optional cache. | Config, LakeCatalog, bool -> LakeReader | — | as class | see class |
-| `build_project_catalog` | ProjectCatalog over the repository with the contract linter. | Config, LakeCatalog -> ProjectCatalog | — | as class | see class |
+| `__init__` | wire dependencies | Console -> None | — | callers of the class | — |
 
 ### `BaseApiClient` — `quant_cn.core.base_api_client` (L1)
 - **Purpose:** Abstract vendor client: one logical query returns all pages as one DataFrame.
@@ -394,7 +393,7 @@ never column lists (those live in section E).
 ### `BaseStep` — `quant_cn.core.base_step` (L1)
 - **Purpose:** Abstract unit of pipeline work: list its units, then run and report.
 - **Base:** ABC. **Depends on (injected):** —.
-- **Used by:** `pipeline.FetchStep`, `pipeline.BaseRunner.run`, `pipeline.LocalRunner.run`, `pipeline.CompactStep`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep`.
+- **Used by:** `pipeline.FetchStep`, `pipeline.BaseRunner.run`, `pipeline.LocalRunner.run`, `pipeline.CompactStep`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`.
 - **Tests:** `tests/core/test_base_classes.py` (TC-BAC-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -417,7 +416,7 @@ never column lists (those live in section E).
 ### `Clock` — `quant_cn.core.clock` (L1)
 - **Purpose:** The single source of wall time, monotonic time and sleeping; tests inject a fake subclass.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.FetcherFactory`, `data_loading.PeriodSweepFetcher`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `lake.RebuildAudit`.
+- **Used by:** `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.FetcherFactory`, `data_loading.PeriodSweepFetcher`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `lake.RebuildAudit`, `cli.ResearchCommands`.
 - **Tests:** `tests/core/test_clock.py` (TC-CL-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -502,7 +501,7 @@ never column lists (those live in section E).
 ### `Config` — `quant_cn.core.config` (L1)
 - **Purpose:** The typed configuration injected everywhere: YAML defaults, machine overrides, environment.
 - **Base:** BaseModel. **Depends on (injected):** —.
-- **Used by:** `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`.
+- **Used by:** `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands`.
 - **Tests:** `tests/core/test_config.py` (TC-C-001..013).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -911,7 +910,7 @@ never column lists (those live in section E).
 ### `StepReport` — `quant_cn.core.step_report` (L1)
 - **Purpose:** Counts and status of one step (usually one dataset's fetch) so runs can be summarised.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `pipeline.FetchStep`, `pipeline.PipelineReport`, `pipeline.CompactStep`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep`.
+- **Used by:** `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `pipeline.FetchStep`, `pipeline.PipelineReport`, `pipeline.CompactStep`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`.
 - **Tests:** `tests/core/test_base_fetcher.py` (TC-BF-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1055,7 +1054,7 @@ never column lists (those live in section E).
 ### `BaseFactor` — `quant_cn.factor.base_factor` (L5)
 - **Purpose:** Abstract factor: declares which inputs, fundamentals fields and daily_basic columns it needs and how many sessions of price history before the first output date; `compute` turns FactorInputs into FACTOR_PANEL rows for [start, end]. Contract (FACTOR_TESTING_DESIGN §11): the value at t uses only data known by the close of t; fundamentals only through FUNDAMENTALS_PIT. Subclasses register themselves by class name for FactorFactory.
 - **Base:** ABC. **Depends on (injected):** str.
-- **Used by:** `factor.FactorFactory`, `factor.library.*`, `factor.library.EarningsYieldFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor`.
+- **Used by:** `factor.FactorFactory`, `factor.library.*`, `factor.library.EarningsYieldFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor`, `pipeline.FeatureStep`.
 - **Tests:** `tests/factor/test_base_factor.py` (TC-BFA-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1077,19 +1076,20 @@ never column lists (those live in section E).
 ### `FactorEvaluator` — `quant_cn.factor.factor_evaluator` (L5)
 - **Purpose:** Evaluate every factor of a campaign (FACTOR_TESTING_DESIGN §2, §3, §6): tradeable forward returns from the open of t+1, IC series per horizon, the IcSignificance tests, decay across horizons (half-life), rank autocorrelation (turnover proxy), quantile ladders and long-short statistics on non-overlapping samples, then the campaign-level Holm / BHY / Romano-Wolf adjustment and HLZ flag over all factor x horizon mean-IC tests. Records each variant in the TrialLog (identical variants are not recorded twice).
 - **Base:** none. **Depends on (injected):** IcCalculator, IcSignificance, MultipleTestingAdjuster, QuantileReturns, ReturnStats, BlockBootstrap, Sequence[int].
-- **Used by:** `notebooks`.
+- **Used by:** `notebooks`, `pipeline.EvaluationStep`, `cli.ServiceBuilder`.
 - **Tests:** `tests/factor/test_factor_evaluator.py` (TC-FEV-001..003).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
 | `__init__` | wire dependencies | IcCalculator, IcSignificance, MultipleTestingAdjuster, QuantileReturns, ReturnStats, BlockBootstrap, Sequence[int] -> None | `ValueError` | callers of the class | — |
-| `compute` | The campaign report. | pd.DataFrame, pd.DataFrame, TrialLog \| None, Mapping[str, Mapping[str, object]] \| None -> FactorReport | `SchemaError` | as class | see class |
+| `compute` | The campaign report. | pd.DataFrame, pd.DataFrame, TrialLog \| None, Mapping[str, Mapping[str, object]] \| None, bool -> FactorReport | `SchemaError` | as class | see class |
+| `build_campaign` | Campaign-level adjustment over every factor x horizon mean-IC test. | pd.DataFrame, pd.DataFrame -> pd.DataFrame | `SchemaError` | as class | see class |
 | `_build_factor_rows` (private) | internal helper over 20 lines | pd.DataFrame, pd.DataFrame, str -> pd.DataFrame | — | internal | — |
 
 ### `FactorFactory` — `quant_cn.factor.factor_factory` (L5)
 - **Purpose:** Resolve config/factors.yaml entries to BaseFactor instances (every module under factor/library/ is imported so its classes register themselves; adding a factor needs one module, one registry block and one YAML line) and load, once, the panels the chosen factors declare: dense prices from `lookback` sessions before the start, PIT fundamentals for the union of fields, daily_basic columns.
 - **Base:** none. **Depends on (injected):** Sequence[FactorSpec], TradingCalendar, DateCodec.
-- **Used by:** `notebooks`.
+- **Used by:** `notebooks`, `pipeline.FeatureStep`, `cli.ServiceBuilder`.
 - **Tests:** `tests/factor/test_factor_factory.py` (TC-FAF-001..003).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1101,7 +1101,7 @@ never column lists (those live in section E).
 ### `FactorPreprocessor` — `quant_cn.factor.factor_preprocessor` (L5)
 - **Purpose:** The ordered chain applied to every raw factor, each step optional and logged: winsorise (median +- k * 1.4826 * MAD per date) -> standardise (z per date) -> neutralise (per-date OLS residual on Shenwan L1 dummies and log market cap, D-093) -> standardise again, so the processed value is a unit-dispersion, industry- and size-neutral z-score. `value_raw` is kept; `value` holds the result. Rows without exposures are dropped when neutralising.
 - **Base:** none. **Depends on (injected):** Winsorizer | None, Standardizer | None, Neutralizer | None.
-- **Used by:** (none yet).
+- **Used by:** `pipeline.FeatureStep`, `cli.ServiceBuilder`.
 - **Tests:** `tests/factor/test_factor_preprocessor.py` (TC-FPP-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1180,7 +1180,7 @@ never column lists (those live in section E).
 ### `SignalCombiner` — `quant_cn.factor.signal_combiner` (L5)
 - **Purpose:** score_{i,t} = sum_f w_f z_{f,i,t} / sum_{f available} /w_f/ over the processed factors a stock has at t (at least `min_factors`), then standardised per date: an equal-risk blend of z-scores that tolerates a missing factor instead of dropping the stock.
 - **Base:** none. **Depends on (injected):** Mapping[str, float], Standardizer, int.
-- **Used by:** (none yet).
+- **Used by:** `pipeline.FeatureStep`, `cli.ServiceBuilder`.
 - **Tests:** `tests/factor/test_signal_combiner.py` (TC-SGC-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1200,15 +1200,16 @@ never column lists (those live in section E).
 | `rebuild` | Replace the curated partitions of `spec` (all years, or only `years`). | DatasetSpec, set[int] \| None -> StepReport | `SchemaError`, `LakeError` | as class | see class |
 
 ### `DerivedViews` — `quant_cn.lake.derived_views` (L2)
-- **Purpose:** Create the `derived` schema views built only from curated/: `derived.prices_adj` (daily bars joined to adj_factor, close_adj = close * adj_factor; PRICE_PANEL columns; retired alias codes absent from stock_basic dropped); `derived.fundamentals_long` = `derived.fundamentals_base` (every statement dataset under curated/fundamentals/ unpivoted to one row per numeric field and announced version, report_type = '1') plus `derived.fundamentals_ttm` (`<flow>_ttm` and `<field>_ttm_yoy` rows from the latest versions known at each announcement, D-092); `derived.fut_holding_brokers` (contract rows of fut_holding without member-category totals, exchange "ZCE" -> "CZCE"; D-079); `derived.fut_daily_one_sided` (fut_daily with vol, amount, oi, oi_chg halved for SHFE/DCE/CZCE/INE before 2020-01-02, flagged two_sided_adjusted; D-079); `derived.industry_l1` (Shenwan L1 validity intervals per stock, PIT rows plus back-filled rows flagged industry_backfilled; l1_pit = rows not back-filled, l1_grouping = any; D-071); `derived.margin_targets` (SZSE official list + SSE proxy from margin_detail, source column; D-084); `derived.universe` over derived/universe (UniverseStep output); `derived.ticker_alias` through TickerAliasMap (D-089); then the `quality` schema through QualityViews.
+- **Purpose:** Create the `derived` schema views built only from curated/: `derived.prices_adj` (daily bars joined to adj_factor, close_adj = close * adj_factor; PRICE_PANEL columns; retired alias codes absent from stock_basic dropped); `derived.fundamentals_long` = `derived.fundamentals_base` (every statement dataset under curated/fundamentals/ unpivoted to one row per numeric field and announced version, report_type = '1') plus `derived.fundamentals_ttm` (`<flow>_ttm` and `<field>_ttm_yoy` rows from the latest versions known at each announcement, D-092); `derived.fut_holding_brokers` (contract rows of fut_holding without member-category totals, exchange "ZCE" -> "CZCE"; D-079); `derived.fut_daily_one_sided` (fut_daily with vol, amount, oi, oi_chg halved for SHFE/DCE/CZCE/INE before 2020-01-02, flagged two_sided_adjusted; D-079); `derived.industry_l1` (Shenwan L1 validity intervals per stock, PIT rows plus back-filled rows flagged industry_backfilled; l1_pit = rows not back-filled, l1_grouping = any; D-071); `derived.margin_targets` (SZSE official list + SSE proxy from margin_detail, source column; D-084); `derived.universe` / `derived.features` over the UniverseStep / FeatureStep year files (refresh_tables); `derived.ticker_alias` through TickerAliasMap (D-089); then the `quality` schema through QualityViews.
 - **Base:** none. **Depends on (injected):** LakeCatalog, LakeQuery, Mapping[str, DatasetSpec], Sequence[FuturesCategory], Sequence[TickerAlias].
-- **Used by:** `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `cli.ServiceBuilder`.
+- **Used by:** `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `cli.ServiceBuilder`, `pipeline.FeatureStep`.
 - **Tests:** `tests/lake/test_derived_views.py` (TC-DV-001..010).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
 | `__init__` | wire dependencies | LakeCatalog, LakeQuery, Mapping[str, DatasetSpec], Sequence[FuturesCategory], Sequence[TickerAlias] -> None | — | callers of the class | — |
 | `refresh` | (Re)create every derived view whose curated inputs exist; drop the others. | — -> list[str] | `LakeError` | as class | see class |
+| `refresh_tables` | (Re)create the views over materialised tables (UniverseStep, FeatureStep outputs). | — -> list[str] | `LakeError` | as class | see class |
 | `_build_plan` (private) | internal helper over 20 lines | — -> list[tuple[str, list[str], str]] | — | internal | — |
 
 ### `EffectiveDateResolver` — `quant_cn.lake.effective_date_resolver` (L2)
@@ -1226,7 +1227,7 @@ never column lists (those live in section E).
 ### `ExposureReader` — `quant_cn.lake.exposure_reader` (L2)
 - **Purpose:** Per universe member and session: the Shenwan L1 group in effect (derived.industry_l1, l1_grouping = the PIT row or the back-filled first-known L1, flagged; D-071, D-093) and log market cap (ln of total_mv in CNY, from daily_basic at the close of t). The inputs of FactorPreprocessor's neutralisation.
 - **Base:** none. **Depends on (injected):** LakeQuery.
-- **Used by:** (none yet).
+- **Used by:** `pipeline.FeatureStep`, `cli.ServiceBuilder`.
 - **Tests:** `tests/lake/test_lake_reader.py` (TC-EXR-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1253,7 +1254,7 @@ never column lists (those live in section E).
 ### `LakeCatalog` — `quant_cn.lake.lake_catalog` (L2)
 - **Purpose:** Own the lake's single DuckDB connection (`meta/quant_cn.duckdb`): schemas `raw`, `curated`, `meta`; one view per dataset and zone; `meta.dataset_meta`; generated INDEX.md files. The DuckDB file is disposable: `rebuild()` recreates it from the parquet files.
 - **Base:** none. **Depends on (injected):** Path, Mapping[str, DatasetSpec], bool.
-- **Used by:** `lake.FetchLog`, `lake.RunLog`, `lake.LakeQuery`, `lake.Compactor`, `pipeline.FetchStep.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `lake.DerivedViews`, `lake.PitAligner`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `lake.QualityViews`, `lake.LakeReader`, `lake.TickerAliasMap`.
+- **Used by:** `lake.FetchLog`, `lake.RunLog`, `lake.LakeQuery`, `lake.Compactor`, `pipeline.FetchStep.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `lake.DerivedViews`, `lake.PitAligner`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `lake.QualityViews`, `lake.LakeReader`, `lake.TickerAliasMap`, `cli.ResearchCommands`.
 - **Tests:** `tests/lake/test_lake_catalog.py` (TC-LC-001..005).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1272,7 +1273,7 @@ never column lists (those live in section E).
 ### `LakeQuery` — `quant_cn.lake.lake_query` (L2)
 - **Purpose:** Run read queries against the catalog views; the only way code above the lake reads data.
 - **Base:** none. **Depends on (injected):** LakeCatalog.
-- **Used by:** `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader`.
+- **Used by:** `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `cli.ResearchCommands`.
 - **Tests:** `tests/lake/test_lake_query.py` (TC-LQ-001..005).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1287,7 +1288,7 @@ never column lists (those live in section E).
 ### `LakeReader` — `quant_cn.lake.lake_reader` (L2)
 - **Purpose:** The read API factors, the universe step and notebooks use (SRC_DESIGN §2.2b, D-089): one curated dataset as a panel, dense or sparse prices, point-in-time fundamentals, reference tables (in-memory frames and view discovery: LakeQuery). Retired codes are mapped to their surviving codes on every per-stock read (TickerAliasMap, new code wins); every output is validated with its schema; an optional PanelCache serves repeated reads. LakeQuery stays the raw SQL layer underneath.
 - **Base:** none. **Depends on (injected):** LakeCatalog, LakeQuery, Mapping[str, DatasetSpec], PitAligner, TickerAliasMap, TradingCalendar, PanelCache | None.
-- **Used by:** `cli.ServiceBuilder`, (none yet), `factor.FactorFactory`.
+- **Used by:** `cli.ServiceBuilder`, (none yet), `factor.FactorFactory`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`.
 - **Tests:** `tests/lake/test_lake_reader.py` (TC-LRD-001..007).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1317,8 +1318,8 @@ never column lists (those live in section E).
 ### `ParquetWriter` — `quant_cn.lake.parquet_writer` (L2)
 - **Purpose:** Write raw fetch results and curated partitions as zstd parquet, atomically (write `.tmp`, fsync, rename), so a crash never leaves a half-written file.
 - **Base:** BaseStore. **Depends on (injected):** Path.
-- **Used by:** `cli.QuantCnCli`, `cli.ServiceBuilder`, `pipeline.UniverseStep`.
-- **Tests:** `tests/lake/test_parquet_writer.py` (TC-PW-001..007).
+- **Used by:** `cli.QuantCnCli`, `cli.ServiceBuilder`, `pipeline.UniverseStep`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`.
+- **Tests:** `tests/lake/test_parquet_writer.py` (TC-PW-001..008).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -1328,6 +1329,7 @@ never column lists (those live in section E).
 | `write_raw` | Persist one fetch key's rows, dtypes coerced by the dataset schema (dates stay strings); an existing file is kept as `<file>.prev` until `rebuild` confirms it (D-083). | DatasetSpec, str, pd.DataFrame -> Path \| None | `SchemaError`, `LakeError` | as class | see class |
 | `write_curated` | Replace one curated partition after validating it against the dataset schema. | DatasetSpec, int \| None, pd.DataFrame -> Path | `SchemaError`, `LakeError` | as class | see class |
 | `write_derived` | Persist one year of a materialised derived table (e.g. the universe). | str, int, pd.DataFrame -> Path | `LakeError` | as class | see class |
+| `write_table` | Persist a whole small table (reports under derived/, logs under meta/). | str, str, pd.DataFrame -> Path | `ValueError`, `LakeError` | as class | see class |
 
 ### `PitAligner` — `quant_cn.lake.pit_aligner` (L2)
 - **Purpose:** Align fundamentals to trading days without look-ahead. A version announced on `known_on` (f_ann_date / ann_date) becomes effective on the first trading day strictly after it; on each day the visible value of a field is the latest report period effective so far, in its latest effective restatement. Older-period restatements never replace a newer period. Built as the DuckDB view `derived.fundamentals_states` (one row per change) and read with an ASOF JOIN from trading days.
@@ -1378,7 +1380,7 @@ never column lists (those live in section E).
 ### `ReleaseLagChecker` — `quant_cn.lake.release_lag_checker` (L2)
 - **Purpose:** For every dataset with `known_on_rule: period_end_lag` and `release_dates` set, measure the observed lag (release date - period end) in that curated release-date dataset and count releases that came later than the rule. A rule earlier than any observed release is look-ahead; D-086 raises it to the observed maximum and `make check` warns if it recurs. The period of a release is the last month end before it, or its own month end when the release falls on/after day 25 (month-end PMI releases).
 - **Base:** none. **Depends on (injected):** LakeQuery, Mapping[str, DatasetSpec], str.
-- **Used by:** `cli.QuantCnCli`.
+- **Used by:** `cli.ResearchCommands`.
 - **Tests:** `tests/lake/test_release_lag_checker.py` (TC-RLC-001..003).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1390,7 +1392,7 @@ never column lists (those live in section E).
 ### `RunLog` — `quant_cn.lake.run_log` (L2)
 - **Purpose:** Append run and per-key events to `meta.run_log` (run_id, started_at, finished_at, kind, dataset, key, status, n_rows, duration_ms, message) and echo them to logging.
 - **Base:** BaseRunLog. **Depends on (injected):** LakeCatalog, Clock.
-- **Used by:** `cli.QuantCnCli`, `cli.ServiceBuilder`.
+- **Used by:** `cli.QuantCnCli`, `cli.ServiceBuilder`, `cli.ResearchCommands`.
 - **Tests:** `tests/lake/test_run_log.py` (TC-RL-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1445,8 +1447,8 @@ never column lists (those live in section E).
 ### `DeriveStep` — `quant_cn.pipeline.curate_pipeline` (L6)
 - **Purpose:** Build the derived views and the PIT states view, then record a digest per derived view.
 - **Base:** BaseStep. **Depends on (injected):** DerivedViews, PitAligner, LakeQuery, Path.
-- **Used by:** `pipeline.CuratePipeline`.
-- **Tests:** `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..002).
+- **Used by:** `pipeline.CuratePipeline`, `pipeline.FeatureStep`, `cli.ServiceBuilder`.
+- **Tests:** `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..004).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -1455,16 +1457,17 @@ never column lists (those live in section E).
 | `list_units` | One unit: the derived layer. | — -> list[str] | — | as class | see class |
 | `run` | Refresh derived views (and PIT states when fundamentals exist), write digests. | str, ProgressHook \| None -> StepReport | `LakeError` | as class | see class |
 | `build_digests` | md5 over every row of each view, rows ordered by their text form; equal digests mean byte-identical derived data. | Sequence[str] -> dict[str, str] | `LakeError` | as class | see class |
+| `refresh_digests` | Recompute the digests of views built after this step (derived.features) and merge them into meta/manifest/derived_digests.json. | Sequence[str] -> dict[str, str] | `LakeError` | as class | see class |
 
 ### `CuratePipeline` — `quant_cn.pipeline.curate_pipeline` (L6)
 - **Purpose:** Rebuild everything below raw/: compact every dataset, create derived views and PIT states, regenerate lake indexes, and record digests in meta/manifest/derived_digests.json.
-- **Base:** none. **Depends on (injected):** Config, Compactor, DerivedViews, PitAligner, LakeQuery, LakeCatalog, BaseRunner, BaseStep | None.
+- **Base:** none. **Depends on (injected):** Config, Compactor, DerivedViews, PitAligner, LakeQuery, LakeCatalog, BaseRunner, BaseStep | None, DeriveStep | None, BaseStep | None.
 - **Used by:** `cli.ServiceBuilder`.
 - **Tests:** `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..003).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
-| `__init__` | wire dependencies | Config, Compactor, DerivedViews, PitAligner, LakeQuery, LakeCatalog, BaseRunner, BaseStep \| None -> None | — | callers of the class | — |
+| `__init__` | wire dependencies | Config, Compactor, DerivedViews, PitAligner, LakeQuery, LakeCatalog, BaseRunner, BaseStep \| None, DeriveStep \| None, BaseStep \| None -> None | — | callers of the class | — |
 | `run` | Compact the datasets (default all), then derive and index. | Sequence[str] \| None -> PipelineReport | `ConfigError`, `SchemaError`, `LakeError` | as class | see class |
 
 ### `FetchStep` — `quant_cn.pipeline.download_pipeline` (L6)
@@ -1490,6 +1493,32 @@ never column lists (those live in section E).
 |---|---|---|---|---|---|
 | `__init__` | wire dependencies | Config, FetcherFactory, BaseRunner, LakeCatalog, BaseFetchLog, Clock, DateCodec -> None | — | callers of the class | — |
 | `run` | Download the requested datasets (default: config.download.order). | Sequence[str] \| None, str \| None, str \| None, bool, bool -> PipelineReport | `ConfigError`, `ValueError`, `DataSourceError` | as class | see class |
+
+### `EvaluationStep` — `quant_cn.pipeline.evaluation_step` (L6)
+- **Purpose:** Evaluate every factor in derived.features (FactorEvaluator, one factor at a time to bound memory, forward returns from the open of t+1 on dense prices), apply the campaign-level adjustment once over all factor x horizon tests, and write derived/reports/<campaign>/ ic_series, ic_test and quantiles; the campaign's TrialLog (meta/trials/<campaign>.parquet) is resumed and saved, so re-running the same variants does not inflate N.
+- **Base:** BaseStep. **Depends on (injected):** LakeQuery, LakeReader, FactorEvaluator, ParquetWriter, str, Mapping[str, Mapping[str, object]], str.
+- **Used by:** `cli.ServiceBuilder`.
+- **Tests:** `tests/pipeline/test_evaluation_step.py` (TC-ES-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | LakeQuery, LakeReader, FactorEvaluator, ParquetWriter, str, Mapping[str, Mapping[str, object]], str -> None | — | callers of the class | — |
+| `name` | Step name. | — -> str | — | as class | see class |
+| `list_units` | Factors to evaluate. | — -> list[str] | `LakeError` | as class | see class |
+| `run` | Evaluate, adjust, write reports and the trial log. | str, ProgressHook \| None -> StepReport | `LakeError`, `SchemaError` | as class | see class |
+
+### `FeatureStep` — `quant_cn.pipeline.feature_step` (L6)
+- **Purpose:** Build derived/features, one file per year from the campaign start: the six library factors (FactorFactory, PIT inputs from LakeReader), restricted to universe members, preprocessed (winsorise -> standardise -> neutralise on Shenwan L1 + log market cap, D-093) and the combined "score" (SignalCombiner), as FACTOR_PANEL. Runs inside curate after the derived views; then refreshes derived.features and merges its digest so `make lake-rebuild` proves the features byte-identical.
+- **Base:** BaseStep. **Depends on (injected):** LakeQuery, LakeReader, FactorFactory, ExposureReader, FactorPreprocessor, SignalCombiner, ParquetWriter, DerivedViews, DeriveStep, str.
+- **Used by:** `cli.ServiceBuilder`.
+- **Tests:** `tests/pipeline/test_feature_step.py` (TC-FS-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | LakeQuery, LakeReader, FactorFactory, ExposureReader, FactorPreprocessor, SignalCombiner, ParquetWriter, DerivedViews, DeriveStep, str -> None | — | callers of the class | — |
+| `name` | Step name. | — -> str | — | as class | see class |
+| `list_units` | Years from the campaign start to the last universe session. | — -> list[str] | `LakeError` | as class | see class |
+| `run` | Build and write every year, then refresh the view and its digest. | str, ProgressHook \| None -> StepReport | `LakeError`, `SchemaError`, `ConfigError` | as class | see class |
 
 ### `PrefectRunner` — `quant_cn.pipeline.prefect_runner` (L6)
 - **Purpose:** Same contract as LocalRunner, executed as a Prefect flow named "quant_cn <kind>" whose run name is the RunLog run id; every step is a Prefect task with a progress artifact over its units (keys). RunLog stays the source of truth (D-022); steps and fetchers never import Prefect. A permission failure marks the step blocked and continues; any other project error fails the flow, closes the run as failed and re-raises.
@@ -1547,10 +1576,26 @@ never column lists (those live in section E).
 | `list_units` | Years to build: from rules.start to the last daily session. | — -> list[str] | `LakeError` | as class | see class |
 | `run` | Build and write every year. | str, ProgressHook \| None -> StepReport | `LakeError`, `SchemaError` | as class | see class |
 
+### `ServiceBuilder` — `quant_cn.service_builder` (L8)
+- **Purpose:** Wire services for the CLI commands (the composition root's constructors): download and curate pipelines with the chosen runner, and the project catalog.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `cli.QuantCnCli`, `cli.ResearchCommands`.
+- **Tests:** `tests/test_cli.py` (TC-QCC-002..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `build_download_pipeline` | DownloadPipeline wired to the lake, Tushare client and chosen runner. | Config, LakeCatalog, bool, str -> DownloadPipeline | — | as class | see class |
+| `build_curate_pipeline` | CuratePipeline wired to compactor, derived views, PIT aligner and chosen runner. | Config, LakeCatalog, bool, str -> CuratePipeline | — | as class | see class |
+| `build_features` | FeatureStep wired from config/factors.yaml (factors and campaign settings). | Config, LakeCatalog, LakeQuery, DerivedViews, DeriveStep -> FeatureStep | — | as class | see class |
+| `build_runner` | LocalRunner, or PrefectRunner for name "prefect" (optional extra "flows", D-022). | RunLog, str, bool -> BaseRunner | `ModuleNotFoundError` | as class | see class |
+| `build_reader` | The lake read API (D-089): PIT aligner, alias map, calendar and an optional cache. | Config, LakeCatalog, bool -> LakeReader | — | as class | see class |
+| `build_evaluation` | EvaluationStep for the configured campaign (2,000 seeded block-bootstrap resamples). | Config, LakeCatalog -> EvaluationStep | — | as class | see class |
+| `build_project_catalog` | ProjectCatalog over the repository with the contract linter. | Config, LakeCatalog -> ProjectCatalog | — | as class | see class |
+
 ### `BlockBootstrap` — `quant_cn.statistic.block_bootstrap` (L4)
 - **Purpose:** Resample a time series (or several aligned series with the same draws) in blocks so serial correlation survives: stationary bootstrap with geometric block lengths (Politis & Romano 1994) or circular block bootstrap with fixed blocks (Politis & Romano 1992); both wrap around. Seeded, so reports reproduce byte for byte.
 - **Base:** none. **Depends on (injected):** int, int, Method.
-- **Used by:** `statistic.IcSignificance`, `factor.FactorEvaluator`.
+- **Used by:** `statistic.IcSignificance`, `factor.FactorEvaluator`, `cli.ServiceBuilder`.
 - **Tests:** `tests/statistic/test_block_bootstrap.py` (TC-BB-001..004).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1564,7 +1609,7 @@ never column lists (those live in section E).
 ### `HacVariance` — `quant_cn.statistic.hac_variance` (L4)
 - **Purpose:** Heteroskedasticity- and autocorrelation-consistent variance of a sample mean with the Bartlett kernel (Newey & West 1987; lag rule of Newey & West 1994), for series whose observations overlap (IC_t at horizon h is serially correlated by construction). By default the series is AR(1)-prewhitened before the kernel and recoloured after (Andrews & Monahan 1992): with the plain rule-of-thumb lag, 95% intervals covered only 89.8% on AR(1) phi = 0.6 and 88.4% on an overlapping 20-session MA(19), against 95.1% and 99.0% prewhitened (D-090). Used for the NW t on mean IC and by every HAC test.
 - **Base:** none. **Depends on (injected):** int | None, bool.
-- **Used by:** `statistic.IcSignificance`.
+- **Used by:** `statistic.IcSignificance`, `cli.ServiceBuilder`.
 - **Tests:** `tests/statistic/test_hac_variance.py` (TC-HAC-001..004).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1578,7 +1623,7 @@ never column lists (those live in section E).
 ### `IcCalculator` — `quant_cn.statistic.ic_calculator` (L4)
 - **Purpose:** Per-date information coefficient between factor values and forward returns across the universe: IC_t = corr_rank(f_{i,t}, r_{i,t->t+h}) (Spearman; Pearson on the values as a variant). Forward returns are tradeable (FACTOR_TESTING_DESIGN §10, §11): the factor known at the close of t is traded at the next open, r = P_adj close(t+h) / P_adj open(t+1) - 1; close-to-close is available for comparison only.
 - **Base:** none. **Depends on (injected):** Method, int.
-- **Used by:** `factor.FactorEvaluator`.
+- **Used by:** `factor.FactorEvaluator`, `cli.ServiceBuilder`.
 - **Tests:** `tests/statistic/test_ic_calculator.py` (TC-ICC-001..004).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1590,7 +1635,7 @@ never column lists (those live in section E).
 ### `IcSignificance` — `quant_cn.statistic.ic_significance` (L4)
 - **Purpose:** The §2 tests for one factor at one horizon: Newey-West t on mean IC (Newey & West 1987, 1994, prewhitened per D-090), stationary block-bootstrap CI of mean IC and ICIR (Politis & Romano 1994), Fisher-z / Stouffer screen, sign consistency per sub-period, single break in mean (Bai & Perron 1998; sup-F critical values of Andrews 1993), plus Pesaran-Timmermann directional accuracy (1992, 2009) and an exponential decay fit across horizons.
 - **Base:** none. **Depends on (injected):** HacVariance, BlockBootstrap, Mapping[str, tuple[str, str]].
-- **Used by:** `factor.FactorEvaluator`.
+- **Used by:** `factor.FactorEvaluator`, `cli.ServiceBuilder`.
 - **Tests:** `tests/statistic/test_ic_significance.py` (TC-ICS-001..004).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1606,7 +1651,7 @@ never column lists (those live in section E).
 ### `MultipleTestingAdjuster` — `quant_cn.statistic.multiple_testing_adjuster` (L4)
 - **Purpose:** Adjust the p-values of many factor tests run in one campaign: Holm step-down FWER (Holm 1979), Benjamini-Hochberg FDR (1995), Benjamini-Hochberg-Yekutieli FDR under arbitrary dependence (2001), Romano-Wolf bootstrap step-down FWER (Romano & Wolf 2005, 2016), and the Harvey-Liu-Zhu (2016) /t/ >= 3.0 hurdle. Pure arithmetic on arrays.
 - **Base:** none. **Depends on (injected):** float.
-- **Used by:** `factor.FactorEvaluator`.
+- **Used by:** `factor.FactorEvaluator`, `cli.ServiceBuilder`.
 - **Tests:** `tests/statistic/test_multiple_testing_adjuster.py` (TC-MTA-001..005).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1621,7 +1666,7 @@ never column lists (those live in section E).
 ### `Neutralizer` — `quant_cn.statistic.neutralizer` (L4)
 - **Purpose:** Remove what industry membership and numeric exposures (e.g. log market cap) explain in a factor, date by date: the residual of OLS x_i = a + sum_g d_{ig} b_g + sum_k z_{ik} c_k + e_i, so the factor's IC is not an industry or size bet in disguise.
 - **Base:** none. **Depends on (injected):** int.
-- **Used by:** `factor.FactorPreprocessor`.
+- **Used by:** `factor.FactorPreprocessor`, `cli.ServiceBuilder`.
 - **Tests:** `tests/statistic/test_neutralizer.py` (TC-NEU-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1632,7 +1677,7 @@ never column lists (those live in section E).
 ### `QuantileReturns` — `quant_cn.statistic.quantile_returns` (L4)
 - **Purpose:** Sort names into n quantiles of the factor within each date and horizon, and report each quantile's equal-weighted mean forward return plus the long-short spread (top minus bottom, stored as quantile 0): the monotone "ladder" that complements the IC.
 - **Base:** none. **Depends on (injected):** int.
-- **Used by:** `factor.FactorEvaluator`.
+- **Used by:** `factor.FactorEvaluator`, `cli.ServiceBuilder`.
 - **Tests:** `tests/statistic/test_quantile_returns.py` (TC-QR-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1643,7 +1688,7 @@ never column lists (those live in section E).
 ### `ReturnStats` — `quant_cn.statistic.return_stats` (L4)
 - **Purpose:** Summarise a series of period returns: annualised mean and volatility, Sharpe (per period and annualised with sqrt(244 / h)), maximum drawdown of the compounded path, hit rate, skewness and non-excess kurtosis (the PSR / DSR inputs of Bailey & López de Prado 2012).
 - **Base:** none. **Depends on (injected):** int.
-- **Used by:** `factor.FactorEvaluator`.
+- **Used by:** `factor.FactorEvaluator`, `cli.ServiceBuilder`.
 - **Tests:** `tests/statistic/test_return_stats.py` (TC-RS-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1654,7 +1699,7 @@ never column lists (those live in section E).
 ### `Standardizer` — `quant_cn.statistic.standardizer` (L4)
 - **Purpose:** Put factor values on a common scale within each date: z = (x - m) / s with m the equal-weighted mean (or a weighted mean, e.g. cap weights as in Barra-style exposures) and s the equal-weighted standard deviation, so the cross-section has unit dispersion.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `factor.FactorPreprocessor`, `factor.SignalCombiner`.
+- **Used by:** `factor.FactorPreprocessor`, `factor.SignalCombiner`, `cli.ServiceBuilder`.
 - **Tests:** `tests/statistic/test_standardizer.py` (TC-STD-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1664,7 +1709,7 @@ never column lists (those live in section E).
 ### `TrialLog` — `quant_cn.statistic.trial_log` (L4)
 - **Purpose:** Record every factor / parameter / horizon variant evaluated in a campaign, including the failures, because the deflated Sharpe ratio (Bailey & López de Prado 2014) and the multiple-testing adjusters need the number and dispersion of all trials, not just the winners. Append-only: trials get sequential ids and can never be edited or removed. No I/O: the caller persists `build_frame()` and resumes with `from_frame()`.
 - **Base:** none. **Depends on (injected):** str.
-- **Used by:** `factor.FactorEvaluator`.
+- **Used by:** `factor.FactorEvaluator`, `pipeline.EvaluationStep`.
 - **Tests:** `tests/statistic/test_trial_log.py` (TC-TL-001..004).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1679,7 +1724,7 @@ never column lists (those live in section E).
 ### `Winsorizer` — `quant_cn.statistic.winsorizer` (L4)
 - **Purpose:** Clip extreme factor values within each date so a few outliers do not dominate ranks, z-scores or regressions: median +- k * 1.4826 * MAD (robust default) or the q / 1 - q cross-sectional quantiles.
 - **Base:** none. **Depends on (injected):** Method, float, float.
-- **Used by:** `factor.FactorPreprocessor`.
+- **Used by:** `factor.FactorPreprocessor`, `cli.ServiceBuilder`.
 - **Tests:** `tests/statistic/test_winsorizer.py` (TC-WZ-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1730,7 +1775,7 @@ never column lists (those live in section E).
 | `BaseFetchLog` | `quant_cn.core.base_fetch_log` | 1 | Abstract record of which (dataset, key) pairs are fully downloaded. | `read_done_keys`: All keys recorded as done for a dataset.; `mark_done`: Record a finished key, replacing any earlier record for it.; `save`: Make recorded keys durable (e.g. write the parquet mirror). | `FetchLog` | 2026-09-27 |
 | `BaseFetcher` | `quant_cn.core.base_fetcher` | 1 | Download one dataset as a sequence of keys | `list_keys`: All fetch keys for [start, end], ascending.; `build_params`: API parameters for one key. | `SingleCallFetcher`, `EnumFetcher`, `DateSweepFetcher`, `PeriodSweepFetcher`, `DateWindowFetcher` | 2026-09-27 |
 | `BaseRunLog` | `quant_cn.core.base_run_log` | 1 | Abstract append-only log of runs and per-key events | `open_run`: Open a run and return its id.; `record_event`: Append one event (fetched / skipped / empty / failed / blocked).; `close_run`: Close a run with its final status. | `RunLog` | 2026-09-27 |
-| `BaseStep` | `quant_cn.core.base_step` | 1 | Abstract unit of pipeline work: list its units, then run and report. | `name`: Step name shown in progress and reports.; `list_units`: Compute the work units (e.g. keys) just before running.; `run`: Do the work listed by `list_units`. | `CompactStep`, `DeriveStep`, `FetchStep`, `UniverseStep` | 2026-09-27 |
+| `BaseStep` | `quant_cn.core.base_step` | 1 | Abstract unit of pipeline work: list its units, then run and report. | `name`: Step name shown in progress and reports.; `list_units`: Compute the work units (e.g. keys) just before running.; `run`: Do the work listed by `list_units`. | `CompactStep`, `DeriveStep`, `FetchStep`, `EvaluationStep`, `FeatureStep`, `UniverseStep` | 2026-09-27 |
 | `BaseStore` | `quant_cn.core.base_store` | 1 | Abstract sink for raw fetch results and curated partitions. | `write_raw`: Persist one fetch key's rows atomically.; `write_curated`: Replace one curated partition atomically after validating its schema. | `ParquetWriter` | 2026-09-27 |
 | `BaseChecker` | `quant_cn.core.docs.base_checker` | 1 | Abstract repository check: inspect the tree, return findings (empty = pass). | `run`: Run the check over the repository. | `ContractChecker`, `IndexChecker`, `NameChecker`, `SizeChecker` | 2026-09-27 |
 | `BaseFactor` | `quant_cn.factor.base_factor` | 5 | Abstract factor: declares which inputs, fundamentals fields and daily_basic columns it needs and how many sessions of price history before the first output date | `compute_raw`: The raw factor value per stock and session. | `EarningsYieldFactor`, `MomentumFactor`, `ProfitGrowthFactor`, `ReversalFactor`, `RoeFactor`, `TurnoverFactor` | 2026-09-27 |

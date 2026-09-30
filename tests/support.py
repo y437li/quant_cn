@@ -9,22 +9,25 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar
 
+import numpy as np
 import pandas as pd
 
 from quant_cn.calculation.black76_model import Black76Model
 from quant_cn.core.base_api_client import BaseApiClient
 from quant_cn.core.base_step import BaseStep, ProgressHook
 from quant_cn.core.clock import Clock
-from quant_cn.core.config import Config
+from quant_cn.core.config import Config, UniverseConfig
 from quant_cn.core.dataset_spec import CuratedSpec, DatasetSpec, SweepSpec
 from quant_cn.core.exceptions import QuantCnError
 from quant_cn.core.step_report import StepReport
 from quant_cn.lake.compactor import Compactor
+from quant_cn.lake.derived_views import DerivedViews
 from quant_cn.lake.fetch_log import FetchLog
 from quant_cn.lake.lake_catalog import LakeCatalog
 from quant_cn.lake.lake_query import LakeQuery
 from quant_cn.lake.parquet_writer import ParquetWriter
 from quant_cn.lake.run_log import RunLog
+from quant_cn.pipeline.universe_step import UniverseStep
 
 
 class FakeClock(Clock):
@@ -329,3 +332,70 @@ class SampleFactorLake:
                 }
             ],
         )
+
+
+class SampleMarket:
+    """A small market (prices, daily_basic, universe) for feature and evaluation step tests."""
+
+    DAYS: ClassVar[list[str]] = pd.bdate_range("2026-01-05", periods=80).strftime("%Y%m%d").tolist()
+    CODES: ClassVar[list[str]] = [f"{i:06d}.SH" for i in range(39)] + ["830001.BJ"]
+
+    @classmethod
+    def write(cls, lake: MiniLake, config: Config) -> None:
+        rng = np.random.default_rng(3)
+        write = SampleFactorLake.write
+        lake.writer.write_raw(
+            config.get_dataset("trade_cal"), "all", Sample.build_trade_cal(cls.DAYS)
+        )
+        Compactor(lake.catalog, lake.query, lake.writer, lake.clock).rebuild(
+            config.get_dataset("trade_cal")
+        )
+        write(
+            lake,
+            config,
+            "stock_basic",
+            [{"ts_code": c, "list_status": "L", "list_date": "20000101"} for c in cls.CODES],
+        )
+        close = 10 * np.cumprod(
+            1 + 0.02 * rng.standard_normal((len(cls.DAYS), len(cls.CODES))), axis=0
+        )
+        bars, basic = [], []
+        for t, day in enumerate(cls.DAYS):
+            for i, code in enumerate(cls.CODES):
+                opened = close[t - 1, i] if t else close[0, i]
+                bars.append(
+                    {"ts_code": code, "trade_date": day, "open": opened, "close": close[t, i]}
+                )
+                basic.append(
+                    {
+                        "ts_code": code,
+                        "trade_date": day,
+                        "total_mv": 100.0 + i,
+                        "turnover_rate_f": float(rng.uniform(0.5, 5.0)),
+                    }
+                )
+        cls.write_market(lake, config, bars, basic)
+        views = DerivedViews(lake.catalog, lake.query, config.datasets)
+        views.refresh()
+        rules = UniverseConfig(start=cls.DAYS[0], min_sessions=1, exchanges=["SH", "SZ"])
+        UniverseStep(lake.query, lake.writer, rules).run("r0")
+        views.refresh_tables()
+
+    @classmethod
+    def write_market(
+        cls,
+        lake: MiniLake,
+        config: Config,
+        bars: list[dict[str, object]],
+        basic: list[dict[str, object]],
+    ) -> None:
+        write = SampleFactorLake.write
+        write(lake, config, "daily", bars)
+        adj = [
+            {"ts_code": b["ts_code"], "trade_date": b["trade_date"], "adj_factor": 1.0}
+            for b in bars
+        ]
+        write(lake, config, "adj_factor", adj)
+        write(lake, config, "daily_basic", basic)
+        names = [{"ts_code": c, "name": "x", "start_date": "20000101"} for c in cls.CODES]
+        write(lake, config, "namechange", names)

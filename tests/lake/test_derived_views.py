@@ -200,6 +200,18 @@ def test_tc_dv_009_universe_view(lake: MiniLake, config: Config) -> None:
     lake.writer.write_derived("universe", 2026, frame)
     assert "derived.universe" in DerivedViews(lake.catalog, lake.query, config.datasets).refresh()
     assert lake.query.sql("SELECT count(*) AS n FROM derived.universe")["n"].iloc[0] == 1
+    features = pd.DataFrame(
+        {
+            "trade_date": ["20260105"],
+            "ts_code": ["600000.SH"],
+            "factor": ["f"],
+            "value": [0.5],
+            "value_raw": [1.5],
+        }
+    )
+    lake.writer.write_derived("features", 2026, features)
+    created = DerivedViews(lake.catalog, lake.query, config.datasets).refresh_tables()
+    assert created == ["derived.universe", "derived.features"]
 
 
 # TC-DV-010

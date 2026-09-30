@@ -30,6 +30,7 @@ class ReturnStats:
 
     Used by:
         factor.FactorEvaluator  -- injected type or call
+        cli.ServiceBuilder      -- injected type or call
 
     Test cases:
         TC-RS-001  known answer: constant returns give zero volatility, no drawdown, Sharpe inf

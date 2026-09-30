@@ -15,7 +15,7 @@ from quant_cn.lake.lake_query import LakeQuery
 from quant_cn.lake.parquet_writer import ParquetWriter
 from quant_cn.lake.pit_aligner import PitAligner
 from quant_cn.lake.run_log import RunLog
-from quant_cn.pipeline.curate_pipeline import DIGEST_FILE, CuratePipeline
+from quant_cn.pipeline.curate_pipeline import DIGEST_FILE, CuratePipeline, DeriveStep
 from quant_cn.pipeline.runner import LocalRunner
 from tests.support import FakeClock, MiniLake, SampleLake
 
@@ -75,3 +75,18 @@ def test_tc_cp_002_rebuild_identical(seeded: MiniLake, config: Config) -> None:
 def test_tc_cp_003_unknown_dataset(lake: MiniLake, config: Config) -> None:
     with pytest.raises(ConfigError):
         build_curate(config, lake.catalog).run(["nope"])
+
+
+# TC-CP-004
+def test_tc_cp_004_refresh_digests(seeded: MiniLake, config: Config) -> None:
+    build_curate(config, seeded.catalog).run()
+    manifest = seeded.lake_root / "meta" / "manifest"
+    step = DeriveStep(
+        DerivedViews(seeded.catalog, seeded.query, config.datasets),
+        PitAligner(seeded.catalog, seeded.query, DateCodec()),
+        seeded.query,
+        manifest,
+    )
+    before = read_digests(seeded)
+    merged = step.refresh_digests(["derived.fundamentals_long"])
+    assert set(before) <= set(merged) and merged == read_digests(seeded)

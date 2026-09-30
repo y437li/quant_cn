@@ -32,6 +32,8 @@ class BaseStep(ABC):
         pipeline.DeriveStep       -- subclass
         pipeline.PrefectRunner    -- injected type or call
         pipeline.UniverseStep     -- subclass
+        pipeline.EvaluationStep   -- subclass
+        pipeline.FeatureStep      -- subclass
 
     Test cases:
         TC-BAC-001  abstract bases cannot be instantiated

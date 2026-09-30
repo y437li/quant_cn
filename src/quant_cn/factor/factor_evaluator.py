@@ -66,12 +66,14 @@ class FactorEvaluator:
             return_stats: ReturnStats; bootstrap: BlockBootstrap  -- Romano-Wolf draws
             horizons: Sequence[int]
         Output:
-            instance; `compute`
+            instance; `compute`, `build_campaign`
         Raises:
             ValueError  -- no horizons
 
     Used by:
-        notebooks  -- factor campaign (phase 6)
+        notebooks                -- factor campaign (phase 6)
+        pipeline.EvaluationStep  -- injected type or call
+        cli.ServiceBuilder       -- injected type or call
 
     Test cases:
         TC-FEV-001  a factor that predicts returns gets a positive mean IC, hlz_pass at high t,
@@ -107,6 +109,7 @@ class FactorEvaluator:
         prices: pd.DataFrame,
         trial_log: TrialLog | None = None,
         params: Mapping[str, Mapping[str, object]] | None = None,
+        adjust: bool = True,
     ) -> FactorReport:
         """
         Purpose:
@@ -118,24 +121,24 @@ class FactorEvaluator:
                 prices:    DataFrame           -- dense PRICE_PANEL covering the horizons
                 trial_log: TrialLog | None     -- variants recorded here
                 params:    Mapping | None      -- factor -> parameters (for the TrialLog)
+                adjust:    bool                -- apply the campaign adjustment (False when the
+                                                  caller evaluates factor by factor and calls
+                                                  build_campaign once on the concatenation)
             Output:
                 FactorReport
             Raises:
                 SchemaError  -- inputs not FACTOR_PANEL / PRICE_PANEL
         """
         panel = FACTOR_PANEL.validate(factors)
-        returns = self._ic.build_forward_returns(prices, self._horizons)
-        ic_series = self._ic.compute(panel, returns)
-        ladder = self._quantiles.compute(panel, returns)
+        ic_series, ladder = self._compute_series(panel, prices)
         rows = [
             self._build_factor_rows(ic_series, ladder, name)
             for name in sorted(panel["factor"].unique())
         ]
         rows.append(self._build_autocorr_rows(panel))
         ic_test = pd.concat([r for r in rows if not r.empty], ignore_index=True)
-        ic_test = self._adj.build_adjusted(
-            ic_test, "ic_mean", "full", self._build_t_boot(ic_series, ic_test)
-        )
+        if adjust:
+            ic_test = self.build_campaign(ic_series, ic_test)
         if trial_log is not None:
             self._record_trials(trial_log, ic_test, params or {})
         logger.info(
@@ -146,6 +149,35 @@ class FactorEvaluator:
             ic_test=IC_TEST.validate(ic_test),
             quantiles=QUANTILE_RETURNS.validate(ladder),
         )
+
+    def build_campaign(self, ic_series: pd.DataFrame, ic_test: pd.DataFrame) -> pd.DataFrame:
+        """
+        Purpose:
+            Campaign-level adjustment over every factor x horizon mean-IC test.
+
+        Contract:
+            Input:
+                ic_series: DataFrame  -- IC_SERIES of the whole campaign
+                ic_test:   DataFrame  -- IC_TEST of the whole campaign
+            Output:
+                DataFrame  -- IC_TEST with p_adj_holm, p_adj_bhy, p_adj_romano_wolf (block-bootstrap
+                              draws shared across the family, recentred t) and hlz_pass on the
+                              full-window ic_mean rows
+            Raises:
+                SchemaError  -- not IC_TEST
+        """
+        t_boot = self._build_t_boot(ic_series, ic_test)
+        return self._adj.build_adjusted(ic_test, "ic_mean", "full", t_boot)
+
+    def _compute_series(
+        self, panel: pd.DataFrame, prices: pd.DataFrame
+    ) -> tuple[pd.DataFrame, pd.DataFrame]:
+        ic_parts, ladder_parts = [], []
+        for h in self._horizons:  # one horizon at a time keeps memory to one return panel
+            returns = self._ic.build_forward_returns(prices, [h])
+            ic_parts.append(self._ic.compute(panel, returns))
+            ladder_parts.append(self._quantiles.compute(panel, returns))
+        return pd.concat(ic_parts, ignore_index=True), pd.concat(ladder_parts, ignore_index=True)
 
     def _build_factor_rows(
         self, ic_series: pd.DataFrame, ladder: pd.DataFrame, name: str

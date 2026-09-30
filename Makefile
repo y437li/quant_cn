@@ -6,7 +6,7 @@ CLI := $(UV_RUN) python -m quant_cn.cli
 PREFECT_API_DEFAULT := http://127.0.0.1:4200/api
 PREFECT_ENV = $(if $(filter prefect,$(RUNNER)),PREFECT_API_URL="$${PREFECT_API_URL:-$$(sed -n 's/^PREFECT_API_URL=//p' .env 2>/dev/null)}" && export PREFECT_API_URL="$${PREFECT_API_URL:-$(PREFECT_API_DEFAULT)}" &&)
 
-.PHONY: release-lags verify-prices setup hooks lint lint-contracts test check doctor download download-dry compact curate lake-rebuild lake-backup notebook project-catalog query prefect-server
+.PHONY: evaluate release-lags verify-prices setup hooks lint lint-contracts test check doctor download download-dry compact curate lake-rebuild lake-backup notebook project-catalog query prefect-server
 
 setup:            ## create the venv from uv.lock; copy .env.example to .env if missing
 	uv sync --all-extras
@@ -73,3 +73,6 @@ verify-prices:    ## BaoStock cross-check of the last ~5 sessions (D-085): refet
 	$(CLI) download --datasets baostock_daily_recent --start $(VERIFY_START) --force --no-progress
 	$(CLI) curate --datasets baostock_daily_recent --no-progress
 	$(CLI) query "SELECT * FROM quality.price_crosscheck WHERE trade_date >= '$(VERIFY_START)' ORDER BY trade_date"
+
+evaluate:         ## evaluate the factor campaign (config/factors.yaml): reports + trial log (plan 04 phase 5)
+	$(CLI) evaluate --no-progress

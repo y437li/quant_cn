@@ -96,6 +96,7 @@ class BaseFactor(ABC):
         factor.library.ReversalFactor       -- subclass
         factor.library.RoeFactor            -- subclass
         factor.library.TurnoverFactor       -- subclass
+        pipeline.FeatureStep                -- injected type or call
 
     Test cases:
         TC-BFA-001  compute keeps [start, end], sets value = value_raw and the factor name,

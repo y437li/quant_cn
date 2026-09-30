@@ -49,6 +49,7 @@ class LakeCatalog:
         lake.QualityViews              -- injected type or call
         lake.LakeReader                -- injected type or call
         lake.TickerAliasMap            -- injected type or call
+        cli.ResearchCommands           -- injected type or call
 
     Test cases:
         TC-LC-001  raw and curated views exist after refresh and return the written rows

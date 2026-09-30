@@ -34,7 +34,7 @@ class ReleaseLagChecker:
             (none at construction)
 
     Used by:
-        cli.QuantCnCli  -- `release-lags` command, run by `make check`
+        cli.ResearchCommands  -- injected type or call
 
     Test cases:
         TC-RLC-001  a release later than the rule is counted; observed max reported

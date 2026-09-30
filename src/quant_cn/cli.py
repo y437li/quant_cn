@@ -20,41 +20,18 @@ from rich.table import Table
 from quant_cn.core.clock import Clock
 from quant_cn.core.config import Config
 from quant_cn.core.date_codec import DateCodec
-from quant_cn.core.docs.code_scanner import CodeScanner
-from quant_cn.core.docs.code_table_builder import CodeTableBuilder
-from quant_cn.core.docs.contract_linter import ContractLinter
-from quant_cn.core.docs.decisions_reader import DecisionsReader
-from quant_cn.core.docs.doc_table_builder import DocTableBuilder
-from quant_cn.core.docs.docstring_parser import DocstringParser
-from quant_cn.core.docs.index_reader import IndexReader
-from quant_cn.core.docs.markdown_table import MarkdownTableReader
-from quant_cn.core.docs.plan_reader import PlanReader
-from quant_cn.core.docs.registry_reader import RegistryReader
-from quant_cn.core.docs.repo_files import RepoFiles
 from quant_cn.core.exceptions import LakeError, QuantCnError
-from quant_cn.data_loading.akshare_client import AkshareClient
-from quant_cn.data_loading.baostock_client import BaostockClient
-from quant_cn.data_loading.fetcher_factory import FetcherFactory
-from quant_cn.data_loading.tushare_client import TushareClient
 from quant_cn.lake.compactor import Compactor
-from quant_cn.lake.derived_views import DerivedViews
 from quant_cn.lake.fetch_log import FetchLog
 from quant_cn.lake.lake_catalog import LakeCatalog
 from quant_cn.lake.lake_query import LakeQuery
-from quant_cn.lake.lake_reader import LakeReader
-from quant_cn.lake.panel_cache import PanelCache
 from quant_cn.lake.parquet_writer import ParquetWriter
-from quant_cn.lake.pit_aligner import PitAligner
-from quant_cn.lake.project_catalog import ProjectCatalog
 from quant_cn.lake.rebuild_audit import RebuildAudit
 from quant_cn.lake.release_lag_checker import ReleaseLagChecker
 from quant_cn.lake.run_log import RunLog
-from quant_cn.lake.ticker_alias_map import TickerAliasMap
-from quant_cn.lake.trading_calendar import TradingCalendar
-from quant_cn.pipeline.curate_pipeline import DIGEST_FILE, CuratePipeline
-from quant_cn.pipeline.download_pipeline import DownloadPipeline
-from quant_cn.pipeline.runner import BaseRunner, LocalRunner, PipelineReport
-from quant_cn.pipeline.universe_step import UniverseStep
+from quant_cn.pipeline.curate_pipeline import DIGEST_FILE
+from quant_cn.pipeline.runner import PipelineReport
+from quant_cn.service_builder import ServiceBuilder
 
 MIN_FREE_GB = 20
 MIN_CALENDAR_DAYS = 90
@@ -88,7 +65,6 @@ class QuantCnCli:
         TC-QCC-005  doctor reports the trade_cal horizon and warns under 90 days
         TC-QCC-006  doctor warns (exit code unchanged) when the Prefect API is unreachable
         TC-QCC-007  rebuild removes fetch-log orphans and writes fetch_log_orphans.json
-        TC-QCC-008  release-lags prints one line per checked dataset and exits 0 on warnings
     """
 
     def __init__(self, config: Config | None = None, console: Console | None = None) -> None:
@@ -116,7 +92,10 @@ class QuantCnCli:
         )
         try:
             config = self._config or Config.load()
-            handler = getattr(self, f"_run_{args.command.replace('-', '_')}")
+            method = f"_run_{args.command.replace('-', '_')}"
+            handler = getattr(self, method, None) or getattr(
+                ResearchCommands(self._console), method
+            )
             return int(handler(config, args))
         except QuantCnError as exc:
             self._console.print(f"[red]error:[/red] {exc}")
@@ -149,6 +128,10 @@ class QuantCnCli:
         qy.add_argument("sql", help='SQL, e.g. "SELECT * FROM project.todo"')
         qy.add_argument("--limit", type=int, default=50)
         sub.add_parser("release-lags", help="warn when a release-lag rule is earlier than observed")
+        ev = sub.add_parser(
+            "evaluate", help="evaluate the factor campaign; write reports and trials"
+        )
+        ev.add_argument("--no-progress", action="store_true")
         return parser
 
     def _run_doctor(self, config: Config, _args: argparse.Namespace) -> int:
@@ -290,15 +273,6 @@ class QuantCnCli:
         self._console.print(table)
         return 0
 
-    def _run_release_lags(self, config: Config, _args: argparse.Namespace) -> int:
-        catalog = LakeCatalog(config.lake.root, config.datasets, read_only=True)
-        try:
-            frame = ReleaseLagChecker(LakeQuery(catalog), config.datasets).compute()
-        finally:
-            catalog.close()
-        self._console.print("\n".join(ReleaseLagChecker.build_lines(frame)))
-        return 0  # a warning, not a failure (D-086)
-
     def _run_rebuild(self, config: Config, _args: argparse.Namespace) -> int:
         catalog = LakeCatalog(config.lake.root, config.datasets)
         try:
@@ -358,155 +332,57 @@ class QuantCnCli:
         return any((p / ".git").exists() for p in (path, *path.parents))
 
 
-class ServiceBuilder:
+class ResearchCommands:
     """
     Purpose:
-        Wire services for the CLI commands (the composition root's constructors): download and
-        curate pipelines with the chosen runner, and the project catalog.
+        The research-side CLI commands, kept apart so QuantCnCli stays within its size limit:
+        `release-lags` (D-086) and `evaluate` (factor campaign reports and trial log, plan 04
+        phase 5). QuantCnCli parses the arguments and dispatches here.
 
     Contract:
         Input:
-            (none)
+            console: Console
         Output:
-            instance; `build_download_pipeline`, `build_curate_pipeline`, `build_runner`,
-            `build_project_catalog`
+            instance; `_run_release_lags`, `_run_evaluate` (dispatched by QuantCnCli.run)
         Raises:
             (none at construction)
 
     Used by:
-        cli.QuantCnCli  -- download, curate, project-catalog commands
+        cli.QuantCnCli  -- dispatch fallback
 
     Test cases:
-        TC-QCC-002  download --dry-run on an empty lake exits 0 and lists datasets
-        TC-QCC-003  curate on a mini lake exits 0 and reports derived digests unchanged on rerun
+        TC-QCC-008  release-lags prints one line per checked dataset and exits 0 on warnings
+        TC-QCC-009  evaluate without features exits 0 and writes nothing
     """
 
-    def build_download_pipeline(
-        self, config: Config, catalog: LakeCatalog, show_progress: bool, runner: str = "local"
-    ) -> DownloadPipeline:
-        """
-        Purpose:
-            DownloadPipeline wired to the lake, Tushare client and chosen runner.
+    def __init__(self, console: Console) -> None:
+        self._console = console
 
-        Contract:
-            Input:
-                config, catalog; show_progress: bool; runner: "local" | "prefect"
-            Output:
-                DownloadPipeline
-            Raises:
-                (none)
-        """
-        clock, codec = Clock(), DateCodec()
-        writer = ParquetWriter(config.lake.root)
-        fetch_log = FetchLog(catalog)
-        run_log = RunLog(catalog, clock)
-        calendar = TradingCalendar(LakeQuery(catalog))
-        client = TushareClient(config.tushare, clock)
-        factory = FetcherFactory(
-            config,
-            client,
-            writer,
-            fetch_log,
-            run_log,
-            clock,
-            calendar,
-            codec,
-            extra_clients={"akshare": AkshareClient(clock), "baostock": BaostockClient(clock)},
-            query=LakeQuery(catalog),
-        )
-        executor = self.build_runner(run_log, runner, show_progress)
-        return DownloadPipeline(config, factory, executor, catalog, fetch_log, clock, codec)
+    def _run_release_lags(self, config: Config, _args: argparse.Namespace) -> int:
+        catalog = LakeCatalog(config.lake.root, config.datasets, read_only=True)
+        try:
+            frame = ReleaseLagChecker(LakeQuery(catalog), config.datasets).compute()
+        finally:
+            catalog.close()
+        self._console.print("\n".join(ReleaseLagChecker.build_lines(frame)))
+        return 0  # a warning, not a failure (D-086)
 
-    def build_curate_pipeline(
-        self, config: Config, catalog: LakeCatalog, show_progress: bool, runner_name: str = "local"
-    ) -> CuratePipeline:
-        """
-        Purpose:
-            CuratePipeline wired to compactor, derived views, PIT aligner and chosen runner.
-
-        Contract:
-            Input:
-                config, catalog; show_progress: bool; runner_name: "local" | "prefect"
-            Output:
-                CuratePipeline
-            Raises:
-                (none)
-        """
-        clock, query = Clock(), LakeQuery(catalog)
-        compactor = Compactor(catalog, query, ParquetWriter(config.lake.root), clock)
-        views = DerivedViews(
-            catalog, query, config.datasets, config.futures_categories, config.ticker_aliases
-        )
-        aligner = PitAligner(catalog, query, DateCodec())
-        runner = self.build_runner(RunLog(catalog, clock), runner_name, show_progress)
-        universe = UniverseStep(query, ParquetWriter(config.lake.root), config.universe)
-        return CuratePipeline(config, compactor, views, aligner, query, catalog, runner, universe)
-
-    def build_runner(self, run_log: RunLog, name: str, show_progress: bool) -> BaseRunner:
-        """
-        Purpose:
-            LocalRunner, or PrefectRunner for name "prefect" (optional extra "flows", D-022).
-
-        Contract:
-            Input:
-                run_log: RunLog; name: "local" | "prefect"; show_progress: bool
-            Output:
-                BaseRunner
-            Raises:
-                ModuleNotFoundError  -- prefect requested but the "flows" extra is not installed
-        """
-        if name == "prefect":
-            from quant_cn.pipeline import prefect_runner  # noqa: PLC0415 -- optional extra (D-022)
-
-            return prefect_runner.PrefectRunner(run_log)
-        return LocalRunner(run_log, show_progress=show_progress)
-
-    def build_reader(self, config: Config, catalog: LakeCatalog, cache: bool = False) -> LakeReader:
-        """
-        Purpose:
-            The lake read API (D-089): PIT aligner, alias map, calendar and an optional cache.
-
-        Contract:
-            Input:
-                config: Config; catalog: LakeCatalog (read-only is fine)
-                cache:  bool  -- True in notebooks (PanelCache), False in pipelines
-            Output:
-                LakeReader
-            Raises:
-                (none)
-        """
-        query = LakeQuery(catalog)
-        return LakeReader(
-            catalog,
-            query,
-            config.datasets,
-            PitAligner(catalog, query, DateCodec()),
-            TickerAliasMap(catalog, query, config.ticker_aliases),
-            TradingCalendar(query),
-            PanelCache() if cache else None,
-        )
-
-    def build_project_catalog(self, config: Config, catalog: LakeCatalog) -> ProjectCatalog:
-        """
-        Purpose:
-            ProjectCatalog over the repository with the contract linter.
-
-        Contract:
-            Input:
-                config, catalog
-            Output:
-                ProjectCatalog
-            Raises:
-                (none)
-        """
-        root = config.repo_root
-        tables, scanner = MarkdownTableReader(), CodeScanner()
-        code = CodeTableBuilder(root, scanner, DocstringParser(), RegistryReader(tables))
-        files = RepoFiles(root)
-        docs = DocTableBuilder(
-            root, files, IndexReader(tables), DecisionsReader(tables), PlanReader(tables)
-        )
-        return ProjectCatalog(catalog, code, docs, config.datasets, ContractLinter(root), Clock())
+    def _run_evaluate(self, config: Config, args: argparse.Namespace) -> int:
+        catalog = LakeCatalog(config.lake.root, config.datasets)
+        try:
+            step = ServiceBuilder().build_evaluation(config, catalog)
+            runner = ServiceBuilder().build_runner(
+                RunLog(catalog, Clock()), "local", not args.no_progress
+            )
+            report = runner.run("evaluate", [step])
+        finally:
+            catalog.close()
+        self._console.print(f"run {report.run_id}: {report.status}")
+        for step_report in report.steps:
+            self._console.print(
+                f"{step_report.name}: {step_report.fetched} factors, {step_report.rows} test rows"
+            )
+        return 0
 
 
 if __name__ == "__main__":

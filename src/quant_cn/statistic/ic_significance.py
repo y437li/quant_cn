@@ -44,6 +44,7 @@ class IcSignificance:
 
     Used by:
         factor.FactorEvaluator  -- injected type or call
+        cli.ServiceBuilder      -- injected type or call
 
     Test cases:
         TC-ICS-001  compute returns ic_mean (NW t, bootstrap CI), icir, fisher_z and one row per

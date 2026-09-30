@@ -32,8 +32,9 @@ class RunLog(BaseRunLog):
             LakeError  -- table cannot be created
 
     Used by:
-        cli.QuantCnCli      -- composition root
-        cli.ServiceBuilder  -- injected type or call
+        cli.QuantCnCli        -- composition root
+        cli.ServiceBuilder    -- injected type or call
+        cli.ResearchCommands  -- injected type or call
 
     Test cases:
         TC-RL-001  start/event/finish rows are queryable

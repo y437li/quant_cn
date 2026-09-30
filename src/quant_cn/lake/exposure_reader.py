@@ -37,7 +37,8 @@ class ExposureReader:
             (none at construction)
 
     Used by:
-        (none yet)
+        pipeline.FeatureStep  -- injected type or call
+        cli.ServiceBuilder    -- injected type or call
 
     Test cases:
         TC-EXR-001  members only; L1 from the interval covering t with its backfilled flag;

@@ -32,6 +32,7 @@ class MultipleTestingAdjuster:
 
     Used by:
         factor.FactorEvaluator  -- injected type or call
+        cli.ServiceBuilder      -- injected type or call
 
     Test cases:
         TC-MTA-001  known answer: Holm/BH/BHY on a hand-worked 4-value example

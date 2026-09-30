@@ -116,3 +116,11 @@ def test_tc_qcc_008_release_lags(config: Config) -> None:
     assert QuantCnCli(config, console).run(["release-lags"]) == 0
     text = console.export_text()
     assert "cn_pmi: rule 7d, observed max 7d over 1 releases -> ok" in text
+
+
+# TC-QCC-009
+def test_tc_qcc_009_evaluate_empty(config: Config) -> None:
+    console = Console(record=True, width=200)
+    assert QuantCnCli(config, console).run(["evaluate", "--no-progress"]) == 0
+    assert "0 factors" in console.export_text()
+    assert not (config.lake.root / "derived" / "reports").exists()

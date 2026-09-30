@@ -112,16 +112,19 @@ class DeriveStep(BaseStep):
         Input:
             views: DerivedViews; aligner: PitAligner; query: LakeQuery; manifest_dir: Path
         Output:
-            instance; BaseStep API, `build_digests`
+            instance; BaseStep API, `build_digests`, `refresh_digests`
         Raises:
             (none at construction)
 
     Used by:
         pipeline.CuratePipeline  -- second step
+        pipeline.FeatureStep     -- injected type or call
+        cli.ServiceBuilder       -- injected type or call
 
     Test cases:
         TC-CP-001  curate compacts, builds derived views, PIT states and writes digests
         TC-CP-002  digests are identical after deleting the catalog and curating again
+        TC-CP-004  refresh_digests merges new view digests into the existing file
     """
 
     def __init__(
@@ -207,6 +210,26 @@ class DeriveStep(BaseStep):
             out[view] = str(value) if isinstance(value, str) else ""
         return out
 
+    def refresh_digests(self, views: Sequence[str]) -> dict[str, str]:
+        """
+        Purpose:
+            Recompute the digests of views built after this step (derived.features) and merge
+            them into meta/manifest/derived_digests.json.
+
+        Contract:
+            Input:
+                views: Sequence[str]  -- existing views
+            Output:
+                dict[str, str]  -- the merged digest map written
+            Raises:
+                LakeError  -- query or write failure
+        """
+        path = self._manifest_dir / DIGEST_FILE
+        current = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+        merged = {**{str(k): str(v) for k, v in current.items()}, **self.build_digests(views)}
+        self._write_digests(merged)
+        return merged
+
     def _write_digests(self, digests: dict[str, str]) -> None:
         path = self._manifest_dir / DIGEST_FILE
         try:
@@ -234,6 +257,8 @@ class CuratePipeline:
             catalog:   LakeCatalog
             runner:    BaseRunner
             universe:  BaseStep | None  -- UniverseStep, run between compact and derive
+            derive:    DeriveStep | None -- shared with FeatureStep (None: built here)
+            features:  BaseStep | None  -- FeatureStep, run last
         Output:
             instance; `run(datasets=None) -> PipelineReport`
         Raises:
@@ -258,6 +283,8 @@ class CuratePipeline:
         catalog: LakeCatalog,
         runner: BaseRunner,
         universe: BaseStep | None = None,
+        derive: DeriveStep | None = None,
+        features: BaseStep | None = None,
     ) -> None:
         self._config = config
         self._compactor = compactor
@@ -267,6 +294,8 @@ class CuratePipeline:
         self._catalog = catalog
         self._runner = runner
         self._universe = universe
+        self._derive = derive
+        self._features = features
 
     def run(self, datasets: Sequence[str] | None = None) -> PipelineReport:
         """
@@ -277,7 +306,7 @@ class CuratePipeline:
             Input:
                 datasets: Sequence[str] | None  -- subset to compact; derived views always rebuilt
             Output:
-                PipelineReport  -- steps "compact", "universe" (if given) and "derive"
+                PipelineReport  -- steps "compact", "universe", "derive", "features" (as given)
             Raises:
                 ConfigError  -- unknown dataset
                 SchemaError, LakeError
@@ -290,7 +319,8 @@ class CuratePipeline:
         steps: list[BaseStep] = [
             CompactStep(self._compactor, [self._config.get_dataset(n) for n in names]),
             *([self._universe] if self._universe is not None else []),
-            DeriveStep(self._views, self._aligner, self._query, manifest),
+            self._derive or DeriveStep(self._views, self._aligner, self._query, manifest),
+            *([self._features] if self._features is not None else []),
         ]
         report = self._runner.run("curate", steps)
         self._catalog.write_indexes()

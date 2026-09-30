@@ -31,7 +31,8 @@ class SignalCombiner:
             ValueError  -- empty weights or min_factors < 1
 
     Used by:
-        (none yet)
+        pipeline.FeatureStep  -- injected type or call
+        cli.ServiceBuilder    -- injected type or call
 
     Test cases:
         TC-SGC-001  known answer: weighted mean renormalised over available factors; value_raw is
