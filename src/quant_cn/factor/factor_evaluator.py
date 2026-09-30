@@ -212,7 +212,14 @@ class FactorEvaluator:
             decay = self._sig.compute_decay(mean_ic)
             rows.append(
                 self._build_scalar(
-                    name, 0, {"half_life": decay["half_life"], "decay_r2": decay["r2"]}
+                    name,
+                    0,
+                    {
+                        "half_life": decay["half_life"],
+                        "decay_r2": decay["r2"],
+                        "peak_horizon": decay["peak_horizon"],
+                        "accumulation_ratio": decay["accumulation_ratio"],
+                    },
                 )
             )
         return pd.concat(rows, ignore_index=True) if rows else pd.DataFrame(columns=IC_TEST.columns)

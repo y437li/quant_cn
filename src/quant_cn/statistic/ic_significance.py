@@ -19,6 +19,7 @@ SUBPERIODS: dict[str, tuple[str, str]] = {
     "2025-": ("20250101", "99991231"),
 }
 TRIM = 0.15
+ACCEPT_H, LONG_H = 20, 60  # accumulation ratio IC_60 / IC_20 (D-095)
 ANDREWS_5PCT = 8.68  # Andrews (1993) sup-F critical value, one parameter, 15% trimming, 5%
 Values = Sequence[float] | np.ndarray
 
@@ -54,6 +55,8 @@ class IcSignificance:
         TC-ICS-003  known answer: Pesaran-Timmermann p is uniform on independent signs (KS) and
                     rejects near 5% at the 5% level; a skilled signal is detected
         TC-ICS-004  compute_decay recovers the half-life of an exponential IC profile
+        TC-ICS-005  compute_decay (D-095): a rising profile gives half_life NaN, peak 60, rising 1
+                    and IC_60 / IC_20; a hump fits only beyond its peak; negative IC is oriented
     """
 
     def __init__(
@@ -184,28 +187,51 @@ class IcSignificance:
     def compute_decay(mean_ic: Mapping[int, float]) -> dict[str, float]:
         """
         Purpose:
-            Exponential decay of mean IC over horizons.
+            Horizon profile of mean IC (D-095): peak horizon, exponential decay beyond the peak,
+            accumulation ratio.
 
         Contract:
             Input:
-                mean_ic: Mapping[int, float]  -- horizon h -> mean IC (same sign expected)
+                mean_ic: Mapping[int, float]  -- horizon h -> mean IC
             Output:
-                dict  -- fit ln|IC_h| = ln a - (ln 2 / H) h by OLS; half_life H (inf if not
-                         decaying), r2 of the log fit, n horizons
+                dict  -- IC oriented by the sign of the largest |IC|; peak_horizon = argmax of the
+                         oriented IC; half_life H from OLS ln IC_h = ln a - (ln 2 / H) h on horizons
+                         >= peak (NaN when the peak is the longest horizon, i.e. rising, or the
+                         fit does not decay), r2 of that fit (NaN without a fit), n horizons
+                         fitted, rising (1.0 / 0.0), accumulation_ratio = IC_60 / IC_20 (NaN
+                         unless both exist)
             Raises:
                 ValueError  -- fewer than 2 horizons with non-zero IC
         """
-        pairs = [(h, abs(v)) for h, v in sorted(mean_ic.items()) if v]
-        if len(pairs) < 2:  # noqa: PLR2004 -- a slope needs two points
+        pairs = [(h, v) for h, v in sorted(mean_ic.items()) if v]
+        if len(pairs) < 2:  # noqa: PLR2004 -- a profile needs two points
             raise ValueError("need at least two horizons with non-zero IC")
-        h = np.array([p[0] for p in pairs], float)
-        y = np.log([p[1] for p in pairs])
+        sign = math.copysign(1.0, max(pairs, key=lambda p: abs(p[1]))[1])
+        oriented = [(h, sign * v) for h, v in pairs]
+        peak = max(oriented, key=lambda p: p[1])[0]
+        fit = [(h, v) for h, v in oriented if h >= peak and v > 0]
+        out = {
+            "peak_horizon": float(peak),
+            "rising": float(peak == oriented[-1][0]),
+            "accumulation_ratio": (
+                mean_ic[LONG_H] / mean_ic[ACCEPT_H]
+                if mean_ic.get(ACCEPT_H) and LONG_H in mean_ic
+                else math.nan
+            ),
+            "half_life": math.nan,
+            "r2": math.nan,
+            "n": float(len(fit)),
+        }
+        if out["rising"] or len(fit) < 2:  # noqa: PLR2004
+            return out
+        h = np.array([p[0] for p in fit], float)
+        y = np.log([p[1] for p in fit])
         slope, intercept = np.polyfit(h, y, 1)
         fitted = intercept + slope * h
         total = float(((y - y.mean()) ** 2).sum())
-        r2 = 1 - float(((y - fitted) ** 2).sum()) / total if total > 0 else 1.0
-        half_life = math.log(2) / -slope if slope < 0 else math.inf
-        return {"half_life": float(half_life), "r2": r2, "n": float(len(h))}
+        out["r2"] = 1 - float(((y - fitted) ** 2).sum()) / total if total > 0 else 1.0
+        out["half_life"] = float(math.log(2) / -slope) if slope < 0 else math.nan
+        return out
 
     def _build_full_rows(
         self, frame: pd.DataFrame, factor: str, horizon: int, block: int

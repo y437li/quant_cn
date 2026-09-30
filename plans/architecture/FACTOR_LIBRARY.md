@@ -152,3 +152,19 @@ EP or BP (value), ROE TTM (quality), net profit TTM yoy (growth), 12-1 momentum,
 `income_vip.revenue`, `balancesheet_vip.total_hldr_eqy_exc_min_int` added to `datasets.yaml` fields before
 the next fundamentals refetch (config-only). `cyq_perf` optional (permission tier). Analyst family: `report_rc`,
 `stk_surv`, `broker_recommend`, `hk_hold` (§3b; verify `report_rc` tier first).
+
+## 10. Campaign 01 status (plan 04 phase 6, 2026-09-30; D-095)
+Verdicts under FACTOR_TESTING_DESIGN §6 criteria 1–3 at h = 20, universe members 2019-01 → 2026-09, processed
+values (winsorise → standardise → Shenwan L1 + log mcap neutral, D-093). Reports: lake
+`derived/reports/factor_campaign_01/`; TrialLog `meta/trials/factor_campaign_01.parquet` (35 trials); notebook
+`research_space/notebooks/20260930_factor_campaign_01.ipynb`. Criterion 4 (DSR, PBO, OOS) belongs to plan 06.
+
+| Factor | Status | Mean IC | NW t | BHY p | Sub-period t (19–21 / 22–24 / 25–) | ICIR [95% CI] | Horizon profile (D-095) | Note |
+|---|---|---|---|---|---|---|---|---|
+| `turnover_60d` (−) | **accepted** | 0.079 | 4.85 | < 0.001 | 3.26 / 3.48 / 1.65 | 0.81 [0.64, 0.99] | rising, IC60/IC20 1.44 | criteria 1–3; criterion 4 pending plan 06 |
+| `reversal_1m` (−) | **accepted** | 0.052 | 4.90 | < 0.001 | 3.19 / 3.07 / 2.12 | 0.57 [0.42, 0.72] | peak 20, half-life beyond peak ≈ 127 sessions | criteria 1–3; criterion 4 pending plan 06 |
+| `score` (equal weight) | **composite-input** | 0.061 | 3.59 | 0.003 | 3.58 / 1.47 / 2.01 | 0.71 [0.53, 0.93] | rising, 1.19 | criterion 2 missed by 0.03 in 2022–24 |
+| `ep_ttm` | archived at h = 20 | 0.036 | 1.86 | 0.39 | 1.51 / 1.02 / 1.00 | 0.41 [0.23, 0.60] | rising, 1.37 | neutralisation helps: raw IC 0.026 (t 0.92) → neutral 0.036 (t 1.86) |
+| `roe_ttm` | archived at h = 20 | 0.017 | 0.96 | 1.00 | 0.94 / 0.21 / 1.14 | 0.22 [0.04, 0.40] | rising, 1.20 | raw IC 0.003 (t 0.09) |
+| `profit_growth_ttm` | archived at h = 20 | 0.009 | 0.77 | 1.00 | 0.81 / 0.12 / 0.49 | 0.19 [0.01, 0.36] | rising, 1.04 | raw IC 0.004 (t 0.21) |
+| `momentum_12_1` | archived at h = 20 | −0.005 | −0.24 | 1.00 | 0.03 / −0.06 / −0.43 | −0.05 [−0.21, 0.12] | (IC ≈ 0) | no 12-1 momentum in A-shares (reversal-dominated) |

@@ -100,6 +100,7 @@ def test_tc_fev_002_adjusted_and_extras() -> None:
     assert main[["p_adj_holm", "p_adj_bhy", "p_adj_romano_wolf"]].notna().all().all()
     metrics = set(report.ic_test["metric"])
     assert {"half_life", "rank_autocorr", "ls_sharpe", "icir", "fisher_z"} <= metrics
+    assert {"peak_horizon", "accumulation_ratio"} <= metrics
 
 
 # TC-FEV-003

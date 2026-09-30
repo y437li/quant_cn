@@ -20,7 +20,8 @@ class ChartTheme:
     Contract:
         Input:
             mode: "light" | "dark"
-            surface, text_primary, text_secondary, grid, up, down, neutral: str  -- hex
+            surface, text_primary, text_secondary, grid, up, down, neutral, accent: str  -- hex
+                (accent = categorical slot 1, blue, for single-series charts)
             font: str  -- CSS font family
         Output:
             frozen dataclass; `from_mode`
@@ -30,6 +31,7 @@ class ChartTheme:
     Used by:
         visualization.BaseChart   -- applied to every figure
         visualization.PriceChart  -- candle and volume colours
+        visualization.FactorChart -- accent, neutral and ink
 
     Test cases:
         TC-CT-001  light and dark themes have distinct surfaces and the validated up/down steps
@@ -43,6 +45,7 @@ class ChartTheme:
     up: str
     down: str
     neutral: str
+    accent: str
     font: str = "Inter, -apple-system, Segoe UI, sans-serif"
 
     @classmethod
@@ -61,10 +64,26 @@ class ChartTheme:
         """
         if mode == "light":
             return cls(
-                "light", "#fcfcfb", "#0b0b0b", "#52514e", "#e7e6e2", "#e34948", "#008300", "#a9a8a3"
+                "light",
+                "#fcfcfb",
+                "#0b0b0b",
+                "#52514e",
+                "#e7e6e2",
+                "#e34948",
+                "#008300",
+                "#a9a8a3",
+                "#2a78d6",
             )
         if mode == "dark":
             return cls(
-                "dark", "#1a1a19", "#ffffff", "#c3c2b7", "#383835", "#e66767", "#008300", "#6d6c67"
+                "dark",
+                "#1a1a19",
+                "#ffffff",
+                "#c3c2b7",
+                "#383835",
+                "#e66767",
+                "#008300",
+                "#6d6c67",
+                "#3987e5",
             )
         raise ValueError(f"unknown mode {mode!r}")

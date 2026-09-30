@@ -28,7 +28,8 @@ class BaseChart(ABC):
             TypeError  -- when instantiated directly
 
     Used by:
-        visualization.PriceChart  -- subclass
+        visualization.PriceChart   -- subclass
+        visualization.FactorChart  -- subclass
 
     Test cases:
         TC-BCA-001  render applies surface, ink, grid and size from the theme

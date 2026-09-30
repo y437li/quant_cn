@@ -97,6 +97,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `TushareClient` | `quant_cn.data_loading.tushare_client` | 3 | BaseApiClient | Query Tushare Pro: one logical query follows limit/offset paging until a short page and returns all rows | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..009) | 2026-09-27 |
 | `FactorInputs` | `quant_cn.factor.base_factor` | 5 | none | The panels a factor may read, loaded once by FactorFactory for all factors of a run | 1 | `factor.BaseFactor`, `factor.FactorFactory`, `factor.library.EarningsYieldFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor` | `tests/factor/test_base_factor.py` (TC-FIN-001..001) | 2026-09-27 |
 | `BaseFactor` | `quant_cn.factor.base_factor` | 5 | ABC | Abstract factor: declares which inputs, fundamentals fields and daily_basic columns it needs and how many sessions of price history before the first output date | 3 | `factor.FactorFactory`, `factor.library.*`, `factor.library.EarningsYieldFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor`, `pipeline.FeatureStep` | `tests/factor/test_base_factor.py` (TC-BFA-001..002) | 2026-09-27 |
+| `FactorAcceptance` | `quant_cn.factor.factor_acceptance` | 5 | none | Criteria 1-3 of FACTOR_TESTING_DESIGN §6 per factor at one horizon, from the campaign's IC_TEST: (1) NW t of the full-window mean IC >= t_min (HLZ) and BHY-adjusted p <= alpha | 1 | `research_space/notebooks/20260930_factor_campaign_01.ipynb`, `plan 06 ReportBuilder` | `tests/factor/test_factor_acceptance.py` (TC-FA-001..003) | 2026-09-27 |
 | `FactorReport` | `quant_cn.factor.factor_evaluator` | 5 | none | The evaluation of one campaign: IC series, every test result, quantile ladders. | 0 | `factor.FactorEvaluator` | `tests/factor/test_factor_evaluator.py` (TC-FEV-001..001) | 2026-09-27 |
 | `FactorEvaluator` | `quant_cn.factor.factor_evaluator` | 5 | none | Evaluate every factor of a campaign (FACTOR_TESTING_DESIGN §2, §3, §6): tradeable forward returns from the open of t+1, IC series per horizon, the IcSignificance tests, decay across horizons (half-life), rank autocorrelation (turnover proxy), quantile ladders and long-short statistics on non-overlapping samples, then the campaign-level Holm / BHY / Romano-Wolf adjustment and HLZ flag over all factor x horizon mean-IC tests | 2 | `notebooks`, `pipeline.EvaluationStep`, `cli.ServiceBuilder` | `tests/factor/test_factor_evaluator.py` (TC-FEV-001..003) | 2026-09-27 |
 | `FactorFactory` | `quant_cn.factor.factor_factory` | 5 | none | Resolve config/factors.yaml entries to BaseFactor instances (every module under factor/library/ is imported so its classes register themselves | 2 | `notebooks`, `pipeline.FeatureStep`, `cli.ServiceBuilder` | `tests/factor/test_factor_factory.py` (TC-FAF-001..003) | 2026-09-27 |
@@ -142,7 +143,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `BlockBootstrap` | `quant_cn.statistic.block_bootstrap` | 4 | none | Resample a time series (or several aligned series with the same draws) in blocks so serial correlation survives: stationary bootstrap with geometric block lengths (Politis & Romano 1994) or circular block bootstrap with fixed blocks (Politis & Romano 1992) | 4 | `statistic.IcSignificance`, `factor.FactorEvaluator`, `cli.ServiceBuilder` | `tests/statistic/test_block_bootstrap.py` (TC-BB-001..004) | 2026-09-27 |
 | `HacVariance` | `quant_cn.statistic.hac_variance` | 4 | none | Heteroskedasticity- and autocorrelation-consistent variance of a sample mean with the Bartlett kernel (Newey & West 1987 | 4 | `statistic.IcSignificance`, `cli.ServiceBuilder` | `tests/statistic/test_hac_variance.py` (TC-HAC-001..004) | 2026-09-27 |
 | `IcCalculator` | `quant_cn.statistic.ic_calculator` | 4 | none | Per-date information coefficient between factor values and forward returns across the universe: IC_t = corr_rank(f_{i,t}, r_{i,t->t+h}) (Spearman | 2 | `factor.FactorEvaluator`, `cli.ServiceBuilder` | `tests/statistic/test_ic_calculator.py` (TC-ICC-001..004) | 2026-09-27 |
-| `IcSignificance` | `quant_cn.statistic.ic_significance` | 4 | none | The §2 tests for one factor at one horizon: Newey-West t on mean IC (Newey & West 1987, 1994, prewhitened per D-090), stationary block-bootstrap CI of mean IC and ICIR (Politis & Romano 1994), Fisher-z / Stouffer screen, sign consistency per sub-period, single break in mean (Bai & Perron 1998 | 4 | `factor.FactorEvaluator`, `cli.ServiceBuilder` | `tests/statistic/test_ic_significance.py` (TC-ICS-001..004) | 2026-09-27 |
+| `IcSignificance` | `quant_cn.statistic.ic_significance` | 4 | none | The §2 tests for one factor at one horizon: Newey-West t on mean IC (Newey & West 1987, 1994, prewhitened per D-090), stationary block-bootstrap CI of mean IC and ICIR (Politis & Romano 1994), Fisher-z / Stouffer screen, sign consistency per sub-period, single break in mean (Bai & Perron 1998 | 4 | `factor.FactorEvaluator`, `cli.ServiceBuilder` | `tests/statistic/test_ic_significance.py` (TC-ICS-001..005) | 2026-09-27 |
 | `MultipleTestingAdjuster` | `quant_cn.statistic.multiple_testing_adjuster` | 4 | none | Adjust the p-values of many factor tests run in one campaign: Holm step-down FWER (Holm 1979), Benjamini-Hochberg FDR (1995), Benjamini-Hochberg-Yekutieli FDR under arbitrary dependence (2001), Romano-Wolf bootstrap step-down FWER (Romano & Wolf 2005, 2016), and the Harvey-Liu-Zhu (2016) /t/ >= 3.0 hurdle | 5 | `factor.FactorEvaluator`, `cli.ServiceBuilder` | `tests/statistic/test_multiple_testing_adjuster.py` (TC-MTA-001..005) | 2026-09-27 |
 | `Neutralizer` | `quant_cn.statistic.neutralizer` | 4 | none | Remove what industry membership and numeric exposures (e.g | 1 | `factor.FactorPreprocessor`, `cli.ServiceBuilder` | `tests/statistic/test_neutralizer.py` (TC-NEU-001..002) | 2026-09-27 |
 | `QuantileReturns` | `quant_cn.statistic.quantile_returns` | 4 | none | Sort names into n quantiles of the factor within each date and horizon, and report each quantile's equal-weighted mean forward return plus the long-short spread (top minus bottom, stored as quantile 0): the monotone "ladder" that complements the IC. | 1 | `factor.FactorEvaluator`, `cli.ServiceBuilder` | `tests/statistic/test_quantile_returns.py` (TC-QR-001..002) | 2026-09-27 |
@@ -150,8 +151,9 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `Standardizer` | `quant_cn.statistic.standardizer` | 4 | none | Put factor values on a common scale within each date: z = (x - m) / s with m the equal-weighted mean (or a weighted mean, e.g | 1 | `factor.FactorPreprocessor`, `factor.SignalCombiner`, `cli.ServiceBuilder` | `tests/statistic/test_standardizer.py` (TC-STD-001..002) | 2026-09-27 |
 | `TrialLog` | `quant_cn.statistic.trial_log` | 4 | none | Record every factor / parameter / horizon variant evaluated in a campaign, including the failures, because the deflated Sharpe ratio (Bailey & López de Prado 2014) and the multiple-testing adjusters need the number and dispersion of all trials, not just the winners | 5 | `factor.FactorEvaluator`, `pipeline.EvaluationStep` | `tests/statistic/test_trial_log.py` (TC-TL-001..004) | 2026-09-27 |
 | `Winsorizer` | `quant_cn.statistic.winsorizer` | 4 | none | Clip extreme factor values within each date so a few outliers do not dominate ranks, z-scores or regressions: median +- k * 1.4826 * MAD (robust default) or the q / 1 - q cross-sectional quantiles. | 1 | `factor.FactorPreprocessor`, `cli.ServiceBuilder` | `tests/statistic/test_winsorizer.py` (TC-WZ-001..002) | 2026-09-27 |
-| `BaseChart` | `quant_cn.visualization.base_chart` | 7 | ABC | Abstract chart: subclasses build a plotly figure from a DataFrame (frames only, never objects from other packages) | 4 | `visualization.PriceChart` | `tests/visualization/test_charts.py` (TC-BCA-001..002) | 2026-09-27 |
-| `ChartTheme` | `quant_cn.visualization.chart_theme` | 7 | none | The colour and font tokens every chart reads, so charts are written against roles, never raw hex | 1 | `visualization.BaseChart`, `visualization.PriceChart` | `tests/visualization/test_charts.py` (TC-CT-001..001) | 2026-09-27 |
+| `BaseChart` | `quant_cn.visualization.base_chart` | 7 | ABC | Abstract chart: subclasses build a plotly figure from a DataFrame (frames only, never objects from other packages) | 4 | `visualization.PriceChart`, `visualization.FactorChart` | `tests/visualization/test_charts.py` (TC-BCA-001..002) | 2026-09-27 |
+| `ChartTheme` | `quant_cn.visualization.chart_theme` | 7 | none | The colour and font tokens every chart reads, so charts are written against roles, never raw hex | 1 | `visualization.BaseChart`, `visualization.PriceChart`, `visualization.FactorChart` | `tests/visualization/test_charts.py` (TC-CT-001..001) | 2026-09-27 |
+| `FactorChart` | `quant_cn.visualization.factor_chart` | 7 | BaseChart | The four views of a factor campaign (plan 04 phase 6), one single-series chart each so identity never rests on colour: "ic_series" (IC_SERIES) the rolling mean IC of one factor and horizon with a band of +/- 1.96 sd / sqrt(window / h), the effective number of non-overlapping observations | 1 | `research_space/notebooks/20260930_factor_campaign_01.ipynb`, `plan 06 ReportBuilder` | `tests/visualization/test_factor_chart.py` (TC-FC-001..004) | 2026-09-27 |
 | `PriceChart` | `quant_cn.visualization.price_chart` | 7 | BaseChart | Daily candles (backward-adjusted by default: OHLC x adj_factor) over a volume panel for one ticker | 1 | `research_space/main.ipynb` | `tests/visualization/test_charts.py` (TC-PC-001..003) | 2026-09-27 |
 
 ## B. Class details (one block per class; methods carry their own purpose)
@@ -1064,6 +1066,18 @@ never column lists (those live in section E).
 | `compute` | FACTOR_PANEL rows of this factor for [start, end]. | FactorInputs, str, str -> pd.DataFrame | `SchemaError` | as class | see class |
 | `compute_raw` | The raw factor value per stock and session. | FactorInputs -> pd.DataFrame | — | as class | see class |
 
+### `FactorAcceptance` — `quant_cn.factor.factor_acceptance` (L5)
+- **Purpose:** Criteria 1-3 of FACTOR_TESTING_DESIGN §6 per factor at one horizon, from the campaign's IC_TEST: (1) NW t of the full-window mean IC >= t_min (HLZ) and BHY-adjusted p <= alpha; (2) every sub-period mean IC has the full-window sign with sign-oriented t >= t_sub; (3) the bootstrap CI of ICIR excludes 0. Criterion 4 (DSR, PBO, out-of-sample) needs a traded variant and belongs to plan 06, so `verdict` is "pass" (criteria 1-3 met) or "fail"; the horizon profile (peak, half-life, accumulation ratio; D-095) is attached as notes, never a criterion.
+- **Base:** none. **Depends on (injected):** int, float, float, float, Sequence[str].
+- **Used by:** `research_space/notebooks/20260930_factor_campaign_01.ipynb`, `plan 06 ReportBuilder`.
+- **Tests:** `tests/factor/test_factor_acceptance.py` (TC-FA-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | int, float, float, float, Sequence[str] -> None | `ValueError` | callers of the class | — |
+| `compute` | One verdict row per factor. | pd.DataFrame -> pd.DataFrame | `SchemaError` | as class | see class |
+| `_build_row` (private) | internal helper over 20 lines | pd.DataFrame, pd.DataFrame, str -> dict[str, object] | — | internal | — |
+
 ### `FactorReport` — `quant_cn.factor.factor_evaluator` (L5)
 - **Purpose:** The evaluation of one campaign: IC series, every test result, quantile ladders.
 - **Base:** none. **Depends on (injected):** —.
@@ -1636,7 +1650,7 @@ never column lists (those live in section E).
 - **Purpose:** The §2 tests for one factor at one horizon: Newey-West t on mean IC (Newey & West 1987, 1994, prewhitened per D-090), stationary block-bootstrap CI of mean IC and ICIR (Politis & Romano 1994), Fisher-z / Stouffer screen, sign consistency per sub-period, single break in mean (Bai & Perron 1998; sup-F critical values of Andrews 1993), plus Pesaran-Timmermann directional accuracy (1992, 2009) and an exponential decay fit across horizons.
 - **Base:** none. **Depends on (injected):** HacVariance, BlockBootstrap, Mapping[str, tuple[str, str]].
 - **Used by:** `factor.FactorEvaluator`, `cli.ServiceBuilder`.
-- **Tests:** `tests/statistic/test_ic_significance.py` (TC-ICS-001..004).
+- **Tests:** `tests/statistic/test_ic_significance.py` (TC-ICS-001..005).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -1644,7 +1658,7 @@ never column lists (those live in section E).
 | `compute` | IC_TEST rows for one factor and horizon. | pd.DataFrame -> pd.DataFrame | `SchemaError`, `ValueError` | as class | see class |
 | `compute_break` | Single structural break in mean IC. | pd.DataFrame, int -> dict[str, object] | `ValueError` | as class | see class |
 | `compute_pesaran_timmermann` | Directional accuracy of sign(signal) for sign(outcome) beyond chance. | Values, Values -> dict[str, float] | `ValueError` | as class | see class |
-| `compute_decay` | Exponential decay of mean IC over horizons. | Mapping[int, float] -> dict[str, float] | `ValueError` | as class | see class |
+| `compute_decay` | Horizon profile of mean IC (D-095): peak horizon, exponential decay beyond the peak, accumulation ratio. | Mapping[int, float] -> dict[str, float] | `ValueError` | as class | see class |
 | `_build_full_rows` (private) | internal helper over 20 lines | pd.DataFrame, str, int, int -> list[dict[str, object]] | — | internal | — |
 | `_build_row` (private) | internal helper over 20 lines | str, int, str, str, float, float \| None, float \| None, float \| None, tuple[float, float] \| None -> dict[str, object] | — | internal | — |
 
@@ -1735,7 +1749,7 @@ never column lists (those live in section E).
 ### `BaseChart` — `quant_cn.visualization.base_chart` (L7)
 - **Purpose:** Abstract chart: subclasses build a plotly figure from a DataFrame (frames only, never objects from other packages); the base applies theme, size, hover and export.
 - **Base:** ABC. **Depends on (injected):** ChartTheme, int, int.
-- **Used by:** `visualization.PriceChart`.
+- **Used by:** `visualization.PriceChart`, `visualization.FactorChart`.
 - **Tests:** `tests/visualization/test_charts.py` (TC-BCA-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1749,12 +1763,25 @@ never column lists (those live in section E).
 ### `ChartTheme` — `quant_cn.visualization.chart_theme` (L7)
 - **Purpose:** The colour and font tokens every chart reads, so charts are written against roles, never raw hex. Values follow the dataviz reference palette; `up`/`down` are its red and green slots (A-share convention: red up, green down), validated per mode; the light pair sits in the CVD 6-8 band, so up candles are hollow as the secondary encoding.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `visualization.BaseChart`, `visualization.PriceChart`.
+- **Used by:** `visualization.BaseChart`, `visualization.PriceChart`, `visualization.FactorChart`.
 - **Tests:** `tests/visualization/test_charts.py` (TC-CT-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
 | `from_mode` | The theme for a display mode. | Mode -> ChartTheme | `ValueError` | as class | see class |
+
+### `FactorChart` — `quant_cn.visualization.factor_chart` (L7)
+- **Purpose:** The four views of a factor campaign (plan 04 phase 6), one single-series chart each so identity never rests on colour: "ic_series" (IC_SERIES) the rolling mean IC of one factor and horizon with a band of +/- 1.96 sd / sqrt(window / h), the effective number of non-overlapping observations; "icir" (IC_TEST) full-window ICIR per factor at one horizon with its bootstrap CI; "quantiles" (QUANTILE_RETURNS) mean forward return per quantile of one factor and horizon, long-short mean in the title; "horizon" (IC_TEST) full-window mean IC of one factor by horizon with its CI, peak horizon and half-life in the title (D-095).
+- **Base:** BaseChart. **Depends on (injected):** ChartTheme, Kind, str | None, int, int, DateCodec | None, int, int.
+- **Used by:** `research_space/notebooks/20260930_factor_campaign_01.ipynb`, `plan 06 ReportBuilder`.
+- **Tests:** `tests/visualization/test_factor_chart.py` (TC-FC-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | ChartTheme, Kind, str \| None, int, int, DateCodec \| None, int, int -> None | `ValueError` | callers of the class | — |
+| `build_figure` | The figure for `kind`. | pd.DataFrame -> go.Figure | `SchemaError`, `ValueError` | as class | see class |
+| `_build_ic_series` (private) | internal helper over 20 lines | pd.DataFrame -> go.Figure | — | internal | — |
+| `_build_horizon` (private) | internal helper over 20 lines | pd.DataFrame -> go.Figure | — | internal | — |
 
 ### `PriceChart` — `quant_cn.visualization.price_chart` (L7)
 - **Purpose:** Daily candles (backward-adjusted by default: OHLC x adj_factor) over a volume panel for one ticker. Two stacked panels with their own y-axes (never a dual axis); x is a category axis of trading days so non-trading days leave no gaps. Up candles hollow, down candles filled.
@@ -1780,7 +1807,7 @@ never column lists (those live in section E).
 | `BaseChecker` | `quant_cn.core.docs.base_checker` | 1 | Abstract repository check: inspect the tree, return findings (empty = pass). | `run`: Run the check over the repository. | `ContractChecker`, `IndexChecker`, `NameChecker`, `SizeChecker` | 2026-09-27 |
 | `BaseFactor` | `quant_cn.factor.base_factor` | 5 | Abstract factor: declares which inputs, fundamentals fields and daily_basic columns it needs and how many sessions of price history before the first output date | `compute_raw`: The raw factor value per stock and session. | `EarningsYieldFactor`, `MomentumFactor`, `ProfitGrowthFactor`, `ReversalFactor`, `RoeFactor`, `TurnoverFactor` | 2026-09-27 |
 | `BaseRunner` | `quant_cn.pipeline.runner` | 6 | Extension point for how steps are executed (local now, Prefect later, D-022) | `run`: Execute steps in order under one run id. | `PrefectRunner`, `LocalRunner` | 2026-09-27 |
-| `BaseChart` | `quant_cn.visualization.base_chart` | 7 | Abstract chart: subclasses build a plotly figure from a DataFrame (frames only, never objects from other packages) | `build_figure`: Build the unthemed figure from the input frame. | `PriceChart` | 2026-09-27 |
+| `BaseChart` | `quant_cn.visualization.base_chart` | 7 | Abstract chart: subclasses build a plotly figure from a DataFrame (frames only, never objects from other packages) | `build_figure`: Build the unthemed figure from the input frame. | `FactorChart`, `PriceChart` | 2026-09-27 |
 
 ## D. Exceptions
 

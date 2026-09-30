@@ -31,6 +31,7 @@ class DateCodec:
         cli.QuantCnCli                             -- composition root
         lake.PitAligner                            -- injected type or call
         visualization.PriceChart                   -- injected type or call
+        visualization.FactorChart                  -- injected type or call
         cli.ServiceBuilder                         -- injected type or call
         data_loading.DateWindowFetcher             -- injected type or call
         lake.EffectiveDateResolver                 -- injected type or call

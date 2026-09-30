@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import math
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -76,3 +78,17 @@ def test_tc_ics_004_decay() -> None:
     assert res["half_life"] == pytest.approx(10.0) and res["r2"] == pytest.approx(1.0)
     with pytest.raises(ValueError):
         IcSignificance.compute_decay({5: 0.01})
+
+
+# TC-ICS-005
+def test_tc_ics_005_decay_profiles() -> None:
+    rising = IcSignificance.compute_decay({1: 0.01, 5: 0.02, 10: 0.03, 20: 0.04, 60: 0.06})
+    assert math.isnan(rising["half_life"]) and rising["rising"] == 1.0
+    assert rising["peak_horizon"] == 60.0 and rising["accumulation_ratio"] == pytest.approx(1.5)
+    hump = {1: 0.01, 5: 0.04, 10: 0.04 * 0.5**0.25, 20: 0.04 * 0.5**0.75, 60: 0.04 * 0.5**2.75}
+    res = IcSignificance.compute_decay(hump)
+    assert res["peak_horizon"] == 5.0 and res["half_life"] == pytest.approx(20.0)
+    assert res["n"] == 4.0 and res["rising"] == 0.0
+    neg = IcSignificance.compute_decay({h: -v for h, v in hump.items()})
+    assert neg["peak_horizon"] == 5.0 and neg["half_life"] == pytest.approx(20.0)
+    assert neg["accumulation_ratio"] == pytest.approx(0.5**2)
