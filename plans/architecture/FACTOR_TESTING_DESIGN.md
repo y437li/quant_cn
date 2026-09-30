@@ -1,4 +1,4 @@
-# Factor Significance Testing Design (v1.1, 2026-09-30; D-060; HAC prewhitening D-090)
+# Factor Significance Testing Design (v1.2, 2026-09-30; D-060; D-090; decay reporting D-095)
 
 What `statistic` must provide so that an IC, an ICIR or a Sharpe ratio is reported *with* its evidence, and so
 that testing 55 candidate factors does not manufacture false discoveries. Every number in `FactorEvaluator`'s
@@ -22,7 +22,7 @@ report comes from these classes; the acceptance bar in FACTOR_LIBRARY §7 is def
 | Pesaran-Timmermann (2009 version) | directional accuracy of factor sign vs return sign beyond chance | PT statistic with serial-correlation-robust variance |
 | Sign consistency | does the factor work in every regime | mean IC sign and NW t per sub-period (2019–21, 2022–24, 2025–) and per `VIX_PANEL.regime` |
 | Structural break | did the factor die | Bai-Perron single break in IC_t mean; sup-F with HAC |
-| Decay fit | how fast it fades | exponential fit of mean IC over h; report half-life and R² |
+| Decay fit | how fast it fades | mean IC by horizon h ∈ {1, 5, 10, 20, 60}; `peak_horizon` = argmax; exponential half-life fitted only on horizons ≥ peak; if the profile is non-decreasing through h = 60, report `half_life = NA (rising)` and `ic_60 / ic_20` as the accumulation ratio (D-095) |
 
 ## 3. Many-factor corrections (`MultipleTestingAdjuster`, `DataSnoopingTest`)
 The catalogue has ~55 factors × 5 horizons × variants: dozens to hundreds of trials.
