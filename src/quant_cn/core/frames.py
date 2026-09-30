@@ -21,6 +21,9 @@ Contract:
         IC_SERIES         -- key (trade_date, factor, horizon); ic, n
         IC_TEST           -- key (factor, horizon, metric, window); value, se, t, p, CI, adjusted p
         TRIAL_LOG         -- key (campaign, trial_id); factor, params, horizon, sr, ic_mean
+        FORWARD_RETURN    -- key (trade_date, ts_code, horizon); fwd_return (open t+1 -> close t+h)
+        QUANTILE_RETURNS  -- key (trade_date, factor, horizon, quantile); ret, n
+                             (quantile 0 = long-short)
     Raises:
         (none)
 
@@ -212,4 +215,18 @@ TRIAL_LOG: Final = Schema(
     columns=["campaign", "trial_id", "factor", "params", "horizon", "sr", "ic_mean"],
     text_columns=["campaign", "trial_id", "factor", "params"],
     primary_key=["campaign", "trial_id"],
+)
+
+FORWARD_RETURN: Final = Schema(
+    "FORWARD_RETURN",
+    columns=["trade_date", "ts_code", "horizon", "fwd_return"],
+    text_columns=["trade_date", "ts_code"],
+    primary_key=["trade_date", "ts_code", "horizon"],
+)
+
+QUANTILE_RETURNS: Final = Schema(
+    "QUANTILE_RETURNS",
+    columns=["trade_date", "factor", "horizon", "quantile", "ret", "n"],
+    text_columns=["trade_date", "factor"],
+    primary_key=["trade_date", "factor", "horizon", "quantile"],
 )

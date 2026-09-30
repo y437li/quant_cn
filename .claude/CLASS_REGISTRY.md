@@ -118,6 +118,17 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `PipelineReport` | `quant_cn.pipeline.runner` | 4 | none | Result of one pipeline run: its id, overall status and one StepReport per step. | 2 | `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.BaseRunner`, `pipeline.CuratePipeline`, `pipeline.PrefectRunner` | `tests/pipeline/test_runner.py` (TC-LR-001..001) | 2026-09-27 |
 | `BaseRunner` | `quant_cn.pipeline.runner` | 4 | ABC | Extension point for how steps are executed (local now, Prefect later, D-022) | 1 | `pipeline.LocalRunner`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `pipeline.PrefectRunner`, `cli.ServiceBuilder` | `tests/pipeline/test_runner.py` (TC-LR-001..001) | 2026-09-27 |
 | `LocalRunner` | `quant_cn.pipeline.runner` | 4 | BaseRunner | Run steps serially in this process with a rich progress bar per step | 1 | `cli.ServiceBuilder` | `tests/pipeline/test_runner.py` (TC-LR-001..003) | 2026-09-27 |
+| `BlockBootstrap` | `quant_cn.statistic.block_bootstrap` | 4 | none | Resample a time series (or several aligned series with the same draws) in blocks so serial correlation survives: stationary bootstrap with geometric block lengths (Politis & Romano 1994) or circular block bootstrap with fixed blocks (Politis & Romano 1992) | 4 | `statistic.IcSignificance` | `tests/statistic/test_block_bootstrap.py` (TC-BB-001..004) | 2026-09-27 |
+| `HacVariance` | `quant_cn.statistic.hac_variance` | 4 | none | Heteroskedasticity- and autocorrelation-consistent variance of a sample mean with the Bartlett kernel (Newey & West 1987 | 4 | `statistic.IcSignificance` | `tests/statistic/test_hac_variance.py` (TC-HAC-001..004) | 2026-09-27 |
+| `IcCalculator` | `quant_cn.statistic.ic_calculator` | 4 | none | Per-date information coefficient between factor values and forward returns across the universe: IC_t = corr_rank(f_{i,t}, r_{i,t->t+h}) (Spearman | 2 | (none yet) | `tests/statistic/test_ic_calculator.py` (TC-ICC-001..004) | 2026-09-27 |
+| `IcSignificance` | `quant_cn.statistic.ic_significance` | 4 | none | The §2 tests for one factor at one horizon: Newey-West t on mean IC (Newey & West 1987, 1994, prewhitened per D-090), stationary block-bootstrap CI of mean IC and ICIR (Politis & Romano 1994), Fisher-z / Stouffer screen, sign consistency per sub-period, single break in mean (Bai & Perron 1998 | 4 | (none yet) | `tests/statistic/test_ic_significance.py` (TC-ICS-001..004) | 2026-09-27 |
+| `MultipleTestingAdjuster` | `quant_cn.statistic.multiple_testing_adjuster` | 4 | none | Adjust the p-values of many factor tests run in one campaign: Holm step-down FWER (Holm 1979), Benjamini-Hochberg FDR (1995), Benjamini-Hochberg-Yekutieli FDR under arbitrary dependence (2001), Romano-Wolf bootstrap step-down FWER (Romano & Wolf 2005, 2016), and the Harvey-Liu-Zhu (2016) /t/ >= 3.0 hurdle | 5 | (none yet) | `tests/statistic/test_multiple_testing_adjuster.py` (TC-MTA-001..005) | 2026-09-27 |
+| `Neutralizer` | `quant_cn.statistic.neutralizer` | 4 | none | Remove what industry membership and numeric exposures (e.g | 1 | (none yet) | `tests/statistic/test_neutralizer.py` (TC-NEU-001..002) | 2026-09-27 |
+| `QuantileReturns` | `quant_cn.statistic.quantile_returns` | 4 | none | Sort names into n quantiles of the factor within each date and horizon, and report each quantile's equal-weighted mean forward return plus the long-short spread (top minus bottom, stored as quantile 0): the monotone "ladder" that complements the IC. | 1 | (none yet) | `tests/statistic/test_quantile_returns.py` (TC-QR-001..002) | 2026-09-27 |
+| `ReturnStats` | `quant_cn.statistic.return_stats` | 4 | none | Summarise a series of period returns: annualised mean and volatility, Sharpe (per period and annualised with sqrt(244 / h)), maximum drawdown of the compounded path, hit rate, skewness and non-excess kurtosis (the PSR / DSR inputs of Bailey & López de Prado 2012). | 1 | (none yet) | `tests/statistic/test_return_stats.py` (TC-RS-001..002) | 2026-09-27 |
+| `Standardizer` | `quant_cn.statistic.standardizer` | 4 | none | Put factor values on a common scale within each date: z = (x - m) / s with m the equal-weighted mean (or a weighted mean, e.g | 1 | (none yet) | `tests/statistic/test_standardizer.py` (TC-STD-001..002) | 2026-09-27 |
+| `TrialLog` | `quant_cn.statistic.trial_log` | 4 | none | Record every factor / parameter / horizon variant evaluated in a campaign, including the failures, because the deflated Sharpe ratio (Bailey & López de Prado 2014) and the multiple-testing adjusters need the number and dispersion of all trials, not just the winners | 4 | (none yet) | `tests/statistic/test_trial_log.py` (TC-TL-001..003) | 2026-09-27 |
+| `Winsorizer` | `quant_cn.statistic.winsorizer` | 4 | none | Clip extreme factor values within each date so a few outliers do not dominate ranks, z-scores or regressions: median +- k * 1.4826 * MAD (robust default) or the q / 1 - q cross-sectional quantiles. | 1 | (none yet) | `tests/statistic/test_winsorizer.py` (TC-WZ-001..002) | 2026-09-27 |
 | `BaseChart` | `quant_cn.visualization.base_chart` | 5 | ABC | Abstract chart: subclasses build a plotly figure from a DataFrame (frames only, never objects from other packages) | 4 | `visualization.PriceChart` | `tests/visualization/test_charts.py` (TC-BCA-001..002) | 2026-09-27 |
 | `ChartTheme` | `quant_cn.visualization.chart_theme` | 5 | none | The colour and font tokens every chart reads, so charts are written against roles, never raw hex | 1 | `visualization.BaseChart`, `visualization.PriceChart` | `tests/visualization/test_charts.py` (TC-CT-001..001) | 2026-09-27 |
 | `PriceChart` | `quant_cn.visualization.price_chart` | 5 | BaseChart | Daily candles (backward-adjusted by default: OHLC x adj_factor) over a volume panel for one ticker | 1 | `research_space/main.ipynb` | `tests/visualization/test_charts.py` (TC-PC-001..003) | 2026-09-27 |
@@ -1318,6 +1329,145 @@ never column lists (those live in section E).
 | `__init__` | wire dependencies | BaseRunLog, Console \| None, bool -> None | — | callers of the class | — |
 | `run` | See BaseRunner.run. | str, Sequence[BaseStep] -> PipelineReport | `QuantCnError` | as class | see class |
 
+### `BlockBootstrap` — `quant_cn.statistic.block_bootstrap` (L4)
+- **Purpose:** Resample a time series (or several aligned series with the same draws) in blocks so serial correlation survives: stationary bootstrap with geometric block lengths (Politis & Romano 1994) or circular block bootstrap with fixed blocks (Politis & Romano 1992); both wrap around. Seeded, so reports reproduce byte for byte.
+- **Base:** none. **Depends on (injected):** int, int, Method.
+- **Used by:** `statistic.IcSignificance`.
+- **Tests:** `tests/statistic/test_block_bootstrap.py` (TC-BB-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | int, int, Method -> None | `ValueError` | callers of the class | — |
+| `compute_block` | Expected block length for a horizon. | int -> int | — | as class | see class |
+| `build_indices` | B resampled index vectors of length T. | int, int -> np.ndarray | — | as class | see class |
+| `compute_distribution` | The statistic recomputed on every resample. | Values, Callable[[np.ndarray], float], int -> np.ndarray | `ValueError` | as class | see class |
+| `compute_interval` | Percentile confidence interval and bootstrap p-value of H0: statistic = 0. | Values, Callable[[np.ndarray], float], int, float -> dict[str, float] | `ValueError` | as class | see class |
+
+### `HacVariance` — `quant_cn.statistic.hac_variance` (L4)
+- **Purpose:** Heteroskedasticity- and autocorrelation-consistent variance of a sample mean with the Bartlett kernel (Newey & West 1987; lag rule of Newey & West 1994), for series whose observations overlap (IC_t at horizon h is serially correlated by construction). By default the series is AR(1)-prewhitened before the kernel and recoloured after (Andrews & Monahan 1992): with the plain rule-of-thumb lag, 95% intervals covered only 89.8% on AR(1) phi = 0.6 and 88.4% on an overlapping 20-session MA(19), against 95.1% and 99.0% prewhitened (D-090). Used for the NW t on mean IC and by every HAC test.
+- **Base:** none. **Depends on (injected):** int | None, bool.
+- **Used by:** `statistic.IcSignificance`.
+- **Tests:** `tests/statistic/test_hac_variance.py` (TC-HAC-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | int \| None, bool -> None | `ValueError` | callers of the class | — |
+| `compute_lag` | Bartlett truncation lag. | int, int -> int | — | as class | see class |
+| `compute_long_run_variance` | Bartlett-kernel long-run variance of a series. | Values, int -> float | `ValueError` | as class | see class |
+| `compute_hac_variance` | Long-run variance used for inference: prewhitened (default) or plain Bartlett. | Values, int -> float | `ValueError` | as class | see class |
+| `compute_t` | Newey-West t statistic of the mean. | Values, int -> dict[str, float] | `ValueError` | as class | see class |
+
+### `IcCalculator` — `quant_cn.statistic.ic_calculator` (L4)
+- **Purpose:** Per-date information coefficient between factor values and forward returns across the universe: IC_t = corr_rank(f_{i,t}, r_{i,t->t+h}) (Spearman; Pearson on the values as a variant). Forward returns are tradeable (FACTOR_TESTING_DESIGN §10, §11): the factor known at the close of t is traded at the next open, r = P_adj close(t+h) / P_adj open(t+1) - 1; close-to-close is available for comparison only.
+- **Base:** none. **Depends on (injected):** Method, int.
+- **Used by:** (none yet).
+- **Tests:** `tests/statistic/test_ic_calculator.py` (TC-ICC-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Method, int -> None | `ValueError` | callers of the class | — |
+| `build_forward_returns` | Forward returns per stock, session and horizon from dense adjusted prices. | pd.DataFrame, Sequence[int], Entry -> pd.DataFrame | `SchemaError`, `ValueError` | as class | see class |
+| `compute` | IC_t per date, factor and horizon. | pd.DataFrame, pd.DataFrame -> pd.DataFrame | `SchemaError` | as class | see class |
+
+### `IcSignificance` — `quant_cn.statistic.ic_significance` (L4)
+- **Purpose:** The §2 tests for one factor at one horizon: Newey-West t on mean IC (Newey & West 1987, 1994, prewhitened per D-090), stationary block-bootstrap CI of mean IC and ICIR (Politis & Romano 1994), Fisher-z / Stouffer screen, sign consistency per sub-period, single break in mean (Bai & Perron 1998; sup-F critical values of Andrews 1993), plus Pesaran-Timmermann directional accuracy (1992, 2009) and an exponential decay fit across horizons.
+- **Base:** none. **Depends on (injected):** HacVariance, BlockBootstrap, Mapping[str, tuple[str, str]].
+- **Used by:** (none yet).
+- **Tests:** `tests/statistic/test_ic_significance.py` (TC-ICS-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | HacVariance, BlockBootstrap, Mapping[str, tuple[str, str]] -> None | — | callers of the class | — |
+| `compute` | IC_TEST rows for one factor and horizon. | pd.DataFrame -> pd.DataFrame | `SchemaError`, `ValueError` | as class | see class |
+| `compute_break` | Single structural break in mean IC. | pd.DataFrame, int -> dict[str, object] | `ValueError` | as class | see class |
+| `compute_pesaran_timmermann` | Directional accuracy of sign(signal) for sign(outcome) beyond chance. | Values, Values -> dict[str, float] | `ValueError` | as class | see class |
+| `compute_decay` | Exponential decay of mean IC over horizons. | Mapping[int, float] -> dict[str, float] | `ValueError` | as class | see class |
+| `_build_full_rows` (private) | internal helper over 20 lines | pd.DataFrame, str, int, int -> list[dict[str, object]] | — | internal | — |
+| `_build_row` (private) | internal helper over 20 lines | str, int, str, str, float, float \| None, float \| None, float \| None, tuple[float, float] \| None -> dict[str, object] | — | internal | — |
+
+### `MultipleTestingAdjuster` — `quant_cn.statistic.multiple_testing_adjuster` (L4)
+- **Purpose:** Adjust the p-values of many factor tests run in one campaign: Holm step-down FWER (Holm 1979), Benjamini-Hochberg FDR (1995), Benjamini-Hochberg-Yekutieli FDR under arbitrary dependence (2001), Romano-Wolf bootstrap step-down FWER (Romano & Wolf 2005, 2016), and the Harvey-Liu-Zhu (2016) /t/ >= 3.0 hurdle. Pure arithmetic on arrays.
+- **Base:** none. **Depends on (injected):** float.
+- **Used by:** (none yet).
+- **Tests:** `tests/statistic/test_multiple_testing_adjuster.py` (TC-MTA-001..005).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | float -> None | — | callers of the class | — |
+| `compute_holm` | Holm step-down adjusted p-values (family-wise error). | Values -> np.ndarray | — | as class | see class |
+| `compute_bh` | Benjamini-Hochberg adjusted p-values (false discovery rate). | Values, float -> np.ndarray | — | as class | see class |
+| `compute_bhy` | Benjamini-Hochberg-Yekutieli adjusted p-values (FDR under arbitrary dependence). | Values -> np.ndarray | — | as class | see class |
+| `compute_romano_wolf` | Romano-Wolf step-down adjusted p-values from bootstrap null statistics. | Values, np.ndarray -> np.ndarray | `ValueError` | as class | see class |
+| `build_adjusted` | Fill adjusted p-values and the HLZ flag on one metric (and window) across factors. | pd.DataFrame, str, str \| None, np.ndarray \| None -> pd.DataFrame | `SchemaError`, `ValueError` | as class | see class |
+
+### `Neutralizer` — `quant_cn.statistic.neutralizer` (L4)
+- **Purpose:** Remove what industry membership and numeric exposures (e.g. log market cap) explain in a factor, date by date: the residual of OLS x_i = a + sum_g d_{ig} b_g + sum_k z_{ik} c_k + e_i, so the factor's IC is not an industry or size bet in disguise.
+- **Base:** none. **Depends on (injected):** int.
+- **Used by:** (none yet).
+- **Tests:** `tests/statistic/test_neutralizer.py` (TC-NEU-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | int -> None | — | callers of the class | — |
+| `compute` | Replace `column` by its per-date OLS residual. | pd.DataFrame, str, Sequence[str], Sequence[str], str -> pd.DataFrame | `KeyError` | as class | see class |
+
+### `QuantileReturns` — `quant_cn.statistic.quantile_returns` (L4)
+- **Purpose:** Sort names into n quantiles of the factor within each date and horizon, and report each quantile's equal-weighted mean forward return plus the long-short spread (top minus bottom, stored as quantile 0): the monotone "ladder" that complements the IC.
+- **Base:** none. **Depends on (injected):** int.
+- **Used by:** (none yet).
+- **Tests:** `tests/statistic/test_quantile_returns.py` (TC-QR-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | int -> None | `ValueError` | callers of the class | — |
+| `compute` | Mean forward return per quantile, date, factor and horizon. | pd.DataFrame, pd.DataFrame -> pd.DataFrame | `SchemaError` | as class | see class |
+
+### `ReturnStats` — `quant_cn.statistic.return_stats` (L4)
+- **Purpose:** Summarise a series of period returns: annualised mean and volatility, Sharpe (per period and annualised with sqrt(244 / h)), maximum drawdown of the compounded path, hit rate, skewness and non-excess kurtosis (the PSR / DSR inputs of Bailey & López de Prado 2012).
+- **Base:** none. **Depends on (injected):** int.
+- **Used by:** (none yet).
+- **Tests:** `tests/statistic/test_return_stats.py` (TC-RS-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | int -> None | — | callers of the class | — |
+| `compute` | Statistics of non-overlapping returns of length h sessions. | Values, int -> dict[str, float] | `ValueError` | as class | see class |
+
+### `Standardizer` — `quant_cn.statistic.standardizer` (L4)
+- **Purpose:** Put factor values on a common scale within each date: z = (x - m) / s with m the equal-weighted mean (or a weighted mean, e.g. cap weights as in Barra-style exposures) and s the equal-weighted standard deviation, so the cross-section has unit dispersion.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** (none yet).
+- **Tests:** `tests/statistic/test_standardizer.py` (TC-STD-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `compute` | z-score one column within each group. | pd.DataFrame, str, str, str \| None -> pd.DataFrame | `KeyError` | as class | see class |
+
+### `TrialLog` — `quant_cn.statistic.trial_log` (L4)
+- **Purpose:** Record every factor / parameter / horizon variant evaluated in a campaign, including the failures, because the deflated Sharpe ratio (Bailey & López de Prado 2014) and the multiple-testing adjusters need the number and dispersion of all trials, not just the winners. Append-only: trials get sequential ids and can never be edited or removed. No I/O: the caller persists `build_frame()` and resumes with `from_frame()`.
+- **Base:** none. **Depends on (injected):** str.
+- **Used by:** (none yet).
+- **Tests:** `tests/statistic/test_trial_log.py` (TC-TL-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | str -> None | `ValueError` | callers of the class | — |
+| `n_trials` | Number of trials recorded (N for the deflated Sharpe ratio). | — -> int | — | as class | see class |
+| `add_trial` | Append one evaluated variant. | str, Mapping[str, object], int, float \| None, float \| None -> str | `TypeError` | as class | see class |
+| `build_frame` | The log as a TRIAL_LOG frame (a copy). | — -> pd.DataFrame | — | as class | see class |
+| `from_frame` | Resume a campaign's log from a saved TRIAL_LOG frame. | str, pd.DataFrame -> TrialLog | `ValueError`, `SchemaError` | as class | see class |
+
+### `Winsorizer` — `quant_cn.statistic.winsorizer` (L4)
+- **Purpose:** Clip extreme factor values within each date so a few outliers do not dominate ranks, z-scores or regressions: median +- k * 1.4826 * MAD (robust default) or the q / 1 - q cross-sectional quantiles.
+- **Base:** none. **Depends on (injected):** Method, float, float.
+- **Used by:** (none yet).
+- **Tests:** `tests/statistic/test_winsorizer.py` (TC-WZ-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Method, float, float -> None | `ValueError` | callers of the class | — |
+| `compute` | Winsorise one column within each group. | pd.DataFrame, str, str -> pd.DataFrame | `KeyError` | as class | see class |
+
 ### `BaseChart` — `quant_cn.visualization.base_chart` (L5)
 - **Purpose:** Abstract chart: subclasses build a plotly figure from a DataFrame (frames only, never objects from other packages); the base applies theme, size, hover and export.
 - **Base:** ABC. **Depends on (injected):** ChartTheme, int, int.
@@ -1394,6 +1544,8 @@ never column lists (those live in section E).
 | `IC_SERIES` | `quant_cn.core.frames` | information coefficient per date, factor and horizon with N | long; key (trade_date, factor, horizon) | trade_date (string), factor (string), horizon (float64), ic (float64), n (float64) | key unique and non-null | `statistic.ICCalculator` (plan 04 ph2) | `statistic.ICSignificance` | 2026-09-27 |
 | `IC_TEST` | `quant_cn.core.frames` | significance results per factor, horizon, metric and window incl. adjusted p | long; key (factor, horizon, metric, window) | factor (string), horizon (float64), metric (string), value (float64), se (float64), t (float64), p (float64), ci_lo (float64), ci_hi (float64), window (string), p_adj_holm (float64), p_adj_bhy (float64), p_adj_romano_wolf (float64), hlz_pass (float64) | key unique and non-null | `statistic.ICSignificance`, `statistic.MultipleTestingAdjuster` (plan 04 ph2) | `factor.FactorEvaluator` reports | 2026-09-27 |
 | `TRIAL_LOG` | `quant_cn.core.frames` | every factor/parameter variant evaluated in a campaign | long; key (campaign, trial_id) | campaign (string), trial_id (string), factor (string), params (string), horizon (float64), sr (float64), ic_mean (float64) | key unique and non-null | `statistic.TrialLog` (plan 04 ph2) | `statistic.MultipleTestingAdjuster`, DSR (plan 06) | 2026-09-27 |
+| `FORWARD_RETURN` | `quant_cn.core.frames` | tradeable forward return per stock, session and horizon | long; key (trade_date, ts_code, horizon) | trade_date (string), ts_code (string), horizon (float64), fwd_return (float64) | key unique and non-null | `statistic.ICCalculator.build_forward_returns` | `statistic.ICCalculator`, `statistic.QuantileReturns` | 2026-09-27 |
+| `QUANTILE_RETURNS` | `quant_cn.core.frames` | mean forward return per factor quantile and date (0 = long-short) | long; key (trade_date, factor, horizon, quantile) | trade_date (string), factor (string), horizon (float64), quantile (float64), ret (float64), n (float64) | key unique and non-null | `statistic.QuantileReturns.compute` | `factor.FactorEvaluator`, `FactorChart` | 2026-09-27 |
 
 ## F. Allowed standalone functions (`core/utils` only, with justification)
 

@@ -66,6 +66,8 @@ def test_tc_fr_005_plan04_frames() -> None:
         frames.IC_SERIES,
         frames.IC_TEST,
         frames.TRIAL_LOG,
+        frames.FORWARD_RETURN,
+        frames.QUANTILE_RETURNS,
     ]
     for schema in schemas:
         row = {c: sample.get(c, 1.0) for c in schema.columns}
