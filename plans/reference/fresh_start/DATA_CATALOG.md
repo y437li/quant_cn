@@ -72,11 +72,16 @@ history is realistic to pull, not something the new project reads.
 | Lock-up expiries | `share_float` (by `ann_date`, all days) | `ts_code, ann_date, float_date, holder_name, share_type` | `ann_date` | ann 2016-01-01 → 2026-09-28 | 6.66 M | D-081 |
 | Disclosure schedule | `disclosure_date` (param `end_date`) | `ts_code, end_date` | `ann_date` (latest schedule, not PIT) | periods 2019 → 2026Q2 | 145 k | D-081 |
 | Shareholder count | `stk_holdernumber` (param `enddate`) | `ts_code, end_date, ann_date` | `ann_date` | ann 2016-07 → 2026-08 | 153 k | D-081, D-082 |
+| ChinaBond yield curves | `cn_bond_yield` (AkShare `bond_china_yield`) | `curve_name, trade_date` | next session | 2010-01-04 → 2026-09-28, 3 curves | 12.6 k | D-087 |
+| LME copper 3M | `lme_copper` (AkShare / Sina) | `trade_date` | next session | 2016-09-30 → 2026-09 | 2,537 | D-087 |
+| Macro release dates | `macro_release_cpi/ppi/pmi/m2` (AkShare / Jin10) | `release_date` | `release_date` | ends 2025-09; real dates from ~2010 | 1,485 | D-086 |
+| SZSE margin-eligible list | `szse_margin_targets` (AkShare / SZSE, official) | `trade_date, code` | `trade_date` | 2019-01-02 → 2026-09-28 | 2.63 M | D-087 |
+| Derived: margin eligibility | `derived.margin_targets` | `trade_date, ts_code` | `trade_date` | SZSE official + SSE proxy (margin_detail row; short = rqye > 0) | — | D-084 |
 | Derived: futures holdings | `derived.fut_holding_brokers` | `trade_date, exchange, symbol, broker` | as `fut_holding` | contract rows, no category totals | 13.65 M | D-079 |
 | Derived: one-sided futures | `derived.fut_daily_one_sided` | `ts_code, trade_date` | as `fut_daily` | vol/amount/oi halved pre-2020 (SHF/DCE/ZCE/INE) | 1.65 M | D-079 |
 | Derived: Shenwan L1 intervals | `derived.industry_l1` | `ts_code, valid_from` | `valid_from` (back-filled rows flagged) | 1984 → open | ~10 k | D-071 |
 | Margin totals | `margin` | `trade_date, exchange_id` | `trade_date` (published next morning) | 2025-01-02 → 2026-09-28 | 1,266 | plan 09 |
-| Margin by stock | `margin_detail` | `ts_code, trade_date` | `trade_date` (published next morning) | 2024-01-02 → 2026-09-28 | 2.73 M | plan 09 |
+| Margin by stock | `margin_detail` | `ts_code, trade_date` | `trade_date` (published next morning) | 2019-01-02 → 2026-09-28 | 5.53 M | plan 09, D-084 |
 
 Rough size: one full-market daily table since 2019 ≈ 9 M rows ≈ 400–600 MB as zstd parquet.
 
@@ -212,6 +217,12 @@ Verify any unit you rely on against the endpoint's doc page before building on i
   Fill on report_type 1: revenue / operate_profit 99.9%, oper_cost 97.8% (banks report none), equity 100%;
   bond_payable 17%, st_borr 76%, c_recp_cap_contrib 38% — NULL means the item is absent, treat as 0 only where the
   line is structurally applicable.
+- **Release-lag rules were look-ahead.** Observed NBS/PBOC releases since 2010 (Jin10): CPI/PPI up to 20 days after
+  month end (23 of 179 later than 12), M2 up to 20 (11 of 242 later than 15), PMI up to 7. Rules raised to the observed
+  maxima (D-086); `make release-lags` warns if a later release appears. The Jin10 feed stops in 2025-09.
+- **SSE margin eligibility has no official history.** Use `derived.margin_targets` (SSE proxy = had a margin_detail
+  row; short-eligible = rqye > 0). The proxy matches `margin_secs` exactly at month ends since 2024-04; SZSE rows come
+  from the official daily list (438 names in 2019-01 before the 2019-08 expansion).
 - **Statements** carry an original and a corrected version per filing (`update_flag`); it must be requested and
   is part of the primary key (D-038), otherwise compaction drops real data.
 

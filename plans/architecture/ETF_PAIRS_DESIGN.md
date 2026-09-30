@@ -6,7 +6,7 @@ promoted to `strategy`-level classes in `portfolio`/`back_testing` only if the r
 ## 1. What can actually be shorted in this market
 | Short leg | Mechanism | Practical notes |
 |---|---|---|
-| Equity ETF | 融券 (securities lending) on margin-eligible ETFs | eligibility list changes; borrow cost roughly 6–10% p.a. (verify with broker); T+1 for equity ETFs |
+| Equity ETF | 融券 (securities lending) on short-eligible ETFs: SZSE official list (`szse_margin_targets`, 融券 flag); SSE proxy = `margin_detail.rqye > 0` (D-084) | eligibility list changes; borrow cost roughly 6–10% p.a. (verify with broker); T+1 for equity ETFs |
 | Index exposure | CFFEX futures IH (SSE 50), IF (CSI 300), IC (CSI 500), IM (CSI 1000) | liquid, cheap; basis (usually discount) is itself a signal/cost; margin |
 | Cross-border / commodity / bond ETFs | 融券 where eligible; these trade T+0 | QDII ETFs carry premium/discount to NAV |
 | Options | synthetic short via put − call on 50/300/500 ETFs | plan 03 data covers it |

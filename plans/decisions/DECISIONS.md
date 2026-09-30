@@ -660,3 +660,35 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Decision: `CAP_STEP = 100`: keep paging while a page is full or a multiple of 100 (one extra call for keys whose size is a round hundred). Refetched with `--force`: `stk_holdernumber` all 30 periods (149,032 → 152,592 rows), `hk_hold` 6 dates (4,200 → 4,417 … 5,254), `stk_surv` 2021-08 → 2026-09 (433,119 → 905,248 rows; max 7,626 visits on one day). Rescan: no dataset left whose maximum is a multiple of 100 reached on several keys, except `index_weight` 12,000 (natural: 1,000 constituents × 12 months, already paged past 6,000).
 - Consequences: the phase 9 coverage notebook repeats the scan with step 100; a cap that is not a multiple of 100 would still be missed and is caught only by that scan.
 - Links: D-070, D-076, D-081
+
+### D-084 SSE lending eligibility proxy
+- Context: SZSE publishes an official per-date margin/short-sell eligibility list (AkShare wraps it); SSE has no API list and its per-security page is truncated at 2,000 rows. Tushare `margin_secs` SSE history is frozen before 2024-04 (plan 11 ph3 trap).
+- Decision: extend Tushare `margin_detail` back to 2019 (~1,200 calls) and define the SSE proxy per date: `margin_eligible` = has a `margin_detail` row; `short_eligible` = `rqye > 0` (short balance outstanding) — the stricter proxy the ETF-pairs short leg needs. Documented as "had margin/short activity", i.e. a subset of the true list. From 2024-04 the proxy is compared with `margin_secs` SSE monthly and the agreement rate stored in the quality schema. SZSE uses the official list (`szse_margin_targets`). Hand-downloaded SSE lists may be added to `external/` later with provenance for spot checks. Accepted.
+- Alternatives: manual SSE downloads per date (rejected: no API, unbounded manual work); Tushare `margin_secs` alone (rejected: frozen before 2024-04).
+- Consequences: `margin_targets` derived view unions SZSE official + SSE proxy with a `source` column; ETF_PAIRS_DESIGN §1 short-leg rule references it.
+- Links: plan 11 ph10, D-065, ETF_PAIRS_DESIGN
+
+### D-085 BaoStock verification scope
+- Context: a full price cross-check is ~5,500 stocks × 2 calls; verification must be cheap to run nightly.
+- Decision: one full-history backfill into `raw/baostock_daily` and `raw/baostock_adj_factor`; thereafter nightly only the last 5 sessions per stock (one call per stock with a 5-session range), plus a monthly random sample of 200 stocks over full history to catch silent historical revisions. `quality.price_crosscheck` reports mismatch rate on close and adj_factor (tolerance 1e-6 relative) and lists mismatches; never overwrites Tushare data. Accepted.
+- Alternatives: full nightly (rejected: 11k calls/night); no historical resample (rejected: revisions would go unnoticed).
+- Consequences: `make verify-prices` target; quality rows in the catalog.
+- Links: DATA_SOURCES §2, plan 11 ph10
+
+### D-086 Release-lag validation against observed release dates
+- Context: Jin10 release-date series (via AkShare) exist for CPI/PPI/PMI/M2 but stop at 2025-09 and have placeholder early dates, so they cannot replace the lag rules.
+- Decision: store the four series as `macro_release_dates`; derive the observed lag per month (release − month end) and validate our `release_lag_days` (CPI/PPI 12, M 15, PMI 1) against them: if any observed release is later than the rule, raise the rule to the observed maximum for that series and log it. Lag rules remain the mechanism; validation runs in the coverage notebook and `make check` warns on violations. Accepted.
+- Alternatives: use observed dates where available and rules elsewhere (rejected: two regimes in one series; the conservative rule everywhere is simpler and safe).
+- Consequences: `EffectiveDateResolver` unchanged; a small validator class in `lake`.
+- Links: plan 11 ph5, ph10, D-080
+
+### D-083 Forced refetches keep the previous raw file (proposed by quant-cn-a1; not yet implemented)
+- Status: accepted, implementation pending (after plan 11 phase 10).
+- Decision: `--force` keeps the previous raw file as `<key>.prev.parquet` until the next `make lake-rebuild` confirms the new one, then deletes it, so a forced refetch is auditable (the phase 8 statement refetch could not be compared field by field).
+- Links: D-038, plan 11 phase 8
+
+### D-087 Third-source loader: AkShare and BaoStock clients, rename, key_field (plan 11 phase 10)
+- Status: accepted by execution (2026-09-29).
+- Decision: `AkshareClient` (akshare function per query, lazy import from the optional extra `sources`, retries, ISO dates → YYYYMMDD) and `BaostockClient` (lazy login, `600000.SH` ↔ `sh.600000`, lake field names mapped to BaoStock's, numbers parsed, Beijing codes skipped) as `BaseApiClient`s selected by `DatasetSpec.source`. `DatasetSpec.rename` (vendor column → field, applied in `BaseFetcher.fetch_one` before the raw write) and `SweepSpec.key_field` (the sweep key written into a column the response lacks, e.g. the SZSE list's date). `ServiceBuilder` now passes `query` to `FetcherFactory`, so `values_from_dataset` works outside tests. `DatasetSpec.release_dates` + `ReleaseLagChecker` + `make release-lags` in `make check` (D-086); lags raised to the observed maxima since 2010: CPI/PPI 12 → 20, M 15 → 20, PMI 1 → 7 days (23/179 CPI and 11/242 M2 releases had come later than the old rules, i.e. look-ahead). `QualityViews` (schema `quality`): `margin_targets_agreement` (D-084), `price_mismatches` / `price_crosscheck` / `adj_crosscheck` (D-085); `make verify-prices` refetches the last ~10 calendar days from BaoStock and reports the mismatch rate.
+- Results: `cn_bond_yield` 3 ChinaBond curves 2010-01-04 → 2026-09-28 (4,184 days each); `lme_copper` 2,537 days from 2016-09; `macro_release_*` 477/363/250/395 rows (Jin10, ends 2025-09); `szse_margin_targets` 2.63 M rows 2019 → 2026 (438 names on 2019-01-02, 2,106 on 2026-09-24); `margin_detail` extended to 2019 (2.80 M new rows); `derived.margin_targets` SSE proxy agrees with `margin_secs` at 29 of 30 month-ends since 2024-04 exactly (one margin_secs-only name in 2025-10). SSE proxy year-end counts 919 (2019) → 2,002 (2026), where Tushare `margin_secs` reported a frozen 1,956.
+- Links: D-065, D-080, D-084, D-085, D-086, plan 11 phase 10

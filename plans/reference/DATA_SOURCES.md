@@ -36,3 +36,10 @@ Decision trigger for analyst data: the `report_rc` tier check (plan 11 ph7). If 
 - Verification sources never write to `raw/` datasets that a primary owns; they write to `raw/<source>_<dataset>/` and a quality view compares.
 - Hand-downloaded files go to `external/<source>/` with a `PROVENANCE.md` (URL, date, who).
 - Licence terms are recorded per source in this file before integration.
+
+## 5. Licence and terms (recorded 2026-09-29, plan 11 phase 10)
+| Source | Library licence | Data terms we follow |
+|---|---|---|
+| AkShare 1.18.97 | MIT (library code only) | AkShare scrapes public pages; the terms are those of each site: ChinaBond (中债) yield curves, SZSE margin lists, Jin10 macro calendar, Sina LME quotes. Personal research use only, no redistribution of the data, raw copies kept in the lake, request rate kept at one call at a time with retries. Record the site behind each dataset (`cn_bond_yield`: ChinaBond; `szse_margin_targets`: SZSE; `macro_release_*`: Jin10; `lme_copper`: Sina / LME). |
+| BaoStock 0.9.40 | BSD-style (library); free anonymous login | BaoStock states its data is free for learning and research; verification only in this project (D-065, D-085), never republished, never the source of record. |
+| FRED | Terms of Use (St. Louis Fed) | research use; key in `.env`; series-level copyright notices respected (some series, e.g. LBMA gold, carry third-party terms). |
