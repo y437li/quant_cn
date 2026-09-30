@@ -54,6 +54,7 @@ from quant_cn.lake.trading_calendar import TradingCalendar
 from quant_cn.pipeline.curate_pipeline import DIGEST_FILE, CuratePipeline
 from quant_cn.pipeline.download_pipeline import DownloadPipeline
 from quant_cn.pipeline.runner import BaseRunner, LocalRunner, PipelineReport
+from quant_cn.pipeline.universe_step import UniverseStep
 
 MIN_FREE_GB = 20
 MIN_CALENDAR_DAYS = 90
@@ -438,7 +439,8 @@ class ServiceBuilder:
         )
         aligner = PitAligner(catalog, query, DateCodec())
         runner = self.build_runner(RunLog(catalog, clock), runner_name, show_progress)
-        return CuratePipeline(config, compactor, views, aligner, query, catalog, runner)
+        universe = UniverseStep(query, ParquetWriter(config.lake.root), config.universe)
+        return CuratePipeline(config, compactor, views, aligner, query, catalog, runner, universe)
 
     def build_runner(self, run_log: RunLog, name: str, show_progress: bool) -> BaseRunner:
         """

@@ -80,6 +80,11 @@ download:
     - macro_release_m2
     - szse_margin_targets
 
+universe:                        # plan 04 phase 3 (FACTOR_TESTING_DESIGN §11)
+  start: "20100101"
+  min_sessions: 120              # sessions since listing before a stock enters
+  exchanges: ["SH", "SZ"]        # BJ excluded by default (D-054)
+
 enum_values:
   indices: ["000001.SH", "000016.SH", "000300.SH", "000852.SH", "000905.SH", "399001.SZ", "399006.SZ"]
   # fx_daily instruments (plan 11 phase 5): CNH, dollar index, majors, metals, oil, copper, US rates, indices

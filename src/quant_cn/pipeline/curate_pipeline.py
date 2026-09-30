@@ -233,6 +233,7 @@ class CuratePipeline:
             query:     LakeQuery
             catalog:   LakeCatalog
             runner:    BaseRunner
+            universe:  BaseStep | None  -- UniverseStep, run between compact and derive
         Output:
             instance; `run(datasets=None) -> PipelineReport`
         Raises:
@@ -256,6 +257,7 @@ class CuratePipeline:
         query: LakeQuery,
         catalog: LakeCatalog,
         runner: BaseRunner,
+        universe: BaseStep | None = None,
     ) -> None:
         self._config = config
         self._compactor = compactor
@@ -264,6 +266,7 @@ class CuratePipeline:
         self._query = query
         self._catalog = catalog
         self._runner = runner
+        self._universe = universe
 
     def run(self, datasets: Sequence[str] | None = None) -> PipelineReport:
         """
@@ -274,7 +277,7 @@ class CuratePipeline:
             Input:
                 datasets: Sequence[str] | None  -- subset to compact; derived views always rebuilt
             Output:
-                PipelineReport  -- steps "compact" and "derive"
+                PipelineReport  -- steps "compact", "universe" (if given) and "derive"
             Raises:
                 ConfigError  -- unknown dataset
                 SchemaError, LakeError
@@ -286,6 +289,7 @@ class CuratePipeline:
         manifest = self._catalog.lake_root / "meta" / "manifest"
         steps: list[BaseStep] = [
             CompactStep(self._compactor, [self._config.get_dataset(n) for n in names]),
+            *([self._universe] if self._universe is not None else []),
             DeriveStep(self._views, self._aligner, self._query, manifest),
         ]
         report = self._runner.run("curate", steps)

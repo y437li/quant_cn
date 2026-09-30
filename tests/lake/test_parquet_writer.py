@@ -77,3 +77,10 @@ def test_tc_pw_006_keeps_previous(lake: MiniLake, config: Config) -> None:
     prev = path.with_name(path.name + ".prev")
     assert len(pd.read_parquet(prev)) == 2  # the first version is kept, not the second
     assert pd.read_parquet(path)["ts_code"].tolist() == ["000002.SZ"]
+
+
+# TC-PW-007
+def test_tc_pw_007_write_derived(lake: MiniLake) -> None:
+    path = lake.writer.write_derived("universe", 2026, pd.DataFrame({"x": [1.0]}))
+    assert path == lake.lake_root / "derived" / "universe" / "year=2026" / "part-0.parquet"
+    assert pd.read_parquet(path)["x"].tolist() == [1.0]

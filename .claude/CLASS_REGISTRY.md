@@ -34,15 +34,16 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `BaseFetchLog` | `quant_cn.core.base_fetch_log` | 1 | ABC | Abstract record of which (dataset, key) pairs are fully downloaded. | 5 | `lake.FetchLog`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher` | `tests/lake/test_fetch_log.py` (TC-FL-001..003) | 2026-09-27 |
 | `BaseFetcher` | `quant_cn.core.base_fetcher` | 1 | ABC | Download one dataset as a sequence of keys | 5 | `data_loading.SingleCallFetcher`, `data_loading.EnumFetcher`, `data_loading.DateSweepFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.FetcherFactory.build`, `pipeline.FetchStep`, `data_loading.DateWindowFetcher` | `tests/core/test_base_fetcher.py` (TC-BF-001..007) | 2026-09-27 |
 | `BaseRunLog` | `quant_cn.core.base_run_log` | 1 | ABC | Abstract append-only log of runs and per-key events | 3 | `lake.RunLog`, `core.BaseFetcher.run`, `pipeline.LocalRunner`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `pipeline.PrefectRunner`, `data_loading.DateWindowFetcher` | `tests/lake/test_run_log.py` (TC-RL-001..001) | 2026-09-27 |
-| `BaseStep` | `quant_cn.core.base_step` | 1 | ABC | Abstract unit of pipeline work: list its units, then run and report. | 3 | `pipeline.FetchStep`, `pipeline.BaseRunner.run`, `pipeline.LocalRunner.run`, `pipeline.CompactStep`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `pipeline.PrefectRunner` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
+| `BaseStep` | `quant_cn.core.base_step` | 1 | ABC | Abstract unit of pipeline work: list its units, then run and report. | 3 | `pipeline.FetchStep`, `pipeline.BaseRunner.run`, `pipeline.LocalRunner.run`, `pipeline.CompactStep`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
 | `BaseStore` | `quant_cn.core.base_store` | 1 | ABC | Abstract sink for raw fetch results and curated partitions. | 2 | `lake.ParquetWriter`, `core.BaseFetcher`, `lake.Compactor`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
 | `Clock` | `quant_cn.core.clock` | 1 | none | The single source of wall time, monotonic time and sleeping | 4 | `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.FetcherFactory`, `data_loading.PeriodSweepFetcher`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `lake.RebuildAudit` | `tests/core/test_clock.py` (TC-CL-001..002) | 2026-09-27 |
 | `LakeConfig` | `quant_cn.core.config` | 1 | BaseModel | Where the lake lives and whether it may sit inside the repository. | 0 | `core.Config` | `tests/core/test_config.py` (TC-C-001..001) | 2026-09-27 |
 | `TushareConfig` | `quant_cn.core.config` | 1 | BaseModel | Tushare endpoint, paging, retry and rate-limit settings | 0 | `core.Config`, `data_loading.TushareClient` | `tests/core/test_config.py` (TC-C-002..002) | 2026-09-27 |
 | `DownloadConfig` | `quant_cn.core.config` | 1 | BaseModel | Which datasets to download, in what order, and from which start dates (D-015b). | 0 | `core.Config` | `tests/core/test_config.py` (TC-C-004..004) | 2026-09-27 |
+| `UniverseConfig` | `quant_cn.core.config` | 1 | BaseModel | Rules of the tradeable universe per session (FACTOR_TESTING_DESIGN §11, D-054). | 0 | `core.Config`, `pipeline.UniverseStep` | `tests/core/test_config.py` (TC-C-011..011) | 2026-09-27 |
 | `FuturesCategory` | `quant_cn.core.config` | 1 | BaseModel | One member-category label that `fut_holding` lists among real brokers (D-079). | 0 | `core.Config`, `lake.DerivedViews` | `tests/core/test_config.py` (TC-C-009..009) | 2026-09-27 |
 | `TickerAlias` | `quant_cn.core.config` | 1 | BaseModel | One retired code and the code its company trades on afterwards (D-053, D-089). | 0 | `core.Config`, `lake.TickerAliasMap`, `lake.DerivedViews` | `tests/core/test_config.py` (TC-C-010..010) | 2026-09-27 |
-| `Config` | `quant_cn.core.config` | 1 | BaseModel | The typed configuration injected everywhere: YAML defaults, machine overrides, environment. | 3 | `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder` | `tests/core/test_config.py` (TC-C-001..010) | 2026-09-27 |
+| `Config` | `quant_cn.core.config` | 1 | BaseModel | The typed configuration injected everywhere: YAML defaults, machine overrides, environment. | 3 | `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder` | `tests/core/test_config.py` (TC-C-001..011) | 2026-09-27 |
 | `ValuesFromDataset` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Enumerate sweep keys from another curated dataset (e.g | 0 | `core.SweepSpec` | `tests/data_loading/test_fetcher_factory.py` (TC-FF-003..003) | 2026-09-27 |
 | `SweepSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | How a dataset is swept so each call returns the whole market for one key. | 1 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
 | `CuratedSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Where a dataset lands in `curated/` and which date column drives its yearly partition. | 0 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
@@ -80,7 +81,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `RepoFiles` | `quant_cn.core.docs.repo_files` | 1 | none | The set of repository files a linter should see: `git ls-files --cached --others --exclude-standard`, so .gitignore (caches, .env, lake guards) decides what is ignored. | 2 | `core.docs.IndexChecker`, `core.docs.ContractLinter`, `core.docs.DocTableBuilder`, `cli.ServiceBuilder` | `tests/core/docs/test_repo_files.py` (TC-RF-001..003) | 2026-09-27 |
 | `SizeChecker` | `quant_cn.core.docs.size_checker` | 1 | BaseChecker | Fail any .py file over 600 lines, class over 300, function or method over 50 (physical lines, docstrings included), and INDEX.md / SKILL.md / execution plan over 300 lines. | 1 | `core.docs.ContractLinter` | `tests/core/docs/test_size_checker.py` (TC-SC-001..002) | 2026-09-27 |
 | `Schema` | `quant_cn.core.schema` | 1 | none | Declare and enforce a DataFrame shape: text columns are pandas `string`, all other declared columns are `float64`, and the primary key is unique and non-null. | 4 | `core.DatasetSpec.build_schema`, `lake.LakeReader` | `tests/core/test_schema.py` (TC-S-001..006) | 2026-09-27 |
-| `StepReport` | `quant_cn.core.step_report` | 1 | none | Counts and status of one step (usually one dataset's fetch) so runs can be summarised. | 0 | `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `pipeline.FetchStep`, `pipeline.PipelineReport`, `pipeline.CompactStep`, `pipeline.DeriveStep`, `pipeline.PrefectRunner` | `tests/core/test_base_fetcher.py` (TC-BF-001..001) | 2026-09-27 |
+| `StepReport` | `quant_cn.core.step_report` | 1 | none | Counts and status of one step (usually one dataset's fetch) so runs can be summarised. | 0 | `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `pipeline.FetchStep`, `pipeline.PipelineReport`, `pipeline.CompactStep`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep` | `tests/core/test_base_fetcher.py` (TC-BF-001..001) | 2026-09-27 |
 | `TickerNormalizer` | `quant_cn.core.ticker_normalizer` | 1 | none | Turn common A-share ticker spellings into Tushare `ts_code` and check `ts_code` validity. | 2 | (none yet) | `tests/core/test_ticker_normalizer.py` (TC-TN-001..004) | 2026-09-27 |
 | `AkshareClient` | `quant_cn.data_loading.akshare_client` | 3 | BaseApiClient | Call one AkShare function per query (`api_name` = function name, `params` = its keyword arguments) and return its frame with dates normalised to YYYYMMDD strings, so the lake's schema and PIT rules apply unchanged | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_akshare_client.py` (TC-AKC-001..002) | 2026-09-27 |
 | `BaostockClient` | `quant_cn.data_loading.baostock_client` | 3 | BaseApiClient | Call one BaoStock query per request (`api_name` = method, e.g | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_baostock_client.py` (TC-BSC-001..003) | 2026-09-27 |
@@ -93,14 +94,14 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `HttpTransport` | `quant_cn.data_loading.http_transport` | 3 | none | Send one JSON POST and return the decoded JSON object. | 1 | `data_loading.TushareClient` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..001) | 2026-09-27 |
 | `TushareClient` | `quant_cn.data_loading.tushare_client` | 3 | BaseApiClient | Query Tushare Pro: one logical query follows limit/offset paging until a short page and returns all rows | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..009) | 2026-09-27 |
 | `Compactor` | `quant_cn.lake.compactor` | 2 | none | Rebuild a dataset's curated partitions from its raw files: select declared fields, cast dtypes, fill `key_defaults` into NULL key columns, drop duplicate primary keys (keeping one), sort by partition date then key, validate, write, and record a manifest in `meta/manifest/<dataset>.json`. | 1 | `cli.QuantCnCli`, `pipeline.CompactStep`, `pipeline.CuratePipeline`, `cli.ServiceBuilder` | `tests/lake/test_compactor.py` (TC-CO-001..006) | 2026-09-27 |
-| `DerivedViews` | `quant_cn.lake.derived_views` | 2 | none | Create the `derived` schema views built only from curated/: `derived.prices_adj` (daily bars joined to adj_factor, close_adj = close * adj_factor | 1 | `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `cli.ServiceBuilder` | `tests/lake/test_derived_views.py` (TC-DV-001..008) | 2026-09-27 |
+| `DerivedViews` | `quant_cn.lake.derived_views` | 2 | none | Create the `derived` schema views built only from curated/: `derived.prices_adj` (daily bars joined to adj_factor, close_adj = close * adj_factor | 1 | `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `cli.ServiceBuilder` | `tests/lake/test_derived_views.py` (TC-DV-001..009) | 2026-09-27 |
 | `EffectiveDateResolver` | `quant_cn.lake.effective_date_resolver` | 2 | none | Turn a dataset's `known_on` value into `effective_date`, the first China trading session the row may be used (FACTOR_TESTING_DESIGN §11): as_is          -> that session, or the next one if the day is closed (same-day data) | 2 | (none yet) | `tests/lake/test_effective_date_resolver.py` (TC-EDR-001..006) | 2026-09-27 |
 | `FetchLog` | `quant_cn.lake.fetch_log` | 2 | BaseFetchLog | Record finished (dataset, key) pairs in `meta.fetch_log`, mirror them to `meta/fetch_log.parquet` on save, and rebuild the table after the DuckDB file is lost. | 6 | `cli.QuantCnCli`, `cli.ServiceBuilder` | `tests/lake/test_fetch_log.py` (TC-FL-001..006) | 2026-09-27 |
 | `LakeCatalog` | `quant_cn.lake.lake_catalog` | 2 | none | Own the lake's single DuckDB connection (`meta/quant_cn.duckdb`): schemas `raw`, `curated`, `meta` | 8 | `lake.FetchLog`, `lake.RunLog`, `lake.LakeQuery`, `lake.Compactor`, `pipeline.FetchStep.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `lake.DerivedViews`, `lake.PitAligner`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `lake.QualityViews`, `lake.LakeReader`, `lake.TickerAliasMap` | `tests/lake/test_lake_catalog.py` (TC-LC-001..005) | 2026-09-27 |
-| `LakeQuery` | `quant_cn.lake.lake_query` | 2 | none | Run read queries against the catalog views | 3 | `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap` | `tests/lake/test_lake_query.py` (TC-LQ-001..004) | 2026-09-27 |
-| `LakeReader` | `quant_cn.lake.lake_reader` | 2 | none | The read API factors, the universe step and notebooks use (SRC_DESIGN §2.2b, D-089): one curated dataset as a panel, dense or sparse prices, point-in-time fundamentals, reference tables, in-memory frames joinable in SQL, and view discovery | 6 | `cli.ServiceBuilder`, (none yet) | `tests/lake/test_lake_reader.py` (TC-LRD-001..006) | 2026-09-27 |
+| `LakeQuery` | `quant_cn.lake.lake_query` | 2 | none | Run read queries against the catalog views | 5 | `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep` | `tests/lake/test_lake_query.py` (TC-LQ-001..005) | 2026-09-27 |
+| `LakeReader` | `quant_cn.lake.lake_reader` | 2 | none | The read API factors, the universe step and notebooks use (SRC_DESIGN §2.2b, D-089): one curated dataset as a panel, dense or sparse prices, point-in-time fundamentals, reference tables (in-memory frames and view discovery: LakeQuery) | 5 | `cli.ServiceBuilder`, (none yet) | `tests/lake/test_lake_reader.py` (TC-LRD-001..007) | 2026-09-27 |
 | `PanelCache` | `quant_cn.lake.panel_cache` | 2 | none | Keep recently read panels in memory, keyed by (method, arguments), least recently used evicted first once the total size exceeds `max_bytes` | 4 | `lake.LakeReader`, `cli.ServiceBuilder` | `tests/lake/test_panel_cache.py` (TC-PCH-001..003) | 2026-09-27 |
-| `ParquetWriter` | `quant_cn.lake.parquet_writer` | 2 | BaseStore | Write raw fetch results and curated partitions as zstd parquet, atomically (write `.tmp`, fsync, rename), so a crash never leaves a half-written file. | 4 | `cli.QuantCnCli`, `cli.ServiceBuilder` | `tests/lake/test_parquet_writer.py` (TC-PW-001..006) | 2026-09-27 |
+| `ParquetWriter` | `quant_cn.lake.parquet_writer` | 2 | BaseStore | Write raw fetch results and curated partitions as zstd parquet, atomically (write `.tmp`, fsync, rename), so a crash never leaves a half-written file. | 5 | `cli.QuantCnCli`, `cli.ServiceBuilder`, `pipeline.UniverseStep` | `tests/lake/test_parquet_writer.py` (TC-PW-001..007) | 2026-09-27 |
 | `PitAligner` | `quant_cn.lake.pit_aligner` | 2 | none | Align fundamentals to trading days without look-ahead | 2 | `pipeline.CuratePipeline`, `research_space/main.ipynb`, `pipeline.DeriveStep`, `cli.ServiceBuilder`, `lake.LakeReader` | `tests/lake/test_pit_aligner.py` (TC-PA-001..005) | 2026-09-27 |
 | `ProjectCatalog` | `quant_cn.lake.project_catalog` | 2 | none | Rebuild schema `project` in the lake's DuckDB from the repository: folders, files, classes, methods, used_by, contracts, test_cases, decisions, plans, phases, datasets, lint_findings, plus views tree, class_graph, stale and todo | 1 | `cli.ServiceBuilder` | `tests/lake/test_project_catalog.py` (TC-PJC-001..004) | 2026-09-27 |
 | `QualityViews` | `quant_cn.lake.quality_views` | 2 | none | Create the `quality` schema: cross-source comparisons that report, never overwrite (D-065) | 1 | `lake.DerivedViews.refresh` | `tests/lake/test_quality_views.py` (TC-QV-001..003) | 2026-09-27 |
@@ -118,6 +119,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `PipelineReport` | `quant_cn.pipeline.runner` | 4 | none | Result of one pipeline run: its id, overall status and one StepReport per step. | 2 | `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.BaseRunner`, `pipeline.CuratePipeline`, `pipeline.PrefectRunner` | `tests/pipeline/test_runner.py` (TC-LR-001..001) | 2026-09-27 |
 | `BaseRunner` | `quant_cn.pipeline.runner` | 4 | ABC | Extension point for how steps are executed (local now, Prefect later, D-022) | 1 | `pipeline.LocalRunner`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `pipeline.PrefectRunner`, `cli.ServiceBuilder` | `tests/pipeline/test_runner.py` (TC-LR-001..001) | 2026-09-27 |
 | `LocalRunner` | `quant_cn.pipeline.runner` | 4 | BaseRunner | Run steps serially in this process with a rich progress bar per step | 1 | `cli.ServiceBuilder` | `tests/pipeline/test_runner.py` (TC-LR-001..003) | 2026-09-27 |
+| `UniverseStep` | `quant_cn.pipeline.universe_step` | 4 | BaseStep | Build UNIVERSE_PANEL: one row per stock listed on each session (list_date <= t < delist_date | 3 | `cli.ServiceBuilder` | `tests/core/docs/test_contract_checker.py`, `tests/pipeline/test_universe_step.py` (TC-US-001..004) | 2026-09-27 |
 | `BlockBootstrap` | `quant_cn.statistic.block_bootstrap` | 4 | none | Resample a time series (or several aligned series with the same draws) in blocks so serial correlation survives: stationary bootstrap with geometric block lengths (Politis & Romano 1994) or circular block bootstrap with fixed blocks (Politis & Romano 1992) | 4 | `statistic.IcSignificance` | `tests/statistic/test_block_bootstrap.py` (TC-BB-001..004) | 2026-09-27 |
 | `HacVariance` | `quant_cn.statistic.hac_variance` | 4 | none | Heteroskedasticity- and autocorrelation-consistent variance of a sample mean with the Bartlett kernel (Newey & West 1987 | 4 | `statistic.IcSignificance` | `tests/statistic/test_hac_variance.py` (TC-HAC-001..004) | 2026-09-27 |
 | `IcCalculator` | `quant_cn.statistic.ic_calculator` | 4 | none | Per-date information coefficient between factor values and forward returns across the universe: IC_t = corr_rank(f_{i,t}, r_{i,t->t+h}) (Spearman | 2 | (none yet) | `tests/statistic/test_ic_calculator.py` (TC-ICC-001..004) | 2026-09-27 |
@@ -376,7 +378,7 @@ never column lists (those live in section E).
 ### `BaseStep` — `quant_cn.core.base_step` (L1)
 - **Purpose:** Abstract unit of pipeline work: list its units, then run and report.
 - **Base:** ABC. **Depends on (injected):** —.
-- **Used by:** `pipeline.FetchStep`, `pipeline.BaseRunner.run`, `pipeline.LocalRunner.run`, `pipeline.CompactStep`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`.
+- **Used by:** `pipeline.FetchStep`, `pipeline.BaseRunner.run`, `pipeline.LocalRunner.run`, `pipeline.CompactStep`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep`.
 - **Tests:** `tests/core/test_base_classes.py` (TC-BAC-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -436,6 +438,15 @@ never column lists (those live in section E).
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
 
+### `UniverseConfig` — `quant_cn.core.config` (L1)
+- **Purpose:** Rules of the tradeable universe per session (FACTOR_TESTING_DESIGN §11, D-054).
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `core.Config`, `pipeline.UniverseStep`.
+- **Tests:** `tests/core/test_config.py` (TC-C-011..011).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
 ### `FuturesCategory` — `quant_cn.core.config` (L1)
 - **Purpose:** One member-category label that `fut_holding` lists among real brokers (D-079).
 - **Base:** BaseModel. **Depends on (injected):** —.
@@ -458,7 +469,7 @@ never column lists (those live in section E).
 - **Purpose:** The typed configuration injected everywhere: YAML defaults, machine overrides, environment.
 - **Base:** BaseModel. **Depends on (injected):** —.
 - **Used by:** `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`.
-- **Tests:** `tests/core/test_config.py` (TC-C-001..010).
+- **Tests:** `tests/core/test_config.py` (TC-C-001..011).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -866,7 +877,7 @@ never column lists (those live in section E).
 ### `StepReport` — `quant_cn.core.step_report` (L1)
 - **Purpose:** Counts and status of one step (usually one dataset's fetch) so runs can be summarised.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `pipeline.FetchStep`, `pipeline.PipelineReport`, `pipeline.CompactStep`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`.
+- **Used by:** `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `pipeline.FetchStep`, `pipeline.PipelineReport`, `pipeline.CompactStep`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep`.
 - **Tests:** `tests/core/test_base_fetcher.py` (TC-BF-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1009,10 +1020,10 @@ never column lists (those live in section E).
 | `rebuild` | Replace the curated partitions of `spec` (all years, or only `years`). | DatasetSpec, set[int] \| None -> StepReport | `SchemaError`, `LakeError` | as class | see class |
 
 ### `DerivedViews` — `quant_cn.lake.derived_views` (L2)
-- **Purpose:** Create the `derived` schema views built only from curated/: `derived.prices_adj` (daily bars joined to adj_factor, close_adj = close * adj_factor; PRICE_PANEL columns; retired alias codes absent from stock_basic dropped); `derived.fundamentals_long` (every period-swept dataset unpivoted to one row per numeric field and announced version; statements under curated/fundamentals/ only, filtered to report_type = '1'); `derived.fut_holding_brokers` (contract rows of fut_holding without member-category totals, exchange "ZCE" -> "CZCE"; D-079); `derived.fut_daily_one_sided` (fut_daily with vol, amount, oi, oi_chg halved for SHFE/DCE/CZCE/INE before 2020-01-02, flagged two_sided_adjusted; D-079); `derived.industry_l1` (Shenwan L1 validity intervals per stock, PIT rows plus back-filled rows flagged industry_backfilled; l1_pit = rows not back-filled, l1_grouping = any; D-071); `derived.margin_targets` (SZSE official list + SSE proxy from margin_detail, source column; D-084); `derived.ticker_alias` through TickerAliasMap (D-089); then the `quality` schema through QualityViews.
+- **Purpose:** Create the `derived` schema views built only from curated/: `derived.prices_adj` (daily bars joined to adj_factor, close_adj = close * adj_factor; PRICE_PANEL columns; retired alias codes absent from stock_basic dropped); `derived.fundamentals_long` (every period-swept dataset unpivoted to one row per numeric field and announced version; statements under curated/fundamentals/ only, filtered to report_type = '1'); `derived.fut_holding_brokers` (contract rows of fut_holding without member-category totals, exchange "ZCE" -> "CZCE"; D-079); `derived.fut_daily_one_sided` (fut_daily with vol, amount, oi, oi_chg halved for SHFE/DCE/CZCE/INE before 2020-01-02, flagged two_sided_adjusted; D-079); `derived.industry_l1` (Shenwan L1 validity intervals per stock, PIT rows plus back-filled rows flagged industry_backfilled; l1_pit = rows not back-filled, l1_grouping = any; D-071); `derived.margin_targets` (SZSE official list + SSE proxy from margin_detail, source column; D-084); `derived.universe` over derived/universe (UniverseStep output); `derived.ticker_alias` through TickerAliasMap (D-089); then the `quality` schema through QualityViews.
 - **Base:** none. **Depends on (injected):** LakeCatalog, LakeQuery, Mapping[str, DatasetSpec], Sequence[FuturesCategory], Sequence[TickerAlias].
 - **Used by:** `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `cli.ServiceBuilder`.
-- **Tests:** `tests/lake/test_derived_views.py` (TC-DV-001..008).
+- **Tests:** `tests/lake/test_derived_views.py` (TC-DV-001..009).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -1069,8 +1080,8 @@ never column lists (those live in section E).
 ### `LakeQuery` — `quant_cn.lake.lake_query` (L2)
 - **Purpose:** Run read queries against the catalog views; the only way code above the lake reads data.
 - **Base:** none. **Depends on (injected):** LakeCatalog.
-- **Used by:** `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`.
-- **Tests:** `tests/lake/test_lake_query.py` (TC-LQ-001..004).
+- **Used by:** `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`.
+- **Tests:** `tests/lake/test_lake_query.py` (TC-LQ-001..005).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -1078,12 +1089,14 @@ never column lists (those live in section E).
 | `sql` | Execute a query and return the result as a DataFrame. | str, Sequence[object] \| None -> pd.DataFrame | `LakeError` | as class | see class |
 | `has_view` | True if `schema.view` exists in the catalog. | str -> bool | `LakeError` | as class | see class |
 | `read_prices` | Adjusted daily prices from `derived.prices_adj` for a date range. | str, str, Sequence[str] \| None -> pd.DataFrame | `LakeError`, `SchemaError` | as class | see class |
+| `register_frame` | Expose an in-memory frame as a view so SQL can join it with lake views. | str, pd.DataFrame -> str | `ValueError`, `LakeError` | as class | see class |
+| `list_views` | Every lake view as "schema.view", plus registered frames by bare name. | — -> list[str] | `LakeError` | as class | see class |
 
 ### `LakeReader` — `quant_cn.lake.lake_reader` (L2)
-- **Purpose:** The read API factors, the universe step and notebooks use (SRC_DESIGN §2.2b, D-089): one curated dataset as a panel, dense or sparse prices, point-in-time fundamentals, reference tables, in-memory frames joinable in SQL, and view discovery. Retired codes are mapped to their surviving codes on every per-stock read (TickerAliasMap, new code wins); every output is validated with its schema; an optional PanelCache serves repeated reads. LakeQuery stays the raw SQL layer underneath.
+- **Purpose:** The read API factors, the universe step and notebooks use (SRC_DESIGN §2.2b, D-089): one curated dataset as a panel, dense or sparse prices, point-in-time fundamentals, reference tables (in-memory frames and view discovery: LakeQuery). Retired codes are mapped to their surviving codes on every per-stock read (TickerAliasMap, new code wins); every output is validated with its schema; an optional PanelCache serves repeated reads. LakeQuery stays the raw SQL layer underneath.
 - **Base:** none. **Depends on (injected):** LakeCatalog, LakeQuery, Mapping[str, DatasetSpec], PitAligner, TickerAliasMap, TradingCalendar, PanelCache | None.
 - **Used by:** `cli.ServiceBuilder`, (none yet).
-- **Tests:** `tests/lake/test_lake_reader.py` (TC-LRD-001..006).
+- **Tests:** `tests/lake/test_lake_reader.py` (TC-LRD-001..007).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -1091,9 +1104,8 @@ never column lists (those live in section E).
 | `read_panel` | One curated dataset over a date range as a long panel, sorted by primary key. | str, str, str, Sequence[str] \| None, Sequence[str] \| None -> pd.DataFrame | `LakeError`, `SchemaError` | as class | see class |
 | `read_prices` | Daily prices (raw and backward-adjusted close) for a date range. | str, str, Sequence[str] \| None, bool -> pd.DataFrame | `LakeError`, `SchemaError` | as class | see class |
 | `read_fundamentals_pit` | Point-in-time fundamentals per session (PitAligner), statements filed under a retired code attached to the surviving code (the new code's value wins on the same day). | Sequence[str] \| None, str, str, Sequence[str] \| None -> pd.DataFrame | `ValueError`, `LakeError` | as class | see class |
+| `read_universe` | The tradeable universe per session (UniverseStep output). | str, str, bool -> pd.DataFrame | `LakeError` | as class | see class |
 | `read_reference` | A whole reference table (curated under reference/: stock_basic, namechange, trade_cal, index_daily, index_classify, fund_basic, fut_basic, ...). | str -> pd.DataFrame | `LakeError` | as class | see class |
-| `register_frame` | Expose an in-memory frame as a view so SQL can join it with lake views. | str, pd.DataFrame -> str | `ValueError`, `LakeError` | as class | see class |
-| `list_views` | Every lake view as "schema.view", plus registered frames by bare name. | — -> list[str] | `LakeError` | as class | see class |
 | `_load_panel` (private) | internal helper over 20 lines | DatasetSpec, str, str, str, Sequence[str] \| None, list[str] -> pd.DataFrame | — | internal | — |
 
 ### `PanelCache` — `quant_cn.lake.panel_cache` (L2)
@@ -1113,8 +1125,8 @@ never column lists (those live in section E).
 ### `ParquetWriter` — `quant_cn.lake.parquet_writer` (L2)
 - **Purpose:** Write raw fetch results and curated partitions as zstd parquet, atomically (write `.tmp`, fsync, rename), so a crash never leaves a half-written file.
 - **Base:** BaseStore. **Depends on (injected):** Path.
-- **Used by:** `cli.QuantCnCli`, `cli.ServiceBuilder`.
-- **Tests:** `tests/lake/test_parquet_writer.py` (TC-PW-001..006).
+- **Used by:** `cli.QuantCnCli`, `cli.ServiceBuilder`, `pipeline.UniverseStep`.
+- **Tests:** `tests/lake/test_parquet_writer.py` (TC-PW-001..007).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -1123,6 +1135,7 @@ never column lists (those live in section E).
 | `get_curated_path` | Target path of one curated partition. | DatasetSpec, int \| None -> Path | — | as class | see class |
 | `write_raw` | Persist one fetch key's rows, dtypes coerced by the dataset schema (dates stay strings); an existing file is kept as `<file>.prev` until `rebuild` confirms it (D-083). | DatasetSpec, str, pd.DataFrame -> Path \| None | `SchemaError`, `LakeError` | as class | see class |
 | `write_curated` | Replace one curated partition after validating it against the dataset schema. | DatasetSpec, int \| None, pd.DataFrame -> Path | `SchemaError`, `LakeError` | as class | see class |
+| `write_derived` | Persist one year of a materialised derived table (e.g. the universe). | str, int, pd.DataFrame -> Path | `LakeError` | as class | see class |
 
 ### `PitAligner` — `quant_cn.lake.pit_aligner` (L2)
 - **Purpose:** Align fundamentals to trading days without look-ahead. A version announced on `known_on` (f_ann_date / ann_date) becomes effective on the first trading day strictly after it; on each day the visible value of a field is the latest report period effective so far, in its latest effective restatement. Older-period restatements never replace a newer period. Built as the DuckDB view `derived.fundamentals_states` (one row per change) and read with an ASOF JOIN from trading days.
@@ -1253,13 +1266,13 @@ never column lists (those live in section E).
 
 ### `CuratePipeline` — `quant_cn.pipeline.curate_pipeline` (L4)
 - **Purpose:** Rebuild everything below raw/: compact every dataset, create derived views and PIT states, regenerate lake indexes, and record digests in meta/manifest/derived_digests.json.
-- **Base:** none. **Depends on (injected):** Config, Compactor, DerivedViews, PitAligner, LakeQuery, LakeCatalog, BaseRunner.
+- **Base:** none. **Depends on (injected):** Config, Compactor, DerivedViews, PitAligner, LakeQuery, LakeCatalog, BaseRunner, BaseStep | None.
 - **Used by:** `cli.ServiceBuilder`.
 - **Tests:** `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..003).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
-| `__init__` | wire dependencies | Config, Compactor, DerivedViews, PitAligner, LakeQuery, LakeCatalog, BaseRunner -> None | — | callers of the class | — |
+| `__init__` | wire dependencies | Config, Compactor, DerivedViews, PitAligner, LakeQuery, LakeCatalog, BaseRunner, BaseStep \| None -> None | — | callers of the class | — |
 | `run` | Compact the datasets (default all), then derive and index. | Sequence[str] \| None -> PipelineReport | `ConfigError`, `SchemaError`, `LakeError` | as class | see class |
 
 ### `FetchStep` — `quant_cn.pipeline.download_pipeline` (L4)
@@ -1328,6 +1341,19 @@ never column lists (those live in section E).
 |---|---|---|---|---|---|
 | `__init__` | wire dependencies | BaseRunLog, Console \| None, bool -> None | — | callers of the class | — |
 | `run` | See BaseRunner.run. | str, Sequence[BaseStep] -> PipelineReport | `QuantCnError` | as class | see class |
+
+### `UniverseStep` — `quant_cn.pipeline.universe_step` (L4)
+- **Purpose:** Build UNIVERSE_PANEL: one row per stock listed on each session (list_date <= t < delist_date; retired alias codes are absent from stock_basic, D-053), in_universe = 1 when no rule excludes it, and every failing rule kept in `reason` (comma-joined): exchange (not in config, BJ by default, D-054), st (name in effect at t contains ST or starts with PT, from namechange start dates), delisting (name contains 退, 退市整理期), new_listing (fewer than min_sessions sessions since the first session on/after list_date), suspended (no daily bar at t). Delisted stocks stay in history (no survivorship). Point in time: the name at t is the namechange row with the latest start_date <= t (FACTOR_TESTING_DESIGN §11). One unit per calendar year, written to derived/universe/year=YYYY.
+- **Base:** BaseStep. **Depends on (injected):** LakeQuery, ParquetWriter, UniverseConfig.
+- **Used by:** `cli.ServiceBuilder`.
+- **Tests:** `tests/core/docs/test_contract_checker.py`, `tests/pipeline/test_universe_step.py` (TC-US-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | LakeQuery, ParquetWriter, UniverseConfig -> None | — | callers of the class | — |
+| `name` | Step name. | — -> str | — | as class | see class |
+| `list_units` | Years to build: from rules.start to the last daily session. | — -> list[str] | `LakeError` | as class | see class |
+| `run` | Build and write every year. | str, ProgressHook \| None -> StepReport | `LakeError`, `SchemaError` | as class | see class |
 
 ### `BlockBootstrap` — `quant_cn.statistic.block_bootstrap` (L4)
 - **Purpose:** Resample a time series (or several aligned series with the same draws) in blocks so serial correlation survives: stationary bootstrap with geometric block lengths (Politis & Romano 1994) or circular block bootstrap with fixed blocks (Politis & Romano 1992); both wrap around. Seeded, so reports reproduce byte for byte.
@@ -1511,7 +1537,7 @@ never column lists (those live in section E).
 | `BaseFetchLog` | `quant_cn.core.base_fetch_log` | 1 | Abstract record of which (dataset, key) pairs are fully downloaded. | `read_done_keys`: All keys recorded as done for a dataset.; `mark_done`: Record a finished key, replacing any earlier record for it.; `save`: Make recorded keys durable (e.g. write the parquet mirror). | `FetchLog` | 2026-09-27 |
 | `BaseFetcher` | `quant_cn.core.base_fetcher` | 1 | Download one dataset as a sequence of keys | `list_keys`: All fetch keys for [start, end], ascending.; `build_params`: API parameters for one key. | `SingleCallFetcher`, `EnumFetcher`, `DateSweepFetcher`, `PeriodSweepFetcher`, `DateWindowFetcher` | 2026-09-27 |
 | `BaseRunLog` | `quant_cn.core.base_run_log` | 1 | Abstract append-only log of runs and per-key events | `open_run`: Open a run and return its id.; `record_event`: Append one event (fetched / skipped / empty / failed / blocked).; `close_run`: Close a run with its final status. | `RunLog` | 2026-09-27 |
-| `BaseStep` | `quant_cn.core.base_step` | 1 | Abstract unit of pipeline work: list its units, then run and report. | `name`: Step name shown in progress and reports.; `list_units`: Compute the work units (e.g. keys) just before running.; `run`: Do the work listed by `list_units`. | `CompactStep`, `DeriveStep`, `FetchStep` | 2026-09-27 |
+| `BaseStep` | `quant_cn.core.base_step` | 1 | Abstract unit of pipeline work: list its units, then run and report. | `name`: Step name shown in progress and reports.; `list_units`: Compute the work units (e.g. keys) just before running.; `run`: Do the work listed by `list_units`. | `CompactStep`, `DeriveStep`, `FetchStep`, `UniverseStep` | 2026-09-27 |
 | `BaseStore` | `quant_cn.core.base_store` | 1 | Abstract sink for raw fetch results and curated partitions. | `write_raw`: Persist one fetch key's rows atomically.; `write_curated`: Replace one curated partition atomically after validating its schema. | `ParquetWriter` | 2026-09-27 |
 | `BaseChecker` | `quant_cn.core.docs.base_checker` | 1 | Abstract repository check: inspect the tree, return findings (empty = pass). | `run`: Run the check over the repository. | `ContractChecker`, `IndexChecker`, `NameChecker`, `SizeChecker` | 2026-09-27 |
 | `BaseRunner` | `quant_cn.pipeline.runner` | 4 | Extension point for how steps are executed (local now, Prefect later, D-022) | `run`: Execute steps in order under one run id. | `PrefectRunner`, `LocalRunner` | 2026-09-27 |

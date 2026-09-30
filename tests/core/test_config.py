@@ -96,3 +96,9 @@ def test_tc_c_010_ticker_aliases(config: Config, tmp_path: Path) -> None:
     pairs = {(a.old_code, a.new_code) for a in committed.ticker_aliases}
     assert ("000043.SZ", "001914.SZ") in pairs and len(pairs) == 3
     assert config.ticker_aliases == []
+
+
+# TC-C-011
+def test_tc_c_011_universe(config: Config) -> None:
+    assert config.universe.min_sessions == 120 and config.universe.exchanges == ["SH", "SZ"]
+    assert Config.model_fields["universe"].default_factory is not None

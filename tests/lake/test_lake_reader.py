@@ -120,18 +120,6 @@ def test_tc_lrd_004_reference(lake: MiniLake, config: Config) -> None:
         reader.read_reference("no_such_dataset")
 
 
-# TC-LRD-005
-def test_tc_lrd_005_register_and_list(lake: MiniLake, config: Config) -> None:
-    reader = build_reader(lake, config)
-    name = reader.register_frame("picks", pd.DataFrame({"ts_code": [OTHER]}))
-    joined = lake.query.sql(f"SELECT count(*) AS n FROM {name} JOIN curated.daily USING (ts_code)")
-    assert joined["n"].iloc[0] == 2
-    views = reader.list_views()
-    assert "picks" in views and "curated.daily" in views and "derived.ticker_alias" in views
-    with pytest.raises(ValueError):
-        reader.register_frame("bad name;", pd.DataFrame())
-
-
 # TC-LRD-006
 def test_tc_lrd_006_cache(lake: MiniLake, config: Config) -> None:
     cache = PanelCache()
@@ -139,3 +127,20 @@ def test_tc_lrd_006_cache(lake: MiniLake, config: Config) -> None:
     reader.read_prices(DAYS[0], DAYS[3])
     reader.read_prices(DAYS[0], DAYS[3])
     assert (cache.misses, cache.hits) == (1, 1)
+
+
+# TC-LRD-007
+def test_tc_lrd_007_read_universe(lake: MiniLake, config: Config) -> None:
+    rows = pd.DataFrame(
+        {
+            "trade_date": [DAYS[0], DAYS[0], DAYS[1]],
+            "ts_code": [NEW, OTHER, NEW],
+            "in_universe": [1.0, 0.0, 1.0],
+            "reason": ["", "suspended", ""],
+        }
+    )
+    lake.writer.write_derived("universe", 2026, rows)
+    reader = build_reader(lake, config)
+    assert len(reader.read_universe(DAYS[0], DAYS[0])) == 2
+    members = reader.read_universe(DAYS[0], DAYS[3], members_only=True)
+    assert members["ts_code"].tolist() == [NEW, NEW]

@@ -119,6 +119,36 @@ class DownloadConfig(BaseModel):
     end: str | None = None
 
 
+class UniverseConfig(BaseModel):
+    """
+    Purpose:
+        Rules of the tradeable universe per session (FACTOR_TESTING_DESIGN §11, D-054).
+
+    Contract:
+        Input:
+            start:        str        -- YYYYMMDD, first session built
+            min_sessions: int >= 1   -- sessions since listing before a stock enters
+            exchanges:    list[str]  -- ts_code suffixes admitted (BJ excluded by default)
+        Output:
+            frozen pydantic model
+        Raises:
+            pydantic.ValidationError
+
+    Used by:
+        core.Config            -- field `universe`
+        pipeline.UniverseStep  -- membership rules
+
+    Test cases:
+        TC-C-011  base.yaml universe section loads; missing section gives the defaults
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    start: str = "20100101"
+    min_sessions: int = Field(default=120, ge=1)
+    exchanges: list[str] = Field(default_factory=lambda: ["SH", "SZ"])
+
+
 class FuturesCategory(BaseModel):
     """
     Purpose:
@@ -196,6 +226,7 @@ class Config(BaseModel):
             datasets:    dict[str, DatasetSpec]
             futures_categories: list[FuturesCategory]  -- config/futures_categories.yaml (D-079)
             ticker_aliases: list[TickerAlias]  -- config/ticker_aliases.yaml (D-089)
+            universe:    UniverseConfig          -- base.yaml `universe` (plan 04 phase 3)
         Output:
             frozen pydantic model
         Raises:
@@ -219,6 +250,7 @@ class Config(BaseModel):
         TC-C-008  malformed YAML or a dataset whose key differs from its name raises ConfigError
         TC-C-009  config/futures_categories.yaml loads; a missing file gives an empty list
         TC-C-010  config/ticker_aliases.yaml loads the three known pairs; missing file = []
+        TC-C-011  base.yaml universe section loads; missing section gives the defaults
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -231,6 +263,7 @@ class Config(BaseModel):
     datasets: dict[str, DatasetSpec]
     futures_categories: list[FuturesCategory] = Field(default_factory=list)
     ticker_aliases: list[TickerAlias] = Field(default_factory=list)
+    universe: UniverseConfig = Field(default_factory=UniverseConfig)
 
     @classmethod
     def load(
@@ -277,6 +310,7 @@ class Config(BaseModel):
                 datasets={name: DatasetSpec(name=name, **spec) for name, spec in datasets.items()},
                 futures_categories=[FuturesCategory(**c) for c in categories.get("categories", [])],
                 ticker_aliases=[TickerAlias(**a) for a in aliases.get("aliases", [])],
+                universe=UniverseConfig(**merged.get("universe", {})),
             )
         except (ValidationError, TypeError) as exc:
             raise ConfigError(f"invalid configuration: {exc}") from exc

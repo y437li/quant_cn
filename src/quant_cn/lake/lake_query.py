@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Sequence
 
 import duckdb
@@ -10,6 +11,9 @@ import pandas as pd
 from quant_cn.core.exceptions import LakeError
 from quant_cn.core.frames import PRICE_PANEL
 from quant_cn.lake.lake_catalog import LakeCatalog
+
+_IDENTIFIER = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+_SCHEMAS = ("raw", "curated", "derived", "quality", "meta", "project")
 
 
 class LakeQuery:
@@ -21,7 +25,7 @@ class LakeQuery:
         Input:
             catalog: LakeCatalog
         Output:
-            instance; `sql`, `has_view`, `read_prices`
+            instance; `sql`, `has_view`, `read_prices`, `register_frame`, `list_views`
         Raises:
             (none at construction)
 
@@ -39,12 +43,14 @@ class LakeQuery:
         lake.ReleaseLagChecker       -- injected type or call
         lake.LakeReader              -- injected type or call
         lake.TickerAliasMap          -- injected type or call
+        pipeline.UniverseStep        -- injected type or call
 
     Test cases:
         TC-LQ-001  sql returns a DataFrame with parameters bound
         TC-LQ-002  bad SQL raises LakeError
         TC-LQ-003  has_view reflects which views exist
         TC-LQ-004  read_prices returns PRICE_PANEL rows in range, filtered and sorted
+        TC-LQ-005  register_frame makes a frame joinable; list_views includes it and curated views
     """
 
     def __init__(self, catalog: LakeCatalog) -> None:
@@ -112,3 +118,46 @@ class LakeQuery:
             [start, end, codes, codes],
         )
         return PRICE_PANEL.validate(PRICE_PANEL.normalize(raw, strict=True))
+
+    def register_frame(self, name: str, frame: pd.DataFrame) -> str:
+        """
+        Purpose:
+            Expose an in-memory frame as a view so SQL can join it with lake views.
+
+        Contract:
+            Input:
+                name: str  -- identifier ([A-Za-z_][A-Za-z0-9_]*)
+                frame: DataFrame
+            Output:
+                str  -- the view name to use in SQL
+            Raises:
+                ValueError  -- name is not a plain identifier
+                LakeError   -- registration failed
+        """
+        if not _IDENTIFIER.match(name):
+            raise ValueError(f"not a plain identifier: {name!r}")
+        try:
+            self._catalog.connection.register(name, frame)
+        except duckdb.Error as exc:
+            raise LakeError(f"cannot register {name}: {exc}") from exc
+        return name
+
+    def list_views(self) -> list[str]:
+        """
+        Purpose:
+            Every lake view as "schema.view", plus registered frames by bare name.
+
+        Contract:
+            Input:
+                (none)
+            Output:
+                list[str]  -- sorted
+            Raises:
+                LakeError  -- catalog unreadable
+        """
+        views = self.sql("SELECT schema_name, view_name FROM duckdb_views() WHERE NOT internal")
+        out = [
+            f"{s}.{v}" if s in _SCHEMAS else v
+            for s, v in zip(views["schema_name"], views["view_name"], strict=True)
+        ]
+        return sorted(out)

@@ -185,3 +185,15 @@ def test_tc_dv_008_margin_targets(lake: MiniLake, config: Config) -> None:
     ]
     agree = lake.query.sql("SELECT * FROM quality.margin_targets_agreement").to_dict("records")[0]
     assert (agree["both_lists"], agree["proxy_only"], agree["margin_secs_only"]) == (1, 1, 1)
+
+
+# TC-DV-009
+def test_tc_dv_009_universe_view(lake: MiniLake, config: Config) -> None:
+    DerivedViews(lake.catalog, lake.query, config.datasets).refresh()
+    assert not lake.query.has_view("derived.universe")
+    frame = pd.DataFrame(
+        {"trade_date": ["20260105"], "ts_code": ["600000.SH"], "in_universe": [1.0], "reason": [""]}
+    )
+    lake.writer.write_derived("universe", 2026, frame)
+    assert "derived.universe" in DerivedViews(lake.catalog, lake.query, config.datasets).refresh()
+    assert lake.query.sql("SELECT count(*) AS n FROM derived.universe")["n"].iloc[0] == 1

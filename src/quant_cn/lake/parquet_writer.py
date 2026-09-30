@@ -33,8 +33,9 @@ class ParquetWriter(BaseStore):
             (none at construction)
 
     Used by:
-        cli.QuantCnCli      -- composition root
-        cli.ServiceBuilder  -- injected type or call
+        cli.QuantCnCli         -- composition root
+        cli.ServiceBuilder     -- injected type or call
+        pipeline.UniverseStep  -- injected type or call
 
     Test cases:
         TC-PW-001  raw file lands at raw/<dataset>/<param>=<key>.parquet with coerced dtypes
@@ -43,6 +44,7 @@ class ParquetWriter(BaseStore):
         TC-PW-004  curated partition under year=YYYY, readable by DuckDB with hive partitioning
         TC-PW-005  curated write refuses a frame violating the schema
         TC-PW-006  rewriting a raw file keeps the first previous version as <file>.prev
+        TC-PW-007  write_derived lands at derived/<name>/year=<year>/part-0.parquet
     """
 
     def __init__(self, lake_root: Path) -> None:
@@ -125,6 +127,25 @@ class ParquetWriter(BaseStore):
         """
         spec.build_schema().validate(df)
         path = self.get_curated_path(spec, year)
+        self._write_atomic(df, path)
+        return path
+
+    def write_derived(self, name: str, year: int, df: pd.DataFrame) -> Path:
+        """
+        Purpose:
+            Persist one year of a materialised derived table (e.g. the universe).
+
+        Contract:
+            Input:
+                name: str  -- folder under derived/, e.g. "universe"
+                year: int  -- partition
+                df:   DataFrame  -- already validated by its frame schema
+            Output:
+                Path  -- derived/<name>/year=<year>/part-0.parquet (atomic replace)
+            Raises:
+                LakeError  -- write failed
+        """
+        path = self.lake_root / "derived" / name / f"year={year}" / "part-0.parquet"
         self._write_atomic(df, path)
         return path
 

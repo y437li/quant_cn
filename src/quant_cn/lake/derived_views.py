@@ -23,6 +23,7 @@ HOLDING_VIEW = f"{SCHEMA}.fut_holding_brokers"
 ONE_SIDED_VIEW = f"{SCHEMA}.fut_daily_one_sided"
 INDUSTRY_VIEW = f"{SCHEMA}.industry_l1"
 MARGIN_VIEW = f"{SCHEMA}.margin_targets"
+UNIVERSE_VIEW = f"{SCHEMA}.universe"
 # statements only: event datasets are period-swept too (forecast_vip, disclosure_date; D-081)
 FUNDAMENTALS_PREFIX = "fundamentals/"
 _PRICE_SQL = f"""
@@ -116,7 +117,8 @@ class DerivedViews:
         `derived.industry_l1` (Shenwan L1 validity intervals per stock, PIT rows plus back-filled
         rows flagged industry_backfilled; l1_pit = rows not back-filled, l1_grouping = any; D-071);
         `derived.margin_targets` (SZSE official list + SSE proxy from margin_detail, source
-        column; D-084); `derived.ticker_alias` through TickerAliasMap (D-089); then the `quality`
+        column; D-084); `derived.universe` over derived/universe (UniverseStep output);
+        `derived.ticker_alias` through TickerAliasMap (D-089); then the `quality`
         schema through QualityViews.
 
     Contract:
@@ -145,6 +147,7 @@ class DerivedViews:
         TC-DV-006  fut_daily_one_sided halves two-sided commodity rows before 2020 only
         TC-DV-007  industry_l1 gives PIT intervals plus back-filled rows before and between them
         TC-DV-008  margin_targets unions SZSE flags and the SSE proxy (agreement: QualityViews)
+        TC-DV-009  derived.universe reads the materialised universe files; absent without them
     """
 
     def __init__(
@@ -202,10 +205,24 @@ class DerivedViews:
                 created.append(view)
             else:
                 self._execute(con, f"DROP VIEW IF EXISTS {view}")
+        created += self._refresh_universe(con)
         alias_view = TickerAliasMap(self._catalog, self._query, self._aliases).refresh()
         created += [alias_view] if alias_view else []
         logger.info("derived views: %s", created)
         return created + QualityViews(self._catalog, self._query).refresh()
+
+    def _refresh_universe(self, con: duckdb.DuckDBPyConnection) -> list[str]:
+        folder = self._catalog.lake_root / "derived" / "universe"
+        if not any(folder.glob("year=*/part-0.parquet")):
+            self._execute(con, f"DROP VIEW IF EXISTS {UNIVERSE_VIEW}")
+            return []
+        files = str(folder / "year=*" / "part-0.parquet").replace("'", "''")
+        self._execute(
+            con,
+            f"CREATE OR REPLACE VIEW {UNIVERSE_VIEW} AS SELECT trade_date, ts_code, in_universe, "
+            f"reason FROM read_parquet('{files}', hive_partitioning = false)",
+        )
+        return [UNIVERSE_VIEW]
 
     def _build_category_filter(self) -> str:
         if not self._categories:

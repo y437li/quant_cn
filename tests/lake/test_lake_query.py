@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import pandas as pd
 import pytest
 
 from quant_cn.core.config import Config
 from quant_cn.core.exceptions import LakeError
 from quant_cn.lake.compactor import Compactor
 from quant_cn.lake.derived_views import DerivedViews
+from tests.lake.test_lake_reader import OTHER, build_reader
 from tests.support import MiniLake, Sample
 
 
@@ -50,3 +52,15 @@ def test_tc_lq_004_read_prices(lake: MiniLake, config: Config) -> None:
     out = lake.query.read_prices("20260828", "20260828", tickers=["600000.SH"])
     assert out[["trade_date", "ts_code"]].values.tolist() == [["20260828", "600000.SH"]]
     assert len(lake.query.read_prices("20260801", "20260831")) == 4
+
+
+# TC-LQ-005
+def test_tc_lq_005_register_and_list(lake: MiniLake, config: Config) -> None:
+    build_reader(lake, config)
+    name = lake.query.register_frame("picks", pd.DataFrame({"ts_code": [OTHER]}))
+    joined = lake.query.sql(f"SELECT count(*) AS n FROM {name} JOIN curated.daily USING (ts_code)")
+    assert joined["n"].iloc[0] == 2
+    views = lake.query.list_views()
+    assert "picks" in views and "curated.daily" in views and "derived.ticker_alias" in views
+    with pytest.raises(ValueError):
+        lake.query.register_frame("bad name;", pd.DataFrame())

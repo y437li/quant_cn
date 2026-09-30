@@ -2,15 +2,13 @@
 
 from __future__ import annotations
 
-import re
 from collections.abc import Callable, Hashable, Mapping, Sequence
 
-import duckdb
 import pandas as pd
 
 from quant_cn.core.dataset_spec import DatasetSpec
 from quant_cn.core.exceptions import LakeError
-from quant_cn.core.frames import FUNDAMENTALS_PIT, PRICE_PANEL
+from quant_cn.core.frames import FUNDAMENTALS_PIT, PRICE_PANEL, UNIVERSE_PANEL
 from quant_cn.core.schema import Schema
 from quant_cn.lake.lake_catalog import LakeCatalog
 from quant_cn.lake.lake_query import LakeQuery
@@ -20,8 +18,6 @@ from quant_cn.lake.ticker_alias_map import TickerAliasMap
 from quant_cn.lake.trading_calendar import TradingCalendar
 
 REFERENCE_PREFIX = "reference/"
-_IDENTIFIER = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
-_SCHEMAS = ("raw", "curated", "derived", "quality", "meta", "project")
 
 
 class LakeReader:
@@ -29,7 +25,7 @@ class LakeReader:
     Purpose:
         The read API factors, the universe step and notebooks use (SRC_DESIGN §2.2b, D-089): one
         curated dataset as a panel, dense or sparse prices, point-in-time fundamentals, reference
-        tables, in-memory frames joinable in SQL, and view discovery. Retired codes are mapped to
+        tables (in-memory frames and view discovery: LakeQuery). Retired codes are mapped to
         their surviving codes on every per-stock read (TickerAliasMap, new code wins); every
         output is validated with its schema; an optional PanelCache serves repeated reads.
         LakeQuery stays the raw SQL layer underneath.
@@ -44,8 +40,8 @@ class LakeReader:
             calendar:  TradingCalendar             -- sessions for dense prices
             cache:     PanelCache | None           -- on in notebooks, off in pipelines
         Output:
-            instance; `read_panel`, `read_prices`, `read_fundamentals_pit`, `read_reference`,
-            `register_frame`, `list_views`
+            instance; `read_panel`, `read_prices`, `read_fundamentals_pit`, `read_universe`,
+            `read_reference` (register_frame / list_views are on LakeQuery)
         Raises:
             (none at construction)
 
@@ -58,8 +54,8 @@ class LakeReader:
         TC-LRD-002  read_prices dense adds NaN rows for missing sessions inside each stock's span
         TC-LRD-003  read_fundamentals_pit attaches statements filed under the old code to the new
         TC-LRD-004  read_reference returns reference tables only; unknown or dated names raise
-        TC-LRD-005  register_frame makes a frame joinable; list_views includes it and curated views
         TC-LRD-006  a second identical read is a cache hit
+        TC-LRD-007  read_universe filters dates and, with members_only, excluded rows
     """
 
     def __init__(
@@ -168,6 +164,33 @@ class LakeReader:
         )
         return self._read_cached(key, lambda: self._load_fundamentals(fields, start, end, tickers))
 
+    def read_universe(self, start: str, end: str, members_only: bool = False) -> pd.DataFrame:
+        """
+        Purpose:
+            The tradeable universe per session (UniverseStep output).
+
+        Contract:
+            Input:
+                start, end:   str   -- YYYYMMDD, inclusive
+                members_only: bool  -- True: only rows with in_universe = 1
+            Output:
+                DataFrame  -- UNIVERSE_PANEL sorted by (trade_date, ts_code)
+            Raises:
+                LakeError  -- derived.universe missing (run curate) or query failure
+        """
+        key: Hashable = ("read_universe", start, end, members_only)
+        member = "AND in_universe = 1" if members_only else ""
+        sql = (
+            "SELECT trade_date, ts_code, in_universe, reason FROM derived.universe "
+            f"WHERE trade_date BETWEEN ? AND ? {member} ORDER BY trade_date, ts_code"
+        )
+        return self._read_cached(
+            key,
+            lambda: UNIVERSE_PANEL.validate(
+                UNIVERSE_PANEL.normalize(self._query.sql(sql, [start, end]), strict=True)
+            ),
+        )
+
     def read_reference(self, name: str) -> pd.DataFrame:
         """
         Purpose:
@@ -192,51 +215,6 @@ class LakeReader:
                 spec, self._query.sql(f"SELECT * FROM curated.{name} ORDER BY {order}"), spec.fields
             ),
         )
-
-    def register_frame(self, name: str, frame: pd.DataFrame) -> str:
-        """
-        Purpose:
-            Expose an in-memory frame as a view so SQL can join it with lake views.
-
-        Contract:
-            Input:
-                name: str  -- identifier ([A-Za-z_][A-Za-z0-9_]*)
-                frame: DataFrame
-            Output:
-                str  -- the view name to use in SQL
-            Raises:
-                ValueError  -- name is not a plain identifier
-                LakeError   -- registration failed
-        """
-        if not _IDENTIFIER.match(name):
-            raise ValueError(f"not a plain identifier: {name!r}")
-        try:
-            self._catalog.connection.register(name, frame)
-        except duckdb.Error as exc:
-            raise LakeError(f"cannot register {name}: {exc}") from exc
-        return name
-
-    def list_views(self) -> list[str]:
-        """
-        Purpose:
-            Every lake view as "schema.view", plus registered frames by bare name.
-
-        Contract:
-            Input:
-                (none)
-            Output:
-                list[str]  -- sorted
-            Raises:
-                LakeError  -- catalog unreadable
-        """
-        views = self._query.sql(
-            "SELECT schema_name, view_name FROM duckdb_views() WHERE NOT internal"
-        )
-        out = [
-            f"{s}.{v}" if s in _SCHEMAS else v
-            for s, v in zip(views["schema_name"], views["view_name"], strict=True)
-        ]
-        return sorted(out)
 
     def _load_panel(
         self,
