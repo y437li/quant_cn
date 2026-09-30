@@ -112,3 +112,11 @@ def test_tc_tc_008_capped_page(settings: TushareConfig, clock: FakeClock) -> Non
     df = c.query("fund_share", {"trade_date": "20260924"}, ["ts_code", "close"])
     assert len(df) == 2002
     assert [p["params"]["offset"] for p in t.payloads] == [0, 2000]
+
+
+# TC-TC-009
+def test_tc_tc_009_repeated_page(settings: TushareConfig, clock: FakeClock) -> None:
+    same = build_ok([["A", 1], ["B", 2]])  # page_size 2: full pages keep paging
+    c, _ = build_client(settings, [same, build_ok([["A", 1], ["B", 2]])], clock)
+    with pytest.raises(DataSourceError, match="offset ignored"):
+        c.query("share_float", {"ann_date": "20260917"}, ["ts_code", "close"])

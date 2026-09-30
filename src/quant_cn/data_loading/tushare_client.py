@@ -14,7 +14,7 @@ from quant_cn.core.config import TushareConfig
 from quant_cn.core.exceptions import ConfigError, DataSourceError, PermissionDeniedError
 from quant_cn.data_loading.http_transport import HttpTransport
 
-CAP_STEP = 1000  # Tushare per-call caps are multiples of 1000 (2000, 4000, 6000 ...)
+CAP_STEP = 100  # per-call caps seen: 400 (stk_surv), 2000, 4000, 5500 (stk_holdernumber), 6000
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +48,7 @@ class TushareClient(BaseApiClient):
         TC-TC-006  empty result returns zero rows with the requested columns
         TC-TC-007  query with an empty token raises ConfigError
         TC-TC-008  a short page of a round size (endpoint cap < limit) keeps paging by rows received
+        TC-TC-009  a page identical to the previous one raises DataSourceError (offset ignored)
     """
 
     def __init__(
@@ -80,13 +81,20 @@ class TushareClient(BaseApiClient):
         rows: list[list[Any]] = []
         columns: list[str] = list(fields)
         offset = 0
+        previous: list[Any] = []
         while True:
             data = self._fetch_page(api_name, {**params, "limit": page, "offset": offset}, fields)
             columns = list(data.get("fields") or columns)
             items = data.get("items") or []
+            if items and items == previous:
+                # share_float ignores offset and repeats the page forever (D-081): never loop
+                raise DataSourceError(
+                    f"{api_name}: offset ignored (page {offset} repeats); narrow the query"
+                )
             rows.extend(items)
             if not self._has_more(len(items), page):
                 break
+            previous = items
             offset += len(items)
         return pd.DataFrame(rows, columns=columns)
 

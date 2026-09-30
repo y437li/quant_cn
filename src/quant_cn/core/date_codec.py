@@ -41,6 +41,7 @@ class DateCodec:
         TC-DC-003  quarter_ends inclusive of boundaries, sorted
         TC-DC-004  weekdays skips Saturday and Sunday
         TC-DC-005  start > end raises ValueError
+        TC-DC-006  list_days returns every calendar day, weekends included
     """
 
     def validate(self, value: str) -> str:
@@ -132,6 +133,23 @@ class DateCodec:
         days = (hi - lo).days + 1
         dates = (lo + dt.timedelta(days=i) for i in range(days))
         return [self.to_str(d) for d in dates if d.weekday() < _SATURDAY]
+
+    def list_days(self, start: str, end: str) -> list[str]:
+        """
+        Purpose:
+            Every calendar day within [start, end], for event sweeps that publish on weekends too.
+
+        Contract:
+            Input:
+                start: str  -- YYYYMMDD, inclusive
+                end:   str  -- YYYYMMDD, inclusive, >= start
+            Output:
+                list[str]  -- YYYYMMDD, ascending
+            Raises:
+                ValueError  -- malformed dates or start > end
+        """
+        lo, hi = self._parse_range(start, end)
+        return [self.to_str(lo + dt.timedelta(days=i)) for i in range((hi - lo).days + 1)]
 
     def _parse_range(self, start: str, end: str) -> tuple[dt.date, dt.date]:
         lo, hi = self.to_date(start), self.to_date(end)

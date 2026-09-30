@@ -23,8 +23,9 @@ class Compactor:
     """
     Purpose:
         Rebuild a dataset's curated partitions from its raw files: select declared fields, cast
-        dtypes, drop duplicate primary keys (keeping one), sort by partition date then key,
-        validate, write, and record a manifest in `meta/manifest/<dataset>.json`.
+        dtypes, fill `key_defaults` into NULL key columns, drop duplicate primary keys (keeping
+        one), sort by partition date then key, validate, write, and record a manifest in
+        `meta/manifest/<dataset>.json`.
 
     Contract:
         Input:
@@ -49,6 +50,7 @@ class Compactor:
         TC-CO-003  unpartitioned dataset compacts into a single curated file
         TC-CO-004  dataset without raw files returns a report with zero rows and writes nothing
         TC-CO-005  curated view is queryable after compaction
+        TC-CO-006  key_defaults fills NULL text key columns before validation
     """
 
     def __init__(
@@ -110,7 +112,10 @@ class Compactor:
     def _normalize_frame(
         self, spec: DatasetSpec, raw: pd.DataFrame, report: StepReport
     ) -> pd.DataFrame:
-        df = spec.build_schema().normalize(raw, strict=True).drop_duplicates()
+        df = spec.build_schema().normalize(raw, strict=True)
+        for column, value in spec.key_defaults.items():
+            df[column] = df[column].fillna(value)
+        df = df.drop_duplicates()
         before = len(df)
         if spec.primary_key:
             df = df.drop_duplicates(subset=spec.primary_key, keep="last")

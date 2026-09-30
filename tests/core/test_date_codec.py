@@ -49,3 +49,13 @@ def test_tc_dc_005_start_after_end(codec: DateCodec) -> None:
         codec.list_quarter_ends("20260101", "20250101")
     with pytest.raises(ValueError):
         codec.list_weekdays("20260101", "20250101")
+
+
+# TC-DC-006
+def test_tc_dc_006_list_days() -> None:
+    assert DateCodec().list_days("20260918", "20260921") == [
+        "20260918",
+        "20260919",
+        "20260920",
+        "20260921",
+    ]

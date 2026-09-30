@@ -161,3 +161,24 @@ def test_tc_dsf_004_recent_empty_not_done(
     assert lake.fetch_log.read_done_keys("daily") == {"20260824", "20260825"}
     events = lake.query.sql("SELECT key, status FROM meta.run_log WHERE dataset = 'daily'")
     assert sorted(events[events.status == "empty_recent"].key) == days[2:]
+
+
+# TC-DSF-005
+def test_tc_dsf_005_all_days_and_param_name(lake: MiniLake, deps: tuple[object, ...]) -> None:
+    spec = Sample.build_spec(sweep={"kind": "ann_date", "days": "all", "param_name": "report_date"})
+    f = DateSweepFetcher(spec, *deps, calendar=TradingCalendar(lake.query), codec=DateCodec())  # type: ignore[arg-type]
+    assert f.list_keys("20260918", "20260920") == ["20260918", "20260919", "20260920"]
+    assert f.build_params("20260919", "", "") == {"report_date": "20260919"}
+    period = Sample.build_spec(sweep={"kind": "period", "param_name": "end_date"})
+    p = PeriodSweepFetcher(period, *deps, codec=DateCodec())  # type: ignore[arg-type]
+    assert p.build_params("20260630", "", "") == {"end_date": "20260630"}
+
+
+# TC-DWF-004
+def test_tc_dwf_004_window_as_param(deps: tuple[object, ...]) -> None:
+    spec = Sample.build_spec(
+        sweep={"kind": "date_window", "window": "month", "param_name": "month"}
+    )
+    f = DateWindowFetcher(spec, *deps, codec=DateCodec())  # type: ignore[arg-type]
+    assert f.list_keys("20260815", "20261005") == ["202608", "202609", "202610"]
+    assert f.build_params("202609", "20260815", "20261005") == {"month": "202609"}

@@ -23,7 +23,8 @@ SweepKind = Literal[
 DATE_KINDS = ("trade_date", "ann_date", "nav_date")
 ENUM_KINDS = ("list_status", "ts_code", "exchange", "is_new")
 Source = Literal["tushare", "fred", "akshare"]
-KnownOnRule = Literal["as_is", "next_session", "period_end_lag"]
+KnownOnRule = Literal["as_is", "next_session", "period_end_lag", "period_start_lag"]
+Days = Literal["sessions", "weekdays", "all"]
 Window = Literal["month", "year"]
 
 
@@ -71,6 +72,12 @@ class SweepSpec(BaseModel):
             refetch_recent: int >= 0         -- always refetch the newest N keys (late filers)
             values_from_dataset: ValuesFromDataset | None -- keys from another curated dataset
             window:         "month" | "year" | None  -- calendar window for kind date_window
+            param_name:     str | None       -- API parameter carrying the key when it differs
+                                                from the kind (disclosure_date: end_date); for
+                                                date_window the window key itself is sent (D-081)
+            days:           "sessions" | "weekdays" | "all" | None  -- date sweeps: which days;
+                                                None = sessions for trade_date/nav_date, else
+                                                weekdays (event data also publishes on weekends)
             value_param:    str | None       -- date_window only: API parameter swept per window
                                                 with the values (keys "<window>_<value>", D-069)
         Output:
@@ -96,6 +103,8 @@ class SweepSpec(BaseModel):
     values_from_dataset: ValuesFromDataset | None = None
     window: Window | None = None
     value_param: str | None = None
+    param_name: str | None = None
+    days: Days | None = None
 
     @model_validator(mode="after")
     def _check_window(self) -> SweepSpec:
@@ -106,6 +115,10 @@ class SweepSpec(BaseModel):
         has_values = bool(self.values or self.values_from or self.values_from_dataset)
         if self.kind == "date_window" and has_values != bool(self.value_param):
             raise ValueError("date_window: sweep.value_param and a values source go together")
+        if self.days and self.kind not in DATE_KINDS:
+            raise ValueError("sweep.days is only valid with a date kind")
+        if self.param_name and self.value_param:
+            raise ValueError("sweep.param_name and sweep.value_param are exclusive")
         return self
 
     @property
@@ -124,6 +137,8 @@ class SweepSpec(BaseModel):
         """
         if self.kind == "none":
             return None
+        if self.param_name:
+            return self.param_name
         return "window" if self.kind == "date_window" else self.kind
 
 
@@ -171,8 +186,13 @@ class DatasetSpec(BaseModel):
             text_fields: list[str]     -- subset stored as text; all other fields are numeric
             start:       str | None    -- dataset-specific download start (YYYYMMDD)
             source:      "tushare" | "fred" | "akshare"  -- which API client fetches it (D-063)
-            known_on_rule: "as_is" | "next_session" | "period_end_lag"  -- how known_on becomes
+            known_on_rule: "as_is" | "next_session" | "period_end_lag" | "period_start_lag"  --
+                                          how known_on becomes
                                           the first usable session (EffectiveDateResolver)
+            key_defaults: dict[str, str] -- value filled into a NULL text primary-key column before
+                                          validation (report_rc: rating-only reports, quarter "")
+            lag_sessions: int >= 1     -- next_session rule: usable from the N-th session after
+                                          known_on (stk_surv: 2, visits disclosed 1-2 days later)
             release_lag_days: int >= 0 -- days after period end a value is published
                                           (period_end_lag rule; monthly macro)
             extend_days: int >= 0      -- fetch this many calendar days past the run end
@@ -207,6 +227,9 @@ class DatasetSpec(BaseModel):
         TC-DS-003  primary key or known_on outside fields raises ValidationError
         TC-DS-004  build_schema() mirrors fields, text_fields and primary_key
         TC-DS-005  source / known_on_rule / release_lag_days / date_window validation
+        TC-DS-006  param_name renames the key parameter; days only with date kinds
+        TC-DS-007  lag_sessions other than 1 requires known_on_rule next_session
+        TC-DS-008  key_defaults only on text primary-key columns
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -223,6 +246,8 @@ class DatasetSpec(BaseModel):
     source: Source = "tushare"
     known_on_rule: KnownOnRule = "as_is"
     release_lag_days: int = Field(default=0, ge=0)
+    lag_sessions: int = Field(default=1, ge=1)
+    key_defaults: dict[str, str] = Field(default_factory=dict)
     extend_days: int = Field(default=0, ge=0)
     curated: CuratedSpec
 
@@ -239,8 +264,15 @@ class DatasetSpec(BaseModel):
             raise ValueError(f"{self.name}: columns not in fields: {sorted(missing)}")
         if self.known_on_rule != "as_is" and not self.known_on:
             raise ValueError(f"{self.name}: known_on_rule {self.known_on_rule} needs known_on")
-        if self.release_lag_days and self.known_on_rule != "period_end_lag":
-            raise ValueError(f"{self.name}: release_lag_days needs known_on_rule period_end_lag")
+        if self.release_lag_days and not self.known_on_rule.startswith("period_"):
+            raise ValueError(f"{self.name}: release_lag_days needs a period_*_lag known_on_rule")
+        bad_defaults = set(self.key_defaults) - (set(self.primary_key) & set(self.text_fields))
+        if bad_defaults:
+            raise ValueError(
+                f"{self.name}: key_defaults on non-text-key columns {sorted(bad_defaults)}"
+            )
+        if self.lag_sessions != 1 and self.known_on_rule != "next_session":
+            raise ValueError(f"{self.name}: lag_sessions needs known_on_rule next_session")
         return self
 
     def get_raw_filename(self, key: str) -> str:

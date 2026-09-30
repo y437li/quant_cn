@@ -51,3 +51,35 @@ def test_tc_ds_005_new_fields() -> None:
         Sample.build_spec(release_lag_days=10)
     with pytest.raises(ValidationError):
         Sample.build_spec(known_on=None, known_on_rule="next_session")
+
+
+# TC-DS-006
+def test_tc_ds_006_param_name_and_days() -> None:
+    spec = Sample.build_spec(sweep={"kind": "period", "param_name": "enddate"})
+    assert spec.sweep.param == "enddate"
+    assert spec.get_raw_filename("20260630") == "enddate=20260630.parquet"
+    with pytest.raises(ValidationError):
+        Sample.build_spec(sweep={"kind": "period", "days": "all"})
+    with pytest.raises(ValidationError):
+        Sample.build_spec(
+            sweep={
+                "kind": "date_window",
+                "window": "year",
+                "param_name": "m",
+                "value_param": "ts_code",
+                "values": ["A"],
+            }
+        )
+
+
+# TC-DS-007
+def test_tc_ds_007_lag_sessions() -> None:
+    assert Sample.build_spec(known_on_rule="next_session", lag_sessions=2).lag_sessions == 2
+    with pytest.raises(ValidationError):
+        Sample.build_spec(lag_sessions=2)  # as_is
+
+
+# TC-DS-008
+def test_tc_ds_008_key_defaults() -> None:
+    with pytest.raises(ValidationError):
+        Sample.build_spec(key_defaults={"close": "0"})  # numeric, not a key column

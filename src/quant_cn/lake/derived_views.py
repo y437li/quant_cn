@@ -20,6 +20,8 @@ FUNDAMENTALS_VIEW = f"{SCHEMA}.fundamentals_long"
 HOLDING_VIEW = f"{SCHEMA}.fut_holding_brokers"
 ONE_SIDED_VIEW = f"{SCHEMA}.fut_daily_one_sided"
 INDUSTRY_VIEW = f"{SCHEMA}.industry_l1"
+# statements only: event datasets are period-swept too (forecast_vip, disclosure_date; D-081)
+FUNDAMENTALS_PREFIX = "fundamentals/"
 _PRICE_SQL = f"""
 CREATE OR REPLACE VIEW {PRICES_VIEW} AS
 SELECT d.trade_date, d.ts_code, d.open, d.high, d.low, d.close, d.pre_close, d.vol, d.amount,
@@ -88,7 +90,8 @@ class DerivedViews:
         `derived.prices_adj` (daily bars joined to adj_factor, close_adj = close * adj_factor;
         PRICE_PANEL columns; retired alias codes absent from stock_basic dropped);
         `derived.fundamentals_long` (every period-swept dataset unpivoted to one row per numeric
-        field and announced version; statements filtered to report_type = '1');
+        field and announced version; statements under curated/fundamentals/ only, filtered to
+        report_type = '1');
         `derived.fut_holding_brokers` (contract rows of fut_holding without member-category
         totals, exchange "ZCE" -> "CZCE"; D-079);
         `derived.fut_daily_one_sided` (fut_daily with vol, amount, oi, oi_chg halved for
@@ -197,7 +200,9 @@ class DerivedViews:
         return [
             spec
             for spec in self._datasets.values()
-            if spec.sweep.kind == "period" and self._query.has_view(f"curated.{spec.name}")
+            if spec.sweep.kind == "period"
+            and spec.curated.path.startswith(FUNDAMENTALS_PREFIX)
+            and self._query.has_view(f"curated.{spec.name}")
         ]
 
     def _build_unpivot(self, spec: DatasetSpec) -> str:

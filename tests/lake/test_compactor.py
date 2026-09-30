@@ -70,3 +70,32 @@ def test_tc_co_005_curated_view(lake: MiniLake, config: Config, compactor: Compa
     compactor.rebuild(config.get_dataset("stk_limit"))
     df = lake.query.sql("SELECT year, count(*) n FROM curated.stk_limit GROUP BY year")
     assert df.values.tolist() == [[2026, 2]]
+
+
+# TC-CO-006
+def test_tc_co_006_key_defaults(lake: MiniLake, config: Config, compactor: Compactor) -> None:
+    spec = config.get_dataset("report_rc")
+    base = {f: None for f in spec.fields}
+    rows = [
+        base
+        | {
+            "ts_code": "600519.SH",
+            "report_date": "20260914",
+            "org_name": "A",
+            "report_title": "t",
+            "quarter": "2026Q4",
+            "eps": 1.0,
+        },
+        base
+        | {
+            "ts_code": "600519.SH",
+            "report_date": "20260914",
+            "org_name": "B",
+            "report_title": "rating only",
+            "quarter": None,
+        },
+    ]
+    lake.writer.write_raw(spec, "20260914", pd.DataFrame(rows))
+    assert compactor.rebuild(spec).rows == 2
+    out = lake.query.sql("SELECT org_name, quarter FROM curated.report_rc ORDER BY org_name")
+    assert out["quarter"].tolist() == ["2026Q4", ""]

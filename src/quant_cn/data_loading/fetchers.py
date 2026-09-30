@@ -170,6 +170,7 @@ class DateSweepFetcher(BaseFetcher):
         TC-DSF-002  ann_date keys are weekdays in range
         TC-DSF-003  nav_date keys are trading days, passed as nav_date + extra params
         TC-DSF-004  an empty key within the last 3 sessions is not marked done (D-078)
+        TC-DSF-005  days "all" sweeps calendar days; param_name renames the parameter (D-081)
     """
 
     def __init__(
@@ -201,8 +202,13 @@ class DateSweepFetcher(BaseFetcher):
                 LakeError   -- trade_cal missing (trade_date sweeps)
                 ValueError  -- malformed dates
         """
-        if self.spec.sweep.kind in ("trade_date", "nav_date"):
+        days = self.spec.sweep.days
+        if days is None:
+            days = "sessions" if self.spec.sweep.kind in ("trade_date", "nav_date") else "weekdays"
+        if days == "sessions":
             return self._calendar.list_sessions(start, end)
+        if days == "all":
+            return self._codec.list_days(start, end)
         return self._codec.list_weekdays(start, end)
 
     def _is_recent(self, key: str) -> bool:
@@ -247,7 +253,7 @@ class PeriodSweepFetcher(BaseFetcher):
         data_loading.FetcherFactory.build  -- sweep kind "period"
 
     Test cases:
-        TC-PSF-001  keys are quarter ends in range; params carry period
+        TC-PSF-001  keys are quarter ends in range; params carry period (or sweep.param_name)
     """
 
     def __init__(
@@ -291,7 +297,7 @@ class PeriodSweepFetcher(BaseFetcher):
             Raises:
                 (none)
         """
-        return {**self.spec.sweep.extra_params, "period": key}
+        return {**self.spec.sweep.extra_params, str(self.spec.sweep.param): key}
 
 
 class DateWindowFetcher(BaseFetcher):
@@ -322,6 +328,7 @@ class DateWindowFetcher(BaseFetcher):
         TC-DWF-001  monthly windows cover the range and clip the first and last month
         TC-DWF-002  yearly windows use YYYY keys and full-year bounds inside the range
         TC-DWF-003  with value_param: window-major "<window>_<value>" keys, value passed as param
+        TC-DWF-004  with param_name the window key is sent as that parameter, no date range
     """
 
     def __init__(
@@ -373,6 +380,8 @@ class DateWindowFetcher(BaseFetcher):
         """
         window, _, value = key.partition("_")
         extra = dict(self.spec.sweep.extra_params)
+        if self.spec.sweep.param_name:  # the window key itself is the parameter (D-081)
+            return {**extra, self.spec.sweep.param_name: window}
         if self.spec.sweep.value_param:
             extra[self.spec.sweep.value_param] = value
         first, last = self._get_bounds(window)

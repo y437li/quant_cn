@@ -49,3 +49,18 @@ def test_tc_edr_004_resolve(resolver: EffectiveDateResolver) -> None:
     )
     out = resolver.compute(frame, spec)
     assert out["effective_date"].iloc[0] == "20260928" and pd.isna(out["effective_date"].iloc[1])
+
+
+# TC-EDR-005
+def test_tc_edr_005_period_start_lag(resolver: EffectiveDateResolver) -> None:
+    spec = Sample.build_spec(known_on_rule="period_start_lag")
+    assert resolver.get_effective_date("202610", spec) == "20261008"  # 10-01..07 National Day
+    lagged = Sample.build_spec(known_on_rule="period_start_lag", release_lag_days=1)
+    assert resolver.get_effective_date("202609", lagged) == "20260924"  # 09-02 -> first open
+
+
+# TC-EDR-006
+def test_tc_edr_006_two_sessions(resolver: EffectiveDateResolver) -> None:
+    spec = Sample.build_spec(known_on_rule="next_session", lag_sessions=2)
+    assert resolver.get_effective_date("20260924", spec) == "20260929"  # 09-28, then 09-29
+    assert resolver.get_effective_date("20260929", spec) == "20261008"  # 09-30, then 10-08

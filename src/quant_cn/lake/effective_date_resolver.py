@@ -20,9 +20,12 @@ class EffectiveDateResolver:
         Turn a dataset's `known_on` value into `effective_date`, the first China trading session
         the row may be used (FACTOR_TESTING_DESIGN §11):
         as_is          -> that session, or the next one if the day is closed (same-day data);
-        next_session   -> the first session strictly after (FRED US observations, analyst reports);
+        next_session   -> the lag_sessions-th session strictly after (default 1: FRED, analyst
+                          reports; 2: survey visits, disclosed 1-2 days after the visit);
         period_end_lag -> period end (a YYYYMM month or YYYYMMDD date) + release_lag_days, then the
-                          first session on or after (monthly macro without an announce date).
+                          first session on or after (monthly macro without an announce date);
+        period_start_lag -> month (or date) start + release_lag_days, first session on or after
+                          (monthly lists published at the start of the month they apply to).
 
     Contract:
         Input:
@@ -41,6 +44,8 @@ class EffectiveDateResolver:
         TC-EDR-002  next_session: a US Friday observation becomes the following China session
         TC-EDR-003  period_end_lag: a monthly print is effective from month end + lag, on or after
         TC-EDR-004  compute adds effective_date per row; missing known_on stays empty
+        TC-EDR-005  period_start_lag: a YYYYMM list is effective from month start + lag
+        TC-EDR-006  next_session with lag_sessions 2 skips two sessions (stk_surv)
     """
 
     def __init__(self, calendar: TradingCalendar, codec: DateCodec) -> None:
@@ -63,7 +68,14 @@ class EffectiveDateResolver:
                 LakeError   -- trade_cal missing or not far enough ahead
         """
         if spec.known_on_rule == "next_session":
-            return self._calendar.get_next(self._codec.validate(known_on))
+            date = self._codec.validate(known_on)
+            for _ in range(spec.lag_sessions):
+                date = self._calendar.get_next(date)
+            return date
+        if spec.known_on_rule == "period_start_lag":
+            begin = self._codec.to_date(known_on + "01" if len(known_on) == MONTH_KEY else known_on)
+            released = self._codec.to_str(begin + dt.timedelta(days=spec.release_lag_days))
+            return self._get_on_or_after(released)
         if spec.known_on_rule == "period_end_lag":
             end = self._get_period_end(known_on)
             released = self._codec.to_str(end + dt.timedelta(days=spec.release_lag_days))

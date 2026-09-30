@@ -466,3 +466,125 @@ fx_daily:
            ask_low, tick_qty]
   text_fields: [ts_code, trade_date]
   curated: {path: fx_daily, partition_by: trade_date}
+
+# --- analysts and events (plan 11 phase 7, D-081) ---
+# Event endpoints publish on weekends too: date sweeps use days: all. Statement-style event data
+# (forecast, express) keeps every version like the statements (D-038).
+
+report_rc:
+  endpoint: report_rc
+  # a one-month range stops at 5,000 rows: one call per report_date; visible from the next session
+  sweep: {kind: ann_date, days: all, param_name: report_date}
+  primary_key: [ts_code, report_date, org_name, report_title, quarter]
+  # rating-only reports carry no forecast quarter (3,486 rows by 2026-09): keep them, quarter ""
+  key_defaults: {quarter: ""}
+  known_on: report_date
+  known_on_rule: next_session
+  fields: [ts_code, name, report_date, report_title, report_type, classify, org_name, author_name,
+           quarter, op_rt, op_pr, tp, np, eps, pe, rd, roe, ev_ebitda, rating, max_price, min_price]
+  text_fields: [ts_code, name, report_date, report_title, report_type, classify, org_name,
+                author_name, quarter, rating]
+  curated: {path: analysts/report_rc, partition_by: report_date}
+
+stk_surv:
+  endpoint: stk_surv
+  # surv_date is the visit; the endpoint has no disclosure date and visits are disclosed 1-2 days
+  # later (DATA_CATALOG §3): conservative rule, usable from the 2nd session after the visit
+  sweep: {kind: trade_date, days: all}
+  primary_key: [ts_code, surv_date, rece_org, fund_visitors]
+  key_defaults: {rece_org: ""}
+  known_on: surv_date
+  known_on_rule: next_session
+  lag_sessions: 2
+  fields: [ts_code, name, surv_date, fund_visitors, rece_place, rece_mode, rece_org, org_type,
+           comp_rece, content]
+  text_fields: [ts_code, name, surv_date, fund_visitors, rece_place, rece_mode, rece_org, org_type,
+                comp_rece, content]
+  curated: {path: analysts/stk_surv, partition_by: surv_date}
+
+broker_recommend:
+  endpoint: broker_recommend
+  # monthly picks; the endpoint has no publication date: known-on is a rule (month start), not observed
+  sweep: {kind: date_window, window: month, param_name: month, refetch_recent: 1}
+  primary_key: [month, broker, ts_code]
+  known_on: month
+  known_on_rule: period_start_lag
+  fields: [month, broker, ts_code, name]
+  text_fields: [month, broker, ts_code, name]
+  curated: {path: analysts/broker_recommend}
+
+hk_hold:
+  endpoint: hk_hold
+  # Stock Connect holdings of day T are published by HKEX the next morning
+  sweep: {kind: trade_date, days: all}
+  primary_key: [code, trade_date, exchange]
+  known_on: trade_date
+  known_on_rule: next_session
+  fields: [code, trade_date, ts_code, name, vol, ratio, exchange]
+  text_fields: [code, trade_date, ts_code, name, exchange]
+  curated: {path: hk_hold, partition_by: trade_date}
+
+forecast_vip:
+  endpoint: forecast_vip
+  sweep: {kind: period, refetch_recent: 2}
+  primary_key: [ts_code, end_date, ann_date, update_flag]
+  known_on: ann_date
+  fields: [ts_code, ann_date, end_date, type, p_change_min, p_change_max, net_profit_min,
+           net_profit_max, last_parent_net, first_ann_date, summary, change_reason, update_flag]
+  text_fields: [ts_code, ann_date, end_date, type, first_ann_date, summary, change_reason,
+                update_flag]
+  curated: {path: events/forecast, partition_by: end_date}
+
+express_vip:
+  endpoint: express_vip
+  sweep: {kind: period, refetch_recent: 2}
+  primary_key: [ts_code, end_date, ann_date, update_flag]
+  known_on: ann_date
+  fields: [ts_code, ann_date, end_date, revenue, operate_profit, total_profit, n_income, total_assets,
+           total_hldr_eqy_exc_min_int, diluted_eps, diluted_roe, yoy_net_profit, bps,
+           open_net_assets, open_bps, perf_summary, update_flag]
+  text_fields: [ts_code, ann_date, end_date, perf_summary, update_flag]
+  curated: {path: events/express, partition_by: end_date}
+
+stk_holdertrade:
+  endpoint: stk_holdertrade
+  sweep: {kind: ann_date, days: all}
+  # no unique key: the vendor repeats rows (65,459 rows in 20,023 key groups, 24,517 distinct) and
+  # the same holder can trade twice a day; compaction drops exact duplicate rows only (D-081)
+  primary_key: []
+  known_on: ann_date
+  fields: [ts_code, ann_date, holder_name, holder_type, in_de, change_vol, change_ratio, after_share,
+           after_ratio, avg_price, total_share]
+  text_fields: [ts_code, ann_date, holder_name, holder_type, in_de]
+  curated: {path: events/stk_holdertrade, partition_by: ann_date}
+
+share_float:
+  endpoint: share_float
+  # by announcement date: float_date windows hit the 6,000 cap and the endpoint ignores offset;
+  # from 2016 so lock-ups announced before 2019 are included
+  sweep: {kind: ann_date, days: all}
+  start: "20160101"
+  primary_key: [ts_code, ann_date, float_date, holder_name, share_type]
+  known_on: ann_date
+  fields: [ts_code, ann_date, float_date, float_share, float_ratio, holder_name, share_type]
+  text_fields: [ts_code, ann_date, float_date, holder_name, share_type]
+  curated: {path: events/share_float, partition_by: ann_date}
+
+disclosure_date:
+  endpoint: disclosure_date
+  # latest schedule per report period (pre_date is revised in place: not a PIT history)
+  sweep: {kind: period, param_name: end_date, refetch_recent: 2}
+  primary_key: [ts_code, end_date]
+  known_on: ann_date
+  fields: [ts_code, ann_date, end_date, pre_date, actual_date]
+  text_fields: [ts_code, ann_date, end_date, pre_date, actual_date]
+  curated: {path: events/disclosure_date, partition_by: end_date}
+
+stk_holdernumber:
+  endpoint: stk_holdernumber
+  sweep: {kind: period, param_name: enddate, refetch_recent: 2}
+  primary_key: [ts_code, end_date, ann_date]
+  known_on: ann_date
+  fields: [ts_code, ann_date, end_date, holder_num]
+  text_fields: [ts_code, ann_date, end_date]
+  curated: {path: events/stk_holdernumber, partition_by: end_date}
