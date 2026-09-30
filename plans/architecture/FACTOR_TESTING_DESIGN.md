@@ -1,4 +1,4 @@
-# Factor Significance Testing Design (v1.0, 2026-09-28; D-060 accepted with plan 04)
+# Factor Significance Testing Design (v1.1, 2026-09-30; D-060; HAC prewhitening D-090)
 
 What `statistic` must provide so that an IC, an ICIR or a Sharpe ratio is reported *with* its evidence, and so
 that testing 55 candidate factors does not manufacture false discoveries. Every number in `FactorEvaluator`'s
@@ -69,7 +69,7 @@ A factor enters `factor/library/` when, at the 20-session horizon on the full sa
 Otherwise it may stay as a documented *input to a composite* or be archived with its report.
 
 ## 7. Tests for the tests
-- Simulated IC_t with known mean and AR(1) autocorrelation: NW t coverage at 95% within ±2 pp; naive t over-rejects as expected.
+- Simulated IC_t with known mean and AR(1) autocorrelation (φ = 0.3, 0.6) and MA(19) overlapping sums: prewhitened NW t coverage at 95% within ±2 pp (AR) and ≥ 93% (MA); naive t over-rejects (83% / 65%) as expected.
 - Null family of 200 random factors: BHY keeps false discoveries ≤ 5%; Holm/Romano-Wolf FWER ≤ 5%; SPA p uniform.
 - DSR reproduces the worked example in Bailey & López de Prado (2014); CSCV reproduces the PBO on the paper's synthetic grid.
 - Pesaran-Timmermann on independent signs → p ≈ uniform.
@@ -95,9 +95,14 @@ P^{adj}_{i, close(t+h)} / P^{adj}_{i, open(t+1)} − 1`, so the factor known at 
 next open (SRC_DESIGN §4 time discipline). Option `close_to_close` (close t → close t+h) is reported for
 comparison only. ICIR `= μ̂ / sd(IC_t)`; annualised `× √(244/h)` when stated.
 
-**Newey-West HAC t.** `γ̂_l = (1/T) Σ_{t=l+1}^{T} (IC_t − μ̂)(IC_{t−l} − μ̂)`;
-`Ω̂ = γ̂_0 + 2 Σ_{l=1}^{L} (1 − l/(L+1)) γ̂_l` (Bartlett kernel); `se = √(Ω̂ / T)`; `t = μ̂ / se`;
-`L = max(h − 1, ⌊4 (T/100)^{2/9}⌋)`; two-sided `p` from Student-t with `T − 1` df. (Newey & West 1987, 1994.)
+**Newey-West HAC t, prewhitened (D-090).** Centre `x_t = IC_t − μ̂`. Prewhiten with an AR(1) fitted by OLS,
+`ρ̂ = Σ x_t x_{t−1} / Σ x_{t−1}²`, capped at 0.97; residuals `e_t = x_t − ρ̂ x_{t−1}`. Bartlett kernel on the
+residuals: `γ̂_l = (1/T) Σ_{t=l+1}^{T} e_t e_{t−l}`, `Ω̂_e = γ̂_0 + 2 Σ_{l=1}^{L} (1 − l/(L+1)) γ̂_l`,
+`L = max(h − 1, ⌊4 (T/100)^{2/9}⌋)`. Recolour: `Ω̂ = Ω̂_e / (1 − ρ̂)²`; `se = √(Ω̂ / T)`; `t = μ̂ / se`;
+two-sided `p` from Student-t with `T − 1` df. (Newey & West 1987, 1994; Andrews & Monahan 1992.)
+The unprewhitened estimator is available (`prewhiten=False`) for comparison only: on the §7 simulations it
+covers 93.8% / 89.8% / 88.4% (AR(1) φ = 0.3 / 0.6 / MA(19)) against 94.8% / 95.1% / 99.0% prewhitened, i.e. it
+would let ~12% of null factors pass |t| > 1.96 at h = 20.
 
 **Stationary block bootstrap** (Politis & Romano 1994). Block lengths `~ Geometric(1/b)`, `b = max(h, 20)`,
 wrap-around; `B = 2,000` resamples, seed fixed; statistic recomputed per resample; 95% CI = percentile
@@ -152,7 +157,7 @@ the studentised circular block bootstrap (their recommended version).
 **Bai-Perron single break in mean.** For `τ ∈ [0.15T, 0.85T]`: `F(τ)` = HAC-Wald statistic for
 `μ_{≤τ} = μ_{>τ}`; `supF = max_τ F(τ)`; critical values from Andrews (1993, trimming 0.15); report `τ̂`.
 
-**Known-answer tests.** NW t coverage on simulated AR(1) IC series (φ = 0.3, 0.6); Holm/BH/BHY on the
+**Known-answer tests.** NW t coverage on simulated AR(1) IC series (φ = 0.3, 0.6; 1,000 sims, T = 1,000, within ±2 pp of 95%) and on MA(19) overlapping 20-session sums (≥ 93%); Holm/BH/BHY on the
 textbook 10-p-value example; PSR/DSR on the worked example in Bailey & López de Prado (2014, §5); CSCV on the
 paper's synthetic random-strategy grid (`PBO ≈ 0.5` for pure noise); SPA `p` uniform under a null family;
 Pesaran-Timmermann `p` uniform for independent signs.
