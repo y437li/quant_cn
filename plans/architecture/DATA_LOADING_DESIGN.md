@@ -92,7 +92,7 @@ DownloadPipeline.run(datasets?, start?, end?)
 - **Permission error** (points): raise `DataSourceError` with the endpoint name; pipeline marks the dataset
   `blocked` and continues with the next dataset; report lists blocked datasets.
 - **Paging** (amended by D-076): endpoints cap a call below `limit` (fut_holding 4,000, fund_share 2,000, others 6,000).
-  Keep paging while the page is full **or its size is a multiple of 1,000**; advance the offset by the rows actually
+  Keep paging while the page is full **or its size is a multiple of 100** (caps seen: 6,000, 5,500, 4,200, 4,000, 2,000, 400); advance the offset by the rows actually
   received; stop on a page that is neither. Concatenated before writing so a key is all-or-nothing. Never treat
   "shorter than limit" as "complete".
 - **Empty keys near the present** (D-078): an empty result for a key within the last 3 sessions is written to the
@@ -179,7 +179,7 @@ Clients share `HttpTransport`, retry and rate-limit handling; permission/limit e
 | `sweep.kind: trade_date` + `extra_params` (have, plan 09) | fixed params added to each call | `fut_daily`/`fut_holding` per exchange |
 | `sweep.kind: ts_code` with `values_from` | enumerate codes from config or from another dataset (`values_from_dataset: fund_basic.ts_code where fund_type = 'ETF'`) | `fund_nav` per ETF, `sw_daily` per index if range-only |
 | `release_lag_days` | known-on = period end + lag when the endpoint has no announce date | monthly macro (`cn_cpi` ~10, `cn_ppi` ~10, `cn_pmi` ~0/last day, `cn_m` ~12) |
-| `known_on_rule: next_session` | value visible from the next China session | FRED series, `report_rc` |
+| `known_on_rule: next_session` + `lag_sessions` (default 1) | value visible N sessions after the known-on date | FRED series, `report_rc` (1); `stk_surv` (2, disclosure lag per DATA_CATALOG §3) |
 | `refresh: overwrite \| append` (have) with D-049 guard | | |
 
 ### Datasets added by plan 11 (summary; full rows in `config/datasets.yaml`, catalogue rows in DATA_CATALOG §1)

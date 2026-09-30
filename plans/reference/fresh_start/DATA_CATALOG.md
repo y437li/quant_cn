@@ -62,6 +62,16 @@ history is realistic to pull, not something the new project reads.
 | Money supply | `cn_m` | `month` | month end + 15 days | 2015-01 → 2026-08 | 140 | D-080 |
 | LPR | `shibor_lpr` | `date` | `date` (09:15 fixing) | 2015-01-04 → 2026-08-20 | 1,234 | D-080 |
 | FX, metals, CFDs (FXCM) | `fx_daily` (14 codes) | `ts_code, trade_date` | next session after `trade_date` | FX/metals 2015 →, CFDs 2022-07 → 2026-09-28 | 27 k | D-080 |
+| Analyst forecasts | `report_rc` (by `report_date`, all days) | `ts_code, report_date, org_name, report_title, quarter` | next session after `report_date` | 2019-01-01 → 2026-09-28 | 1.72 M | D-081 |
+| Investor visits | `stk_surv` (all days) | `ts_code, surv_date, rece_org, fund_visitors` | **surv_date + 2 sessions** (rule, conservative: no disclosure date) | 2021-08-05 → 2026-09-28 | 905 k | D-081, D-082 |
+| Broker monthly picks | `broker_recommend` | `month, broker, ts_code` | **month start (rule `period_start_lag` 0, not an observed date)** | 2020-03 → 2026-09 | 18 k | D-081 |
+| Stock Connect holdings | `hk_hold` (all days) | `code, trade_date, exchange` | next session after `trade_date` | 2019-01-02 → 2026-09-28 | 5.76 M | D-081, D-082 |
+| Earnings guidance | `forecast_vip` (by period, all versions) | `ts_code, end_date, ann_date, update_flag` | `ann_date` | ann 2018-12-28 → 2026-08-24 | 48 k | D-081 |
+| Preliminary results | `express_vip` (by period, all versions) | `ts_code, end_date, ann_date, update_flag` | `ann_date` | ann 2019-04-10 → 2026-08-25 | 12 k | D-081 |
+| Insider trades | `stk_holdertrade` (all days) | none (exact duplicate rows dropped) | `ann_date` | 2019-01-02 → 2026-09-28 | 119 k | D-081 |
+| Lock-up expiries | `share_float` (by `ann_date`, all days) | `ts_code, ann_date, float_date, holder_name, share_type` | `ann_date` | ann 2016-01-01 → 2026-09-28 | 6.66 M | D-081 |
+| Disclosure schedule | `disclosure_date` (param `end_date`) | `ts_code, end_date` | `ann_date` (latest schedule, not PIT) | periods 2019 → 2026Q2 | 145 k | D-081 |
+| Shareholder count | `stk_holdernumber` (param `enddate`) | `ts_code, end_date, ann_date` | `ann_date` | ann 2016-07 → 2026-08 | 153 k | D-081, D-082 |
 | Derived: futures holdings | `derived.fut_holding_brokers` | `trade_date, exchange, symbol, broker` | as `fut_holding` | contract rows, no category totals | 13.65 M | D-079 |
 | Derived: one-sided futures | `derived.fut_daily_one_sided` | `ts_code, trade_date` | as `fut_daily` | vol/amount/oi halved pre-2020 (SHF/DCE/ZCE/INE) | 1.65 M | D-079 |
 | Derived: Shenwan L1 intervals | `derived.industry_l1` | `ts_code, valid_from` | `valid_from` (back-filled rows flagged) | 1984 → open | ~10 k | D-071 |
@@ -182,6 +192,21 @@ Verify any unit you rely on against the endpoint's doc page before building on i
   its month column is upper-case `MONTH`.
 - **Amount was two-sided too.** Before 2020 `amount / (vol × close)` is unchanged across the break, so
   `derived.fut_daily_one_sided` halves `amount` and `oi_chg` as well as `vol` and `oi`.
+- **More per-call caps (not multiples of 1,000).** `stk_surv` 400, `stk_holdernumber` 5,500, `hk_hold` 4,200 per
+  call; with a 1,000-step paging rule 760 `stk_surv` days lost more than half their rows (D-082). Paging now continues
+  on any multiple of 100. `share_float` ignores `offset` per the handbook, but paged correctly by `ann_date` in 2026-09;
+  the client raises if a page ever repeats.
+- **Event data publishes on weekends.** `report_rc` (69–155 rows on a weekend day), `stk_surv`, `stk_holdertrade`,
+  `share_float` have Saturday/Sunday rows: sweep every calendar day, not weekdays.
+- **`report_rc`**: `tp` is total profit (10k CNY), not a target price (targets: `max_price`/`min_price`); 3,486
+  rating-only reports carry no `quarter` (stored as ""). A one-month range stops at 5,000 rows: sweep by `report_date`.
+- **`stk_holdertrade` repeats rows.** 65,459 rows fall in 20,023 (ts_code, ann_date, holder, direction, volume) groups
+  but only 24,517 are distinct; ~4.5 k groups are genuine second trades the same day. No unique key exists; keep all
+  distinct rows. `after_share` and `avg_price` are often NULL.
+- **`share_float` is big since 2021**: IPO lock-up notices list every offline placement investor (up to 44 k rows on one
+  announcement day). Filter by `share_type` / holder before aggregating.
+- **`hk_hold` after 2024-08**: daily northbound disclosure ended; ~900 rows/day remain (southbound + partial), full
+  lists only at quarter-ends.
 - **Statements** carry an original and a corrected version per filing (`update_flag`); it must be requested and
   is part of the primary key (D-038), otherwise compaction drops real data.
 

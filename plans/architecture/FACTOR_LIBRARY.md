@@ -50,8 +50,11 @@ marked (−), in which case the factor is negated before standardisation.
 | Long-term growth | 5-y (fallback 3-y) regression slope of revenue and EPS scaled by mean | statements | same as CNE5 SGRO/EGRO |
 
 ## 3b. Analyst revisions and expectations (needs `report_rc`; permission tier to verify)
-Source: Tushare `report_rc` (券商研报盈利预测: per report `ts_code, report_date, org_name, author_name, quarter,
-op_rt, op_pr, tp, np, eps_pred (FY1/FY2/FY3), pe, rd, rating, max_price, min_price`), swept by `report_date`.
+Source: Tushare `report_rc` (券商研报盈利预测: per report `ts_code, report_date, org_name, author_name, report_title,
+classify, quarter, op_rt, op_pr, tp, np, eps, pe, rd, roe, ev_ebitda, rating, max_price, min_price`), swept by
+`report_date` on all calendar days (weekend reports exist). **`tp` is total profit (10k CNY), not target price**;
+target prices are `max_price`/`min_price`. Each report carries ~3 forecast rows (quarters, e.g. 2026Q2…2028Q2);
+rating-only reports have no quarter. Coverage 2019+: 90–107 brokers, 2.5–3.5k stocks per year, 60–175 stocks per day.
 Known-on = `report_date` (publication day; treat as after-close, effective next session). Build a **consensus
 snapshot per stock per day**: for each fiscal year, the mean/median of each broker's latest forecast within a
 trailing 90-day window (one vote per broker, latest report wins). Complements: `stk_surv` (机构调研, survey
@@ -62,7 +65,7 @@ visits), `broker_recommend` (monthly broker picks), `ccass_hold`/`hk_hold` (nort
 | EPS revision 1M / 3M | (consensus FY1 EPS today − consensus 21/63 sessions ago) / |consensus 63 sessions ago| | core revision factor; also FY2 |
 | Revision breadth | (# brokers raising FY1 − # lowering) / # brokers with two reports in the window | diffusion index, robust to outliers |
 | Revision momentum | 3-month EW sum of monthly consensus changes, half-life 1 month | |
-| Target-price implied return | median target price / close − 1 | (+); shrink when coverage < 3 |
+| Target-price implied return | median of (max_price + min_price)/2 across brokers / close − 1 | (+); shrink when coverage < 3; `tp` is NOT a target price |
 | Target-price revision | change in median target over 63 sessions | |
 | Rating change | Δ of mean numeric rating (买入 = 5 … 卖出 = 1) over 63 sessions; upgrades − downgrades | |
 | Coverage | ln(1 + # brokers in window); Δ coverage over 63 sessions | (+) for Δ; low coverage = neglected-stock premium (−) |

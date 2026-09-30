@@ -638,3 +638,25 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Findings: the FXCM CFDs (oil, copper, US notes, dollar index, equity indices) start only in 2022-07 in Tushare; currency pairs and metals go back to 2015. FXCM bars are dated by the Beijing date of the New York close: Friday's bar carries Saturday's date and a short Sunday bar opens the week, so a `next_session` effective date is never early (at most one day late).
 - Consequences: macro effective dates check out (CPI 2026-08 → 2026-09-14; M 2026-01 → 2026-02-24 after the Spring Festival); ~185 calls in total.
 - Links: D-063, D-065, D-069, plan 11 phases 5, 6, 10
+
+### D-081 Analyst and event datasets and the loader changes they need (plan 11 phase 7)
+- Status: accepted by execution (2026-09-29); design approved by quant-cn-a1 before the backfill.
+- Context: probes on 2026-09-12 … 09-24. `report_rc`: a normal week has 189–493 rows/day (23–35 brokers, 61–174 stocks); a one-month range stops at exactly 5,000; weekends are not empty (69–155 rows). `share_float`: a one-month `float_date` window already returns the 6,000 cap and the endpoint is documented to ignore `offset`. Event endpoints (`report_rc`, `stk_surv`, `stk_holdertrade`, `share_float`) publish on Saturdays/Sundays. `disclosure_date` takes `end_date`, `stk_holdernumber` `enddate`, `broker_recommend` `month` (YYYYMM). `stk_surv` has no disclosure date. `broker_recommend` has no publication date.
+- Decision (seven loader changes + the datasets):
+  1. `SweepSpec.days: sessions | weekdays | all` (event datasets `all`; `DateCodec.list_days`).
+  2. `SweepSpec.param_name` renames the key parameter; for `date_window` the window key itself is sent (`broker_recommend`).
+  3. `TushareClient` raises `DataSourceError("offset ignored")` when a page repeats the previous one (never loops).
+  4. `known_on_rule: period_start_lag` (month start + lag) for `broker_recommend` (lag 0; a rule, not an observed date).
+  5. `DatasetSpec.lag_sessions` for `next_session`: `stk_surv` = surv_date + 2 sessions (visits disclosed 1–2 days later; conservative, DATA_CATALOG §3).
+  6. `DatasetSpec.key_defaults`: NULL text key columns filled before validation (`report_rc.quarter` "" for 3,486 rating-only reports; `stk_surv.rece_org` "" for 1 row).
+  7. `derived.fundamentals_long` limited to datasets curated under `fundamentals/` (event data is period-swept too and would otherwise enter the PIT states; digests unchanged).
+  Datasets: `report_rc` by `report_date` (days all, next_session, from 2019); `stk_surv` (days all); `broker_recommend` (monthly window); `hk_hold` (days all, next_session); `forecast_vip`, `express_vip` by period with every version; `stk_holdertrade` by `ann_date` (days all) **without a primary key** (vendor repeats rows: 65,459 rows in 20,023 key groups, 24,517 distinct; ~4.5 k groups are real second trades; exact duplicate rows dropped); `share_float` by `ann_date` from 2016 (days all); `disclosure_date` and `stk_holdernumber` by period.
+- Results: report_rc 1.72 M rows (90–107 brokers, 2.5–3.5 k stocks a year; max 5,589 rows on one day); share_float 6.66 M (IPO lock-up notices list every offline placement investor, up to 44,069 rows on one day; 124 duplicate keys); hk_hold 5.76 M; stk_surv 905 k (from 2021-08-05); broker_recommend 18 k (from 2020-03); PIT test OK for all ten; a 90-day consensus snapshot works (600519.SH, 2026-09-24: 45 brokers, median 2026 EPS 67.34). `report_rc.tp` is total profit (10k CNY), not a target price (targets: `max_price`/`min_price`).
+- Links: D-038, D-063, D-076, D-082, plan 11 phase 7
+
+### D-082 Paging step 100 (amends D-076)
+- Status: accepted by execution (2026-09-29).
+- Context: after the phase 7 backfill the round-count scan found three per-call caps that are not multiples of 1,000, so D-076's step missed them: `stk_surv` 400 (760 days at exactly 400), `stk_holdernumber` 5,500 (11 periods), `hk_hold` 4,200 (the 6 quarter-ends since 2024-12, when full holdings are still disclosed). `offset` works on all three (disjoint second pages).
+- Decision: `CAP_STEP = 100`: keep paging while a page is full or a multiple of 100 (one extra call for keys whose size is a round hundred). Refetched with `--force`: `stk_holdernumber` all 30 periods (149,032 → 152,592 rows), `hk_hold` 6 dates (4,200 → 4,417 … 5,254), `stk_surv` 2021-08 → 2026-09 (433,119 → 905,248 rows; max 7,626 visits on one day). Rescan: no dataset left whose maximum is a multiple of 100 reached on several keys, except `index_weight` 12,000 (natural: 1,000 constituents × 12 months, already paged past 6,000).
+- Consequences: the phase 9 coverage notebook repeats the scan with step 100; a cap that is not a multiple of 100 would still be missed and is caught only by that scan.
+- Links: D-070, D-076, D-081
