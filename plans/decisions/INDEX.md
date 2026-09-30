@@ -5,4 +5,4 @@ Append-only decision log (ADR-lite). Maintained with the `decisions` skill; entr
 ## Files
 | File | Purpose | Contains |
 |---|---|---|
-| `DECISIONS.md` | index table plus one block per decision: context, decision, alternatives, consequences, links | D-001..D-080 |
+| `DECISIONS.md` | index table plus one block per decision: context, decision, alternatives, consequences, links | D-001..D-082 |

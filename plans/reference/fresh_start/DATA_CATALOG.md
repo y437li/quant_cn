@@ -207,6 +207,11 @@ Verify any unit you rely on against the endpoint's doc page before building on i
   announcement day). Filter by `share_type` / holder before aggregating.
 - **`hk_hold` after 2024-08**: daily northbound disclosure ended; ~900 rows/day remain (southbound + partial), full
   lists only at quarter-ends.
+- **Statement fields added 2026-09-29 (plan 11 phase 8).** `income_vip.revenue`, `operate_profit`, `oper_cost`;
+  `balancesheet_vip.total_hldr_eqy_exc_min_int`, `bond_payable`, `st_borr`; `cashflow_vip.c_recp_cap_contrib`.
+  Fill on report_type 1: revenue / operate_profit 99.9%, oper_cost 97.8% (banks report none), equity 100%;
+  bond_payable 17%, st_borr 76%, c_recp_cap_contrib 38% — NULL means the item is absent, treat as 0 only where the
+  line is structurally applicable.
 - **Statements** carry an original and a corrected version per filing (`update_flag`); it must be requested and
   is part of the primary key (D-038), otherwise compaction drops real data.
 
