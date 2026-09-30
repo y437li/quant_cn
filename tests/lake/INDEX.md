@@ -15,6 +15,7 @@ Tests for `quant_cn.lake`. No network, no files outside `tmp_path`.
 | `test_pit_aligner.py` | tests for `pit_aligner`, one function per TC ID |  |
 | `test_project_catalog.py` | tests for `project_catalog`, one function per TC ID |  |
 | `test_quality_views.py` | tests for `quality_views`, one function per TC ID |  |
+| `test_rebuild_audit.py` | tests for `rebuild_audit`, one function per TC ID |  |
 | `test_release_lag_checker.py` | tests for `release_lag_checker`, one function per TC ID |  |
 | `test_run_log.py` | tests for `run_log`, one function per TC ID |  |
 | `test_trading_calendar.py` | tests for `trading_calendar`, one function per TC ID |  |

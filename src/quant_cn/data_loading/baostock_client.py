@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import importlib
 import logging
 from collections.abc import Mapping, Sequence
@@ -19,6 +20,8 @@ _EXCHANGES = {"SH": "sh", "SZ": "sz"}
 _DATE_COLUMNS = ("date", "dividOperateDate")
 _VENDOR_FIELDS = {"trade_date": "date", "ts_code": "code"}  # lake name -> BaoStock name
 _YYYYMMDD = 8
+_SYMBOL_LEN = 6
+LOGIN_BACKOFF = 5  # login retries wait 5x the query retry pause
 
 
 class BaostockClient(BaseApiClient):
@@ -47,7 +50,8 @@ class BaostockClient(BaseApiClient):
     Test cases:
         TC-BSC-001  codes and dates are converted both ways; fields are joined; numbers parsed
         TC-BSC-002  error codes are retried then raise DataSourceError; login happens once
-        TC-BSC-003  a Beijing code (no BaoStock coverage) returns an empty frame without a call
+        TC-BSC-004  a failed login is retried before the query runs
+        TC-BSC-003  a Beijing or non-6-digit code (T600018.SH) returns an empty frame, no call
     """
 
     def __init__(
@@ -113,18 +117,27 @@ class BaostockClient(BaseApiClient):
     def _load_module(self) -> ModuleType:
         if self._module is None:
             self._module = importlib.import_module("baostock")
-        if not self._logged_in:
+        failures = 0
+        while not self._logged_in:
             login: Any = self._module.login()
-            if str(login.error_code) != "0":
+            if str(login.error_code) == "0":
+                self._logged_in = True
+                break
+            failures += 1  # network errors ("网络接收错误") also hit login: same retry budget
+            if failures > self._retries:
                 raise DataSourceError(f"baostock login failed: {login.error_msg}")
-            self._logged_in = True
+            logger.warning("baostock login attempt %s failed: %s", failures, login.error_msg)
+            self._clock.sleep(self._retry_sleep_s * LOGIN_BACKOFF)
+            with contextlib.suppress(Exception):  # a broken session must be closed before re-login
+                self._module.logout()
         return self._module
 
     @staticmethod
     def _to_code(ts_code: str) -> str | None:
         symbol, _, exchange = ts_code.partition(".")
         prefix = _EXCHANGES.get(exchange)
-        return f"{prefix}.{symbol}" if prefix else None
+        valid = prefix and len(symbol) == _SYMBOL_LEN and symbol.isdigit()  # T600018.SH: no
+        return f"{prefix}.{symbol}" if valid else None
 
     @staticmethod
     def _to_iso(value: str) -> str:

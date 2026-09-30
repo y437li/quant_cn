@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 from pathlib import Path
 
 import pandas as pd
@@ -12,6 +13,7 @@ import pyarrow.parquet as pq
 from quant_cn.core.base_store import BaseStore
 from quant_cn.core.dataset_spec import DatasetSpec
 from quant_cn.core.exceptions import LakeError
+from quant_cn.lake.rebuild_audit import PREV_SUFFIX
 
 ROW_GROUP_SIZE = 256_000
 
@@ -40,6 +42,7 @@ class ParquetWriter(BaseStore):
         TC-PW-003  failed write leaves no .tmp and no target; raises LakeError
         TC-PW-004  curated partition under year=YYYY, readable by DuckDB with hive partitioning
         TC-PW-005  curated write refuses a frame violating the schema
+        TC-PW-006  rewriting a raw file keeps the first previous version as <file>.prev
     """
 
     def __init__(self, lake_root: Path) -> None:
@@ -81,7 +84,8 @@ class ParquetWriter(BaseStore):
     def write_raw(self, spec: DatasetSpec, key: str, df: pd.DataFrame) -> Path | None:
         """
         Purpose:
-            Persist one fetch key's rows, dtypes coerced by the dataset schema (dates stay strings).
+            Persist one fetch key's rows, dtypes coerced by the dataset schema (dates stay strings);
+            an existing file is kept as `<file>.prev` until `rebuild` confirms it (D-083).
 
         Contract:
             Input:
@@ -96,6 +100,12 @@ class ParquetWriter(BaseStore):
             return None
         coerced = spec.build_schema().normalize(df)
         path = self.get_raw_path(spec, key)
+        prev = path.with_name(path.name + PREV_SUFFIX)
+        if path.exists() and not prev.exists():  # keep the oldest until rebuild confirms (D-083)
+            try:
+                shutil.copy2(path, prev)
+            except OSError as exc:
+                raise LakeError(f"cannot keep previous raw file {path}: {exc}") from exc
         self._write_atomic(coerced, path)
         return path
 

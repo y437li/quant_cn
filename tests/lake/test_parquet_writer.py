@@ -4,6 +4,7 @@ import duckdb
 import pandas as pd
 import pytest
 
+from quant_cn.core.config import Config
 from quant_cn.core.exceptions import LakeError, SchemaError
 from quant_cn.lake.parquet_writer import ParquetWriter
 from tests.support import MiniLake, Sample
@@ -64,3 +65,15 @@ def test_tc_pw_005_curated_schema_violation(lake: MiniLake) -> None:
     assert not (lake.lake_root / "curated").exists() or not any(
         (lake.lake_root / "curated").rglob("*.parquet")
     )
+
+
+# TC-PW-006
+def test_tc_pw_006_keeps_previous(lake: MiniLake, config: Config) -> None:
+    spec = config.get_dataset("daily")
+    path = lake.writer.write_raw(spec, "20260828", Sample.build_bars("20260828"))
+    assert path is not None and not path.with_name(path.name + ".prev").exists()
+    lake.writer.write_raw(spec, "20260828", Sample.build_bars("20260828", ("000001.SZ",)))
+    lake.writer.write_raw(spec, "20260828", Sample.build_bars("20260828", ("000002.SZ",)))
+    prev = path.with_name(path.name + ".prev")
+    assert len(pd.read_parquet(prev)) == 2  # the first version is kept, not the second
+    assert pd.read_parquet(path)["ts_code"].tolist() == ["000002.SZ"]

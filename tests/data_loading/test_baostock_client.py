@@ -81,4 +81,24 @@ def test_tc_bsc_003_beijing_skipped(clock: FakeClock) -> None:
     calls: list[dict[str, Any]] = []
     client = BaostockClient(clock, module=build_module([], calls))
     assert client.query("query_history_k_data_plus", {"ts_code": "920001.BJ"}, ["close"]).empty
+    assert client.query("query_adjust_factor", {"ts_code": "T600018.SH"}, []).empty
     assert calls == []
+
+
+# TC-BSC-004
+def test_tc_bsc_004_login_retry(clock: FakeClock) -> None:
+    calls: list[dict[str, Any]] = []
+    module = build_module(
+        [FakeResult([{"date": "2026-09-28", "code": "sh.600000", "close": "9.16"}])], calls
+    )
+    replies = iter(
+        [
+            SimpleNamespace(error_code="10001", error_msg="网络接收错误"),
+            SimpleNamespace(error_code="0", error_msg=""),
+        ]
+    )
+    module.login = lambda: next(replies)
+    out = BaostockClient(clock, retries=2, module=module).query(
+        "query_history_k_data_plus", {"ts_code": "600000.SH"}, ["date", "code", "close"]
+    )
+    assert out["close"].tolist() == [9.16]

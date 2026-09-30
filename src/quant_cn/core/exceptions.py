@@ -154,6 +154,7 @@ class LakeError(QuantCnError):
         lake.PitAligner            -- injected type or call
         lake.ProjectCatalog        -- injected type or call
         lake.QualityViews          -- injected type or call
+        lake.RebuildAudit          -- injected type or call
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError

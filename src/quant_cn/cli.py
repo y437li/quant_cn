@@ -44,6 +44,7 @@ from quant_cn.lake.lake_query import LakeQuery
 from quant_cn.lake.parquet_writer import ParquetWriter
 from quant_cn.lake.pit_aligner import PitAligner
 from quant_cn.lake.project_catalog import ProjectCatalog
+from quant_cn.lake.rebuild_audit import RebuildAudit
 from quant_cn.lake.release_lag_checker import ReleaseLagChecker
 from quant_cn.lake.run_log import RunLog
 from quant_cn.lake.trading_calendar import TradingCalendar
@@ -54,7 +55,6 @@ from quant_cn.pipeline.runner import BaseRunner, LocalRunner, PipelineReport
 MIN_FREE_GB = 20
 MIN_CALENDAR_DAYS = 90
 DEFAULT_PREFECT_API_URL = "http://127.0.0.1:4200/api"  # D-067
-ORPHAN_FILE = "fetch_log_orphans.json"  # D-073
 
 
 class QuantCnCli:
@@ -302,7 +302,9 @@ class QuantCnCli:
             fetch_log = FetchLog(catalog)
             restored = fetch_log.rebuild_from_mirror()
             orphans = fetch_log.remove_orphans()
-            self._write_orphan_manifest(config, orphans)
+            audit = RebuildAudit(config.lake.root, Clock())
+            audit.record_orphans(orphans)
+            rewrites = audit.record_rewrites()
             RunLog(catalog, Clock())
             catalog.write_indexes()
         finally:
@@ -310,16 +312,9 @@ class QuantCnCli:
         removed = sum(len(keys) for keys in orphans.values())
         self._console.print(
             f"catalog rebuilt at {catalog.catalog_path}; fetch_log rows: {restored - removed}"
-            f" ({removed} orphan rows removed)"
+            f" ({removed} orphan rows removed; {len(rewrites)} rewritten raw files confirmed)"
         )
         return 0
-
-    @staticmethod
-    def _write_orphan_manifest(config: Config, orphans: dict[str, list[str]]) -> None:
-        folder = config.lake.root / "meta" / "manifest"
-        folder.mkdir(parents=True, exist_ok=True)
-        record = {"checked_at": Clock().get_now().isoformat(timespec="seconds"), "removed": orphans}
-        (folder / ORPHAN_FILE).write_text(json.dumps(record, indent=2, sort_keys=True) + "\n")
 
     def _run_backup(self, config: Config, _args: argparse.Namespace) -> int:
         target = config.lake.backup_target
