@@ -52,7 +52,7 @@ package boundary except `core` types. `cli` (L6) is the composition root that as
 
 ### 2.2b Lake read API — the loading engine (D-041, D-089)
 Two classes form the lake's read API, and nothing above the lake reads any other way. `LakeQuery` is the SQL
-layer (`sql`, `has_view`, `read_prices`); `LakeReader(query, aligner, alias_map, calendar, cache=None)` is the
+layer (`sql`, `has_view`, `read_prices`, `register_frame`, `list_views` — catalog utilities, D-091); `LakeReader(query, aligner, alias_map, calendar, cache=None)` is the
 composing facade that exposes the surface below (plan 04 phase 1). The split avoids an import cycle
 (`PitAligner` reads through `LakeQuery`) and the 300-line class limit. `ServiceBuilder` builds `LakeReader`
 with the cache on in notebooks and off in pipelines. `UniverseStep`, factors and notebooks use `LakeReader` only.
@@ -64,9 +64,9 @@ with the cache on in notebooks and off in pipelines. `UniverseStep`, factors and
 | `read_prices(start, end, tickers=None, adjusted=True, dense=False)` | prices; `dense=True` reindexes to `TradingCalendar` sessions with suspended days as NaN rows (closes the phase-5 deferral) | `PRICE_PANEL` |
 | `read_fundamentals_pit(fields, start, end, tickers=None)` | PIT-aligned fundamentals via `PitAligner` | `FUNDAMENTALS_PIT` |
 | `read_reference(name)` | `stock_basic`, `namechange`, `trade_cal`, `index_daily` as frames | curated schema |
-| `read_universe(start, end)` | the `UniversePanel` once `UniverseStep` exists | `UNIVERSE_PANEL` |
-| `register_frame(name, frame)` | expose a notebook/in-memory frame as a DuckDB view for joins | view name |
-| `list_views()` / `has_view(name)` | discovery | list[str] / bool |
+| `read_universe(start, end, members_only=)` | the `UniversePanel` from `derived/universe/` | `UNIVERSE_PANEL` |
+| `LakeQuery.register_frame(name, frame)` | expose a notebook/in-memory frame as a DuckDB view for joins (D-091: on LakeQuery) | view name |
+| `LakeQuery.list_views()` / `has_view(name)` | discovery (on LakeQuery) | list[str] / bool |
 
 `PanelCache` (lake): optional in-memory Arrow cache keyed by (method, args) with a size cap, injected into
 `LakeReader`; on by default in notebooks, off in pipelines. All methods validate their output with the
