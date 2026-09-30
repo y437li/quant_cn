@@ -3,6 +3,7 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
+from quant_cn.core import frames
 from quant_cn.core.exceptions import SchemaError
 from quant_cn.core.frames import (
     FUNDAMENTALS_PIT,
@@ -44,3 +45,29 @@ def test_tc_fr_003_vix_panel() -> None:
 def test_tc_fr_004_plan09_frames(frame: Schema) -> None:
     assert set(frame.primary_key) <= set(frame.columns)
     frame.validate(frame.build_empty())
+
+
+# TC-FR-005
+def test_tc_fr_005_plan04_frames() -> None:
+    sample = {
+        "trade_date": "20260924",
+        "ts_code": "600000.SH",
+        "factor": "ep_ttm",
+        "reason": "",
+        "metric": "ic_mean",
+        "window": "2019-2026",
+        "campaign": "c01",
+        "trial_id": "t1",
+        "params": "{}",
+    }
+    schemas = [
+        frames.UNIVERSE_PANEL,
+        frames.FACTOR_PANEL,
+        frames.IC_SERIES,
+        frames.IC_TEST,
+        frames.TRIAL_LOG,
+    ]
+    for schema in schemas:
+        row = {c: sample.get(c, 1.0) for c in schema.columns}
+        out = schema.validate(schema.normalize(pd.DataFrame([row]), strict=True))
+        assert list(out.columns) == schema.columns and len(out) == 1

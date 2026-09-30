@@ -41,12 +41,15 @@ from quant_cn.lake.derived_views import DerivedViews
 from quant_cn.lake.fetch_log import FetchLog
 from quant_cn.lake.lake_catalog import LakeCatalog
 from quant_cn.lake.lake_query import LakeQuery
+from quant_cn.lake.lake_reader import LakeReader
+from quant_cn.lake.panel_cache import PanelCache
 from quant_cn.lake.parquet_writer import ParquetWriter
 from quant_cn.lake.pit_aligner import PitAligner
 from quant_cn.lake.project_catalog import ProjectCatalog
 from quant_cn.lake.rebuild_audit import RebuildAudit
 from quant_cn.lake.release_lag_checker import ReleaseLagChecker
 from quant_cn.lake.run_log import RunLog
+from quant_cn.lake.ticker_alias_map import TickerAliasMap
 from quant_cn.lake.trading_calendar import TradingCalendar
 from quant_cn.pipeline.curate_pipeline import DIGEST_FILE, CuratePipeline
 from quant_cn.pipeline.download_pipeline import DownloadPipeline
@@ -430,7 +433,9 @@ class ServiceBuilder:
         """
         clock, query = Clock(), LakeQuery(catalog)
         compactor = Compactor(catalog, query, ParquetWriter(config.lake.root), clock)
-        views = DerivedViews(catalog, query, config.datasets, config.futures_categories)
+        views = DerivedViews(
+            catalog, query, config.datasets, config.futures_categories, config.ticker_aliases
+        )
         aligner = PitAligner(catalog, query, DateCodec())
         runner = self.build_runner(RunLog(catalog, clock), runner_name, show_progress)
         return CuratePipeline(config, compactor, views, aligner, query, catalog, runner)
@@ -453,6 +458,31 @@ class ServiceBuilder:
 
             return prefect_runner.PrefectRunner(run_log)
         return LocalRunner(run_log, show_progress=show_progress)
+
+    def build_reader(self, config: Config, catalog: LakeCatalog, cache: bool = False) -> LakeReader:
+        """
+        Purpose:
+            The lake read API (D-089): PIT aligner, alias map, calendar and an optional cache.
+
+        Contract:
+            Input:
+                config: Config; catalog: LakeCatalog (read-only is fine)
+                cache:  bool  -- True in notebooks (PanelCache), False in pipelines
+            Output:
+                LakeReader
+            Raises:
+                (none)
+        """
+        query = LakeQuery(catalog)
+        return LakeReader(
+            catalog,
+            query,
+            config.datasets,
+            PitAligner(catalog, query, DateCodec()),
+            TickerAliasMap(catalog, query, config.ticker_aliases),
+            TradingCalendar(query),
+            PanelCache() if cache else None,
+        )
 
     def build_project_catalog(self, config: Config, catalog: LakeCatalog) -> ProjectCatalog:
         """

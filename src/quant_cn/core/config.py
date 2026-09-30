@@ -151,6 +151,35 @@ class FuturesCategory(BaseModel):
     last: str | None = None
 
 
+class TickerAlias(BaseModel):
+    """
+    Purpose:
+        One retired code and the code its company trades on afterwards (D-053, D-089).
+
+    Contract:
+        Input:
+            old_code: str  -- retired ts_code, e.g. "000043.SZ"
+            new_code: str  -- surviving ts_code, e.g. "001914.SZ"
+        Output:
+            frozen pydantic model
+        Raises:
+            pydantic.ValidationError
+
+    Used by:
+        core.Config          -- field `ticker_aliases`
+        lake.TickerAliasMap  -- floor of derived.ticker_alias
+        lake.DerivedViews    -- injected type or call
+
+    Test cases:
+        TC-C-010  config/ticker_aliases.yaml loads the three known pairs; missing file = []
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    old_code: str
+    new_code: str
+
+
 class Config(BaseModel):
     """
     Purpose:
@@ -166,6 +195,7 @@ class Config(BaseModel):
             enum_values: dict[str, list[str]]  -- named key lists for enum sweeps (e.g. indices)
             datasets:    dict[str, DatasetSpec]
             futures_categories: list[FuturesCategory]  -- config/futures_categories.yaml (D-079)
+            ticker_aliases: list[TickerAlias]  -- config/ticker_aliases.yaml (D-089)
         Output:
             frozen pydantic model
         Raises:
@@ -188,6 +218,7 @@ class Config(BaseModel):
         TC-C-007  the committed config/ files load and every ordered dataset exists
         TC-C-008  malformed YAML or a dataset whose key differs from its name raises ConfigError
         TC-C-009  config/futures_categories.yaml loads; a missing file gives an empty list
+        TC-C-010  config/ticker_aliases.yaml loads the three known pairs; missing file = []
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -199,6 +230,7 @@ class Config(BaseModel):
     enum_values: dict[str, list[str]] = Field(default_factory=dict)
     datasets: dict[str, DatasetSpec]
     futures_categories: list[FuturesCategory] = Field(default_factory=list)
+    ticker_aliases: list[TickerAlias] = Field(default_factory=list)
 
     @classmethod
     def load(
@@ -228,6 +260,7 @@ class Config(BaseModel):
         merged = cls._build_merged(base, local)
         datasets = cls._read_yaml(root / "config" / "datasets.yaml", required=True)
         categories = cls._read_yaml(root / "config" / "futures_categories.yaml", required=False)
+        aliases = cls._read_yaml(root / "config" / "ticker_aliases.yaml", required=False)
 
         lake = dict(merged.get("lake", {}))
         if environ.get(ENV_LAKE_ROOT):
@@ -243,6 +276,7 @@ class Config(BaseModel):
                 enum_values=merged.get("enum_values", {}),
                 datasets={name: DatasetSpec(name=name, **spec) for name, spec in datasets.items()},
                 futures_categories=[FuturesCategory(**c) for c in categories.get("categories", [])],
+                ticker_aliases=[TickerAlias(**a) for a in aliases.get("aliases", [])],
             )
         except (ValidationError, TypeError) as exc:
             raise ConfigError(f"invalid configuration: {exc}") from exc

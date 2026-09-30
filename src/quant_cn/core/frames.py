@@ -16,6 +16,11 @@ Contract:
         FUTURES_POSITIONING -- key (trade_date, product); OI regime, top-20 net, basis
         MARGIN_VINTAGES   -- key (ts_code, entry_date, seeded); FIFO financing vintages
         MARGIN_LADDER     -- key (drawdown_pct); financing debt forced at each market drawdown
+        UNIVERSE_PANEL    -- key (trade_date, ts_code); in_universe (1/0), reason
+        FACTOR_PANEL      -- key (trade_date, ts_code, factor); value, value_raw
+        IC_SERIES         -- key (trade_date, factor, horizon); ic, n
+        IC_TEST           -- key (factor, horizon, metric, window); value, se, t, p, CI, adjusted p
+        TRIAL_LOG         -- key (campaign, trial_id); factor, params, horizon, sr, ic_mean
     Raises:
         (none)
 
@@ -27,6 +32,7 @@ Test cases:
     TC-FR-004  plan 09 frames (GEX_PANEL, FUTURES_POSITIONING, MARGIN_*) validate empty frames
     TC-FR-001  each frame's key and text columns are declared columns; empty frames validate
     TC-FR-002  a frame with a duplicate key fails validation
+    TC-FR-005  plan 04 frames (UNIVERSE_PANEL ... TRIAL_LOG) validate a one-row frame
 """
 
 from __future__ import annotations
@@ -154,4 +160,56 @@ MARGIN_LADDER: Final = Schema(
     columns=["drawdown_pct", "debt_forced", "share_of_debt"],
     text_columns=[],
     primary_key=["drawdown_pct"],
+)
+
+# --- plan 04 (factors): universe, factor values, IC and test results, trial log ---
+
+UNIVERSE_PANEL: Final = Schema(
+    "UNIVERSE_PANEL",
+    columns=["trade_date", "ts_code", "in_universe", "reason"],
+    text_columns=["trade_date", "ts_code", "reason"],
+    primary_key=["trade_date", "ts_code"],
+)
+
+FACTOR_PANEL: Final = Schema(
+    "FACTOR_PANEL",
+    columns=["trade_date", "ts_code", "factor", "value", "value_raw"],
+    text_columns=["trade_date", "ts_code", "factor"],
+    primary_key=["trade_date", "ts_code", "factor"],
+)
+
+IC_SERIES: Final = Schema(
+    "IC_SERIES",
+    columns=["trade_date", "factor", "horizon", "ic", "n"],
+    text_columns=["trade_date", "factor"],
+    primary_key=["trade_date", "factor", "horizon"],
+)
+
+IC_TEST: Final = Schema(
+    "IC_TEST",
+    columns=[
+        "factor",
+        "horizon",
+        "metric",
+        "value",
+        "se",
+        "t",
+        "p",
+        "ci_lo",
+        "ci_hi",
+        "window",
+        "p_adj_holm",
+        "p_adj_bhy",
+        "p_adj_romano_wolf",
+        "hlz_pass",
+    ],
+    text_columns=["factor", "metric", "window"],
+    primary_key=["factor", "horizon", "metric", "window"],
+)
+
+TRIAL_LOG: Final = Schema(
+    "TRIAL_LOG",
+    columns=["campaign", "trial_id", "factor", "params", "horizon", "sr", "ic_mean"],
+    text_columns=["campaign", "trial_id", "factor", "params"],
+    primary_key=["campaign", "trial_id"],
 )

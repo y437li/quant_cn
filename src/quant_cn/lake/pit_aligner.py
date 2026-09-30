@@ -74,6 +74,7 @@ class PitAligner:
         research_space/main.ipynb  -- aligned fundamentals
         pipeline.DeriveStep        -- injected type or call
         cli.ServiceBuilder         -- injected type or call
+        lake.LakeReader            -- injected type or call
 
     Test cases:
         TC-PA-001  nothing is visible on or before the announcement date; visible the next session

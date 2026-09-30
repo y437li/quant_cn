@@ -155,6 +155,8 @@ class LakeError(QuantCnError):
         lake.ProjectCatalog        -- injected type or call
         lake.QualityViews          -- injected type or call
         lake.RebuildAudit          -- injected type or call
+        lake.LakeReader            -- injected type or call
+        lake.TickerAliasMap        -- injected type or call
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError

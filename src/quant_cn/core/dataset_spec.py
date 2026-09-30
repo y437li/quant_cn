@@ -228,6 +228,7 @@ class DatasetSpec(BaseModel):
         data_loading.DateWindowFetcher     -- injected type or call
         lake.EffectiveDateResolver         -- injected type or call
         lake.ReleaseLagChecker             -- injected type or call
+        lake.LakeReader                    -- injected type or call
 
     Test cases:
         TC-DS-001  datasets.yaml entries parse into DatasetSpec

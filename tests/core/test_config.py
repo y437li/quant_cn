@@ -88,3 +88,11 @@ def test_tc_c_009_futures_categories(config: Config, tmp_path: Path) -> None:
     pairs = {(c.exchange, c.broker) for c in committed.futures_categories}
     assert ("DCE", "期货公司会员") in pairs and len(pairs) == len(committed.futures_categories)
     assert config.futures_categories == []  # fixture repo has no futures_categories.yaml
+
+
+# TC-C-010
+def test_tc_c_010_ticker_aliases(config: Config, tmp_path: Path) -> None:
+    committed = Config.load(REPO, env={"QUANT_CN_LAKE_ROOT": str(tmp_path)})
+    pairs = {(a.old_code, a.new_code) for a in committed.ticker_aliases}
+    assert ("000043.SZ", "001914.SZ") in pairs and len(pairs) == 3
+    assert config.ticker_aliases == []

@@ -32,6 +32,7 @@ class Schema:
 
     Used by:
         core.DatasetSpec.build_schema  -- builds one Schema per dataset
+        lake.LakeReader                -- injected type or call
 
     Test cases:
         TC-S-001  coerce casts text to string and numbers to float64

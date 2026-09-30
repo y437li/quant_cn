@@ -7,12 +7,13 @@ from collections.abc import Mapping, Sequence
 
 import duckdb
 
-from quant_cn.core.config import FuturesCategory
+from quant_cn.core.config import FuturesCategory, TickerAlias
 from quant_cn.core.dataset_spec import DatasetSpec
 from quant_cn.core.exceptions import LakeError
 from quant_cn.lake.lake_catalog import LakeCatalog
 from quant_cn.lake.lake_query import LakeQuery
 from quant_cn.lake.quality_views import QualityViews
+from quant_cn.lake.ticker_alias_map import TickerAliasMap
 
 logger = logging.getLogger(__name__)
 SCHEMA = "derived"
@@ -115,7 +116,8 @@ class DerivedViews:
         `derived.industry_l1` (Shenwan L1 validity intervals per stock, PIT rows plus back-filled
         rows flagged industry_backfilled; l1_pit = rows not back-filled, l1_grouping = any; D-071);
         `derived.margin_targets` (SZSE official list + SSE proxy from margin_detail, source
-        column; D-084); then the `quality` schema through QualityViews.
+        column; D-084); `derived.ticker_alias` through TickerAliasMap (D-089); then the `quality`
+        schema through QualityViews.
 
     Contract:
         Input:
@@ -123,6 +125,7 @@ class DerivedViews:
             query:      LakeQuery                    -- which curated views exist
             datasets:   Mapping[str, DatasetSpec]    -- Config.datasets; sources = sweep "period"
             categories: Sequence[FuturesCategory]    -- Config.futures_categories
+            aliases:    Sequence[TickerAlias]        -- Config.ticker_aliases (derived.ticker_alias)
         Output:
             instance; `refresh() -> list[str]` views created
         Raises:
@@ -150,11 +153,13 @@ class DerivedViews:
         query: LakeQuery,
         datasets: Mapping[str, DatasetSpec],
         categories: Sequence[FuturesCategory] = (),
+        aliases: Sequence[TickerAlias] = (),
     ) -> None:
         self._catalog = catalog
         self._query = query
         self._datasets = dict(datasets)
         self._categories = list(categories)
+        self._aliases = list(aliases)
 
     def refresh(self) -> list[str]:
         """
@@ -197,6 +202,8 @@ class DerivedViews:
                 created.append(view)
             else:
                 self._execute(con, f"DROP VIEW IF EXISTS {view}")
+        alias_view = TickerAliasMap(self._catalog, self._query, self._aliases).refresh()
+        created += [alias_view] if alias_view else []
         logger.info("derived views: %s", created)
         return created + QualityViews(self._catalog, self._query).refresh()
 
