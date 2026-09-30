@@ -77,6 +77,8 @@ history is realistic to pull, not something the new project reads.
 | Macro release dates | `macro_release_cpi/ppi/pmi/m2` (AkShare / Jin10) | `release_date` | `release_date` | ends 2025-09; real dates from ~2010 | 1,485 | D-086 |
 | SZSE margin-eligible list | `szse_margin_targets` (AkShare / SZSE, official) | `trade_date, code` | `trade_date` | 2019-01-02 → 2026-09-28 | 2.63 M | D-087 |
 | Derived: margin eligibility | `derived.margin_targets` | `trade_date, ts_code` | `trade_date` | SZSE official + SSE proxy (margin_detail row; short = rqye > 0) | — | D-084 |
+| BaoStock bars (verification) | `baostock_daily` (per stock, SH/SZ) | `ts_code, trade_date` | `trade_date` | 2019-01-02 → 2026-09-28, 5,556 stocks | 2.53 M | D-085, D-088 |
+| BaoStock factors (verification) | `baostock_adj_factor` (dividend dates) | `ts_code, trade_date` | `trade_date` | 2019 → 2026 | 26.6 k | D-085, D-088 |
 | Derived: futures holdings | `derived.fut_holding_brokers` | `trade_date, exchange, symbol, broker` | as `fut_holding` | contract rows, no category totals | 13.65 M | D-079 |
 | Derived: one-sided futures | `derived.fut_daily_one_sided` | `ts_code, trade_date` | as `fut_daily` | vol/amount/oi halved pre-2020 (SHF/DCE/ZCE/INE) | 1.65 M | D-079 |
 | Derived: Shenwan L1 intervals | `derived.industry_l1` | `ts_code, valid_from` | `valid_from` (back-filled rows flagged) | 1984 → open | ~10 k | D-071 |
@@ -223,6 +225,9 @@ Verify any unit you rely on against the endpoint's doc page before building on i
 - **SSE margin eligibility has no official history.** Use `derived.margin_targets` (SSE proxy = had a margin_detail
   row; short-eligible = rqye > 0). The proxy matches `margin_secs` exactly at month ends since 2024-04; SZSE rows come
   from the official daily list (438 names in 2019-01 before the 2019-08 expansion).
+- **Tushare closes verified against BaoStock**: 8.65 M unadjusted closes 2019–2026, 0 mismatches (1e-6). Adjustment
+  steps agree to Tushare's 4-decimal storage on 99.9% of 26,565 dividend events; 31 differ by more than 1e-3, the largest
+  being BaoStock restarting its factor at the code change 300114 → 302132 (D-088).
 - **Statements** carry an original and a corrected version per filing (`update_flag`); it must be requested and
   is part of the primary key (D-038), otherwise compaction drops real data.
 
