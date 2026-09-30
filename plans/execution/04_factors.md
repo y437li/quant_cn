@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | approved 2026-09-28 (user: "once you finish the planning assign to the other session to execute"); handed to quant-cn-b7 |
+| Status | doing — phase 1 started 2026-09-30 (quant-cn-b7) |
 | Owner | user / executor quant-cn-b7 (build) / quant-cn-a1 (record) |
 | Created | 2026-09-28 |
 | Notion | pending |
@@ -22,7 +22,7 @@ read API, universe and statistic test classes every later plan reuses.
 
 | # | Phase | Deliverable | Done criterion | Depends on | Status |
 |---|---|---|---|---|---|
-| 1 | Read API + alias map | `LakeQuery.read_panel / read_prices(dense=) / read_fundamentals_pit / read_reference / list_views / register_frame`, `PanelCache`, `TickerAliasMap` (old→new code from `stock_basic` + `namechange` + the three known pairs, applied in `prices_adj`), `frames` for `UNIVERSE_PANEL`, `FACTOR_PANEL`, `IC_SERIES`, `IC_TEST`, `TRIAL_LOG` | every method schema-validated; dense prices reindex to sessions; alias map restores the 3 double-listed histories (TC); cache hit/miss test | — | todo |
+| 1 | Read API + alias map | `LakeQuery.read_panel / read_prices(dense=) / read_fundamentals_pit / read_reference / list_views / register_frame`, `PanelCache`, `TickerAliasMap` (old→new code from `stock_basic` + `namechange` + the three known pairs, applied in `prices_adj`), `frames` for `UNIVERSE_PANEL`, `FACTOR_PANEL`, `IC_SERIES`, `IC_TEST`, `TRIAL_LOG` | every method schema-validated; dense prices reindex to sessions; alias map restores the 3 double-listed histories (TC); cache hit/miss test | — | doing |
 | 2 | Statistic core | `Winsorizer`, `Standardizer`, `Neutralizer`, `QuantileReturns`, `ReturnStats`, `ICCalculator`, `HacVariance`, `BlockBootstrap`, `ICSignificance`, `MultipleTestingAdjuster`, `TrialLog` with the formulas of FACTOR_TESTING_DESIGN §10 in the docstrings | known-answer tests of §10 pass (NW coverage, Holm/BH/BHY example, PT uniform p, bootstrap CI coverage); no I/O | 1 | todo |
 | 3 | Universe | `UniverseStep` → `UNIVERSE_PANEL` per session: listed, not ST/*ST (via `namechange`), not suspended, ≥ 120 sessions since listing, exchanges per config (BJ excluded by default, D-054); exclusion reasons kept | counts per date plausible vs `stock_basic`; PIT test on an ST entry/exit; written to `derived/universe/` | 1 | todo |
 | 4 | Factor library | `BaseFactor`, `FactorFactory`, `config/factors.yaml`; six factors in `factor/library/`: `EarningsYieldFactor` (EP TTM), `RoeFactor` (TTM), `ProfitGrowthFactor` (net profit TTM yoy), `MomentumFactor` (12-1), `ReversalFactor` (1-month, −), `TurnoverFactor` (60-session mean, −); each with a synthetic PIT test | six `FACTOR_PANEL`s over the full lake; each factor's restatement test proves no early visibility; coverage ≥ 90% of universe from 2019 | 2, 3 | todo |
@@ -33,7 +33,7 @@ read API, universe and statistic test classes every later plan reuses.
 
 | Class | Action | Package | Phase | Used by (planned) |
 |---|---|---|---|---|
-| `LakeQuery` (extend), `PanelCache`, `TickerAliasMap` | extend / new | lake | 1 | `UniverseStep`, `BaseFactor` inputs via `FeaturePipeline`, notebooks, plan 05/06 |
+| `LakeReader` (facade, D-089), `LakeQuery` (unchanged), `PanelCache`, `TickerAliasMap` + `derived.ticker_alias` | new / extend | lake | 1 | `UniverseStep`, `BaseFactor` inputs via `FeaturePipeline`, notebooks, plan 05/06 |
 | `UNIVERSE_PANEL`, `FACTOR_PANEL`, `IC_SERIES`, `IC_TEST`, `TRIAL_LOG`, `FACTOR_REPORT` | new schemas | core.frames | 1, 5 | producers/consumers above |
 | `Winsorizer`, `Standardizer`, `Neutralizer`, `QuantileReturns`, `ReturnStats` | new | statistic | 2 | `FactorPreprocessor`, `FactorEvaluator`; plan 05 `ExposureStandardizer` |
 | `ICCalculator`, `HacVariance`, `BlockBootstrap`, `ICSignificance`, `MultipleTestingAdjuster`, `TrialLog` | new | statistic | 2 | `FactorEvaluator`; plan 05 `RiskModelValidator`; plan 09 `EventStudy` |
@@ -57,4 +57,5 @@ None at approval; FACTOR_TESTING_DESIGN §9 recommendations adopted (Spearman fo
 
 | Date | Phase | Change |
 |---|---|---|
+| 2026-09-30 | 1 | Started. D-089 (executor): `LakeReader(query, aligner, alias_map, calendar, cache)` facade exposes the §2.2b surface; `LakeQuery` keeps sql/has_view/read_prices (avoids a PitAligner import cycle and the 300-line limit); ServiceBuilder builds it (cache on in notebooks, off in pipelines). TickerAliasMap: old→new pairs from data (a curated.daily code absent from stock_basic aliases the stock_basic code whose closes match on ≥ 20 shared dates, ≥ 99% equal) plus the three configured pairs as a floor → `derived.ticker_alias` (old_code, new_code, first_date, last_date, matched_days, source); prices_adj maps old-code bars onto the new code where the new code has none (new code wins on overlap); read_panel applies the map to per-stock datasets. Frames UNIVERSE_PANEL, FACTOR_PANEL, IC_SERIES, IC_TEST (p_adj_*, hlz_pass), TRIAL_LOG and PanelCache done and tested. Fixtures: 1,693 no-BaoStock rows and the 31 adjustment events |
 | 2026-09-28 | — | Drafted and approved by user instruction; handed to quant-cn-b7 for execution |

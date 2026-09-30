@@ -1,4 +1,4 @@
-# `src/quant_cn` Design (v1.4, 2026-09-28; D-020, D-028, D-032, D-041, D-045, D-060 factor testing)
+# `src/quant_cn` Design (v1.5, 2026-09-30; D-020, D-028, D-032, D-041, D-045, D-060, D-089 LakeReader)
 
 How the eleven packages fit together, what each owns, where the extension points are, and the shared
 frames that let independent packages talk without importing each other. Plan-level detail lives in
@@ -50,14 +50,17 @@ package boundary except `core` types. `cli` (L6) is the composition root that as
 | `TradingCalendar` | trading-day arithmetic from `trade_cal`: `next()`, `prev()`, `sessions(start,end)`, `is_open()`; used by every layer above |
 | `ProjectCatalog` | repo tree / registry / plans as SQL (plan 02) |
 
-### 2.2b Lake read API — the loading engine (D-041)
-`LakeQuery` is the only way code above the lake reads data. Built today: `sql`, `has_view`, `read_prices`.
-Completed to this surface in plan 04 phase 1 (factors and the universe step are its first consumers):
+### 2.2b Lake read API — the loading engine (D-041, D-089)
+Two classes form the lake's read API, and nothing above the lake reads any other way. `LakeQuery` is the SQL
+layer (`sql`, `has_view`, `read_prices`); `LakeReader(query, aligner, alias_map, calendar, cache=None)` is the
+composing facade that exposes the surface below (plan 04 phase 1). The split avoids an import cycle
+(`PitAligner` reads through `LakeQuery`) and the 300-line class limit. `ServiceBuilder` builds `LakeReader`
+with the cache on in notebooks and off in pipelines. `UniverseStep`, factors and notebooks use `LakeReader` only.
 
 | Method | Purpose | Output |
 |---|---|---|
-| `sql(query, params)` | any read against catalog views | DataFrame |
-| `read_panel(dataset, start, end, tickers=None, columns=None)` | one curated dataset as a long panel, PK-sorted | DataFrame in the dataset's curated schema |
+| `LakeQuery.sql(query, params)` | any read against catalog views | DataFrame |
+| `read_panel(dataset, start, end, tickers=None, columns=None)` | one curated dataset as a long panel, PK-sorted; ticker aliases applied to per-stock datasets (`derived.ticker_alias`, D-089) | DataFrame in the dataset's curated schema |
 | `read_prices(start, end, tickers=None, adjusted=True, dense=False)` | prices; `dense=True` reindexes to `TradingCalendar` sessions with suspended days as NaN rows (closes the phase-5 deferral) | `PRICE_PANEL` |
 | `read_fundamentals_pit(fields, start, end, tickers=None)` | PIT-aligned fundamentals via `PitAligner` | `FUNDAMENTALS_PIT` |
 | `read_reference(name)` | `stock_basic`, `namechange`, `trade_cal`, `index_daily` as frames | curated schema |
@@ -66,7 +69,7 @@ Completed to this surface in plan 04 phase 1 (factors and the universe step are 
 | `list_views()` / `has_view(name)` | discovery | list[str] / bool |
 
 `PanelCache` (lake): optional in-memory Arrow cache keyed by (method, args) with a size cap, injected into
-`LakeQuery`; on by default in notebooks, off in pipelines. All methods validate their output with the
+`LakeReader`; on by default in notebooks, off in pipelines. All methods validate their output with the
 frame's `Schema` before returning. Names follow the verb table (`read_`, `list_`, `register_`).
 
 ### 2.3 `data_loading` (L3) — getting bytes from Tushare
