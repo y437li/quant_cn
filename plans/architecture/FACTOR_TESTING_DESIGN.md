@@ -13,7 +13,7 @@ report comes from these classes; the acceptance bar in FACTOR_LIBRARY §7 is def
 | Quantile spread | top-minus-bottom decile forward return; long-short Sharpe | |
 | Hit rate | share of dates with IC_t > 0 | |
 
-## 2. Single-factor tests (`ICSignificance`)
+## 2. Single-factor tests (`IcSignificance`)
 | Test | What it answers | Method |
 |---|---|---|
 | Newey-West t on mean IC | is mean IC ≠ 0 given autocorrelated IC_t (overlapping horizons make IC_t serially correlated by construction) | HAC standard error with lag = h − 1 (at least Bartlett with ⌊4(T/100)^{2/9}⌋); t = mean / se |
@@ -47,10 +47,10 @@ The catalogue has ~55 factors × 5 horizons × variants: dozens to hundreds of t
 ## 5. Classes (`statistic`, one module each, no I/O)
 | Class | Purpose | Output |
 |---|---|---|
-| `ICCalculator` | IC_t series per horizon, Spearman/Pearson, with per-date N | `IC_SERIES` (`trade_date, factor, horizon, ic, n`) |
+| `IcCalculator` | IC_t series per horizon, Spearman/Pearson, with per-date N | `IC_SERIES` (`trade_date, factor, horizon, ic, n`) |
 | `HacVariance` | Newey-West / Bartlett HAC variance with automatic or fixed lag | used by several classes |
 | `BlockBootstrap` | stationary and circular block resampling of a time series or a panel of dates, seeded | resample generator |
-| `ICSignificance` | §2 tests for one factor and horizon | `IC_TEST` rows (`factor, horizon, metric, value, se, t, p, ci_lo, ci_hi, window`) |
+| `IcSignificance` | §2 tests for one factor and horizon | `IC_TEST` rows (`factor, horizon, metric, value, se, t, p, ci_lo, ci_hi, window`) |
 | `MultipleTestingAdjuster` | Holm, BHY, Romano-Wolf adjusted p-values; HLZ hurdle flag | `IC_TEST` rows with `p_adj_*` |
 | `DataSnoopingTest` | White RC and Hansen SPA over a family of IC or return series | family-level p-values |
 | `DeflatedSharpe` | PSR, DSR, minimum backtest length given a trial log | scalar rows |
@@ -76,8 +76,8 @@ Otherwise it may stay as a documented *input to a composite* or be archived with
 - References are cited in each class docstring's Purpose with paper and year; formulas in the method docstrings.
 
 ## 8. Placement in plans
-Plan 04 phase 2 ("statistic primitives") grows to include §5's classes in two steps: `ICCalculator`, `HacVariance`,
-`BlockBootstrap`, `ICSignificance`, `MultipleTestingAdjuster`, `TrialLog` first (needed before any factor is
+Plan 04 phase 2 ("statistic primitives") grows to include §5's classes in two steps: `IcCalculator`, `HacVariance`,
+`BlockBootstrap`, `IcSignificance`, `MultipleTestingAdjuster`, `TrialLog` first (needed before any factor is
 accepted); `DataSnoopingTest`, `DeflatedSharpe`, `BacktestOverfitting`, `SharpeRatioTest` in a later phase of
 plan 04 or with plan 06 where traded backtests exist.
 
@@ -172,7 +172,7 @@ Pesaran-Timmermann `p` uniform for independent signs.
 | Universe | membership at `t` uses `stock_basic` list/delist dates, `namechange` for ST status as of `t`, suspension = no bar at `t`, ≥ N sessions since listing; delisted stocks stay in history (no survivorship) | `UniverseStep` (plan 04) |
 | Industry | Shenwan membership at `t` from `in_date ≤ t < out_date` | `IndustryClassifier` (plan 05) |
 | Factor value | `f_{i,t}` uses only rows with effective date ≤ `t`; TTM sums are built from the four latest PIT-visible quarters at `t`, not from calendar quarters | `BaseFactor.compute` receives `FUNDAMENTALS_PIT` already aligned; the contract forbids any other fundamentals input |
-| Forward return | starts at the **open of `t+1`** (tradeable), never at the close of `t` | `ICCalculator`, `ExecutionModel` (single owner of the lag) |
+| Forward return | starts at the **open of `t+1`** (tradeable), never at the close of `t` | `IcCalculator`, `ExecutionModel` (single owner of the lag) |
 | Analyst data | `report_date` is the known-on; a report dated `d` is effective from the next session; consensus is rebuilt as of each `t` from reports with `report_date ≤ t` | FACTOR_LIBRARY §3b |
 | Calendar | trading sessions are known 400 days ahead (D-050), so "next session" is always resolvable | `TradingCalendar` |
 | Tests | every aligner and factor has a synthetic restatement test proving a value is not visible before its effective date (TC-PA-001..005 exist; each new factor adds one) | CODING_STANDARD §6 |

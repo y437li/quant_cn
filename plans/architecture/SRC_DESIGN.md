@@ -84,9 +84,9 @@ frame's `Schema` before returning. Names follow the verb table (`read_`, `list_`
 |---|---|
 | `Winsorizer`, `Standardizer` (z-score, rank) | cross-sectional per-date transforms on a long panel |
 | `Neutralizer` | residualise a value column against industry dummies / size per date |
-| `ICCalculator` | Spearman/Pearson IC per date and horizon between any value column and forward returns → `IC_SERIES` |
+| `IcCalculator` | Spearman/Pearson IC per date and horizon between any value column and forward returns → `IC_SERIES` |
 | `HacVariance`, `BlockBootstrap` | Newey-West variance; stationary/circular block bootstrap (shared by tests and the risk validator) |
-| `ICSignificance` | NW t, bootstrap CI, Pesaran-Timmermann, sub-period/regime consistency, structural break, decay (FACTOR_TESTING_DESIGN §2) |
+| `IcSignificance` | NW t, bootstrap CI, Pesaran-Timmermann, sub-period/regime consistency, structural break, decay (FACTOR_TESTING_DESIGN §2) |
 | `MultipleTestingAdjuster`, `DataSnoopingTest` | Holm / BHY / Romano-Wolf adjusted p, HLZ t ≥ 3 hurdle; White RC / Hansen SPA over a factor family (§3) |
 | `DeflatedSharpe`, `BacktestOverfitting`, `SharpeRatioTest`, `TrialLog` | PSR/DSR, CSCV PBO, Ledoit-Wolf Sharpe difference; append-only trial log feeding them (§4) |
 | `QuantileReturns` | per-date quantile buckets of a value column and their forward returns |

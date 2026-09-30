@@ -188,7 +188,7 @@ plotted via its `to_frame()` output, never by importing `back_testing`. Nothing 
 | lake | `ParquetWriter`, `LakeCatalog`, `FetchLog`, `RunLog`, `Compactor`, `LakeQuery`, `PitAligner`, `TradingCalendar` |
 | data_loading | `TushareClient`, `FetcherFactory`, `SingleCallFetcher`, `EnumFetcher`, `DateSweepFetcher`, `PeriodSweepFetcher` (one per sweep pattern, DATA_LOADING_DESIGN §2.2) |
 | pipeline | `BaseRunner`, `LocalRunner`, `KeyExecutor`, `DownloadPipeline`, `CuratePipeline` (`PrefectRunner` deferred, D-022) |
-| statistic | `Winsorizer`, `Standardizer`, `Neutralizer`, `ICCalculator`, `ReturnStats` (plan 04) |
+| statistic | `Winsorizer`, `Standardizer`, `Neutralizer`, `IcCalculator`, `ReturnStats` (plan 04) |
 | calculation | `BaseCalculation`, `RiskFreeCurve`, `OptionChainBuilder`, `TermSelector`, `ForwardPriceEstimator`, `VarianceStripCalculator`, `TermInterpolator`, `VixCalculator`, `CalculationFactory` (plan 03) |
 | factor | `BaseFactor`, six concrete factors, `FactorPreprocessor`, `FactorEvaluator`, `SignalCombiner`, `FactorFactory` (plan 04) |
 | risk | `IndustryClassifier`, `DescriptorBuilder`, `ExposureStandardizer`, `FactorReturnEstimator`, `FactorCovarianceEstimator`, `SpecificRiskEstimator`, `RiskModel`, `RiskDecomposer`, `RiskModelValidator` (plan 05) |
