@@ -26,6 +26,55 @@ MARGIN_VIEW = f"{SCHEMA}.margin_targets"
 UNIVERSE_VIEW = f"{SCHEMA}.universe"
 # statements only: event datasets are period-swept too (forecast_vip, disclosure_date; D-081)
 FUNDAMENTALS_PREFIX = "fundamentals/"
+BASE_VIEW = f"{SCHEMA}.fundamentals_base"
+TTM_VIEW = f"{SCHEMA}.fundamentals_ttm"
+# D-092: trailing twelve months from the latest PIT-visible versions of the needed periods.
+# Statements report year-to-date flows (Q1, H1, 9M, FY), so for the latest visible period P:
+# TTM = YTD(P) + FY(year(P) - 1) - YTD(P - 1 year); TTM = YTD(P) when P is a year end. Each time a
+# new version becomes known (known_on) the TTM is recomputed from the versions known by then, so
+# PitAligner sees `<field>_ttm` rows like any other field (effective the next session).
+_TTM_SQL = f"""
+CREATE OR REPLACE VIEW {TTM_VIEW} AS
+WITH v AS (
+    SELECT ts_code, end_date, known_on, ann_date, field, value FROM {BASE_VIEW}
+    WHERE source IN ('income_vip', 'cashflow_vip') AND value IS NOT NULL
+    QUALIFY row_number() OVER (PARTITION BY ts_code, field, end_date, known_on
+                               ORDER BY ann_date DESC, update_flag DESC NULLS LAST) = 1),
+ev AS (
+    SELECT DISTINCT ON (ts_code, field, known_on) ts_code, field, known_on, ann_date,
+           max(end_date) OVER (PARTITION BY ts_code, field ORDER BY known_on
+                               RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS period
+    FROM v ORDER BY ts_code, field, known_on, ann_date DESC),
+keyed AS (
+    SELECT *, CAST(CAST(substr(period, 1, 4) AS INTEGER) - 1 AS VARCHAR) AS prior_year FROM ev),
+cur AS (SELECT k.*, c.value AS v_cur FROM keyed k ASOF LEFT JOIN v c
+        ON c.ts_code = k.ts_code AND c.field = k.field AND c.end_date = k.period
+       AND c.known_on <= k.known_on),
+fy AS (SELECT k.*, f.value AS v_fy FROM cur k ASOF LEFT JOIN v f
+       ON f.ts_code = k.ts_code AND f.field = k.field AND f.end_date = k.prior_year || '1231'
+      AND f.known_on <= k.known_on),
+prev AS (SELECT k.*, p.value AS v_prev FROM fy k ASOF LEFT JOIN v p
+         ON p.ts_code = k.ts_code AND p.field = k.field
+        AND p.end_date = k.prior_year || substr(k.period, 5, 4) AND p.known_on <= k.known_on),
+ttm AS (
+    SELECT ts_code, period AS end_date, known_on, ann_date, field,
+           CASE WHEN substr(period, 5, 4) = '1231' THEN v_cur
+                ELSE v_cur + v_fy - v_prev END AS value
+    FROM prev),
+yoy AS (
+    SELECT t.ts_code, t.end_date, t.known_on, t.ann_date, t.field,
+           (t.value - b.value) / abs(b.value) AS value
+    FROM ttm t ASOF LEFT JOIN ttm b
+      ON b.ts_code = t.ts_code AND b.field = t.field
+     AND b.end_date = CAST(CAST(substr(t.end_date, 1, 4) AS INTEGER) - 1 AS VARCHAR)
+                      || substr(t.end_date, 5, 4)
+     AND b.known_on <= t.known_on
+    WHERE t.field IN ('n_income_attr_p', 'revenue') AND b.value <> 0)
+SELECT ts_code, end_date, known_on, ann_date, CAST(NULL AS VARCHAR) AS update_flag,
+       'ttm' AS source, field || '_ttm' AS field, value FROM ttm WHERE value IS NOT NULL
+UNION ALL
+SELECT ts_code, end_date, known_on, ann_date, CAST(NULL AS VARCHAR) AS update_flag,
+       'ttm' AS source, field || '_ttm_yoy' AS field, value FROM yoy WHERE value IS NOT NULL"""
 _PRICE_SQL = f"""
 CREATE OR REPLACE VIEW {PRICES_VIEW} AS
 SELECT d.trade_date, d.ts_code, d.open, d.high, d.low, d.close, d.pre_close, d.vol, d.amount,
@@ -107,9 +156,10 @@ class DerivedViews:
         Create the `derived` schema views built only from curated/:
         `derived.prices_adj` (daily bars joined to adj_factor, close_adj = close * adj_factor;
         PRICE_PANEL columns; retired alias codes absent from stock_basic dropped);
-        `derived.fundamentals_long` (every period-swept dataset unpivoted to one row per numeric
-        field and announced version; statements under curated/fundamentals/ only, filtered to
-        report_type = '1');
+        `derived.fundamentals_long` = `derived.fundamentals_base` (every statement dataset under
+        curated/fundamentals/ unpivoted to one row per numeric field and announced version,
+        report_type = '1') plus `derived.fundamentals_ttm` (`<flow>_ttm` and `<field>_ttm_yoy` rows
+        from the latest versions known at each announcement, D-092);
         `derived.fut_holding_brokers` (contract rows of fut_holding without member-category
         totals, exchange "ZCE" -> "CZCE"; D-079);
         `derived.fut_daily_one_sided` (fut_daily with vol, amount, oi, oi_chg halved for
@@ -148,6 +198,8 @@ class DerivedViews:
         TC-DV-007  industry_l1 gives PIT intervals plus back-filled rows before and between them
         TC-DV-008  margin_targets unions SZSE flags and the SSE proxy (agreement: QualityViews)
         TC-DV-009  derived.universe reads the materialised universe files; absent without them
+        TC-DV-010  TTM = YTD + prior FY - prior same period from versions known at each
+                   announcement; a restated FY yields a new TTM row; yoy from prior TTM
     """
 
     def __init__(
@@ -179,25 +231,7 @@ class DerivedViews:
         """
         con = self._catalog.connection
         self._execute(con, f"CREATE SCHEMA IF NOT EXISTS {SCHEMA}")
-        aliases = _ALIAS_FILTER if self._query.has_view("curated.stock_basic") else ""
-        parts = [self._build_unpivot(s) for s in self._list_sources()]
-        fundamentals = (
-            f"CREATE OR REPLACE VIEW {FUNDAMENTALS_VIEW} AS\n" + "\nUNION ALL\n".join(parts)
-            if parts
-            else ""
-        )
-        plan: list[tuple[str, list[str], str]] = [
-            (PRICES_VIEW, ["daily", "adj_factor"], _PRICE_SQL.format(alias_filter=aliases)),
-            (FUNDAMENTALS_VIEW, [], fundamentals),
-            (
-                HOLDING_VIEW,
-                ["fut_holding"],
-                _HOLDING_SQL.format(category_filter=self._build_category_filter()),
-            ),
-            (ONE_SIDED_VIEW, ["fut_daily"], _ONE_SIDED_SQL),
-            (INDUSTRY_VIEW, ["index_member_all"], _INDUSTRY_SQL),
-            (MARGIN_VIEW, ["szse_margin_targets", "margin_detail"], _MARGIN_SQL),
-        ]
+        plan = self._build_plan()
         created: list[str] = []
         for view, inputs, sql in plan:
             if sql and all(self._query.has_view(f"curated.{name}") for name in inputs):
@@ -210,6 +244,33 @@ class DerivedViews:
         created += [alias_view] if alias_view else []
         logger.info("derived views: %s", created)
         return created + QualityViews(self._catalog, self._query).refresh()
+
+    def _build_plan(self) -> list[tuple[str, list[str], str]]:
+        aliases = _ALIAS_FILTER if self._query.has_view("curated.stock_basic") else ""
+        parts = [self._build_unpivot(s) for s in self._list_sources()]
+        base = (
+            f"CREATE OR REPLACE VIEW {BASE_VIEW} AS\n" + "\nUNION ALL\n".join(parts)
+            if parts
+            else ""
+        )
+        long_sql = (
+            f"CREATE OR REPLACE VIEW {FUNDAMENTALS_VIEW} AS SELECT * FROM {BASE_VIEW} "
+            f"UNION ALL SELECT * FROM {TTM_VIEW}"
+        )
+        return [
+            (PRICES_VIEW, ["daily", "adj_factor"], _PRICE_SQL.format(alias_filter=aliases)),
+            (BASE_VIEW, [], base),
+            (TTM_VIEW, [], _TTM_SQL if base else ""),
+            (FUNDAMENTALS_VIEW, [], long_sql if base else ""),
+            (
+                HOLDING_VIEW,
+                ["fut_holding"],
+                _HOLDING_SQL.format(category_filter=self._build_category_filter()),
+            ),
+            (ONE_SIDED_VIEW, ["fut_daily"], _ONE_SIDED_SQL),
+            (INDUSTRY_VIEW, ["index_member_all"], _INDUSTRY_SQL),
+            (MARGIN_VIEW, ["szse_margin_targets", "margin_detail"], _MARGIN_SQL),
+        ]
 
     def _refresh_universe(self, con: duckdb.DuckDBPyConnection) -> list[str]:
         folder = self._catalog.lake_root / "derived" / "universe"

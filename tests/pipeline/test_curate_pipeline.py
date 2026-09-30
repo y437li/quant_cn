@@ -51,7 +51,12 @@ def test_tc_cp_001_curate(seeded: MiniLake, config: Config) -> None:
     report = build_curate(config, seeded.catalog).run()
     assert [s.name for s in report.steps] == ["compact", "derive"]
     digests = read_digests(seeded)
-    assert set(digests) == {"derived.fundamentals_long", "derived.fundamentals_states"}
+    assert set(digests) == {
+        "derived.fundamentals_base",
+        "derived.fundamentals_ttm",
+        "derived.fundamentals_long",
+        "derived.fundamentals_states",
+    }
     assert all(len(h) == 32 for h in digests.values())
     assert (seeded.lake_root / "curated" / "INDEX.md").exists()
 

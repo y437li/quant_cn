@@ -9,6 +9,7 @@ Mirrors `src/quant_cn`; one `test_<module>.py` per module, one test per TC ID (C
 | [`calculation/`](calculation/INDEX.md) | tests for `quant_cn.calculation` |
 | [`core/`](core/INDEX.md) | tests for `quant_cn.core` |
 | [`data_loading/`](data_loading/INDEX.md) | tests for `quant_cn.data_loading` |
+| [`factor/`](factor/INDEX.md) | TODO purpose |
 | [`lake/`](lake/INDEX.md) | tests for `quant_cn.lake` |
 | [`pipeline/`](pipeline/INDEX.md) | tests for `quant_cn.pipeline` |
 | [`portfolio/`](portfolio/INDEX.md) | tests for `quant_cn.portfolio` |
@@ -21,6 +22,6 @@ Mirrors `src/quant_cn`; one `test_<module>.py` per module, one test per TC ID (C
 |---|---|---|
 | `__init__.py` | package marker |  |
 | `conftest.py` | shared fixtures: Config over copied YAML, mini lake in tmp_path | `clock`, `repo`, `config`, `lake` |
-| `support.py` | Test doubles and frame builders shared by all test modules (no network, no real lake) | `FakeClock`, `FakeTushareClient`, `MiniLake`, `Sample`, `SampleRepo`, `SampleLake`, `SampleOptions`, `ScriptStep` |
+| `support.py` | Test doubles and frame builders shared by all test modules (no network, no real lake) | `FakeClock`, `FakeTushareClient`, `MiniLake`, `Sample`, `SampleRepo`, `SampleLake`, `SampleOptions`, `ScriptStep`, `SampleFactorLake` |
 | `test_cli.py` | tests for `cli`, one function per TC ID |  |
 | `test_contracts.py` | the whole repository passes lint_contracts (every group) |  |

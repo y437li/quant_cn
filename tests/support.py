@@ -7,6 +7,7 @@ import subprocess
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import ClassVar
 
 import pandas as pd
 
@@ -14,9 +15,11 @@ from quant_cn.calculation.black76_model import Black76Model
 from quant_cn.core.base_api_client import BaseApiClient
 from quant_cn.core.base_step import BaseStep, ProgressHook
 from quant_cn.core.clock import Clock
+from quant_cn.core.config import Config
 from quant_cn.core.dataset_spec import CuratedSpec, DatasetSpec, SweepSpec
 from quant_cn.core.exceptions import QuantCnError
 from quant_cn.core.step_report import StepReport
+from quant_cn.lake.compactor import Compactor
 from quant_cn.lake.fetch_log import FetchLog
 from quant_cn.lake.lake_catalog import LakeCatalog
 from quant_cn.lake.lake_query import LakeQuery
@@ -242,3 +245,87 @@ class ScriptStep(BaseStep):
         if progress:
             progress("k", "fetched")
         return StepReport(self._name, fetched=1)
+
+
+class SampleFactorLake:
+    """Statements, prices and daily_basic for one stock (plan 04 factor PIT tests)."""
+
+    CODE = "000001.SZ"
+    PROFIT: ClassVar[
+        list[tuple[str, str, float]]
+    ] = [  # (end_date, f_ann_date, n_income_attr_p YTD)
+        ("20240331", "20240425", 10.0),
+        ("20241231", "20250320", 80.0),
+        ("20250331", "20250425", 20.0),
+        ("20251231", "20260320", 100.0),
+        ("20260331", "20260424", 30.0),
+        ("20251231", "20260515", 120.0),  # restated FY 2025
+    ]
+
+    @staticmethod
+    def write(lake: MiniLake, config: Config, name: str, rows: list[dict[str, object]]) -> None:
+        spec = config.get_dataset(name)
+        base = {f: None for f in spec.fields}
+        lake.writer.write_raw(spec, "x", pd.DataFrame([base | r for r in rows]))
+        Compactor(lake.catalog, lake.query, lake.writer, lake.clock).rebuild(spec)
+
+    @classmethod
+    def write_market(cls, lake: MiniLake, config: Config, days: list[str]) -> None:
+        lake.writer.write_raw(config.get_dataset("trade_cal"), "all", Sample.build_trade_cal(days))
+        Compactor(lake.catalog, lake.query, lake.writer, lake.clock).rebuild(
+            config.get_dataset("trade_cal")
+        )
+        cls.write(
+            lake,
+            config,
+            "stock_basic",
+            [{"ts_code": cls.CODE, "list_status": "L", "list_date": "20000101"}],
+        )
+        cls.write(
+            lake,
+            config,
+            "daily",
+            [{"ts_code": cls.CODE, "trade_date": d, "open": 10.0, "close": 10.0} for d in days],
+        )
+        cls.write(
+            lake,
+            config,
+            "adj_factor",
+            [{"ts_code": cls.CODE, "trade_date": d, "adj_factor": 1.0} for d in days],
+        )
+        cls.write(
+            lake,
+            config,
+            "daily_basic",
+            [
+                {"ts_code": cls.CODE, "trade_date": d, "total_mv": 50.0, "turnover_rate_f": 1.0}
+                for d in days
+            ],
+        )
+
+    @classmethod
+    def write_statements(cls, lake: MiniLake, config: Config) -> None:
+        stmt = {"ts_code": cls.CODE, "report_type": "1", "update_flag": "1"}
+        cls.write(
+            lake,
+            config,
+            "income_vip",
+            [
+                stmt | {"end_date": e, "ann_date": a, "f_ann_date": a, "n_income_attr_p": v}
+                for e, a, v in cls.PROFIT
+            ],
+        )
+        cls.write(
+            lake,
+            config,
+            "balancesheet_vip",
+            [
+                stmt
+                | {
+                    "end_date": "20260331",
+                    "ann_date": "20260424",
+                    "f_ann_date": "20260424",
+                    "total_hldr_eqy_exc_min_int": 1000.0,
+                }
+            ],
+        )

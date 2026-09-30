@@ -30,6 +30,7 @@ class TradingCalendar:
         cli.ServiceBuilder                       -- injected type or call
         lake.EffectiveDateResolver               -- injected type or call
         lake.LakeReader                          -- injected type or call
+        factor.FactorFactory                     -- injected type or call
 
     Test cases:
         TC-TCA-001  sessions returns open days in range, inclusive, ascending

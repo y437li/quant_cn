@@ -119,6 +119,36 @@ class DownloadConfig(BaseModel):
     end: str | None = None
 
 
+class FactorSpec(BaseModel):
+    """
+    Purpose:
+        One factor of config/factors.yaml: its name, implementing class and parameters.
+
+    Contract:
+        Input:
+            name:       str             -- FACTOR_PANEL.factor, e.g. "ep_ttm"
+            class_name: str             -- BaseFactor subclass name (YAML key `class`)
+            params:     dict[str, Any]  -- constructor keyword arguments
+        Output:
+            frozen pydantic model
+        Raises:
+            pydantic.ValidationError
+
+    Used by:
+        core.Config           -- field `factors`
+        factor.FactorFactory  -- builds the instances
+
+    Test cases:
+        TC-C-012  config/factors.yaml loads six factors with their classes; missing file = []
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid", populate_by_name=True)
+
+    name: str
+    class_name: str = Field(alias="class")
+    params: dict[str, Any] = Field(default_factory=dict)
+
+
 class UniverseConfig(BaseModel):
     """
     Purpose:
@@ -227,6 +257,7 @@ class Config(BaseModel):
             futures_categories: list[FuturesCategory]  -- config/futures_categories.yaml (D-079)
             ticker_aliases: list[TickerAlias]  -- config/ticker_aliases.yaml (D-089)
             universe:    UniverseConfig          -- base.yaml `universe` (plan 04 phase 3)
+            factors:     list[FactorSpec]        -- config/factors.yaml (plan 04 phase 4)
         Output:
             frozen pydantic model
         Raises:
@@ -251,6 +282,7 @@ class Config(BaseModel):
         TC-C-009  config/futures_categories.yaml loads; a missing file gives an empty list
         TC-C-010  config/ticker_aliases.yaml loads the three known pairs; missing file = []
         TC-C-011  base.yaml universe section loads; missing section gives the defaults
+        TC-C-012  config/factors.yaml loads six factors with their classes; missing file = []
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -264,6 +296,7 @@ class Config(BaseModel):
     futures_categories: list[FuturesCategory] = Field(default_factory=list)
     ticker_aliases: list[TickerAlias] = Field(default_factory=list)
     universe: UniverseConfig = Field(default_factory=UniverseConfig)
+    factors: list[FactorSpec] = Field(default_factory=list)
 
     @classmethod
     def load(
@@ -292,8 +325,7 @@ class Config(BaseModel):
         local = cls._read_yaml(root / "config" / "local.yaml", required=False)
         merged = cls._build_merged(base, local)
         datasets = cls._read_yaml(root / "config" / "datasets.yaml", required=True)
-        categories = cls._read_yaml(root / "config" / "futures_categories.yaml", required=False)
-        aliases = cls._read_yaml(root / "config" / "ticker_aliases.yaml", required=False)
+        extras = cls._read_extras(root)
 
         lake = dict(merged.get("lake", {}))
         if environ.get(ENV_LAKE_ROOT):
@@ -308,9 +340,8 @@ class Config(BaseModel):
                 download=DownloadConfig(**merged.get("download", {})),
                 enum_values=merged.get("enum_values", {}),
                 datasets={name: DatasetSpec(name=name, **spec) for name, spec in datasets.items()},
-                futures_categories=[FuturesCategory(**c) for c in categories.get("categories", [])],
-                ticker_aliases=[TickerAlias(**a) for a in aliases.get("aliases", [])],
                 universe=UniverseConfig(**merged.get("universe", {})),
+                **extras,
             )
         except (ValidationError, TypeError) as exc:
             raise ConfigError(f"invalid configuration: {exc}") from exc
@@ -375,6 +406,18 @@ class Config(BaseModel):
                 f"lake root {lake_root} is inside the repository; set QUANT_CN_LAKE_ROOT to a path "
                 "outside it (D-021) or lake.allow_inside_repo: true in config/local.yaml"
             )
+
+    @classmethod
+    def _read_extras(cls, root: Path) -> dict[str, Any]:
+        """The optional list files: futures categories, ticker aliases, factors."""
+        categories = cls._read_yaml(root / "config" / "futures_categories.yaml", required=False)
+        aliases = cls._read_yaml(root / "config" / "ticker_aliases.yaml", required=False)
+        factors = cls._read_yaml(root / "config" / "factors.yaml", required=False)
+        return {
+            "futures_categories": [FuturesCategory(**c) for c in categories.get("categories", [])],
+            "ticker_aliases": [TickerAlias(**a) for a in aliases.get("aliases", [])],
+            "factors": [FactorSpec(**f) for f in factors.get("factors", [])],
+        }
 
     @staticmethod
     def _read_environment(root: Path) -> dict[str, str]:

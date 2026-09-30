@@ -42,7 +42,8 @@ def test_tc_c_003_inside_repo_refused(repo: Path) -> None:
 def test_tc_c_004_start_for(config: Config) -> None:
     assert config.get_start("trade_cal") == "19901219"
     assert config.get_start("daily") == config.download.long_history_start
-    assert config.get_start("daily_basic") == config.download.default_start
+    assert config.get_start("moneyflow") == config.download.default_start
+    assert config.get_start("daily_basic") == "20180901"  # own start wins
 
 
 # TC-C-005
@@ -102,3 +103,11 @@ def test_tc_c_010_ticker_aliases(config: Config, tmp_path: Path) -> None:
 def test_tc_c_011_universe(config: Config) -> None:
     assert config.universe.min_sessions == 120 and config.universe.exchanges == ["SH", "SZ"]
     assert Config.model_fields["universe"].default_factory is not None
+
+
+# TC-C-012
+def test_tc_c_012_factors(config: Config, tmp_path: Path) -> None:
+    committed = Config.load(REPO, env={"QUANT_CN_LAKE_ROOT": str(tmp_path)})
+    names = {f.name: f.class_name for f in committed.factors}
+    assert len(names) == 6 and names["momentum_12_1"] == "MomentumFactor"
+    assert config.factors == []

@@ -1,0 +1,9 @@
+# Factor library (plan 04 phase 4, FACTOR_LIBRARY §8). One line per factor: name (FACTOR_PANEL.factor),
+# class (a BaseFactor subclass under quant_cn/factor/library/), params (constructor keyword arguments).
+factors:
+  - {name: ep_ttm, class: EarningsYieldFactor}
+  - {name: roe_ttm, class: RoeFactor}
+  - {name: profit_growth_ttm, class: ProfitGrowthFactor}
+  - {name: momentum_12_1, class: MomentumFactor, params: {window: 252, skip: 21}}
+  - {name: reversal_1m, class: ReversalFactor, params: {window: 21}}
+  - {name: turnover_60d, class: TurnoverFactor, params: {window: 60, min_obs: 40}}

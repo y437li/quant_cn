@@ -64,6 +64,7 @@ adj_factor:
 daily_basic:
   endpoint: daily_basic
   sweep: {kind: trade_date}
+  start: "20180901"  # 60-session turnover needs history before 2019 (D-092)
   primary_key: [ts_code, trade_date]
   known_on: trade_date
   fields: [ts_code, trade_date, close, turnover_rate, turnover_rate_f, volume_ratio, pe, pe_ttm,
@@ -97,6 +98,7 @@ stk_limit:
 fina_indicator_vip:
   endpoint: fina_indicator_vip
   sweep: {kind: period, refetch_recent: 2}
+  start: "20160101"  # TTM needs the prior year and growth two: factors from 2019 (D-092)
   primary_key: [ts_code, end_date, ann_date, update_flag]
   known_on: ann_date
   fields: [ts_code, ann_date, end_date, eps, dt_eps, roe, roe_dt, roa, grossprofit_margin,
@@ -109,6 +111,7 @@ fina_indicator_vip:
 income_vip:
   endpoint: income_vip
   sweep: {kind: period, refetch_recent: 2}
+  start: "20160101"  # TTM needs the prior year and growth two: factors from 2019 (D-092)
   primary_key: [ts_code, end_date, report_type, f_ann_date, ann_date, update_flag]
   known_on: f_ann_date
   fields: [ts_code, ann_date, f_ann_date, end_date, report_type, total_profit, n_income_attr_p,
@@ -119,6 +122,7 @@ income_vip:
 balancesheet_vip:
   endpoint: balancesheet_vip
   sweep: {kind: period, refetch_recent: 2}
+  start: "20160101"  # TTM needs the prior year and growth two: factors from 2019 (D-092)
   primary_key: [ts_code, end_date, report_type, f_ann_date, ann_date, update_flag]
   known_on: f_ann_date
   fields: [ts_code, ann_date, f_ann_date, end_date, report_type, total_assets, total_liab,
@@ -131,6 +135,7 @@ balancesheet_vip:
 cashflow_vip:
   endpoint: cashflow_vip
   sweep: {kind: period, refetch_recent: 2}
+  start: "20160101"  # TTM needs the prior year and growth two: factors from 2019 (D-092)
   primary_key: [ts_code, end_date, report_type, f_ann_date, ann_date, update_flag]
   known_on: f_ann_date
   fields: [ts_code, ann_date, f_ann_date, end_date, report_type, n_cashflow_act, free_cashflow,

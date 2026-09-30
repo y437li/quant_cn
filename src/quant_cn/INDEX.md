@@ -9,6 +9,7 @@ The package. A layer imports only its own layer or lower (CODING_STANDARD §2.1)
 | [`calculation/`](calculation/INDEX.md) | L4 calculation: CBOE VIX, Black-76, rate curve, option chains |
 | [`core/`](core/INDEX.md) | L1 base classes, exceptions, Config, Schema, DateCodec, TickerNormalizer, logging |
 | [`data_loading/`](data_loading/INDEX.md) | L3 Tushare client and one fetcher per sweep pattern; writes into the lake |
+| [`factor/`](factor/INDEX.md) | TODO purpose |
 | [`lake/`](lake/INDEX.md) | L2 parquet writer, DuckDB catalog, fetch log, compactor, query API, PIT aligner |
 | [`pipeline/`](pipeline/INDEX.md) | L4 resumable steps: download -> compact -> curate -> features |
 | [`portfolio/`](portfolio/INDEX.md) | L5 position sizing, constraints, rebalancing schedules |

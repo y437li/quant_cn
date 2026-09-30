@@ -40,10 +40,13 @@ def test_tc_dv_002_fundamentals_long(lake: MiniLake, config: Config) -> None:
     rebuild_curated(lake, config, "income_vip")
     DerivedViews(lake.catalog, lake.query, config.datasets).refresh()
     df = lake.query.sql(
-        "SELECT known_on, field, value, source FROM derived.fundamentals_long ORDER BY known_on"
+        "SELECT known_on, field, value, source FROM derived.fundamentals_long"
+        " ORDER BY source, known_on"
     )
-    assert df["value"].tolist() == [1.0, 2.0] and set(df["field"]) == {"total_profit"}
-    assert set(df["source"]) == {"income_vip"}
+    base = df[df["source"] == "income_vip"]
+    assert base["value"].tolist() == [1.0, 2.0] and set(base["field"]) == {"total_profit"}
+    ttm = df[df["source"] == "ttm"]  # a year-end period: TTM equals the YTD value, per version
+    assert ttm["value"].tolist() == [1.0, 2.0] and set(ttm["field"]) == {"total_profit_ttm"}
 
 
 # TC-DV-003
@@ -197,3 +200,26 @@ def test_tc_dv_009_universe_view(lake: MiniLake, config: Config) -> None:
     lake.writer.write_derived("universe", 2026, frame)
     assert "derived.universe" in DerivedViews(lake.catalog, lake.query, config.datasets).refresh()
     assert lake.query.sql("SELECT count(*) AS n FROM derived.universe")["n"].iloc[0] == 1
+
+
+# TC-DV-010
+def test_tc_dv_010_ttm(lake: MiniLake, config: Config) -> None:
+    rows = [  # (end_date, f_ann_date, report_type, total_profit)
+        ("20240331", "20240425", "1", 10.0),
+        ("20241231", "20250320", "1", 80.0),
+        ("20250331", "20250425", "1", 20.0),
+        ("20251231", "20260320", "1", 100.0),
+        ("20260331", "20260425", "1", 30.0),
+        ("20251231", "20260601", "1", 120.0),  # restated FY 2025
+    ]
+    SampleLake.write_income(lake, config.get_dataset("income_vip"), rows)
+    rebuild_curated(lake, config, "income_vip")
+    DerivedViews(lake.catalog, lake.query, config.datasets).refresh()
+    ttm = lake.query.sql(
+        "SELECT end_date, known_on, value FROM derived.fundamentals_ttm"
+        " WHERE field = 'total_profit_ttm' ORDER BY known_on"
+    ).set_index("known_on")
+    assert ttm.loc["20250425", "value"] == 20.0 + 80.0 - 10.0  # Q1-25 TTM
+    assert ttm.loc["20260425", "value"] == 30.0 + 100.0 - 20.0  # Q1-26 TTM
+    assert ttm.loc["20260601", "value"] == 30.0 + 120.0 - 20.0  # restated FY: new TTM row
+    assert ttm.loc["20260601", "end_date"] == "20260331"

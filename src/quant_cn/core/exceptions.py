@@ -50,6 +50,7 @@ class ConfigError(QuantCnError):
         data_loading.FetcherFactory.build  -- unknown sweep kind
         pipeline.DownloadPipeline.run      -- unknown dataset requested
         pipeline.CuratePipeline            -- injected type or call
+        factor.FactorFactory               -- injected type or call
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError
