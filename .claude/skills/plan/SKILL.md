@@ -1,33 +1,33 @@
 ---
 name: plan
-description: Write, update or execute a concise project plan in Plans/plans/ and mirror its phases to Notion. Use when the user asks to "plan", "make a plan", "draft a plan", "update the plan", "start phase N", "what's next", or before any non-trivial implementation (required by CLAUDE.md). Plans are short: goal, scope, phases with done-criteria, classes touched, risks.
+description: Write, update or execute a concise project plan in plans/execution/ and mirror its phases to Notion. Use when the user asks to "plan", "make a plan", "draft a plan", "update the plan", "start phase N", "what's next", or before any non-trivial implementation (required by CLAUDE.md). Plans are short: goal, scope, phases with done-criteria, classes touched, risks.
 ---
 
 # plan
 
-Source of truth is the markdown file in `Plans/plans/`. Notion is a mirror for phase tracking.
+Source of truth is the markdown file in `plans/execution/`. Notion is a mirror for phase tracking.
 Never let the two disagree: every phase status change is written to the file first, then Notion.
 
 ## Principles (best practice, keep it short)
 - One page. If it needs more, the scope is too big; split into plans.
 - Every phase has a **deliverable** and a **done criterion** that can be checked, not felt.
 - Name the classes: new / extended / reused (from `.claude/CLASS_REGISTRY.md`). No class, no phase.
-- Decisions go in `Plans/DECISIONS.md` via the `decisions` skill; the plan only links their IDs.
+- Decisions go in `plans/decisions/DECISIONS.md` via the `decisions` skill; the plan only links their IDs.
 - No prose that explains why something is obvious. Bullets, tables, imperative verbs.
 - Status vocabulary: `todo` | `doing` | `blocked` | `done`. Nothing else.
 
 ## Modes
 
 ### 1. Create
-1. Read `CLAUDE.md`, `Plans/CODING_STANDARD.md`, `.claude/CLASS_REGISTRY.md`, `Plans/DECISIONS.md`, and any existing plan that overlaps. Reuse, do not duplicate.
-2. Copy `plan_template.md` (beside this file) to `Plans/plans/NN_<slug>.md` (`NN` = next two-digit number).
-3. Fill it. Hard limits: <= 6 phases, <= 3 bullets per phase, <= 5 risks. Unknowns go under **Open questions**, never guessed.
+1. Read `CLAUDE.md`, `plans/standards/CODING_STANDARD.md`, `.claude/CLASS_REGISTRY.md`, `plans/decisions/DECISIONS.md`, `plans/execution/ROADMAP.md`, the design in `plans/architecture/` the plan implements, and any existing plan that overlaps. Reuse, do not duplicate.
+2. Copy `plan_template.md` (beside this file) to `plans/execution/NN_<slug>.md` (`NN` = next two-digit number).
+3. Fill it. Hard limits: <= 6 phases, <= 3 bullets per phase, <= 5 risks. Unknowns go under **Open questions**, never guessed. Add the plan's row to `ROADMAP.md` (status `drafted, awaiting approval`) and its file row to `plans/execution/INDEX.md`.
 4. Sync to Notion (Section "Notion sync"). Record the Notion page URL in the plan header.
 5. Stop and hand the plan to the user for approval. Do not start implementation in the same turn.
 
 ### 2. Update
 1. Edit the plan file: status, done-criterion evidence (test output, file paths), new open questions.
-2. Append one line to the plan's **Log** table: `date | phase | change`.
+2. Append one line to the plan's **Log** table: `date | phase | change`. If the plan's status changed, update its row in `plans/execution/ROADMAP.md`.
 3. Sync the changed phases to Notion.
 
 ### 3. Execute (follow the plan)

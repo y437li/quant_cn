@@ -1,0 +1,930 @@
+# One entry per dataset (FOLDER_STRUCTURE §2, DATA_CATALOG §1). Fields not in text_fields are numeric.
+# Adding a dataset with a known sweep kind needs no code.
+
+trade_cal:
+  endpoint: trade_cal
+  sweep: {kind: none, range_params: true, extra_params: {exchange: SSE}}
+  start: "19901219"
+  extend_days: 400
+  refresh: overwrite
+  primary_key: [cal_date]
+  known_on: null
+  fields: [cal_date, is_open, pretrade_date]
+  text_fields: [cal_date, pretrade_date]
+  curated: {path: reference/trade_cal}
+
+stock_basic:
+  endpoint: stock_basic
+  sweep: {kind: list_status, values: [L, D, P]}
+  refresh: overwrite
+  primary_key: [ts_code]
+  known_on: list_date
+  fields: [ts_code, symbol, name, area, industry, market, list_date, list_status, delist_date]
+  text_fields: [ts_code, symbol, name, area, industry, market, list_date, list_status, delist_date]
+  curated: {path: reference/stock_basic}
+
+namechange:
+  endpoint: namechange
+  sweep: {kind: none}
+  refresh: overwrite
+  primary_key: [ts_code, start_date, name]
+  known_on: ann_date
+  fields: [ts_code, name, start_date, end_date, ann_date, change_reason]
+  text_fields: [ts_code, name, start_date, end_date, ann_date, change_reason]
+  curated: {path: reference/namechange}
+
+index_daily:
+  endpoint: index_daily
+  sweep: {kind: ts_code, values_from: indices, range_params: true}
+  refresh: overwrite
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, open, high, low, close, pre_close, change, pct_chg, vol, amount]
+  text_fields: [ts_code, trade_date]
+  curated: {path: reference/index_daily}
+
+daily:
+  endpoint: daily
+  sweep: {kind: trade_date}
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, open, high, low, close, pre_close, change, pct_chg, vol, amount]
+  text_fields: [ts_code, trade_date]
+  curated: {path: daily, partition_by: trade_date}
+
+adj_factor:
+  endpoint: adj_factor
+  sweep: {kind: trade_date}
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, adj_factor]
+  text_fields: [ts_code, trade_date]
+  curated: {path: adj_factor, partition_by: trade_date}
+
+daily_basic:
+  endpoint: daily_basic
+  sweep: {kind: trade_date}
+  start: "20180901"  # 60-session turnover needs history before 2019 (D-092)
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, close, turnover_rate, turnover_rate_f, volume_ratio, pe, pe_ttm,
+           pb, ps, ps_ttm, dv_ratio, dv_ttm, total_share, float_share, free_share, total_mv, circ_mv]
+  text_fields: [ts_code, trade_date]
+  curated: {path: daily_basic, partition_by: trade_date}
+
+moneyflow:
+  endpoint: moneyflow
+  sweep: {kind: trade_date}
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date,
+           buy_sm_vol, buy_sm_amount, sell_sm_vol, sell_sm_amount,
+           buy_md_vol, buy_md_amount, sell_md_vol, sell_md_amount,
+           buy_lg_vol, buy_lg_amount, sell_lg_vol, sell_lg_amount,
+           buy_elg_vol, buy_elg_amount, sell_elg_vol, sell_elg_amount,
+           net_mf_vol, net_mf_amount, trade_count]
+  text_fields: [ts_code, trade_date]
+  curated: {path: moneyflow, partition_by: trade_date}
+
+stk_limit:
+  endpoint: stk_limit
+  sweep: {kind: trade_date}
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [trade_date, ts_code, up_limit, down_limit]
+  text_fields: [trade_date, ts_code]
+  curated: {path: stk_limit, partition_by: trade_date}
+
+fina_indicator_vip:
+  endpoint: fina_indicator_vip
+  sweep: {kind: period, refetch_recent: 2}
+  start: "20160101"  # TTM needs the prior year and growth two: factors from 2019 (D-092)
+  primary_key: [ts_code, end_date, ann_date, update_flag]
+  known_on: ann_date
+  fields: [ts_code, ann_date, end_date, eps, dt_eps, roe, roe_dt, roa, grossprofit_margin,
+           netprofit_margin, netprofit_yoy, dt_netprofit_yoy, or_yoy, tr_yoy, debt_to_assets,
+           current_ratio, quick_ratio, assets_turn, working_capital, retained_earnings, ebit, ebitda,
+           fcff, ocfps, roic, invest_capital, interestdebt, netdebt, profit_dedt, update_flag]
+  text_fields: [ts_code, ann_date, end_date, update_flag]
+  curated: {path: fundamentals/fina_indicator, partition_by: end_date}
+
+income_vip:
+  endpoint: income_vip
+  sweep: {kind: period, refetch_recent: 2}
+  start: "20160101"  # TTM needs the prior year and growth two: factors from 2019 (D-092)
+  primary_key: [ts_code, end_date, report_type, f_ann_date, ann_date, update_flag]
+  known_on: f_ann_date
+  # D-117: expense lines added for the company financial table (sell/admin/fin, taxes, impairments)
+  fields: [ts_code, ann_date, f_ann_date, end_date, report_type, total_profit, n_income_attr_p,
+           rd_exp, invest_income, income_tax, revenue, operate_profit, oper_cost, update_flag,
+           total_revenue, sell_exp, admin_exp, fin_exp, biz_tax_surchg, assets_impair_loss,
+           credit_impa_loss, n_income, minority_gain, non_oper_income, non_oper_exp]
+  text_fields: [ts_code, ann_date, f_ann_date, end_date, report_type, update_flag]
+  curated: {path: fundamentals/income, partition_by: end_date}
+
+balancesheet_vip:
+  endpoint: balancesheet_vip
+  sweep: {kind: period, refetch_recent: 2}
+  start: "20160101"  # TTM needs the prior year and growth two: factors from 2019 (D-092)
+  primary_key: [ts_code, end_date, report_type, f_ann_date, ann_date, update_flag]
+  known_on: f_ann_date
+  fields: [ts_code, ann_date, f_ann_date, end_date, report_type, total_assets, total_liab,
+           total_cur_assets, total_cur_liab, accounts_receiv, fix_assets, lt_borr, oth_receiv,
+           prepayment, money_cap, lt_rec, contract_liab, adv_receipts, inventories, goodwill, cip,
+           total_hldr_eqy_exc_min_int, bond_payable, st_borr, update_flag]
+  text_fields: [ts_code, ann_date, f_ann_date, end_date, report_type, update_flag]
+  curated: {path: fundamentals/balancesheet, partition_by: end_date}
+
+cashflow_vip:
+  endpoint: cashflow_vip
+  sweep: {kind: period, refetch_recent: 2}
+  start: "20160101"  # TTM needs the prior year and growth two: factors from 2019 (D-092)
+  primary_key: [ts_code, end_date, report_type, f_ann_date, ann_date, update_flag]
+  known_on: f_ann_date
+  fields: [ts_code, ann_date, f_ann_date, end_date, report_type, n_cashflow_act, free_cashflow,
+           depr_fa_coga_dpba, c_pay_acq_const_fiolta, c_recp_cap_contrib, update_flag]
+  text_fields: [ts_code, ann_date, f_ann_date, end_date, report_type, update_flag]
+  curated: {path: fundamentals/cashflow, partition_by: end_date}
+
+# --- options and rates for the VIX calculation (plan 03, CALCULATION_DESIGN §3); not in download.order ---
+
+opt_basic:
+  endpoint: opt_basic
+  sweep: {kind: exchange, values: [SSE, SZSE, CFFEX]}
+  refresh: overwrite
+  primary_key: [ts_code]
+  known_on: list_date
+  fields: [ts_code, exchange, name, opt_code, call_put, exercise_price, per_unit, maturity_date,
+           list_date, delist_date]
+  text_fields: [ts_code, exchange, name, opt_code, call_put, maturity_date, list_date, delist_date]
+  curated: {path: reference/opt_basic}
+
+opt_daily:
+  endpoint: opt_daily
+  sweep: {kind: trade_date}
+  start: "20260801"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, exchange, pre_settle, pre_close, open, high, low, close, settle, vol,
+           amount, oi]
+  text_fields: [ts_code, trade_date, exchange]
+  curated: {path: opt_daily, partition_by: trade_date}
+
+shibor:
+  endpoint: shibor
+  # yearly windows: one range call silently stops at 2,000 rows (D-070)
+  sweep: {kind: date_window, window: year, refetch_recent: 1}
+  start: "20150101"
+  primary_key: [date]
+  known_on: date
+  fields: [date, "on", 1w, 2w, 1m, 3m, 6m, 9m, 1y]
+  text_fields: [date]
+  curated: {path: reference/shibor}
+
+fund_daily:
+  endpoint: fund_daily
+  # every exchange-traded fund by date (D-074); the plan-03 per-ETF files moved to external/
+  sweep: {kind: trade_date}
+  start: "20190101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, pre_close, open, high, low, close, change, pct_chg, vol, amount]
+  text_fields: [ts_code, trade_date]
+  curated: {path: fund_daily, partition_by: trade_date}
+
+# --- positioning and forced flows (plan 09): futures, top-20 holdings, margin; explicit starts ---
+
+fut_daily:
+  endpoint: fut_daily
+  # every exchange in one call per date (D-077); CFFEX-only 2025 files replaced
+  sweep: {kind: trade_date}
+  start: "20190101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, pre_close, pre_settle, open, high, low, close, settle, change1,
+           change2, vol, amount, oi, oi_chg]
+  text_fields: [ts_code, trade_date]
+  curated: {path: fut_daily, partition_by: trade_date}
+
+fut_holding:
+  endpoint: fut_holding
+  # all exchanges per date; the endpoint caps a call at 4,000 rows, paged past by D-076
+  sweep: {kind: trade_date}
+  start: "20190101"
+  primary_key: [trade_date, exchange, symbol, broker]
+  known_on: trade_date
+  fields: [trade_date, symbol, broker, vol, vol_chg, long_hld, long_chg, short_hld, short_chg,
+           exchange]
+  text_fields: [trade_date, symbol, broker, exchange]
+  curated: {path: fut_holding, partition_by: trade_date}
+
+margin:
+  endpoint: margin
+  sweep: {kind: trade_date}
+  start: "20250101"
+  primary_key: [trade_date, exchange_id]
+  known_on: trade_date
+  fields: [trade_date, exchange_id, rzye, rzmre, rzche, rqye, rqmcl, rzrqye, rqyl]
+  text_fields: [trade_date, exchange_id]
+  curated: {path: margin, partition_by: trade_date}
+
+margin_detail:
+  endpoint: margin_detail
+  sweep: {kind: trade_date}
+  start: "20190101"  # extended for the SSE eligibility proxy (D-084)
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [trade_date, ts_code, rzye, rqye, rzmre, rqyl, rzche, rqchl, rqmcl, rzrqye]
+  text_fields: [trade_date, ts_code]
+  curated: {path: margin_detail, partition_by: trade_date}
+
+# --- sectors and index composition (plan 11 phase 2) ---
+# Shenwan 2021 history before 2021-07 is reconstructed by the vendor (in_date earlier than the
+# scheme itself): usable for grouping, not as a record of what investors saw then (D-068).
+
+index_classify:
+  endpoint: index_classify
+  sweep: {kind: none, extra_params: {src: SW2021}}
+  refresh: overwrite
+  primary_key: [index_code]
+  known_on: null
+  fields: [index_code, industry_name, level, industry_code, is_pub, parent_code, src]
+  text_fields: [index_code, industry_name, level, industry_code, is_pub, parent_code, src]
+  curated: {path: reference/index_classify}
+
+index_member_all:
+  endpoint: index_member_all
+  sweep: {kind: is_new, values: ["Y", "N"]}
+  refresh: overwrite
+  primary_key: [ts_code, l3_code, in_date]
+  known_on: in_date
+  fields: [l1_code, l1_name, l2_code, l2_name, l3_code, l3_name, ts_code, name, in_date, out_date,
+           is_new]
+  text_fields: [l1_code, l1_name, l2_code, l2_name, l3_code, l3_name, ts_code, name, in_date,
+                out_date, is_new]
+  curated: {path: reference/index_member_all}
+
+index_weight:
+  endpoint: index_weight
+  # yearly windows per index: one range call pages past Tushare's 100k offset cap for CSI 1000 (D-069)
+  sweep: {kind: date_window, window: year, value_param: index_code, values_from: weight_indices,
+          refetch_recent: 4}
+  start: "20100101"
+  primary_key: [index_code, con_code, trade_date]
+  known_on: trade_date
+  fields: [index_code, con_code, trade_date, weight]
+  text_fields: [index_code, con_code, trade_date]
+  curated: {path: index_weight, partition_by: trade_date}
+
+sw_daily:
+  endpoint: sw_daily
+  sweep: {kind: trade_date}
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, name, open, low, high, close, change, pct_change, vol, amount, pe,
+           pb, float_mv, total_mv]
+  text_fields: [ts_code, trade_date, name]
+  curated: {path: sw_daily, partition_by: trade_date}
+
+# --- ETFs and funds (plan 11 phase 3, D-074) ---
+
+fund_basic:
+  endpoint: fund_basic
+  sweep: {kind: none, extra_params: {market: E}}
+  refresh: overwrite
+  primary_key: [ts_code]
+  known_on: list_date
+  fields: [ts_code, name, management, custodian, fund_type, found_date, due_date, list_date,
+           issue_date, delist_date, issue_amount, m_fee, c_fee, benchmark, status, invest_type, type,
+           market]
+  text_fields: [ts_code, name, management, custodian, fund_type, found_date, due_date, list_date,
+                issue_date, delist_date, benchmark, status, invest_type, type, market]
+  curated: {path: reference/fund_basic}
+
+fund_nav:
+  endpoint: fund_nav
+  # NAV of day T is published that evening: usable from the next session
+  sweep: {kind: nav_date, extra_params: {market: E}}
+  start: "20190101"
+  primary_key: [ts_code, nav_date]
+  known_on: nav_date
+  known_on_rule: next_session
+  fields: [ts_code, ann_date, nav_date, unit_nav, accum_nav, accum_div, net_asset, total_netasset,
+           adj_nav]
+  text_fields: [ts_code, ann_date, nav_date]
+  curated: {path: fund_nav, partition_by: nav_date}
+
+fund_share:
+  endpoint: fund_share
+  # shares outstanding at the close of T, published after the close: next session
+  sweep: {kind: trade_date}
+  start: "20190101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  known_on_rule: next_session
+  fields: [ts_code, trade_date, fd_share, fund_type, market]
+  text_fields: [ts_code, trade_date, fund_type, market]
+  curated: {path: fund_share, partition_by: trade_date}
+
+margin_secs:
+  endpoint: margin_secs
+  # securities eligible for margin trading on T (list known before the open)
+  sweep: {kind: trade_date}
+  start: "20190101"
+  primary_key: [trade_date, ts_code]
+  known_on: trade_date
+  fields: [trade_date, ts_code, name, exchange]
+  text_fields: [trade_date, ts_code, name, exchange]
+  curated: {path: margin_secs, partition_by: trade_date}
+
+# --- futures and gold (plan 11 phase 4, D-077) ---
+
+fut_basic:
+  endpoint: fut_basic
+  sweep: {kind: exchange, values: [CFFEX, SHFE, DCE, CZCE, INE, GFEX]}
+  refresh: overwrite
+  primary_key: [ts_code]
+  known_on: list_date
+  fields: [ts_code, symbol, exchange, name, fut_code, multiplier, trade_unit, per_unit, quote_unit,
+           list_date, delist_date, d_month, last_ddate]
+  text_fields: [ts_code, symbol, exchange, name, fut_code, trade_unit, quote_unit, list_date,
+                delist_date, d_month, last_ddate]
+  curated: {path: reference/fut_basic}
+
+fut_mapping:
+  endpoint: fut_mapping
+  # continuous code (e.g. AGL.SHF) -> the contract it maps to that day
+  sweep: {kind: trade_date}
+  start: "20190101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, mapping_ts_code]
+  text_fields: [ts_code, trade_date, mapping_ts_code]
+  curated: {path: fut_mapping, partition_by: trade_date}
+
+sge_basic:
+  endpoint: sge_basic
+  sweep: {kind: none}
+  refresh: overwrite
+  primary_key: [ts_code]
+  known_on: null
+  fields: [ts_code, ts_name, trade_type, t_unit, p_unit, min_change, price_limit, min_vol, max_vol,
+           trade_mode]
+  text_fields: [ts_code, ts_name, trade_type, t_unit, p_unit, trade_mode]
+  curated: {path: reference/sge_basic}
+
+sge_daily:
+  endpoint: sge_daily
+  sweep: {kind: trade_date}
+  start: "20190101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, close, open, high, low, price_avg, change, pct_change, vol, amount,
+           oi, settle_vol, settle_dire]
+  text_fields: [ts_code, trade_date, settle_dire]
+  curated: {path: sge_daily, partition_by: trade_date}
+
+# --- domestic macro and FX (plan 11 phase 5, D-080) ---
+# Monthly prints have no announce date: known-on = month end + release_lag_days (conservative until
+# the official NBS/PBOC calendars of phase 10 replace the lags). yc_cb is not permitted (D-080).
+
+cn_cpi:
+  endpoint: cn_cpi
+  sweep: {kind: none, extra_params: {start_m: "201501"}}
+  refresh: overwrite
+  primary_key: [month]
+  known_on: month
+  known_on_rule: period_end_lag
+  release_lag_days: 20  # observed max since 2010 (D-086; was 12)
+  release_dates: macro_release_cpi
+  fields: [month, nt_val, nt_yoy, nt_mom, nt_accu, town_val, town_yoy, town_mom, town_accu, cnt_val,
+           cnt_yoy, cnt_mom, cnt_accu]
+  text_fields: [month]
+  curated: {path: macro/cn_cpi}
+
+cn_ppi:
+  endpoint: cn_ppi
+  sweep: {kind: none, extra_params: {start_m: "201501"}}
+  refresh: overwrite
+  primary_key: [month]
+  known_on: month
+  known_on_rule: period_end_lag
+  release_lag_days: 20  # observed max since 2010 (D-086; was 12)
+  release_dates: macro_release_ppi
+  fields: [month, ppi_yoy, ppi_mp_yoy, ppi_mp_qm_yoy, ppi_mp_rm_yoy, ppi_mp_p_yoy, ppi_cg_yoy,
+           ppi_cg_f_yoy, ppi_cg_c_yoy, ppi_cg_adu_yoy, ppi_cg_dcg_yoy, ppi_mom, ppi_mp_mom,
+           ppi_mp_qm_mom, ppi_mp_rm_mom, ppi_mp_p_mom, ppi_cg_mom, ppi_cg_f_mom, ppi_cg_c_mom,
+           ppi_cg_adu_mom, ppi_cg_dcg_mom, ppi_accu, ppi_mp_accu, ppi_mp_qm_accu, ppi_mp_rm_accu,
+           ppi_mp_p_accu, ppi_cg_accu, ppi_cg_f_accu, ppi_cg_c_accu, ppi_cg_adu_accu,
+           ppi_cg_dcg_accu]
+  text_fields: [month]
+  curated: {path: macro/cn_ppi}
+
+cn_pmi:
+  endpoint: cn_pmi
+  # NBS PMI is released on the last day of the month (09:30): usable from the next session.
+  # The endpoint ignores `fields` and always adds its metadata columns, kept as text.
+  sweep: {kind: none, extra_params: {start_m: "201501"}}
+  refresh: overwrite
+  primary_key: [MONTH]
+  known_on: MONTH
+  known_on_rule: period_end_lag
+  release_lag_days: 7  # observed max since 2010 (D-086; was 1)
+  release_dates: macro_release_pmi
+  fields: [MONTH, ID, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, PMI010000, PMI010100, PMI010200, PMI010300, PMI010400, PMI010401, PMI010402,
+           PMI010403, PMI010500, PMI010501, PMI010502, PMI010503, PMI010600, PMI010601,
+           PMI010602, PMI010603, PMI010700, PMI010701, PMI010702, PMI010703, PMI010800,
+           PMI010801, PMI010802, PMI010803, PMI010900, PMI011000, PMI011100, PMI011200,
+           PMI011300, PMI011400, PMI011500, PMI011600, PMI011700, PMI011800, PMI011900,
+           PMI012000, PMI020100, PMI020101, PMI020102, PMI020200, PMI020201, PMI020202,
+           PMI020300, PMI020301, PMI020302, PMI020400, PMI020401, PMI020402, PMI020500,
+           PMI020501, PMI020502, PMI020600, PMI020601, PMI020602, PMI020700, PMI020800,
+           PMI020900, PMI021000, PMI030000]
+  text_fields: [MONTH, ID, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME]
+  curated: {path: macro/cn_pmi}
+
+cn_m:
+  endpoint: cn_m
+  sweep: {kind: none, extra_params: {start_m: "201501"}}
+  refresh: overwrite
+  primary_key: [month]
+  known_on: month
+  known_on_rule: period_end_lag
+  release_lag_days: 20  # observed max since 2010 (D-086; was 15)
+  release_dates: macro_release_m2
+  fields: [month, m0, m0_yoy, m0_mom, m1, m1_yoy, m1_mom, m2, m2_yoy, m2_mom]
+  text_fields: [month]
+  curated: {path: macro/cn_m}
+
+shibor_lpr:
+  endpoint: shibor_lpr
+  sweep: {kind: date_window, window: year, refetch_recent: 1}
+  start: "20150101"
+  primary_key: [date]
+  known_on: date
+  fields: [date, 1y, 5y]
+  text_fields: [date]
+  curated: {path: macro/shibor_lpr}
+
+fx_daily:
+  endpoint: fx_daily
+  # FXCM daily bars close at 17:00 New York: usable from the next China session
+  sweep: {kind: date_window, window: year, value_param: ts_code, values_from: fx_codes,
+          refetch_recent: 14}
+  start: "20150101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  known_on_rule: next_session
+  fields: [ts_code, trade_date, bid_open, bid_close, bid_high, bid_low, ask_open, ask_close, ask_high,
+           ask_low, tick_qty]
+  text_fields: [ts_code, trade_date]
+  curated: {path: fx_daily, partition_by: trade_date}
+
+# --- analysts and events (plan 11 phase 7, D-081) ---
+# Event endpoints publish on weekends too: date sweeps use days: all. Statement-style event data
+# (forecast, express) keeps every version like the statements (D-038).
+
+report_rc:
+  endpoint: report_rc
+  # a one-month range stops at 5,000 rows: one call per report_date; visible from the next session
+  sweep: {kind: ann_date, days: all, param_name: report_date}
+  primary_key: [ts_code, report_date, org_name, report_title, quarter]
+  # rating-only reports carry no forecast quarter (3,486 rows by 2026-09): keep them, quarter ""
+  key_defaults: {quarter: ""}
+  known_on: report_date
+  known_on_rule: next_session
+  fields: [ts_code, name, report_date, report_title, report_type, classify, org_name, author_name,
+           quarter, op_rt, op_pr, tp, np, eps, pe, rd, roe, ev_ebitda, rating, max_price, min_price]
+  text_fields: [ts_code, name, report_date, report_title, report_type, classify, org_name,
+                author_name, quarter, rating]
+  curated: {path: analysts/report_rc, partition_by: report_date}
+
+stk_surv:
+  endpoint: stk_surv
+  # surv_date is the visit; the endpoint has no disclosure date and visits are disclosed 1-2 days
+  # later (DATA_CATALOG §3): conservative rule, usable from the 2nd session after the visit
+  sweep: {kind: trade_date, days: all}
+  primary_key: [ts_code, surv_date, rece_org, fund_visitors]
+  key_defaults: {rece_org: ""}
+  known_on: surv_date
+  known_on_rule: next_session
+  lag_sessions: 2
+  fields: [ts_code, name, surv_date, fund_visitors, rece_place, rece_mode, rece_org, org_type,
+           comp_rece, content]
+  text_fields: [ts_code, name, surv_date, fund_visitors, rece_place, rece_mode, rece_org, org_type,
+                comp_rece, content]
+  curated: {path: analysts/stk_surv, partition_by: surv_date}
+
+broker_recommend:
+  endpoint: broker_recommend
+  # monthly picks; the endpoint has no publication date: known-on is a rule (month start), not observed
+  sweep: {kind: date_window, window: month, param_name: month, refetch_recent: 1}
+  primary_key: [month, broker, ts_code]
+  known_on: month
+  known_on_rule: period_start_lag
+  fields: [month, broker, ts_code, name]
+  text_fields: [month, broker, ts_code, name]
+  curated: {path: analysts/broker_recommend}
+
+hk_hold:
+  endpoint: hk_hold
+  # Stock Connect holdings of day T are published by HKEX the next morning
+  sweep: {kind: trade_date, days: all}
+  primary_key: [code, trade_date, exchange]
+  known_on: trade_date
+  known_on_rule: next_session
+  fields: [code, trade_date, ts_code, name, vol, ratio, exchange]
+  text_fields: [code, trade_date, ts_code, name, exchange]
+  curated: {path: hk_hold, partition_by: trade_date}
+
+forecast_vip:
+  endpoint: forecast_vip
+  sweep: {kind: period, refetch_recent: 2}
+  primary_key: [ts_code, end_date, ann_date, update_flag]
+  known_on: ann_date
+  fields: [ts_code, ann_date, end_date, type, p_change_min, p_change_max, net_profit_min,
+           net_profit_max, last_parent_net, first_ann_date, summary, change_reason, update_flag]
+  text_fields: [ts_code, ann_date, end_date, type, first_ann_date, summary, change_reason,
+                update_flag]
+  curated: {path: events/forecast, partition_by: end_date}
+
+express_vip:
+  endpoint: express_vip
+  sweep: {kind: period, refetch_recent: 2}
+  primary_key: [ts_code, end_date, ann_date, update_flag]
+  known_on: ann_date
+  fields: [ts_code, ann_date, end_date, revenue, operate_profit, total_profit, n_income, total_assets,
+           total_hldr_eqy_exc_min_int, diluted_eps, diluted_roe, yoy_net_profit, bps,
+           open_net_assets, open_bps, perf_summary, update_flag]
+  text_fields: [ts_code, ann_date, end_date, perf_summary, update_flag]
+  curated: {path: events/express, partition_by: end_date}
+
+stk_holdertrade:
+  endpoint: stk_holdertrade
+  sweep: {kind: ann_date, days: all}
+  # no unique key: the vendor repeats rows (65,459 rows in 20,023 key groups, 24,517 distinct) and
+  # the same holder can trade twice a day; compaction drops exact duplicate rows only (D-081)
+  primary_key: []
+  known_on: ann_date
+  fields: [ts_code, ann_date, holder_name, holder_type, in_de, change_vol, change_ratio, after_share,
+           after_ratio, avg_price, total_share]
+  text_fields: [ts_code, ann_date, holder_name, holder_type, in_de]
+  curated: {path: events/stk_holdertrade, partition_by: ann_date}
+
+share_float:
+  endpoint: share_float
+  # by announcement date: float_date windows hit the 6,000 cap and the endpoint ignores offset;
+  # from 2016 so lock-ups announced before 2019 are included
+  sweep: {kind: ann_date, days: all}
+  start: "20160101"
+  primary_key: [ts_code, ann_date, float_date, holder_name, share_type]
+  known_on: ann_date
+  fields: [ts_code, ann_date, float_date, float_share, float_ratio, holder_name, share_type]
+  text_fields: [ts_code, ann_date, float_date, holder_name, share_type]
+  curated: {path: events/share_float, partition_by: ann_date}
+
+disclosure_date:
+  endpoint: disclosure_date
+  # latest schedule per report period (pre_date is revised in place: not a PIT history)
+  sweep: {kind: period, param_name: end_date, refetch_recent: 2}
+  primary_key: [ts_code, end_date]
+  known_on: ann_date
+  fields: [ts_code, ann_date, end_date, pre_date, actual_date]
+  text_fields: [ts_code, ann_date, end_date, pre_date, actual_date]
+  curated: {path: events/disclosure_date, partition_by: end_date}
+
+stk_holdernumber:
+  endpoint: stk_holdernumber
+  sweep: {kind: period, param_name: enddate, refetch_recent: 2}
+  primary_key: [ts_code, end_date, ann_date]
+  known_on: ann_date
+  fields: [ts_code, ann_date, end_date, holder_num]
+  text_fields: [ts_code, ann_date, end_date]
+  curated: {path: events/stk_holdernumber, partition_by: end_date}
+
+# --- third source (plan 11 phase 10): AkShare (D-065, D-084, D-086, D-087) ---
+# Columns are renamed to English fields before the raw write; the client normalises dates.
+
+cn_bond_yield:
+  source: akshare
+  endpoint: bond_china_yield
+  # ChinaBond curves (government, AAA bank, AAA notes); replaces the denied Tushare yc_cb (D-080)
+  sweep: {kind: date_window, window: year, refetch_recent: 1}
+  start: "20100101"
+  primary_key: [curve_name, trade_date]
+  known_on: trade_date
+  known_on_rule: next_session
+  rename: {曲线名称: curve_name, 日期: trade_date, 3月: y_3m, 6月: y_6m, 1年: y_1y, 3年: y_3y, 5年: y_5y,
+           7年: y_7y, 10年: y_10y, 30年: y_30y}
+  fields: [curve_name, trade_date, y_3m, y_6m, y_1y, y_3y, y_5y, y_7y, y_10y, y_30y]
+  text_fields: [curve_name, trade_date]
+  curated: {path: macro/cn_bond_yield}
+
+lme_copper:
+  source: akshare
+  endpoint: futures_foreign_hist
+  # LME 3-month copper (Sina); FRED has only a monthly copper price. London closes after China
+  sweep: {kind: none, extra_params: {symbol: CAD}}
+  refresh: overwrite
+  primary_key: [trade_date]
+  known_on: trade_date
+  known_on_rule: next_session
+  rename: {date: trade_date, position: oi, s: settle}
+  fields: [trade_date, open, high, low, close, volume, oi, settle]
+  text_fields: [trade_date]
+  curated: {path: macro/lme_copper}
+
+# Jin10 macro series carry the actual release date (feed ends 2025-09): used to check the lag rules
+
+macro_release_cpi:
+  source: akshare
+  endpoint: macro_china_cpi_yearly
+  sweep: {kind: none}
+  refresh: overwrite
+  primary_key: [release_date]
+  known_on: release_date
+  rename: {商品: series, 日期: release_date, 今值: actual, 预测值: forecast, 前值: previous}
+  fields: [series, release_date, actual, forecast, previous]
+  text_fields: [series, release_date]
+  curated: {path: macro/release_cpi}
+
+macro_release_ppi:
+  source: akshare
+  endpoint: macro_china_ppi_yearly
+  sweep: {kind: none}
+  refresh: overwrite
+  primary_key: [release_date]
+  known_on: release_date
+  rename: {商品: series, 日期: release_date, 今值: actual, 预测值: forecast, 前值: previous}
+  fields: [series, release_date, actual, forecast, previous]
+  text_fields: [series, release_date]
+  curated: {path: macro/release_ppi}
+
+macro_release_pmi:
+  source: akshare
+  endpoint: macro_china_pmi_yearly
+  sweep: {kind: none}
+  refresh: overwrite
+  primary_key: [release_date]
+  known_on: release_date
+  rename: {商品: series, 日期: release_date, 今值: actual, 预测值: forecast, 前值: previous}
+  fields: [series, release_date, actual, forecast, previous]
+  text_fields: [series, release_date]
+  curated: {path: macro/release_pmi}
+
+macro_release_m2:
+  source: akshare
+  endpoint: macro_china_m2_yearly
+  sweep: {kind: none}
+  refresh: overwrite
+  primary_key: [release_date]
+  known_on: release_date
+  rename: {商品: series, 日期: release_date, 今值: actual, 预测值: forecast, 前值: previous}
+  fields: [series, release_date, actual, forecast, previous]
+  text_fields: [series, release_date]
+  curated: {path: macro/release_m2}
+
+szse_margin_targets:
+  source: akshare
+  endpoint: stock_margin_underlying_info_szse
+  # official SZSE list of margin-eligible securities per day (flags for margin buy / short sell)
+  sweep: {kind: trade_date, param_name: date, key_field: trade_date}
+  start: "20190101"
+  primary_key: [trade_date, code]
+  known_on: trade_date
+  rename: {证券代码: code, 证券简称: name, 融资标的: fin_target, 融券标的: sec_target, 当日可融资: fin_today,
+           当日可融券: sec_today, 融券卖出价格限制: short_price_limit, 涨跌幅限制: limit_pct}
+  fields: [trade_date, code, name, fin_target, sec_target, fin_today, sec_today, short_price_limit,
+           limit_pct]
+  text_fields: [trade_date, code, name, fin_target, sec_target, fin_today, sec_today,
+                short_price_limit, limit_pct]
+  curated: {path: szse_margin_targets, partition_by: trade_date}
+
+# --- BaoStock: verification only (D-065, D-085); written to raw/baostock_*, never replaces Tushare ---
+
+baostock_daily:
+  source: baostock
+  endpoint: query_history_k_data_plus
+  # unadjusted bars per stock, full history once (about 5 s per stock); SH/SZ only
+  sweep: {kind: ts_code, range_params: true, extra_params: {frequency: d, adjustflag: "3"},
+          values_from_dataset: {dataset: stock_basic, column: ts_code, where: "ts_code NOT LIKE '%.BJ'"}}
+  start: "20190101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  rename: {date: trade_date}
+  fields: [ts_code, trade_date, open, high, low, close, preclose, volume, amount, tradestatus]
+  text_fields: [ts_code, trade_date]
+  curated: {path: verification/baostock_daily, partition_by: trade_date}
+
+baostock_daily_recent:
+  source: baostock
+  endpoint: query_history_k_data_plus
+  # the last sessions per stock, rewritten by `make verify-prices` (force); overrides the backfill
+  sweep: {kind: ts_code, range_params: true, extra_params: {frequency: d, adjustflag: "3"},
+          values_from_dataset: {dataset: stock_basic, column: ts_code, where: "ts_code NOT LIKE '%.BJ'"}}
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  rename: {date: trade_date}
+  fields: [ts_code, trade_date, open, high, low, close, preclose, volume, amount, tradestatus]
+  text_fields: [ts_code, trade_date]
+  curated: {path: verification/baostock_daily_recent}
+
+baostock_adj_factor:
+  source: baostock
+  endpoint: query_adjust_factor
+  # factors only on dividend dates (back factor = cumulative, compared step by step with adj_factor)
+  sweep: {kind: ts_code, range_params: true,
+          values_from_dataset: {dataset: stock_basic, column: ts_code, where: "ts_code NOT LIKE '%.BJ'"}}
+  start: "20190101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  rename: {dividOperateDate: trade_date, foreAdjustFactor: fore_adjust_factor,
+           backAdjustFactor: back_adjust_factor, adjustFactor: adjust_factor}
+  fields: [ts_code, trade_date, fore_adjust_factor, back_adjust_factor, adjust_factor]
+  text_fields: [ts_code, trade_date]
+  curated: {path: verification/baostock_adj_factor}
+
+# --- documents for the industry-chain graph (plan 12 phase 2, D-096, D-100) ---
+# Metadata only; PDFs are fetched by DocumentDownloader into documents/. Websites, not Tushare:
+# CNINFO swept per calendar day (whole market, every category); Eastmoney per month and kind.
+
+cninfo_announcements:
+  endpoint: hisAnnouncement
+  source: cninfo
+  # by category and month (D-111): one CNINFO query reaches ~3,000 rows, a peak day has 26k
+  # announcements, so whole-day sweeps lose data; the client splits a query above the cap by date
+  # halves and then by board. Categories: periodic reports, IPO prospectuses, follow-on offerings.
+  sweep: {kind: date_window, window: month, value_param: category, refetch_recent: 1,
+          values: [category_ndbg_szsh, category_bndbg_szsh, category_yjdbg_szsh, category_sjdbg_szsh,
+                   category_sf_szsh, category_zf_szsh]}
+  start: "20231101"
+  primary_key: [ann_id, sec_code]
+  known_on: ann_date
+  known_on_rule: next_session
+  fields: [ann_id, sec_code, sec_name, org_id, title, ann_time, ann_date, adjunct_url, adjunct_size,
+           adjunct_type, column_id, ann_type, page_column]
+  text_fields: [ann_id, sec_code, sec_name, org_id, title, ann_time, ann_date, adjunct_url,
+                adjunct_type, column_id, ann_type, page_column]
+  curated: {path: documents/cninfo_announcements, partition_by: ann_date}
+
+cninfo_keyword_announcements:
+  endpoint: hisAnnouncement
+  source: cninfo
+  # chain-relevant announcements outside the periodic categories, by title keyword and month (D-111)
+  sweep: {kind: date_window, window: month, value_param: searchkey, refetch_recent: 1,
+          values: [投资者关系活动记录表, 重大合同, 中标, 问询函, 重组报告书, 对外投资, 可行性研究报告]}
+  start: "20231101"
+  primary_key: [ann_id, sec_code]
+  known_on: ann_date
+  known_on_rule: next_session
+  fields: [ann_id, sec_code, sec_name, org_id, title, ann_time, ann_date, adjunct_url, adjunct_size,
+           adjunct_type, column_id, ann_type, page_column]
+  text_fields: [ann_id, sec_code, sec_name, org_id, title, ann_time, ann_date, adjunct_url,
+                adjunct_type, column_id, ann_type, page_column]
+  curated: {path: documents/cninfo_keyword_announcements, partition_by: ann_date}
+
+em_industry_reports:
+  endpoint: report_list
+  source: eastmoney
+  sweep: {kind: date_window, window: month, extra_params: {q_type: "1"}, refetch_recent: 1}
+  start: "20231101"
+  primary_key: [info_code]
+  known_on: publish_date
+  known_on_rule: next_session
+  fields: &em_fields [info_code, publish_date, title, report_kind, stock_code, stock_name, org_code,
+                      org_name, researcher, industry_code, industry_name, em_industry_code, rating,
+                      rating_change, attach_pages, attach_size]
+  text_fields: &em_text [info_code, publish_date, title, report_kind, stock_code, stock_name,
+                         org_code, org_name, researcher, industry_code, industry_name,
+                         em_industry_code, rating, rating_change]
+  curated: {path: documents/em_industry_reports, partition_by: publish_date}
+
+em_stock_reports:
+  endpoint: report_list
+  source: eastmoney
+  sweep: {kind: date_window, window: month, extra_params: {q_type: "0"}, refetch_recent: 1}
+  start: "20231101"
+  primary_key: [info_code]
+  known_on: publish_date
+  known_on_rule: next_session
+  fields: *em_fields
+  text_fields: *em_text
+  curated: {path: documents/em_stock_reports, partition_by: publish_date}
+
+irm_qa_sh:
+  endpoint: irm_qa_sh
+  # investor Q&A on the SSE e-interaction platform; one call per calendar day (Q&A on weekends too)
+  sweep: {kind: trade_date, days: all}
+  start: "20231101"
+  primary_key: [ts_code, pub_time, q]
+  key_defaults: {q: "", pub_time: ""}
+  known_on: trade_date
+  known_on_rule: next_session
+  fields: [ts_code, name, trade_date, q, a, pub_time]
+  text_fields: [ts_code, name, trade_date, q, a, pub_time]
+  curated: {path: documents/irm_qa_sh, partition_by: trade_date}
+
+irm_qa_sz:
+  endpoint: irm_qa_sz
+  # investor Q&A on SZSE 互动易; same rules as irm_qa_sh, plus the CSRC industry
+  sweep: {kind: trade_date, days: all}
+  start: "20231101"
+  primary_key: [ts_code, pub_time, q]
+  key_defaults: {q: "", pub_time: ""}
+  known_on: trade_date
+  known_on_rule: next_session
+  fields: [ts_code, name, trade_date, q, a, pub_time, industry]
+  text_fields: [ts_code, name, trade_date, q, a, pub_time, industry]
+  curated: {path: documents/irm_qa_sz, partition_by: trade_date}
+
+fina_mainbz_p:
+  endpoint: fina_mainbz_vip
+  # main-business revenue / cost / profit by product (type P), whole market per period (plan 12).
+  # No announcement date: usable from period end + 120 days (annual reports are due by 30 April).
+  sweep: {kind: period, extra_params: {type: P}, refetch_recent: 2}
+  start: "20230101"
+  primary_key: [ts_code, end_date, bz_item]
+  known_on: end_date
+  known_on_rule: period_end_lag
+  release_lag_days: 120
+  fields: [ts_code, end_date, bz_item, bz_code, bz_sales, bz_profit, bz_cost, curr_type]
+  text_fields: [ts_code, end_date, bz_item, bz_code, curr_type]
+  curated: {path: documents/fina_mainbz_p, partition_by: end_date}
+
+fina_mainbz_i:
+  endpoint: fina_mainbz_vip
+  # the same breakdown by industry (type I)
+  sweep: {kind: period, extra_params: {type: I}, refetch_recent: 2}
+  start: "20230101"
+  primary_key: [ts_code, end_date, bz_item]
+  known_on: end_date
+  known_on_rule: period_end_lag
+  release_lag_days: 120
+  fields: [ts_code, end_date, bz_item, bz_code, bz_sales, bz_profit, bz_cost, curr_type]
+  text_fields: [ts_code, end_date, bz_item, bz_code, curr_type]
+  curated: {path: documents/fina_mainbz_i, partition_by: end_date}
+
+# --- free labels for the industry-chain graph (plan 12, D-103) ---
+# Company profiles and concept-board membership: structured, no LLM. Concept boards are market
+# themes (e.g. 英伟达概念, CPO, 液冷): weak signals for recall, never evidence of a relation.
+
+stock_company:
+  endpoint: stock_company
+  # one call per exchange; profile text changes rarely: refetched in full on every run
+  sweep: {kind: exchange, values: [SSE, SZSE, BSE]}
+  refresh: overwrite
+  primary_key: [ts_code]
+  known_on: null
+  fields: [ts_code, com_name, com_id, exchange, chairman, manager, secretary, reg_capital, setup_date,
+           province, city, introduction, website, email, office, employees, main_business,
+           business_scope]
+  text_fields: [ts_code, com_name, com_id, exchange, chairman, manager, secretary, setup_date,
+                province, city, introduction, website, email, office, main_business, business_scope]
+  curated: {path: reference/stock_company}
+
+ths_index:
+  endpoint: ths_index
+  # all Tonghuashun indices: type N concept, I industry, R region, S special, ST style, TH theme, BB broad
+  sweep: {kind: none}
+  refresh: overwrite
+  primary_key: [ts_code]
+  known_on: list_date
+  fields: [ts_code, name, count, exchange, list_date, type]
+  text_fields: [ts_code, name, exchange, list_date, type]
+  curated: {path: concepts/ths_index}
+
+ths_member:
+  endpoint: ths_member
+  # members of every concept, industry and theme index (one call per index); current membership
+  sweep: {kind: ts_code, values_from_dataset: {dataset: ths_index, column: ts_code,
+                                               where: "type IN ('N', 'I', 'TH')"}}
+  refresh: overwrite
+  primary_key: [ts_code, con_code]
+  known_on: null
+  fields: [ts_code, con_code, con_name, weight, in_date, out_date, is_new]
+  text_fields: [ts_code, con_code, con_name, in_date, out_date, is_new]
+  curated: {path: concepts/ths_member}
+
+dc_index:
+  endpoint: dc_index
+  # Eastmoney concept / industry / region boards, one snapshot per session from the start date
+  sweep: {kind: trade_date}
+  start: "20261106"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  known_on_rule: next_session
+  fields: [ts_code, trade_date, name, idx_type]
+  text_fields: [ts_code, trade_date, name, idx_type]
+  curated: {path: concepts/dc_index, partition_by: trade_date}
+
+dc_member:
+  endpoint: dc_member
+  # board membership per session (about 60k rows a day, paged), so membership changes are dated
+  sweep: {kind: trade_date}
+  start: "20261106"
+  primary_key: [trade_date, ts_code, con_code]
+  known_on: trade_date
+  known_on_rule: next_session
+  fields: [trade_date, ts_code, con_code, name]
+  text_fields: [trade_date, ts_code, con_code, name]
+  curated: {path: concepts/dc_member, partition_by: trade_date}

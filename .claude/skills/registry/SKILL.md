@@ -1,6 +1,6 @@
 ---
 name: registry
-description: Look up, add or update entries in .claude/CLASS_REGISTRY.md, the single source of truth for every class, base class, exception, schema and allowed standalone function (Plans/CODING_STANDARD.md §5). Use before writing any class ("does X exist", "is there a loader for"), after creating, renaming, retiring or changing a class, and whenever a call between classes is added or removed (Used by column).
+description: Look up, add or update entries in .claude/CLASS_REGISTRY.md, the single source of truth for every class, base class, exception, schema and allowed standalone function (plans/standards/CODING_STANDARD.md §5). Use before writing any class ("does X exist", "is there a loader for"), after creating, renaming, retiring or changing a class, and whenever a call between classes is added or removed (Used by column).
 ---
 
 # registry
@@ -13,6 +13,11 @@ File: `.claude/CLASS_REGISTRY.md`. Sections: A index (one row per class), B clas
 3. Answer with: exact match / near-match (row + how to extend or subclass) / none. Quote the row; do not paraphrase.
 
 ## Update mode (same change set as the code)
+Names in rows must be the names in code; pick new names with the `naming` skill. The detail-block columns derive
+from code: `Input -> Output` from the signature annotations, `Raises` from the method docstring's `Raises:`,
+Purpose from the docstring's `Purpose:`. When many classes change at once (e.g. a rename sweep), regenerate
+sections A–D from the docstrings + AST rather than hand-editing, then review the diff.
+
 1. **Add or edit the index row (section A)** for each class touched:
    - `Module`: `quant_cn.<package>.<module>`
    - `Layer`: number from CODING_STANDARD §2.1

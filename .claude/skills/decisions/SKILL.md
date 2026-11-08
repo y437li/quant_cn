@@ -1,11 +1,11 @@
 ---
 name: decisions
-description: Record, look up or revisit project decisions in Plans/DECISIONS.md (lightweight ADR log). Use whenever a design, data, tooling or scope choice is made or changed, when the user says "decide", "we'll go with", "log this decision", "why did we choose", or when a plan or code change contradicts an earlier decision.
+description: Record, look up or revisit project decisions in plans/decisions/DECISIONS.md (lightweight ADR log). Use whenever a design, data, tooling or scope choice is made or changed, when the user says "decide", "we'll go with", "log this decision", "why did we choose", or when a plan or code change contradicts an earlier decision.
 ---
 
 # decisions
 
-One append-only log: `Plans/DECISIONS.md`. Every entry is short enough to read in 20 seconds.
+One append-only log: `plans/decisions/DECISIONS.md`. Every entry is short enough to read in 20 seconds.
 
 ## When to record
 - A choice between alternatives that later code will depend on (library, schema, layout, rule).
@@ -30,7 +30,7 @@ Detail block:
 Status values: `proposed` | `accepted` | `superseded by D-MMM` | `rejected`.
 
 ## Procedure
-1. Read `Plans/DECISIONS.md`; check whether the topic already has an entry. If yes and it still holds, cite it instead of writing a new one.
+1. Read `plans/decisions/DECISIONS.md`; check whether the topic already has an entry. If yes and it still holds, cite it instead of writing a new one.
 2. If the user has not chosen yet, write the entry as `proposed` with alternatives and stop for their call.
 3. On acceptance, set `accepted`, and update anything the decision governs in the same change: `CODING_STANDARD.md`, the affected plan's `Decisions` header, `.claude/CLASS_REGISTRY.md` if a class is renamed or retired.
 4. When a decision is reversed, add the new entry and mark the old row `superseded by D-NNN`.

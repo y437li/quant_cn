@@ -1,0 +1,650 @@
+# 有色金属 (SW 240000) product taxonomy — plan 12 phase 1, D-097. All edges are priors (source: prior).
+# Base metals (MAT_COPPER, MAT_ALUMINUM, MAT_RARE_EARTH, ...) live in _common.yaml; here are the stages
+# companies report: mining/concentrate, smelting, intermediates and fabricated forms.
+# Battery foils, precursors/cathodes, PV ribbons and sputtering targets belong to other sectors.
+
+sector: {sw_l1: "240000", name: 有色金属, name_en: Non-ferrous Metals}
+
+nodes:
+  # ---------------- segments ----------------
+  - {id: SEG_NFM_COPPER, type: segment, name: 铜产业链, name_en: Copper Chain}
+  - {id: SEG_NFM_COPPER_MINING, type: segment, name: 铜矿采选, name_en: Copper Mining, parent: SEG_NFM_COPPER}
+  - {id: SEG_NFM_COPPER_SMELTING, type: segment, name: 铜冶炼, name_en: Copper Smelting, parent: SEG_NFM_COPPER}
+  - {id: SEG_NFM_COPPER_FABRICATION, type: segment, name: 铜加工, name_en: Copper Fabrication, parent: SEG_NFM_COPPER}
+  - {id: SEG_NFM_ALUMINUM, type: segment, name: 铝产业链, name_en: Aluminum Chain}
+  - {id: SEG_NFM_ALU_UPSTREAM, type: segment, name: 铝土矿-氧化铝-电解铝, name_en: Bauxite Alumina and Primary Aluminum, parent: SEG_NFM_ALUMINUM}
+  - {id: SEG_NFM_ALU_FABRICATION, type: segment, name: 铝加工, name_en: Aluminum Fabrication, parent: SEG_NFM_ALUMINUM}
+  - {id: SEG_NFM_LEAD_ZINC, type: segment, name: 铅锌采选冶炼, name_en: Lead and Zinc}
+  - {id: SEG_NFM_GOLD, type: segment, name: 黄金采选冶炼, name_en: Gold Mining and Refining}
+  - {id: SEG_NFM_SILVER_PGM, type: segment, name: 白银与铂族金属, name_en: Silver and Platinum Group Metals}
+  - {id: SEG_NFM_RARE_EARTH, type: segment, name: 稀土开采与冶炼分离, name_en: Rare Earth Mining and Separation}
+  - {id: SEG_NFM_MAGNETIC, type: segment, name: 磁性材料（金属）, name_en: Magnetic Materials, aliases: [稀土永磁, 永磁材料]}
+  - {id: SEG_NFM_TUNGSTEN, type: segment, name: 钨产业链, name_en: Tungsten Chain}
+  - {id: SEG_NFM_MOLYBDENUM, type: segment, name: 钼产业链, name_en: Molybdenum Chain}
+  - {id: SEG_NFM_MINOR_METALS, type: segment, name: 其他小金属, name_en: Other Minor Metals}
+  - {id: SEG_NFM_TIN, type: segment, name: 锡产业链, name_en: Tin Chain}
+  - {id: SEG_NFM_ANTIMONY, type: segment, name: 锑产业链, name_en: Antimony Chain}
+  - {id: SEG_NFM_SCARCE_METALS, type: segment, name: 稀散金属, name_en: Scarce Metals, aliases: [镓锗铟]}
+  - {id: SEG_NFM_MAGNESIUM, type: segment, name: 镁产业链, name_en: Magnesium Chain}
+  - {id: SEG_NFM_VANADIUM, type: segment, name: 钒产业链, name_en: Vanadium Chain}
+  - {id: SEG_NFM_TANTALUM_NIOBIUM, type: segment, name: 钽铌, name_en: Tantalum and Niobium}
+  - {id: SEG_NFM_ZIRCONIUM, type: segment, name: 锆铪, name_en: Zirconium and Hafnium}
+  - {id: SEG_NFM_ENERGY_METALS, type: segment, name: 能源金属, name_en: Energy Metals}
+  - {id: SEG_NFM_COBALT, type: segment, name: 钴产业链, name_en: Cobalt Chain}
+  - {id: SEG_NFM_NICKEL, type: segment, name: 镍产业链, name_en: Nickel Chain}
+  - {id: SEG_NFM_LITHIUM, type: segment, name: 锂资源与锂盐, name_en: Lithium Resources and Salts}
+  - {id: SEG_NFM_NEW_MATERIALS, type: segment, name: 金属新材料, name_en: Advanced Metal Materials}
+  - {id: SEG_NFM_TITANIUM, type: segment, name: 钛材, name_en: Titanium Materials, aliases: [钛产业链]}
+  - {id: SEG_NFM_SUPERALLOY, type: segment, name: 高温合金与精密合金, name_en: Superalloys and Precision Alloys}
+  - {id: SEG_NFM_FUNCTIONAL_METALS, type: segment, name: 功能金属材料, name_en: Functional Metal Materials}
+
+  # ---------------- copper ----------------
+  - {id: PROD_NFM_COPPER_CONCENTRATE, type: product, name: 铜精矿, name_en: Copper Concentrate, segment: SEG_NFM_COPPER_MINING, aliases: [铜矿, 铜矿采选], import_dependence: high}
+  - {id: PROD_NFM_CU_CO_ORE, type: product, name: 铜钴矿, name_en: Copper-Cobalt Ore, segment: SEG_NFM_COPPER_MINING, aliases: [刚果金铜钴矿], import_dependence: high}
+  - {id: PROD_NFM_SXEW_COPPER, type: product, name: 湿法冶炼铜, name_en: SX-EW Copper, segment: SEG_NFM_COPPER_MINING, aliases: [湿法铜, SX-EW铜]}
+  - {id: PROD_NFM_ANODE_COPPER, type: product, name: 阳极铜, name_en: Anode and Blister Copper, segment: SEG_NFM_COPPER_SMELTING, aliases: [粗铜]}
+  - {id: PROD_NFM_REFINED_COPPER, type: product, name: 精炼铜冶炼, name_en: Refined Copper Smelting, segment: SEG_NFM_COPPER_SMELTING, aliases: [铜冶炼产品, 铜冶炼]}
+  - {id: PROD_NFM_RECYCLED_COPPER, type: product, name: 再生铜, name_en: Recycled Copper, segment: SEG_NFM_COPPER_SMELTING}
+  - {id: PROD_NFM_COPPER_ROD, type: product, name: 铜杆, name_en: Copper Rod, segment: SEG_NFM_COPPER_FABRICATION, aliases: [低氧光亮铜杆, 无氧铜杆]}
+  - {id: PROD_NFM_COPPER_WIRE, type: product, name: 铜线, name_en: Bare Copper Wire, segment: SEG_NFM_COPPER_FABRICATION, aliases: [铜导体, 裸铜线]}
+  - {id: PROD_NFM_COPPER_CONTACT_WIRE, type: product, name: 铜合金接触线, name_en: Copper Alloy Contact Wire, segment: SEG_NFM_COPPER_FABRICATION, aliases: [接触网导线]}
+  - {id: PROD_NFM_COPPER_STRIP, type: product, name: 铜板带, name_en: Copper Plate and Strip, segment: SEG_NFM_COPPER_FABRICATION, aliases: [铜板带材]}
+  - {id: PROD_NFM_HP_COPPER_ALLOY_STRIP, type: product, name: 高性能铜合金带材, name_en: High-Performance Copper Alloy Strip, parent: PROD_NFM_COPPER_STRIP, segment: SEG_NFM_COPPER_FABRICATION, aliases: [引线框架铜带, 连接器铜带], import_dependence: medium}
+  - {id: PROD_NFM_COPPER_TUBE, type: product, name: 铜管, name_en: Copper Tube, segment: SEG_NFM_COPPER_FABRICATION, aliases: [精密铜管, 空调铜管]}
+  - {id: PROD_NFM_COPPER_BAR, type: product, name: 铜棒, name_en: Copper Bar, segment: SEG_NFM_COPPER_FABRICATION, aliases: [铜棒材]}
+  - {id: PROD_NFM_BRASS_ROD, type: product, name: 黄铜棒, name_en: Brass Rod, parent: PROD_NFM_COPPER_BAR, segment: SEG_NFM_COPPER_FABRICATION}
+  - {id: PROD_NFM_COPPER_POWDER, type: product, name: 铜粉, name_en: Copper Powder, segment: SEG_NFM_COPPER_FABRICATION, aliases: [电解铜粉, 超细铜粉]}
+
+  # ---------------- aluminium ----------------
+  - {id: PROD_NFM_BAUXITE, type: product, name: 铝土矿, name_en: Bauxite, segment: SEG_NFM_ALU_UPSTREAM, import_dependence: high}
+  - {id: PROD_NFM_ALUMINA, type: product, name: 氧化铝, name_en: Alumina, segment: SEG_NFM_ALU_UPSTREAM, aliases: [冶金级氧化铝]}
+  - {id: PROD_NFM_PREBAKED_ANODE, type: product, name: 预焙阳极, name_en: Prebaked Anode, segment: SEG_NFM_ALU_UPSTREAM, aliases: [炭素阳极]}
+  - {id: PROD_NFM_PRIMARY_ALUMINUM, type: product, name: 电解铝冶炼, name_en: Primary Aluminum Smelting, segment: SEG_NFM_ALU_UPSTREAM, aliases: [铝冶炼, 铝锭]}
+  - {id: PROD_NFM_RECYCLED_ALUMINUM, type: product, name: 再生铝, name_en: Recycled Aluminum, segment: SEG_NFM_ALU_UPSTREAM, aliases: [废铝回收]}
+  - {id: PROD_NFM_ALU_ALLOY_INGOT, type: product, name: 铝合金锭, name_en: Aluminum Alloy Ingot, segment: SEG_NFM_ALU_FABRICATION, aliases: [铸造铝合金, 再生铝合金锭]}
+  - {id: PROD_NFM_HIGH_PURITY_ALUMINUM, type: product, name: 高纯铝, name_en: High-Purity Aluminum, segment: SEG_NFM_ALU_FABRICATION, aliases: [精铝]}
+  - {id: PROD_NFM_ELECTRODE_FOIL, type: product, name: 电极箔, name_en: Capacitor Electrode Foil, segment: SEG_NFM_ALU_FABRICATION, aliases: [电子铝箔, 化成箔, 腐蚀箔]}
+  - {id: PROD_NFM_ALU_BILLET, type: product, name: 铝棒, name_en: Aluminum Billet, segment: SEG_NFM_ALU_FABRICATION, aliases: [铝圆棒, 铝合金圆铸锭]}
+  - {id: PROD_NFM_ALU_WIRE_ROD, type: product, name: 电工圆铝杆, name_en: Electrical Aluminum Rod, segment: SEG_NFM_ALU_FABRICATION, aliases: [铝杆]}
+  - {id: PROD_NFM_ALU_EXTRUSION, type: product, name: 铝型材, name_en: Aluminum Extrusion, segment: SEG_NFM_ALU_FABRICATION, aliases: [铝挤压材]}
+  - {id: PROD_NFM_ARCH_ALU_PROFILE, type: product, name: 建筑铝型材, name_en: Architectural Aluminum Profile, parent: PROD_NFM_ALU_EXTRUSION, segment: SEG_NFM_ALU_FABRICATION, aliases: [门窗铝型材]}
+  - {id: PROD_NFM_IND_ALU_PROFILE, type: product, name: 工业铝型材, name_en: Industrial Aluminum Profile, parent: PROD_NFM_ALU_EXTRUSION, segment: SEG_NFM_ALU_FABRICATION}
+  - {id: PROD_NFM_PV_ALU_FRAME, type: product, name: 光伏铝边框, name_en: PV Aluminum Frame, parent: PROD_NFM_IND_ALU_PROFILE, segment: SEG_NFM_ALU_FABRICATION, aliases: [光伏边框, 铝边框]}
+  - {id: PROD_NFM_AUTO_ALU_PROFILE, type: product, name: 汽车轻量化铝型材, name_en: Automotive Aluminum Profile, parent: PROD_NFM_IND_ALU_PROFILE, segment: SEG_NFM_ALU_FABRICATION, aliases: [汽车铝型材]}
+  - {id: PROD_NFM_ALU_PLATE_STRIP, type: product, name: 铝板带, name_en: Aluminum Plate and Strip, segment: SEG_NFM_ALU_FABRICATION, aliases: [铝板带材, 铝板]}
+  - {id: PROD_NFM_CAN_STOCK, type: product, name: 罐料, name_en: Can Body Stock, parent: PROD_NFM_ALU_PLATE_STRIP, segment: SEG_NFM_ALU_FABRICATION, aliases: [易拉罐料, 罐体料]}
+  - {id: PROD_NFM_AUTO_ALU_SHEET, type: product, name: 汽车铝板, name_en: Automotive Aluminum Sheet, parent: PROD_NFM_ALU_PLATE_STRIP, segment: SEG_NFM_ALU_FABRICATION, aliases: [车身铝板]}
+  - {id: PROD_NFM_AERO_ALU_PLATE, type: product, name: 航空铝厚板, name_en: Aerospace Aluminum Plate, parent: PROD_NFM_ALU_PLATE_STRIP, segment: SEG_NFM_ALU_FABRICATION, aliases: [航空航天铝材], import_dependence: medium}
+  - {id: PROD_NFM_ALU_BRAZING_SHEET, type: product, name: 铝钎焊复合材料, name_en: Aluminum Brazing Sheet, parent: PROD_NFM_ALU_PLATE_STRIP, segment: SEG_NFM_ALU_FABRICATION, aliases: [热传输复合铝材]}
+  - {id: PROD_NFM_ALU_FOIL, type: product, name: 铝箔, name_en: Aluminum Foil, segment: SEG_NFM_ALU_FABRICATION}
+  - {id: PROD_NFM_PACKAGING_ALU_FOIL, type: product, name: 包装铝箔, name_en: Packaging Aluminum Foil, parent: PROD_NFM_ALU_FOIL, segment: SEG_NFM_ALU_FABRICATION, aliases: [双零铝箔, 食品铝箔]}
+  - {id: PROD_NFM_AIRCON_ALU_FOIL, type: product, name: 空调铝箔, name_en: Air-Conditioner Fin Foil, parent: PROD_NFM_ALU_FOIL, segment: SEG_NFM_ALU_FABRICATION, aliases: [亲水铝箔]}
+
+  # ---------------- lead & zinc ----------------
+  - {id: PROD_NFM_ZINC_CONCENTRATE, type: product, name: 锌精矿, name_en: Zinc Concentrate, segment: SEG_NFM_LEAD_ZINC, aliases: [锌矿], import_dependence: medium}
+  - {id: PROD_NFM_LEAD_CONCENTRATE, type: product, name: 铅精矿, name_en: Lead Concentrate, segment: SEG_NFM_LEAD_ZINC, aliases: [铅矿], import_dependence: medium}
+  - {id: PROD_NFM_ZINC_SMELTING, type: product, name: 锌冶炼, name_en: Zinc Smelting, segment: SEG_NFM_LEAD_ZINC, aliases: [锌锭, 精锌]}
+  - {id: PROD_NFM_LEAD_SMELTING, type: product, name: 铅冶炼, name_en: Lead Smelting, segment: SEG_NFM_LEAD_ZINC, aliases: [铅锭, 电解铅]}
+  - {id: PROD_NFM_RECYCLED_LEAD, type: product, name: 再生铅, name_en: Recycled Lead, segment: SEG_NFM_LEAD_ZINC, aliases: [废铅蓄电池回收]}
+  - {id: PROD_NFM_ZINC_ALLOY, type: product, name: 锌合金, name_en: Zinc Alloy, segment: SEG_NFM_LEAD_ZINC, aliases: [热镀锌合金, 压铸锌合金]}
+  - {id: PROD_NFM_ZINC_OXIDE, type: product, name: 氧化锌, name_en: Zinc Oxide, segment: SEG_NFM_LEAD_ZINC}
+
+  # ---------------- tin / antimony ----------------
+  - {id: PROD_NFM_TIN_CONCENTRATE, type: product, name: 锡精矿, name_en: Tin Concentrate, segment: SEG_NFM_TIN, aliases: [锡矿], import_dependence: medium}
+  - {id: PROD_NFM_TIN_SMELTING, type: product, name: 锡冶炼, name_en: Tin Smelting, segment: SEG_NFM_TIN, aliases: [锡锭, 精锡]}
+  - {id: PROD_NFM_TIN_SOLDER, type: product, name: 锡焊料, name_en: Tin Solder, segment: SEG_NFM_TIN, aliases: [锡基焊料]}
+  - {id: PROD_NFM_TIN_CHEMICALS, type: product, name: 锡化工, name_en: Tin Chemicals, segment: SEG_NFM_TIN, aliases: [有机锡, 锡盐]}
+  - {id: PROD_NFM_ANTIMONY_CONCENTRATE, type: product, name: 锑精矿, name_en: Antimony Concentrate, segment: SEG_NFM_ANTIMONY, aliases: [锑矿], import_dependence: medium}
+  - {id: PROD_NFM_ANTIMONY_INGOT, type: product, name: 锑锭, name_en: Antimony Ingot, segment: SEG_NFM_ANTIMONY, aliases: [精锑]}
+  - {id: PROD_NFM_ANTIMONY_OXIDE, type: product, name: 氧化锑, name_en: Antimony Trioxide, segment: SEG_NFM_ANTIMONY, aliases: [三氧化二锑]}
+
+  # ---------------- precious metals ----------------
+  - {id: PROD_NFM_GOLD_ORE, type: product, name: 金矿采选, name_en: Gold Ore Mining, segment: SEG_NFM_GOLD, aliases: [金精矿, 矿产金]}
+  - {id: PROD_NFM_GOLD_DORE, type: product, name: 合质金, name_en: Gold Dore, segment: SEG_NFM_GOLD}
+  - {id: PROD_NFM_GOLD_REFINING, type: product, name: 黄金冶炼精炼, name_en: Gold Refining, segment: SEG_NFM_GOLD, aliases: [标准金锭, 冶炼金]}
+  - {id: PROD_NFM_INVESTMENT_GOLD, type: product, name: 投资金条, name_en: Investment Gold Bar, segment: SEG_NFM_GOLD, aliases: [金条]}
+  - {id: PROD_NFM_SILVER_REFINING, type: product, name: 白银冶炼, name_en: Silver Refining, segment: SEG_NFM_SILVER_PGM, aliases: [银锭, 矿产银]}
+  - {id: PROD_NFM_PGM_REFINING, type: product, name: 铂族金属精炼, name_en: PGM Refining, segment: SEG_NFM_SILVER_PGM, aliases: [铂钯铑, 贵金属回收], import_dependence: high}
+  - {id: PROD_NFM_PM_CATALYST, type: product, name: 贵金属催化剂, name_en: Precious Metal Catalyst, segment: SEG_NFM_SILVER_PGM, aliases: [钯碳催化剂, 铂催化剂], import_dependence: medium}
+  - {id: PROD_NFM_SILVER_CONTACT, type: product, name: 银基电接触材料, name_en: Silver-Based Electrical Contact, segment: SEG_NFM_SILVER_PGM, aliases: [电触头, 银触点]}
+
+  # ---------------- rare earth & magnets ----------------
+  - {id: PROD_NFM_LREE_CONCENTRATE, type: product, name: 稀土精矿, name_en: Rare Earth Concentrate, segment: SEG_NFM_RARE_EARTH, aliases: [氟碳铈矿, 独居石]}
+  - {id: PROD_NFM_IONIC_RE_ORE, type: product, name: 离子型稀土矿, name_en: Ion-Adsorption Rare Earth Ore, segment: SEG_NFM_RARE_EARTH, aliases: [南方离子型稀土, 中重稀土矿]}
+  - {id: PROD_NFM_RE_SEPARATION, type: product, name: 稀土冶炼分离, name_en: Rare Earth Separation, segment: SEG_NFM_RARE_EARTH, aliases: [稀土氧化物]}
+  - {id: PROD_NFM_RE_METAL, type: product, name: 稀土金属, name_en: Rare Earth Metal, segment: SEG_NFM_RARE_EARTH, aliases: [镨钕金属, 稀土合金]}
+  - {id: PROD_NFM_HREE_PRODUCTS, type: product, name: 镝铽产品, name_en: Dysprosium and Terbium Products, segment: SEG_NFM_RARE_EARTH, aliases: [氧化镝, 氧化铽, 重稀土]}
+  - {id: PROD_NFM_RE_RECYCLING, type: product, name: 稀土废料回收, name_en: Rare Earth Recycling, segment: SEG_NFM_RARE_EARTH, aliases: [稀土二次资源]}
+  - {id: PROD_NFM_RE_POLISHING_POWDER, type: product, name: 稀土抛光粉, name_en: Rare Earth Polishing Powder, segment: SEG_NFM_RARE_EARTH, aliases: [氧化铈抛光粉]}
+  - {id: PROD_NFM_RE_HYDROGEN_ALLOY, type: product, name: 稀土储氢合金, name_en: Rare Earth Hydrogen Storage Alloy, segment: SEG_NFM_RARE_EARTH, aliases: [储氢合金]}
+  - {id: PROD_NFM_NDFEB, type: product, name: 钕铁硼永磁材料, name_en: NdFeB Magnets, segment: SEG_NFM_MAGNETIC, aliases: [钕铁硼, NdFeB, 稀土永磁体]}
+  - {id: PROD_NFM_NDFEB_BLANK, type: product, name: 钕铁硼毛坯, name_en: NdFeB Blank, segment: SEG_NFM_MAGNETIC, aliases: [速凝薄片]}
+  - {id: PROD_NFM_SINTERED_NDFEB, type: product, name: 烧结钕铁硼, name_en: Sintered NdFeB, parent: PROD_NFM_NDFEB, segment: SEG_NFM_MAGNETIC, aliases: [高性能烧结钕铁硼]}
+  - {id: PROD_NFM_BONDED_NDFEB, type: product, name: 粘结钕铁硼, name_en: Bonded NdFeB, parent: PROD_NFM_NDFEB, segment: SEG_NFM_MAGNETIC}
+  - {id: PROD_NFM_HOT_PRESSED_NDFEB, type: product, name: 热压钕铁硼, name_en: Hot-Deformed NdFeB, parent: PROD_NFM_NDFEB, segment: SEG_NFM_MAGNETIC, aliases: [热变形钕铁硼]}
+  - {id: PROD_NFM_MAGNET_ASSEMBLY, type: product, name: 磁组件, name_en: Magnet Assembly, segment: SEG_NFM_MAGNETIC, aliases: [电机磁钢组件, 转子磁组件]}
+  - {id: PROD_NFM_SMCO, type: product, name: 钐钴永磁, name_en: SmCo Magnets, segment: SEG_NFM_MAGNETIC, aliases: [钐钴磁体]}
+  - {id: PROD_NFM_FERRITE_MAGNET, type: product, name: 永磁铁氧体, name_en: Permanent Ferrite Magnet, segment: SEG_NFM_MAGNETIC, aliases: [铁氧体磁瓦]}
+  - {id: PROD_NFM_SOFT_MAGNETIC_POWDER_CORE, type: product, name: 金属软磁粉芯, name_en: Metal Soft Magnetic Powder Core, segment: SEG_NFM_MAGNETIC, aliases: [软磁粉芯, 合金软磁粉]}
+  - {id: PROD_NFM_AMORPHOUS_STRIP, type: product, name: 非晶合金带材, name_en: Amorphous Alloy Strip, segment: SEG_NFM_MAGNETIC, aliases: [非晶带材]}
+  - {id: PROD_NFM_NANOCRYSTALLINE_STRIP, type: product, name: 纳米晶带材, name_en: Nanocrystalline Strip, segment: SEG_NFM_MAGNETIC, aliases: [纳米晶合金]}
+
+  # ---------------- tungsten / molybdenum ----------------
+  - {id: PROD_NFM_TUNGSTEN_CONCENTRATE, type: product, name: 钨精矿, name_en: Tungsten Concentrate, segment: SEG_NFM_TUNGSTEN, aliases: [黑钨精矿, 白钨精矿]}
+  - {id: PROD_NFM_APT, type: product, name: 仲钨酸铵, name_en: Ammonium Paratungstate, segment: SEG_NFM_TUNGSTEN, aliases: [APT]}
+  - {id: PROD_NFM_TUNGSTEN_POWDER, type: product, name: 钨粉, name_en: Tungsten Powder, segment: SEG_NFM_TUNGSTEN, aliases: [氧化钨]}
+  - {id: PROD_NFM_WC_POWDER, type: product, name: 碳化钨粉, name_en: Tungsten Carbide Powder, segment: SEG_NFM_TUNGSTEN}
+  - {id: PROD_NFM_CEMENTED_CARBIDE, type: product, name: 硬质合金, name_en: Cemented Carbide, segment: SEG_NFM_TUNGSTEN, aliases: [硬质合金耐磨件]}
+  - {id: PROD_NFM_TUNGSTEN_WIRE, type: product, name: 钨丝, name_en: Tungsten Wire, segment: SEG_NFM_TUNGSTEN, aliases: [光伏钨丝, 钨丝母线]}
+  - {id: PROD_NFM_TUNGSTEN_MO_PRODUCTS, type: product, name: 钨钼制品, name_en: Tungsten and Molybdenum Fabricated Products, segment: SEG_NFM_TUNGSTEN, aliases: [钨钼板, 钨合金, 高比重钨合金]}
+  - {id: PROD_NFM_MO_CONCENTRATE, type: product, name: 钼精矿, name_en: Molybdenum Concentrate, segment: SEG_NFM_MOLYBDENUM, aliases: [钼矿]}
+  - {id: PROD_NFM_ROASTED_MO, type: product, name: 焙烧钼精矿, name_en: Roasted Molybdenum Concentrate, segment: SEG_NFM_MOLYBDENUM, aliases: [氧化钼]}
+  - {id: PROD_NFM_FERROMOLYBDENUM, type: product, name: 钼铁, name_en: Ferromolybdenum, segment: SEG_NFM_MOLYBDENUM}
+  - {id: PROD_NFM_MO_CHEMICALS, type: product, name: 钼化工产品, name_en: Molybdenum Chemicals, segment: SEG_NFM_MOLYBDENUM, aliases: [钼酸铵, 钼酸钠]}
+
+  # ---------------- scarce / other minor metals ----------------
+  - {id: PROD_NFM_GALLIUM, type: product, name: 金属镓, name_en: Gallium Metal, segment: SEG_NFM_SCARCE_METALS, aliases: [高纯镓]}
+  - {id: PROD_NFM_GERMANIUM_PRODUCTS, type: product, name: 锗产品, name_en: Germanium Products, segment: SEG_NFM_SCARCE_METALS, aliases: [四氯化锗, 区熔锗, 锗单晶]}
+  - {id: PROD_NFM_GERMANIUM_IR_LENS, type: product, name: 红外锗镜头, name_en: Germanium Infrared Optics, segment: SEG_NFM_SCARCE_METALS, aliases: [红外光学锗]}
+  - {id: PROD_NFM_INDIUM, type: product, name: 精铟, name_en: Refined Indium, segment: SEG_NFM_SCARCE_METALS, aliases: [铟锭]}
+  - {id: PROD_NFM_HIGH_PURITY_METALS, type: product, name: 高纯金属, name_en: High-Purity Metals, segment: SEG_NFM_SCARCE_METALS, aliases: [超高纯金属, 6N金属], import_dependence: medium}
+  - {id: PROD_NFM_PRIMARY_MAGNESIUM, type: product, name: 原镁冶炼, name_en: Primary Magnesium Smelting, segment: SEG_NFM_MAGNESIUM, aliases: [镁锭]}
+  - {id: PROD_NFM_MAGNESIUM_ALLOY, type: product, name: 镁合金, name_en: Magnesium Alloy, segment: SEG_NFM_MAGNESIUM, aliases: [镁合金锭]}
+  - {id: PROD_NFM_MG_DIE_CASTING, type: product, name: 镁合金压铸件, name_en: Magnesium Die Casting, segment: SEG_NFM_MAGNESIUM, aliases: [镁合金结构件]}
+  - {id: PROD_NFM_VANADIUM_SLAG, type: product, name: 钒渣, name_en: Vanadium Slag, segment: SEG_NFM_VANADIUM, aliases: [钒钛磁铁矿]}
+  - {id: PROD_NFM_V2O5, type: product, name: 五氧化二钒, name_en: Vanadium Pentoxide, segment: SEG_NFM_VANADIUM, aliases: [钒氧化物]}
+  - {id: PROD_NFM_VANADIUM_ALLOY, type: product, name: 钒氮合金, name_en: Vanadium Nitrogen Alloy, segment: SEG_NFM_VANADIUM, aliases: [钒铁, 钒合金]}
+  - {id: PROD_NFM_VANADIUM_ELECTROLYTE, type: product, name: 钒电解液, name_en: Vanadium Electrolyte, segment: SEG_NFM_VANADIUM, aliases: [全钒液流电池电解液]}
+  - {id: PROD_NFM_TANTALUM_NIOBIUM_ORE, type: product, name: 钽铌矿, name_en: Tantalum-Niobium Ore, segment: SEG_NFM_TANTALUM_NIOBIUM, aliases: [钽铌精矿], import_dependence: high}
+  - {id: PROD_NFM_TANTALUM_POWDER, type: product, name: 钽粉, name_en: Tantalum Powder, segment: SEG_NFM_TANTALUM_NIOBIUM, aliases: [电容器级钽粉]}
+  - {id: PROD_NFM_TANTALUM_WIRE, type: product, name: 钽丝, name_en: Tantalum Wire, segment: SEG_NFM_TANTALUM_NIOBIUM}
+  - {id: PROD_NFM_NIOBIUM_PRODUCTS, type: product, name: 铌及铌合金, name_en: Niobium and Niobium Alloys, segment: SEG_NFM_TANTALUM_NIOBIUM, aliases: [超导铌材, 铌材]}
+  - {id: PROD_NFM_ZIRCONIUM_HAFNIUM, type: product, name: 核级锆铪, name_en: Nuclear-Grade Zirconium and Hafnium, segment: SEG_NFM_ZIRCONIUM, aliases: [海绵锆, 锆合金, 铪], import_dependence: medium}
+
+  # ---------------- cobalt / nickel / lithium ----------------
+  - {id: PROD_NFM_COBALT_HYDROXIDE, type: product, name: 氢氧化钴, name_en: Cobalt Hydroxide, segment: SEG_NFM_COBALT, aliases: [粗制氢氧化钴, 钴中间品], import_dependence: high}
+  - {id: PROD_NFM_COBALT_SULFATE, type: product, name: 硫酸钴, name_en: Cobalt Sulfate, segment: SEG_NFM_COBALT}
+  - {id: PROD_NFM_COBALT_TETROXIDE, type: product, name: 四氧化三钴, name_en: Cobalt Tetroxide, segment: SEG_NFM_COBALT, aliases: [Co3O4]}
+  - {id: PROD_NFM_ELECTROLYTIC_COBALT, type: product, name: 电解钴, name_en: Electrolytic Cobalt, segment: SEG_NFM_COBALT, aliases: [电积钴, 钴金属]}
+  - {id: PROD_NFM_COBALT_POWDER, type: product, name: 钴粉, name_en: Cobalt Powder, segment: SEG_NFM_COBALT}
+  - {id: PROD_NFM_LATERITE_ORE, type: product, name: 红土镍矿, name_en: Laterite Nickel Ore, segment: SEG_NFM_NICKEL, aliases: [镍矿], import_dependence: high}
+  - {id: PROD_NFM_NPI, type: product, name: 镍铁, name_en: Nickel Pig Iron, segment: SEG_NFM_NICKEL, aliases: [NPI, 镍生铁], import_dependence: medium}
+  - {id: PROD_NFM_MHP, type: product, name: 氢氧化镍钴, name_en: Mixed Hydroxide Precipitate, segment: SEG_NFM_NICKEL, aliases: [MHP], import_dependence: high}
+  - {id: PROD_NFM_NICKEL_MATTE, type: product, name: 高冰镍, name_en: Nickel Matte, segment: SEG_NFM_NICKEL, aliases: [镍锍, 低冰镍], import_dependence: high}
+  - {id: PROD_NFM_NICKEL_SULFATE, type: product, name: 硫酸镍, name_en: Nickel Sulfate, segment: SEG_NFM_NICKEL}
+  - {id: PROD_NFM_ELECTROLYTIC_NICKEL, type: product, name: 电解镍, name_en: Electrolytic Nickel, segment: SEG_NFM_NICKEL, aliases: [镍板, 纯镍]}
+  - {id: PROD_NFM_SPODUMENE_CONCENTRATE, type: product, name: 锂辉石精矿, name_en: Spodumene Concentrate, segment: SEG_NFM_LITHIUM, aliases: [锂精矿, SC6], import_dependence: high}
+  - {id: PROD_NFM_LEPIDOLITE_CONCENTRATE, type: product, name: 锂云母精矿, name_en: Lepidolite Concentrate, segment: SEG_NFM_LITHIUM}
+  - {id: PROD_NFM_BRINE_LITHIUM, type: product, name: 盐湖提锂, name_en: Brine Lithium Extraction, segment: SEG_NFM_LITHIUM, aliases: [卤水提锂, 吸附法提锂]}
+  - {id: PROD_NFM_LI_CARBONATE_REFINING, type: product, name: 碳酸锂冶炼, name_en: Lithium Carbonate Production, segment: SEG_NFM_LITHIUM, aliases: [电池级碳酸锂, 工业级碳酸锂]}
+  - {id: PROD_NFM_LI_HYDROXIDE_REFINING, type: product, name: 氢氧化锂冶炼, name_en: Lithium Hydroxide Production, segment: SEG_NFM_LITHIUM, aliases: [电池级氢氧化锂, 单水氢氧化锂]}
+  - {id: PROD_NFM_LITHIUM_CHLORIDE, type: product, name: 氯化锂, name_en: Lithium Chloride, segment: SEG_NFM_LITHIUM}
+  - {id: PROD_NFM_LITHIUM_METAL, type: product, name: 金属锂, name_en: Lithium Metal, segment: SEG_NFM_LITHIUM, aliases: [锂金属, 锂带]}
+  - {id: PROD_NFM_BUTYL_LITHIUM, type: product, name: 丁基锂, name_en: Butyllithium, segment: SEG_NFM_LITHIUM, aliases: [有机锂]}
+  - {id: PROD_NFM_LITHIUM_SULFIDE, type: product, name: 硫化锂, name_en: Lithium Sulfide, segment: SEG_NFM_LITHIUM, aliases: [Li2S]}
+
+  # ---------------- titanium / superalloys / functional ----------------
+  - {id: PROD_NFM_TITANIUM_CONCENTRATE, type: product, name: 钛精矿, name_en: Ilmenite Concentrate, segment: SEG_NFM_TITANIUM, aliases: [钛铁矿], import_dependence: medium}
+  - {id: PROD_NFM_TI_SPONGE, type: product, name: 海绵钛冶炼, name_en: Titanium Sponge Production, segment: SEG_NFM_TITANIUM}
+  - {id: PROD_NFM_TITANIUM_INGOT, type: product, name: 钛锭, name_en: Titanium Ingot, segment: SEG_NFM_TITANIUM, aliases: [钛合金铸锭]}
+  - {id: PROD_NFM_TITANIUM_PLATE, type: product, name: 钛板带, name_en: Titanium Plate and Strip, segment: SEG_NFM_TITANIUM, aliases: [钛板, 钛卷]}
+  - {id: PROD_NFM_TITANIUM_BAR, type: product, name: 钛合金棒丝材, name_en: Titanium Alloy Bar and Wire, segment: SEG_NFM_TITANIUM, aliases: [钛棒, 钛丝, 航空钛合金棒材]}
+  - {id: PROD_NFM_TITANIUM_TUBE, type: product, name: 钛管, name_en: Titanium Tube, segment: SEG_NFM_TITANIUM, aliases: [钛焊管, 钛无缝管]}
+  - {id: PROD_NFM_SUPERALLOY, type: product, name: 高温合金, name_en: Superalloys, segment: SEG_NFM_SUPERALLOY, aliases: [镍基高温合金]}
+  - {id: PROD_NFM_CAST_SUPERALLOY, type: product, name: 铸造高温合金, name_en: Cast Superalloy, parent: PROD_NFM_SUPERALLOY, segment: SEG_NFM_SUPERALLOY, aliases: [高温合金母合金, 铸造高温合金母合金, 母合金], import_dependence: medium}
+  - {id: PROD_NFM_WROUGHT_SUPERALLOY, type: product, name: 变形高温合金, name_en: Wrought Superalloy, parent: PROD_NFM_SUPERALLOY, segment: SEG_NFM_SUPERALLOY}
+  - {id: PROD_NFM_PM_SUPERALLOY, type: product, name: 粉末高温合金, name_en: Powder Metallurgy Superalloy, parent: PROD_NFM_SUPERALLOY, segment: SEG_NFM_SUPERALLOY, import_dependence: medium}
+  - {id: PROD_NFM_PRECISION_ALLOY, type: product, name: 精密合金, name_en: Precision Alloy, segment: SEG_NFM_SUPERALLOY, aliases: [膨胀合金, 软磁合金, 耐蚀合金]}
+  - {id: PROD_NFM_AM_METAL_POWDER, type: product, name: 3D打印金属粉末, name_en: Additive Manufacturing Metal Powder, segment: SEG_NFM_FUNCTIONAL_METALS, aliases: [球形金属粉末]}
+  - {id: PROD_NFM_METAL_CLAD_PLATE, type: product, name: 金属复合板, name_en: Clad Metal Plate, segment: SEG_NFM_FUNCTIONAL_METALS, aliases: [爆炸复合板, 层状金属复合材料]}
+
+  # ---------------- technologies ----------------
+  - {id: TECH_NFM_GRAIN_BOUNDARY_DIFFUSION, type: technology, name: 晶界扩散, name_en: Grain Boundary Diffusion, aliases: [晶界渗透]}
+  - {id: TECH_NFM_HPAL, type: technology, name: 高压酸浸, name_en: High-Pressure Acid Leaching, aliases: [HPAL]}
+  - {id: TECH_NFM_RKEF, type: technology, name: 回转窑-电炉工艺, name_en: Rotary Kiln Electric Furnace, aliases: [RKEF]}
+  - {id: TECH_NFM_DLE, type: technology, name: 直接提锂, name_en: Direct Lithium Extraction, aliases: [DLE]}
+
+edges:
+  # segment structure
+  - [SEG_NFM_COPPER_MINING, part_of, SEG_NFM_COPPER]
+  - [SEG_NFM_COPPER_SMELTING, part_of, SEG_NFM_COPPER]
+  - [SEG_NFM_COPPER_FABRICATION, part_of, SEG_NFM_COPPER]
+  - [SEG_NFM_ALU_UPSTREAM, part_of, SEG_NFM_ALUMINUM]
+  - [SEG_NFM_ALU_FABRICATION, part_of, SEG_NFM_ALUMINUM]
+  - [SEG_NFM_TIN, part_of, SEG_NFM_MINOR_METALS]
+  - [SEG_NFM_ANTIMONY, part_of, SEG_NFM_MINOR_METALS]
+  - [SEG_NFM_SCARCE_METALS, part_of, SEG_NFM_MINOR_METALS]
+  - [SEG_NFM_MAGNESIUM, part_of, SEG_NFM_MINOR_METALS]
+  - [SEG_NFM_VANADIUM, part_of, SEG_NFM_MINOR_METALS]
+  - [SEG_NFM_TANTALUM_NIOBIUM, part_of, SEG_NFM_MINOR_METALS]
+  - [SEG_NFM_ZIRCONIUM, part_of, SEG_NFM_MINOR_METALS]
+  - [SEG_NFM_COBALT, part_of, SEG_NFM_ENERGY_METALS]
+  - [SEG_NFM_NICKEL, part_of, SEG_NFM_ENERGY_METALS]
+  - [SEG_NFM_LITHIUM, part_of, SEG_NFM_ENERGY_METALS]
+  - [SEG_NFM_TITANIUM, part_of, SEG_NFM_NEW_MATERIALS]
+  - [SEG_NFM_SUPERALLOY, part_of, SEG_NFM_NEW_MATERIALS]
+  - [SEG_NFM_FUNCTIONAL_METALS, part_of, SEG_NFM_NEW_MATERIALS]
+  - [SEG_NFM_MAGNETIC, part_of, SEG_NFM_NEW_MATERIALS]
+  # segment -> end market
+  - [SEG_NFM_COPPER, serves, MKT_POWER_GRID]
+  - [SEG_NFM_COPPER, serves, MKT_CONSTRUCTION]
+  - [SEG_NFM_COPPER, serves, MKT_HOME_APPLIANCE]
+  - [SEG_NFM_COPPER, serves, MKT_EV]
+  - [SEG_NFM_ALUMINUM, serves, MKT_CONSTRUCTION]
+  - [SEG_NFM_ALUMINUM, serves, MKT_EV]
+  - [SEG_NFM_ALUMINUM, serves, MKT_PACKAGING]
+  - [SEG_NFM_ALUMINUM, serves, MKT_SOLAR]
+  - [SEG_NFM_ALUMINUM, serves, MKT_POWER_GRID]
+  - [SEG_NFM_LEAD_ZINC, serves, MKT_CONSTRUCTION]
+  - [SEG_NFM_LEAD_ZINC, serves, MKT_STEEL_INDUSTRY]
+  - [SEG_NFM_GOLD, serves, MKT_FINANCE]
+  - [SEG_NFM_GOLD, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_NFM_SILVER_PGM, serves, MKT_SOLAR]
+  - [SEG_NFM_SILVER_PGM, serves, MKT_ICE_VEHICLE]
+  - [SEG_NFM_RARE_EARTH, serves, MKT_EV]
+  - [SEG_NFM_MAGNETIC, serves, MKT_EV]
+  - [SEG_NFM_MAGNETIC, serves, MKT_WIND]
+  - [SEG_NFM_MAGNETIC, serves, MKT_HOME_APPLIANCE]
+  - [SEG_NFM_MAGNETIC, serves, MKT_HUMANOID_ROBOT]
+  - [SEG_NFM_MAGNETIC, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_NFM_TUNGSTEN, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_NFM_TUNGSTEN, serves, MKT_SOLAR]
+  - [SEG_NFM_TUNGSTEN, serves, MKT_DEFENSE]
+  - [SEG_NFM_MOLYBDENUM, serves, MKT_STEEL_INDUSTRY]
+  - [SEG_NFM_TIN, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_NFM_ANTIMONY, serves, MKT_SOLAR]
+  - [SEG_NFM_SCARCE_METALS, serves, MKT_SEMI_FAB]
+  - [SEG_NFM_SCARCE_METALS, serves, MKT_DEFENSE]
+  - [SEG_NFM_MAGNESIUM, serves, MKT_EV]
+  - [SEG_NFM_VANADIUM, serves, MKT_STEEL_INDUSTRY]
+  - [SEG_NFM_VANADIUM, serves, MKT_ENERGY_STORAGE]
+  - [SEG_NFM_TANTALUM_NIOBIUM, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_NFM_ZIRCONIUM, serves, MKT_NUCLEAR_POWER]
+  - [SEG_NFM_ENERGY_METALS, serves, MKT_EV]
+  - [SEG_NFM_ENERGY_METALS, serves, MKT_ENERGY_STORAGE]
+  - [SEG_NFM_NICKEL, serves, MKT_STEEL_INDUSTRY]
+  - [SEG_NFM_TITANIUM, serves, MKT_AEROSPACE]
+  - [SEG_NFM_TITANIUM, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_NFM_SUPERALLOY, serves, MKT_AEROSPACE]
+  - [SEG_NFM_SUPERALLOY, serves, MKT_DEFENSE]
+  - [SEG_NFM_SUPERALLOY, serves, MKT_THERMAL_POWER]
+
+  # copper chain
+  - [PROD_NFM_COPPER_CONCENTRATE, upstream_of, PROD_NFM_ANODE_COPPER]
+  - [PROD_NFM_ANODE_COPPER, upstream_of, PROD_NFM_REFINED_COPPER]
+  - [PROD_NFM_RECYCLED_COPPER, upstream_of, PROD_NFM_ANODE_COPPER]
+  - [PROD_NFM_CU_CO_ORE, upstream_of, PROD_NFM_SXEW_COPPER]
+  - [PROD_NFM_CU_CO_ORE, upstream_of, PROD_NFM_COBALT_HYDROXIDE]
+  - [PROD_NFM_REFINED_COPPER, upstream_of, PROD_NFM_COPPER_ROD]
+  - [PROD_NFM_SXEW_COPPER, upstream_of, PROD_NFM_COPPER_ROD]
+  - [MAT_COPPER, upstream_of, PROD_NFM_COPPER_ROD]
+  - [PROD_NFM_COPPER_ROD, upstream_of, PROD_NFM_COPPER_WIRE]
+  - [PROD_NFM_COPPER_ROD, upstream_of, PROD_PWR_MAGNET_WIRE]
+  - [PROD_NFM_COPPER_ROD, upstream_of, PROD_NFM_COPPER_CONTACT_WIRE]
+  - [PROD_NFM_REFINED_COPPER, upstream_of, PROD_NFM_COPPER_STRIP]
+  - [PROD_NFM_REFINED_COPPER, upstream_of, PROD_NFM_COPPER_TUBE]
+  - [PROD_NFM_REFINED_COPPER, upstream_of, PROD_NFM_COPPER_BAR]
+  - [PROD_NFM_REFINED_COPPER, upstream_of, PROD_PWR_COPPER_BUSBAR]
+  - [PROD_NFM_REFINED_COPPER, upstream_of, PROD_NFM_COPPER_POWDER]
+  - [PROD_NFM_RECYCLED_COPPER, upstream_of, PROD_NFM_BRASS_ROD]
+  - [PROD_NFM_COPPER_STRIP, uses_material, MAT_COPPER]
+  - [PROD_NFM_COPPER_TUBE, uses_material, MAT_COPPER]
+  - [PROD_NFM_COPPER_BAR, uses_material, MAT_COPPER]
+  - [PROD_NFM_BRASS_ROD, uses_material, MAT_ZINC]
+  - [PROD_PWR_MAGNET_WIRE, uses_material, MAT_COPPER]
+  - [PROD_PWR_COPPER_BUSBAR, uses_material, MAT_COPPER]
+  - [PROD_NFM_REFINED_COPPER, uses_material, MAT_ELECTRICITY]
+  - [PROD_NFM_COPPER_WIRE, used_in, MKT_POWER_GRID]
+  - [PROD_NFM_COPPER_WIRE, used_in, MKT_CONSTRUCTION]
+  - [PROD_PWR_MAGNET_WIRE, used_in, MKT_EV]
+  - [PROD_PWR_MAGNET_WIRE, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_PWR_MAGNET_WIRE, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_PWR_MAGNET_WIRE, used_in, MKT_POWER_GRID]
+  - [PROD_NFM_COPPER_CONTACT_WIRE, used_in, MKT_RAIL]
+  - [PROD_NFM_COPPER_TUBE, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_NFM_COPPER_TUBE, used_in, MKT_CONSTRUCTION]
+  - [PROD_NFM_HP_COPPER_ALLOY_STRIP, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_NFM_HP_COPPER_ALLOY_STRIP, used_in, MKT_EV]
+  - [PROD_NFM_HP_COPPER_ALLOY_STRIP, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_NFM_COPPER_STRIP, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_COPPER_BUSBAR, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_COPPER_BUSBAR, used_in, MKT_DATA_CENTER]
+  - [PROD_PWR_COPPER_BUSBAR, used_in, MKT_EV]
+  - [PROD_NFM_BRASS_ROD, used_in, MKT_CONSTRUCTION]
+  - [PROD_NFM_COPPER_POWDER, used_in, MKT_CONSUMER_ELECTRONICS]
+
+  # aluminium chain
+  - [PROD_NFM_BAUXITE, upstream_of, PROD_NFM_ALUMINA]
+  - [PROD_NFM_ALUMINA, upstream_of, PROD_NFM_PRIMARY_ALUMINUM]
+  - [PROD_NFM_PREBAKED_ANODE, upstream_of, PROD_NFM_PRIMARY_ALUMINUM]
+  - [PROD_NFM_ALUMINA, uses_material, MAT_CHLOR_ALKALI]
+  - [PROD_NFM_ALUMINA, uses_material, MAT_THERMAL_COAL]
+  - [PROD_NFM_PRIMARY_ALUMINUM, uses_material, MAT_ELECTRICITY]
+  - [PROD_NFM_PRIMARY_ALUMINUM, upstream_of, PROD_NFM_ALU_BILLET]
+  - [PROD_NFM_PRIMARY_ALUMINUM, upstream_of, PROD_NFM_ALU_WIRE_ROD]
+  - [PROD_NFM_PRIMARY_ALUMINUM, upstream_of, PROD_NFM_ALU_PLATE_STRIP]
+  - [PROD_NFM_PRIMARY_ALUMINUM, upstream_of, PROD_NFM_ALU_ALLOY_INGOT]
+  - [PROD_NFM_PRIMARY_ALUMINUM, upstream_of, PROD_NFM_HIGH_PURITY_ALUMINUM]
+  - [PROD_NFM_RECYCLED_ALUMINUM, upstream_of, PROD_NFM_ALU_ALLOY_INGOT]
+  - [PROD_NFM_HIGH_PURITY_ALUMINUM, upstream_of, PROD_NFM_ELECTRODE_FOIL]
+  - [PROD_NFM_ALU_BILLET, upstream_of, PROD_NFM_ALU_EXTRUSION]
+  - [PROD_NFM_ALU_PLATE_STRIP, upstream_of, PROD_NFM_ALU_FOIL]
+  - [MAT_ALUMINUM, upstream_of, PROD_NFM_ALU_BILLET]
+  - [PROD_NFM_ALU_EXTRUSION, uses_material, MAT_ALUMINUM]
+  - [PROD_NFM_ALU_PLATE_STRIP, uses_material, MAT_ALUMINUM]
+  - [PROD_NFM_ALU_FOIL, uses_material, MAT_ALUMINUM]
+  - [PROD_NFM_ALU_ALLOY_INGOT, uses_material, MAT_SILICON_METAL]
+  - [PROD_NFM_ALU_ALLOY_INGOT, used_in, MKT_ICE_VEHICLE]
+  - [PROD_NFM_ALU_ALLOY_INGOT, used_in, MKT_EV]
+  - [PROD_NFM_ALU_WIRE_ROD, used_in, MKT_POWER_GRID]
+  - [PROD_NFM_ARCH_ALU_PROFILE, used_in, MKT_CONSTRUCTION]
+  - [PROD_NFM_ARCH_ALU_PROFILE, used_in, MKT_REAL_ESTATE]
+  - [PROD_NFM_PV_ALU_FRAME, used_in, MKT_SOLAR]
+  - [PROD_NFM_AUTO_ALU_PROFILE, used_in, MKT_EV]
+  - [PROD_NFM_IND_ALU_PROFILE, used_in, MKT_RAIL]
+  - [PROD_NFM_IND_ALU_PROFILE, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_NFM_CAN_STOCK, used_in, MKT_PACKAGING]
+  - [PROD_NFM_AUTO_ALU_SHEET, used_in, MKT_EV]
+  - [PROD_NFM_AUTO_ALU_SHEET, used_in, MKT_ICE_VEHICLE]
+  - [PROD_NFM_AERO_ALU_PLATE, used_in, MKT_AEROSPACE]
+  - [PROD_NFM_ALU_BRAZING_SHEET, used_in, MKT_EV]
+  - [PROD_NFM_ALU_BRAZING_SHEET, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_NFM_ALU_PLATE_STRIP, used_in, MKT_CONSTRUCTION]
+  - [PROD_NFM_PACKAGING_ALU_FOIL, used_in, MKT_PACKAGING]
+  - [PROD_NFM_AIRCON_ALU_FOIL, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_NFM_ELECTRODE_FOIL, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_NFM_ELECTRODE_FOIL, used_in, MKT_SOLAR]
+
+  # lead / zinc / tin / antimony
+  - [PROD_NFM_ZINC_CONCENTRATE, upstream_of, PROD_NFM_ZINC_SMELTING]
+  - [PROD_NFM_LEAD_CONCENTRATE, upstream_of, PROD_NFM_LEAD_SMELTING]
+  - [PROD_NFM_LEAD_CONCENTRATE, upstream_of, PROD_NFM_SILVER_REFINING]
+  - [PROD_NFM_ZINC_CONCENTRATE, upstream_of, PROD_NFM_GERMANIUM_PRODUCTS]
+  - [PROD_NFM_ZINC_CONCENTRATE, upstream_of, PROD_NFM_INDIUM]
+  - [PROD_NFM_ZINC_SMELTING, upstream_of, PROD_NFM_ZINC_ALLOY]
+  - [PROD_NFM_ZINC_SMELTING, upstream_of, PROD_NFM_ZINC_OXIDE]
+  - [PROD_NFM_RECYCLED_LEAD, substitute_for, PROD_NFM_LEAD_SMELTING]
+  - [PROD_NFM_ZINC_SMELTING, uses_material, MAT_ELECTRICITY]
+  - [PROD_NFM_ZINC_ALLOY, uses_material, MAT_ZINC]
+  - [PROD_NFM_ZINC_ALLOY, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_NFM_LEAD_SMELTING, used_in, MKT_ICE_VEHICLE]
+  - [PROD_NFM_RECYCLED_LEAD, used_in, MKT_ICE_VEHICLE]
+  - [PROD_NFM_ZINC_OXIDE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_NFM_TIN_CONCENTRATE, upstream_of, PROD_NFM_TIN_SMELTING]
+  - [PROD_NFM_TIN_SMELTING, upstream_of, PROD_NFM_TIN_SOLDER]
+  - [PROD_NFM_TIN_SMELTING, upstream_of, PROD_NFM_TIN_CHEMICALS]
+  - [PROD_NFM_TIN_SOLDER, uses_material, MAT_TIN]
+  - [PROD_NFM_TIN_SOLDER, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_NFM_TIN_SOLDER, used_in, MKT_SOLAR]
+  - [PROD_NFM_TIN_CHEMICALS, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_NFM_ANTIMONY_CONCENTRATE, upstream_of, PROD_NFM_ANTIMONY_INGOT]
+  - [PROD_NFM_ANTIMONY_INGOT, upstream_of, PROD_NFM_ANTIMONY_OXIDE]
+  - [PROD_NFM_ANTIMONY_OXIDE, uses_material, MAT_ANTIMONY]
+  - [PROD_NFM_ANTIMONY_OXIDE, used_in, MKT_SOLAR]
+  - [PROD_NFM_ANTIMONY_OXIDE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_NFM_ANTIMONY_INGOT, used_in, MKT_DEFENSE]
+
+  # precious metals
+  - [PROD_NFM_GOLD_ORE, upstream_of, PROD_NFM_GOLD_DORE]
+  - [PROD_NFM_GOLD_DORE, upstream_of, PROD_NFM_GOLD_REFINING]
+  - [PROD_NFM_COPPER_CONCENTRATE, upstream_of, PROD_NFM_GOLD_REFINING]
+  - [PROD_NFM_GOLD_REFINING, upstream_of, PROD_NFM_INVESTMENT_GOLD]
+  - [PROD_NFM_INVESTMENT_GOLD, uses_material, MAT_GOLD]
+  - [PROD_NFM_INVESTMENT_GOLD, used_in, MKT_FINANCE]
+  - [PROD_NFM_INVESTMENT_GOLD, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_NFM_GOLD_REFINING, used_in, MKT_FINANCE]
+  - [PROD_NFM_SILVER_REFINING, used_in, MKT_SOLAR]
+  - [PROD_NFM_SILVER_REFINING, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_NFM_PGM_REFINING, upstream_of, PROD_NFM_PM_CATALYST]
+  - [PROD_NFM_PM_CATALYST, used_in, MKT_ICE_VEHICLE]
+  - [PROD_NFM_PM_CATALYST, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_NFM_SILVER_CONTACT, uses_material, MAT_SILVER]
+  - [PROD_NFM_SILVER_CONTACT, used_in, MKT_POWER_GRID]
+  - [PROD_NFM_SILVER_CONTACT, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_NFM_SILVER_CONTACT, used_in, MKT_EV]
+
+  # rare earth & magnets
+  - [PROD_NFM_LREE_CONCENTRATE, upstream_of, PROD_NFM_RE_SEPARATION]
+  - [PROD_NFM_IONIC_RE_ORE, upstream_of, PROD_NFM_RE_SEPARATION]
+  - [PROD_NFM_RE_RECYCLING, upstream_of, PROD_NFM_RE_SEPARATION]
+  - [PROD_NFM_RE_SEPARATION, upstream_of, PROD_NFM_RE_METAL]
+  - [PROD_NFM_RE_SEPARATION, upstream_of, PROD_NFM_HREE_PRODUCTS]
+  - [PROD_NFM_RE_SEPARATION, upstream_of, PROD_NFM_RE_POLISHING_POWDER]
+  - [PROD_NFM_RE_SEPARATION, upstream_of, PROD_NFM_RE_HYDROGEN_ALLOY]
+  - [PROD_NFM_RE_METAL, upstream_of, PROD_NFM_NDFEB_BLANK]
+  - [PROD_NFM_RE_METAL, upstream_of, PROD_NFM_SMCO]
+  - [PROD_NFM_HREE_PRODUCTS, upstream_of, PROD_NFM_SINTERED_NDFEB]
+  - [PROD_NFM_NDFEB_BLANK, upstream_of, PROD_NFM_SINTERED_NDFEB]
+  - [PROD_NFM_RE_METAL, upstream_of, PROD_NFM_BONDED_NDFEB]
+  - [PROD_NFM_RE_METAL, upstream_of, PROD_NFM_HOT_PRESSED_NDFEB]
+  - [PROD_NFM_SINTERED_NDFEB, upstream_of, PROD_NFM_MAGNET_ASSEMBLY]
+  - [PROD_NFM_RE_SEPARATION, uses_material, MAT_RARE_EARTH]
+  - [PROD_NFM_RE_METAL, uses_material, MAT_RARE_EARTH]
+  - [PROD_NFM_NDFEB, uses_material, MAT_RARE_EARTH]
+  - [PROD_NFM_SINTERED_NDFEB, uses_material, MAT_RARE_EARTH]
+  - [TECH_NFM_GRAIN_BOUNDARY_DIFFUSION, enables, PROD_NFM_SINTERED_NDFEB]
+  - [PROD_NFM_SINTERED_NDFEB, used_in, MKT_EV]
+  - [PROD_NFM_SINTERED_NDFEB, used_in, MKT_WIND]
+  - [PROD_NFM_SINTERED_NDFEB, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_NFM_SINTERED_NDFEB, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_NFM_SINTERED_NDFEB, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_NFM_SINTERED_NDFEB, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_NFM_SINTERED_NDFEB, used_in, MKT_LOW_ALTITUDE]
+  - [PROD_NFM_BONDED_NDFEB, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_NFM_BONDED_NDFEB, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_NFM_HOT_PRESSED_NDFEB, used_in, MKT_EV]
+  - [PROD_NFM_MAGNET_ASSEMBLY, used_in, MKT_EV]
+  - [PROD_NFM_MAGNET_ASSEMBLY, used_in, MKT_WIND]
+  - [PROD_NFM_SMCO, uses_material, MAT_COBALT]
+  - [PROD_NFM_SMCO, used_in, MKT_DEFENSE]
+  - [PROD_NFM_SMCO, used_in, MKT_AEROSPACE]
+  - [PROD_NFM_FERRITE_MAGNET, substitute_for, PROD_NFM_BONDED_NDFEB]
+  - [PROD_NFM_FERRITE_MAGNET, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_NFM_FERRITE_MAGNET, used_in, MKT_ICE_VEHICLE]
+  - [PROD_NFM_SOFT_MAGNETIC_POWDER_CORE, used_in, MKT_SOLAR]
+  - [PROD_NFM_SOFT_MAGNETIC_POWDER_CORE, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_NFM_SOFT_MAGNETIC_POWDER_CORE, used_in, MKT_EV]
+  - [PROD_NFM_AMORPHOUS_STRIP, used_in, MKT_POWER_GRID]
+  - [PROD_NFM_AMORPHOUS_STRIP, substitute_for, PROD_STL_GO_ELECTRICAL_STEEL]
+  - [PROD_NFM_NANOCRYSTALLINE_STRIP, used_in, MKT_EV]
+  - [PROD_NFM_NANOCRYSTALLINE_STRIP, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_NFM_RE_POLISHING_POWDER, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_NFM_RE_HYDROGEN_ALLOY, used_in, MKT_CONSUMER_ELECTRONICS]
+
+  # tungsten / molybdenum
+  - [PROD_NFM_TUNGSTEN_CONCENTRATE, upstream_of, PROD_NFM_APT]
+  - [PROD_NFM_APT, upstream_of, PROD_NFM_TUNGSTEN_POWDER]
+  - [PROD_NFM_TUNGSTEN_POWDER, upstream_of, PROD_NFM_WC_POWDER]
+  - [PROD_NFM_WC_POWDER, upstream_of, PROD_NFM_CEMENTED_CARBIDE]
+  - [PROD_NFM_CEMENTED_CARBIDE, upstream_of, PROD_MACH_CARBIDE_INSERT]
+  - [PROD_NFM_TUNGSTEN_POWDER, upstream_of, PROD_NFM_TUNGSTEN_WIRE]
+  - [PROD_NFM_TUNGSTEN_POWDER, upstream_of, PROD_NFM_TUNGSTEN_MO_PRODUCTS]
+  - [PROD_NFM_COBALT_POWDER, upstream_of, PROD_NFM_CEMENTED_CARBIDE]
+  - [PROD_NFM_APT, uses_material, MAT_TUNGSTEN]
+  - [PROD_NFM_CEMENTED_CARBIDE, uses_material, MAT_TUNGSTEN]
+  - [PROD_NFM_CEMENTED_CARBIDE, used_in, MKT_MINING]
+  - [PROD_MACH_CARBIDE_INSERT, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_CARBIDE_INSERT, used_in, MKT_ICE_VEHICLE]
+  - [PROD_MACH_CARBIDE_INSERT, used_in, MKT_AEROSPACE]
+  - [PROD_NFM_TUNGSTEN_WIRE, used_in, MKT_SOLAR]
+  - [PROD_NFM_TUNGSTEN_MO_PRODUCTS, used_in, MKT_DEFENSE]
+  - [PROD_NFM_TUNGSTEN_MO_PRODUCTS, used_in, MKT_SEMI_FAB]
+  - [PROD_NFM_MO_CONCENTRATE, upstream_of, PROD_NFM_ROASTED_MO]
+  - [PROD_NFM_ROASTED_MO, upstream_of, PROD_NFM_FERROMOLYBDENUM]
+  - [PROD_NFM_ROASTED_MO, upstream_of, PROD_NFM_MO_CHEMICALS]
+  - [PROD_NFM_MO_CHEMICALS, upstream_of, PROD_NFM_TUNGSTEN_MO_PRODUCTS]
+  - [PROD_NFM_ROASTED_MO, uses_material, MAT_MOLYBDENUM]
+  - [PROD_NFM_FERROMOLYBDENUM, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_NFM_MO_CHEMICALS, used_in, MKT_CHEMICAL_INDUSTRY]
+
+  # scarce & other minor metals
+  - [PROD_NFM_ALUMINA, upstream_of, PROD_NFM_GALLIUM]
+  - [PROD_NFM_GALLIUM, uses_material, MAT_GALLIUM_GERMANIUM]
+  - [PROD_NFM_GALLIUM, used_in, MKT_SEMI_FAB]
+  - [PROD_NFM_GERMANIUM_PRODUCTS, uses_material, MAT_GALLIUM_GERMANIUM]
+  - [PROD_NFM_GERMANIUM_PRODUCTS, upstream_of, PROD_NFM_GERMANIUM_IR_LENS]
+  - [PROD_NFM_GERMANIUM_PRODUCTS, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_NFM_GERMANIUM_PRODUCTS, used_in, MKT_AEROSPACE]
+  - [PROD_NFM_GERMANIUM_IR_LENS, used_in, MKT_DEFENSE]
+  - [PROD_NFM_INDIUM, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_NFM_HIGH_PURITY_METALS, used_in, MKT_SEMI_FAB]
+  - [PROD_NFM_PRIMARY_MAGNESIUM, upstream_of, PROD_NFM_MAGNESIUM_ALLOY]
+  - [PROD_NFM_MAGNESIUM_ALLOY, upstream_of, PROD_NFM_MG_DIE_CASTING]
+  - [PROD_NFM_PRIMARY_MAGNESIUM, uses_material, MAT_MAGNESIUM]
+  - [PROD_NFM_PRIMARY_MAGNESIUM, uses_material, MAT_THERMAL_COAL]
+  - [PROD_NFM_PRIMARY_MAGNESIUM, upstream_of, PROD_NFM_TI_SPONGE]
+  - [PROD_NFM_PRIMARY_MAGNESIUM, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_NFM_MG_DIE_CASTING, used_in, MKT_EV]
+  - [PROD_NFM_MG_DIE_CASTING, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_NFM_MG_DIE_CASTING, substitute_for, PROD_NFM_ALU_ALLOY_INGOT]
+  - [PROD_NFM_VANADIUM_SLAG, upstream_of, PROD_NFM_V2O5]
+  - [PROD_NFM_V2O5, upstream_of, PROD_NFM_VANADIUM_ALLOY]
+  - [PROD_NFM_V2O5, upstream_of, PROD_NFM_VANADIUM_ELECTROLYTE]
+  - [PROD_NFM_VANADIUM_ALLOY, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_NFM_VANADIUM_ELECTROLYTE, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_NFM_TANTALUM_NIOBIUM_ORE, upstream_of, PROD_NFM_TANTALUM_POWDER]
+  - [PROD_NFM_TANTALUM_NIOBIUM_ORE, upstream_of, PROD_NFM_NIOBIUM_PRODUCTS]
+  - [PROD_NFM_TANTALUM_POWDER, upstream_of, PROD_NFM_TANTALUM_WIRE]
+  - [PROD_NFM_TANTALUM_POWDER, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_NFM_TANTALUM_POWDER, used_in, MKT_DEFENSE]
+  - [PROD_NFM_TANTALUM_WIRE, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_NFM_NIOBIUM_PRODUCTS, used_in, MKT_HEALTHCARE]
+  - [PROD_NFM_NIOBIUM_PRODUCTS, used_in, MKT_AEROSPACE]
+  - [PROD_NFM_ZIRCONIUM_HAFNIUM, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_NFM_ZIRCONIUM_HAFNIUM, used_in, MKT_AEROSPACE]
+
+  # cobalt / nickel / lithium
+  - [PROD_NFM_COBALT_HYDROXIDE, upstream_of, PROD_NFM_COBALT_SULFATE]
+  - [PROD_NFM_COBALT_HYDROXIDE, upstream_of, PROD_NFM_COBALT_TETROXIDE]
+  - [PROD_NFM_COBALT_HYDROXIDE, upstream_of, PROD_NFM_ELECTROLYTIC_COBALT]
+  - [PROD_NFM_ELECTROLYTIC_COBALT, upstream_of, PROD_NFM_COBALT_POWDER]
+  - [PROD_NFM_MHP, upstream_of, PROD_NFM_COBALT_SULFATE]
+  - [PROD_ENV_BATTERY_RECYCLING, upstream_of, PROD_NFM_COBALT_SULFATE]
+  - [PROD_ENV_BATTERY_RECYCLING, upstream_of, PROD_NFM_NICKEL_SULFATE]
+  - [PROD_ENV_BATTERY_RECYCLING, upstream_of, PROD_NFM_LI_CARBONATE_REFINING]
+  - [PROD_NFM_COBALT_SULFATE, uses_material, MAT_COBALT]
+  - [PROD_NFM_COBALT_TETROXIDE, uses_material, MAT_COBALT]
+  - [PROD_NFM_COBALT_SULFATE, used_in, MKT_EV]
+  - [PROD_NFM_COBALT_TETROXIDE, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_NFM_ELECTROLYTIC_COBALT, used_in, MKT_AEROSPACE]
+  - [PROD_NFM_LATERITE_ORE, upstream_of, PROD_NFM_NPI]
+  - [PROD_NFM_LATERITE_ORE, upstream_of, PROD_NFM_MHP]
+  - [PROD_NFM_NPI, upstream_of, PROD_NFM_NICKEL_MATTE]
+  - [PROD_NFM_MHP, upstream_of, PROD_NFM_NICKEL_SULFATE]
+  - [PROD_NFM_NICKEL_MATTE, upstream_of, PROD_NFM_NICKEL_SULFATE]
+  - [PROD_NFM_NICKEL_MATTE, upstream_of, PROD_NFM_ELECTROLYTIC_NICKEL]
+  - [PROD_NFM_ELECTROLYTIC_NICKEL, upstream_of, PROD_NFM_SUPERALLOY]
+  - [PROD_NFM_NPI, upstream_of, PROD_STL_STAINLESS_SLAB]
+  - [PROD_NFM_NICKEL_SULFATE, uses_material, MAT_NICKEL]
+  - [PROD_NFM_ELECTROLYTIC_NICKEL, uses_material, MAT_NICKEL]
+  - [PROD_NFM_NPI, uses_material, MAT_ELECTRICITY]
+  - [TECH_NFM_HPAL, enables, PROD_NFM_MHP]
+  - [TECH_NFM_RKEF, enables, PROD_NFM_NPI]
+  - [PROD_NFM_NICKEL_SULFATE, used_in, MKT_EV]
+  - [PROD_NFM_NPI, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_NFM_SPODUMENE_CONCENTRATE, upstream_of, PROD_NFM_LI_CARBONATE_REFINING]
+  - [PROD_NFM_SPODUMENE_CONCENTRATE, upstream_of, PROD_NFM_LI_HYDROXIDE_REFINING]
+  - [PROD_NFM_LEPIDOLITE_CONCENTRATE, upstream_of, PROD_NFM_LI_CARBONATE_REFINING]
+  - [PROD_NFM_BRINE_LITHIUM, upstream_of, PROD_NFM_LI_CARBONATE_REFINING]
+  - [PROD_NFM_BRINE_LITHIUM, upstream_of, PROD_NFM_LITHIUM_CHLORIDE]
+  - [PROD_NFM_LI_CARBONATE_REFINING, upstream_of, PROD_NFM_LI_HYDROXIDE_REFINING]
+  - [PROD_NFM_LITHIUM_CHLORIDE, upstream_of, PROD_NFM_LITHIUM_METAL]
+  - [PROD_NFM_LITHIUM_METAL, upstream_of, PROD_NFM_BUTYL_LITHIUM]
+  - [PROD_NFM_LI_HYDROXIDE_REFINING, upstream_of, PROD_NFM_LITHIUM_SULFIDE]
+  - [PROD_NFM_SPODUMENE_CONCENTRATE, uses_material, MAT_LITHIUM_ORE]
+  - [PROD_NFM_LEPIDOLITE_CONCENTRATE, uses_material, MAT_LITHIUM_ORE]
+  - [PROD_NFM_BRINE_LITHIUM, uses_material, MAT_LITHIUM_ORE]
+  - [PROD_NFM_LI_CARBONATE_REFINING, uses_material, MAT_LITHIUM_ORE]
+  - [PROD_NFM_LI_CARBONATE_REFINING, uses_material, MAT_SODA_ASH]
+  - [PROD_NFM_LI_CARBONATE_REFINING, uses_material, MAT_SULFURIC_ACID]
+  - [PROD_NFM_LI_HYDROXIDE_REFINING, uses_material, MAT_LITHIUM_ORE]
+  - [TECH_NFM_DLE, enables, PROD_NFM_BRINE_LITHIUM]
+  - [TECH_SOLID_STATE_BATTERY, enables, PROD_NFM_LITHIUM_SULFIDE]
+  - [TECH_SOLID_STATE_BATTERY, enables, PROD_NFM_LITHIUM_METAL]
+  - [PROD_NFM_LI_CARBONATE_REFINING, used_in, MKT_EV]
+  - [PROD_NFM_LI_CARBONATE_REFINING, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_NFM_LI_HYDROXIDE_REFINING, used_in, MKT_EV]
+  - [PROD_NFM_LITHIUM_SULFIDE, used_in, MKT_EV]
+  - [PROD_NFM_BUTYL_LITHIUM, used_in, MKT_PHARMA_RD]
+  - [PROD_NFM_BUTYL_LITHIUM, used_in, MKT_CHEMICAL_INDUSTRY]
+
+  # titanium / superalloy / functional
+  - [PROD_NFM_TITANIUM_CONCENTRATE, upstream_of, PROD_NFM_TI_SPONGE]
+  - [PROD_NFM_TI_SPONGE, upstream_of, PROD_NFM_TITANIUM_INGOT]
+  - [PROD_NFM_TITANIUM_INGOT, upstream_of, PROD_NFM_TITANIUM_PLATE]
+  - [PROD_NFM_TITANIUM_INGOT, upstream_of, PROD_NFM_TITANIUM_BAR]
+  - [PROD_NFM_TITANIUM_INGOT, upstream_of, PROD_NFM_TITANIUM_TUBE]
+  - [PROD_NFM_TITANIUM_INGOT, uses_material, MAT_TITANIUM]
+  - [PROD_NFM_TITANIUM_BAR, used_in, MKT_AEROSPACE]
+  - [PROD_NFM_TITANIUM_BAR, used_in, MKT_DEFENSE]
+  - [PROD_NFM_TITANIUM_BAR, used_in, MKT_HEALTHCARE]
+  - [PROD_NFM_TITANIUM_PLATE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_NFM_TITANIUM_PLATE, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_NFM_TITANIUM_PLATE, used_in, MKT_SHIPBUILDING]
+  - [PROD_NFM_TITANIUM_TUBE, used_in, MKT_THERMAL_POWER]
+  - [PROD_NFM_TITANIUM_TUBE, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_NFM_SUPERALLOY, uses_material, MAT_NICKEL]
+  - [PROD_NFM_SUPERALLOY, uses_material, MAT_COBALT]
+  - [PROD_NFM_SUPERALLOY, used_in, MKT_AEROSPACE]
+  - [PROD_NFM_SUPERALLOY, used_in, MKT_DEFENSE]
+  - [PROD_NFM_SUPERALLOY, used_in, MKT_THERMAL_POWER]
+  - [PROD_NFM_SUPERALLOY, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_NFM_PRECISION_ALLOY, used_in, MKT_DEFENSE]
+  - [PROD_NFM_PRECISION_ALLOY, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_NFM_TITANIUM_BAR, upstream_of, PROD_NFM_AM_METAL_POWDER]
+  - [PROD_NFM_SUPERALLOY, upstream_of, PROD_NFM_AM_METAL_POWDER]
+  - [TECH_ADDITIVE_MANUFACTURING, enables, PROD_NFM_AM_METAL_POWDER]
+  - [PROD_NFM_AM_METAL_POWDER, used_in, MKT_AEROSPACE]
+  - [PROD_NFM_METAL_CLAD_PLATE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_NFM_METAL_CLAD_PLATE, used_in, MKT_SHIPBUILDING]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_NFM_COPPER_WIRE, upstream_of, PROD_COMM_SILVER_PLATED_CONDUCTOR]
+  - [PROD_NFM_ALU_FOIL, upstream_of, PROD_COMM_SHIELD_TAPE]
+  - [PROD_NFM_REFINED_COPPER, upstream_of, PROD_ELEC_COPPER_FOIL]
+  - [PROD_NFM_REFINED_COPPER, upstream_of, PROD_PWR_LI_COPPER_FOIL]
+  - [PROD_NFM_TANTALUM_POWDER, upstream_of, PROD_DEF_TANTALUM_CAPACITOR]
+  - [PROD_NFM_INDIUM, upstream_of, PROD_ELEC_DISPLAY_TARGET]
+  - [PROD_NFM_HIGH_PURITY_METALS, upstream_of, PROD_ELEC_SEMI_TARGET]
+  - [PROD_NFM_GALLIUM, upstream_of, PROD_ELEC_GAAS_SUBSTRATE]
+  - [PROD_NFM_GALLIUM, upstream_of, PROD_ELEC_GAN_SUBSTRATE]
+  - [PROD_NFM_HP_COPPER_ALLOY_STRIP, upstream_of, PROD_ELEC_LEADFRAME]
+  - [PROD_NFM_HP_COPPER_ALLOY_STRIP, upstream_of, PROD_ELEC_CONNECTOR]
+  - [PROD_NFM_SOFT_MAGNETIC_POWDER_CORE, component_of, PROD_ELEC_POWER_INDUCTOR]
+  - [PROD_NFM_NANOCRYSTALLINE_STRIP, upstream_of, PROD_ELEC_MAGNETIC_COMPONENT]
+  - [PROD_NFM_TUNGSTEN_WIRE, upstream_of, PROD_MACH_DIAMOND_WIRE]
+  - [PROD_NFM_MAGNET_ASSEMBLY, component_of, PROD_PWR_EV_DRIVE_MOTOR]
+  - [PROD_NFM_MAGNET_ASSEMBLY, component_of, PROD_PWR_PM_MOTOR]
+  - [PROD_NFM_SINTERED_NDFEB, component_of, PROD_PWR_FRAMELESS_TORQUE_MOTOR]
+  - [PROD_NFM_SINTERED_NDFEB, component_of, PROD_PWR_WIND_GENERATOR]
+  - [PROD_NFM_AMORPHOUS_STRIP, upstream_of, PROD_PWR_AMORPHOUS_TRANSFORMER]
+  - [PROD_NFM_TITANIUM_BAR, upstream_of, PROD_DEF_AERO_FORGING]
+  - [PROD_NFM_TI_SPONGE, upstream_of, PROD_DEF_TITANIUM_ALLOY]
+  - [PROD_NFM_ALU_PLATE_STRIP, upstream_of, PROD_PWR_BATTERY_AL_FOIL]
+  - [PROD_NFM_NICKEL_SULFATE, upstream_of, PROD_PWR_NCM_PRECURSOR]
+  - [PROD_NFM_COBALT_SULFATE, upstream_of, PROD_PWR_NCM_PRECURSOR]
+  - [PROD_NFM_LI_CARBONATE_REFINING, upstream_of, MAT_LITHIUM_CARBONATE]
+  - [PROD_NFM_LI_HYDROXIDE_REFINING, upstream_of, MAT_LITHIUM_HYDROXIDE]
+  - [PROD_NFM_LI_CARBONATE_REFINING, upstream_of, PROD_PWR_LFP]
+  - [PROD_NFM_LI_HYDROXIDE_REFINING, upstream_of, PROD_PWR_HIGH_NI_NCM]
+  - [PROD_NFM_COBALT_TETROXIDE, upstream_of, PROD_PWR_LCO]
+  - [PROD_NFM_SILVER_REFINING, upstream_of, PROD_PWR_SILVER_PASTE]
+  - [PROD_NFM_COPPER_WIRE, upstream_of, PROD_PWR_RIBBON]
+  - [PROD_NFM_PM_CATALYST, upstream_of, PROD_AUTO_CATALYST]
+  - [PROD_NFM_CEMENTED_CARBIDE, upstream_of, PROD_MACH_CARBIDE_ROD]
+  - [PROD_NFM_CAN_STOCK, upstream_of, PROD_LIGHT_TWO_PIECE_CAN]
+
+sw_l3_map:
+  "240201": [SEG_NFM_NEW_MATERIALS, SEG_NFM_TITANIUM, SEG_NFM_SUPERALLOY, SEG_NFM_FUNCTIONAL_METALS, SEG_NFM_COPPER_FABRICATION]
+  "240202": [SEG_NFM_MAGNETIC]
+  "240301": [SEG_NFM_ALU_UPSTREAM, SEG_NFM_ALU_FABRICATION]
+  "240302": [SEG_NFM_COPPER_MINING, SEG_NFM_COPPER_SMELTING, SEG_NFM_COPPER_FABRICATION]
+  "240303": [SEG_NFM_LEAD_ZINC]
+  "240401": [SEG_NFM_GOLD]
+  "240402": [SEG_NFM_SILVER_PGM]
+  "240501": [SEG_NFM_RARE_EARTH, SEG_NFM_MAGNETIC]
+  "240502": [SEG_NFM_TUNGSTEN]
+  "240504": [SEG_NFM_MINOR_METALS, SEG_NFM_TIN, SEG_NFM_ANTIMONY, SEG_NFM_SCARCE_METALS, SEG_NFM_MAGNESIUM, SEG_NFM_VANADIUM, SEG_NFM_TANTALUM_NIOBIUM, SEG_NFM_ZIRCONIUM, SEG_NFM_TITANIUM]
+  "240505": [SEG_NFM_MOLYBDENUM]
+  "240601": [SEG_NFM_COBALT]
+  "240602": [SEG_NFM_NICKEL]
+  "240603": [SEG_NFM_LITHIUM]

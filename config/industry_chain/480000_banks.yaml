@@ -1,0 +1,53 @@
+# Shenwan 480000 银行 — product taxonomy prior (plan 12 phase 1, D-097). Format: README.md.
+# Bank business lines are services; the chain is mostly serves -> end markets.
+sector: {sw_l1: "480000", name: 银行, name_en: Banks}
+
+nodes:
+  - {id: SEG_BANK_BANKING, type: segment, name: 商业银行, name_en: Commercial Banking}
+  - {id: SEG_BANK_STATE_OWNED, type: segment, name: 国有大型银行, name_en: Large State-Owned Banks, aliases: [国有大型银行Ⅱ, 国有大型银行Ⅲ, 国有行]}
+  - {id: SEG_BANK_JOINT_STOCK, type: segment, name: 股份制银行, name_en: Joint-Stock Banks, aliases: [股份制银行Ⅱ, 股份制银行Ⅲ, 股份行]}
+  - {id: SEG_BANK_CITY, type: segment, name: 城商行, name_en: City Commercial Banks, aliases: [城商行Ⅱ, 城商行Ⅲ, 城市商业银行]}
+  - {id: SEG_BANK_RURAL, type: segment, name: 农商行, name_en: Rural Commercial Banks, aliases: [农商行Ⅱ, 农商行Ⅲ, 农村商业银行]}
+  - {id: SEG_BANK_OTHER, type: segment, name: 其他银行, name_en: Other Banks, aliases: [其他银行Ⅱ, 其他银行Ⅲ]}
+
+  - {id: PROD_BANK_CORPORATE_LOAN, type: product, kind: service, name: 对公贷款, name_en: Corporate Loans, segment: SEG_BANK_BANKING, aliases: [公司贷款, 对公信贷]}
+  - {id: PROD_BANK_INFRA_LOAN, type: product, kind: service, name: 基建与政信贷款, name_en: Infrastructure and Government-Related Loans, parent: PROD_BANK_CORPORATE_LOAN, segment: SEG_BANK_BANKING, aliases: [基建贷款, 城投贷款]}
+  - {id: PROD_BANK_SME_LOAN, type: product, kind: service, name: 普惠小微贷款, name_en: Inclusive SME Loans, parent: PROD_BANK_CORPORATE_LOAN, segment: SEG_BANK_BANKING, aliases: [小微贷款, 普惠金融]}
+  - {id: PROD_BANK_MORTGAGE, type: product, kind: service, name: 个人住房贷款, name_en: Residential Mortgages, segment: SEG_BANK_BANKING, aliases: [按揭贷款, 房贷]}
+  - {id: PROD_BANK_CONSUMER_LOAN, type: product, kind: service, name: 个人消费贷款, name_en: Consumer Loans, segment: SEG_BANK_BANKING, aliases: [消费贷, 信用卡贷款]}
+  - {id: PROD_BANK_DEPOSIT, type: product, kind: service, name: 存款业务, name_en: Deposits, segment: SEG_BANK_BANKING, aliases: [吸收存款]}
+  - {id: PROD_BANK_WEALTH_MGMT, type: product, kind: service, name: 银行理财, name_en: Bank Wealth Management, segment: SEG_BANK_BANKING, aliases: [理财子公司, 财富管理]}
+  - {id: PROD_BANK_PAYMENT_SETTLEMENT, type: product, kind: service, name: 支付结算, name_en: Payment and Settlement, segment: SEG_BANK_BANKING, aliases: [结算业务, 代理业务]}
+  - {id: PROD_BANK_TREASURY, type: product, kind: service, name: 金融市场业务, name_en: Treasury and Bond Investment, segment: SEG_BANK_BANKING, aliases: [债券投资, 同业业务]}
+
+edges:
+  - [SEG_BANK_STATE_OWNED, part_of, SEG_BANK_BANKING]
+  - [SEG_BANK_JOINT_STOCK, part_of, SEG_BANK_BANKING]
+  - [SEG_BANK_CITY, part_of, SEG_BANK_BANKING]
+  - [SEG_BANK_RURAL, part_of, SEG_BANK_BANKING]
+  - [SEG_BANK_OTHER, part_of, SEG_BANK_BANKING]
+  - [SEG_BANK_BANKING, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_BANK_BANKING, serves, MKT_REAL_ESTATE]
+  - [SEG_BANK_BANKING, serves, MKT_CONSTRUCTION]
+  - [SEG_BANK_BANKING, serves, MKT_GOVERNMENT]
+  - [SEG_BANK_BANKING, serves, MKT_FINANCE]
+  - [SEG_BANK_RURAL, serves, MKT_AGRICULTURE]
+  - [PROD_BANK_INFRA_LOAN, used_in, MKT_CONSTRUCTION]
+  - [PROD_BANK_INFRA_LOAN, used_in, MKT_GOVERNMENT]
+  - [PROD_BANK_MORTGAGE, used_in, MKT_REAL_ESTATE]
+  - [PROD_BANK_CONSUMER_LOAN, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BANK_SME_LOAN, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BANK_WEALTH_MGMT, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BANK_PAYMENT_SETTLEMENT, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BANK_TREASURY, used_in, MKT_FINANCE]
+  - [PROD_BANK_DEPOSIT, upstream_of, PROD_BANK_CORPORATE_LOAN]
+  - [PROD_BANK_DEPOSIT, upstream_of, PROD_BANK_MORTGAGE]
+  - [PROD_BANK_DEPOSIT, upstream_of, PROD_BANK_CONSUMER_LOAN]
+  - [PROD_BANK_WEALTH_MGMT, substitute_for, PROD_BANK_DEPOSIT]
+
+sw_l3_map:
+  "480201": [SEG_BANK_STATE_OWNED]
+  "480301": [SEG_BANK_JOINT_STOCK]
+  "480401": [SEG_BANK_CITY]
+  "480501": [SEG_BANK_RURAL]
+  "480601": [SEG_BANK_OTHER]

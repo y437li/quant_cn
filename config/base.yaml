@@ -1,0 +1,122 @@
+# Committed defaults. Machine overrides: config/local.yaml (git-ignored). Secrets: .env only.
+# Key meanings: config/README.md.
+
+lake:
+  root: ~/quant_cn_lake          # overridden by QUANT_CN_LAKE_ROOT (D-021); never inside the repo
+  allow_inside_repo: false
+  backup_target: null
+
+tushare:
+  url: http://api.tushare.pro
+  timeout_s: 90
+  page_size: 6000
+  retries: 4
+  retry_sleep_s: 6
+  rate_limit_sleep_s: 65
+  max_rate_limit_waits: 30
+  rate_limit_markers: ["每分钟", "频率"]
+  permission_markers: ["权限", "积分"]
+
+llm:                             # extraction model (D-098); key from env DEEPSEEK_API_KEY only
+  url: https://api.deepseek.com/chat/completions
+  model: deepseek-flash
+  timeout_s: 180
+  retries: 3
+  retry_sleep_s: 10
+  min_interval_s: 0.2
+  max_tokens: 8000
+  thinking: false                # reasoning used 13k tokens on one report and truncated JSON at 6k
+  # peak prices, CNY per 1M tokens (api-docs.deepseek.com pricing, 2026-11-07); off-peak = half
+  prices:
+    deepseek-flash: {input_hit: 0.04, input_miss: 2.0, output: 8.0}
+    deepseek-v4-pro: {input_hit: 0.30, input_miss: 9.0, output: 27.0}
+  peak_hours: [[9, 12], [14, 18]]  # Beijing time, Mon-Fri (holidays treated as peak: conservative)
+
+download:
+  default_start: "20190101"      # D-015b
+  long_history_start: "20100101"
+  long_history_datasets: [daily, adj_factor, index_daily]
+  end: null                      # null = today
+  order:
+    - trade_cal
+    - stock_basic
+    - namechange
+    - index_daily
+    - daily
+    - adj_factor
+    - daily_basic
+    - moneyflow
+    - stk_limit
+    - fina_indicator_vip
+    - income_vip
+    - balancesheet_vip
+    - cashflow_vip
+    - shibor
+    - opt_basic
+    - fund_basic
+    - fund_daily
+    - fund_nav
+    - fund_share
+    - margin_secs
+    - opt_daily
+    - fut_basic
+    - fut_daily
+    - fut_mapping
+    - fut_holding
+    - margin
+    - margin_detail
+    - index_classify
+    - index_member_all
+    - index_weight
+    - sw_daily
+    - sge_basic
+    - sge_daily
+    - cn_cpi
+    - cn_ppi
+    - cn_pmi
+    - cn_m
+    - shibor_lpr
+    - fx_daily
+    - forecast_vip
+    - express_vip
+    - disclosure_date
+    - stk_holdernumber
+    - stk_holdertrade
+    - share_float
+    - stk_surv
+    - hk_hold
+    - broker_recommend
+    - report_rc
+    - cn_bond_yield
+    - lme_copper
+    - macro_release_cpi
+    - macro_release_ppi
+    - macro_release_pmi
+    - macro_release_m2
+    - szse_margin_targets
+    - irm_qa_sh
+    - irm_qa_sz
+    - em_industry_reports
+    - em_stock_reports
+    - cninfo_announcements
+    - cninfo_keyword_announcements
+    - fina_mainbz_p
+    - fina_mainbz_i
+    - stock_company
+    - ths_index
+    - ths_member
+    - dc_index
+    - dc_member
+
+universe:                        # plan 04 phase 3 (FACTOR_TESTING_DESIGN §11)
+  start: "20100101"
+  min_sessions: 120              # sessions since listing before a stock enters
+  exchanges: ["SH", "SZ"]        # BJ excluded by default (D-054)
+
+enum_values:
+  indices: ["000001.SH", "000016.SH", "000300.SH", "000852.SH", "000905.SH", "399001.SZ", "399006.SZ"]
+  # fx_daily instruments (plan 11 phase 5): CNH, dollar index, majors, metals, oil, copper, US rates, indices
+  fx_codes: ["USDCNH.FXCM", "USDOLLAR", "EURUSD.FXCM", "USDJPY.FXCM", "XAUUSD.FXCM", "XAGUSD.FXCM",
+             "UKOIL", "USOIL", "COPPER", "10USNOTE", "SPX500", "NAS100", "HKG33", "CHN50"]
+  # index_weight constituents (plan 11 phase 2): CSI 300 / 500 / 1000, SSE 50
+  weight_indices: ["000300.SH", "000905.SH", "000852.SH", "000016.SH"]

@@ -1,0 +1,347 @@
+# SW L1 330000 家用电器 — product taxonomy prior (plan 12 phase 1, D-097). Format: README.md. All edges are priors.
+
+sector: {sw_l1: "330000", name: 家用电器, name_en: Household Appliances}
+
+nodes:
+  # ---------------- segments ----------------
+  - {id: SEG_HA_WHITE_GOODS, type: segment, name: 白色家电, name_en: White Goods}
+  - {id: SEG_HA_AIR_CONDITIONER, type: segment, name: 空调, name_en: Air Conditioners}
+  - {id: SEG_HA_FRIDGE_WASHER, type: segment, name: 冰洗, name_en: Refrigerators and Washers}
+  - {id: SEG_HA_BLACK_GOODS, type: segment, name: 黑色家电, name_en: Black Goods}
+  - {id: SEG_HA_TV, type: segment, name: 彩电, name_en: Televisions}
+  - {id: SEG_HA_OTHER_BLACK, type: segment, name: 其他黑色家电, name_en: Other Audio-Visual Appliances}
+  - {id: SEG_HA_SMALL_APPLIANCE, type: segment, name: 小家电, name_en: Small Appliances}
+  - {id: SEG_HA_KITCHEN_SMALL, type: segment, name: 厨房小家电, name_en: Small Kitchen Appliances}
+  - {id: SEG_HA_CLEANING, type: segment, name: 清洁小家电, name_en: Cleaning Appliances}
+  - {id: SEG_HA_PERSONAL_CARE, type: segment, name: 个护小家电, name_en: Personal Care Appliances}
+  - {id: SEG_HA_KITCHEN_BATH, type: segment, name: 厨卫电器, name_en: Kitchen and Bathroom Appliances}
+  - {id: SEG_HA_KITCHEN_APPLIANCE, type: segment, name: 厨房电器, name_en: Major Kitchen Appliances}
+  - {id: SEG_HA_BATHROOM, type: segment, name: 卫浴电器, name_en: Bathroom Appliances}
+  - {id: SEG_HA_LIGHTING, type: segment, name: 照明设备, name_en: Lighting Equipment}
+  - {id: SEG_HA_PARTS, type: segment, name: 家电零部件, name_en: Appliance Components}
+  - {id: SEG_HA_COMPRESSOR, type: segment, name: 家电压缩机, name_en: Appliance Compressors}
+  - {id: SEG_HA_REFRIG_CONTROL, type: segment, name: 制冷控制元器件, name_en: Refrigeration Control Components}
+  - {id: SEG_HA_OTHER, type: segment, name: 其他家电, name_en: Other Appliances}
+
+  # ---------------- air conditioning ----------------
+  - {id: PROD_HA_ROOM_AC, type: product, name: 家用空调, name_en: Residential Air Conditioner, segment: SEG_HA_AIR_CONDITIONER, aliases: [房间空调器]}
+  - {id: PROD_HA_SPLIT_AC, type: product, name: 分体式空调, name_en: Split Air Conditioner, parent: PROD_HA_ROOM_AC, segment: SEG_HA_AIR_CONDITIONER, aliases: [挂机, 柜机, 变频空调]}
+  - {id: PROD_HA_PORTABLE_AC, type: product, name: 移动空调, name_en: Portable Air Conditioner, parent: PROD_HA_ROOM_AC, segment: SEG_HA_AIR_CONDITIONER, aliases: [窗机]}
+  - {id: PROD_HA_CENTRAL_AC, type: product, name: 中央空调, name_en: Central Air Conditioning, segment: SEG_HA_AIR_CONDITIONER, aliases: [商用空调]}
+  - {id: PROD_HA_VRF, type: product, name: 多联机, name_en: Variable Refrigerant Flow System, parent: PROD_HA_CENTRAL_AC, segment: SEG_HA_AIR_CONDITIONER, aliases: [VRF, 家用中央空调]}
+  - {id: PROD_HA_AIR_SOURCE_HEAT_PUMP, type: product, name: 空气源热泵, name_en: Air-Source Heat Pump, segment: SEG_HA_AIR_CONDITIONER, aliases: [热泵采暖, 热泵热水机, 空气能], parent: PROD_MACH_HEAT_PUMP}
+  - {id: PROD_HA_DEHUMIDIFIER, type: product, name: 除湿机, name_en: Dehumidifier, segment: SEG_HA_AIR_CONDITIONER, aliases: [抽湿机]}
+
+  # ---------------- refrigeration and laundry ----------------
+  - {id: PROD_HA_REFRIGERATOR, type: product, name: 冰箱, name_en: Refrigerator, segment: SEG_HA_FRIDGE_WASHER, aliases: [电冰箱, 多门冰箱, 对开门冰箱]}
+  - {id: PROD_HA_FREEZER, type: product, name: 冷柜, name_en: Freezer, segment: SEG_HA_FRIDGE_WASHER, aliases: [冰柜]}
+  - {id: PROD_HA_COMMERCIAL_REFRIG, type: product, name: 商用冷柜, name_en: Commercial Refrigeration Display, parent: PROD_HA_FREEZER, segment: SEG_HA_FRIDGE_WASHER, aliases: [展示柜, 冷藏陈列柜]}
+  - {id: PROD_HA_WASHER, type: product, name: 洗衣机, name_en: Washing Machine, segment: SEG_HA_FRIDGE_WASHER}
+  - {id: PROD_HA_FRONT_LOAD_WASHER, type: product, name: 滚筒洗衣机, name_en: Front-Load Washer, parent: PROD_HA_WASHER, segment: SEG_HA_FRIDGE_WASHER, aliases: [洗烘一体机]}
+  - {id: PROD_HA_TOP_LOAD_WASHER, type: product, name: 波轮洗衣机, name_en: Top-Load Washer, parent: PROD_HA_WASHER, segment: SEG_HA_FRIDGE_WASHER}
+  - {id: PROD_HA_DRYER, type: product, name: 干衣机, name_en: Clothes Dryer, segment: SEG_HA_FRIDGE_WASHER, aliases: [烘干机, 热泵干衣机]}
+
+  # ---------------- black goods ----------------
+  - {id: PROD_HA_TV, type: product, name: 电视机, name_en: Television, segment: SEG_HA_TV, aliases: [彩电, 智能电视]}
+  - {id: PROD_HA_LCD_TV, type: product, name: 液晶电视, name_en: LCD Television, parent: PROD_HA_TV, segment: SEG_HA_TV}
+  - {id: PROD_HA_MINILED_TV, type: product, name: Mini LED电视, name_en: Mini LED Television, parent: PROD_HA_LCD_TV, segment: SEG_HA_TV, aliases: [MiniLED电视]}
+  - {id: PROD_HA_OLED_TV, type: product, name: OLED电视, name_en: OLED Television, parent: PROD_HA_TV, segment: SEG_HA_TV}
+  - {id: PROD_HA_LASER_TV, type: product, name: 激光电视, name_en: Laser TV, parent: PROD_HA_TV, segment: SEG_HA_TV}
+  - {id: PROD_HA_TV_OPERATION, type: product, kind: service, name: 智能电视互联网运营, name_en: Smart TV Internet Services, segment: SEG_HA_TV, aliases: [OTT运营, 大屏运营]}
+  - {id: PROD_HA_PROJECTOR, type: product, name: 智能投影仪, name_en: Smart Projector, segment: SEG_HA_OTHER_BLACK, aliases: [家用投影仪, 智能投影, 投影仪]}
+  - {id: PROD_HA_HOME_AUDIO, type: product, name: 家用音响, name_en: Home Audio, segment: SEG_HA_OTHER_BLACK, aliases: [音箱, 回音壁]}
+  - {id: PROD_HA_SET_TOP_BOX, type: product, name: 机顶盒, name_en: Set-Top Box, segment: SEG_HA_OTHER_BLACK, aliases: [网络机顶盒, IPTV机顶盒]}
+
+  # ---------------- small kitchen ----------------
+  - {id: PROD_HA_RICE_COOKER, type: product, name: 电饭煲, name_en: Rice Cooker, segment: SEG_HA_KITCHEN_SMALL, aliases: [IH电饭煲]}
+  - {id: PROD_HA_BLENDER, type: product, name: 破壁料理机, name_en: High-Speed Blender, segment: SEG_HA_KITCHEN_SMALL, aliases: [豆浆机, 料理机, 榨汁机]}
+  - {id: PROD_HA_AIR_FRYER, type: product, name: 空气炸锅, name_en: Air Fryer, segment: SEG_HA_KITCHEN_SMALL}
+  - {id: PROD_HA_INDUCTION_COOKER, type: product, name: 电磁炉, name_en: Induction Cooker, segment: SEG_HA_KITCHEN_SMALL, aliases: [电陶炉]}
+  - {id: PROD_HA_KETTLE, type: product, name: 电水壶, name_en: Electric Kettle, segment: SEG_HA_KITCHEN_SMALL, aliases: [养生壶]}
+  - {id: PROD_HA_COFFEE_MACHINE, type: product, name: 咖啡机, name_en: Coffee Machine, segment: SEG_HA_KITCHEN_SMALL}
+  - {id: PROD_HA_PRESSURE_COOKER, type: product, name: 电压力锅, name_en: Electric Pressure Cooker, segment: SEG_HA_KITCHEN_SMALL}
+  - {id: PROD_HA_COOKWARE, type: product, name: 炊具, name_en: Cookware, segment: SEG_HA_KITCHEN_SMALL, aliases: [不粘锅, 炒锅]}
+
+  # ---------------- cleaning ----------------
+  - {id: PROD_HA_ROBOT_VACUUM, type: product, name: 扫地机器人, name_en: Robot Vacuum, segment: SEG_HA_CLEANING, aliases: [扫拖机器人, 扫地机]}
+  - {id: PROD_HA_FLOOR_WASHER, type: product, name: 洗地机, name_en: Wet-Dry Floor Washer, segment: SEG_HA_CLEANING}
+  - {id: PROD_HA_VACUUM, type: product, name: 吸尘器, name_en: Vacuum Cleaner, segment: SEG_HA_CLEANING, aliases: [无线吸尘器]}
+  - {id: PROD_HA_WINDOW_ROBOT, type: product, name: 擦窗机器人, name_en: Window-Cleaning Robot, segment: SEG_HA_CLEANING}
+  - {id: PROD_HA_MOWER_ROBOT, type: product, name: 割草机器人, name_en: Robotic Lawn Mower, segment: SEG_HA_CLEANING, aliases: [智能割草机]}
+  - {id: PROD_HA_POOL_ROBOT, type: product, name: 泳池清洁机器人, name_en: Pool-Cleaning Robot, segment: SEG_HA_CLEANING}
+  - {id: PROD_HA_AIR_PURIFIER, type: product, name: 空气净化器, name_en: Air Purifier, segment: SEG_HA_CLEANING}
+
+  # ---------------- personal care ----------------
+  - {id: PROD_HA_SHAVER, type: product, name: 电动剃须刀, name_en: Electric Shaver, segment: SEG_HA_PERSONAL_CARE, aliases: [剃须刀, 理发器]}
+  - {id: PROD_HA_HAIR_DRYER, type: product, name: 电吹风, name_en: Hair Dryer, segment: SEG_HA_PERSONAL_CARE, aliases: [高速吹风机, 吹风机]}
+  - {id: PROD_HA_ELECTRIC_TOOTHBRUSH, type: product, name: 电动牙刷, name_en: Electric Toothbrush, segment: SEG_HA_PERSONAL_CARE, aliases: [冲牙器]}
+  - {id: PROD_HA_BEAUTY_DEVICE, type: product, name: 美容仪, name_en: Beauty Device, segment: SEG_HA_PERSONAL_CARE, aliases: [脱毛仪, 射频美容仪, 家用美容仪]}
+  - {id: PROD_HA_MASSAGER, type: product, name: 按摩器具, name_en: Massager, segment: SEG_HA_PERSONAL_CARE, aliases: [按摩椅, 筋膜枪]}
+
+  # ---------------- major kitchen ----------------
+  - {id: PROD_HA_RANGE_HOOD, type: product, name: 吸油烟机, name_en: Range Hood, segment: SEG_HA_KITCHEN_APPLIANCE, aliases: [油烟机]}
+  - {id: PROD_HA_GAS_STOVE, type: product, name: 燃气灶, name_en: Gas Hob, segment: SEG_HA_KITCHEN_APPLIANCE}
+  - {id: PROD_HA_INTEGRATED_STOVE, type: product, name: 集成灶, name_en: Integrated Range, segment: SEG_HA_KITCHEN_APPLIANCE}
+  - {id: PROD_HA_DISHWASHER, type: product, name: 洗碗机, name_en: Dishwasher, segment: SEG_HA_KITCHEN_APPLIANCE}
+  - {id: PROD_HA_STEAM_OVEN, type: product, name: 嵌入式蒸烤箱, name_en: Built-In Steam Oven, segment: SEG_HA_KITCHEN_APPLIANCE, aliases: [蒸烤一体机, 电烤箱, 微波炉]}
+  - {id: PROD_HA_STERILIZER, type: product, name: 消毒柜, name_en: Dish Sterilizer, segment: SEG_HA_KITCHEN_APPLIANCE}
+  - {id: PROD_HA_WATER_PURIFIER, type: product, name: 净水器, name_en: Water Purifier, segment: SEG_HA_KITCHEN_APPLIANCE, aliases: [净饮机, 反渗透净水器]}
+
+  # ---------------- bathroom ----------------
+  - {id: PROD_HA_GAS_WATER_HEATER, type: product, name: 燃气热水器, name_en: Gas Water Heater, segment: SEG_HA_BATHROOM}
+  - {id: PROD_HA_ELECTRIC_WATER_HEATER, type: product, name: 电热水器, name_en: Electric Water Heater, segment: SEG_HA_BATHROOM}
+  - {id: PROD_HA_HEAT_PUMP_WATER_HEATER, type: product, name: 热泵热水器, name_en: Heat Pump Water Heater, segment: SEG_HA_BATHROOM, aliases: [空气能热水器]}
+  - {id: PROD_HA_WALL_BOILER, type: product, name: 燃气壁挂炉, name_en: Gas Wall-Hung Boiler, segment: SEG_HA_BATHROOM, aliases: [壁挂炉]}
+  - {id: PROD_HA_BATH_HEATER, type: product, name: 浴霸, name_en: Bathroom Heater, segment: SEG_HA_BATHROOM, aliases: [风暖浴霸]}
+
+  # ---------------- lighting ----------------
+  - {id: PROD_HA_LIGHTING_FIXTURE, type: product, name: 照明灯具, name_en: Lighting Fixture, segment: SEG_HA_LIGHTING, aliases: [灯具, 家居照明灯具]}
+  - {id: PROD_HA_LED_LIGHTING, type: product, name: LED照明产品, name_en: LED Lighting Products, parent: PROD_HA_LIGHTING_FIXTURE, segment: SEG_HA_LIGHTING, aliases: [LED灯具, LED光源, LED照明]}
+  - {id: PROD_HA_HOME_LIGHTING, type: product, name: 家居照明, name_en: Residential Lighting, parent: PROD_HA_LIGHTING_FIXTURE, segment: SEG_HA_LIGHTING, aliases: [吸顶灯, 护眼台灯]}
+  - {id: PROD_HA_COMMERCIAL_LIGHTING, type: product, name: 商业照明, name_en: Commercial Lighting, parent: PROD_HA_LIGHTING_FIXTURE, segment: SEG_HA_LIGHTING, aliases: [工程照明]}
+  - {id: PROD_HA_OUTDOOR_LIGHTING, type: product, name: 户外照明, name_en: Outdoor Lighting, parent: PROD_HA_LIGHTING_FIXTURE, segment: SEG_HA_LIGHTING, aliases: [路灯, 景观照明]}
+  - {id: PROD_HA_SMART_LIGHTING, type: product, name: 智能照明, name_en: Smart Lighting, parent: PROD_HA_LIGHTING_FIXTURE, segment: SEG_HA_LIGHTING, aliases: [智能照明系统]}
+  - {id: PROD_HA_PLANT_LIGHTING, type: product, name: 植物照明, name_en: Horticultural Lighting, parent: PROD_HA_LIGHTING_FIXTURE, segment: SEG_HA_LIGHTING, aliases: [植物生长灯]}
+  - {id: PROD_HA_LED_DRIVER, type: product, name: LED驱动电源, name_en: LED Driver, segment: SEG_HA_LIGHTING, aliases: [照明电源]}
+
+  # ---------------- compressors ----------------
+  - {id: PROD_HA_ROTARY_COMPRESSOR, type: product, name: 转子压缩机, name_en: Rotary Compressor, segment: SEG_HA_COMPRESSOR, aliases: [空调压缩机, 旋转式压缩机]}
+  - {id: PROD_HA_SCROLL_COMPRESSOR, type: product, import_dependence: medium, name: 涡旋压缩机, name_en: Scroll Compressor, segment: SEG_HA_COMPRESSOR, aliases: [商用涡旋压缩机], parent: PROD_MACH_REFRIG_COMPRESSOR}
+  - {id: PROD_HA_FRIDGE_COMPRESSOR, type: product, name: 冰箱压缩机, name_en: Refrigerator Compressor, segment: SEG_HA_COMPRESSOR, aliases: [全封闭活塞压缩机]}
+  - {id: PROD_HA_SCREW_COMPRESSOR, type: product, import_dependence: medium, name: 制冷螺杆压缩机, name_en: Refrigeration Screw Compressor, segment: SEG_HA_COMPRESSOR}
+  - {id: PROD_HA_COMPRESSOR_MOTOR, type: product, name: 压缩机电机, name_en: Compressor Motor, segment: SEG_HA_COMPRESSOR}
+
+  # ---------------- refrigeration controls and parts ----------------
+  - {id: PROD_HA_FOUR_WAY_VALVE, type: product, name: 四通换向阀, name_en: Four-Way Reversing Valve, segment: SEG_HA_REFRIG_CONTROL, aliases: [四通阀]}
+  - {id: PROD_HA_EXV, type: product, name: 家电电子膨胀阀, name_en: Appliance Electronic Expansion Valve, segment: SEG_HA_REFRIG_CONTROL}
+  - {id: PROD_HA_STOP_VALVE, type: product, name: 截止阀, name_en: Stop Valve, segment: SEG_HA_REFRIG_CONTROL}
+  - {id: PROD_HA_SOLENOID_VALVE, type: product, name: 制冷电磁阀, name_en: Refrigeration Solenoid Valve, segment: SEG_HA_REFRIG_CONTROL, aliases: [电磁阀]}
+  - {id: PROD_HA_RESERVOIR, type: product, name: 储液器, name_en: Accumulator and Reservoir, segment: SEG_HA_REFRIG_CONTROL, aliases: [过滤器, 消音器]}
+  - {id: PROD_HA_MICROCHANNEL_HX, type: product, name: 微通道换热器, name_en: Microchannel Heat Exchanger, segment: SEG_HA_REFRIG_CONTROL}
+  - {id: PROD_HA_AC_HX, type: product, name: 空调两器, name_en: AC Evaporator and Condenser, segment: SEG_HA_PARTS, aliases: [翅片换热器, 冷凝器蒸发器]}
+  - {id: PROD_HA_MOTOR, type: product, name: 家电电机, name_en: Appliance Motor, segment: SEG_HA_PARTS, aliases: [直流无刷电机, BLDC电机, 风机电机]}
+  - {id: PROD_HA_CONTROLLER, type: product, name: 家电智能控制器, name_en: Appliance Smart Controller, segment: SEG_HA_PARTS, aliases: [变频控制器, 智能控制器, 家电控制板]}
+  - {id: PROD_HA_THERMOSTAT, type: product, name: 家电温控器, name_en: Appliance Thermostat, segment: SEG_HA_PARTS, aliases: [温控器, 突跳式温控器]}
+  - {id: PROD_HA_WASHER_CLUTCH, type: product, name: 洗衣机减速离合器, name_en: Washer Clutch and Gearbox, segment: SEG_HA_PARTS, aliases: [洗衣机离合器]}
+  - {id: PROD_HA_STRUCTURAL_PARTS, type: product, name: 家电结构件, name_en: Appliance Structural Parts, segment: SEG_HA_PARTS, aliases: [家电注塑件, 家电钣金件, 冰箱门体]}
+  - {id: PROD_HA_HEATING_ELEMENT, type: product, name: 家电发热组件, name_en: Appliance Heating Element, segment: SEG_HA_PARTS, aliases: [电热管, 厚膜加热器, IH线盘]}
+  - {id: PROD_HA_GAS_VALVE, type: product, name: 燃气控制阀, name_en: Gas Control Valve, segment: SEG_HA_PARTS, aliases: [燃气比例阀, 熄火保护阀]}
+  - {id: PROD_HA_BATTERY_PACK, type: product, name: 小家电锂电池包, name_en: Appliance Battery Pack, segment: SEG_HA_PARTS, aliases: [无绳电池包]}
+  - {id: PROD_HA_ODM, type: product, kind: service, name: 家电代工制造, name_en: Appliance OEM/ODM Manufacturing, segment: SEG_HA_PARTS, aliases: [家电ODM, 小家电代工]}
+
+  # ---------------- other ----------------
+  - {id: PROD_HA_FAN, type: product, name: 电风扇, name_en: Electric Fan, segment: SEG_HA_OTHER, aliases: [循环扇]}
+  - {id: PROD_HA_HEATER, type: product, name: 取暖器, name_en: Space Heater, segment: SEG_HA_OTHER, aliases: [电暖器, 油汀]}
+  - {id: PROD_HA_FRESH_AIR, type: product, name: 新风系统, name_en: Fresh-Air Ventilation System, segment: SEG_HA_OTHER, aliases: [新风机]}
+  - {id: PROD_HA_SMART_HOME, type: product, name: 智能家居设备, name_en: Smart Home Device, segment: SEG_HA_OTHER, aliases: [智能门锁, 智能家居]}
+
+edges:
+  # ---------- segment tree ----------
+  - [SEG_HA_AIR_CONDITIONER, part_of, SEG_HA_WHITE_GOODS]
+  - [SEG_HA_FRIDGE_WASHER, part_of, SEG_HA_WHITE_GOODS]
+  - [SEG_HA_TV, part_of, SEG_HA_BLACK_GOODS]
+  - [SEG_HA_OTHER_BLACK, part_of, SEG_HA_BLACK_GOODS]
+  - [SEG_HA_KITCHEN_SMALL, part_of, SEG_HA_SMALL_APPLIANCE]
+  - [SEG_HA_CLEANING, part_of, SEG_HA_SMALL_APPLIANCE]
+  - [SEG_HA_PERSONAL_CARE, part_of, SEG_HA_SMALL_APPLIANCE]
+  - [SEG_HA_KITCHEN_APPLIANCE, part_of, SEG_HA_KITCHEN_BATH]
+  - [SEG_HA_BATHROOM, part_of, SEG_HA_KITCHEN_BATH]
+  - [SEG_HA_COMPRESSOR, part_of, SEG_HA_PARTS]
+  - [SEG_HA_REFRIG_CONTROL, part_of, SEG_HA_PARTS]
+
+  # ---------- segments -> end markets ----------
+  - [SEG_HA_WHITE_GOODS, serves, MKT_HOME_APPLIANCE]
+  - [SEG_HA_WHITE_GOODS, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_HA_AIR_CONDITIONER, serves, MKT_HOME_APPLIANCE]
+  - [SEG_HA_AIR_CONDITIONER, serves, MKT_REAL_ESTATE]
+  - [SEG_HA_AIR_CONDITIONER, serves, MKT_DATA_CENTER]
+  - [SEG_HA_FRIDGE_WASHER, serves, MKT_HOME_APPLIANCE]
+  - [SEG_HA_BLACK_GOODS, serves, MKT_HOME_APPLIANCE]
+  - [SEG_HA_TV, serves, MKT_HOME_APPLIANCE]
+  - [SEG_HA_TV, serves, MKT_MEDIA_ENTERTAINMENT]
+  - [SEG_HA_OTHER_BLACK, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_HA_SMALL_APPLIANCE, serves, MKT_HOME_APPLIANCE]
+  - [SEG_HA_KITCHEN_SMALL, serves, MKT_HOME_APPLIANCE]
+  - [SEG_HA_CLEANING, serves, MKT_HOME_APPLIANCE]
+  - [SEG_HA_CLEANING, serves, MKT_ROBOTICS]
+  - [SEG_HA_PERSONAL_CARE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_HA_KITCHEN_BATH, serves, MKT_HOME_APPLIANCE]
+  - [SEG_HA_KITCHEN_BATH, serves, MKT_REAL_ESTATE]
+  - [SEG_HA_KITCHEN_APPLIANCE, serves, MKT_REAL_ESTATE]
+  - [SEG_HA_BATHROOM, serves, MKT_REAL_ESTATE]
+  - [SEG_HA_LIGHTING, serves, MKT_CONSTRUCTION]
+  - [SEG_HA_LIGHTING, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_HA_LIGHTING, serves, MKT_AGRICULTURE]
+  - [SEG_HA_PARTS, serves, MKT_HOME_APPLIANCE]
+  - [SEG_HA_COMPRESSOR, serves, MKT_HOME_APPLIANCE]
+  - [SEG_HA_REFRIG_CONTROL, serves, MKT_HOME_APPLIANCE]
+  - [SEG_HA_REFRIG_CONTROL, serves, MKT_EV]
+  - [SEG_HA_OTHER, serves, MKT_HOME_APPLIANCE]
+
+  # ---------- products -> end markets ----------
+  - [PROD_HA_ROOM_AC, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_HA_CENTRAL_AC, used_in, MKT_REAL_ESTATE]
+  - [PROD_HA_CENTRAL_AC, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_CHILLER, used_in, MKT_DATA_CENTER]
+  - [PROD_MACH_CHILLER, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_MACH_DATA_CENTER_COOLING, used_in, MKT_DATA_CENTER]
+  - [PROD_MACH_DATA_CENTER_COOLING, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_HA_AIR_SOURCE_HEAT_PUMP, used_in, MKT_REAL_ESTATE]
+  - [PROD_HA_REFRIGERATOR, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_HA_COMMERCIAL_REFRIG, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_HA_WASHER, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_HA_TV, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_HA_TV_OPERATION, used_in, MKT_MEDIA_ENTERTAINMENT]
+  - [PROD_HA_HOME_AUDIO, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_HA_SET_TOP_BOX, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_HA_ROBOT_VACUUM, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_HA_MOWER_ROBOT, used_in, MKT_ROBOTICS]
+  - [PROD_HA_RICE_COOKER, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_HA_SHAVER, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_HA_BEAUTY_DEVICE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_HA_MASSAGER, used_in, MKT_HEALTHCARE]
+  - [PROD_HA_RANGE_HOOD, used_in, MKT_REAL_ESTATE]
+  - [PROD_HA_INTEGRATED_STOVE, used_in, MKT_REAL_ESTATE]
+  - [PROD_HA_DISHWASHER, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_HA_WALL_BOILER, used_in, MKT_REAL_ESTATE]
+  - [PROD_HA_GAS_WATER_HEATER, used_in, MKT_REAL_ESTATE]
+  - [PROD_HA_OUTDOOR_LIGHTING, used_in, MKT_GOVERNMENT]
+  - [PROD_HA_PLANT_LIGHTING, used_in, MKT_AGRICULTURE]
+  - [PROD_HA_SMART_HOME, used_in, MKT_REAL_ESTATE]
+  - [PROD_PWR_PORTABLE_POWER, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PWR_PORTABLE_POWER, used_in, MKT_ENERGY_STORAGE]
+  - [TECH_IOT, enables, PROD_HA_SMART_HOME]
+  - [TECH_IOT, enables, PROD_HA_SMART_LIGHTING]
+  - [TECH_AI_LARGE_MODEL, enables, PROD_HA_ROBOT_VACUUM]
+  - [TECH_LIQUID_COOLING, enables, PROD_MACH_DATA_CENTER_COOLING]
+
+  # ---------- substitutes ----------
+  - [PROD_HA_AIR_SOURCE_HEAT_PUMP, substitute_for, PROD_HA_WALL_BOILER]
+  - [PROD_HA_HEAT_PUMP_WATER_HEATER, substitute_for, PROD_HA_ELECTRIC_WATER_HEATER]
+  - [PROD_HA_ELECTRIC_WATER_HEATER, substitute_for, PROD_HA_GAS_WATER_HEATER]
+  - [PROD_HA_INTEGRATED_STOVE, substitute_for, PROD_HA_RANGE_HOOD]
+  - [PROD_HA_FLOOR_WASHER, substitute_for, PROD_HA_VACUUM]
+  - [PROD_HA_ROBOT_VACUUM, substitute_for, PROD_HA_VACUUM]
+  - [PROD_HA_LASER_TV, substitute_for, PROD_HA_LCD_TV]
+  - [PROD_HA_PROJECTOR, substitute_for, PROD_HA_TV]
+  - [PROD_HA_SCROLL_COMPRESSOR, substitute_for, PROD_HA_ROTARY_COMPRESSOR]
+
+  # ---------- components ----------
+  - [PROD_HA_ROTARY_COMPRESSOR, component_of, PROD_HA_SPLIT_AC]
+  - [PROD_HA_ROTARY_COMPRESSOR, component_of, PROD_HA_AIR_SOURCE_HEAT_PUMP]
+  - [PROD_HA_ROTARY_COMPRESSOR, component_of, PROD_HA_DEHUMIDIFIER]
+  - [PROD_HA_ROTARY_COMPRESSOR, component_of, PROD_HA_DRYER]
+  - [PROD_HA_SCROLL_COMPRESSOR, component_of, PROD_HA_VRF]
+  - [PROD_HA_SCROLL_COMPRESSOR, component_of, PROD_HA_AIR_SOURCE_HEAT_PUMP]
+  - [PROD_HA_SCREW_COMPRESSOR, component_of, PROD_MACH_CHILLER]
+  - [PROD_HA_FRIDGE_COMPRESSOR, component_of, PROD_HA_REFRIGERATOR]
+  - [PROD_HA_FRIDGE_COMPRESSOR, component_of, PROD_HA_FREEZER]
+  - [PROD_HA_COMPRESSOR_MOTOR, component_of, PROD_HA_ROTARY_COMPRESSOR]
+  - [PROD_HA_COMPRESSOR_MOTOR, component_of, PROD_HA_FRIDGE_COMPRESSOR]
+  - [PROD_HA_COMPRESSOR_MOTOR, component_of, PROD_HA_SCROLL_COMPRESSOR]
+  - [PROD_HA_FOUR_WAY_VALVE, component_of, PROD_HA_SPLIT_AC]
+  - [PROD_HA_FOUR_WAY_VALVE, component_of, PROD_HA_AIR_SOURCE_HEAT_PUMP]
+  - [PROD_HA_EXV, component_of, PROD_HA_SPLIT_AC]
+  - [PROD_HA_EXV, component_of, PROD_HA_VRF]
+  - [PROD_HA_EXV, component_of, PROD_HA_REFRIGERATOR]
+  - [PROD_HA_EXV, component_of, PROD_HA_AIR_SOURCE_HEAT_PUMP]
+  - [PROD_HA_STOP_VALVE, component_of, PROD_HA_SPLIT_AC]
+  - [PROD_HA_SOLENOID_VALVE, component_of, PROD_HA_REFRIGERATOR]
+  - [PROD_HA_RESERVOIR, component_of, PROD_HA_ROTARY_COMPRESSOR]
+  - [PROD_HA_MICROCHANNEL_HX, component_of, PROD_HA_CENTRAL_AC]
+  - [PROD_HA_MICROCHANNEL_HX, used_in, MKT_DATA_CENTER]
+  - [PROD_HA_AC_HX, component_of, PROD_HA_SPLIT_AC]
+  - [PROD_HA_MICROCHANNEL_HX, substitute_for, PROD_HA_AC_HX]
+  - [PROD_HA_MOTOR, component_of, PROD_HA_SPLIT_AC]
+  - [PROD_HA_MOTOR, component_of, PROD_HA_WASHER]
+  - [PROD_HA_MOTOR, component_of, PROD_HA_RANGE_HOOD]
+  - [PROD_HA_MOTOR, component_of, PROD_HA_VACUUM]
+  - [PROD_HA_MOTOR, component_of, PROD_HA_HAIR_DRYER]
+  - [PROD_HA_MOTOR, component_of, PROD_HA_FAN]
+  - [PROD_HA_MOTOR, component_of, PROD_HA_BLENDER]
+  - [PROD_HA_CONTROLLER, component_of, PROD_HA_SPLIT_AC]
+  - [PROD_HA_CONTROLLER, component_of, PROD_HA_REFRIGERATOR]
+  - [PROD_HA_CONTROLLER, component_of, PROD_HA_WASHER]
+  - [PROD_HA_CONTROLLER, component_of, PROD_HA_ROBOT_VACUUM]
+  - [PROD_HA_CONTROLLER, component_of, PROD_HA_RICE_COOKER]
+  - [PROD_HA_THERMOSTAT, component_of, PROD_HA_KETTLE]
+  - [PROD_HA_THERMOSTAT, component_of, PROD_HA_ELECTRIC_WATER_HEATER]
+  - [PROD_HA_WASHER_CLUTCH, component_of, PROD_HA_TOP_LOAD_WASHER]
+  - [PROD_HA_STRUCTURAL_PARTS, component_of, PROD_HA_REFRIGERATOR]
+  - [PROD_HA_STRUCTURAL_PARTS, component_of, PROD_HA_WASHER]
+  - [PROD_HA_STRUCTURAL_PARTS, component_of, PROD_HA_SPLIT_AC]
+  - [PROD_HA_HEATING_ELEMENT, component_of, PROD_HA_RICE_COOKER]
+  - [PROD_HA_HEATING_ELEMENT, component_of, PROD_HA_ELECTRIC_WATER_HEATER]
+  - [PROD_HA_HEATING_ELEMENT, component_of, PROD_HA_STEAM_OVEN]
+  - [PROD_HA_HEATING_ELEMENT, component_of, PROD_HA_AIR_FRYER]
+  - [PROD_HA_GAS_VALVE, component_of, PROD_HA_GAS_STOVE]
+  - [PROD_HA_GAS_VALVE, component_of, PROD_HA_GAS_WATER_HEATER]
+  - [PROD_HA_GAS_VALVE, component_of, PROD_HA_WALL_BOILER]
+  - [PROD_HA_BATTERY_PACK, component_of, PROD_HA_VACUUM]
+  - [PROD_HA_BATTERY_PACK, component_of, PROD_HA_ROBOT_VACUUM]
+  - [PROD_HA_BATTERY_PACK, component_of, PROD_HA_FLOOR_WASHER]
+  - [PROD_HA_LED_DRIVER, component_of, PROD_HA_LED_LIGHTING]
+  - [PROD_HA_GAS_STOVE, component_of, PROD_HA_INTEGRATED_STOVE]
+  - [PROD_HA_ODM, upstream_of, PROD_HA_AIR_FRYER]
+  - [PROD_HA_ODM, upstream_of, PROD_HA_COFFEE_MACHINE]
+  - [PROD_HA_ODM, upstream_of, PROD_HA_VACUUM]
+
+  # ---------- cross-file links into auto taxonomy (Sanhua/Dunan-type suppliers) ----------
+  - [PROD_HA_EXV, upstream_of, PROD_AUTO_EXV]
+  - [PROD_HA_MICROCHANNEL_HX, upstream_of, PROD_AUTO_HEAT_EXCHANGER]
+  - [PROD_HA_MOTOR, upstream_of, PROD_PWR_FRAMELESS_TORQUE_MOTOR]
+  - [PROD_HA_SCROLL_COMPRESSOR, upstream_of, PROD_AUTO_E_COMPRESSOR]
+
+  # ---------- materials ----------
+  - [PROD_HA_SPLIT_AC, uses_material, MAT_COPPER]
+  - [PROD_HA_SPLIT_AC, uses_material, MAT_ALUMINUM]
+  - [PROD_HA_SPLIT_AC, uses_material, MAT_STEEL]
+  - [PROD_HA_SPLIT_AC, uses_material, MAT_PLASTICS]
+  - [PROD_HA_AC_HX, uses_material, MAT_COPPER]
+  - [PROD_HA_AC_HX, uses_material, MAT_ALUMINUM]
+  - [PROD_HA_MICROCHANNEL_HX, uses_material, MAT_ALUMINUM]
+  - [PROD_HA_ROTARY_COMPRESSOR, uses_material, MAT_STEEL]
+  - [PROD_HA_ROTARY_COMPRESSOR, uses_material, MAT_COPPER]
+  - [PROD_HA_FRIDGE_COMPRESSOR, uses_material, MAT_STEEL]
+  - [PROD_HA_SCROLL_COMPRESSOR, uses_material, MAT_STEEL]
+  - [PROD_HA_COMPRESSOR_MOTOR, uses_material, MAT_ELECTRICAL_STEEL]
+  - [PROD_HA_COMPRESSOR_MOTOR, uses_material, MAT_COPPER]
+  - [PROD_HA_COMPRESSOR_MOTOR, uses_material, MAT_RARE_EARTH]
+  - [PROD_HA_MOTOR, uses_material, MAT_COPPER]
+  - [PROD_HA_MOTOR, uses_material, MAT_ELECTRICAL_STEEL]
+  - [PROD_HA_MOTOR, uses_material, MAT_RARE_EARTH]
+  - [PROD_HA_FOUR_WAY_VALVE, uses_material, MAT_COPPER]
+  - [PROD_HA_STOP_VALVE, uses_material, MAT_COPPER]
+  - [PROD_HA_EXV, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_HA_REFRIGERATOR, uses_material, MAT_STEEL]
+  - [PROD_HA_REFRIGERATOR, uses_material, MAT_PLASTICS]
+  - [PROD_HA_WASHER, uses_material, MAT_STEEL]
+  - [PROD_HA_WASHER, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_HA_WASHER, uses_material, MAT_PLASTICS]
+  - [PROD_HA_STRUCTURAL_PARTS, uses_material, MAT_STEEL]
+  - [PROD_HA_STRUCTURAL_PARTS, uses_material, MAT_PLASTICS]
+  - [PROD_HA_RANGE_HOOD, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_HA_GAS_STOVE, uses_material, MAT_FLAT_GLASS]
+  - [PROD_HA_DISHWASHER, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_HA_COOKWARE, uses_material, MAT_ALUMINUM]
+  - [PROD_HA_COOKWARE, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_HA_RICE_COOKER, uses_material, MAT_ALUMINUM]
+  - [PROD_HA_VACUUM, uses_material, MAT_ENGINEERING_PLASTICS]
+  - [PROD_HA_TV, uses_material, MAT_PLASTICS]
+  - [PROD_HA_ELECTRIC_WATER_HEATER, uses_material, MAT_STEEL]
+  - [PROD_HA_LED_LIGHTING, uses_material, MAT_ALUMINUM]
+  - [PROD_HA_BATTERY_PACK, uses_material, MAT_LITHIUM_CARBONATE]
+
+sw_l3_map:
+  "330102": [SEG_HA_AIR_CONDITIONER]
+  "330106": [SEG_HA_FRIDGE_WASHER]
+  "330201": [SEG_HA_TV]
+  "330202": [SEG_HA_OTHER_BLACK]
+  "330301": [SEG_HA_KITCHEN_SMALL]
+  "330302": [SEG_HA_CLEANING]
+  "330303": [SEG_HA_PERSONAL_CARE]
+  "330401": [SEG_HA_KITCHEN_APPLIANCE]
+  "330402": [SEG_HA_BATHROOM]
+  "330501": [SEG_HA_LIGHTING]
+  "330601": [SEG_HA_PARTS, SEG_HA_COMPRESSOR, SEG_HA_REFRIG_CONTROL, SEG_AUTO_THERMAL, SEG_AUTO_ROBOT_PARTS]
+  "330701": [SEG_HA_OTHER]

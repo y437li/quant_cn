@@ -1,0 +1,8 @@
+# Retired codes whose company trades on under a new code (D-053, D-089). Tushare keeps the old code's rows
+# and back-fills the same history under the new code; some datasets (stk_limit, moneyflow, margin_detail)
+# exist only under the old code before the change. derived.ticker_alias also detects pairs from the data
+# (identical closes on shared dates); these entries are the floor, kept even if detection ever fails.
+aliases:
+  - {old_code: "000022.SZ", new_code: "001872.SZ"}
+  - {old_code: "000043.SZ", new_code: "001914.SZ"}
+  - {old_code: "300114.SZ", new_code: "302132.SZ"}

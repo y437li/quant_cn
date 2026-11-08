@@ -1,0 +1,1096 @@
+# 机械设备 (640000) industrial-chain taxonomy prior (plan 12 phase 1, D-097). Format: README.md. All edges are source: prior.
+sector: {sw_l1: '640000', name: 机械设备, name_en: Machinery}
+nodes:
+  - {id: SEG_MACH_GENERAL, type: segment, name: 通用设备, name_en: General Equipment}
+  - {id: SEG_MACH_MACHINE_TOOL, type: segment, name: 机床工具, name_en: Machine Tools and Cutting Tools}
+  - {id: SEG_MACH_ABRASIVE, type: segment, name: 磨具磨料, name_en: Abrasives and Superhard Materials}
+  - {id: SEG_MACH_REFRIG_HVAC, type: segment, name: 制冷空调设备, name_en: Refrigeration and HVAC Equipment}
+  - {id: SEG_MACH_OTHER_GENERAL, type: segment, name: 其他通用设备, name_en: Other General Equipment}
+  - {id: SEG_MACH_TRANSMISSION, type: segment, name: 传动与基础零部件, name_en: Power Transmission and Basic Components}
+  - {id: SEG_MACH_FLUID_POWER, type: segment, name: 液压气动, name_en: Hydraulics and Pneumatics}
+  - {id: SEG_MACH_PUMP_VALVE, type: segment, name: 泵阀, name_en: Pumps and Valves}
+  - {id: SEG_MACH_COMPRESSOR, type: segment, name: 压缩机风机与空分, name_en: 'Compressors, Fans and Air Separation'}
+  - {id: SEG_MACH_MATERIAL_HANDLING, type: segment, name: 物料搬运设备, name_en: Material Handling Equipment}
+  - {id: SEG_MACH_INSTRUMENT, type: segment, name: 仪器仪表, name_en: Instruments and Meters}
+  - {id: SEG_MACH_METAL_PRODUCTS, type: segment, name: 金属制品, name_en: Metal Products}
+  - {id: SEG_MACH_SPECIAL, type: segment, name: 专用设备, name_en: Specialised Equipment}
+  - {id: SEG_MACH_ENERGY_HEAVY, type: segment, name: 能源及重型设备, name_en: Energy and Heavy Equipment}
+  - {id: SEG_MACH_OIL_SERVICE_EQUIP, type: segment, name: 油气装备, name_en: Oil and Gas Equipment, aliases: [油服装备, 石油机械]}
+  - {id: SEG_MACH_MINING_MACH, type: segment, name: 矿山机械, name_en: Mining Machinery}
+  - {id: SEG_MACH_HYDROGEN_EQUIP, type: segment, name: 氢能装备, name_en: Hydrogen Equipment}
+  - {id: SEG_MACH_BUILDING_EQUIP, type: segment, name: 楼宇设备, name_en: Building Equipment}
+  - {id: SEG_MACH_TEXTILE_MACH, type: segment, name: 纺织服装设备, name_en: Textile and Garment Machinery}
+  - {id: SEG_MACH_AGRI_MACH, type: segment, name: 农用机械, name_en: Agricultural Machinery}
+  - {id: SEG_MACH_PRINT_PACK_MACH, type: segment, name: 印刷包装机械, name_en: Printing and Packaging Machinery}
+  - {id: SEG_MACH_OTHER_SPECIAL, type: segment, name: 其他专用设备, name_en: Other Specialised Equipment}
+  - {id: SEG_MACH_LIB_EQUIP, type: segment, name: 锂电池生产设备, name_en: Lithium Battery Manufacturing Equipment}
+  - {id: SEG_MACH_PV_EQUIP, type: segment, name: 光伏生产设备, name_en: PV Manufacturing Equipment}
+  - {id: SEG_MACH_DISPLAY_EQUIP, type: segment, name: 显示面板设备, name_en: Display Panel Equipment}
+  - {id: SEG_MACH_FOOD_PHARMA_MACH, type: segment, name: 食品制药机械, name_en: Food and Pharmaceutical Machinery}
+  - {id: SEG_MACH_RAIL_EQUIP, type: segment, name: 轨交设备, name_en: Rail Transit Equipment}
+  - {id: SEG_MACH_CONSTRUCTION, type: segment, name: 工程机械, name_en: Construction Machinery}
+  - {id: SEG_MACH_CM_WHOLE, type: segment, name: 工程机械整机, name_en: Construction Machinery OEM}
+  - {id: SEG_MACH_CM_PARTS, type: segment, name: 工程机械器件, name_en: Construction Machinery Components}
+  - {id: SEG_MACH_AUTOMATION, type: segment, name: 自动化设备, name_en: Automation Equipment}
+  - {id: SEG_MACH_ROBOT, type: segment, name: 机器人本体与集成, name_en: Robots and Integration}
+  - {id: SEG_MACH_HUMANOID_PARTS, type: segment, name: 人形机器人零部件, name_en: Humanoid Robot Components}
+  - {id: SEG_MACH_INDUSTRIAL_CONTROL, type: segment, name: 工控设备, name_en: Industrial Control Equipment}
+  - {id: SEG_MACH_LASER_EQUIP, type: segment, name: 激光设备, name_en: Laser Equipment}
+  - {id: SEG_MACH_OTHER_AUTOMATION, type: segment, name: 其他自动化设备, name_en: Other Automation Equipment}
+  - {id: SEG_MACH_3C_AUTOMATION, type: segment, name: 3C自动化设备, name_en: 3C Automation Equipment}
+  - {id: PROD_MACH_CNC_MACHINE_TOOL, type: product, name: 数控机床, name_en: CNC Machine Tool, segment: SEG_MACH_MACHINE_TOOL, aliases: [CNC机床, 数控金属切削机床]}
+  - {id: PROD_MACH_MACHINING_CENTER, type: product, name: 加工中心, name_en: Machining Center, parent: PROD_MACH_CNC_MACHINE_TOOL, segment: SEG_MACH_MACHINE_TOOL, aliases: [立式加工中心, 卧式加工中心, 龙门加工中心]}
+  - {id: PROD_MACH_FIVE_AXIS_MC, type: product, name: 五轴联动加工中心, name_en: Five-Axis Machining Center, parent: PROD_MACH_MACHINING_CENTER, segment: SEG_MACH_MACHINE_TOOL, aliases: [五轴机床, 五轴数控机床]}
+  - {id: PROD_MACH_CNC_LATHE, type: product, name: 数控车床, name_en: CNC Lathe, parent: PROD_MACH_CNC_MACHINE_TOOL, segment: SEG_MACH_MACHINE_TOOL, aliases: [车削中心]}
+  - {id: PROD_MACH_CNC_GRINDER, type: product, name: 数控磨床, name_en: CNC Grinding Machine, parent: PROD_MACH_CNC_MACHINE_TOOL, segment: SEG_MACH_MACHINE_TOOL, aliases: [磨床]}
+  - {id: PROD_MACH_GEAR_MACHINE_TOOL, type: product, name: 齿轮加工机床, name_en: Gear Cutting Machine Tool, parent: PROD_MACH_CNC_MACHINE_TOOL, segment: SEG_MACH_MACHINE_TOOL, aliases: [滚齿机, 磨齿机]}
+  - {id: PROD_MACH_CNC_BORING_MILLING, type: product, name: 数控镗铣床, name_en: CNC Boring and Milling Machine, parent: PROD_MACH_CNC_MACHINE_TOOL, segment: SEG_MACH_MACHINE_TOOL, aliases: [镗铣床, 龙门镗铣床]}
+  - {id: PROD_MACH_EDM_MACHINE, type: product, name: 电火花加工机床, name_en: EDM Machine, segment: SEG_MACH_MACHINE_TOOL, aliases: [电火花机床, 线切割机床]}
+  - {id: PROD_MACH_FORMING_MACHINE_TOOL, type: product, name: 金属成形机床, name_en: Metal Forming Machine Tool, segment: SEG_MACH_MACHINE_TOOL, aliases: [锻压机床, 锻压设备]}
+  - {id: PROD_MACH_PRESS_MACHINE, type: product, name: 压力机, name_en: Press, parent: PROD_MACH_FORMING_MACHINE_TOOL, segment: SEG_MACH_MACHINE_TOOL, aliases: [冲床, 伺服压力机]}
+  - {id: PROD_MACH_BENDING_MACHINE, type: product, name: 折弯机, name_en: Press Brake, parent: PROD_MACH_FORMING_MACHINE_TOOL, segment: SEG_MACH_MACHINE_TOOL, aliases: [数控折弯机]}
+  - {id: PROD_MACH_CNC_SYSTEM, type: product, name: 数控系统, name_en: CNC Control System, segment: SEG_MACH_MACHINE_TOOL, aliases: [机床数控系统]}
+  - {id: PROD_MACH_MOTORIZED_SPINDLE, type: product, name: 电主轴, name_en: Motorized Spindle, segment: SEG_MACH_MACHINE_TOOL, aliases: [机床主轴]}
+  - {id: PROD_MACH_MACHINE_TOOL_CASTING, type: product, name: 机床铸件, name_en: Machine Tool Casting, segment: SEG_MACH_MACHINE_TOOL, aliases: [床身铸件]}
+  - {id: PROD_MACH_CUTTING_TOOL, type: product, name: 切削刀具, name_en: Cutting Tool, segment: SEG_MACH_MACHINE_TOOL, aliases: [刀具, 数控刀具]}
+  - {id: PROD_MACH_CARBIDE_INSERT, type: product, name: 硬质合金刀片, name_en: Carbide Insert, parent: PROD_MACH_CUTTING_TOOL, segment: SEG_MACH_MACHINE_TOOL, aliases: [数控刀片, 硬质合金刀具, 硬质合金数控刀片]}
+  - {id: PROD_MACH_CARBIDE_ROD, type: product, name: 硬质合金棒材, name_en: Cemented Carbide Rod, segment: SEG_MACH_MACHINE_TOOL, aliases: [钨钢棒]}
+  - {id: PROD_MACH_PCB_DRILL, type: product, name: PCB钻针, name_en: PCB Micro Drill, parent: PROD_MACH_CUTTING_TOOL, segment: SEG_MACH_MACHINE_TOOL, aliases: [微钻, PCB微型钻头, 钻针, PCB刀具]}
+  - {id: PROD_MACH_SUPERHARD_TOOL, type: product, name: 超硬刀具, name_en: Superhard Cutting Tool, parent: PROD_MACH_CUTTING_TOOL, segment: SEG_MACH_MACHINE_TOOL, aliases: [PCD刀具, CBN刀具]}
+  - {id: PROD_MACH_ABRASIVE_TOOL, type: product, name: 磨具, name_en: Abrasive Tool, segment: SEG_MACH_ABRASIVE, aliases: [砂轮, 固结磨具]}
+  - {id: PROD_MACH_COATED_ABRASIVE, type: product, name: 涂附磨具, name_en: Coated Abrasive, parent: PROD_MACH_ABRASIVE_TOOL, segment: SEG_MACH_ABRASIVE, aliases: [砂纸, 砂带]}
+  - {id: PROD_MACH_SUPERHARD_MATERIAL, type: product, name: 超硬材料, name_en: Superhard Material, segment: SEG_MACH_ABRASIVE}
+  - {id: PROD_MACH_SYNTHETIC_DIAMOND, type: product, name: 人造金刚石, name_en: Synthetic Diamond, parent: PROD_MACH_SUPERHARD_MATERIAL, segment: SEG_MACH_ABRASIVE, aliases: [金刚石单晶, 工业金刚石]}
+  - {id: PROD_MACH_LAB_GROWN_DIAMOND, type: product, name: 培育钻石, name_en: Lab-Grown Diamond, parent: PROD_MACH_SYNTHETIC_DIAMOND, segment: SEG_MACH_ABRASIVE, aliases: [人造钻石, CVD钻石]}
+  - {id: PROD_MACH_DIAMOND_MICROPOWDER, type: product, name: 金刚石微粉, name_en: Diamond Micropowder, parent: PROD_MACH_SUPERHARD_MATERIAL, segment: SEG_MACH_ABRASIVE}
+  - {id: PROD_MACH_CBN, type: product, name: 立方氮化硼, name_en: Cubic Boron Nitride, parent: PROD_MACH_SUPERHARD_MATERIAL, segment: SEG_MACH_ABRASIVE, aliases: [CBN]}
+  - {id: PROD_MACH_DIAMOND_FUNCTIONAL, type: product, name: 金刚石功能材料, name_en: Functional Diamond Material, parent: PROD_MACH_SUPERHARD_MATERIAL, segment: SEG_MACH_ABRASIVE, aliases: [金刚石热沉, 金刚石散热片]}
+  - {id: PROD_MACH_DIAMOND_WIRE, type: product, name: 金刚石线, name_en: Diamond Wire, segment: SEG_MACH_ABRASIVE, aliases: [金刚线, 金刚石切割线, 钨丝金刚线]}
+  - {id: PROD_MACH_CUBIC_PRESS, type: product, name: 六面顶压机, name_en: Cubic Press, segment: SEG_MACH_ABRASIVE, aliases: [六面顶液压机, MPCVD设备]}
+  - {id: PROD_MACH_REFRIG_COMPRESSOR, type: product, name: 制冷压缩机, name_en: Refrigeration Compressor, parent: PROD_MACH_COMPRESSOR, segment: SEG_MACH_REFRIG_HVAC}
+  - {id: PROD_MACH_CHILLER, type: product, name: 冷水机组, name_en: Chiller, segment: SEG_MACH_REFRIG_HVAC, aliases: [工业冷水机, 离心机组, 螺杆机组], parent: PROD_HA_CENTRAL_AC}
+  - {id: PROD_MACH_CENTRIFUGAL_CHILLER, type: product, name: 离心式冷水机组, name_en: Centrifugal Chiller, parent: PROD_MACH_CHILLER, segment: SEG_MACH_REFRIG_HVAC, aliases: [磁悬浮冷水机组]}
+  - {id: PROD_MACH_HEAT_PUMP, type: product, name: 热泵, name_en: Heat Pump, segment: SEG_MACH_REFRIG_HVAC, aliases: [工业热泵]}
+  - {id: PROD_MACH_COLD_CHAIN_EQUIP, type: product, name: 冷链设备, name_en: Cold Chain Equipment, segment: SEG_MACH_REFRIG_HVAC, aliases: [冷库设备]}
+  - {id: PROD_MACH_REFRIG_VALVE, type: product, name: 制冷控制阀件, name_en: Refrigeration Control Valve, segment: SEG_MACH_REFRIG_HVAC, aliases: [电子膨胀阀]}
+  - {id: PROD_MACH_DATA_CENTER_COOLING, type: product, name: 数据中心温控设备, name_en: Data Center Thermal Management, segment: SEG_MACH_REFRIG_HVAC, aliases: [精密空调, 机房空调, 机房精密空调, 冷冻水空调]}
+  - {id: PROD_MACH_LIQUID_COOLING_CDU, type: product, name: 液冷分配单元, name_en: Coolant Distribution Unit, parent: PROD_MACH_DATA_CENTER_COOLING, segment: SEG_MACH_REFRIG_HVAC, aliases: [CDU, 液冷CDU, 冷量分配单元]}
+  - {id: PROD_MACH_COOLING_TOWER, type: product, name: 冷却塔, name_en: Cooling Tower, segment: SEG_MACH_REFRIG_HVAC}
+  - {id: PROD_MACH_BEARING, type: product, name: 轴承, name_en: Bearing, segment: SEG_MACH_TRANSMISSION}
+  - {id: PROD_MACH_ROLLING_BEARING, type: product, name: 滚动轴承, name_en: Rolling Bearing, parent: PROD_MACH_BEARING, segment: SEG_MACH_TRANSMISSION, aliases: [深沟球轴承, 圆锥滚子轴承]}
+  - {id: PROD_MACH_PRECISION_BEARING, type: product, name: 精密轴承, name_en: Precision Bearing, parent: PROD_MACH_ROLLING_BEARING, segment: SEG_MACH_TRANSMISSION, aliases: [机床轴承, 高端轴承]}
+  - {id: PROD_MACH_CROSSED_ROLLER_BEARING, type: product, name: 交叉滚子轴承, name_en: Crossed Roller Bearing, parent: PROD_MACH_ROLLING_BEARING, segment: SEG_MACH_TRANSMISSION}
+  - {id: PROD_MACH_WIND_BEARING, type: product, name: 风电轴承, name_en: Wind Turbine Bearing, parent: PROD_MACH_ROLLING_BEARING, segment: SEG_MACH_TRANSMISSION, aliases: [主轴轴承, 偏航变桨轴承]}
+  - {id: PROD_MACH_SLEWING_BEARING, type: product, name: 回转支承, name_en: Slewing Bearing, parent: PROD_MACH_BEARING, segment: SEG_MACH_TRANSMISSION, aliases: [转盘轴承]}
+  - {id: PROD_MACH_SLIDING_BEARING, type: product, name: 滑动轴承, name_en: Plain Bearing, parent: PROD_MACH_BEARING, segment: SEG_MACH_TRANSMISSION, aliases: [自润滑轴承]}
+  - {id: PROD_MACH_ROLLING_ELEMENT, type: product, name: 轴承滚动体, name_en: Bearing Rolling Element, segment: SEG_MACH_TRANSMISSION, aliases: [钢球, 滚子]}
+  - {id: PROD_MACH_BEARING_RING, type: product, name: 轴承套圈, name_en: Bearing Ring, segment: SEG_MACH_TRANSMISSION}
+  - {id: PROD_MACH_GEAR, type: product, name: 齿轮, name_en: Gear, segment: SEG_MACH_TRANSMISSION, aliases: [精密齿轮]}
+  - {id: PROD_MACH_GEARBOX, type: product, name: 齿轮箱, name_en: Gearbox, segment: SEG_MACH_TRANSMISSION}
+  - {id: PROD_MACH_REDUCER, type: product, name: 减速器, name_en: Speed Reducer, segment: SEG_MACH_TRANSMISSION, aliases: [减速机, 通用减速机]}
+  - {id: PROD_MACH_HARMONIC_REDUCER, type: product, name: 谐波减速器, name_en: Harmonic Reducer, parent: PROD_MACH_REDUCER, segment: SEG_MACH_TRANSMISSION, aliases: [谐波减速机]}
+  - {id: PROD_MACH_RV_REDUCER, type: product, name: RV减速器, name_en: RV Reducer, parent: PROD_MACH_REDUCER, segment: SEG_MACH_TRANSMISSION, aliases: [RV减速机, 摆线针轮减速器]}
+  - {id: PROD_MACH_PLANETARY_REDUCER, type: product, name: 行星减速器, name_en: Planetary Reducer, parent: PROD_MACH_REDUCER, segment: SEG_MACH_TRANSMISSION, aliases: [精密行星减速机]}
+  - {id: PROD_MACH_CHAIN, type: product, name: 工业链条, name_en: Industrial Chain, segment: SEG_MACH_TRANSMISSION, aliases: [链条, 传动链]}
+  - {id: PROD_MACH_COUPLING, type: product, name: 联轴器, name_en: Coupling, segment: SEG_MACH_TRANSMISSION}
+  - {id: PROD_MACH_LINEAR_GUIDE, type: product, name: 直线导轨, name_en: Linear Guide, segment: SEG_MACH_TRANSMISSION, aliases: [滚动导轨, 线性导轨]}
+  - {id: PROD_MACH_BALL_SCREW, type: product, name: 滚珠丝杠, name_en: Ball Screw, segment: SEG_MACH_TRANSMISSION, aliases: [滚珠丝杆, 丝杠]}
+  - {id: PROD_MACH_SPRING, type: product, name: 弹簧, name_en: Spring, segment: SEG_MACH_TRANSMISSION}
+  - {id: PROD_MACH_HYDRAULIC_COMPONENT, type: product, name: 液压件, name_en: Hydraulic Component, segment: SEG_MACH_FLUID_POWER, aliases: [液压元件]}
+  - {id: PROD_MACH_HYDRAULIC_CYLINDER, type: product, name: 液压油缸, name_en: Hydraulic Cylinder, parent: PROD_MACH_HYDRAULIC_COMPONENT, segment: SEG_MACH_FLUID_POWER, aliases: [油缸, 挖掘机油缸]}
+  - {id: PROD_MACH_HYDRAULIC_PUMP, type: product, name: 液压泵, name_en: Hydraulic Pump, parent: PROD_MACH_HYDRAULIC_COMPONENT, segment: SEG_MACH_FLUID_POWER, aliases: [柱塞泵, 齿轮泵]}
+  - {id: PROD_MACH_HYDRAULIC_VALVE, type: product, name: 液压阀, name_en: Hydraulic Valve, parent: PROD_MACH_HYDRAULIC_COMPONENT, segment: SEG_MACH_FLUID_POWER, aliases: [多路阀, 液压多路阀]}
+  - {id: PROD_MACH_HYDRAULIC_MOTOR, type: product, name: 液压马达, name_en: Hydraulic Motor, parent: PROD_MACH_HYDRAULIC_COMPONENT, segment: SEG_MACH_FLUID_POWER, aliases: [行走马达, 回转马达]}
+  - {id: PROD_MACH_HYDRAULIC_SYSTEM, type: product, name: 液压系统, name_en: Hydraulic System, segment: SEG_MACH_FLUID_POWER, aliases: [液压传动系统]}
+  - {id: PROD_MACH_PNEUMATIC_COMPONENT, type: product, name: 气动元件, name_en: Pneumatic Component, segment: SEG_MACH_FLUID_POWER, aliases: [气缸, 气动执行元件]}
+  - {id: PROD_MACH_SEAL, type: product, name: 密封件, name_en: Seal, segment: SEG_MACH_FLUID_POWER, aliases: [机械密封, 液压密封件]}
+  - {id: PROD_MACH_INDUSTRIAL_PUMP, type: product, name: 工业泵, name_en: Industrial Pump, segment: SEG_MACH_PUMP_VALVE, aliases: [泵]}
+  - {id: PROD_MACH_CENTRIFUGAL_PUMP, type: product, name: 离心泵, name_en: Centrifugal Pump, parent: PROD_MACH_INDUSTRIAL_PUMP, segment: SEG_MACH_PUMP_VALVE, aliases: [化工泵]}
+  - {id: PROD_MACH_NUCLEAR_PUMP, type: product, name: 核电泵, name_en: Nuclear Pump, parent: PROD_MACH_INDUSTRIAL_PUMP, segment: SEG_MACH_PUMP_VALVE}
+  - {id: PROD_MACH_VACUUM_PUMP, type: product, name: 真空泵, name_en: Vacuum Pump, parent: PROD_MACH_INDUSTRIAL_PUMP, segment: SEG_MACH_PUMP_VALVE}
+  - {id: PROD_MACH_INDUSTRIAL_VALVE, type: product, name: 工业阀门, name_en: Industrial Valve, segment: SEG_MACH_PUMP_VALVE, aliases: [阀门]}
+  - {id: PROD_MACH_CONTROL_VALVE, type: product, name: 调节阀, name_en: Control Valve, parent: PROD_MACH_INDUSTRIAL_VALVE, segment: SEG_MACH_PUMP_VALVE, aliases: [控制阀]}
+  - {id: PROD_MACH_BALL_VALVE, type: product, name: 球阀, name_en: Ball Valve, parent: PROD_MACH_INDUSTRIAL_VALVE, segment: SEG_MACH_PUMP_VALVE}
+  - {id: PROD_MACH_NUCLEAR_VALVE, type: product, name: 核级阀门, name_en: Nuclear Valve, parent: PROD_MACH_INDUSTRIAL_VALVE, segment: SEG_MACH_PUMP_VALVE, aliases: [核电阀门]}
+  - {id: PROD_MACH_CRYOGENIC_VALVE, type: product, name: 超低温阀门, name_en: Cryogenic Valve, parent: PROD_MACH_INDUSTRIAL_VALVE, segment: SEG_MACH_PUMP_VALVE, aliases: [LNG阀门]}
+  - {id: PROD_MACH_VALVE_ACTUATOR, type: product, name: 阀门执行器, name_en: Valve Actuator, segment: SEG_MACH_PUMP_VALVE, aliases: [电动执行器, 气动执行器]}
+  - {id: PROD_MACH_COMPRESSOR, type: product, name: 压缩机, name_en: Compressor, segment: SEG_MACH_COMPRESSOR}
+  - {id: PROD_MACH_AIR_COMPRESSOR, type: product, name: 空气压缩机, name_en: Air Compressor, parent: PROD_MACH_COMPRESSOR, segment: SEG_MACH_COMPRESSOR, aliases: [空压机]}
+  - {id: PROD_MACH_SCREW_COMPRESSOR, type: product, name: 螺杆压缩机, name_en: Screw Compressor, parent: PROD_MACH_COMPRESSOR, segment: SEG_MACH_COMPRESSOR, aliases: [螺杆机, 螺杆主机]}
+  - {id: PROD_MACH_PROCESS_COMPRESSOR, type: product, name: 工艺压缩机, name_en: Process Gas Compressor, parent: PROD_MACH_COMPRESSOR, segment: SEG_MACH_COMPRESSOR, aliases: [离心压缩机]}
+  - {id: PROD_MACH_HYDROGEN_COMPRESSOR, type: product, name: 氢气压缩机, name_en: Hydrogen Compressor, parent: PROD_MACH_COMPRESSOR, segment: SEG_MACH_COMPRESSOR, aliases: [隔膜压缩机]}
+  - {id: PROD_MACH_INDUSTRIAL_FAN, type: product, name: 工业风机, name_en: Industrial Fan, segment: SEG_MACH_COMPRESSOR, aliases: [鼓风机, 通风机]}
+  - {id: PROD_MACH_MAGLEV_BLOWER, type: product, name: 磁悬浮鼓风机, name_en: Magnetic Levitation Blower, parent: PROD_MACH_INDUSTRIAL_FAN, segment: SEG_MACH_COMPRESSOR, aliases: [磁悬浮风机]}
+  - {id: PROD_MACH_ENERGY_RECOVERY_TURBINE, type: product, name: 能量回收透平, name_en: Energy Recovery Turbine, segment: SEG_MACH_COMPRESSOR, aliases: [TRT, 透平机械]}
+  - {id: PROD_MACH_AIR_SEPARATION_UNIT, type: product, name: 空分设备, name_en: Air Separation Unit, segment: SEG_MACH_COMPRESSOR, aliases: [空气分离设备, 空分装置]}
+  - {id: PROD_MACH_FORKLIFT, type: product, name: 叉车, name_en: Forklift, segment: SEG_MACH_MATERIAL_HANDLING, aliases: [工业车辆]}
+  - {id: PROD_MACH_ELECTRIC_FORKLIFT, type: product, name: 电动叉车, name_en: Electric Forklift, parent: PROD_MACH_FORKLIFT, segment: SEG_MACH_MATERIAL_HANDLING, aliases: [锂电叉车]}
+  - {id: PROD_MACH_IC_FORKLIFT, type: product, name: 内燃叉车, name_en: Internal Combustion Forklift, parent: PROD_MACH_FORKLIFT, segment: SEG_MACH_MATERIAL_HANDLING}
+  - {id: PROD_MACH_INTRALOGISTICS_SYSTEM, type: product, name: 智能物流系统, name_en: Intralogistics System, segment: SEG_MACH_MATERIAL_HANDLING, aliases: [自动化立体仓库, 智能仓储系统]}
+  - {id: PROD_MACH_CONVEYOR, type: product, name: 输送设备, name_en: Conveyor, segment: SEG_MACH_MATERIAL_HANDLING, aliases: [输送机, 带式输送机]}
+  - {id: PROD_MACH_OVERHEAD_CRANE, type: product, name: 桥门式起重机, name_en: Overhead and Gantry Crane, segment: SEG_MACH_MATERIAL_HANDLING, aliases: [桥式起重机, 门式起重机]}
+  - {id: PROD_MACH_PRESSURE_TRANSMITTER, type: product, name: 压力变送器, name_en: Pressure Transmitter, segment: SEG_MACH_INSTRUMENT, aliases: [变送器]}
+  - {id: PROD_MACH_FLOWMETER, type: product, name: 流量计, name_en: Flowmeter, segment: SEG_MACH_INSTRUMENT, aliases: [电磁流量计, 科氏流量计]}
+  - {id: PROD_MACH_SMART_WATER_GAS_METER, type: product, name: 智能水表燃气表, name_en: Smart Water and Gas Meter, segment: SEG_MACH_INSTRUMENT, aliases: [智能水表, 智能燃气表]}
+  - {id: PROD_MACH_ANALYTICAL_INSTRUMENT, type: product, name: 分析仪器, name_en: Analytical Instrument, segment: SEG_MACH_INSTRUMENT, aliases: [科学仪器]}
+  - {id: PROD_MACH_MASS_SPECTROMETER, type: product, name: 质谱仪, name_en: Mass Spectrometer, parent: PROD_MACH_ANALYTICAL_INSTRUMENT, segment: SEG_MACH_INSTRUMENT}
+  - {id: PROD_MACH_CHROMATOGRAPH, type: product, name: 色谱仪, name_en: Chromatograph, parent: PROD_MACH_ANALYTICAL_INSTRUMENT, segment: SEG_MACH_INSTRUMENT, aliases: [液相色谱仪, 气相色谱仪]}
+  - {id: PROD_MACH_SPECTROMETER, type: product, name: 光谱仪, name_en: Spectrometer, parent: PROD_MACH_ANALYTICAL_INSTRUMENT, segment: SEG_MACH_INSTRUMENT}
+  - {id: PROD_MACH_ELECTRONIC_TEST_INSTRUMENT, type: product, name: 电子测量仪器, name_en: Electronic Test and Measurement Instrument, segment: SEG_MACH_INSTRUMENT, aliases: [示波器, 频谱分析仪, 信号发生器]}
+  - {id: PROD_MACH_MATERIAL_TESTING_MACHINE, type: product, name: 试验机, name_en: Material Testing Machine, segment: SEG_MACH_INSTRUMENT, aliases: [力学试验机]}
+  - {id: PROD_MACH_ENV_TEST_EQUIP, type: product, name: 环境与可靠性试验设备, name_en: Environmental and Reliability Test Equipment, segment: SEG_MACH_INSTRUMENT, aliases: [振动台, 温湿度试验箱]}
+  - {id: PROD_MACH_ENV_TEST_SERVICE, type: product, name: 环境与可靠性试验服务, name_en: Environmental and Reliability Testing Service, segment: SEG_MACH_INSTRUMENT, aliases: [第三方检测], kind: service}
+  - {id: PROD_MACH_CMM, type: product, name: 三坐标测量机, name_en: Coordinate Measuring Machine, segment: SEG_MACH_INSTRUMENT, aliases: [几何量测量仪器]}
+  - {id: PROD_MACH_INFRARED_THERMAL_IMAGER, type: product, name: 红外热像仪, name_en: Infrared Thermal Imager, segment: SEG_MACH_INSTRUMENT, aliases: [红外热成像仪, 测温热像仪]}
+  - {id: PROD_MACH_SURVEYING_INSTRUMENT, type: product, name: 测绘仪器, name_en: Surveying Instrument, segment: SEG_MACH_INSTRUMENT, aliases: [全站仪]}
+  - {id: PROD_MACH_GAS_DETECTOR, type: product, name: 气体检测仪, name_en: Gas Detector, segment: SEG_MACH_INSTRUMENT, aliases: [可燃气体探测器]}
+  - {id: PROD_MACH_FASTENER, type: product, name: 紧固件, name_en: Fastener, segment: SEG_MACH_METAL_PRODUCTS, aliases: [螺栓, 螺母]}
+  - {id: PROD_MACH_CASTING, type: product, name: 铸件, name_en: Casting, segment: SEG_MACH_METAL_PRODUCTS, aliases: [大型铸件]}
+  - {id: PROD_MACH_FORGING, type: product, name: 锻件, name_en: Forging, segment: SEG_MACH_METAL_PRODUCTS, aliases: [自由锻件, 模锻件]}
+  - {id: PROD_MACH_RING_FORGING, type: product, name: 环形锻件, name_en: Ring Forging, parent: PROD_MACH_FORGING, segment: SEG_MACH_METAL_PRODUCTS, aliases: [辗环件, 环锻件]}
+  - {id: PROD_MACH_MOLD, type: product, name: 模具, name_en: Mold and Die, segment: SEG_MACH_METAL_PRODUCTS, aliases: [注塑模具]}
+  - {id: PROD_MACH_POWDER_METALLURGY, type: product, name: 粉末冶金件, name_en: Powder Metallurgy Part, segment: SEG_MACH_METAL_PRODUCTS, aliases: [MIM件, 金属注射成形件]}
+  - {id: PROD_MACH_WELDING_EQUIPMENT, type: product, name: 焊接设备, name_en: Welding Equipment, segment: SEG_MACH_OTHER_GENERAL, aliases: [电焊机, 焊机]}
+  - {id: PROD_MACH_PRESSURE_VESSEL, type: product, name: 压力容器, name_en: Pressure Vessel, segment: SEG_MACH_ENERGY_HEAVY, aliases: [反应器, 储罐]}
+  - {id: PROD_MACH_HEAT_EXCHANGER, type: product, name: 换热器, name_en: Heat Exchanger, segment: SEG_MACH_ENERGY_HEAVY, aliases: [管壳式换热器]}
+  - {id: PROD_MACH_NUCLEAR_EQUIPMENT, type: product, name: 核电设备, name_en: Nuclear Power Equipment, segment: SEG_MACH_ENERGY_HEAVY, aliases: [核岛设备, 核电主设备]}
+  - {id: PROD_MACH_INDUSTRIAL_STEAM_TURBINE, type: product, name: 工业汽轮机, name_en: Industrial Steam Turbine, segment: SEG_MACH_ENERGY_HEAVY, aliases: [工业驱动汽轮机]}
+  - {id: PROD_MACH_METALLURGICAL_EQUIP, type: product, name: 冶金设备, name_en: Metallurgical Equipment, segment: SEG_MACH_ENERGY_HEAVY, aliases: [轧机, 连铸机]}
+  - {id: PROD_MACH_DRILLING_RIG, type: product, name: 钻机, name_en: Drilling Rig, segment: SEG_MACH_OIL_SERVICE_EQUIP, aliases: [石油钻机, 陆地钻机]}
+  - {id: PROD_MACH_FRACTURING_EQUIP, type: product, name: 压裂设备, name_en: Fracturing Equipment, segment: SEG_MACH_OIL_SERVICE_EQUIP, aliases: [压裂车, 电驱压裂设备, 电驱压裂成套设备]}
+  - {id: PROD_MACH_WELLHEAD_EQUIP, type: product, name: 井口装置, name_en: Wellhead Equipment, segment: SEG_MACH_OIL_SERVICE_EQUIP, aliases: [采油树, 井口装置及采油树, 水下采油树]}
+  - {id: PROD_MACH_DOWNHOLE_TOOL, type: product, name: 井下工具, name_en: Downhole Tool, segment: SEG_MACH_OIL_SERVICE_EQUIP, aliases: [旋转导向系统, 随钻测量仪器]}
+  - {id: PROD_MACH_LNG_EQUIPMENT, type: product, name: LNG装备, name_en: LNG Equipment, segment: SEG_MACH_OIL_SERVICE_EQUIP, aliases: [LNG储罐, 液化天然气储运装备]}
+  - {id: PROD_MACH_OFFSHORE_EQUIP, type: product, name: 海洋工程装备, name_en: Offshore Engineering Equipment, segment: SEG_MACH_OIL_SERVICE_EQUIP, aliases: [海工装备, FPSO, 钻井平台]}
+  - {id: PROD_MACH_HYDRAULIC_ROOF_SUPPORT, type: product, name: 液压支架, name_en: Hydraulic Roof Support, segment: SEG_MACH_MINING_MACH}
+  - {id: PROD_MACH_SHEARER, type: product, name: 采煤机, name_en: Shearer, segment: SEG_MACH_MINING_MACH}
+  - {id: PROD_MACH_ROADHEADER, type: product, name: 掘进机, name_en: Roadheader, segment: SEG_MACH_MINING_MACH, aliases: [掘锚机, 悬臂式掘进机]}
+  - {id: PROD_MACH_SCRAPER_CONVEYOR, type: product, name: 刮板输送机, name_en: Armored Face Conveyor, segment: SEG_MACH_MINING_MACH, aliases: [刮板机]}
+  - {id: PROD_MACH_MINING_TRUCK, type: product, name: 矿用卡车, name_en: Mining Truck, segment: SEG_MACH_MINING_MACH, aliases: [宽体车, 电动矿卡]}
+  - {id: PROD_MACH_CRUSHER, type: product, name: 破碎设备, name_en: Crusher, segment: SEG_MACH_MINING_MACH, aliases: [破碎机, 圆锥破碎机]}
+  - {id: PROD_MACH_GRINDING_MILL, type: product, name: 磨机, name_en: Grinding Mill, segment: SEG_MACH_MINING_MACH, aliases: [球磨机, 立磨]}
+  - {id: PROD_MACH_HYDROGEN_STORAGE_TANK, type: product, name: 储氢瓶, name_en: Hydrogen Storage Cylinder, segment: SEG_MACH_HYDROGEN_EQUIP, aliases: [IV型瓶, 车载储氢瓶, 储氢系统, IV型储氢瓶]}
+  - {id: PROD_MACH_HYDROGEN_REFUELING_EQUIP, type: product, name: 加氢站设备, name_en: Hydrogen Refueling Equipment, segment: SEG_MACH_HYDROGEN_EQUIP, aliases: [加氢机]}
+  - {id: PROD_MACH_ELEVATOR, type: product, name: 电梯, name_en: Elevator, segment: SEG_MACH_BUILDING_EQUIP, aliases: [自动扶梯]}
+  - {id: PROD_MACH_ELEVATOR_TRACTION_MACHINE, type: product, name: 电梯曳引机, name_en: Elevator Traction Machine, segment: SEG_MACH_BUILDING_EQUIP, aliases: [曳引机, 电梯部件]}
+  - {id: PROD_MACH_FIRE_EQUIPMENT, type: product, name: 消防设备, name_en: Fire Protection Equipment, segment: SEG_MACH_BUILDING_EQUIP, aliases: [消防装备, 消防车]}
+  - {id: PROD_MACH_WATER_SUPPLY_EQUIP, type: product, name: 二次供水设备, name_en: Secondary Water Supply Equipment, segment: SEG_MACH_BUILDING_EQUIP, aliases: [供水设备]}
+  - {id: PROD_MACH_SPINNING_MACH, type: product, name: 纺纱机械, name_en: Spinning Machinery, segment: SEG_MACH_TEXTILE_MACH, aliases: [细纱机, 转杯纺纱机]}
+  - {id: PROD_MACH_WEAVING_MACH, type: product, name: 织造机械, name_en: Weaving Machinery, segment: SEG_MACH_TEXTILE_MACH, aliases: [喷气织机, 织机]}
+  - {id: PROD_MACH_KNITTING_MACH, type: product, name: 针织机械, name_en: Knitting Machinery, segment: SEG_MACH_TEXTILE_MACH, aliases: [圆纬机, 电脑横机]}
+  - {id: PROD_MACH_CHEMICAL_FIBER_MACH, type: product, name: 化纤机械, name_en: Chemical Fiber Machinery, segment: SEG_MACH_TEXTILE_MACH, aliases: [卷绕头, 纺丝设备]}
+  - {id: PROD_MACH_SEWING_MACH, type: product, name: 工业缝纫机, name_en: Industrial Sewing Machine, segment: SEG_MACH_TEXTILE_MACH, aliases: [缝制设备]}
+  - {id: PROD_MACH_DYEING_MACH, type: product, name: 印染机械, name_en: Dyeing and Finishing Machinery, segment: SEG_MACH_TEXTILE_MACH, aliases: [印染设备]}
+  - {id: PROD_MACH_TRACTOR, type: product, name: 拖拉机, name_en: Tractor, segment: SEG_MACH_AGRI_MACH, aliases: [大马力拖拉机]}
+  - {id: PROD_MACH_HARVESTER, type: product, name: 收获机械, name_en: Harvester, segment: SEG_MACH_AGRI_MACH, aliases: [联合收割机]}
+  - {id: PROD_MACH_PLANTING_MACH, type: product, name: 种植机械, name_en: Planting Machinery, segment: SEG_MACH_AGRI_MACH, aliases: [播种机, 插秧机]}
+  - {id: PROD_MACH_PLANT_PROTECTION_DRONE, type: product, name: 植保无人机, name_en: Agricultural Spraying Drone, segment: SEG_MACH_AGRI_MACH, aliases: [植保机, 农业无人机]}
+  - {id: PROD_MACH_GARDEN_MACH, type: product, name: 园林机械, name_en: Outdoor Power Equipment, segment: SEG_MACH_AGRI_MACH, aliases: [割草机, OPE, 园林工具]}
+  - {id: PROD_MACH_PACKAGING_MACH, type: product, name: 包装机械, name_en: Packaging Machinery, segment: SEG_MACH_PRINT_PACK_MACH, aliases: [灌装机, 饮料灌装生产线]}
+  - {id: PROD_MACH_PRINTING_MACH, type: product, name: 印刷机械, name_en: Printing Machinery, segment: SEG_MACH_PRINT_PACK_MACH, aliases: [印刷机]}
+  - {id: PROD_MACH_CORRUGATED_MACH, type: product, name: 瓦楞纸板设备, name_en: Corrugated Board Machinery, segment: SEG_MACH_PRINT_PACK_MACH, aliases: [瓦楞纸板生产线]}
+  - {id: PROD_MACH_PAPER_MACH, type: product, name: 造纸机械, name_en: Papermaking Machinery, segment: SEG_MACH_PRINT_PACK_MACH, aliases: [造纸机]}
+  - {id: PROD_MACH_FOOD_MACH, type: product, name: 食品机械, name_en: Food Processing Machinery, segment: SEG_MACH_FOOD_PHARMA_MACH, aliases: [食品加工设备]}
+  - {id: PROD_MACH_INJECTION_MOLDING_MACH, type: product, name: 注塑机, name_en: Injection Molding Machine, segment: SEG_MACH_OTHER_SPECIAL}
+  - {id: PROD_MACH_DIE_CASTING_MACH, type: product, name: 压铸机, name_en: Die Casting Machine, segment: SEG_MACH_OTHER_SPECIAL, aliases: [一体化压铸机, 超大型压铸机]}
+  - {id: PROD_MACH_TIRE_EQUIP, type: product, name: 轮胎装备, name_en: Tire Manufacturing Equipment, segment: SEG_MACH_OTHER_SPECIAL, aliases: [硫化机, 轮胎模具]}
+  - {id: PROD_MACH_ADDITIVE_MFG_EQUIP, type: product, name: 3D打印设备, name_en: 3D Printer, segment: SEG_MACH_OTHER_SPECIAL, aliases: [增材制造装备, 金属3D打印机]}
+  - {id: PROD_MACH_VACUUM_COATING_EQUIP, type: product, name: 真空镀膜设备, name_en: Vacuum Coating Equipment, segment: SEG_MACH_OTHER_SPECIAL, aliases: [镀膜机]}
+  - {id: PROD_MACH_PCB_EQUIP, type: product, name: PCB生产设备, name_en: PCB Manufacturing Equipment, segment: SEG_MACH_OTHER_SPECIAL, aliases: [PCB钻孔机, PCB专用设备]}
+  - {id: PROD_MACH_BONDER, type: product, name: 键合设备, name_en: Bonding Equipment, parent: PROD_ELEC_BACKEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT}
+  - {id: PROD_MACH_WAFER_HANDLING, type: product, name: 晶圆传输系统, name_en: Wafer Handling System, segment: SEG_ELEC_SEMI_EQUIPMENT, aliases: [EFEM, 晶圆传输机器人, 真空机械手]}
+  - {id: PROD_MACH_LIB_FRONT_EQUIP, type: product, name: 锂电前段设备, name_en: Li-ion Electrode Equipment, segment: SEG_MACH_LIB_EQUIP, aliases: [辊压机]}
+  - {id: PROD_MACH_LIB_MID_EQUIP, type: product, name: 锂电中段设备, name_en: Li-ion Cell Assembly Equipment, segment: SEG_MACH_LIB_EQUIP, aliases: [模切机]}
+  - {id: PROD_MACH_LIB_BACK_EQUIP, type: product, name: 锂电后段设备, name_en: Li-ion Formation and Grading Equipment, segment: SEG_MACH_LIB_EQUIP, aliases: [化成柜]}
+  - {id: PROD_MACH_SOLID_STATE_BATTERY_EQUIP, type: product, name: 固态电池设备, name_en: Solid-State Battery Equipment, segment: SEG_MACH_LIB_EQUIP, aliases: [等静压机]}
+  - {id: PROD_MACH_CELL_EQUIP, type: product, name: 光伏电池片设备, name_en: Solar Cell Equipment, segment: SEG_MACH_PV_EQUIP, aliases: [电池片设备]}
+  - {id: PROD_MACH_TOPCON_EQUIP, type: product, name: TOPCon电池设备, name_en: TOPCon Cell Equipment, parent: PROD_MACH_CELL_EQUIP, segment: SEG_MACH_PV_EQUIP, aliases: [TOPCon设备]}
+  - {id: PROD_MACH_HJT_EQUIP, type: product, name: HJT电池设备, name_en: HJT Cell Equipment, parent: PROD_MACH_CELL_EQUIP, segment: SEG_MACH_PV_EQUIP, aliases: [异质结设备]}
+  - {id: PROD_MACH_BC_EQUIP, type: product, name: BC电池设备, name_en: Back-Contact Cell Equipment, parent: PROD_MACH_CELL_EQUIP, segment: SEG_MACH_PV_EQUIP, aliases: [BC设备]}
+  - {id: PROD_MACH_MODULE_EQUIP, type: product, name: 光伏组件设备, name_en: Solar Module Equipment, segment: SEG_MACH_PV_EQUIP}
+  - {id: PROD_MACH_DISPLAY_PANEL_EQUIP, type: product, name: 面板制造设备, name_en: Display Panel Manufacturing Equipment, segment: SEG_MACH_DISPLAY_EQUIP, aliases: [显示面板设备]}
+  - {id: PROD_MACH_OLED_EVAPORATION, type: product, name: OLED蒸镀设备, name_en: OLED Evaporation Equipment, parent: PROD_MACH_DISPLAY_PANEL_EQUIP, segment: SEG_MACH_DISPLAY_EQUIP, aliases: [蒸镀机]}
+  - {id: PROD_MACH_DISPLAY_INSPECTION, type: product, name: 面板检测设备, name_en: Display Inspection Equipment, segment: SEG_MACH_DISPLAY_EQUIP, aliases: [显示检测设备, AOI检测设备]}
+  - {id: PROD_MACH_INDUSTRIAL_ROBOT, type: product, name: 工业机器人本体, name_en: Industrial Robot, segment: SEG_MACH_ROBOT, aliases: [机器人本体]}
+  - {id: PROD_MACH_ARTICULATED_ROBOT, type: product, name: 多关节机器人, name_en: Articulated Robot, parent: PROD_MACH_INDUSTRIAL_ROBOT, segment: SEG_MACH_ROBOT, aliases: [六轴机器人]}
+  - {id: PROD_MACH_SCARA_ROBOT, type: product, name: SCARA机器人, name_en: SCARA Robot, parent: PROD_MACH_INDUSTRIAL_ROBOT, segment: SEG_MACH_ROBOT, aliases: [平面关节机器人]}
+  - {id: PROD_MACH_COLLABORATIVE_ROBOT, type: product, name: 协作机器人, name_en: Collaborative Robot, parent: PROD_MACH_INDUSTRIAL_ROBOT, segment: SEG_MACH_ROBOT, aliases: [Cobot]}
+  - {id: PROD_MACH_SERVICE_ROBOT, type: product, name: 服务机器人本体, name_en: Service Robot, segment: SEG_MACH_ROBOT, aliases: [商用服务机器人]}
+  - {id: PROD_MACH_HUMANOID_ROBOT, type: product, name: 人形机器人整机, name_en: Humanoid Robot, segment: SEG_MACH_ROBOT, aliases: [人形机器人本体]}
+  - {id: PROD_MACH_QUADRUPED_ROBOT, type: product, name: 四足机器人, name_en: Quadruped Robot, segment: SEG_MACH_ROBOT, aliases: [机器狗]}
+  - {id: PROD_MACH_MOBILE_ROBOT, type: product, name: 移动机器人, name_en: Mobile Robot, segment: SEG_MACH_ROBOT, aliases: [AGV, AMR]}
+  - {id: PROD_MACH_ROBOT_CONTROLLER, type: product, name: 机器人控制器, name_en: Robot Controller, segment: SEG_MACH_ROBOT}
+  - {id: PROD_MACH_ROBOT_INTEGRATION, type: product, name: 机器人系统集成, name_en: Robot System Integration, segment: SEG_MACH_ROBOT, aliases: [机器人集成, 焊接机器人工作站], kind: service}
+  - {id: PROD_MACH_PLANETARY_ROLLER_SCREW, type: product, name: 行星滚柱丝杠, name_en: Planetary Roller Screw, segment: SEG_MACH_HUMANOID_PARTS, aliases: [行星丝杠, 反向式行星滚柱丝杠, 机器人行星滚柱丝杠]}
+  - {id: PROD_MACH_MICRO_LEAD_SCREW, type: product, name: 微型丝杠, name_en: Micro Lead Screw, segment: SEG_MACH_HUMANOID_PARTS, aliases: [微型滚珠丝杠, 机器人微型滚珠丝杠]}
+  - {id: PROD_MACH_ROTARY_ACTUATOR, type: product, name: 旋转关节执行器, name_en: Rotary Joint Actuator, segment: SEG_MACH_HUMANOID_PARTS, aliases: [旋转关节模组, 人形机器人旋转执行器, 旋转关节]}
+  - {id: PROD_MACH_LINEAR_ACTUATOR, type: product, name: 线性关节执行器, name_en: Linear Joint Actuator, segment: SEG_MACH_HUMANOID_PARTS, aliases: [线性执行器, 直线关节模组, 人形机器人线性执行器, 线性关节]}
+  - {id: PROD_MACH_DEXTEROUS_HAND, type: product, name: 灵巧手, name_en: Dexterous Hand, segment: SEG_MACH_HUMANOID_PARTS, aliases: [人形机器人灵巧手]}
+  - {id: PROD_MACH_SIX_AXIS_FORCE_SENSOR, type: product, name: 六维力传感器, name_en: Six-Axis Force/Torque Sensor, segment: SEG_MACH_HUMANOID_PARTS, aliases: [六维力矩传感器]}
+  - {id: PROD_MACH_TACTILE_SENSOR, type: product, name: 触觉传感器, name_en: Tactile Sensor, segment: SEG_MACH_HUMANOID_PARTS, aliases: [电子皮肤]}
+  - {id: PROD_MACH_PLC, type: product, name: 可编程逻辑控制器, name_en: Programmable Logic Controller, segment: SEG_MACH_INDUSTRIAL_CONTROL, aliases: [PLC]}
+  - {id: PROD_MACH_SERVO_SYSTEM, type: product, name: 伺服系统, name_en: Servo System, segment: SEG_MACH_INDUSTRIAL_CONTROL, aliases: [交流伺服]}
+  - {id: PROD_MACH_SERVO_MOTOR, type: product, name: 伺服电机, name_en: Servo Motor, segment: SEG_MACH_INDUSTRIAL_CONTROL}
+  - {id: PROD_MACH_SERVO_DRIVE, type: product, name: 伺服驱动器, name_en: Servo Drive, segment: SEG_MACH_INDUSTRIAL_CONTROL}
+  - {id: PROD_MACH_FREQUENCY_INVERTER, type: product, name: 变频器, name_en: Variable Frequency Drive, segment: SEG_MACH_INDUSTRIAL_CONTROL, aliases: [通用变频器, VFD]}
+  - {id: PROD_MACH_DCS, type: product, name: 分散控制系统, name_en: Distributed Control System, segment: SEG_MACH_INDUSTRIAL_CONTROL, aliases: [DCS]}
+  - {id: PROD_MACH_MOTION_CONTROLLER, type: product, name: 运动控制器, name_en: Motion Controller, segment: SEG_MACH_INDUSTRIAL_CONTROL, aliases: [运动控制卡]}
+  - {id: PROD_MACH_HMI, type: product, name: 人机界面, name_en: Human-Machine Interface, segment: SEG_MACH_INDUSTRIAL_CONTROL, aliases: [HMI, 工业触摸屏]}
+  - {id: PROD_MACH_INDUSTRIAL_SENSOR, type: product, name: 工业传感器, name_en: Industrial Sensor, segment: SEG_MACH_INDUSTRIAL_CONTROL}
+  - {id: PROD_MACH_ENCODER, type: product, name: 编码器, name_en: Encoder, parent: PROD_MACH_INDUSTRIAL_SENSOR, segment: SEG_MACH_INDUSTRIAL_CONTROL, aliases: [光电编码器, 磁编码器]}
+  - {id: PROD_MACH_MACHINE_VISION, type: product, name: 机器视觉系统, name_en: Machine Vision System, segment: SEG_MACH_INDUSTRIAL_CONTROL, aliases: [视觉检测系统]}
+  - {id: PROD_MACH_INDUSTRIAL_CAMERA, type: product, name: 工业相机, name_en: Industrial Camera, segment: SEG_MACH_INDUSTRIAL_CONTROL}
+  - {id: PROD_MACH_FIBER_LASER, type: product, name: 光纤激光器, name_en: Fiber Laser, segment: SEG_MACH_LASER_EQUIP, aliases: [工业激光器]}
+  - {id: PROD_MACH_ULTRAFAST_LASER, type: product, name: 超快激光器, name_en: Ultrafast Laser, segment: SEG_MACH_LASER_EQUIP, aliases: [皮秒激光器, 飞秒激光器]}
+  - {id: PROD_MACH_LASER_CUTTING, type: product, name: 激光切割设备, name_en: Laser Cutting Machine, segment: SEG_MACH_LASER_EQUIP, aliases: [激光切割机]}
+  - {id: PROD_MACH_LASER_WELDING, type: product, name: 激光焊接设备, name_en: Laser Welding Equipment, segment: SEG_MACH_LASER_EQUIP, aliases: [激光焊接机]}
+  - {id: PROD_MACH_LASER_MARKING, type: product, name: 激光打标设备, name_en: Laser Marking Machine, segment: SEG_MACH_LASER_EQUIP, aliases: [激光打标机]}
+  - {id: PROD_MACH_LASER_MICROMACHINING, type: product, name: 激光精密加工设备, name_en: Laser Precision Micromachining Equipment, segment: SEG_MACH_LASER_EQUIP, aliases: [激光微加工设备]}
+  - {id: PROD_MACH_LASER_CUTTING_HEAD, type: product, name: 激光切割头, name_en: Laser Cutting Head, segment: SEG_MACH_LASER_EQUIP, aliases: [激光加工头]}
+  - {id: PROD_MACH_LASER_CONTROL_SYSTEM, type: product, name: 激光切割控制系统, name_en: Laser Cutting Control System, segment: SEG_MACH_LASER_EQUIP, aliases: [激光运动控制系统]}
+  - {id: PROD_MACH_AUTOMATION_LINE, type: product, name: 非标自动化产线, name_en: Custom Automated Production Line, segment: SEG_MACH_OTHER_AUTOMATION, aliases: [非标自动化, 自动化产线]}
+  - {id: PROD_MACH_AUTO_BODY_LINE, type: product, name: 汽车焊装线, name_en: Automotive Body Welding Line, parent: PROD_MACH_AUTOMATION_LINE, segment: SEG_MACH_OTHER_AUTOMATION, aliases: [白车身焊装线]}
+  - {id: PROD_MACH_3C_TEST_EQUIP, type: product, name: 3C检测设备, name_en: 3C Test Equipment, segment: SEG_MACH_3C_AUTOMATION, aliases: [消费电子检测设备]}
+  - {id: PROD_MACH_3C_ASSEMBLY_EQUIP, type: product, name: 3C组装设备, name_en: 3C Assembly Equipment, segment: SEG_MACH_3C_AUTOMATION, aliases: [消费电子自动化组装设备]}
+  - {id: PROD_MACH_SMT_EQUIP, type: product, name: SMT设备, name_en: SMT Equipment, segment: SEG_MACH_3C_AUTOMATION, aliases: [贴片机, 回流焊]}
+  - {id: PROD_MACH_DISPENSING_EQUIP, type: product, name: 点胶设备, name_en: Dispensing Equipment, segment: SEG_MACH_3C_AUTOMATION, aliases: [点胶机]}
+  - {id: PROD_MACH_EMU, type: product, name: 动车组, name_en: EMU, segment: SEG_MACH_RAIL_EQUIP, aliases: [高铁列车, 高速动车组]}
+  - {id: PROD_MACH_LOCOMOTIVE, type: product, name: 机车, name_en: Locomotive, segment: SEG_MACH_RAIL_EQUIP, aliases: [电力机车, 内燃机车]}
+  - {id: PROD_MACH_METRO_VEHICLE, type: product, name: 城轨车辆, name_en: Metro Vehicle, segment: SEG_MACH_RAIL_EQUIP, aliases: [地铁车辆]}
+  - {id: PROD_MACH_FREIGHT_WAGON, type: product, name: 铁路货车, name_en: Railway Freight Wagon, segment: SEG_MACH_RAIL_EQUIP}
+  - {id: PROD_MACH_RAIL_TRACTION, type: product, name: 牵引系统, name_en: Traction System, segment: SEG_MACH_RAIL_EQUIP, aliases: [牵引变流器]}
+  - {id: PROD_MACH_RAIL_BRAKE, type: product, name: 列车制动系统, name_en: Train Brake System, segment: SEG_MACH_RAIL_EQUIP, aliases: [制动系统]}
+  - {id: PROD_MACH_TRAIN_CONTROL, type: product, name: 列车运行控制系统, name_en: Train Control System, segment: SEG_MACH_RAIL_EQUIP, aliases: [信号系统, CBTC, 列控系统]}
+  - {id: PROD_MACH_BOGIE, type: product, name: 转向架, name_en: Bogie, segment: SEG_MACH_RAIL_EQUIP}
+  - {id: PROD_MACH_WHEELSET, type: product, name: 轮对, name_en: Wheelset, segment: SEG_MACH_RAIL_EQUIP, aliases: [车轮, 车轴]}
+  - {id: PROD_MACH_TRACK_MAINT_MACH, type: product, name: 养路机械, name_en: Track Maintenance Machinery, segment: SEG_MACH_RAIL_EQUIP, aliases: [大型养路机械]}
+  - {id: PROD_MACH_RAIL_FASTENING, type: product, name: 轨道扣件, name_en: Rail Fastening System, segment: SEG_MACH_RAIL_EQUIP, aliases: [扣件, 道岔]}
+  - {id: PROD_MACH_RAIL_MRO, type: product, name: 轨交运维检修服务, name_en: Rail Maintenance Service, segment: SEG_MACH_RAIL_EQUIP, aliases: [动车组检修, 轨交运维], kind: service}
+  - {id: PROD_MACH_EXCAVATOR, type: product, name: 挖掘机, name_en: Excavator, segment: SEG_MACH_CM_WHOLE, aliases: [挖机]}
+  - {id: PROD_MACH_MINI_EXCAVATOR, type: product, name: 小型挖掘机, name_en: Mini Excavator, parent: PROD_MACH_EXCAVATOR, segment: SEG_MACH_CM_WHOLE, aliases: [小挖]}
+  - {id: PROD_MACH_LOADER, type: product, name: 装载机, name_en: Wheel Loader, segment: SEG_MACH_CM_WHOLE, aliases: [铲车]}
+  - {id: PROD_MACH_MOBILE_CRANE, type: product, name: 工程起重机, name_en: Mobile Crane, segment: SEG_MACH_CM_WHOLE, aliases: [起重机]}
+  - {id: PROD_MACH_TRUCK_CRANE, type: product, name: 汽车起重机, name_en: Truck Crane, parent: PROD_MACH_MOBILE_CRANE, segment: SEG_MACH_CM_WHOLE, aliases: [汽车吊]}
+  - {id: PROD_MACH_CRAWLER_CRANE, type: product, name: 履带起重机, name_en: Crawler Crane, parent: PROD_MACH_MOBILE_CRANE, segment: SEG_MACH_CM_WHOLE, aliases: [履带吊]}
+  - {id: PROD_MACH_TOWER_CRANE, type: product, name: 塔式起重机, name_en: Tower Crane, parent: PROD_MACH_MOBILE_CRANE, segment: SEG_MACH_CM_WHOLE, aliases: [塔机, 塔吊]}
+  - {id: PROD_MACH_CONCRETE_MACH, type: product, name: 混凝土机械, name_en: Concrete Machinery, segment: SEG_MACH_CM_WHOLE}
+  - {id: PROD_MACH_PUMP_TRUCK, type: product, name: 混凝土泵车, name_en: Concrete Pump Truck, parent: PROD_MACH_CONCRETE_MACH, segment: SEG_MACH_CM_WHOLE, aliases: [泵车]}
+  - {id: PROD_MACH_MIXER_TRUCK, type: product, name: 混凝土搅拌车, name_en: Concrete Mixer Truck, parent: PROD_MACH_CONCRETE_MACH, segment: SEG_MACH_CM_WHOLE, aliases: [搅拌车]}
+  - {id: PROD_MACH_AERIAL_WORK_PLATFORM, type: product, name: 高空作业平台, name_en: Aerial Work Platform, segment: SEG_MACH_CM_WHOLE, aliases: [高机, 剪叉式高空作业平台, 臂式高空作业平台]}
+  - {id: PROD_MACH_AWP_LEASING, type: product, name: 高空作业平台租赁, name_en: Aerial Work Platform Leasing, segment: SEG_MACH_CM_WHOLE, aliases: [高机租赁], kind: service}
+  - {id: PROD_MACH_ROAD_MACH, type: product, name: 路面机械, name_en: Road Machinery, segment: SEG_MACH_CM_WHOLE, aliases: [压路机, 摊铺机]}
+  - {id: PROD_MACH_PILING_MACH, type: product, name: 桩工机械, name_en: Piling Machinery, segment: SEG_MACH_CM_WHOLE, aliases: [旋挖钻机]}
+  - {id: PROD_MACH_TBM, type: product, name: 盾构机, name_en: Tunnel Boring Machine, segment: SEG_MACH_CM_WHOLE, aliases: [TBM, 隧道掘进机]}
+  - {id: PROD_MACH_PORT_MACHINERY, type: product, name: 港口机械, name_en: Port Machinery, segment: SEG_MACH_CM_WHOLE, aliases: [岸桥, 场桥]}
+  - {id: PROD_MACH_CM_AFTERMARKET, type: product, name: 工程机械后市场服务, name_en: Construction Machinery Aftermarket Service, segment: SEG_MACH_CM_WHOLE, aliases: [工程机械维修, 再制造], kind: service}
+  - {id: PROD_MACH_OFFROAD_DIESEL_ENGINE, type: product, name: 非道路柴油发动机, name_en: Off-Road Diesel Engine, segment: SEG_MACH_CM_PARTS, aliases: [工程机械发动机]}
+  - {id: PROD_MACH_UNDERCARRIAGE, type: product, name: 底盘件, name_en: Undercarriage Parts, segment: SEG_MACH_CM_PARTS, aliases: [四轮一带]}
+  - {id: PROD_MACH_CM_STRUCTURAL_PART, type: product, name: 工程机械结构件, name_en: Construction Machinery Structural Part, segment: SEG_MACH_CM_PARTS, aliases: [结构件, 动臂]}
+  - {id: PROD_MACH_CM_DRIVE_AXLE, type: product, name: 驱动桥, name_en: Drive Axle, segment: SEG_MACH_CM_PARTS, aliases: [工程机械驱动桥]}
+edges:
+  - [SEG_MACH_MACHINE_TOOL, part_of, SEG_MACH_GENERAL]
+  - [SEG_MACH_ABRASIVE, part_of, SEG_MACH_GENERAL]
+  - [SEG_MACH_REFRIG_HVAC, part_of, SEG_MACH_GENERAL]
+  - [SEG_MACH_OTHER_GENERAL, part_of, SEG_MACH_GENERAL]
+  - [SEG_MACH_TRANSMISSION, part_of, SEG_MACH_OTHER_GENERAL]
+  - [SEG_MACH_FLUID_POWER, part_of, SEG_MACH_OTHER_GENERAL]
+  - [SEG_MACH_PUMP_VALVE, part_of, SEG_MACH_OTHER_GENERAL]
+  - [SEG_MACH_COMPRESSOR, part_of, SEG_MACH_OTHER_GENERAL]
+  - [SEG_MACH_MATERIAL_HANDLING, part_of, SEG_MACH_OTHER_GENERAL]
+  - [SEG_MACH_INSTRUMENT, part_of, SEG_MACH_GENERAL]
+  - [SEG_MACH_METAL_PRODUCTS, part_of, SEG_MACH_GENERAL]
+  - [SEG_MACH_ENERGY_HEAVY, part_of, SEG_MACH_SPECIAL]
+  - [SEG_MACH_OIL_SERVICE_EQUIP, part_of, SEG_MACH_ENERGY_HEAVY]
+  - [SEG_MACH_MINING_MACH, part_of, SEG_MACH_ENERGY_HEAVY]
+  - [SEG_MACH_HYDROGEN_EQUIP, part_of, SEG_MACH_ENERGY_HEAVY]
+  - [SEG_MACH_BUILDING_EQUIP, part_of, SEG_MACH_SPECIAL]
+  - [SEG_MACH_TEXTILE_MACH, part_of, SEG_MACH_SPECIAL]
+  - [SEG_MACH_AGRI_MACH, part_of, SEG_MACH_SPECIAL]
+  - [SEG_MACH_PRINT_PACK_MACH, part_of, SEG_MACH_SPECIAL]
+  - [SEG_MACH_OTHER_SPECIAL, part_of, SEG_MACH_SPECIAL]
+  - [SEG_MACH_LIB_EQUIP, part_of, SEG_MACH_OTHER_SPECIAL]
+  - [SEG_MACH_PV_EQUIP, part_of, SEG_MACH_OTHER_SPECIAL]
+  - [SEG_MACH_DISPLAY_EQUIP, part_of, SEG_MACH_OTHER_SPECIAL]
+  - [SEG_MACH_FOOD_PHARMA_MACH, part_of, SEG_MACH_OTHER_SPECIAL]
+  - [SEG_MACH_CM_WHOLE, part_of, SEG_MACH_CONSTRUCTION]
+  - [SEG_MACH_CM_PARTS, part_of, SEG_MACH_CONSTRUCTION]
+  - [SEG_MACH_ROBOT, part_of, SEG_MACH_AUTOMATION]
+  - [SEG_MACH_HUMANOID_PARTS, part_of, SEG_MACH_ROBOT]
+  - [SEG_MACH_INDUSTRIAL_CONTROL, part_of, SEG_MACH_AUTOMATION]
+  - [SEG_MACH_LASER_EQUIP, part_of, SEG_MACH_AUTOMATION]
+  - [SEG_MACH_OTHER_AUTOMATION, part_of, SEG_MACH_AUTOMATION]
+  - [SEG_MACH_3C_AUTOMATION, part_of, SEG_MACH_OTHER_AUTOMATION]
+  - [SEG_MACH_GENERAL, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_MACH_MACHINE_TOOL, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_MACH_MACHINE_TOOL, serves, MKT_EV]
+  - [SEG_MACH_MACHINE_TOOL, serves, MKT_ICE_VEHICLE]
+  - [SEG_MACH_MACHINE_TOOL, serves, MKT_AEROSPACE]
+  - [SEG_MACH_MACHINE_TOOL, serves, MKT_DEFENSE]
+  - [SEG_MACH_MACHINE_TOOL, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_MACH_ABRASIVE, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_MACH_ABRASIVE, serves, MKT_SOLAR]
+  - [SEG_MACH_ABRASIVE, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_MACH_ABRASIVE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_MACH_REFRIG_HVAC, serves, MKT_REAL_ESTATE]
+  - [SEG_MACH_REFRIG_HVAC, serves, MKT_DATA_CENTER]
+  - [SEG_MACH_REFRIG_HVAC, serves, MKT_AI_DATA_CENTER]
+  - [SEG_MACH_REFRIG_HVAC, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_MACH_REFRIG_HVAC, serves, MKT_HOME_APPLIANCE]
+  - [SEG_MACH_REFRIG_HVAC, serves, MKT_LOGISTICS]
+  - [SEG_MACH_TRANSMISSION, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_MACH_TRANSMISSION, serves, MKT_WIND]
+  - [SEG_MACH_TRANSMISSION, serves, MKT_ROBOTICS]
+  - [SEG_MACH_TRANSMISSION, serves, MKT_HUMANOID_ROBOT]
+  - [SEG_MACH_TRANSMISSION, serves, MKT_EV]
+  - [SEG_MACH_FLUID_POWER, serves, MKT_CONSTRUCTION]
+  - [SEG_MACH_FLUID_POWER, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_MACH_FLUID_POWER, serves, MKT_AGRICULTURE]
+  - [SEG_MACH_PUMP_VALVE, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_MACH_PUMP_VALVE, serves, MKT_OIL_GAS]
+  - [SEG_MACH_PUMP_VALVE, serves, MKT_NUCLEAR_POWER]
+  - [SEG_MACH_PUMP_VALVE, serves, MKT_THERMAL_POWER]
+  - [SEG_MACH_PUMP_VALVE, serves, MKT_ENVIRONMENTAL]
+  - [SEG_MACH_PUMP_VALVE, serves, MKT_SEMI_FAB]
+  - [SEG_MACH_COMPRESSOR, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_MACH_COMPRESSOR, serves, MKT_STEEL_INDUSTRY]
+  - [SEG_MACH_COMPRESSOR, serves, MKT_OIL_GAS]
+  - [SEG_MACH_COMPRESSOR, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_MACH_MATERIAL_HANDLING, serves, MKT_LOGISTICS]
+  - [SEG_MACH_MATERIAL_HANDLING, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_MACH_INSTRUMENT, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_MACH_INSTRUMENT, serves, MKT_ENVIRONMENTAL]
+  - [SEG_MACH_INSTRUMENT, serves, MKT_PHARMA_RD]
+  - [SEG_MACH_INSTRUMENT, serves, MKT_GOVERNMENT]
+  - [SEG_MACH_INSTRUMENT, serves, MKT_DEFENSE]
+  - [SEG_MACH_METAL_PRODUCTS, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_MACH_METAL_PRODUCTS, serves, MKT_WIND]
+  - [SEG_MACH_METAL_PRODUCTS, serves, MKT_EV]
+  - [SEG_MACH_METAL_PRODUCTS, serves, MKT_CONSTRUCTION]
+  - [SEG_MACH_ENERGY_HEAVY, serves, MKT_THERMAL_POWER]
+  - [SEG_MACH_ENERGY_HEAVY, serves, MKT_NUCLEAR_POWER]
+  - [SEG_MACH_ENERGY_HEAVY, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_MACH_ENERGY_HEAVY, serves, MKT_STEEL_INDUSTRY]
+  - [SEG_MACH_OIL_SERVICE_EQUIP, serves, MKT_OIL_GAS]
+  - [SEG_MACH_OIL_SERVICE_EQUIP, serves, MKT_SHIPBUILDING]
+  - [SEG_MACH_MINING_MACH, serves, MKT_MINING]
+  - [SEG_MACH_HYDROGEN_EQUIP, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_MACH_HYDROGEN_EQUIP, serves, MKT_COMMERCIAL_VEHICLE]
+  - [SEG_MACH_BUILDING_EQUIP, serves, MKT_REAL_ESTATE]
+  - [SEG_MACH_BUILDING_EQUIP, serves, MKT_CONSTRUCTION]
+  - [SEG_MACH_TEXTILE_MACH, serves, MKT_APPAREL]
+  - [SEG_MACH_AGRI_MACH, serves, MKT_AGRICULTURE]
+  - [SEG_MACH_PRINT_PACK_MACH, serves, MKT_PACKAGING]
+  - [SEG_MACH_PRINT_PACK_MACH, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_MACH_OTHER_SPECIAL, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_MACH_OTHER_SPECIAL, serves, MKT_EV]
+  - [SEG_MACH_LIB_EQUIP, serves, MKT_EV]
+  - [SEG_MACH_LIB_EQUIP, serves, MKT_ENERGY_STORAGE]
+  - [SEG_MACH_PV_EQUIP, serves, MKT_SOLAR]
+  - [SEG_MACH_DISPLAY_EQUIP, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_MACH_DISPLAY_EQUIP, serves, MKT_SMARTPHONE]
+  - [SEG_MACH_DISPLAY_EQUIP, serves, MKT_WEARABLES_XR]
+  - [SEG_MACH_FOOD_PHARMA_MACH, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_MACH_FOOD_PHARMA_MACH, serves, MKT_HEALTHCARE]
+  - [SEG_MACH_RAIL_EQUIP, serves, MKT_RAIL]
+  - [SEG_MACH_CONSTRUCTION, serves, MKT_CONSTRUCTION]
+  - [SEG_MACH_CONSTRUCTION, serves, MKT_MINING]
+  - [SEG_MACH_CONSTRUCTION, serves, MKT_REAL_ESTATE]
+  - [SEG_MACH_CM_WHOLE, serves, MKT_CONSTRUCTION]
+  - [SEG_MACH_CM_WHOLE, serves, MKT_MINING]
+  - [SEG_MACH_CM_WHOLE, serves, MKT_LOGISTICS]
+  - [SEG_MACH_CM_PARTS, serves, MKT_CONSTRUCTION]
+  - [SEG_MACH_AUTOMATION, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_MACH_ROBOT, serves, MKT_ROBOTICS]
+  - [SEG_MACH_ROBOT, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_MACH_ROBOT, serves, MKT_EV]
+  - [SEG_MACH_HUMANOID_PARTS, serves, MKT_HUMANOID_ROBOT]
+  - [SEG_MACH_HUMANOID_PARTS, serves, MKT_ROBOTICS]
+  - [SEG_MACH_INDUSTRIAL_CONTROL, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_MACH_INDUSTRIAL_CONTROL, serves, MKT_ROBOTICS]
+  - [SEG_MACH_LASER_EQUIP, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_MACH_LASER_EQUIP, serves, MKT_EV]
+  - [SEG_MACH_LASER_EQUIP, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_MACH_OTHER_AUTOMATION, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_MACH_OTHER_AUTOMATION, serves, MKT_EV]
+  - [SEG_MACH_3C_AUTOMATION, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_MACH_3C_AUTOMATION, serves, MKT_SMARTPHONE]
+  - [SEG_MACH_3C_AUTOMATION, serves, MKT_WEARABLES_XR]
+  - [PROD_MACH_CNC_SYSTEM, component_of, PROD_MACH_CNC_MACHINE_TOOL]
+  - [PROD_MACH_MOTORIZED_SPINDLE, component_of, PROD_MACH_CNC_MACHINE_TOOL]
+  - [PROD_MACH_MACHINE_TOOL_CASTING, component_of, PROD_MACH_CNC_MACHINE_TOOL]
+  - [PROD_MACH_LINEAR_GUIDE, component_of, PROD_MACH_CNC_MACHINE_TOOL]
+  - [PROD_MACH_BALL_SCREW, component_of, PROD_MACH_CNC_MACHINE_TOOL]
+  - [PROD_MACH_PRECISION_BEARING, component_of, PROD_MACH_MOTORIZED_SPINDLE]
+  - [PROD_MACH_SERVO_SYSTEM, component_of, PROD_MACH_CNC_MACHINE_TOOL]
+  - [PROD_MACH_CNC_MACHINE_TOOL, used_in, MKT_EV]
+  - [PROD_MACH_CNC_MACHINE_TOOL, used_in, MKT_ICE_VEHICLE]
+  - [PROD_MACH_CNC_MACHINE_TOOL, used_in, MKT_AEROSPACE]
+  - [PROD_MACH_CNC_MACHINE_TOOL, used_in, MKT_DEFENSE]
+  - [PROD_MACH_CNC_MACHINE_TOOL, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_CNC_MACHINE_TOOL, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_FIVE_AXIS_MC, used_in, MKT_AEROSPACE]
+  - [PROD_MACH_FIVE_AXIS_MC, used_in, MKT_DEFENSE]
+  - [PROD_MACH_CNC_LATHE, used_in, MKT_ICE_VEHICLE]
+  - [PROD_MACH_CNC_LATHE, used_in, MKT_EV]
+  - [PROD_MACH_GEAR_MACHINE_TOOL, upstream_of, PROD_MACH_GEAR]
+  - [PROD_MACH_FORMING_MACHINE_TOOL, used_in, MKT_EV]
+  - [PROD_MACH_FORMING_MACHINE_TOOL, used_in, MKT_ICE_VEHICLE]
+  - [PROD_MACH_FORMING_MACHINE_TOOL, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_MACH_CUTTING_TOOL, used_in, PROD_MACH_CNC_MACHINE_TOOL]
+  - [PROD_MACH_CUTTING_TOOL, used_in, MKT_EV]
+  - [PROD_MACH_CUTTING_TOOL, used_in, MKT_AEROSPACE]
+  - [PROD_MACH_CARBIDE_ROD, upstream_of, PROD_MACH_CARBIDE_INSERT]
+  - [PROD_MACH_CARBIDE_ROD, upstream_of, PROD_MACH_PCB_DRILL]
+  - [PROD_MACH_CARBIDE_ROD, uses_material, MAT_TUNGSTEN]
+  - [PROD_MACH_CARBIDE_ROD, uses_material, MAT_COBALT]
+  - [PROD_MACH_CARBIDE_INSERT, uses_material, MAT_TUNGSTEN]
+  - [PROD_MACH_CARBIDE_INSERT, uses_material, MAT_COBALT]
+  - [PROD_MACH_PCB_DRILL, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_MACH_PCB_DRILL, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_CBN, upstream_of, PROD_MACH_SUPERHARD_TOOL]
+  - [PROD_MACH_MACHINE_TOOL_CASTING, uses_material, MAT_IRON_ORE]
+  - [PROD_MACH_SUPERHARD_TOOL, substitute_for, PROD_MACH_CARBIDE_INSERT]
+  - [PROD_MACH_EDM_MACHINE, used_in, PROD_MACH_MOLD]
+  - [TECH_INDUSTRIAL_SOFTWARE, enables, PROD_MACH_CNC_SYSTEM]
+  - [TECH_INDUSTRIAL_SOFTWARE, enables, PROD_MACH_PLC]
+  - [TECH_INDUSTRIAL_SOFTWARE, enables, PROD_MACH_DCS]
+  - [TECH_INDUSTRIAL_SOFTWARE, enables, PROD_MACH_LASER_CONTROL_SYSTEM]
+  - [TECH_INDUSTRIAL_SOFTWARE, enables, PROD_MACH_ROBOT_CONTROLLER]
+  - [PROD_MACH_CUBIC_PRESS, upstream_of, PROD_MACH_SYNTHETIC_DIAMOND]
+  - [PROD_MACH_CUBIC_PRESS, upstream_of, PROD_MACH_CBN]
+  - [PROD_MACH_SYNTHETIC_DIAMOND, upstream_of, PROD_MACH_DIAMOND_MICROPOWDER]
+  - [PROD_MACH_SYNTHETIC_DIAMOND, upstream_of, PROD_MACH_DIAMOND_WIRE]
+  - [PROD_MACH_SYNTHETIC_DIAMOND, upstream_of, PROD_MACH_SUPERHARD_TOOL]
+  - [PROD_MACH_SYNTHETIC_DIAMOND, upstream_of, PROD_MACH_ABRASIVE_TOOL]
+  - [PROD_MACH_CBN, upstream_of, PROD_MACH_ABRASIVE_TOOL]
+  - [PROD_MACH_SYNTHETIC_DIAMOND, uses_material, MAT_GRAPHITE]
+  - [PROD_MACH_LAB_GROWN_DIAMOND, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_MACH_DIAMOND_FUNCTIONAL, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_MACH_DIAMOND_FUNCTIONAL, used_in, MKT_SEMI_FAB]
+  - [PROD_MACH_DIAMOND_WIRE, used_in, PROD_PWR_WIRE_SAW]
+  - [PROD_MACH_DIAMOND_WIRE, used_in, MKT_SOLAR]
+  - [PROD_MACH_DIAMOND_MICROPOWDER, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_DIAMOND_MICROPOWDER, used_in, MKT_SEMI_FAB]
+  - [PROD_MACH_ABRASIVE_TOOL, used_in, PROD_MACH_CNC_GRINDER]
+  - [PROD_MACH_ABRASIVE_TOOL, used_in, MKT_ICE_VEHICLE]
+  - [PROD_MACH_ABRASIVE_TOOL, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_MACH_COATED_ABRASIVE, uses_material, MAT_GLASS_FIBER]
+  - [PROD_HA_SCROLL_COMPRESSOR, component_of, PROD_HA_CENTRAL_AC]
+  - [PROD_HA_SCROLL_COMPRESSOR, component_of, PROD_MACH_HEAT_PUMP]
+  - [PROD_MACH_REFRIG_COMPRESSOR, component_of, PROD_MACH_CHILLER]
+  - [PROD_MACH_REFRIG_COMPRESSOR, component_of, PROD_MACH_COLD_CHAIN_EQUIP]
+  - [PROD_MACH_REFRIG_VALVE, component_of, PROD_HA_CENTRAL_AC]
+  - [PROD_MACH_REFRIG_VALVE, component_of, PROD_MACH_HEAT_PUMP]
+  - [PROD_MACH_REFRIG_VALVE, component_of, PROD_MACH_COLD_CHAIN_EQUIP]
+  - [PROD_MACH_HEAT_EXCHANGER, component_of, PROD_MACH_CHILLER]
+  - [PROD_MACH_HEAT_EXCHANGER, component_of, PROD_MACH_HEAT_PUMP]
+  - [PROD_MACH_COOLING_TOWER, used_in, PROD_MACH_CHILLER]
+  - [PROD_MACH_CHILLER, component_of, PROD_MACH_DATA_CENTER_COOLING]
+  - [PROD_MACH_CHILLER, used_in, MKT_REAL_ESTATE]
+  - [PROD_MACH_CHILLER, used_in, MKT_PHARMA_RD]
+  - [PROD_HA_CENTRAL_AC, uses_material, MAT_COPPER]
+  - [PROD_HA_CENTRAL_AC, uses_material, MAT_ALUMINUM]
+  - [PROD_HA_CENTRAL_AC, uses_material, MAT_STEEL]
+  - [PROD_MACH_HEAT_PUMP, used_in, MKT_REAL_ESTATE]
+  - [PROD_MACH_HEAT_PUMP, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_MACH_COLD_CHAIN_EQUIP, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_MACH_COLD_CHAIN_EQUIP, used_in, MKT_LOGISTICS]
+  - [PROD_MACH_DATA_CENTER_COOLING, used_in, MKT_ENERGY_STORAGE]
+  - [TECH_LIQUID_COOLING, enables, PROD_MACH_LIQUID_COOLING_CDU]
+  - [PROD_MACH_LIQUID_COOLING_CDU, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_MACH_ROLLING_ELEMENT, component_of, PROD_MACH_ROLLING_BEARING]
+  - [PROD_MACH_BEARING_RING, component_of, PROD_MACH_ROLLING_BEARING]
+  - [PROD_MACH_ROLLING_BEARING, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_ROLLING_ELEMENT, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_BEARING_RING, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_FORGING, upstream_of, PROD_MACH_BEARING_RING]
+  - [PROD_MACH_FORGING, upstream_of, PROD_MACH_GEAR]
+  - [PROD_MACH_WIND_BEARING, used_in, MKT_WIND]
+  - [PROD_MACH_SLEWING_BEARING, used_in, MKT_WIND]
+  - [PROD_MACH_SLEWING_BEARING, used_in, PROD_MACH_EXCAVATOR]
+  - [PROD_MACH_SLEWING_BEARING, used_in, PROD_MACH_MOBILE_CRANE]
+  - [PROD_MACH_CROSSED_ROLLER_BEARING, component_of, PROD_MACH_HARMONIC_REDUCER]
+  - [PROD_MACH_CROSSED_ROLLER_BEARING, component_of, PROD_MACH_RV_REDUCER]
+  - [PROD_MACH_CROSSED_ROLLER_BEARING, used_in, PROD_MACH_ROTARY_ACTUATOR]
+  - [PROD_MACH_PRECISION_BEARING, used_in, MKT_ROBOTICS]
+  - [PROD_MACH_PRECISION_BEARING, used_in, MKT_AEROSPACE]
+  - [PROD_MACH_ROLLING_BEARING, used_in, MKT_EV]
+  - [PROD_MACH_ROLLING_BEARING, used_in, MKT_ICE_VEHICLE]
+  - [PROD_MACH_ROLLING_BEARING, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_MACH_ROLLING_BEARING, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_SLIDING_BEARING, used_in, MKT_ICE_VEHICLE]
+  - [PROD_MACH_SLIDING_BEARING, used_in, MKT_WIND]
+  - [PROD_MACH_GEAR, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_GEAR, component_of, PROD_MACH_GEARBOX]
+  - [PROD_MACH_GEAR, component_of, PROD_MACH_REDUCER]
+  - [PROD_MACH_GEARBOX, used_in, MKT_EV]
+  - [PROD_MACH_GEARBOX, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_PWR_GEARBOX, used_in, MKT_WIND]
+  - [PROD_MACH_ROLLING_BEARING, component_of, PROD_PWR_GEARBOX]
+  - [PROD_MACH_ROLLING_BEARING, component_of, PROD_MACH_REDUCER]
+  - [PROD_MACH_HARMONIC_REDUCER, component_of, PROD_MACH_INDUSTRIAL_ROBOT]
+  - [PROD_MACH_HARMONIC_REDUCER, component_of, PROD_MACH_ROTARY_ACTUATOR]
+  - [PROD_MACH_HARMONIC_REDUCER, component_of, PROD_MACH_COLLABORATIVE_ROBOT]
+  - [PROD_MACH_RV_REDUCER, component_of, PROD_MACH_ARTICULATED_ROBOT]
+  - [PROD_MACH_PLANETARY_REDUCER, component_of, PROD_MACH_ROTARY_ACTUATOR]
+  - [PROD_MACH_PLANETARY_REDUCER, component_of, PROD_MACH_SERVO_SYSTEM]
+  - [PROD_MACH_PLANETARY_REDUCER, used_in, PROD_MACH_INDUSTRIAL_ROBOT]
+  - [PROD_MACH_HARMONIC_REDUCER, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_MACH_HARMONIC_REDUCER, used_in, MKT_ROBOTICS]
+  - [PROD_MACH_RV_REDUCER, used_in, MKT_ROBOTICS]
+  - [PROD_MACH_PLANETARY_REDUCER, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_MACH_PLANETARY_REDUCER, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_RV_REDUCER, substitute_for, PROD_MACH_HARMONIC_REDUCER]
+  - [PROD_MACH_HARMONIC_REDUCER, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_RV_REDUCER, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_CHAIN, used_in, MKT_ICE_VEHICLE]
+  - [PROD_MACH_CHAIN, used_in, MKT_LOGISTICS]
+  - [PROD_MACH_CHAIN, used_in, MKT_AGRICULTURE]
+  - [PROD_MACH_LINEAR_GUIDE, used_in, MKT_SEMI_FAB]
+  - [PROD_MACH_LINEAR_GUIDE, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_BALL_SCREW, component_of, PROD_MACH_LINEAR_ACTUATOR]
+  - [PROD_MACH_BALL_SCREW, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_MACH_BALL_SCREW, used_in, MKT_EV]
+  - [PROD_MACH_BALL_SCREW, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_BALL_SCREW, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_SPRING, used_in, MKT_ICE_VEHICLE]
+  - [PROD_MACH_SPRING, used_in, MKT_EV]
+  - [PROD_MACH_HYDRAULIC_CYLINDER, component_of, PROD_MACH_HYDRAULIC_SYSTEM]
+  - [PROD_MACH_HYDRAULIC_CYLINDER, component_of, PROD_MACH_EXCAVATOR]
+  - [PROD_MACH_HYDRAULIC_CYLINDER, component_of, PROD_MACH_HYDRAULIC_ROOF_SUPPORT]
+  - [PROD_MACH_HYDRAULIC_PUMP, component_of, PROD_MACH_HYDRAULIC_SYSTEM]
+  - [PROD_MACH_HYDRAULIC_PUMP, component_of, PROD_MACH_EXCAVATOR]
+  - [PROD_MACH_HYDRAULIC_VALVE, component_of, PROD_MACH_HYDRAULIC_SYSTEM]
+  - [PROD_MACH_HYDRAULIC_VALVE, component_of, PROD_MACH_EXCAVATOR]
+  - [PROD_MACH_HYDRAULIC_MOTOR, component_of, PROD_MACH_HYDRAULIC_SYSTEM]
+  - [PROD_MACH_HYDRAULIC_MOTOR, component_of, PROD_MACH_EXCAVATOR]
+  - [PROD_MACH_SEAL, component_of, PROD_MACH_HYDRAULIC_CYLINDER]
+  - [PROD_MACH_SEAL, component_of, PROD_MACH_INDUSTRIAL_PUMP]
+  - [PROD_MACH_HYDRAULIC_SYSTEM, component_of, PROD_MACH_EXCAVATOR]
+  - [PROD_MACH_HYDRAULIC_SYSTEM, component_of, PROD_MACH_LOADER]
+  - [PROD_MACH_HYDRAULIC_SYSTEM, component_of, PROD_MACH_MOBILE_CRANE]
+  - [PROD_MACH_HYDRAULIC_SYSTEM, component_of, PROD_MACH_AERIAL_WORK_PLATFORM]
+  - [PROD_MACH_HYDRAULIC_SYSTEM, component_of, PROD_MACH_TRACTOR]
+  - [PROD_MACH_HYDRAULIC_CYLINDER, uses_material, MAT_STEEL]
+  - [PROD_MACH_HYDRAULIC_PUMP, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_HYDRAULIC_COMPONENT, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_HYDRAULIC_COMPONENT, used_in, MKT_AGRICULTURE]
+  - [PROD_MACH_HYDRAULIC_COMPONENT, used_in, MKT_MINING]
+  - [PROD_MACH_PNEUMATIC_COMPONENT, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_PNEUMATIC_COMPONENT, used_in, MKT_SEMI_FAB]
+  - [PROD_MACH_INDUSTRIAL_PUMP, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_MACH_INDUSTRIAL_PUMP, uses_material, MAT_STEEL]
+  - [PROD_MACH_INDUSTRIAL_PUMP, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_MACH_INDUSTRIAL_PUMP, used_in, MKT_ENVIRONMENTAL]
+  - [PROD_MACH_INDUSTRIAL_PUMP, used_in, MKT_OIL_GAS]
+  - [PROD_MACH_NUCLEAR_PUMP, component_of, PROD_MACH_NUCLEAR_EQUIPMENT]
+  - [PROD_MACH_NUCLEAR_PUMP, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_MACH_NUCLEAR_VALVE, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_MACH_VACUUM_PUMP, used_in, PROD_ELEC_FRONTEND_EQUIPMENT]
+  - [PROD_MACH_VACUUM_PUMP, used_in, MKT_SEMI_FAB]
+  - [PROD_MACH_VACUUM_PUMP, used_in, MKT_SOLAR]
+  - [PROD_MACH_VACUUM_PUMP, component_of, PROD_MACH_VACUUM_COATING_EQUIP]
+  - [PROD_MACH_INDUSTRIAL_VALVE, uses_material, MAT_STEEL]
+  - [PROD_MACH_INDUSTRIAL_VALVE, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_MACH_INDUSTRIAL_VALVE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_MACH_INDUSTRIAL_VALVE, used_in, MKT_OIL_GAS]
+  - [PROD_MACH_INDUSTRIAL_VALVE, used_in, MKT_THERMAL_POWER]
+  - [PROD_MACH_CRYOGENIC_VALVE, component_of, PROD_MACH_LNG_EQUIPMENT]
+  - [PROD_MACH_CONTROL_VALVE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_MACH_BALL_VALVE, used_in, MKT_OIL_GAS]
+  - [PROD_MACH_VALVE_ACTUATOR, component_of, PROD_MACH_INDUSTRIAL_VALVE]
+  - [PROD_MACH_SCREW_COMPRESSOR, component_of, PROD_MACH_AIR_COMPRESSOR]
+  - [PROD_MACH_AIR_COMPRESSOR, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_AIR_COMPRESSOR, used_in, MKT_MINING]
+  - [PROD_MACH_PROCESS_COMPRESSOR, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_MACH_PROCESS_COMPRESSOR, used_in, MKT_OIL_GAS]
+  - [PROD_MACH_PROCESS_COMPRESSOR, component_of, PROD_MACH_AIR_SEPARATION_UNIT]
+  - [PROD_MACH_HYDROGEN_COMPRESSOR, component_of, PROD_MACH_HYDROGEN_REFUELING_EQUIP]
+  - [PROD_MACH_INDUSTRIAL_FAN, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_MACH_INDUSTRIAL_FAN, used_in, MKT_THERMAL_POWER]
+  - [PROD_MACH_INDUSTRIAL_FAN, used_in, MKT_ENVIRONMENTAL]
+  - [PROD_MACH_MAGLEV_BLOWER, used_in, MKT_ENVIRONMENTAL]
+  - [PROD_MACH_ENERGY_RECOVERY_TURBINE, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_MACH_AIR_SEPARATION_UNIT, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_MACH_AIR_SEPARATION_UNIT, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_MACH_AIR_SEPARATION_UNIT, used_in, MKT_SEMI_FAB]
+  - [TECH_CCUS, enables, PROD_MACH_PROCESS_COMPRESSOR]
+  - [PROD_MACH_FORKLIFT, used_in, MKT_LOGISTICS]
+  - [PROD_MACH_FORKLIFT, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_ELECTRIC_FORKLIFT, substitute_for, PROD_MACH_IC_FORKLIFT]
+  - [PROD_MACH_ELECTRIC_FORKLIFT, uses_material, MAT_LITHIUM_CARBONATE]
+  - [PROD_MACH_MOBILE_ROBOT, component_of, PROD_MACH_INTRALOGISTICS_SYSTEM]
+  - [PROD_MACH_CONVEYOR, component_of, PROD_MACH_INTRALOGISTICS_SYSTEM]
+  - [PROD_MACH_INTRALOGISTICS_SYSTEM, used_in, MKT_LOGISTICS]
+  - [PROD_MACH_INTRALOGISTICS_SYSTEM, used_in, MKT_EV]
+  - [PROD_MACH_INTRALOGISTICS_SYSTEM, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_MACH_CONVEYOR, used_in, MKT_MINING]
+  - [PROD_MACH_CONVEYOR, used_in, MKT_LOGISTICS]
+  - [PROD_MACH_OVERHEAD_CRANE, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_MACH_OVERHEAD_CRANE, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_PRESSURE_TRANSMITTER, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_MACH_PRESSURE_TRANSMITTER, used_in, MKT_OIL_GAS]
+  - [PROD_MACH_PRESSURE_TRANSMITTER, used_in, MKT_THERMAL_POWER]
+  - [PROD_MACH_FLOWMETER, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_MACH_FLOWMETER, used_in, MKT_OIL_GAS]
+  - [PROD_MACH_FLOWMETER, used_in, MKT_ENVIRONMENTAL]
+  - [PROD_MACH_PRESSURE_TRANSMITTER, component_of, PROD_MACH_DCS]
+  - [PROD_MACH_SMART_WATER_GAS_METER, used_in, MKT_GOVERNMENT]
+  - [PROD_MACH_SMART_WATER_GAS_METER, used_in, MKT_REAL_ESTATE]
+  - [TECH_IOT, enables, PROD_MACH_SMART_WATER_GAS_METER]
+  - [PROD_MACH_MASS_SPECTROMETER, used_in, MKT_PHARMA_RD]
+  - [PROD_MACH_MASS_SPECTROMETER, used_in, MKT_HEALTHCARE]
+  - [PROD_MACH_MASS_SPECTROMETER, used_in, MKT_SEMI_FAB]
+  - [PROD_MACH_CHROMATOGRAPH, used_in, MKT_PHARMA_RD]
+  - [PROD_MACH_CHROMATOGRAPH, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_MACH_SPECTROMETER, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_MACH_SPECTROMETER, used_in, MKT_ENVIRONMENTAL]
+  - [PROD_MACH_SPECTROMETER, used_in, MKT_PHARMA_RD]
+  - [PROD_ENV_MONITOR_EQUIP, used_in, MKT_ENVIRONMENTAL]
+  - [PROD_ENV_MONITOR_EQUIP, used_in, MKT_GOVERNMENT]
+  - [PROD_MACH_ELECTRONIC_TEST_INSTRUMENT, used_in, MKT_SEMI_FAB]
+  - [PROD_MACH_ELECTRONIC_TEST_INSTRUMENT, used_in, MKT_DEFENSE]
+  - [PROD_MACH_ELECTRONIC_TEST_INSTRUMENT, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_MACH_MATERIAL_TESTING_MACHINE, used_in, MKT_AEROSPACE]
+  - [PROD_MACH_MATERIAL_TESTING_MACHINE, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_MACH_ENV_TEST_EQUIP, used_in, MKT_DEFENSE]
+  - [PROD_MACH_ENV_TEST_EQUIP, used_in, MKT_AEROSPACE]
+  - [PROD_MACH_ENV_TEST_EQUIP, used_in, MKT_EV]
+  - [PROD_MACH_ENV_TEST_SERVICE, used_in, MKT_DEFENSE]
+  - [PROD_MACH_ENV_TEST_SERVICE, used_in, MKT_AEROSPACE]
+  - [PROD_MACH_ENV_TEST_SERVICE, used_in, MKT_EV]
+  - [PROD_MACH_ENV_TEST_EQUIP, upstream_of, PROD_MACH_ENV_TEST_SERVICE]
+  - [PROD_MACH_CMM, used_in, MKT_EV]
+  - [PROD_MACH_CMM, used_in, MKT_AEROSPACE]
+  - [PROD_MACH_INFRARED_THERMAL_IMAGER, used_in, MKT_POWER_GRID]
+  - [PROD_MACH_INFRARED_THERMAL_IMAGER, used_in, MKT_DEFENSE]
+  - [PROD_MACH_INFRARED_THERMAL_IMAGER, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_SURVEYING_INSTRUMENT, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_SURVEYING_INSTRUMENT, used_in, MKT_GOVERNMENT]
+  - [PROD_MACH_GAS_DETECTOR, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_MACH_GAS_DETECTOR, used_in, MKT_MINING]
+  - [PROD_MACH_FASTENER, uses_material, MAT_STEEL]
+  - [PROD_MACH_FASTENER, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_FASTENER, used_in, MKT_WIND]
+  - [PROD_MACH_FASTENER, used_in, MKT_ICE_VEHICLE]
+  - [PROD_MACH_FASTENER, used_in, MKT_EV]
+  - [PROD_MACH_FASTENER, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_CASTING, uses_material, MAT_IRON_ORE]
+  - [PROD_MACH_CASTING, uses_material, MAT_STEEL]
+  - [PROD_MACH_CASTING, uses_material, MAT_ALUMINUM]
+  - [PROD_MACH_CASTING, used_in, MKT_WIND]
+  - [PROD_MACH_CASTING, used_in, MKT_ICE_VEHICLE]
+  - [PROD_MACH_CASTING, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_FORGING, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_FORGING, used_in, MKT_WIND]
+  - [PROD_MACH_FORGING, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_MACH_FORGING, used_in, MKT_OIL_GAS]
+  - [PROD_MACH_RING_FORGING, used_in, MKT_WIND]
+  - [PROD_MACH_RING_FORGING, upstream_of, PROD_MACH_WIND_BEARING]
+  - [PROD_MACH_MOLD, used_in, PROD_MACH_INJECTION_MOLDING_MACH]
+  - [PROD_MACH_MOLD, used_in, PROD_MACH_DIE_CASTING_MACH]
+  - [PROD_MACH_MOLD, used_in, MKT_EV]
+  - [PROD_MACH_MOLD, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_MACH_MOLD, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_POWDER_METALLURGY, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_POWDER_METALLURGY, used_in, MKT_ICE_VEHICLE]
+  - [PROD_MACH_POWDER_METALLURGY, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_MACH_WELDING_EQUIPMENT, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_WELDING_EQUIPMENT, used_in, MKT_SHIPBUILDING]
+  - [PROD_MACH_WELDING_EQUIPMENT, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_WELDING_EQUIPMENT, component_of, PROD_MACH_ROBOT_INTEGRATION]
+  - [PROD_PWR_INDUSTRIAL_BOILER, used_in, MKT_THERMAL_POWER]
+  - [PROD_MACH_PRESSURE_VESSEL, uses_material, MAT_STEEL]
+  - [PROD_MACH_PRESSURE_VESSEL, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_MACH_PRESSURE_VESSEL, uses_material, MAT_TITANIUM]
+  - [PROD_MACH_PRESSURE_VESSEL, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_MACH_PRESSURE_VESSEL, used_in, MKT_OIL_GAS]
+  - [PROD_MACH_HEAT_EXCHANGER, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_MACH_HEAT_EXCHANGER, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_MACH_NUCLEAR_EQUIPMENT, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_MACH_NUCLEAR_VALVE, component_of, PROD_MACH_NUCLEAR_EQUIPMENT]
+  - [PROD_MACH_FORGING, upstream_of, PROD_MACH_NUCLEAR_EQUIPMENT]
+  - [PROD_PWR_GAS_TURBINE, used_in, MKT_OIL_GAS]
+  - [PROD_PWR_GAS_TURBINE, used_in, MKT_SHIPBUILDING]
+  - [PROD_PWR_GAS_TURBINE, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_PWR_GAS_TURBINE, uses_material, MAT_NICKEL]
+  - [PROD_PWR_GAS_TURBINE, uses_material, MAT_COBALT]
+  - [PROD_MACH_INDUSTRIAL_STEAM_TURBINE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_MACH_INDUSTRIAL_STEAM_TURBINE, used_in, MKT_THERMAL_POWER]
+  - [PROD_MACH_METALLURGICAL_EQUIP, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_MACH_DRILLING_RIG, used_in, MKT_OIL_GAS]
+  - [PROD_MACH_FRACTURING_EQUIP, used_in, MKT_OIL_GAS]
+  - [PROD_MACH_WELLHEAD_EQUIP, used_in, MKT_OIL_GAS]
+  - [PROD_MACH_DOWNHOLE_TOOL, used_in, MKT_OIL_GAS]
+  - [PROD_MACH_LNG_EQUIPMENT, used_in, MKT_OIL_GAS]
+  - [PROD_MACH_LNG_EQUIPMENT, used_in, MKT_SHIPBUILDING]
+  - [PROD_MACH_OFFSHORE_EQUIP, used_in, MKT_OIL_GAS]
+  - [PROD_MACH_OFFSHORE_EQUIP, used_in, MKT_WIND]
+  - [PROD_MACH_DRILLING_RIG, component_of, PROD_MACH_OFFSHORE_EQUIP]
+  - [PROD_MACH_FRACTURING_EQUIP, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_HYDRAULIC_ROOF_SUPPORT, used_in, MKT_MINING]
+  - [PROD_MACH_SHEARER, used_in, MKT_MINING]
+  - [PROD_MACH_ROADHEADER, used_in, MKT_MINING]
+  - [PROD_MACH_SCRAPER_CONVEYOR, used_in, MKT_MINING]
+  - [PROD_MACH_MINING_TRUCK, used_in, MKT_MINING]
+  - [PROD_MACH_CRUSHER, used_in, MKT_MINING]
+  - [PROD_MACH_CRUSHER, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_GRINDING_MILL, used_in, MKT_MINING]
+  - [PROD_MACH_HYDRAULIC_ROOF_SUPPORT, uses_material, MAT_STEEL]
+  - [PROD_PWR_ELECTROLYZER, uses_material, MAT_NICKEL]
+  - [PROD_PWR_ELECTROLYZER, used_in, MKT_SOLAR]
+  - [PROD_PWR_ELECTROLYZER, used_in, MKT_WIND]
+  - [PROD_MACH_HYDROGEN_STORAGE_TANK, component_of, PROD_MACH_HYDROGEN_REFUELING_EQUIP]
+  - [PROD_PWR_ELECTROLYZER, upstream_of, PROD_MACH_HYDROGEN_REFUELING_EQUIP]
+  - [PROD_MACH_ELEVATOR_TRACTION_MACHINE, component_of, PROD_MACH_ELEVATOR]
+  - [PROD_MACH_ELEVATOR_TRACTION_MACHINE, uses_material, MAT_RARE_EARTH]
+  - [PROD_MACH_ELEVATOR_TRACTION_MACHINE, uses_material, MAT_STEEL]
+  - [PROD_MACH_ELEVATOR, uses_material, MAT_STEEL]
+  - [PROD_MACH_ELEVATOR, used_in, MKT_REAL_ESTATE]
+  - [PROD_MACH_ELEVATOR, used_in, MKT_RAIL]
+  - [PROD_MACH_FIRE_EQUIPMENT, used_in, MKT_REAL_ESTATE]
+  - [PROD_MACH_FIRE_EQUIPMENT, used_in, MKT_GOVERNMENT]
+  - [PROD_MACH_WATER_SUPPLY_EQUIP, used_in, MKT_REAL_ESTATE]
+  - [PROD_MACH_INDUSTRIAL_PUMP, component_of, PROD_MACH_WATER_SUPPLY_EQUIP]
+  - [PROD_MACH_SPINNING_MACH, used_in, MKT_APPAREL]
+  - [PROD_MACH_SPINNING_MACH, uses_material, MAT_STEEL]
+  - [PROD_MACH_WEAVING_MACH, used_in, MKT_APPAREL]
+  - [PROD_MACH_KNITTING_MACH, used_in, MKT_APPAREL]
+  - [PROD_MACH_CHEMICAL_FIBER_MACH, used_in, MKT_APPAREL]
+  - [PROD_MACH_CHEMICAL_FIBER_MACH, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_MACH_SEWING_MACH, used_in, MKT_APPAREL]
+  - [PROD_MACH_DYEING_MACH, used_in, MKT_APPAREL]
+  - [PROD_MACH_SERVO_MOTOR, component_of, PROD_MACH_SEWING_MACH]
+  - [PROD_MACH_TRACTOR, used_in, MKT_AGRICULTURE]
+  - [PROD_MACH_HARVESTER, used_in, MKT_AGRICULTURE]
+  - [PROD_MACH_PLANTING_MACH, used_in, MKT_AGRICULTURE]
+  - [PROD_MACH_PLANT_PROTECTION_DRONE, used_in, MKT_AGRICULTURE]
+  - [PROD_MACH_PLANT_PROTECTION_DRONE, used_in, MKT_LOW_ALTITUDE]
+  - [PROD_MACH_GARDEN_MACH, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_MACH_OFFROAD_DIESEL_ENGINE, component_of, PROD_MACH_TRACTOR]
+  - [PROD_MACH_OFFROAD_DIESEL_ENGINE, component_of, PROD_MACH_HARVESTER]
+  - [PROD_MACH_PACKAGING_MACH, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_MACH_PACKAGING_MACH, used_in, MKT_PACKAGING]
+  - [PROD_MACH_PRINTING_MACH, used_in, MKT_PACKAGING]
+  - [PROD_MACH_CORRUGATED_MACH, used_in, MKT_PACKAGING]
+  - [PROD_MACH_PAPER_MACH, used_in, MKT_PACKAGING]
+  - [PROD_MACH_FOOD_MACH, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_PHAR_PHARMA_EQUIPMENT, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_PHARMA_EQUIPMENT, used_in, MKT_PHARMA_RD]
+  - [PROD_PHAR_BIOREACTOR, used_in, MKT_PHARMA_RD]
+  - [TECH_BIOTECH, enables, PROD_PHAR_BIOREACTOR]
+  - [PROD_MACH_INJECTION_MOLDING_MACH, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_MACH_INJECTION_MOLDING_MACH, used_in, MKT_EV]
+  - [PROD_MACH_INJECTION_MOLDING_MACH, used_in, MKT_PACKAGING]
+  - [PROD_MACH_DIE_CASTING_MACH, used_in, MKT_EV]
+  - [PROD_MACH_TIRE_EQUIP, used_in, MKT_ICE_VEHICLE]
+  - [PROD_MACH_TIRE_EQUIP, used_in, MKT_EV]
+  - [PROD_MACH_ADDITIVE_MFG_EQUIP, used_in, MKT_AEROSPACE]
+  - [PROD_MACH_ADDITIVE_MFG_EQUIP, used_in, MKT_DEFENSE]
+  - [PROD_MACH_ADDITIVE_MFG_EQUIP, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_ADDITIVE_MFG_EQUIP, used_in, MKT_HEALTHCARE]
+  - [TECH_ADDITIVE_MANUFACTURING, enables, PROD_MACH_ADDITIVE_MFG_EQUIP]
+  - [PROD_MACH_FIBER_LASER, component_of, PROD_MACH_ADDITIVE_MFG_EQUIP]
+  - [PROD_MACH_ADDITIVE_MFG_EQUIP, uses_material, MAT_TITANIUM]
+  - [PROD_MACH_VACUUM_COATING_EQUIP, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_VACUUM_COATING_EQUIP, used_in, MKT_SOLAR]
+  - [PROD_MACH_PCB_EQUIP, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_MACH_PCB_EQUIP, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ELEC_LITHOGRAPHY, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_COATER_DEVELOPER, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_ETCH, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_DEPOSITION, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_CLEANING_EQUIPMENT, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_CMP_EQUIPMENT, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_ION_IMPLANT, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_THERMAL_PROCESS, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_METROLOGY, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_EPI_EQUIPMENT, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_IC_TESTER, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_PROBER, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_HANDLER, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_BACKEND_EQUIPMENT, used_in, MKT_SEMI_FAB]
+  - [TECH_ADVANCED_PACKAGING, enables, PROD_MACH_BONDER]
+  - [TECH_ADVANCED_PACKAGING, enables, PROD_ELEC_GRINDER]
+  - [TECH_ADVANCED_PACKAGING, enables, PROD_ELEC_DICING]
+  - [TECH_SIC_GAN, enables, PROD_ELEC_CRYSTAL_FURNACE]
+  - [TECH_SIC_GAN, enables, PROD_ELEC_EPI_EQUIPMENT]
+  - [PROD_MACH_WAFER_HANDLING, component_of, PROD_ELEC_LITHOGRAPHY]
+  - [PROD_MACH_WAFER_HANDLING, component_of, PROD_ELEC_ETCH]
+  - [PROD_MACH_WAFER_HANDLING, component_of, PROD_ELEC_DEPOSITION]
+  - [PROD_MACH_WAFER_HANDLING, component_of, PROD_ELEC_CLEANING_EQUIPMENT]
+  - [PROD_MACH_WAFER_HANDLING, component_of, PROD_ELEC_CMP_EQUIPMENT]
+  - [PROD_MACH_WAFER_HANDLING, component_of, PROD_ELEC_METROLOGY]
+  - [PROD_ELEC_MFC, component_of, PROD_ELEC_ETCH]
+  - [PROD_ELEC_MFC, component_of, PROD_ELEC_DEPOSITION]
+  - [PROD_ELEC_ESC, component_of, PROD_ELEC_ION_IMPLANT]
+  - [PROD_MACH_VACUUM_PUMP, component_of, PROD_ELEC_ETCH]
+  - [PROD_MACH_VACUUM_PUMP, component_of, PROD_ELEC_DEPOSITION]
+  - [PROD_MACH_VACUUM_PUMP, component_of, PROD_ELEC_ION_IMPLANT]
+  - [PROD_MACH_LINEAR_GUIDE, component_of, PROD_ELEC_LITHOGRAPHY]
+  - [PROD_ELEC_EQUIP_PARTS, uses_material, MAT_QUARTZ]
+  - [PROD_ELEC_EQUIP_PARTS, uses_material, MAT_ALUMINUM]
+  - [PROD_ELEC_EQUIP_PARTS, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_ELEC_CRYSTAL_FURNACE, used_in, MKT_EV]
+  - [PROD_ELEC_CRYSTAL_FURNACE, used_in, MKT_SEMI_FAB]
+  - [MAT_INDUSTRIAL_GASES, upstream_of, PROD_ELEC_DEPOSITION]
+  - [PROD_MACH_LIB_FRONT_EQUIP, upstream_of, PROD_MACH_LIB_MID_EQUIP]
+  - [PROD_MACH_LIB_MID_EQUIP, upstream_of, PROD_MACH_LIB_BACK_EQUIP]
+  - [PROD_MACH_LIB_BACK_EQUIP, upstream_of, PROD_PWR_LI_PACK_LINE]
+  - [PROD_MACH_LIB_FRONT_EQUIP, used_in, MKT_EV]
+  - [PROD_MACH_LIB_FRONT_EQUIP, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_MACH_LIB_MID_EQUIP, used_in, MKT_EV]
+  - [PROD_MACH_LIB_MID_EQUIP, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_MACH_LIB_BACK_EQUIP, used_in, MKT_EV]
+  - [PROD_MACH_LIB_BACK_EQUIP, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_PWR_LI_PACK_LINE, used_in, MKT_EV]
+  - [PROD_PWR_LI_PACK_LINE, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_MACH_SOLID_STATE_BATTERY_EQUIP, used_in, MKT_EV]
+  - [TECH_SOLID_STATE_BATTERY, enables, PROD_MACH_SOLID_STATE_BATTERY_EQUIP]
+  - [TECH_SODIUM_ION, enables, PROD_MACH_LIB_FRONT_EQUIP]
+  - [PROD_PWR_CATHODE_KILN, used_in, MKT_EV]
+  - [PROD_PWR_CATHODE_KILN, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_MACH_LASER_WELDING, component_of, PROD_MACH_LIB_MID_EQUIP]
+  - [PROD_MACH_LASER_WELDING, component_of, PROD_PWR_LI_PACK_LINE]
+  - [PROD_MACH_LASER_MICROMACHINING, component_of, PROD_MACH_LIB_MID_EQUIP]
+  - [PROD_MACH_MACHINE_VISION, component_of, PROD_MACH_LIB_MID_EQUIP]
+  - [PROD_PWR_CRYSTAL_PULLER, upstream_of, PROD_PWR_WIRE_SAW]
+  - [PROD_PWR_WIRE_SAW, upstream_of, PROD_MACH_CELL_EQUIP]
+  - [PROD_MACH_CELL_EQUIP, upstream_of, PROD_MACH_MODULE_EQUIP]
+  - [PROD_PWR_CRYSTAL_PULLER, uses_material, MAT_POLYSILICON]
+  - [PROD_PWR_CRYSTAL_PULLER, uses_material, MAT_QUARTZ]
+  - [PROD_PWR_CRYSTAL_PULLER, used_in, MKT_SOLAR]
+  - [PROD_PWR_CRYSTAL_PULLER, used_in, MKT_SEMI_FAB]
+  - [PROD_PWR_WIRE_SAW, used_in, MKT_SOLAR]
+  - [PROD_MACH_CELL_EQUIP, used_in, MKT_SOLAR]
+  - [PROD_MACH_MODULE_EQUIP, used_in, MKT_SOLAR]
+  - [PROD_PWR_SCREEN_PRINTER, uses_material, MAT_SILVER]
+  - [TECH_TOPCON, enables, PROD_MACH_TOPCON_EQUIP]
+  - [TECH_HJT, enables, PROD_MACH_HJT_EQUIP]
+  - [TECH_BC_CELL, enables, PROD_MACH_BC_EQUIP]
+  - [TECH_BC_CELL, enables, PROD_MACH_LASER_MICROMACHINING]
+  - [PROD_MACH_HJT_EQUIP, substitute_for, PROD_MACH_TOPCON_EQUIP]
+  - [PROD_MACH_BC_EQUIP, substitute_for, PROD_MACH_TOPCON_EQUIP]
+  - [PROD_MACH_DISPLAY_PANEL_EQUIP, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_DISPLAY_PANEL_EQUIP, used_in, MKT_SMARTPHONE]
+  - [PROD_MACH_OLED_EVAPORATION, used_in, MKT_SMARTPHONE]
+  - [PROD_MACH_OLED_EVAPORATION, used_in, MKT_WEARABLES_XR]
+  - [PROD_MACH_OLED_EVAPORATION, used_in, MKT_PC]
+  - [PROD_MACH_DISPLAY_INSPECTION, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_DISPLAY_INSPECTION, used_in, MKT_SMARTPHONE]
+  - [PROD_MACH_MACHINE_VISION, component_of, PROD_MACH_DISPLAY_INSPECTION]
+  - [PROD_MACH_SERVO_SYSTEM, component_of, PROD_MACH_INDUSTRIAL_ROBOT]
+  - [PROD_MACH_ROBOT_CONTROLLER, component_of, PROD_MACH_INDUSTRIAL_ROBOT]
+  - [PROD_MACH_ROBOT_CONTROLLER, component_of, PROD_MACH_HUMANOID_ROBOT]
+  - [PROD_MACH_ENCODER, component_of, PROD_MACH_SERVO_MOTOR]
+  - [PROD_MACH_ENCODER, component_of, PROD_MACH_ROTARY_ACTUATOR]
+  - [PROD_MACH_INDUSTRIAL_ROBOT, used_in, MKT_ROBOTICS]
+  - [PROD_MACH_INDUSTRIAL_ROBOT, used_in, MKT_EV]
+  - [PROD_MACH_INDUSTRIAL_ROBOT, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_INDUSTRIAL_ROBOT, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_INDUSTRIAL_ROBOT, upstream_of, PROD_MACH_ROBOT_INTEGRATION]
+  - [PROD_MACH_ROBOT_INTEGRATION, used_in, MKT_EV]
+  - [PROD_MACH_ROBOT_INTEGRATION, used_in, MKT_ICE_VEHICLE]
+  - [PROD_MACH_ROBOT_INTEGRATION, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_COLLABORATIVE_ROBOT, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_COLLABORATIVE_ROBOT, used_in, MKT_HEALTHCARE]
+  - [PROD_MACH_SERVICE_ROBOT, used_in, MKT_ROBOTICS]
+  - [PROD_MACH_SERVICE_ROBOT, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_MACH_HUMANOID_ROBOT, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_MACH_QUADRUPED_ROBOT, used_in, MKT_ROBOTICS]
+  - [PROD_MACH_QUADRUPED_ROBOT, used_in, MKT_DEFENSE]
+  - [PROD_MACH_MOBILE_ROBOT, used_in, MKT_LOGISTICS]
+  - [PROD_MACH_MOBILE_ROBOT, used_in, MKT_ROBOTICS]
+  - [TECH_AI_LARGE_MODEL, enables, PROD_MACH_HUMANOID_ROBOT]
+  - [TECH_AI_LARGE_MODEL, enables, PROD_MACH_SERVICE_ROBOT]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_MACH_MOBILE_ROBOT]
+  - [PROD_PWR_CORELESS_MOTOR, component_of, PROD_MACH_DEXTEROUS_HAND]
+  - [PROD_MACH_ROTARY_ACTUATOR, component_of, PROD_MACH_HUMANOID_ROBOT]
+  - [PROD_MACH_LINEAR_ACTUATOR, component_of, PROD_MACH_HUMANOID_ROBOT]
+  - [PROD_MACH_DEXTEROUS_HAND, component_of, PROD_MACH_HUMANOID_ROBOT]
+  - [PROD_MACH_SIX_AXIS_FORCE_SENSOR, component_of, PROD_MACH_HUMANOID_ROBOT]
+  - [PROD_MACH_SIX_AXIS_FORCE_SENSOR, component_of, PROD_MACH_COLLABORATIVE_ROBOT]
+  - [PROD_MACH_TACTILE_SENSOR, component_of, PROD_MACH_DEXTEROUS_HAND]
+  - [PROD_PWR_FRAMELESS_TORQUE_MOTOR, uses_material, MAT_COPPER]
+  - [PROD_PWR_FRAMELESS_TORQUE_MOTOR, uses_material, MAT_ELECTRICAL_STEEL]
+  - [PROD_PWR_CORELESS_MOTOR, uses_material, MAT_RARE_EARTH]
+  - [PROD_PWR_CORELESS_MOTOR, uses_material, MAT_COPPER]
+  - [PROD_MACH_PLANETARY_ROLLER_SCREW, substitute_for, PROD_MACH_BALL_SCREW]
+  - [PROD_MACH_PLANETARY_ROLLER_SCREW, used_in, MKT_AEROSPACE]
+  - [PROD_MACH_PLANETARY_ROLLER_SCREW, used_in, MKT_DEFENSE]
+  - [PROD_PWR_FRAMELESS_TORQUE_MOTOR, used_in, MKT_ROBOTICS]
+  - [PROD_PWR_CORELESS_MOTOR, used_in, MKT_HEALTHCARE]
+  - [PROD_MACH_SIX_AXIS_FORCE_SENSOR, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_MACH_SIX_AXIS_FORCE_SENSOR, used_in, MKT_ROBOTICS]
+  - [PROD_MACH_TACTILE_SENSOR, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_MACH_SERVO_MOTOR, component_of, PROD_MACH_SERVO_SYSTEM]
+  - [PROD_MACH_SERVO_DRIVE, component_of, PROD_MACH_SERVO_SYSTEM]
+  - [PROD_MACH_SERVO_MOTOR, uses_material, MAT_RARE_EARTH]
+  - [PROD_MACH_SERVO_MOTOR, uses_material, MAT_COPPER]
+  - [PROD_MACH_SERVO_MOTOR, uses_material, MAT_ELECTRICAL_STEEL]
+  - [PROD_MACH_SERVO_SYSTEM, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_SERVO_SYSTEM, used_in, MKT_ROBOTICS]
+  - [PROD_MACH_SERVO_SYSTEM, used_in, MKT_EV]
+  - [PROD_MACH_SERVO_SYSTEM, used_in, MKT_SOLAR]
+  - [PROD_MACH_PLC, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_MOTION_CONTROLLER, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_MOTION_CONTROLLER, used_in, MKT_SEMI_FAB]
+  - [PROD_MACH_MOTION_CONTROLLER, component_of, PROD_MACH_LIB_MID_EQUIP]
+  - [PROD_MACH_MOTION_CONTROLLER, component_of, PROD_MACH_3C_ASSEMBLY_EQUIP]
+  - [PROD_MACH_FREQUENCY_INVERTER, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_FREQUENCY_INVERTER, used_in, MKT_REAL_ESTATE]
+  - [PROD_MACH_FREQUENCY_INVERTER, used_in, MKT_MINING]
+  - [PROD_MACH_DCS, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_MACH_DCS, used_in, MKT_THERMAL_POWER]
+  - [PROD_MACH_DCS, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_MACH_HMI, component_of, PROD_MACH_PLC]
+  - [PROD_MACH_INDUSTRIAL_SENSOR, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_INDUSTRIAL_SENSOR, used_in, MKT_ROBOTICS]
+  - [PROD_MACH_INDUSTRIAL_CAMERA, component_of, PROD_MACH_MACHINE_VISION]
+  - [PROD_MACH_MACHINE_VISION, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_MACHINE_VISION, used_in, MKT_EV]
+  - [PROD_MACH_MACHINE_VISION, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_MACHINE_VISION, used_in, MKT_SEMI_FAB]
+  - [PROD_MACH_MACHINE_VISION, component_of, PROD_MACH_3C_TEST_EQUIP]
+  - [PROD_MACH_FIBER_LASER, component_of, PROD_MACH_LASER_CUTTING]
+  - [PROD_MACH_FIBER_LASER, component_of, PROD_MACH_LASER_WELDING]
+  - [PROD_MACH_FIBER_LASER, component_of, PROD_MACH_LASER_MARKING]
+  - [PROD_MACH_ULTRAFAST_LASER, component_of, PROD_MACH_LASER_MICROMACHINING]
+  - [PROD_MACH_LASER_CUTTING_HEAD, component_of, PROD_MACH_LASER_CUTTING]
+  - [PROD_MACH_LASER_CONTROL_SYSTEM, component_of, PROD_MACH_LASER_CUTTING]
+  - [PROD_MACH_LASER_CUTTING, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_LASER_CUTTING, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_LASER_CUTTING, used_in, MKT_EV]
+  - [PROD_MACH_LASER_WELDING, used_in, MKT_EV]
+  - [PROD_MACH_LASER_WELDING, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_MACH_LASER_MARKING, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_LASER_MICROMACHINING, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_LASER_MICROMACHINING, used_in, MKT_SOLAR]
+  - [PROD_MACH_LASER_MICROMACHINING, used_in, MKT_SEMI_FAB]
+  - [PROD_MACH_FIBER_LASER, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_ULTRAFAST_LASER, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_ULTRAFAST_LASER, used_in, MKT_SOLAR]
+  - [PROD_MACH_LASER_CUTTING, substitute_for, PROD_MACH_PRESS_MACHINE]
+  - [PROD_MACH_AUTOMATION_LINE, used_in, MKT_EV]
+  - [PROD_MACH_AUTOMATION_LINE, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_MACH_AUTOMATION_LINE, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_AUTO_BODY_LINE, used_in, MKT_EV]
+  - [PROD_MACH_AUTO_BODY_LINE, used_in, MKT_ICE_VEHICLE]
+  - [PROD_MACH_INDUSTRIAL_ROBOT, component_of, PROD_MACH_AUTO_BODY_LINE]
+  - [PROD_MACH_3C_TEST_EQUIP, used_in, MKT_SMARTPHONE]
+  - [PROD_MACH_3C_TEST_EQUIP, used_in, MKT_WEARABLES_XR]
+  - [PROD_MACH_3C_TEST_EQUIP, used_in, MKT_PC]
+  - [PROD_MACH_3C_ASSEMBLY_EQUIP, used_in, MKT_SMARTPHONE]
+  - [PROD_MACH_3C_ASSEMBLY_EQUIP, used_in, MKT_WEARABLES_XR]
+  - [PROD_MACH_3C_ASSEMBLY_EQUIP, used_in, MKT_PC]
+  - [PROD_MACH_SMT_EQUIP, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_SMT_EQUIP, used_in, MKT_EV]
+  - [PROD_MACH_SMT_EQUIP, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_MACH_DISPENSING_EQUIP, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_DISPENSING_EQUIP, used_in, MKT_SEMI_FAB]
+  - [PROD_MACH_SCARA_ROBOT, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_MACH_RAIL_TRACTION, component_of, PROD_MACH_EMU]
+  - [PROD_MACH_RAIL_TRACTION, component_of, PROD_MACH_LOCOMOTIVE]
+  - [PROD_MACH_RAIL_TRACTION, component_of, PROD_MACH_METRO_VEHICLE]
+  - [PROD_MACH_RAIL_BRAKE, component_of, PROD_MACH_EMU]
+  - [PROD_MACH_RAIL_BRAKE, component_of, PROD_MACH_LOCOMOTIVE]
+  - [PROD_MACH_RAIL_BRAKE, component_of, PROD_MACH_METRO_VEHICLE]
+  - [PROD_MACH_RAIL_BRAKE, component_of, PROD_MACH_FREIGHT_WAGON]
+  - [PROD_MACH_BOGIE, component_of, PROD_MACH_EMU]
+  - [PROD_MACH_BOGIE, component_of, PROD_MACH_METRO_VEHICLE]
+  - [PROD_MACH_BOGIE, component_of, PROD_MACH_FREIGHT_WAGON]
+  - [PROD_MACH_WHEELSET, component_of, PROD_MACH_BOGIE]
+  - [PROD_MACH_WHEELSET, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_ROLLING_BEARING, component_of, PROD_MACH_BOGIE]
+  - [PROD_MACH_EMU, uses_material, MAT_ALUMINUM]
+  - [PROD_MACH_EMU, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_MACH_METRO_VEHICLE, uses_material, MAT_ALUMINUM]
+  - [PROD_MACH_METRO_VEHICLE, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_MACH_FREIGHT_WAGON, uses_material, MAT_STEEL]
+  - [PROD_MACH_EMU, used_in, MKT_RAIL]
+  - [PROD_MACH_LOCOMOTIVE, used_in, MKT_RAIL]
+  - [PROD_MACH_LOCOMOTIVE, used_in, MKT_MINING]
+  - [PROD_MACH_METRO_VEHICLE, used_in, MKT_RAIL]
+  - [PROD_MACH_FREIGHT_WAGON, used_in, MKT_RAIL]
+  - [PROD_MACH_FREIGHT_WAGON, used_in, MKT_LOGISTICS]
+  - [PROD_MACH_TRAIN_CONTROL, used_in, MKT_RAIL]
+  - [PROD_MACH_TRACK_MAINT_MACH, used_in, MKT_RAIL]
+  - [PROD_MACH_RAIL_FASTENING, used_in, MKT_RAIL]
+  - [PROD_MACH_RAIL_MRO, used_in, MKT_RAIL]
+  - [PROD_MACH_EMU, upstream_of, PROD_MACH_RAIL_MRO]
+  - [PROD_MACH_EXCAVATOR, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_EXCAVATOR, used_in, MKT_MINING]
+  - [PROD_MACH_EXCAVATOR, used_in, MKT_REAL_ESTATE]
+  - [PROD_MACH_LOADER, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_LOADER, used_in, MKT_MINING]
+  - [PROD_MACH_MOBILE_CRANE, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_MOBILE_CRANE, used_in, MKT_WIND]
+  - [PROD_MACH_TOWER_CRANE, used_in, MKT_REAL_ESTATE]
+  - [PROD_MACH_TOWER_CRANE, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_CONCRETE_MACH, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_CONCRETE_MACH, used_in, MKT_REAL_ESTATE]
+  - [PROD_MACH_AERIAL_WORK_PLATFORM, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_AERIAL_WORK_PLATFORM, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_AERIAL_WORK_PLATFORM, upstream_of, PROD_MACH_AWP_LEASING]
+  - [PROD_MACH_AWP_LEASING, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_ROAD_MACH, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_PILING_MACH, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_TBM, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_TBM, used_in, MKT_RAIL]
+  - [PROD_MACH_PORT_MACHINERY, used_in, MKT_LOGISTICS]
+  - [PROD_MACH_EXCAVATOR, upstream_of, PROD_MACH_CM_AFTERMARKET]
+  - [PROD_MACH_CM_AFTERMARKET, used_in, MKT_CONSTRUCTION]
+  - [PROD_MACH_EXCAVATOR, uses_material, MAT_STEEL]
+  - [PROD_MACH_MOBILE_CRANE, uses_material, MAT_STEEL]
+  - [PROD_MACH_MOBILE_CRANE, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_OFFROAD_DIESEL_ENGINE, component_of, PROD_MACH_EXCAVATOR]
+  - [PROD_MACH_OFFROAD_DIESEL_ENGINE, component_of, PROD_MACH_LOADER]
+  - [PROD_MACH_OFFROAD_DIESEL_ENGINE, component_of, PROD_MACH_MINING_TRUCK]
+  - [PROD_MACH_UNDERCARRIAGE, component_of, PROD_MACH_EXCAVATOR]
+  - [PROD_MACH_CM_STRUCTURAL_PART, component_of, PROD_MACH_EXCAVATOR]
+  - [PROD_MACH_CM_STRUCTURAL_PART, component_of, PROD_MACH_LOADER]
+  - [PROD_MACH_CM_STRUCTURAL_PART, component_of, PROD_MACH_MOBILE_CRANE]
+  - [PROD_MACH_CM_STRUCTURAL_PART, uses_material, MAT_STEEL]
+  - [PROD_MACH_CM_DRIVE_AXLE, component_of, PROD_MACH_LOADER]
+  - [PROD_MACH_CM_DRIVE_AXLE, component_of, PROD_MACH_MINING_TRUCK]
+  - [PROD_MACH_SLEWING_BEARING, component_of, PROD_MACH_EXCAVATOR]
+  - [PROD_MACH_SLEWING_BEARING, component_of, PROD_MACH_TOWER_CRANE]
+  - [PROD_MACH_GEARBOX, component_of, PROD_MACH_LOADER]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_MACH_LIQUID_COOLING_CDU, used_in, PROD_COMP_RACK_SCALE_AI]
+  - [PROD_MACH_CELL_EQUIP, used_in, PROD_PWR_SOLAR_CELL]
+  - [PROD_MACH_MODULE_EQUIP, used_in, PROD_PWR_SOLAR_MODULE]
+  - [PROD_MACH_LIB_FRONT_EQUIP, used_in, PROD_PWR_LI_CELL]
+  - [PROD_MACH_LIB_MID_EQUIP, used_in, PROD_PWR_LI_CELL]
+  - [PROD_MACH_LIB_BACK_EQUIP, used_in, PROD_PWR_LI_CELL]
+  - [PROD_MACH_SOLID_STATE_BATTERY_EQUIP, used_in, PROD_PWR_LI_CELL]
+  - [PROD_MACH_PCB_EQUIP, used_in, PROD_ELEC_PCB]
+  - [PROD_MACH_OLED_EVAPORATION, used_in, PROD_ELEC_AMOLED_PANEL]
+  - [PROD_MACH_DISPLAY_INSPECTION, used_in, PROD_ELEC_DISPLAY_PANEL]
+  - [PROD_MACH_DIE_CASTING_MACH, used_in, PROD_AUTO_GIGA_CASTING]
+  - [PROD_MACH_WIND_BEARING, component_of, PROD_PWR_WIND_TURBINE]
+  - [PROD_MACH_RING_FORGING, upstream_of, PROD_PWR_WIND_FLANGE]
+  - [PROD_MACH_OFFSHORE_EQUIP, used_in, PROD_PETRO_OFFSHORE_EPC]
+  - [PROD_MACH_HARMONIC_REDUCER, component_of, PROD_PHAR_SURGICAL_ROBOT]
+  - [PROD_MACH_SERVO_MOTOR, component_of, PROD_PHAR_SURGICAL_ROBOT]
+  - [PROD_MACH_LAB_GROWN_DIAMOND, upstream_of, PROD_TEX_LAB_DIAMOND]
+sw_l3_map:
+  "640101": [SEG_MACH_MACHINE_TOOL]
+  "640103": [SEG_MACH_ABRASIVE]
+  "640105": [SEG_MACH_REFRIG_HVAC]
+  "640106": [SEG_MACH_OTHER_GENERAL, SEG_MACH_TRANSMISSION, SEG_MACH_FLUID_POWER, SEG_MACH_PUMP_VALVE, SEG_MACH_COMPRESSOR, SEG_MACH_MATERIAL_HANDLING]
+  "640107": [SEG_MACH_INSTRUMENT]
+  "640108": [SEG_MACH_METAL_PRODUCTS]
+  "640203": [SEG_MACH_ENERGY_HEAVY, SEG_MACH_OIL_SERVICE_EQUIP, SEG_MACH_MINING_MACH, SEG_MACH_HYDROGEN_EQUIP]
+  "640204": [SEG_MACH_BUILDING_EQUIP]
+  "640206": [SEG_MACH_TEXTILE_MACH]
+  "640207": [SEG_MACH_AGRI_MACH]
+  "640208": [SEG_MACH_PRINT_PACK_MACH]
+  "640209": [SEG_MACH_OTHER_SPECIAL, SEG_ELEC_SEMI_EQUIPMENT, SEG_MACH_LIB_EQUIP, SEG_MACH_PV_EQUIP, SEG_MACH_DISPLAY_EQUIP, SEG_MACH_FOOD_PHARMA_MACH]
+  "640501": [SEG_MACH_RAIL_EQUIP]
+  "640601": [SEG_MACH_CM_WHOLE]
+  "640602": [SEG_MACH_CM_PARTS, SEG_MACH_FLUID_POWER]
+  "640701": [SEG_MACH_ROBOT, SEG_MACH_HUMANOID_PARTS]
+  "640702": [SEG_MACH_INDUSTRIAL_CONTROL]
+  "640703": [SEG_MACH_LASER_EQUIP]
+  "640704": [SEG_MACH_OTHER_AUTOMATION, SEG_MACH_3C_AUTOMATION]

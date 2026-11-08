@@ -1,0 +1,122 @@
+openapi: 3.0.3
+info:
+  title: quant_cn industry-chain API
+  version: 0.1.0
+  description: |
+    Read-only API over the industry-chain tables (plan 15, D-116). Every number is produced by the
+    Python pipeline; this API only filters, joins and serves. Demo store: the chain_view builder JSON.
+servers:
+  - url: http://localhost:8787
+paths:
+  /api/bootstrap:
+    get:
+      summary: Taxonomy and reference data the front end needs once
+      responses:
+        "200":
+          description: nodes, edges, sectors, KPI config, archetypes, cycle clocks, broker statistics, quick list
+          content: { application/json: { schema: { $ref: "#/components/schemas/Bootstrap" } } }
+  /api/search:
+    get:
+      summary: Companies (name or code) and taxonomy nodes (name, English name, alias)
+      parameters:
+        - { name: q, in: query, required: true, schema: { type: string, minLength: 1 } }
+        - { name: limit, in: query, schema: { type: integer, default: 30, maximum: 100 } }
+      responses:
+        "200": { description: hits, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/SearchHit" } } } } }
+        "400": { $ref: "#/components/responses/Error" }
+  /api/companies/{code}:
+    get:
+      summary: One company (light record and detail) plus the names of every company it links to
+      parameters: [ { name: code, in: path, required: true, schema: { type: string, example: 300750.SZ } } ]
+      responses:
+        "200": { description: company, content: { application/json: { schema: { $ref: "#/components/schemas/CompanyResponse" } } } }
+        "404": { $ref: "#/components/responses/Error" }
+  /api/nodes/{id}/makers:
+    get:
+      summary: Companies whose revenue lines map to the node
+      parameters: [ { name: id, in: path, required: true, schema: { type: string } } ]
+      responses:
+        "200": { description: makers, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Maker" } } } } }
+  /api/sectors/{l1}/companies:
+    get:
+      summary: Companies of a Shenwan L1 sector, most connected first
+      parameters: [ { name: l1, in: path, required: true, schema: { type: string, example: "270000" } } ]
+      responses:
+        "200": { description: companies, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/CompanyBrief" } } } } }
+  /api/sectors/{l1}/network:
+    get:
+      summary: Company network of a sector (90 most connected members plus 70 most connected outsiders)
+      parameters:
+        - { name: l1, in: path, required: true, schema: { type: string } }
+        - { name: outside, in: query, schema: { type: boolean, default: true } }
+      responses:
+        "200": { description: network, content: { application/json: { schema: { $ref: "#/components/schemas/Network" } } } }
+  /api/views/{scope}/{id}:
+    get:
+      summary: Synthesized broker view of a product or Shenwan L3 industry
+      parameters:
+        - { name: scope, in: path, required: true, schema: { type: string, enum: [product, industry] } }
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        "200": { description: view, content: { application/json: { schema: { type: object } } } }
+        "404": { $ref: "#/components/responses/Error" }
+components:
+  responses:
+    Error:
+      description: error
+      content: { application/json: { schema: { type: object, properties: { error: { type: string } }, required: [error] } } }
+  schemas:
+    Bootstrap:
+      type: object
+      required: [nodes, edges, sectors, quick]
+      properties:
+        nodes: { type: array, items: { type: object } }
+        edges: { type: array, items: { type: array, items: { type: string } } }
+        sectors: { type: object, additionalProperties: { type: string } }
+        kpis: { type: object }
+        archetypes: { type: object }
+        clock_l3: { type: object }
+        clock_prod: { type: object }
+        broker_prod: { type: object }
+        broker_ind: { type: object }
+        quick: { type: array, items: { $ref: "#/components/schemas/CompanyBrief" } }
+        n_companies: { type: integer }
+    SearchHit:
+      type: object
+      required: [kind, id, label, sub]
+      properties:
+        kind: { type: string, enum: [company, node] }
+        id: { type: string }
+        label: { type: string }
+        sub: { type: string }
+    CompanyBrief:
+      type: object
+      required: [code, name]
+      properties:
+        code: { type: string }
+        name: { type: string }
+        l1: { type: string }
+        l3: { type: string, nullable: true }
+        n_links: { type: integer }
+        first_pid: { type: string, nullable: true }
+    CompanyResponse:
+      type: object
+      required: [company, related]
+      properties:
+        company: { type: object, description: light record merged with its detail (prototype shard) }
+        related: { type: object, additionalProperties: { $ref: "#/components/schemas/CompanyBrief" } }
+    Maker:
+      type: object
+      required: [code, name, item, pct]
+      properties:
+        code: { type: string }
+        name: { type: string }
+        item: { type: string }
+        pct: { type: number }
+        how: { type: string }
+    Network:
+      type: object
+      required: [nodes, edges]
+      properties:
+        nodes: { type: array, items: { type: object, properties: { code: { type: string }, name: { type: string }, in_sector: { type: boolean } } } }
+        edges: { type: array, items: { type: object, properties: { from: { type: string }, to: { type: string }, kind: { type: string }, label: { type: string } } } }

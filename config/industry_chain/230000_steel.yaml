@@ -1,0 +1,278 @@
+# 钢铁 (SW 230000) product taxonomy — plan 12 phase 1, D-097. All edges are priors (source: prior).
+# Generic steel/special steel/electrical steel/stainless/iron ore/coke are _common materials; here are the
+# process stages and product forms mills report. Superalloys live in 240000_nonferrous.yaml.
+
+sector: {sw_l1: "230000", name: 钢铁, name_en: Steel}
+
+nodes:
+  # ---------------- segments ----------------
+  - {id: SEG_STL_RAW_MATERIALS, type: segment, name: 冶钢原料, name_en: Steelmaking Raw Materials}
+  - {id: SEG_STL_IRON_ORE, type: segment, name: 铁矿石采选, name_en: Iron Ore Mining, parent: SEG_STL_RAW_MATERIALS}
+  - {id: SEG_STL_AUXILIARY, type: segment, name: 冶钢辅料, name_en: Steelmaking Auxiliaries, parent: SEG_STL_RAW_MATERIALS, aliases: [铁合金与炭素]}
+  - {id: SEG_STL_SMELTING, type: segment, name: 炼铁炼钢, name_en: Ironmaking and Steelmaking}
+  - {id: SEG_STL_LONG, type: segment, name: 普钢长材, name_en: Long Products}
+  - {id: SEG_STL_FLAT, type: segment, name: 普钢板材, name_en: Flat Products}
+  - {id: SEG_STL_ELECTRICAL, type: segment, name: 电工钢板, name_en: Electrical Steel Sheet, parent: SEG_STL_FLAT}
+  - {id: SEG_STL_PIPE, type: segment, name: 钢铁管材, name_en: Steel Pipes and Tubes}
+  - {id: SEG_STL_SPECIAL, type: segment, name: 特钢, name_en: Special Steel Products, aliases: [特殊钢冶炼]}
+  - {id: SEG_STL_STAINLESS, type: segment, name: 不锈钢冶炼加工, name_en: Stainless Steel Production, parent: SEG_STL_SPECIAL}
+
+  # ---------------- raw materials ----------------
+  - {id: PROD_STL_IRON_ORE_MINING, type: product, name: 铁矿采选, name_en: Iron Ore Mining, segment: SEG_STL_IRON_ORE, aliases: [铁矿原矿]}
+  - {id: PROD_STL_IRON_CONCENTRATE, type: product, name: 铁精粉, name_en: Iron Ore Concentrate, segment: SEG_STL_IRON_ORE, aliases: [铁精矿], import_dependence: high}
+  - {id: PROD_STL_PELLET, type: product, name: 球团矿, name_en: Iron Ore Pellet, segment: SEG_STL_IRON_ORE, aliases: [氧化球团]}
+  - {id: PROD_STL_FERROALLOY, type: product, name: 铁合金, name_en: Ferroalloys, segment: SEG_STL_AUXILIARY}
+  - {id: PROD_STL_SILICOMANGANESE, type: product, name: 硅锰合金, name_en: Silicomanganese, parent: PROD_STL_FERROALLOY, segment: SEG_STL_AUXILIARY, aliases: [锰硅]}
+  - {id: PROD_STL_FERROSILICON, type: product, name: 硅铁, name_en: Ferrosilicon, parent: PROD_STL_FERROALLOY, segment: SEG_STL_AUXILIARY}
+  - {id: PROD_STL_FERROCHROME, type: product, name: 铬铁, name_en: Ferrochrome, parent: PROD_STL_FERROALLOY, segment: SEG_STL_AUXILIARY, aliases: [高碳铬铁], import_dependence: high}
+  - {id: PROD_STL_MANGANESE_ORE, type: product, name: 锰矿, name_en: Manganese Ore, segment: SEG_STL_AUXILIARY, aliases: [锰矿石], import_dependence: high}
+  - {id: PROD_STL_GRAPHITE_ELECTRODE, type: product, name: 石墨电极, name_en: Graphite Electrode, segment: SEG_STL_AUXILIARY, aliases: [超高功率石墨电极]}
+  - {id: PROD_STL_SCRAP, type: product, name: 废钢, name_en: Steel Scrap, segment: SEG_STL_AUXILIARY, aliases: [再生钢铁原料]}
+  - {id: PROD_STL_METALLURGICAL_LIME, type: product, name: 冶金石灰, name_en: Metallurgical Lime, segment: SEG_STL_AUXILIARY, aliases: [活性石灰]}
+
+  # ---------------- smelting ----------------
+  - {id: PROD_STL_HOT_METAL, type: product, name: 生铁, name_en: Pig Iron and Hot Metal, segment: SEG_STL_SMELTING, aliases: [铁水, 高炉炼铁]}
+  - {id: PROD_STL_BOF_STEEL, type: product, name: 转炉钢, name_en: BOF Crude Steel, segment: SEG_STL_SMELTING, aliases: [粗钢, 长流程炼钢]}
+  - {id: PROD_STL_EAF_STEEL, type: product, name: 电炉钢, name_en: EAF Crude Steel, segment: SEG_STL_SMELTING, aliases: [短流程炼钢]}
+  - {id: PROD_STL_BILLET, type: product, name: 钢坯, name_en: Billet, segment: SEG_STL_SMELTING, aliases: [方坯]}
+  - {id: PROD_STL_SLAB, type: product, name: 板坯, name_en: Slab, segment: SEG_STL_SMELTING, aliases: [连铸板坯]}
+
+  # ---------------- long ----------------
+  - {id: PROD_STL_REBAR, type: product, name: 螺纹钢, name_en: Rebar, segment: SEG_STL_LONG, aliases: [钢筋, 带肋钢筋]}
+  - {id: PROD_STL_WIRE_ROD, type: product, name: 线材, name_en: Wire Rod, segment: SEG_STL_LONG, aliases: [盘条, 高线]}
+  - {id: PROD_STL_SECTION, type: product, name: 型钢, name_en: Steel Sections, segment: SEG_STL_LONG, aliases: [H型钢, 工字钢, 角钢]}
+  - {id: PROD_STL_RAIL, type: product, name: 钢轨, name_en: Steel Rail, segment: SEG_STL_LONG, aliases: [重轨, 高速轨]}
+  - {id: PROD_STL_MERCHANT_BAR, type: product, name: 普通棒材, name_en: Merchant Bar, segment: SEG_STL_LONG, aliases: [圆钢]}
+  - {id: PROD_STL_PC_STRAND, type: product, name: 预应力钢绞线, name_en: Prestressed Steel Strand, segment: SEG_STL_LONG, aliases: [钢绞线, 钢丝]}
+
+  # ---------------- flat ----------------
+  - {id: PROD_STL_HOT_ROLLED_COIL, type: product, name: 热轧板卷, name_en: Hot-Rolled Coil, segment: SEG_STL_FLAT, aliases: [热卷, 热轧卷板]}
+  - {id: PROD_STL_PIPELINE_STEEL, type: product, name: 管线钢, name_en: Line Pipe Steel, parent: PROD_STL_HOT_ROLLED_COIL, segment: SEG_STL_FLAT}
+  - {id: PROD_STL_COLD_ROLLED, type: product, name: 冷轧板卷, name_en: Cold-Rolled Coil, segment: SEG_STL_FLAT, aliases: [冷轧板, 冷卷]}
+  - {id: PROD_STL_AUTO_SHEET, type: product, name: 汽车板, name_en: Automotive Steel Sheet, parent: PROD_STL_COLD_ROLLED, segment: SEG_STL_FLAT, aliases: [汽车用钢, 高强汽车板]}
+  - {id: PROD_STL_APPLIANCE_SHEET, type: product, name: 家电板, name_en: Appliance Steel Sheet, parent: PROD_STL_COLD_ROLLED, segment: SEG_STL_FLAT}
+  - {id: PROD_STL_GALVANIZED, type: product, name: 镀锌板, name_en: Galvanized Steel, segment: SEG_STL_FLAT, aliases: [热镀锌板, 镀锌卷]}
+  - {id: PROD_STL_ZN_AL_MG, type: product, name: 锌铝镁镀层板, name_en: Zn-Al-Mg Coated Steel, parent: PROD_STL_GALVANIZED, segment: SEG_STL_FLAT, aliases: [锌铝镁]}
+  - {id: PROD_STL_COLOR_COATED, type: product, name: 彩涂板, name_en: Pre-Painted Steel, segment: SEG_STL_FLAT, aliases: [彩钢板, 彩涂卷]}
+  - {id: PROD_STL_TINPLATE, type: product, name: 镀锡板, name_en: Tinplate, segment: SEG_STL_FLAT, aliases: [马口铁]}
+  - {id: PROD_STL_PLATE, type: product, name: 中厚板, name_en: Medium and Heavy Plate, segment: SEG_STL_FLAT, aliases: [宽厚板]}
+  - {id: PROD_STL_SHIP_PLATE, type: product, name: 船板, name_en: Shipbuilding Plate, parent: PROD_STL_PLATE, segment: SEG_STL_FLAT, aliases: [造船板, 海工钢]}
+  - {id: PROD_STL_WIND_PLATE, type: product, name: 风电钢板, name_en: Wind Tower Plate, parent: PROD_STL_PLATE, segment: SEG_STL_FLAT, aliases: [风电用钢]}
+  - {id: PROD_STL_BRIDGE_PLATE, type: product, name: 桥梁钢, name_en: Bridge Steel Plate, parent: PROD_STL_PLATE, segment: SEG_STL_FLAT}
+  - {id: PROD_STL_PRESSURE_VESSEL_PLATE, type: product, name: 容器板, name_en: Pressure Vessel Plate, parent: PROD_STL_PLATE, segment: SEG_STL_FLAT, aliases: [压力容器钢板]}
+  - {id: PROD_STL_NGO_ELECTRICAL_STEEL, type: product, name: 无取向电工钢板, name_en: Non-Oriented Electrical Steel, segment: SEG_STL_ELECTRICAL, aliases: [NGO]}
+  - {id: PROD_STL_EV_NGO, type: product, name: 新能源汽车高牌号无取向电工钢, name_en: High-Grade NGO for EV Motors, parent: PROD_STL_NGO_ELECTRICAL_STEEL, segment: SEG_STL_ELECTRICAL, aliases: [新能源汽车用无取向硅钢]}
+  - {id: PROD_STL_GO_ELECTRICAL_STEEL, type: product, name: 取向电工钢板, name_en: Grain-Oriented Electrical Steel, segment: SEG_STL_ELECTRICAL, aliases: [GO, 高磁感取向硅钢]}
+  - {id: PROD_STL_ELECTRICAL_STEEL_PROCESSING, type: product, kind: service, name: 电工钢剪切加工, name_en: Electrical Steel Slitting and Processing, segment: SEG_STL_ELECTRICAL, aliases: [硅钢加工配送]}
+  - {id: PROD_STL_STEEL_PROCESSING, type: product, kind: service, name: 钢材加工配送, name_en: Steel Service Center Processing, segment: SEG_STL_FLAT, aliases: [钢材剪切配送]}
+
+  # ---------------- pipes ----------------
+  - {id: PROD_STL_SEAMLESS_PIPE, type: product, name: 无缝钢管, name_en: Seamless Steel Pipe, segment: SEG_STL_PIPE}
+  - {id: PROD_STL_OCTG, type: product, name: 油井管, name_en: Oil Country Tubular Goods, parent: PROD_STL_SEAMLESS_PIPE, segment: SEG_STL_PIPE, aliases: [OCTG, 油套管]}
+  - {id: PROD_STL_BOILER_TUBE, type: product, name: 锅炉管, name_en: Boiler Tube, parent: PROD_STL_SEAMLESS_PIPE, segment: SEG_STL_PIPE, aliases: [高压锅炉管]}
+  - {id: PROD_STL_WELDED_PIPE, type: product, name: 焊管, name_en: Welded Steel Pipe, segment: SEG_STL_PIPE, aliases: [直缝焊管, 镀锌焊管]}
+  - {id: PROD_STL_LINE_PIPE, type: product, name: 油气输送管, name_en: Large-Diameter Line Pipe, parent: PROD_STL_WELDED_PIPE, segment: SEG_STL_PIPE, aliases: [螺旋焊管, 直缝埋弧焊管, LSAW]}
+  - {id: PROD_STL_DUCTILE_IRON_PIPE, type: product, name: 球墨铸铁管, name_en: Ductile Iron Pipe, segment: SEG_STL_PIPE, aliases: [球墨铸管]}
+  - {id: PROD_STL_STAINLESS_PIPE, type: product, name: 不锈钢管, name_en: Stainless Steel Pipe, segment: SEG_STL_PIPE, aliases: [工业用不锈钢管, 不锈钢无缝管]}
+
+  # ---------------- special steel ----------------
+  - {id: PROD_STL_SPECIAL_BAR, type: product, name: 特钢棒材, name_en: Special Steel Bar, segment: SEG_STL_SPECIAL, aliases: [合金钢棒材, 优特钢棒材]}
+  - {id: PROD_STL_BEARING_STEEL, type: product, name: 轴承钢, name_en: Bearing Steel, parent: PROD_STL_SPECIAL_BAR, segment: SEG_STL_SPECIAL, import_dependence: medium}
+  - {id: PROD_STL_GEAR_STEEL, type: product, name: 齿轮钢, name_en: Gear Steel, parent: PROD_STL_SPECIAL_BAR, segment: SEG_STL_SPECIAL, aliases: [汽车齿轮钢]}
+  - {id: PROD_STL_SPRING_STEEL, type: product, name: 弹簧钢, name_en: Spring Steel, parent: PROD_STL_SPECIAL_BAR, segment: SEG_STL_SPECIAL}
+  - {id: PROD_STL_ALLOY_STRUCTURAL, type: product, name: 合金结构钢, name_en: Alloy Structural Steel, parent: PROD_STL_SPECIAL_BAR, segment: SEG_STL_SPECIAL, aliases: [非调质钢]}
+  - {id: PROD_STL_SPECIAL_WIRE, type: product, name: 特钢线材, name_en: Special Steel Wire Rod, segment: SEG_STL_SPECIAL, aliases: [帘线钢, 冷镦钢]}
+  - {id: PROD_STL_DIE_STEEL, type: product, name: 模具钢, name_en: Die and Tool Steel, segment: SEG_STL_SPECIAL, aliases: [工模具钢, 高速工具钢], import_dependence: medium}
+  - {id: PROD_STL_ULTRA_HIGH_STRENGTH, type: product, name: 超高强度钢, name_en: Ultra-High-Strength Steel, segment: SEG_STL_SPECIAL, aliases: [航空用钢], import_dependence: medium}
+  - {id: PROD_STL_SPECIAL_FORGING, type: product, name: 特钢锻材, name_en: Special Steel Forgings, segment: SEG_STL_SPECIAL, aliases: [大型锻件, 锻材]}
+  - {id: PROD_STL_STAINLESS_SLAB, type: product, name: 不锈钢坯, name_en: Stainless Steel Slab, segment: SEG_STL_STAINLESS, aliases: [不锈钢炼钢]}
+  - {id: PROD_STL_STAINLESS_HR, type: product, name: 不锈钢热轧卷板, name_en: Hot-Rolled Stainless Coil, segment: SEG_STL_STAINLESS, aliases: [不锈钢热轧]}
+  - {id: PROD_STL_STAINLESS_CR, type: product, name: 不锈钢冷轧卷板, name_en: Cold-Rolled Stainless Coil, segment: SEG_STL_STAINLESS, aliases: [不锈钢冷轧]}
+  - {id: PROD_STL_STAINLESS_PRECISION_STRIP, type: product, name: 精密不锈钢带, name_en: Precision Stainless Strip, parent: PROD_STL_STAINLESS_CR, segment: SEG_STL_STAINLESS, aliases: [不锈钢精密带钢]}
+  - {id: PROD_STL_STAINLESS_LONG, type: product, name: 不锈钢棒线材, name_en: Stainless Bar and Wire, segment: SEG_STL_STAINLESS}
+
+edges:
+  - [SEG_STL_IRON_ORE, part_of, SEG_STL_RAW_MATERIALS]
+  - [SEG_STL_AUXILIARY, part_of, SEG_STL_RAW_MATERIALS]
+  - [SEG_STL_ELECTRICAL, part_of, SEG_STL_FLAT]
+  - [SEG_STL_STAINLESS, part_of, SEG_STL_SPECIAL]
+  - [SEG_STL_RAW_MATERIALS, serves, MKT_STEEL_INDUSTRY]
+  - [SEG_STL_LONG, serves, MKT_CONSTRUCTION]
+  - [SEG_STL_LONG, serves, MKT_REAL_ESTATE]
+  - [SEG_STL_FLAT, serves, MKT_ICE_VEHICLE]
+  - [SEG_STL_FLAT, serves, MKT_EV]
+  - [SEG_STL_FLAT, serves, MKT_HOME_APPLIANCE]
+  - [SEG_STL_FLAT, serves, MKT_SHIPBUILDING]
+  - [SEG_STL_FLAT, serves, MKT_CONSTRUCTION]
+  - [SEG_STL_ELECTRICAL, serves, MKT_POWER_GRID]
+  - [SEG_STL_ELECTRICAL, serves, MKT_EV]
+  - [SEG_STL_PIPE, serves, MKT_OIL_GAS]
+  - [SEG_STL_PIPE, serves, MKT_CONSTRUCTION]
+  - [SEG_STL_PIPE, serves, MKT_THERMAL_POWER]
+  - [SEG_STL_SPECIAL, serves, MKT_ICE_VEHICLE]
+  - [SEG_STL_SPECIAL, serves, MKT_WIND]
+  - [SEG_STL_SPECIAL, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_STL_SPECIAL, serves, MKT_AEROSPACE]
+  - [SEG_STL_STAINLESS, serves, MKT_HOME_APPLIANCE]
+  - [SEG_STL_STAINLESS, serves, MKT_CHEMICAL_INDUSTRY]
+
+  # raw materials -> ironmaking
+  - [PROD_STL_IRON_ORE_MINING, upstream_of, PROD_STL_IRON_CONCENTRATE]
+  - [PROD_STL_IRON_CONCENTRATE, upstream_of, PROD_STL_PELLET]
+  - [PROD_STL_IRON_CONCENTRATE, upstream_of, PROD_STL_HOT_METAL]
+  - [PROD_STL_PELLET, upstream_of, PROD_STL_HOT_METAL]
+  - [MAT_IRON_ORE, upstream_of, PROD_STL_HOT_METAL]
+  - [PROD_STL_IRON_ORE_MINING, uses_material, MAT_IRON_ORE]
+  - [PROD_STL_HOT_METAL, uses_material, MAT_IRON_ORE]
+  - [PROD_STL_HOT_METAL, uses_material, MAT_COKE]
+  - [PROD_STL_HOT_METAL, uses_material, MAT_THERMAL_COAL]
+  - [PROD_STL_METALLURGICAL_LIME, upstream_of, PROD_STL_BOF_STEEL]
+  - [PROD_STL_HOT_METAL, upstream_of, PROD_STL_BOF_STEEL]
+  - [PROD_STL_SCRAP, upstream_of, PROD_STL_EAF_STEEL]
+  - [PROD_STL_SCRAP, upstream_of, PROD_STL_BOF_STEEL]
+  - [PROD_STL_GRAPHITE_ELECTRODE, upstream_of, PROD_STL_EAF_STEEL]
+  - [PROD_STL_GRAPHITE_ELECTRODE, uses_material, MAT_GRAPHITE]
+  - [PROD_STL_EAF_STEEL, uses_material, MAT_ELECTRICITY]
+  - [PROD_STL_BOF_STEEL, uses_material, MAT_INDUSTRIAL_GASES]
+  - [PROD_STL_MANGANESE_ORE, upstream_of, PROD_STL_SILICOMANGANESE]
+  - [PROD_STL_SILICOMANGANESE, upstream_of, PROD_STL_BOF_STEEL]
+  - [PROD_STL_FERROSILICON, upstream_of, PROD_STL_BOF_STEEL]
+  - [PROD_STL_FERROSILICON, upstream_of, PROD_NFM_PRIMARY_MAGNESIUM]
+  - [PROD_STL_FERROSILICON, uses_material, MAT_ELECTRICITY]
+  - [PROD_STL_SILICOMANGANESE, uses_material, MAT_ELECTRICITY]
+  - [PROD_STL_FERROCHROME, upstream_of, PROD_STL_STAINLESS_SLAB]
+  - [PROD_STL_FERROALLOY, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_STL_BOF_STEEL, upstream_of, PROD_STL_BILLET]
+  - [PROD_STL_BOF_STEEL, upstream_of, PROD_STL_SLAB]
+  - [PROD_STL_EAF_STEEL, upstream_of, PROD_STL_BILLET]
+  - [PROD_STL_EAF_STEEL, upstream_of, PROD_STL_SPECIAL_BAR]
+  - [PROD_STL_EAF_STEEL, upstream_of, PROD_STL_STAINLESS_SLAB]
+  - [PROD_STL_HOT_METAL, upstream_of, PROD_STL_DUCTILE_IRON_PIPE]
+
+  # long
+  - [PROD_STL_BILLET, upstream_of, PROD_STL_REBAR]
+  - [PROD_STL_BILLET, upstream_of, PROD_STL_WIRE_ROD]
+  - [PROD_STL_BILLET, upstream_of, PROD_STL_SECTION]
+  - [PROD_STL_BILLET, upstream_of, PROD_STL_RAIL]
+  - [PROD_STL_BILLET, upstream_of, PROD_STL_MERCHANT_BAR]
+  - [PROD_STL_BILLET, upstream_of, PROD_STL_SEAMLESS_PIPE]
+  - [PROD_STL_BILLET, upstream_of, PROD_STL_SPECIAL_BAR]
+  - [PROD_STL_BILLET, upstream_of, PROD_STL_SPECIAL_WIRE]
+  - [PROD_STL_WIRE_ROD, upstream_of, PROD_STL_PC_STRAND]
+  - [PROD_STL_REBAR, used_in, MKT_CONSTRUCTION]
+  - [PROD_STL_REBAR, used_in, MKT_REAL_ESTATE]
+  - [PROD_STL_WIRE_ROD, used_in, MKT_CONSTRUCTION]
+  - [PROD_STL_SECTION, used_in, MKT_CONSTRUCTION]
+  - [PROD_STL_RAIL, used_in, MKT_RAIL]
+  - [PROD_STL_PC_STRAND, used_in, MKT_CONSTRUCTION]
+  - [PROD_STL_MERCHANT_BAR, used_in, MKT_INDUSTRIAL_AUTOMATION]
+
+  # flat
+  - [PROD_STL_SLAB, upstream_of, PROD_STL_HOT_ROLLED_COIL]
+  - [PROD_STL_SLAB, upstream_of, PROD_STL_PLATE]
+  - [PROD_STL_HOT_ROLLED_COIL, upstream_of, PROD_STL_COLD_ROLLED]
+  - [PROD_STL_HOT_ROLLED_COIL, upstream_of, PROD_STL_WELDED_PIPE]
+  - [PROD_STL_PIPELINE_STEEL, upstream_of, PROD_STL_LINE_PIPE]
+  - [PROD_STL_PLATE, upstream_of, PROD_STL_LINE_PIPE]
+  - [PROD_STL_COLD_ROLLED, upstream_of, PROD_STL_GALVANIZED]
+  - [PROD_STL_COLD_ROLLED, upstream_of, PROD_STL_TINPLATE]
+  - [PROD_STL_GALVANIZED, upstream_of, PROD_STL_COLOR_COATED]
+  - [PROD_STL_HOT_ROLLED_COIL, upstream_of, PROD_STL_NGO_ELECTRICAL_STEEL]
+  - [PROD_STL_HOT_ROLLED_COIL, upstream_of, PROD_STL_GO_ELECTRICAL_STEEL]
+  - [PROD_STL_NGO_ELECTRICAL_STEEL, upstream_of, PROD_STL_ELECTRICAL_STEEL_PROCESSING]
+  - [PROD_STL_GO_ELECTRICAL_STEEL, upstream_of, PROD_STL_ELECTRICAL_STEEL_PROCESSING]
+  - [PROD_STL_COLD_ROLLED, upstream_of, PROD_STL_STEEL_PROCESSING]
+  - [PROD_STL_GALVANIZED, uses_material, MAT_ZINC]
+  - [PROD_STL_ZN_AL_MG, uses_material, MAT_ZINC]
+  - [PROD_STL_ZN_AL_MG, uses_material, MAT_MAGNESIUM]
+  - [PROD_STL_TINPLATE, uses_material, MAT_TIN]
+  - [PROD_STL_ZN_AL_MG, uses_material, MAT_ALUMINUM]
+  - [PROD_NFM_ZINC_ALLOY, upstream_of, PROD_STL_GALVANIZED]
+  - [PROD_STL_NGO_ELECTRICAL_STEEL, uses_material, MAT_ELECTRICAL_STEEL]
+  - [PROD_STL_GO_ELECTRICAL_STEEL, uses_material, MAT_ELECTRICAL_STEEL]
+  - [PROD_STL_HOT_ROLLED_COIL, used_in, MKT_CONSTRUCTION]
+  - [PROD_STL_AUTO_SHEET, used_in, MKT_ICE_VEHICLE]
+  - [PROD_STL_AUTO_SHEET, used_in, MKT_EV]
+  - [PROD_STL_APPLIANCE_SHEET, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_STL_COLOR_COATED, used_in, MKT_CONSTRUCTION]
+  - [PROD_STL_COLOR_COATED, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_STL_ZN_AL_MG, used_in, MKT_SOLAR]
+  - [PROD_STL_TINPLATE, used_in, MKT_PACKAGING]
+  - [PROD_STL_SHIP_PLATE, used_in, MKT_SHIPBUILDING]
+  - [PROD_STL_WIND_PLATE, used_in, MKT_WIND]
+  - [PROD_STL_BRIDGE_PLATE, used_in, MKT_CONSTRUCTION]
+  - [PROD_STL_PRESSURE_VESSEL_PLATE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_STL_PRESSURE_VESSEL_PLATE, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_STL_PLATE, used_in, MKT_CONSTRUCTION]
+  - [PROD_STL_NGO_ELECTRICAL_STEEL, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_STL_NGO_ELECTRICAL_STEEL, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_STL_EV_NGO, used_in, MKT_EV]
+  - [PROD_STL_GO_ELECTRICAL_STEEL, used_in, MKT_POWER_GRID]
+  - [TECH_UHV, enables, PROD_STL_GO_ELECTRICAL_STEEL]
+
+  # pipes
+  - [PROD_STL_SEAMLESS_PIPE, upstream_of, PROD_STL_OCTG]
+  - [PROD_STL_OCTG, used_in, MKT_OIL_GAS]
+  - [PROD_STL_LINE_PIPE, used_in, MKT_OIL_GAS]
+  - [PROD_STL_BOILER_TUBE, used_in, MKT_THERMAL_POWER]
+  - [PROD_STL_BOILER_TUBE, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_STL_WELDED_PIPE, used_in, MKT_CONSTRUCTION]
+  - [PROD_STL_DUCTILE_IRON_PIPE, used_in, MKT_CONSTRUCTION]
+  - [PROD_STL_STAINLESS_PIPE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_STL_STAINLESS_PIPE, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_STL_STAINLESS_PIPE, used_in, MKT_OIL_GAS]
+  - [PROD_STL_SEAMLESS_PIPE, used_in, MKT_INDUSTRIAL_AUTOMATION]
+
+  # special steel
+  - [PROD_STL_SPECIAL_BAR, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_STL_SPECIAL_BAR, uses_material, MAT_MOLYBDENUM]
+  - [PROD_NFM_FERROMOLYBDENUM, upstream_of, PROD_STL_ALLOY_STRUCTURAL]
+  - [PROD_NFM_VANADIUM_ALLOY, upstream_of, PROD_STL_REBAR]
+  - [PROD_STL_SPECIAL_BAR, upstream_of, PROD_STL_SPECIAL_FORGING]
+  - [PROD_STL_BEARING_STEEL, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_STL_BEARING_STEEL, used_in, MKT_WIND]
+  - [PROD_STL_BEARING_STEEL, used_in, MKT_RAIL]
+  - [PROD_STL_GEAR_STEEL, used_in, MKT_ICE_VEHICLE]
+  - [PROD_STL_GEAR_STEEL, used_in, MKT_EV]
+  - [PROD_STL_GEAR_STEEL, used_in, MKT_WIND]
+  - [PROD_STL_SPRING_STEEL, used_in, MKT_ICE_VEHICLE]
+  - [PROD_STL_ALLOY_STRUCTURAL, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_STL_SPECIAL_WIRE, used_in, MKT_ICE_VEHICLE]
+  - [PROD_STL_DIE_STEEL, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_STL_DIE_STEEL, used_in, MKT_ICE_VEHICLE]
+  - [PROD_STL_ULTRA_HIGH_STRENGTH, used_in, MKT_AEROSPACE]
+  - [PROD_STL_ULTRA_HIGH_STRENGTH, used_in, MKT_DEFENSE]
+  - [PROD_STL_SPECIAL_FORGING, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_STL_SPECIAL_FORGING, used_in, MKT_OIL_GAS]
+  - [PROD_STL_SPECIAL_FORGING, used_in, MKT_WIND]
+
+  # stainless
+  - [PROD_STL_STAINLESS_SLAB, upstream_of, PROD_STL_STAINLESS_HR]
+  - [PROD_STL_STAINLESS_SLAB, upstream_of, PROD_STL_STAINLESS_LONG]
+  - [PROD_STL_STAINLESS_HR, upstream_of, PROD_STL_STAINLESS_CR]
+  - [PROD_STL_STAINLESS_HR, upstream_of, PROD_STL_STAINLESS_PIPE]
+  - [PROD_STL_STAINLESS_CR, upstream_of, PROD_STL_STAINLESS_PRECISION_STRIP]
+  - [PROD_STL_STAINLESS_SLAB, uses_material, MAT_NICKEL]
+  - [PROD_STL_STAINLESS_SLAB, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_STL_STAINLESS_CR, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_STL_STAINLESS_CR, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_STL_STAINLESS_CR, used_in, MKT_CONSTRUCTION]
+  - [PROD_STL_STAINLESS_PRECISION_STRIP, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_STL_STAINLESS_PRECISION_STRIP, used_in, MKT_EV]
+  - [PROD_STL_STAINLESS_LONG, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_STL_EV_NGO, upstream_of, PROD_PWR_MOTOR_CORE]
+  - [PROD_STL_GO_ELECTRICAL_STEEL, upstream_of, PROD_PWR_POWER_TRANSFORMER]
+  - [PROD_STL_AUTO_SHEET, upstream_of, PROD_AUTO_BODY_STAMPING]
+  - [PROD_STL_SPECIAL_WIRE, upstream_of, PROD_AUTO_TIRE]
+  - [PROD_STL_BEARING_STEEL, upstream_of, PROD_MACH_BEARING]
+  - [PROD_STL_GEAR_STEEL, upstream_of, PROD_MACH_GEAR]
+  - [PROD_STL_GEAR_STEEL, upstream_of, PROD_AUTO_E_REDUCER]
+
+sw_l3_map:
+  "230301": [SEG_STL_IRON_ORE]
+  "230302": [SEG_STL_AUXILIARY]
+  "230401": [SEG_STL_SMELTING, SEG_STL_LONG]
+  "230402": [SEG_STL_SMELTING, SEG_STL_FLAT, SEG_STL_ELECTRICAL]
+  "230403": [SEG_STL_PIPE]
+  "230501": [SEG_STL_SPECIAL, SEG_STL_STAINLESS]

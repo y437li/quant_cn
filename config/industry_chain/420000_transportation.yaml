@@ -1,0 +1,303 @@
+# SW L1 420000 交通运输 — product taxonomy prior (plan 12 phase 1, D-097). Format: README.md. All edges are priors.
+# Almost every node here is a service offering (kind: service).
+
+sector: {sw_l1: "420000", name: 交通运输, name_en: Transportation}
+
+nodes:
+  # ---------------- segments ----------------
+  - {id: SEG_TRAN_LOGISTICS, type: segment, name: 物流, name_en: Logistics}
+  - {id: SEG_TRAN_RAW_MATERIAL_SCM, type: segment, name: 原材料供应链服务, name_en: Raw Material Supply Chain Services}
+  - {id: SEG_TRAN_CONSUMER_SCM, type: segment, name: 中间产品及消费品供应链服务, name_en: Intermediate and Consumer Goods Supply Chain}
+  - {id: SEG_TRAN_EXPRESS, type: segment, name: 快递, name_en: Express Delivery}
+  - {id: SEG_TRAN_CROSS_BORDER, type: segment, name: 跨境物流, name_en: Cross-Border Logistics}
+  - {id: SEG_TRAN_WAREHOUSE, type: segment, name: 仓储物流, name_en: Warehousing Logistics}
+  - {id: SEG_TRAN_ROAD_FREIGHT, type: segment, name: 公路货运, name_en: Road Freight}
+  - {id: SEG_TRAN_RAIL_ROAD, type: segment, name: 铁路公路, name_en: Railways and Highways}
+  - {id: SEG_TRAN_HIGHWAY, type: segment, name: 高速公路, name_en: Expressways}
+  - {id: SEG_TRAN_PUBLIC_TRANSIT, type: segment, name: 公交, name_en: Public Transit}
+  - {id: SEG_TRAN_RAILWAY, type: segment, name: 铁路运输, name_en: Rail Transport}
+  - {id: SEG_TRAN_AVIATION, type: segment, name: 航空机场, name_en: Airlines and Airports}
+  - {id: SEG_TRAN_AIRLINE, type: segment, name: 航空运输, name_en: Airlines}
+  - {id: SEG_TRAN_AIRPORT, type: segment, name: 机场, name_en: Airports}
+  - {id: SEG_TRAN_SHIPPING_PORT, type: segment, name: 航运港口, name_en: Shipping and Ports}
+  - {id: SEG_TRAN_SHIPPING, type: segment, name: 航运, name_en: Shipping}
+  - {id: SEG_TRAN_PORT, type: segment, name: 港口, name_en: Ports}
+
+  # ---------------- express ----------------
+  - {id: PROD_TRAN_EXPRESS, type: product, kind: service, name: 快递服务, name_en: Express Parcel Delivery, segment: SEG_TRAN_EXPRESS, aliases: [快递]}
+  - {id: PROD_TRAN_ECOM_EXPRESS, type: product, kind: service, name: 电商快递, name_en: E-commerce Parcel Delivery, parent: PROD_TRAN_EXPRESS, segment: SEG_TRAN_EXPRESS, aliases: [经济型快递, 通达系快递]}
+  - {id: PROD_TRAN_TIME_DEFINITE_EXPRESS, type: product, kind: service, name: 时效快递, name_en: Time-Definite Express, parent: PROD_TRAN_EXPRESS, segment: SEG_TRAN_EXPRESS, aliases: [商务快递, 特快]}
+  - {id: PROD_TRAN_LTL, type: product, kind: service, name: 快运, name_en: Less-Than-Truckload Freight, segment: SEG_TRAN_EXPRESS, aliases: [零担快运, 大件快运, 零担]}
+  - {id: PROD_TRAN_SAME_CITY, type: product, kind: service, name: 同城即时配送, name_en: Same-City On-Demand Delivery, segment: SEG_TRAN_EXPRESS, aliases: [即时配送, 同城配送]}
+  - {id: PROD_TRAN_COLD_CHAIN, type: product, kind: service, name: 冷链物流, name_en: Cold Chain Logistics, segment: SEG_TRAN_EXPRESS, aliases: [冷运]}
+
+  # ---------------- supply chain services ----------------
+  - {id: PROD_TRAN_COMMODITY_SCM, type: product, kind: service, name: 大宗商品供应链服务, name_en: Commodity Supply Chain Services, segment: SEG_TRAN_RAW_MATERIAL_SCM, aliases: [大宗供应链, 供应链经营]}
+  - {id: PROD_TRAN_METAL_SCM, type: product, kind: service, name: 金属矿产供应链, name_en: Metals and Minerals Supply Chain, parent: PROD_TRAN_COMMODITY_SCM, segment: SEG_TRAN_RAW_MATERIAL_SCM, aliases: [钢铁供应链, 铁矿石贸易]}
+  - {id: PROD_TRAN_ENERGY_SCM, type: product, kind: service, name: 能源化工供应链, name_en: Energy and Chemicals Supply Chain, parent: PROD_TRAN_COMMODITY_SCM, segment: SEG_TRAN_RAW_MATERIAL_SCM, aliases: [煤炭供应链, 石化供应链]}
+  - {id: PROD_TRAN_AGRI_SCM, type: product, kind: service, name: 农产品供应链, name_en: Agricultural Products Supply Chain, parent: PROD_TRAN_COMMODITY_SCM, segment: SEG_TRAN_RAW_MATERIAL_SCM, aliases: [粮油供应链]}
+  - {id: PROD_TRAN_CONTRACT_LOGISTICS, type: product, kind: service, name: 合同物流, name_en: Contract Logistics, segment: SEG_TRAN_CONSUMER_SCM, aliases: [一体化供应链服务, 第三方物流, 3PL]}
+  - {id: PROD_TRAN_CONSUMER_SCM, type: product, kind: service, name: 消费品供应链服务, name_en: Consumer Goods Supply Chain Services, segment: SEG_TRAN_CONSUMER_SCM, aliases: [快消品供应链]}
+  - {id: PROD_TRAN_ELECTRONICS_SCM, type: product, kind: service, name: 电子元器件供应链服务, name_en: Electronics Supply Chain Services, segment: SEG_TRAN_CONSUMER_SCM, aliases: [电子供应链, VMI]}
+  - {id: PROD_TRAN_AUTO_LOGISTICS, type: product, kind: service, name: 汽车物流, name_en: Automotive Logistics, segment: SEG_TRAN_CONSUMER_SCM, aliases: [商品车运输, 整车物流, 零部件入厂物流]}
+
+  # ---------------- cross-border ----------------
+  - {id: PROD_TRAN_FREIGHT_FORWARDING, type: product, kind: service, name: 国际货运代理, name_en: International Freight Forwarding, segment: SEG_TRAN_CROSS_BORDER, aliases: [货代, 国际货代]}
+  - {id: PROD_TRAN_OCEAN_FORWARDING, type: product, kind: service, name: 海运货代, name_en: Ocean Freight Forwarding, parent: PROD_TRAN_FREIGHT_FORWARDING, segment: SEG_TRAN_CROSS_BORDER, aliases: [NVOCC, 无船承运]}
+  - {id: PROD_TRAN_AIR_FORWARDING, type: product, kind: service, name: 空运货代, name_en: Air Freight Forwarding, parent: PROD_TRAN_FREIGHT_FORWARDING, segment: SEG_TRAN_CROSS_BORDER, aliases: [空运代理]}
+  - {id: PROD_TRAN_CROSS_BORDER_ECOM, type: product, kind: service, name: 跨境电商物流, name_en: Cross-Border E-commerce Logistics, segment: SEG_TRAN_CROSS_BORDER, aliases: [跨境小包, 头程物流]}
+  - {id: PROD_TRAN_RAIL_INTERMODAL, type: product, kind: service, name: 国际铁路联运, name_en: International Rail Intermodal, segment: SEG_TRAN_CROSS_BORDER, aliases: [中欧班列, 海铁联运]}
+  - {id: PROD_TRAN_CUSTOMS_BROKERAGE, type: product, kind: service, name: 报关报检服务, name_en: Customs Brokerage, segment: SEG_TRAN_CROSS_BORDER, aliases: [报关]}
+  - {id: PROD_TRAN_PROJECT_LOGISTICS, type: product, kind: service, name: 工程物流, name_en: Project Cargo Logistics, segment: SEG_TRAN_CROSS_BORDER, aliases: [大件运输, 项目物流]}
+
+  # ---------------- warehousing ----------------
+  - {id: PROD_TRAN_WAREHOUSING, type: product, kind: service, name: 仓储服务, name_en: Warehousing Services, segment: SEG_TRAN_WAREHOUSE}
+  - {id: PROD_TRAN_HAZMAT_LOGISTICS, type: product, kind: service, name: 危化品物流, name_en: Hazardous Chemicals Logistics, segment: SEG_TRAN_WAREHOUSE, aliases: [化工物流, 危险品仓储, 危化品运输]}
+  - {id: PROD_TRAN_COLD_STORAGE, type: product, kind: service, name: 冷库仓储, name_en: Cold Storage, parent: PROD_TRAN_WAREHOUSING, segment: SEG_TRAN_WAREHOUSE, aliases: [冷库]}
+  - {id: PROD_TRAN_BONDED_LOGISTICS, type: product, kind: service, name: 保税物流, name_en: Bonded Logistics, parent: PROD_TRAN_WAREHOUSING, segment: SEG_TRAN_WAREHOUSE, aliases: [保税仓]}
+
+  # ---------------- road freight ----------------
+  - {id: PROD_TRAN_FTL, type: product, kind: service, name: 整车运输, name_en: Full-Truckload Transport, segment: SEG_TRAN_ROAD_FREIGHT, aliases: [公路整车, 干线运输]}
+  - {id: PROD_TRAN_FREIGHT_PLATFORM, type: product, kind: service, name: 网络货运平台, name_en: Digital Freight Platform, segment: SEG_TRAN_ROAD_FREIGHT, aliases: [网络货运, 车货匹配]}
+  - {id: PROD_TRAN_HAZMAT_TRUCKING, type: product, kind: service, name: 危化品道路运输, name_en: Hazardous Goods Trucking, segment: SEG_TRAN_ROAD_FREIGHT, aliases: [危运]}
+
+  # ---------------- highways and transit ----------------
+  - {id: PROD_TRAN_TOLL_ROAD, type: product, kind: service, name: 收费公路运营, name_en: Toll Road Operation, segment: SEG_TRAN_HIGHWAY, aliases: [高速公路通行费, 路桥收费]}
+  - {id: PROD_TRAN_SERVICE_AREA, type: product, kind: service, name: 高速公路服务区经营, name_en: Expressway Service Area Operation, segment: SEG_TRAN_HIGHWAY, aliases: [服务区]}
+  - {id: PROD_TRAN_ROAD_MAINTENANCE, type: product, kind: service, name: 公路养护, name_en: Road Maintenance, segment: SEG_TRAN_HIGHWAY, aliases: [路面养护]}
+  - {id: PROD_TRAN_ETC, type: product, kind: service, name: ETC电子收费服务, name_en: Electronic Toll Collection Services, segment: SEG_TRAN_HIGHWAY, aliases: [ETC]}
+  - {id: PROD_TRAN_CITY_BUS, type: product, kind: service, name: 城市公交运营, name_en: City Bus Operation, segment: SEG_TRAN_PUBLIC_TRANSIT, aliases: [公交运营]}
+  - {id: PROD_TRAN_TAXI, type: product, kind: service, name: 出租车运营, name_en: Taxi Operation, segment: SEG_TRAN_PUBLIC_TRANSIT, aliases: [出租汽车, 网约车]}
+  - {id: PROD_TRAN_METRO, type: product, kind: service, name: 城市轨道交通运营, name_en: Metro Operation, segment: SEG_TRAN_PUBLIC_TRANSIT, aliases: [地铁运营]}
+  - {id: PROD_TRAN_INTERCITY_COACH, type: product, kind: service, name: 道路客运, name_en: Intercity Coach Transport, segment: SEG_TRAN_PUBLIC_TRANSIT, aliases: [长途客运, 客运站]}
+
+  # ---------------- railways ----------------
+  - {id: PROD_TRAN_RAIL_PASSENGER, type: product, kind: service, name: 铁路客运, name_en: Rail Passenger Transport, segment: SEG_TRAN_RAILWAY, aliases: [高铁客运]}
+  - {id: PROD_TRAN_HSR_OPERATION, type: product, kind: service, name: 高铁线路运营, name_en: High-Speed Rail Line Operation, parent: PROD_TRAN_RAIL_PASSENGER, segment: SEG_TRAN_RAILWAY, aliases: [京沪高铁, 线路使用费]}
+  - {id: PROD_TRAN_RAIL_FREIGHT, type: product, kind: service, name: 铁路货运, name_en: Rail Freight, segment: SEG_TRAN_RAILWAY}
+  - {id: PROD_TRAN_HEAVY_HAUL_COAL, type: product, kind: service, name: 煤炭重载铁路运输, name_en: Heavy-Haul Coal Railway, parent: PROD_TRAN_RAIL_FREIGHT, segment: SEG_TRAN_RAILWAY, aliases: [大秦线]}
+  - {id: PROD_TRAN_RAIL_CONTAINER, type: product, kind: service, name: 铁路集装箱运输, name_en: Rail Container Transport, parent: PROD_TRAN_RAIL_FREIGHT, segment: SEG_TRAN_RAILWAY, aliases: [铁路特种箱]}
+
+  # ---------------- aviation ----------------
+  - {id: PROD_TRAN_AIR_PASSENGER, type: product, kind: service, name: 航空客运, name_en: Air Passenger Transport, segment: SEG_TRAN_AIRLINE, aliases: [民航客运]}
+  - {id: PROD_TRAN_INTL_AIR_PASSENGER, type: product, kind: service, name: 国际航线客运, name_en: International Air Passenger, parent: PROD_TRAN_AIR_PASSENGER, segment: SEG_TRAN_AIRLINE, aliases: [国际航线]}
+  - {id: PROD_TRAN_LCC, type: product, kind: service, name: 低成本航空, name_en: Low-Cost Carrier Service, parent: PROD_TRAN_AIR_PASSENGER, segment: SEG_TRAN_AIRLINE, aliases: [廉航]}
+  - {id: PROD_TRAN_AIR_CARGO, type: product, kind: service, name: 航空货运, name_en: Air Cargo Transport, segment: SEG_TRAN_AIRLINE, aliases: [全货机运输, 腹舱货运]}
+  - {id: PROD_TRAN_GROUND_HANDLING, type: product, kind: service, name: 航空地面服务, name_en: Ground Handling, segment: SEG_TRAN_AIRPORT, aliases: [地服, 货站操作]}
+  - {id: PROD_TRAN_AIRPORT_AERO, type: product, kind: service, name: 机场航空性业务, name_en: Airport Aeronautical Services, segment: SEG_TRAN_AIRPORT, aliases: [起降费, 旅客服务费]}
+  - {id: PROD_TRAN_AIRPORT_NON_AERO, type: product, kind: service, name: 机场非航业务, name_en: Airport Non-Aeronautical Business, segment: SEG_TRAN_AIRPORT, aliases: [机场商业租赁, 机场广告]}
+
+  # ---------------- shipping ----------------
+  - {id: PROD_TRAN_CONTAINER_SHIPPING, type: product, kind: service, name: 集装箱航运, name_en: Container Shipping, segment: SEG_TRAN_SHIPPING, aliases: [集运, 班轮运输]}
+  - {id: PROD_TRAN_DOMESTIC_CONTAINER, type: product, kind: service, name: 内贸集装箱航运, name_en: Domestic Container Shipping, parent: PROD_TRAN_CONTAINER_SHIPPING, segment: SEG_TRAN_SHIPPING, aliases: [内贸集运]}
+  - {id: PROD_TRAN_CRUDE_TANKER, type: product, kind: service, name: 原油油轮运输, name_en: Crude Oil Tanker Shipping, segment: SEG_TRAN_SHIPPING, aliases: [VLCC, 油运]}
+  - {id: PROD_TRAN_PRODUCT_TANKER, type: product, kind: service, name: 成品油轮运输, name_en: Product Tanker Shipping, segment: SEG_TRAN_SHIPPING, aliases: [成品油运输]}
+  - {id: PROD_TRAN_CHEMICAL_TANKER, type: product, kind: service, name: 化学品船运输, name_en: Chemical Tanker Shipping, segment: SEG_TRAN_SHIPPING, aliases: [化学品航运]}
+  - {id: PROD_TRAN_LNG_SHIPPING, type: product, kind: service, name: LNG船运输, name_en: LNG Shipping, segment: SEG_TRAN_SHIPPING, aliases: [液化气运输, LPG运输]}
+  - {id: PROD_TRAN_DRY_BULK, type: product, kind: service, name: 干散货航运, name_en: Dry Bulk Shipping, segment: SEG_TRAN_SHIPPING, aliases: [散运, 好望角型]}
+  - {id: PROD_TRAN_RORO, type: product, kind: service, name: 汽车滚装运输, name_en: Ro-Ro Car Carrier Shipping, segment: SEG_TRAN_SHIPPING, aliases: [滚装船, PCTC]}
+  - {id: PROD_TRAN_SPECIAL_CARGO_SHIPPING, type: product, kind: service, name: 特种船运输, name_en: Specialized Cargo Shipping, segment: SEG_TRAN_SHIPPING, aliases: [多用途船, 重吊船, 半潜船]}
+  - {id: PROD_TRAN_SHIP_CHARTER, type: product, kind: service, name: 船舶租赁, name_en: Ship Leasing and Chartering, segment: SEG_TRAN_SHIPPING, aliases: [期租, 光租]}
+  - {id: PROD_TRAN_CONTAINER_LEASING, type: product, kind: service, name: 集装箱租赁, name_en: Container Leasing, segment: SEG_TRAN_SHIPPING}
+  - {id: PROD_TRAN_INLAND_SHIPPING, type: product, kind: service, name: 内河与沿海运输, name_en: Inland and Coastal Shipping, segment: SEG_TRAN_SHIPPING, aliases: [沿海散运, 长江航运]}
+  - {id: PROD_TRAN_SHIPPING_AGENCY, type: product, kind: service, name: 船舶代理, name_en: Shipping Agency, segment: SEG_TRAN_SHIPPING, aliases: [船代]}
+
+  # ---------------- ports ----------------
+  - {id: PROD_TRAN_PORT_HANDLING, type: product, kind: service, name: 港口装卸, name_en: Port Cargo Handling, segment: SEG_TRAN_PORT, aliases: [港口吞吐]}
+  - {id: PROD_TRAN_CONTAINER_TERMINAL, type: product, kind: service, name: 集装箱码头装卸, name_en: Container Terminal Handling, parent: PROD_TRAN_PORT_HANDLING, segment: SEG_TRAN_PORT, aliases: [集装箱吞吐量, 集装箱码头]}
+  - {id: PROD_TRAN_BULK_TERMINAL, type: product, kind: service, name: 散货码头装卸, name_en: Dry Bulk Terminal Handling, parent: PROD_TRAN_PORT_HANDLING, segment: SEG_TRAN_PORT, aliases: [煤炭码头, 矿石码头]}
+  - {id: PROD_TRAN_LIQUID_TERMINAL, type: product, kind: service, name: 油品液体化工码头, name_en: Liquid Bulk Terminal, parent: PROD_TRAN_PORT_HANDLING, segment: SEG_TRAN_PORT, aliases: [油品码头, 液化码头]}
+  - {id: PROD_TRAN_PORT_LOGISTICS, type: product, kind: service, name: 港口物流, name_en: Port Logistics, segment: SEG_TRAN_PORT, aliases: [港口堆存, 港口集疏运]}
+  - {id: PROD_TRAN_PILOTAGE_TUG, type: product, kind: service, name: 引航拖轮服务, name_en: Pilotage and Towage, segment: SEG_TRAN_PORT, aliases: [拖轮, 引航]}
+
+edges:
+  # ---------- segment tree ----------
+  - [SEG_TRAN_RAW_MATERIAL_SCM, part_of, SEG_TRAN_LOGISTICS]
+  - [SEG_TRAN_CONSUMER_SCM, part_of, SEG_TRAN_LOGISTICS]
+  - [SEG_TRAN_EXPRESS, part_of, SEG_TRAN_LOGISTICS]
+  - [SEG_TRAN_CROSS_BORDER, part_of, SEG_TRAN_LOGISTICS]
+  - [SEG_TRAN_WAREHOUSE, part_of, SEG_TRAN_LOGISTICS]
+  - [SEG_TRAN_ROAD_FREIGHT, part_of, SEG_TRAN_LOGISTICS]
+  - [SEG_TRAN_HIGHWAY, part_of, SEG_TRAN_RAIL_ROAD]
+  - [SEG_TRAN_PUBLIC_TRANSIT, part_of, SEG_TRAN_RAIL_ROAD]
+  - [SEG_TRAN_RAILWAY, part_of, SEG_TRAN_RAIL_ROAD]
+  - [SEG_TRAN_AIRLINE, part_of, SEG_TRAN_AVIATION]
+  - [SEG_TRAN_AIRPORT, part_of, SEG_TRAN_AVIATION]
+  - [SEG_TRAN_SHIPPING, part_of, SEG_TRAN_SHIPPING_PORT]
+  - [SEG_TRAN_PORT, part_of, SEG_TRAN_SHIPPING_PORT]
+
+  # ---------- segments -> end markets ----------
+  - [SEG_TRAN_LOGISTICS, serves, MKT_LOGISTICS]
+  - [SEG_TRAN_RAW_MATERIAL_SCM, serves, MKT_STEEL_INDUSTRY]
+  - [SEG_TRAN_RAW_MATERIAL_SCM, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_TRAN_RAW_MATERIAL_SCM, serves, MKT_AGRICULTURE]
+  - [SEG_TRAN_CONSUMER_SCM, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_TRAN_CONSUMER_SCM, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_TRAN_CONSUMER_SCM, serves, MKT_EV]
+  - [SEG_TRAN_EXPRESS, serves, MKT_LOGISTICS]
+  - [SEG_TRAN_EXPRESS, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_TRAN_CROSS_BORDER, serves, MKT_LOGISTICS]
+  - [SEG_TRAN_CROSS_BORDER, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_TRAN_WAREHOUSE, serves, MKT_LOGISTICS]
+  - [SEG_TRAN_WAREHOUSE, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_TRAN_ROAD_FREIGHT, serves, MKT_LOGISTICS]
+  - [SEG_TRAN_RAIL_ROAD, serves, MKT_LOGISTICS]
+  - [SEG_TRAN_HIGHWAY, serves, MKT_LOGISTICS]
+  - [SEG_TRAN_HIGHWAY, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_TRAN_PUBLIC_TRANSIT, serves, MKT_GOVERNMENT]
+  - [SEG_TRAN_PUBLIC_TRANSIT, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_TRAN_RAILWAY, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_TRAN_RAILWAY, serves, MKT_THERMAL_POWER]
+  - [SEG_TRAN_RAILWAY, serves, MKT_LOGISTICS]
+  - [SEG_TRAN_AVIATION, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_TRAN_AIRLINE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_TRAN_AIRLINE, serves, MKT_LOGISTICS]
+  - [SEG_TRAN_AIRPORT, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_TRAN_SHIPPING_PORT, serves, MKT_LOGISTICS]
+  - [SEG_TRAN_SHIPPING, serves, MKT_LOGISTICS]
+  - [SEG_TRAN_SHIPPING, serves, MKT_OIL_GAS]
+  - [SEG_TRAN_SHIPPING, serves, MKT_MINING]
+  - [SEG_TRAN_SHIPPING, serves, MKT_STEEL_INDUSTRY]
+  - [SEG_TRAN_PORT, serves, MKT_LOGISTICS]
+
+  # ---------- products -> end markets ----------
+  - [PROD_TRAN_EXPRESS, used_in, MKT_LOGISTICS]
+  - [PROD_TRAN_ECOM_EXPRESS, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TRAN_TIME_DEFINITE_EXPRESS, used_in, MKT_LOGISTICS]
+  - [PROD_TRAN_LTL, used_in, MKT_LOGISTICS]
+  - [PROD_TRAN_SAME_CITY, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TRAN_COLD_CHAIN, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_TRAN_COLD_CHAIN, used_in, MKT_HEALTHCARE]
+  - [PROD_TRAN_METAL_SCM, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_TRAN_ENERGY_SCM, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_TRAN_ENERGY_SCM, used_in, MKT_THERMAL_POWER]
+  - [PROD_TRAN_AGRI_SCM, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_TRAN_AGRI_SCM, used_in, MKT_AGRICULTURE]
+  - [PROD_TRAN_CONTRACT_LOGISTICS, used_in, MKT_LOGISTICS]
+  - [PROD_TRAN_CONSUMER_SCM, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TRAN_ELECTRONICS_SCM, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_TRAN_AUTO_LOGISTICS, used_in, MKT_EV]
+  - [PROD_TRAN_AUTO_LOGISTICS, used_in, MKT_ICE_VEHICLE]
+  - [PROD_TRAN_FREIGHT_FORWARDING, used_in, MKT_LOGISTICS]
+  - [PROD_TRAN_CROSS_BORDER_ECOM, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TRAN_RAIL_INTERMODAL, used_in, MKT_LOGISTICS]
+  - [PROD_TRAN_PROJECT_LOGISTICS, used_in, MKT_CONSTRUCTION]
+  - [PROD_TRAN_PROJECT_LOGISTICS, used_in, MKT_WIND]
+  - [PROD_TRAN_WAREHOUSING, used_in, MKT_LOGISTICS]
+  - [PROD_TRAN_COLD_STORAGE, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_TRAN_HAZMAT_TRUCKING, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_TRAN_FTL, used_in, MKT_LOGISTICS]
+  - [PROD_TRAN_FREIGHT_PLATFORM, used_in, MKT_LOGISTICS]
+  - [PROD_TRAN_TOLL_ROAD, used_in, MKT_LOGISTICS]
+  - [PROD_TRAN_TOLL_ROAD, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TRAN_SERVICE_AREA, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TRAN_CITY_BUS, used_in, MKT_GOVERNMENT]
+  - [PROD_TRAN_METRO, used_in, MKT_RAIL]
+  - [PROD_TRAN_TAXI, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TRAN_INTERCITY_COACH, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TRAN_RAIL_PASSENGER, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TRAN_RAIL_PASSENGER, used_in, MKT_RAIL]
+  - [PROD_TRAN_RAIL_FREIGHT, used_in, MKT_LOGISTICS]
+  - [PROD_TRAN_HEAVY_HAUL_COAL, used_in, MKT_THERMAL_POWER]
+  - [PROD_TRAN_HEAVY_HAUL_COAL, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_TRAN_AIR_PASSENGER, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TRAN_AIR_CARGO, used_in, MKT_LOGISTICS]
+  - [PROD_TRAN_AIR_CARGO, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_TRAN_AIRPORT_NON_AERO, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TRAN_CONTAINER_SHIPPING, used_in, MKT_LOGISTICS]
+  - [PROD_TRAN_CRUDE_TANKER, used_in, MKT_OIL_GAS]
+  - [PROD_TRAN_PRODUCT_TANKER, used_in, MKT_OIL_GAS]
+  - [PROD_TRAN_CHEMICAL_TANKER, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_TRAN_LNG_SHIPPING, used_in, MKT_OIL_GAS]
+  - [PROD_TRAN_DRY_BULK, used_in, MKT_MINING]
+  - [PROD_TRAN_DRY_BULK, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_TRAN_DRY_BULK, used_in, MKT_AGRICULTURE]
+  - [PROD_TRAN_DRY_BULK, used_in, MKT_THERMAL_POWER]
+  - [PROD_TRAN_RORO, used_in, MKT_EV]
+  - [PROD_TRAN_RORO, used_in, MKT_ICE_VEHICLE]
+  - [PROD_TRAN_SPECIAL_CARGO_SHIPPING, used_in, MKT_WIND]
+  - [PROD_TRAN_SPECIAL_CARGO_SHIPPING, used_in, MKT_CONSTRUCTION]
+  - [PROD_TRAN_INLAND_SHIPPING, used_in, MKT_THERMAL_POWER]
+  - [PROD_TRAN_BULK_TERMINAL, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_TRAN_BULK_TERMINAL, used_in, MKT_THERMAL_POWER]
+  - [PROD_TRAN_LIQUID_TERMINAL, used_in, MKT_OIL_GAS]
+  - [PROD_TRAN_LIQUID_TERMINAL, used_in, MKT_CHEMICAL_INDUSTRY]
+
+  # ---------- chain structure among services ----------
+  - [PROD_TRAN_CONTAINER_SHIPPING, upstream_of, PROD_TRAN_OCEAN_FORWARDING]
+  - [PROD_TRAN_AIR_CARGO, upstream_of, PROD_TRAN_AIR_FORWARDING]
+  - [PROD_TRAN_AIR_CARGO, upstream_of, PROD_TRAN_CROSS_BORDER_ECOM]
+  - [PROD_TRAN_CONTAINER_SHIPPING, upstream_of, PROD_TRAN_CROSS_BORDER_ECOM]
+  - [PROD_TRAN_CONTAINER_TERMINAL, used_in, PROD_TRAN_CONTAINER_SHIPPING]
+  - [PROD_TRAN_BULK_TERMINAL, used_in, PROD_TRAN_DRY_BULK]
+  - [PROD_TRAN_LIQUID_TERMINAL, used_in, PROD_TRAN_CRUDE_TANKER]
+  - [PROD_TRAN_PILOTAGE_TUG, used_in, PROD_TRAN_PORT_HANDLING]
+  - [PROD_TRAN_SHIPPING_AGENCY, used_in, PROD_TRAN_CONTAINER_SHIPPING]
+  - [PROD_TRAN_SHIP_CHARTER, upstream_of, PROD_TRAN_CONTAINER_SHIPPING]
+  - [PROD_TRAN_SHIP_CHARTER, upstream_of, PROD_TRAN_DRY_BULK]
+  - [PROD_TRAN_CONTAINER_LEASING, upstream_of, PROD_TRAN_CONTAINER_SHIPPING]
+  - [PROD_TRAN_PORT_LOGISTICS, used_in, PROD_TRAN_PORT_HANDLING]
+  - [PROD_TRAN_CUSTOMS_BROKERAGE, used_in, PROD_TRAN_FREIGHT_FORWARDING]
+  - [PROD_TRAN_AIRPORT_AERO, used_in, PROD_TRAN_AIR_PASSENGER]
+  - [PROD_TRAN_AIRPORT_AERO, used_in, PROD_TRAN_AIR_CARGO]
+  - [PROD_TRAN_GROUND_HANDLING, used_in, PROD_TRAN_AIR_PASSENGER]
+  - [PROD_TRAN_GROUND_HANDLING, used_in, PROD_TRAN_AIR_CARGO]
+  - [PROD_TRAN_AIR_CARGO, used_in, PROD_TRAN_TIME_DEFINITE_EXPRESS]
+  - [PROD_TRAN_FTL, used_in, PROD_TRAN_EXPRESS]
+  - [PROD_TRAN_WAREHOUSING, used_in, PROD_TRAN_CONTRACT_LOGISTICS]
+  - [PROD_TRAN_COLD_STORAGE, used_in, PROD_TRAN_COLD_CHAIN]
+  - [PROD_TRAN_TOLL_ROAD, used_in, PROD_TRAN_FTL]
+  - [PROD_TRAN_ETC, used_in, PROD_TRAN_TOLL_ROAD]
+  - [PROD_TRAN_ROAD_MAINTENANCE, used_in, PROD_TRAN_TOLL_ROAD]
+  - [PROD_TRAN_RAIL_CONTAINER, used_in, PROD_TRAN_RAIL_INTERMODAL]
+  - [PROD_TRAN_HSR_OPERATION, used_in, PROD_TRAN_RAIL_PASSENGER]
+  - [PROD_TRAN_HSR_OPERATION, substitute_for, PROD_TRAN_AIR_PASSENGER]
+  - [PROD_TRAN_RAIL_PASSENGER, substitute_for, PROD_TRAN_INTERCITY_COACH]
+  - [PROD_TRAN_RAIL_FREIGHT, substitute_for, PROD_TRAN_FTL]
+  - [PROD_TRAN_RAIL_INTERMODAL, substitute_for, PROD_TRAN_CONTAINER_SHIPPING]
+  - [PROD_TRAN_FREIGHT_PLATFORM, substitute_for, PROD_TRAN_FTL]
+  - [PROD_TRAN_LTL, substitute_for, PROD_TRAN_TIME_DEFINITE_EXPRESS]
+  - [PROD_TRAN_METRO, substitute_for, PROD_TRAN_CITY_BUS]
+  - [PROD_TRAN_INLAND_SHIPPING, substitute_for, PROD_TRAN_RAIL_FREIGHT]
+
+  # ---------- links into auto taxonomy ----------
+  - [PROD_AUTO_HEAVY_TRUCK, used_in, PROD_TRAN_FTL]
+  - [PROD_AUTO_LIGHT_VAN, used_in, PROD_TRAN_SAME_CITY]
+  - [PROD_AUTO_LIGHT_TRUCK, used_in, PROD_TRAN_EXPRESS]
+  - [PROD_AUTO_NEV_BUS, used_in, PROD_TRAN_CITY_BUS]
+  - [PROD_AUTO_BEV_PASSENGER, used_in, PROD_TRAN_TAXI]
+  - [PROD_AUTO_ROBOTAXI, used_in, PROD_TRAN_TAXI]
+  - [PROD_AUTO_PASSENGER_CAR, upstream_of, PROD_TRAN_RORO]
+  - [PROD_AUTO_PASSENGER_CAR, upstream_of, PROD_TRAN_AUTO_LOGISTICS]
+  - [PROD_AUTO_SPECIAL_VEHICLE, used_in, PROD_TRAN_COLD_CHAIN]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_TRAN_FTL]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_TRAN_TAXI]
+  - [TECH_IOT, enables, PROD_TRAN_FREIGHT_PLATFORM]
+  - [TECH_IOT, enables, PROD_TRAN_ETC]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_TRAN_CONTAINER_SHIPPING, operates, PROD_DEF_CONTAINER_SHIP]
+  - [PROD_TRAN_DRY_BULK, operates, PROD_DEF_BULK_CARRIER]
+  - [PROD_TRAN_CRUDE_TANKER, operates, PROD_DEF_OIL_TANKER]
+  - [PROD_TRAN_LNG_SHIPPING, operates, PROD_DEF_LNG_CARRIER]
+  - [PROD_TRAN_AIR_PASSENGER, operates, PROD_DEF_COMMERCIAL_AIRLINER]
+  - [PROD_TRAN_RAIL_PASSENGER, operates, PROD_MACH_EMU]
+  - [PROD_TRAN_RAIL_FREIGHT, operates, PROD_MACH_LOCOMOTIVE]
+  - [PROD_TRAN_AIR_PASSENGER, uses_material, MAT_JET_FUEL]
+  - [PROD_TRAN_CONTAINER_SHIPPING, uses_material, MAT_BUNKER_FUEL]
+  - [PROD_TRAN_DRY_BULK, uses_material, MAT_BUNKER_FUEL]
+  - [PROD_TRAN_CRUDE_TANKER, uses_material, MAT_BUNKER_FUEL]
+
+sw_l3_map:
+  "420802": [SEG_TRAN_RAW_MATERIAL_SCM]
+  "420803": [SEG_TRAN_CONSUMER_SCM]
+  "420804": [SEG_TRAN_EXPRESS]
+  "420805": [SEG_TRAN_CROSS_BORDER]
+  "420806": [SEG_TRAN_WAREHOUSE]
+  "420807": [SEG_TRAN_ROAD_FREIGHT]
+  "420901": [SEG_TRAN_HIGHWAY]
+  "420902": [SEG_TRAN_PUBLIC_TRANSIT]
+  "420903": [SEG_TRAN_RAILWAY]
+  "421001": [SEG_TRAN_AIRLINE]
+  "421002": [SEG_TRAN_AIRPORT]
+  "421101": [SEG_TRAN_SHIPPING]
+  "421102": [SEG_TRAN_PORT]

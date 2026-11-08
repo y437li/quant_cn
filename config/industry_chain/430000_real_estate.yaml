@@ -1,0 +1,110 @@
+# 房地产 (SW 430000) product taxonomy — plan 12 phase 1, D-097. All edges are priors (source: prior).
+# Development sales, leasing and property services are services (kind: service).
+
+sector: {sw_l1: "430000", name: 房地产, name_en: Real Estate}
+
+nodes:
+  # ---------------- segments ----------------
+  - {id: SEG_RE_DEVELOPMENT, type: segment, name: 房地产开发, name_en: Property Development}
+  - {id: SEG_RE_RESIDENTIAL, type: segment, name: 住宅开发, name_en: Residential Development, parent: SEG_RE_DEVELOPMENT}
+  - {id: SEG_RE_COMMERCIAL, type: segment, name: 商业地产, name_en: Commercial Property, parent: SEG_RE_DEVELOPMENT, aliases: [持有型物业]}
+  - {id: SEG_RE_INDUSTRIAL, type: segment, name: 产业地产, name_en: Industrial Property, parent: SEG_RE_DEVELOPMENT, aliases: [产业园区]}
+  - {id: SEG_RE_SERVICES, type: segment, name: 房地产服务, name_en: Real Estate Services}
+  - {id: SEG_RE_PROPERTY_MGMT, type: segment, name: 物业管理, name_en: Property Management, parent: SEG_RE_SERVICES}
+  - {id: SEG_RE_BROKERAGE, type: segment, name: 房产租赁经纪, name_en: Brokerage and Leasing Agency, parent: SEG_RE_SERVICES}
+  - {id: SEG_RE_INTEGRATED_SERVICES, type: segment, name: 房地产综合服务, name_en: Integrated Real Estate Services, parent: SEG_RE_SERVICES}
+
+  # ---------------- development ----------------
+  - {id: PROD_RE_LAND_DEVELOPMENT, type: product, kind: service, name: 土地一级开发, name_en: Primary Land Development, segment: SEG_RE_DEVELOPMENT, aliases: [土地整理]}
+  - {id: PROD_RE_RESIDENTIAL_SALES, type: product, kind: service, name: 商品住宅开发销售, name_en: Residential Development and Sales, segment: SEG_RE_RESIDENTIAL, aliases: [商品房销售, 住宅销售, 合同销售]}
+  - {id: PROD_RE_AFFORDABLE_HOUSING, type: product, kind: service, name: 保障性住房开发, name_en: Affordable Housing Development, segment: SEG_RE_RESIDENTIAL, aliases: [保障房, 配售型保障房, 安置房]}
+  - {id: PROD_RE_URBAN_VILLAGE, type: product, kind: service, name: 城中村改造开发, name_en: Urban Village Redevelopment, segment: SEG_RE_RESIDENTIAL, aliases: [旧改项目]}
+  - {id: PROD_RE_AGENT_CONSTRUCTION, type: product, kind: service, name: 代建服务, name_en: Development Management Services, segment: SEG_RE_RESIDENTIAL, aliases: [代建, 轻资产代建]}
+  - {id: PROD_RE_OFFICE_LEASING, type: product, kind: service, name: 写字楼租赁, name_en: Office Leasing, segment: SEG_RE_COMMERCIAL, aliases: [办公楼出租]}
+  - {id: PROD_RE_HOTEL_PROPERTY, type: product, kind: service, name: 持有型酒店经营, name_en: Owned Hotel Operation, segment: SEG_RE_COMMERCIAL}
+  - {id: PROD_RE_RENTAL_APARTMENT, type: product, kind: service, name: 长租公寓, name_en: Rental Apartments, segment: SEG_RE_COMMERCIAL, aliases: [保障性租赁住房运营, 租赁住房]}
+  - {id: PROD_RE_INDUSTRIAL_PARK, type: product, kind: service, name: 产业园区开发运营, name_en: Industrial Park Development and Operation, segment: SEG_RE_INDUSTRIAL, aliases: [科技园区, 园区租赁]}
+  - {id: PROD_RE_LOGISTICS_PARK, type: product, kind: service, name: 物流仓储地产, name_en: Logistics and Warehouse Property, segment: SEG_RE_INDUSTRIAL}
+  - {id: PROD_RE_ASSET_MANAGEMENT, type: product, kind: service, name: 不动产资产管理, name_en: Real Estate Asset Management, segment: SEG_RE_INTEGRATED_SERVICES, aliases: [REITs管理, 不动产基金]}
+
+  # ---------------- services ----------------
+  - {id: PROD_RE_RESIDENTIAL_PM, type: product, kind: service, name: 住宅物业服务, name_en: Residential Property Management, segment: SEG_RE_PROPERTY_MGMT, aliases: [基础物业服务, 物业费]}
+  - {id: PROD_RE_NONRES_PM, type: product, kind: service, name: 非住宅物业服务, name_en: Non-Residential Property Management, segment: SEG_RE_PROPERTY_MGMT, aliases: [商写物业, 公建物业, 城市服务]}
+  - {id: PROD_RE_COMMUNITY_VAS, type: product, kind: service, name: 社区增值服务, name_en: Community Value-Added Services, segment: SEG_RE_PROPERTY_MGMT, aliases: [社区生活服务, 美居服务]}
+  - {id: PROD_RE_DEVELOPER_VAS, type: product, kind: service, name: 非业主增值服务, name_en: Developer Value-Added Services, segment: SEG_RE_PROPERTY_MGMT, aliases: [案场服务, 开发商增值服务]}
+  - {id: PROD_RE_SECONDHAND_BROKERAGE, type: product, kind: service, name: 二手房经纪, name_en: Existing-Home Brokerage, segment: SEG_RE_BROKERAGE, aliases: [存量房经纪, 房产中介]}
+  - {id: PROD_RE_NEW_HOME_AGENCY, type: product, kind: service, name: 新房代理销售, name_en: New-Home Sales Agency, segment: SEG_RE_BROKERAGE, aliases: [新房代销, 一手房代理]}
+  - {id: PROD_RE_RENTAL_BROKERAGE, type: product, kind: service, name: 房屋租赁经纪, name_en: Rental Brokerage, segment: SEG_RE_BROKERAGE, aliases: [租赁中介]}
+  - {id: PROD_RE_VALUATION_CONSULTING, type: product, kind: service, name: 房地产估价与咨询, name_en: Valuation and Advisory, segment: SEG_RE_INTEGRATED_SERVICES, aliases: [房地产评估, 策划咨询]}
+
+edges:
+  - [SEG_RE_RESIDENTIAL, part_of, SEG_RE_DEVELOPMENT]
+  - [SEG_RE_COMMERCIAL, part_of, SEG_RE_DEVELOPMENT]
+  - [SEG_RE_INDUSTRIAL, part_of, SEG_RE_DEVELOPMENT]
+  - [SEG_RE_PROPERTY_MGMT, part_of, SEG_RE_SERVICES]
+  - [SEG_RE_BROKERAGE, part_of, SEG_RE_SERVICES]
+  - [SEG_RE_INTEGRATED_SERVICES, part_of, SEG_RE_SERVICES]
+  - [SEG_RE_RESIDENTIAL, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_RE_RESIDENTIAL, serves, MKT_REAL_ESTATE]
+  - [SEG_RE_COMMERCIAL, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_RE_COMMERCIAL, serves, MKT_REAL_ESTATE]
+  - [SEG_RE_INDUSTRIAL, serves, MKT_LOGISTICS]
+  - [SEG_RE_INDUSTRIAL, serves, MKT_REAL_ESTATE]
+  - [SEG_RE_PROPERTY_MGMT, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_RE_PROPERTY_MGMT, serves, MKT_GOVERNMENT]
+  - [SEG_RE_BROKERAGE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_RE_INTEGRATED_SERVICES, serves, MKT_FINANCE]
+
+  # development chain
+  - [PROD_RE_LAND_DEVELOPMENT, upstream_of, PROD_RE_RESIDENTIAL_SALES]
+  - [PROD_RE_LAND_DEVELOPMENT, upstream_of, PROD_RE_INDUSTRIAL_PARK]
+  - [PROD_CONS_DESIGN, upstream_of, PROD_RE_RESIDENTIAL_SALES]
+  - [PROD_CONS_RESIDENTIAL, upstream_of, PROD_RE_RESIDENTIAL_SALES]
+  - [PROD_CONS_RESIDENTIAL, upstream_of, PROD_RE_AFFORDABLE_HOUSING]
+  - [PROD_CONS_RESIDENTIAL_DECORATION, upstream_of, PROD_RE_RESIDENTIAL_SALES]
+  - [PROD_CONS_URBAN_RENEWAL, upstream_of, PROD_RE_URBAN_VILLAGE]
+  - [PROD_CONS_PUBLIC_BUILDING, upstream_of, PROD_RETL_SHOPPING_MALL]
+  - [PROD_CONS_PUBLIC_BUILDING, upstream_of, PROD_RE_OFFICE_LEASING]
+  - [PROD_CONS_INDUSTRIAL_PLANT, upstream_of, PROD_RE_INDUSTRIAL_PARK]
+  - [PROD_CONS_INDUSTRIAL_PLANT, upstream_of, PROD_RE_LOGISTICS_PARK]
+  - [PROD_RE_RESIDENTIAL_SALES, uses_material, MAT_CEMENT]
+  - [PROD_RE_RESIDENTIAL_SALES, uses_material, MAT_STEEL]
+  - [PROD_RE_RESIDENTIAL_SALES, upstream_of, PROD_RE_RESIDENTIAL_PM]
+  - [PROD_RETL_SHOPPING_MALL, upstream_of, PROD_RE_ASSET_MANAGEMENT]
+  - [PROD_RE_LOGISTICS_PARK, upstream_of, PROD_RE_ASSET_MANAGEMENT]
+  - [PROD_RE_INDUSTRIAL_PARK, upstream_of, PROD_RE_ASSET_MANAGEMENT]
+  - [PROD_RE_RENTAL_APARTMENT, upstream_of, PROD_RE_ASSET_MANAGEMENT]
+  - [PROD_RE_RESIDENTIAL_SALES, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_RE_AFFORDABLE_HOUSING, used_in, MKT_GOVERNMENT]
+  - [PROD_RE_URBAN_VILLAGE, used_in, MKT_GOVERNMENT]
+  - [PROD_RE_AGENT_CONSTRUCTION, used_in, MKT_GOVERNMENT]
+  - [PROD_RE_AGENT_CONSTRUCTION, substitute_for, PROD_RE_RESIDENTIAL_SALES]
+  - [PROD_RETL_SHOPPING_MALL, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_RE_OFFICE_LEASING, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_RE_OFFICE_LEASING, used_in, MKT_FINANCE]
+  - [PROD_RE_RENTAL_APARTMENT, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_RE_HOTEL_PROPERTY, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_RE_LOGISTICS_PARK, used_in, MKT_LOGISTICS]
+  - [PROD_RE_INDUSTRIAL_PARK, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_RE_ASSET_MANAGEMENT, used_in, MKT_FINANCE]
+
+  # services
+  - [PROD_RE_RESIDENTIAL_PM, upstream_of, PROD_RE_COMMUNITY_VAS]
+  - [PROD_RE_RESIDENTIAL_SALES, upstream_of, PROD_RE_DEVELOPER_VAS]
+  - [PROD_RE_RESIDENTIAL_SALES, upstream_of, PROD_RE_NEW_HOME_AGENCY]
+  - [PROD_RE_RESIDENTIAL_PM, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_RE_NONRES_PM, used_in, MKT_GOVERNMENT]
+  - [PROD_RE_NONRES_PM, used_in, MKT_HEALTHCARE]
+  - [PROD_RE_COMMUNITY_VAS, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_RE_SECONDHAND_BROKERAGE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_RE_RENTAL_BROKERAGE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_RE_NEW_HOME_AGENCY, used_in, MKT_REAL_ESTATE]
+  - [PROD_RE_VALUATION_CONSULTING, used_in, MKT_FINANCE]
+
+sw_l3_map:
+  "430101": [SEG_RE_RESIDENTIAL]
+  "430102": [SEG_RE_COMMERCIAL]
+  "430103": [SEG_RE_INDUSTRIAL]
+  "430301": [SEG_RE_PROPERTY_MGMT]
+  "430302": [SEG_RE_BROKERAGE]
+  "430303": [SEG_RE_INTEGRATED_SERVICES]

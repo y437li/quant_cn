@@ -6,12 +6,23 @@ Mirrors `src/quant_cn`; one `test_<module>.py` per module, one test per TC ID (C
 | Folder | Purpose |
 |---|---|
 | [`back_testing/`](back_testing/INDEX.md) | tests for `quant_cn.back_testing` |
+| [`calculation/`](calculation/INDEX.md) | tests for `quant_cn.calculation` |
 | [`core/`](core/INDEX.md) | tests for `quant_cn.core` |
 | [`data_loading/`](data_loading/INDEX.md) | tests for `quant_cn.data_loading` |
+| [`factor/`](factor/INDEX.md) | TODO purpose |
+| [`industry_graph/`](industry_graph/INDEX.md) | tests for `quant_cn.industry_graph` |
 | [`lake/`](lake/INDEX.md) | tests for `quant_cn.lake` |
 | [`pipeline/`](pipeline/INDEX.md) | tests for `quant_cn.pipeline` |
 | [`portfolio/`](portfolio/INDEX.md) | tests for `quant_cn.portfolio` |
+| [`scripts/`](scripts/INDEX.md) | tests for `scripts/` |
 | [`statistic/`](statistic/INDEX.md) | tests for `quant_cn.statistic` |
 | [`visualization/`](visualization/INDEX.md) | tests for `quant_cn.visualization` |
 
-_Planned (plan 01 phase 1): `conftest.py` (mini lake in tmp_path), `test_contracts.py` (contract + index linter)._
+## Files
+| File | Purpose | Contains |
+|---|---|---|
+| `__init__.py` | package marker |  |
+| `conftest.py` | shared fixtures: Config over copied YAML, mini lake in tmp_path | `clock`, `repo`, `config`, `lake` |
+| `support.py` | Test doubles and frame builders shared by all test modules (no network, no real lake) | `FakeClock`, `FakeTushareClient`, `MiniLake`, `Sample`, `SampleRepo`, `SampleLake`, `SampleOptions`, `ScriptStep`, `SampleFactorLake`, `SampleMarket` |
+| `test_cli.py` | tests for `cli`, one function per TC ID |  |
+| `test_contracts.py` | the whole repository passes lint_contracts (every group) |  |

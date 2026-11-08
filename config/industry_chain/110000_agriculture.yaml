@@ -1,0 +1,352 @@
+# 农林牧渔 (SW 110000) — product taxonomy prior (plan 12 phase 1, D-097). All edges are priors.
+# Format: README.md beside this file.
+sector: {sw_l1: "110000", name: 农林牧渔, name_en: Agriculture Forestry Livestock and Fishery}
+
+nodes:
+  # ================= segments =================
+  - {id: SEG_AGRI_CROP_FARMING, type: segment, name: 种植业, name_en: Crop Farming}
+  - {id: SEG_AGRI_SEEDS, type: segment, name: 种子, name_en: Seeds, parent: SEG_AGRI_CROP_FARMING}
+  - {id: SEG_AGRI_GRAIN_FARMING, type: segment, name: 粮食种植, name_en: Grain Farming, parent: SEG_AGRI_CROP_FARMING}
+  - {id: SEG_AGRI_OTHER_CROPS, type: segment, name: 其他种植业, name_en: Other Crop Farming, parent: SEG_AGRI_CROP_FARMING}
+  - {id: SEG_AGRI_EDIBLE_FUNGI, type: segment, name: 食用菌, name_en: Edible Fungi, parent: SEG_AGRI_CROP_FARMING}
+  - {id: SEG_AGRI_FISHERY, type: segment, name: 渔业, name_en: Fishery}
+  - {id: SEG_AGRI_MARINE_FISHING, type: segment, name: 海洋捕捞, name_en: Marine Fishing, parent: SEG_AGRI_FISHERY}
+  - {id: SEG_AGRI_AQUACULTURE, type: segment, name: 水产养殖, name_en: Aquaculture, parent: SEG_AGRI_FISHERY}
+  - {id: SEG_AGRI_FORESTRY, type: segment, name: 林业, name_en: Forestry}
+  - {id: SEG_AGRI_FEED, type: segment, name: 饲料, name_en: Feed}
+  - {id: SEG_AGRI_LIVESTOCK_FEED, type: segment, name: 畜禽饲料, name_en: Livestock and Poultry Feed, parent: SEG_AGRI_FEED}
+  - {id: SEG_AGRI_AQUA_FEED, type: segment, name: 水产饲料, name_en: Aquafeed, parent: SEG_AGRI_FEED}
+  - {id: SEG_AGRI_PET_FOOD, type: segment, name: 宠物食品, name_en: Pet Food, parent: SEG_AGRI_FEED}
+  - {id: SEG_AGRI_PROCESSING, type: segment, name: 农产品加工, name_en: Agricultural Products Processing}
+  - {id: SEG_AGRI_FRUIT_VEG_PROCESSING, type: segment, name: 果蔬加工, name_en: Fruit and Vegetable Processing, parent: SEG_AGRI_PROCESSING}
+  - {id: SEG_AGRI_GRAIN_OIL_PROCESSING, type: segment, name: 粮油加工, name_en: Grain and Edible Oil Processing, parent: SEG_AGRI_PROCESSING}
+  - {id: SEG_AGRI_OTHER_PROCESSING, type: segment, name: 其他农产品加工, name_en: Other Agricultural Processing, parent: SEG_AGRI_PROCESSING}
+  - {id: SEG_AGRI_LIVESTOCK, type: segment, name: 养殖业, name_en: Livestock Farming}
+  - {id: SEG_AGRI_HOG_FARMING, type: segment, name: 生猪养殖, name_en: Hog Farming, parent: SEG_AGRI_LIVESTOCK}
+  - {id: SEG_AGRI_BROILER_FARMING, type: segment, name: 肉鸡养殖, name_en: Broiler Farming, parent: SEG_AGRI_LIVESTOCK}
+  - {id: SEG_AGRI_OTHER_LIVESTOCK, type: segment, name: 其他养殖, name_en: Other Livestock Farming, parent: SEG_AGRI_LIVESTOCK}
+  - {id: SEG_AGRI_ANIMAL_HEALTH, type: segment, name: 动物保健, name_en: Animal Health}
+  - {id: SEG_AGRI_INTEGRATED, type: segment, name: 农业综合, name_en: Integrated Agriculture and Services}
+
+  # ================= seeds =================
+  - {id: PROD_AGRI_SEED, type: product, name: 农作物种子, name_en: Crop Seeds, segment: SEG_AGRI_SEEDS, aliases: [种业]}
+  - {id: PROD_AGRI_CORN_SEED, type: product, name: 玉米种子, name_en: Corn Seed, parent: PROD_AGRI_SEED, segment: SEG_AGRI_SEEDS, aliases: [杂交玉米种子]}
+  - {id: PROD_AGRI_GM_CORN_SEED, type: product, name: 转基因玉米种子, name_en: GM Corn Seed, parent: PROD_AGRI_CORN_SEED, segment: SEG_AGRI_SEEDS, aliases: [生物育种玉米, 转基因性状]}
+  - {id: PROD_AGRI_RICE_SEED, type: product, name: 水稻种子, name_en: Rice Seed, parent: PROD_AGRI_SEED, segment: SEG_AGRI_SEEDS, aliases: [杂交水稻种子, 常规稻种子]}
+  - {id: PROD_AGRI_WHEAT_SEED, type: product, name: 小麦种子, name_en: Wheat Seed, parent: PROD_AGRI_SEED, segment: SEG_AGRI_SEEDS}
+  - {id: PROD_AGRI_SOYBEAN_SEED, type: product, name: 大豆种子, name_en: Soybean Seed, parent: PROD_AGRI_SEED, segment: SEG_AGRI_SEEDS, aliases: [转基因大豆种子]}
+  - {id: PROD_AGRI_VEGETABLE_SEED, type: product, name: 蔬菜种子, name_en: Vegetable Seed, parent: PROD_AGRI_SEED, segment: SEG_AGRI_SEEDS, import_dependence: medium, aliases: [瓜菜种子]}
+  - {id: PROD_AGRI_COTTON_SEED, type: product, name: 棉花种子, name_en: Cotton Seed, parent: PROD_AGRI_SEED, segment: SEG_AGRI_SEEDS}
+
+  # ================= grain and other crops =================
+  - {id: PROD_AGRI_FARMED_GRAIN, type: product, name: 自产粮食作物, name_en: Self-Grown Grain Crops, segment: SEG_AGRI_GRAIN_FARMING, aliases: [农场粮食, 自营粮食种植]}
+  - {id: PROD_AGRI_LAND_CONTRACTING, type: product, name: 农垦土地承包, name_en: State-Farm Land Contracting, segment: SEG_AGRI_GRAIN_FARMING, kind: service, aliases: [土地承包费, 土地发包]}
+  - {id: PROD_AGRI_RUBBER_PLANTATION, type: product, name: 天然橡胶种植加工, name_en: Natural Rubber Plantation, segment: SEG_AGRI_OTHER_CROPS, import_dependence: medium, aliases: [橡胶园, 天胶种植]}
+  - {id: PROD_AGRI_COTTON_FARMING, type: product, name: 棉花种植加工, name_en: Cotton Farming and Ginning, segment: SEG_AGRI_OTHER_CROPS, aliases: [皮棉, 籽棉]}
+  - {id: PROD_AGRI_FRUIT_FARMING, type: product, name: 水果种植, name_en: Fruit Growing, segment: SEG_AGRI_OTHER_CROPS, aliases: [果园, 鲜果]}
+  - {id: PROD_AGRI_SUGARCANE, type: product, name: 糖料种植, name_en: Sugar Crop Growing, segment: SEG_AGRI_OTHER_CROPS, aliases: [甘蔗, 甜菜]}
+  - {id: PROD_AGRI_TEA, type: product, name: 茶叶, name_en: Tea, segment: SEG_AGRI_OTHER_CROPS, aliases: [茶园, 毛茶]}
+  - {id: PROD_AGRI_SEEDLINGS, type: product, name: 园林苗木, name_en: Nursery Seedlings, segment: SEG_AGRI_OTHER_CROPS, aliases: [绿化苗木, 花卉, 苗木]}
+  - {id: PROD_AGRI_EDIBLE_FUNGI, type: product, name: 工厂化食用菌, name_en: Industrially Grown Mushrooms, segment: SEG_AGRI_EDIBLE_FUNGI, aliases: [食用菌产品, 鲜菇]}
+  - {id: PROD_AGRI_ENOKI, type: product, name: 金针菇, name_en: Enoki Mushroom, parent: PROD_AGRI_EDIBLE_FUNGI, segment: SEG_AGRI_EDIBLE_FUNGI}
+  - {id: PROD_AGRI_KING_OYSTER, type: product, name: 杏鲍菇, name_en: King Oyster Mushroom, parent: PROD_AGRI_EDIBLE_FUNGI, segment: SEG_AGRI_EDIBLE_FUNGI}
+  - {id: PROD_AGRI_SHIMEJI, type: product, name: 真姬菇, name_en: Shimeji Mushroom, parent: PROD_AGRI_EDIBLE_FUNGI, segment: SEG_AGRI_EDIBLE_FUNGI, aliases: [蟹味菇, 白玉菇, 海鲜菇]}
+  - {id: PROD_AGRI_SHIITAKE, type: product, name: 香菇, name_en: Shiitake Mushroom, parent: PROD_AGRI_EDIBLE_FUNGI, segment: SEG_AGRI_EDIBLE_FUNGI}
+
+  # ================= fishery =================
+  - {id: PROD_AGRI_OCEAN_CATCH, type: product, name: 远洋捕捞水产品, name_en: Distant-Water Catch, segment: SEG_AGRI_MARINE_FISHING, aliases: [远洋渔业, 海洋捕捞产品]}
+  - {id: PROD_AGRI_TUNA, type: product, name: 金枪鱼, name_en: Tuna, parent: PROD_AGRI_OCEAN_CATCH, segment: SEG_AGRI_MARINE_FISHING, aliases: [超低温金枪鱼]}
+  - {id: PROD_AGRI_SQUID, type: product, name: 鱿鱼, name_en: Squid, parent: PROD_AGRI_OCEAN_CATCH, segment: SEG_AGRI_MARINE_FISHING}
+  - {id: PROD_AGRI_FISH_MEAL, type: product, name: 鱼粉, name_en: Fish Meal, segment: SEG_AGRI_MARINE_FISHING, import_dependence: high, aliases: [进口鱼粉, 蒸汽鱼粉]}
+  - {id: PROD_AGRI_AQUA_FRY, type: product, name: 水产苗种, name_en: Aquaculture Fry and Broodstock, segment: SEG_AGRI_AQUACULTURE, import_dependence: medium, aliases: [虾苗, 鱼苗, 南美白对虾种苗]}
+  - {id: PROD_AGRI_SHRIMP, type: product, name: 养殖对虾, name_en: Farmed Shrimp, segment: SEG_AGRI_AQUACULTURE, aliases: [对虾, 南美白对虾]}
+  - {id: PROD_AGRI_SEA_CUCUMBER, type: product, name: 海参, name_en: Sea Cucumber, segment: SEG_AGRI_AQUACULTURE, aliases: [刺参]}
+  - {id: PROD_AGRI_FARMED_FISH, type: product, name: 养殖鱼类, name_en: Farmed Fish, segment: SEG_AGRI_AQUACULTURE, aliases: [淡水鱼, 海水鱼, 大黄鱼, 加州鲈]}
+  - {id: PROD_AGRI_SHELLFISH, type: product, name: 养殖贝类, name_en: Farmed Shellfish, segment: SEG_AGRI_AQUACULTURE, aliases: [扇贝, 鲍鱼, 海螺]}
+
+  # ================= forestry =================
+  - {id: PROD_AGRI_FOREST_MGMT, type: product, name: 营林与林木采伐, name_en: Forest Management and Logging, segment: SEG_AGRI_FORESTRY, aliases: [林地经营, 林木, 原木采伐]}
+  - {id: PROD_AGRI_FOREST_CARBON, type: product, name: 林业碳汇, name_en: Forestry Carbon Credits, segment: SEG_AGRI_FORESTRY, kind: service, aliases: [CCER林业碳汇]}
+
+  # ================= feed =================
+  - {id: PROD_AGRI_FEED, type: product, name: 配合饲料, name_en: Compound Feed, segment: SEG_AGRI_LIVESTOCK_FEED, aliases: [饲料产品, 全价料]}
+  - {id: PROD_AGRI_HOG_FEED, type: product, name: 猪饲料, name_en: Hog Feed, parent: PROD_AGRI_FEED, segment: SEG_AGRI_LIVESTOCK_FEED, aliases: [猪料, 教槽料, 乳猪料]}
+  - {id: PROD_AGRI_POULTRY_FEED, type: product, name: 禽饲料, name_en: Poultry Feed, parent: PROD_AGRI_FEED, segment: SEG_AGRI_LIVESTOCK_FEED, aliases: [禽料, 肉禽料, 蛋禽料]}
+  - {id: PROD_AGRI_RUMINANT_FEED, type: product, name: 反刍饲料, name_en: Ruminant Feed, parent: PROD_AGRI_FEED, segment: SEG_AGRI_LIVESTOCK_FEED, aliases: [反刍料, 牛羊饲料]}
+  - {id: PROD_AGRI_PREMIX, type: product, name: 预混合饲料, name_en: Feed Premix, segment: SEG_AGRI_LIVESTOCK_FEED, aliases: [预混料, 浓缩饲料]}
+  - {id: PROD_AGRI_AQUA_FEED, type: product, name: 水产饲料产品, name_en: Aquafeed Products, parent: PROD_AGRI_FEED, segment: SEG_AGRI_AQUA_FEED, aliases: [水产料, 鱼料]}
+  - {id: PROD_AGRI_SPECIALTY_AQUA_FEED, type: product, name: 特种水产饲料, name_en: Specialty Aquafeed, parent: PROD_AGRI_AQUA_FEED, segment: SEG_AGRI_AQUA_FEED, aliases: [虾料, 膨化料, 特水料]}
+  - {id: PROD_AGRI_FEED_INGREDIENT_TRADE, type: product, name: 饲料原料贸易, name_en: Feed Ingredient Trading, segment: SEG_AGRI_LIVESTOCK_FEED, kind: service, aliases: [饲料原料]}
+  - {id: PROD_AGRI_PET_FOOD, type: product, name: 宠物食品产品, name_en: Pet Food Products, segment: SEG_AGRI_PET_FOOD, aliases: [宠物主粮]}
+  - {id: PROD_AGRI_PET_DRY_FOOD, type: product, name: 宠物干粮, name_en: Dry Pet Food, parent: PROD_AGRI_PET_FOOD, segment: SEG_AGRI_PET_FOOD, aliases: [猫粮, 狗粮, 烘焙粮]}
+  - {id: PROD_AGRI_PET_WET_FOOD, type: product, name: 宠物湿粮, name_en: Wet Pet Food, parent: PROD_AGRI_PET_FOOD, segment: SEG_AGRI_PET_FOOD, aliases: [主食罐头, 猫条, 餐盒]}
+  - {id: PROD_AGRI_PET_TREATS, type: product, name: 宠物零食, name_en: Pet Treats, parent: PROD_AGRI_PET_FOOD, segment: SEG_AGRI_PET_FOOD, aliases: [宠物肉干, 洁齿骨]}
+
+  # ================= agricultural processing =================
+  - {id: PROD_AGRI_FRUIT_JUICE_CONC, type: product, name: 浓缩果蔬汁, name_en: Fruit and Vegetable Juice Concentrate, segment: SEG_AGRI_FRUIT_VEG_PROCESSING, aliases: [浓缩苹果汁, 果浆]}
+  - {id: PROD_AGRI_DEHYDRATED_VEG, type: product, name: 脱水果蔬, name_en: Dehydrated Fruits and Vegetables, segment: SEG_AGRI_FRUIT_VEG_PROCESSING, aliases: [冻干果蔬, 脱水蔬菜]}
+  - {id: PROD_AGRI_CANNED_FRUIT_VEG, type: product, name: 果蔬罐头, name_en: Canned Fruit and Vegetables, segment: SEG_AGRI_FRUIT_VEG_PROCESSING, aliases: [水果罐头, 番茄酱]}
+  - {id: PROD_AGRI_PRESERVED_VEG, type: product, name: 腌制蔬菜, name_en: Pickled Vegetables, segment: SEG_AGRI_FRUIT_VEG_PROCESSING, aliases: [泡菜]}
+  - {id: PROD_AGRI_EDIBLE_OIL, type: product, name: 食用植物油, name_en: Edible Vegetable Oil, segment: SEG_AGRI_GRAIN_OIL_PROCESSING, aliases: [食用油, 大豆油, 菜籽油, 花生油, 小包装油]}
+  - {id: PROD_AGRI_SOY_CRUSHING, type: product, name: 大豆压榨, name_en: Soybean Crushing, segment: SEG_AGRI_GRAIN_OIL_PROCESSING, import_dependence: medium, aliases: [油脂压榨, 油籽压榨]}
+  - {id: PROD_AGRI_RICE_MILLING, type: product, name: 大米, name_en: Milled Rice, segment: SEG_AGRI_GRAIN_OIL_PROCESSING, aliases: [精制大米, 稻米加工]}
+  - {id: PROD_AGRI_FLOUR, type: product, name: 面粉, name_en: Wheat Flour, segment: SEG_AGRI_GRAIN_OIL_PROCESSING, aliases: [小麦粉, 专用粉]}
+  - {id: PROD_AGRI_CORN_STARCH, type: product, name: 玉米淀粉, name_en: Corn Starch, segment: SEG_AGRI_GRAIN_OIL_PROCESSING, aliases: [淀粉, 玉米深加工]}
+  - {id: PROD_AGRI_STARCH_SUGAR, type: product, name: 淀粉糖, name_en: Starch Sugars, segment: SEG_AGRI_GRAIN_OIL_PROCESSING, aliases: [果葡糖浆, 葡萄糖, 麦芽糖浆]}
+  - {id: PROD_AGRI_SUGAR_REFINING, type: product, name: 食糖加工, name_en: Sugar Milling and Refining, segment: SEG_AGRI_OTHER_PROCESSING, aliases: [甘蔗制糖, 甜菜制糖, 白砂糖, 精炼糖]}
+  - {id: PROD_AGRI_CASING, type: product, name: 天然肠衣, name_en: Natural Casings, segment: SEG_AGRI_OTHER_PROCESSING, aliases: [肠衣, 猪肠衣]}
+  - {id: PROD_AGRI_FROZEN_SEAFOOD_PROCESSING, type: product, name: 水产品加工, name_en: Seafood Processing, segment: SEG_AGRI_OTHER_PROCESSING, aliases: [冻品水产, 海产品加工]}
+  - {id: PROD_AGRI_GRAIN_TRADING, type: product, name: 粮食收储与贸易, name_en: Grain Storage and Trading, segment: SEG_AGRI_OTHER_PROCESSING, kind: service, aliases: [粮食仓储, 粮食贸易]}
+  - {id: PROD_AGRI_NUT_PROCESSING, type: product, name: 坚果初加工, name_en: Nut Primary Processing, segment: SEG_AGRI_OTHER_PROCESSING, aliases: [坚果原料, 瓜子原料]}
+
+  # ================= hogs =================
+  - {id: PROD_AGRI_BREEDING_PIG, type: product, name: 种猪, name_en: Breeding Pigs, segment: SEG_AGRI_HOG_FARMING, import_dependence: medium, aliases: [原种猪, 祖代种猪, 二元母猪, 能繁母猪]}
+  - {id: PROD_AGRI_PIGLET, type: product, name: 仔猪, name_en: Piglets, segment: SEG_AGRI_HOG_FARMING, aliases: [猪苗, 断奶仔猪]}
+  - {id: PROD_AGRI_HOG_CONTRACT_FARMING, type: product, name: 生猪代养, name_en: Contract Hog Fattening, segment: SEG_AGRI_HOG_FARMING, kind: service, aliases: [公司+农户, 家庭农场代养]}
+
+  # ================= poultry =================
+  - {id: PROD_AGRI_WHITE_BROILER_GP, type: product, name: 白羽肉鸡祖代种鸡, name_en: White-Feather Broiler Grandparent Stock, segment: SEG_AGRI_BROILER_FARMING, import_dependence: high, aliases: [白羽祖代, 祖代鸡, 祖代种鸡]}
+  - {id: PROD_AGRI_WHITE_BROILER_PS, type: product, name: 白羽肉鸡父母代种鸡, name_en: White-Feather Broiler Parent Stock, segment: SEG_AGRI_BROILER_FARMING, aliases: [父母代鸡苗, 父母代种雏]}
+  - {id: PROD_AGRI_BROILER_CHICK, type: product, name: 商品代鸡苗, name_en: Commercial Broiler Chicks, segment: SEG_AGRI_BROILER_FARMING, aliases: [鸡苗, 白羽鸡苗]}
+  - {id: PROD_AGRI_WHITE_BROILER, type: product, name: 白羽肉鸡, name_en: White-Feather Broilers, segment: SEG_AGRI_BROILER_FARMING, aliases: [商品代白羽肉鸡, 毛鸡]}
+  - {id: PROD_AGRI_YELLOW_BROILER, type: product, name: 黄羽肉鸡, name_en: Yellow-Feather Broilers, segment: SEG_AGRI_BROILER_FARMING, aliases: [黄鸡, 黄羽鸡, 土鸡]}
+  - {id: PROD_AGRI_CHICKEN_MEAT, type: product, name: 鸡肉分割品, name_en: Chicken Cuts, segment: SEG_AGRI_BROILER_FARMING, aliases: [鸡肉, 鸡肉屠宰, 冰鲜鸡]}
+  - {id: PROD_AGRI_PROCESSED_CHICKEN, type: product, name: 鸡肉深加工制品, name_en: Further-Processed Chicken, segment: SEG_AGRI_BROILER_FARMING, aliases: [调理鸡肉, 鸡肉熟食, 炸鸡半成品]}
+
+  # ================= other livestock =================
+  - {id: PROD_AGRI_EGGS, type: product, name: 鸡蛋, name_en: Eggs, segment: SEG_AGRI_OTHER_LIVESTOCK, aliases: [鲜鸡蛋, 品牌蛋, 蛋鸡养殖]}
+  - {id: PROD_AGRI_DUCK, type: product, name: 肉鸭, name_en: Meat Ducks, segment: SEG_AGRI_OTHER_LIVESTOCK, aliases: [鸭苗, 樱桃谷鸭, 鸭肉]}
+  - {id: PROD_AGRI_BEEF_CATTLE, type: product, name: 肉牛, name_en: Beef Cattle, segment: SEG_AGRI_OTHER_LIVESTOCK, aliases: [牛肉, 肉牛养殖]}
+  - {id: PROD_AGRI_DAIRY_FARMING, type: product, name: 奶牛养殖, name_en: Dairy Farming, segment: SEG_AGRI_OTHER_LIVESTOCK, aliases: [牧场, 奶牛, 原料奶供应]}
+  - {id: PROD_AGRI_DAIRY_HEIFER, type: product, name: 进口奶牛与胚胎, name_en: Dairy Genetics and Imported Heifers, segment: SEG_AGRI_OTHER_LIVESTOCK, import_dependence: high, aliases: [冻精, 牛胚胎, 进口牛]}
+  - {id: PROD_AGRI_SHEEP, type: product, name: 肉羊, name_en: Mutton Sheep, segment: SEG_AGRI_OTHER_LIVESTOCK, aliases: [羊肉, 肉羊养殖]}
+
+  # ================= animal health =================
+  - {id: PROD_AGRI_VET_VACCINE, type: product, name: 兽用疫苗, name_en: Veterinary Vaccines, segment: SEG_AGRI_ANIMAL_HEALTH, aliases: [动物疫苗, 兽用生物制品]}
+  - {id: PROD_AGRI_FMD_VACCINE, type: product, name: 口蹄疫疫苗, name_en: Foot-and-Mouth Disease Vaccine, parent: PROD_AGRI_VET_VACCINE, segment: SEG_AGRI_ANIMAL_HEALTH, aliases: [口蹄疫苗, 强免疫苗]}
+  - {id: PROD_AGRI_SWINE_VACCINE, type: product, name: 猪用疫苗, name_en: Swine Vaccines, parent: PROD_AGRI_VET_VACCINE, segment: SEG_AGRI_ANIMAL_HEALTH, aliases: [猪圆环疫苗, 猪伪狂犬疫苗, 蓝耳疫苗, 猪瘟疫苗]}
+  - {id: PROD_AGRI_POULTRY_VACCINE, type: product, name: 禽用疫苗, name_en: Poultry Vaccines, parent: PROD_AGRI_VET_VACCINE, segment: SEG_AGRI_ANIMAL_HEALTH, aliases: [禽流感疫苗, 新城疫疫苗]}
+  - {id: PROD_AGRI_PET_VACCINE, type: product, name: 宠物疫苗, name_en: Pet Vaccines, parent: PROD_AGRI_VET_VACCINE, segment: SEG_AGRI_ANIMAL_HEALTH, import_dependence: medium, aliases: [猫三联, 犬用狂犬疫苗]}
+  - {id: PROD_AGRI_RUMINANT_VACCINE, type: product, name: 反刍动物疫苗, name_en: Ruminant Vaccines, parent: PROD_AGRI_VET_VACCINE, segment: SEG_AGRI_ANIMAL_HEALTH, aliases: [布病疫苗, 小反刍兽疫疫苗]}
+  - {id: PROD_AGRI_VET_DRUG, type: product, name: 兽用化学药品, name_en: Veterinary Pharmaceuticals, segment: SEG_AGRI_ANIMAL_HEALTH, aliases: [兽药, 兽用抗生素, 兽用原料药]}
+  - {id: PROD_AGRI_PET_MEDICINE, type: product, name: 宠物药品, name_en: Companion Animal Medicines, segment: SEG_AGRI_ANIMAL_HEALTH, aliases: [宠物驱虫药, 宠物化药]}
+  - {id: PROD_AGRI_VET_DIAGNOSTIC, type: product, name: 兽用诊断制品, name_en: Veterinary Diagnostics, segment: SEG_AGRI_ANIMAL_HEALTH, aliases: [动物疫病检测试剂, 非洲猪瘟检测]}
+  - {id: PROD_AGRI_FEED_ADDITIVE_BIO, type: product, name: 饲用微生态与酶制剂, name_en: Feed Enzymes and Probiotics, segment: SEG_AGRI_ANIMAL_HEALTH, aliases: [饲用益生菌, 替抗产品]}
+  - {id: PROD_AGRI_VET_SERVICE, type: product, name: 动物诊疗服务, name_en: Veterinary Services, segment: SEG_AGRI_ANIMAL_HEALTH, kind: service, aliases: [宠物医院, 兽医服务]}
+
+  # ================= integrated agriculture =================
+  - {id: PROD_AGRI_AG_SERVICE, type: product, name: 农业社会化服务, name_en: Agricultural Services, segment: SEG_AGRI_INTEGRATED, kind: service, aliases: [农机作业服务, 土地托管, 飞防服务]}
+  - {id: PROD_AGRI_AGRI_INPUT_DISTRIBUTION, type: product, name: 农资流通, name_en: Farm Input Distribution, segment: SEG_AGRI_INTEGRATED, kind: service, aliases: [农资贸易, 农资连锁]}
+
+edges:
+  # ---------- segment tree ----------
+  - [SEG_AGRI_SEEDS, part_of, SEG_AGRI_CROP_FARMING]
+  - [SEG_AGRI_GRAIN_FARMING, part_of, SEG_AGRI_CROP_FARMING]
+  - [SEG_AGRI_OTHER_CROPS, part_of, SEG_AGRI_CROP_FARMING]
+  - [SEG_AGRI_EDIBLE_FUNGI, part_of, SEG_AGRI_CROP_FARMING]
+  - [SEG_AGRI_MARINE_FISHING, part_of, SEG_AGRI_FISHERY]
+  - [SEG_AGRI_AQUACULTURE, part_of, SEG_AGRI_FISHERY]
+  - [SEG_AGRI_LIVESTOCK_FEED, part_of, SEG_AGRI_FEED]
+  - [SEG_AGRI_AQUA_FEED, part_of, SEG_AGRI_FEED]
+  - [SEG_AGRI_PET_FOOD, part_of, SEG_AGRI_FEED]
+  - [SEG_AGRI_FRUIT_VEG_PROCESSING, part_of, SEG_AGRI_PROCESSING]
+  - [SEG_AGRI_GRAIN_OIL_PROCESSING, part_of, SEG_AGRI_PROCESSING]
+  - [SEG_AGRI_OTHER_PROCESSING, part_of, SEG_AGRI_PROCESSING]
+  - [SEG_AGRI_HOG_FARMING, part_of, SEG_AGRI_LIVESTOCK]
+  - [SEG_AGRI_BROILER_FARMING, part_of, SEG_AGRI_LIVESTOCK]
+  - [SEG_AGRI_OTHER_LIVESTOCK, part_of, SEG_AGRI_LIVESTOCK]
+  # ---------- serves ----------
+  - [SEG_AGRI_CROP_FARMING, serves, MKT_AGRICULTURE]
+  - [SEG_AGRI_SEEDS, serves, MKT_AGRICULTURE]
+  - [SEG_AGRI_GRAIN_FARMING, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_AGRI_OTHER_CROPS, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_AGRI_OTHER_CROPS, serves, MKT_APPAREL]
+  - [SEG_AGRI_EDIBLE_FUNGI, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_AGRI_FISHERY, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_AGRI_MARINE_FISHING, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_AGRI_AQUACULTURE, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_AGRI_FORESTRY, serves, MKT_CONSTRUCTION]
+  - [SEG_AGRI_FORESTRY, serves, MKT_ENVIRONMENTAL]
+  - [SEG_AGRI_FEED, serves, MKT_AGRICULTURE]
+  - [SEG_AGRI_LIVESTOCK_FEED, serves, MKT_AGRICULTURE]
+  - [SEG_AGRI_AQUA_FEED, serves, MKT_AGRICULTURE]
+  - [SEG_AGRI_PET_FOOD, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_AGRI_PROCESSING, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_AGRI_FRUIT_VEG_PROCESSING, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_AGRI_GRAIN_OIL_PROCESSING, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_AGRI_GRAIN_OIL_PROCESSING, serves, MKT_AGRICULTURE]
+  - [SEG_AGRI_OTHER_PROCESSING, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_AGRI_LIVESTOCK, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_AGRI_HOG_FARMING, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_AGRI_BROILER_FARMING, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_AGRI_OTHER_LIVESTOCK, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_AGRI_ANIMAL_HEALTH, serves, MKT_AGRICULTURE]
+  - [SEG_AGRI_ANIMAL_HEALTH, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_AGRI_INTEGRATED, serves, MKT_AGRICULTURE]
+  # ---------- seeds and crops ----------
+  - [TECH_BIOTECH, enables, PROD_AGRI_GM_CORN_SEED]
+  - [TECH_BIOTECH, enables, PROD_AGRI_SOYBEAN_SEED]
+  - [PROD_AGRI_GM_CORN_SEED, substitute_for, PROD_AGRI_CORN_SEED]
+  - [PROD_AGRI_SEED, used_in, MKT_AGRICULTURE]
+  - [PROD_AGRI_CORN_SEED, upstream_of, PROD_AGRI_FARMED_GRAIN]
+  - [PROD_AGRI_RICE_SEED, upstream_of, PROD_AGRI_FARMED_GRAIN]
+  - [PROD_AGRI_WHEAT_SEED, upstream_of, PROD_AGRI_FARMED_GRAIN]
+  - [PROD_AGRI_SOYBEAN_SEED, upstream_of, PROD_AGRI_FARMED_GRAIN]
+  - [PROD_AGRI_COTTON_SEED, upstream_of, PROD_AGRI_COTTON_FARMING]
+  - [PROD_AGRI_VEGETABLE_SEED, used_in, MKT_AGRICULTURE]
+  - [PROD_AGRI_FARMED_GRAIN, upstream_of, PROD_AGRI_RICE_MILLING]
+  - [PROD_AGRI_FARMED_GRAIN, upstream_of, PROD_AGRI_FLOUR]
+  - [PROD_AGRI_LAND_CONTRACTING, used_in, MKT_AGRICULTURE]
+  - [PROD_AGRI_RUBBER_PLANTATION, used_in, MKT_ICE_VEHICLE]
+  - [PROD_AGRI_COTTON_FARMING, used_in, MKT_APPAREL]
+  - [PROD_AGRI_FRUIT_FARMING, upstream_of, PROD_AGRI_FRUIT_JUICE_CONC]
+  - [PROD_AGRI_FRUIT_FARMING, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_SUGARCANE, upstream_of, PROD_AGRI_SUGAR_REFINING]
+  - [PROD_AGRI_TEA, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_SEEDLINGS, used_in, MKT_CONSTRUCTION]
+  - [PROD_AGRI_EDIBLE_FUNGI, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_EDIBLE_FUNGI, uses_material, MAT_GRAIN]
+  - [PROD_AGRI_EDIBLE_FUNGI, uses_material, MAT_ELECTRICITY]
+  # ---------- fishery ----------
+  - [PROD_AGRI_OCEAN_CATCH, upstream_of, PROD_AGRI_FROZEN_SEAFOOD_PROCESSING]
+  - [PROD_AGRI_OCEAN_CATCH, upstream_of, PROD_AGRI_FISH_MEAL]
+  - [PROD_AGRI_OCEAN_CATCH, uses_material, MAT_CRUDE_OIL]
+  - [PROD_AGRI_FISH_MEAL, upstream_of, PROD_AGRI_AQUA_FEED]
+  - [PROD_AGRI_FISH_MEAL, upstream_of, PROD_AGRI_SPECIALTY_AQUA_FEED]
+  - [PROD_AGRI_FISH_MEAL, upstream_of, PROD_AGRI_HOG_FEED]
+  - [PROD_AGRI_FISH_MEAL, upstream_of, PROD_AGRI_PET_FOOD]
+  - [PROD_AGRI_AQUA_FRY, upstream_of, PROD_AGRI_SHRIMP]
+  - [PROD_AGRI_AQUA_FRY, upstream_of, PROD_AGRI_FARMED_FISH]
+  - [PROD_AGRI_AQUA_FRY, upstream_of, PROD_AGRI_SEA_CUCUMBER]
+  - [PROD_AGRI_SPECIALTY_AQUA_FEED, upstream_of, PROD_AGRI_SHRIMP]
+  - [PROD_AGRI_AQUA_FEED, upstream_of, PROD_AGRI_FARMED_FISH]
+  - [PROD_AGRI_SHRIMP, upstream_of, PROD_AGRI_FROZEN_SEAFOOD_PROCESSING]
+  - [PROD_AGRI_SEA_CUCUMBER, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_SHELLFISH, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_FROZEN_SEAFOOD_PROCESSING, used_in, MKT_FOOD_CONSUMPTION]
+  # ---------- forestry ----------
+  - [PROD_AGRI_FOREST_MGMT, used_in, MKT_CONSTRUCTION]
+  - [PROD_AGRI_FOREST_CARBON, used_in, MKT_ENVIRONMENTAL]
+  # ---------- feed ----------
+  - [PROD_AGRI_FEED, uses_material, MAT_GRAIN]
+  - [PROD_AGRI_FEED, uses_material, MAT_SOYBEAN_MEAL]
+  - [PROD_AGRI_HOG_FEED, uses_material, MAT_GRAIN]
+  - [PROD_AGRI_HOG_FEED, uses_material, MAT_SOYBEAN_MEAL]
+  - [PROD_AGRI_POULTRY_FEED, uses_material, MAT_GRAIN]
+  - [PROD_AGRI_POULTRY_FEED, uses_material, MAT_SOYBEAN_MEAL]
+  - [PROD_AGRI_RUMINANT_FEED, uses_material, MAT_GRAIN]
+  - [PROD_AGRI_AQUA_FEED, uses_material, MAT_SOYBEAN_MEAL]
+  - [PROD_AGRI_PREMIX, upstream_of, PROD_AGRI_FEED]
+  - [PROD_PHAR_VITAMIN_API, upstream_of, PROD_AGRI_PREMIX]
+  - [PROD_AGRI_FEED_ADDITIVE_BIO, upstream_of, PROD_AGRI_PREMIX]
+  - [PROD_AGRI_FEED_INGREDIENT_TRADE, uses_material, MAT_SOYBEAN_MEAL]
+  - [PROD_AGRI_FEED_INGREDIENT_TRADE, used_in, PROD_AGRI_FEED]
+  - [PROD_AGRI_HOG_FEED, upstream_of, PROD_AGRI_PIGLET]
+  - [PROD_AGRI_HOG_FEED, upstream_of, PROD_AGRI_BREEDING_PIG]
+  - [PROD_AGRI_POULTRY_FEED, upstream_of, PROD_AGRI_WHITE_BROILER]
+  - [PROD_AGRI_POULTRY_FEED, upstream_of, PROD_AGRI_YELLOW_BROILER]
+  - [PROD_AGRI_POULTRY_FEED, upstream_of, PROD_AGRI_EGGS]
+  - [PROD_AGRI_POULTRY_FEED, upstream_of, PROD_AGRI_DUCK]
+  - [PROD_AGRI_RUMINANT_FEED, upstream_of, PROD_AGRI_DAIRY_FARMING]
+  - [PROD_AGRI_RUMINANT_FEED, upstream_of, PROD_AGRI_BEEF_CATTLE]
+  - [PROD_AGRI_PET_FOOD, uses_material, MAT_GRAIN]
+  - [PROD_AGRI_PET_FOOD, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_AGRI_CHICKEN_MEAT, upstream_of, PROD_AGRI_PET_TREATS]
+  - [PROD_AGRI_CHICKEN_MEAT, upstream_of, PROD_AGRI_PET_WET_FOOD]
+  # ---------- processing ----------
+  - [PROD_AGRI_SOY_CRUSHING, uses_material, MAT_GRAIN]
+  - [PROD_AGRI_SOY_CRUSHING, upstream_of, PROD_AGRI_EDIBLE_OIL]
+  - [PROD_AGRI_SOY_CRUSHING, upstream_of, PROD_AGRI_FEED]
+  - [PROD_AGRI_EDIBLE_OIL, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_RICE_MILLING, uses_material, MAT_GRAIN]
+  - [PROD_AGRI_RICE_MILLING, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_FLOUR, uses_material, MAT_GRAIN]
+  - [PROD_AGRI_FLOUR, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_CORN_STARCH, uses_material, MAT_GRAIN]
+  - [PROD_AGRI_CORN_STARCH, upstream_of, PROD_AGRI_STARCH_SUGAR]
+  - [PROD_AGRI_CORN_STARCH, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_AGRI_STARCH_SUGAR, substitute_for, PROD_AGRI_SUGAR_REFINING]
+  - [PROD_AGRI_STARCH_SUGAR, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_SUGAR_REFINING, uses_material, MAT_SUGAR]
+  - [PROD_AGRI_SUGAR_REFINING, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_FRUIT_JUICE_CONC, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_DEHYDRATED_VEG, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_CANNED_FRUIT_VEG, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_PRESERVED_VEG, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_CASING, upstream_of, PROD_PHAR_CRUDE_HEPARIN]
+  - [PROD_AGRI_CASING, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_GRAIN_TRADING, uses_material, MAT_GRAIN]
+  - [PROD_AGRI_GRAIN_TRADING, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_NUT_PROCESSING, used_in, MKT_FOOD_CONSUMPTION]
+  # ---------- hogs ----------
+  - [PROD_AGRI_BREEDING_PIG, upstream_of, PROD_AGRI_PIGLET]
+  - [PROD_AGRI_PIGLET, upstream_of, PROD_AGRI_HOG_CONTRACT_FARMING]
+  - [PROD_AGRI_PIGLET, used_in, MKT_AGRICULTURE]
+  - [PROD_AGRI_HOG_CONTRACT_FARMING, used_in, MKT_AGRICULTURE]
+  - [PROD_AGRI_BREEDING_PIG, used_in, MKT_AGRICULTURE]
+  # ---------- poultry ----------
+  - [PROD_AGRI_WHITE_BROILER_GP, upstream_of, PROD_AGRI_WHITE_BROILER_PS]
+  - [PROD_AGRI_WHITE_BROILER_PS, upstream_of, PROD_AGRI_BROILER_CHICK]
+  - [PROD_AGRI_BROILER_CHICK, upstream_of, PROD_AGRI_WHITE_BROILER]
+  - [PROD_AGRI_WHITE_BROILER, upstream_of, PROD_AGRI_CHICKEN_MEAT]
+  - [PROD_AGRI_YELLOW_BROILER, upstream_of, PROD_AGRI_CHICKEN_MEAT]
+  - [PROD_AGRI_CHICKEN_MEAT, upstream_of, PROD_AGRI_PROCESSED_CHICKEN]
+  - [PROD_AGRI_YELLOW_BROILER, substitute_for, PROD_AGRI_WHITE_BROILER]
+  - [PROD_AGRI_CHICKEN_MEAT, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_PROCESSED_CHICKEN, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_EGGS, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_DUCK, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_BEEF_CATTLE, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_SHEEP, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_DAIRY_HEIFER, upstream_of, PROD_AGRI_DAIRY_FARMING]
+  - [PROD_AGRI_DAIRY_FARMING, used_in, MKT_FOOD_CONSUMPTION]
+  # ---------- animal health ----------
+  - [TECH_BIOTECH, enables, PROD_AGRI_VET_VACCINE]
+  - [TECH_BIOTECH, enables, PROD_AGRI_FEED_ADDITIVE_BIO]
+  - [PROD_AGRI_FMD_VACCINE, used_in, PROD_AGRI_BREEDING_PIG]
+  - [PROD_AGRI_FMD_VACCINE, used_in, PROD_AGRI_BEEF_CATTLE]
+  - [PROD_AGRI_SWINE_VACCINE, used_in, PROD_AGRI_PIGLET]
+  - [PROD_AGRI_SWINE_VACCINE, used_in, PROD_AGRI_BREEDING_PIG]
+  - [PROD_AGRI_POULTRY_VACCINE, used_in, PROD_AGRI_WHITE_BROILER]
+  - [PROD_AGRI_POULTRY_VACCINE, used_in, PROD_AGRI_EGGS]
+  - [PROD_AGRI_RUMINANT_VACCINE, used_in, PROD_AGRI_DAIRY_FARMING]
+  - [PROD_AGRI_VET_VACCINE, used_in, MKT_AGRICULTURE]
+  - [PROD_AGRI_VET_VACCINE, used_in, MKT_GOVERNMENT]
+  - [PROD_AGRI_PET_VACCINE, used_in, PROD_AGRI_VET_SERVICE]
+  - [PROD_AGRI_PET_MEDICINE, used_in, PROD_AGRI_VET_SERVICE]
+  - [PROD_AGRI_PET_MEDICINE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_AGRI_VET_DRUG, used_in, MKT_AGRICULTURE]
+  - [PROD_AGRI_FEED_ADDITIVE_BIO, substitute_for, PROD_AGRI_VET_DRUG]
+  - [PROD_AGRI_VET_DIAGNOSTIC, used_in, MKT_AGRICULTURE]
+  - [PROD_AGRI_VET_SERVICE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_CELL_CULTURE_MEDIA, upstream_of, PROD_AGRI_VET_VACCINE]
+  - [PROD_PHAR_API, upstream_of, PROD_AGRI_VET_DRUG]
+  # ---------- integrated ----------
+  - [PROD_AGRI_AG_SERVICE, used_in, MKT_AGRICULTURE]
+  - [PROD_AGRI_AGRI_INPUT_DISTRIBUTION, used_in, MKT_AGRICULTURE]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_AGRI_FOREST_MGMT, upstream_of, MAT_TIMBER]
+  - [PROD_AGRI_RUBBER_PLANTATION, upstream_of, MAT_NATURAL_RUBBER]
+  - [PROD_AGRI_COTTON_FARMING, upstream_of, MAT_COTTON]
+  - [PROD_AGRI_COTTON_FARMING, upstream_of, PROD_TEX_COTTON_YARN]
+  - [PROD_AGRI_SUGARCANE, upstream_of, MAT_SUGAR]
+
+sw_l3_map:
+  "110101": [SEG_AGRI_SEEDS]
+  "110102": [SEG_AGRI_GRAIN_FARMING]
+  "110103": [SEG_AGRI_OTHER_CROPS]
+  "110104": [SEG_AGRI_EDIBLE_FUNGI]
+  "110201": [SEG_AGRI_MARINE_FISHING]
+  "110202": [SEG_AGRI_AQUACULTURE]
+  "110301": [SEG_AGRI_FORESTRY]
+  "110402": [SEG_AGRI_LIVESTOCK_FEED]
+  "110403": [SEG_AGRI_AQUA_FEED]
+  "110404": [SEG_AGRI_PET_FOOD]
+  "110501": [SEG_AGRI_FRUIT_VEG_PROCESSING]
+  "110502": [SEG_AGRI_GRAIN_OIL_PROCESSING]
+  "110504": [SEG_AGRI_OTHER_PROCESSING]
+  "110702": [SEG_AGRI_HOG_FARMING]
+  "110703": [SEG_AGRI_BROILER_FARMING]
+  "110704": [SEG_AGRI_OTHER_LIVESTOCK]
+  "110801": [SEG_AGRI_ANIMAL_HEALTH]
+  "110901": [SEG_AGRI_INTEGRATED]

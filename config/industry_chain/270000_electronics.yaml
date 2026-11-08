@@ -1,0 +1,1228 @@
+# Electronics (SW 270000) product taxonomy prior (plan 12 phase 1, D-097). Format: README.md.
+sector: {sw_l1: "270000", name: 电子, name_en: Electronics}
+
+nodes:
+  # ---------------- segments ----------------
+  - {id: SEG_ELEC_SEMICONDUCTOR, type: segment, name: 半导体, name_en: Semiconductors}
+  - {id: SEG_ELEC_DISCRETE, type: segment, name: 分立器件, name_en: Discrete Devices}
+  - {id: SEG_ELEC_POWER_SEMI, type: segment, name: 功率半导体, name_en: Power Semiconductors}
+  - {id: SEG_ELEC_COMPOUND_SEMI, type: segment, name: 化合物半导体, name_en: Compound Semiconductors, aliases: [第三代半导体产业链]}
+  - {id: SEG_ELEC_SEMI_MATERIAL, type: segment, name: 半导体材料, name_en: Semiconductor Materials}
+  - {id: SEG_ELEC_WAFER_SUBSTRATE, type: segment, name: 硅片与衬底材料, name_en: Wafers and Substrates}
+  - {id: SEG_ELEC_FAB_MATERIAL, type: segment, name: 晶圆制造材料, name_en: Wafer Fab Materials}
+  - {id: SEG_ELEC_PACKAGING_MATERIAL, type: segment, name: 封装材料, name_en: Packaging Materials}
+  - {id: SEG_ELEC_DIGITAL_IC, type: segment, name: 数字芯片设计, name_en: Digital IC Design}
+  - {id: SEG_ELEC_PROCESSOR_CHIP, type: segment, name: 处理器与AI芯片, name_en: Processors and AI Chips, aliases: [算力芯片产业]}
+  - {id: SEG_ELEC_SOC_CHIP, type: segment, name: SoC与MCU, name_en: SoC and MCU}
+  - {id: SEG_ELEC_MEMORY_CHIP, type: segment, name: 存储芯片, name_en: Memory Chips}
+  - {id: SEG_ELEC_STORAGE_MODULE, type: segment, name: 存储模组, name_en: Storage Modules}
+  - {id: SEG_ELEC_INTERCONNECT_CHIP, type: segment, name: 互连与接口芯片, name_en: Interconnect and Interface Chips}
+  - {id: SEG_ELEC_IC_DESIGN_SERVICE, type: segment, name: 芯片设计服务与IP, name_en: IC Design Services and IP}
+  - {id: SEG_ELEC_ANALOG_IC, type: segment, name: 模拟芯片设计, name_en: Analog IC Design}
+  - {id: SEG_ELEC_POWER_IC, type: segment, name: 电源管理芯片, name_en: Power Management ICs}
+  - {id: SEG_ELEC_SIGNAL_CHAIN, type: segment, name: 信号链芯片, name_en: Signal Chain ICs}
+  - {id: SEG_ELEC_RF_FRONTEND, type: segment, name: 射频前端, name_en: RF Front-End}
+  - {id: SEG_ELEC_SENSOR_CHIP, type: segment, name: 传感器芯片, name_en: Sensor Chips}
+  - {id: SEG_ELEC_FOUNDRY, type: segment, name: 集成电路制造, name_en: IC Manufacturing, aliases: [晶圆制造产业]}
+  - {id: SEG_ELEC_OSAT, type: segment, name: 集成电路封测, name_en: IC Packaging and Testing}
+  - {id: SEG_ELEC_SEMI_EQUIPMENT, type: segment, name: 半导体设备, name_en: Semiconductor Equipment, aliases: [半导体工艺设备]}
+  - {id: SEG_ELEC_EQUIP_PARTS, type: segment, name: 半导体设备零部件, name_en: Semiconductor Equipment Parts}
+  - {id: SEG_ELEC_COMPONENTS, type: segment, name: 元件, name_en: Electronic Components}
+  - {id: SEG_ELEC_PCB, type: segment, name: 印制电路板, name_en: Printed Circuit Boards}
+  - {id: SEG_ELEC_IC_SUBSTRATE, type: segment, name: 封装基板, name_en: IC Substrates}
+  - {id: SEG_ELEC_CCL, type: segment, name: 覆铜板, name_en: Copper Clad Laminates}
+  - {id: SEG_ELEC_PCB_MATERIAL, type: segment, name: PCB上游材料, name_en: PCB Upstream Materials}
+  - {id: SEG_ELEC_PASSIVE, type: segment, name: 被动元件, name_en: Passive Components}
+  - {id: SEG_ELEC_CONNECTOR, type: segment, name: 连接器, name_en: Connectors}
+  - {id: SEG_ELEC_OPTOELECTRONICS, type: segment, name: 光学光电子, name_en: Optoelectronics}
+  - {id: SEG_ELEC_DISPLAY_PANEL, type: segment, name: 面板, name_en: Display Panels}
+  - {id: SEG_ELEC_DISPLAY_MATERIAL, type: segment, name: 显示材料与零部件, name_en: Display Materials and Parts}
+  - {id: SEG_ELEC_LED, type: segment, name: LED, name_en: LED}
+  - {id: SEG_ELEC_OPTICAL_COMPONENT, type: segment, name: 光学元件, name_en: Optical Components}
+  - {id: SEG_ELEC_OTHER_ELECTRONICS, type: segment, name: 其他电子, name_en: Other Electronics}
+  - {id: SEG_ELEC_CONSUMER_ELECTRONICS, type: segment, name: 消费电子产业, name_en: Consumer Electronics Industry}
+  - {id: SEG_ELEC_BRAND_CONSUMER, type: segment, name: 品牌消费电子, name_en: Branded Consumer Electronics}
+  - {id: SEG_ELEC_CONSUMER_PARTS, type: segment, name: 消费电子零部件及组装, name_en: Consumer Electronics Parts and Assembly}
+  - {id: SEG_ELEC_EMS, type: segment, name: 电子制造服务, name_en: Electronics Manufacturing Services}
+  - {id: SEG_ELEC_STRUCTURAL_PARTS, type: segment, name: 结构件与外观件, name_en: Structural and Cosmetic Parts}
+  - {id: SEG_ELEC_ACOUSTIC_HAPTIC, type: segment, name: 声学与触觉器件, name_en: Acoustic and Haptic Components}
+  - {id: SEG_ELEC_THERMAL_FUNCTIONAL, type: segment, name: 散热与功能件, name_en: Thermal and Functional Parts}
+  - {id: SEG_ELEC_CONSUMER_POWER, type: segment, name: 消费电池与充电, name_en: Consumer Batteries and Charging}
+  - {id: SEG_ELEC_ELECTRONIC_CHEMICALS, type: segment, name: 电子化学品, name_en: Electronic Chemicals}
+  - {id: SEG_ELEC_ELECTRONIC_GAS, type: segment, name: 电子气体, name_en: Electronic Gases}
+  - {id: SEG_ELEC_WET_CHEMICAL, type: segment, name: 湿电子化学品产业, name_en: Wet Electronic Chemicals Industry}
+  - {id: SEG_ELEC_PHOTORESIST, type: segment, name: 光刻胶及配套, name_en: Photoresists and Ancillaries}
+
+  # ---------------- sector materials & technologies ----------------
+  - {id: MAT_ELEC_HIGH_PURITY_METALS, type: material, name: 超高纯金属, name_en: Ultra-High-Purity Metals, import_dependence: medium, aliases: [高纯铝, 高纯铜, 高纯钛, 高纯钽]}
+  - {id: MAT_ELEC_TANTALUM, type: material, name: 钽, name_en: Tantalum, import_dependence: high, aliases: [钽粉, 钽丝]}
+  - {id: MAT_ELEC_INDIUM, type: material, name: 铟, name_en: Indium, aliases: [精铟]}
+  - {id: TECH_ELEC_ADVANCED_NODE, type: technology, name: 先进制程, name_en: Advanced Process Node, aliases: [FinFET, GAA, 7nm及以下]}
+  - {id: TECH_ELEC_EUV, type: technology, name: EUV光刻, name_en: EUV Lithography, aliases: [极紫外光刻]}
+  - {id: TECH_ELEC_HIGH_SPEED_INTERCONNECT, type: technology, name: 高速互连, name_en: High-Speed Interconnect, aliases: [224G SerDes, 112G SerDes]}
+  - {id: TECH_ELEC_MLED, type: technology, name: Mini/Micro LED显示技术, name_en: Mini/Micro LED Display, aliases: [MLED]}
+  - {id: TECH_ELEC_FOLDABLE, type: technology, name: 折叠屏技术, name_en: Foldable Display}
+  - {id: TECH_ELEC_ON_DEVICE_AI, type: technology, name: 端侧AI, name_en: On-Device AI, aliases: [AI终端, 边缘AI]}
+
+  # ---------------- power & discrete ----------------
+  - {id: PROD_ELEC_POWER_DEVICE, type: product, name: 功率器件, name_en: Power Device, segment: SEG_ELEC_POWER_SEMI, aliases: [功率半导体器件, Power Semiconductor]}
+  - {id: PROD_ELEC_IGBT, type: product, name: IGBT器件, name_en: IGBT, parent: PROD_ELEC_POWER_DEVICE, segment: SEG_ELEC_POWER_SEMI, aliases: [IGBT, 绝缘栅双极型晶体管, IGBT单管]}
+  - {id: PROD_ELEC_IGBT_CHIP, type: product, name: IGBT芯片, name_en: IGBT Chip, parent: PROD_ELEC_IGBT, segment: SEG_ELEC_POWER_SEMI, import_dependence: medium}
+  - {id: PROD_ELEC_IGBT_MODULE, type: product, name: IGBT模块, name_en: IGBT Module, parent: PROD_ELEC_IGBT, segment: SEG_ELEC_POWER_SEMI, import_dependence: medium}
+  - {id: PROD_ELEC_SI_MOSFET, type: product, name: 硅基MOSFET, name_en: Silicon MOSFET, parent: PROD_ELEC_POWER_DEVICE, segment: SEG_ELEC_POWER_SEMI, aliases: [MOSFET, 功率MOSFET]}
+  - {id: PROD_ELEC_SGT_MOSFET, type: product, name: SGT MOSFET, name_en: Shielded-Gate MOSFET, parent: PROD_ELEC_SI_MOSFET, segment: SEG_ELEC_POWER_SEMI, aliases: [屏蔽栅MOSFET]}
+  - {id: PROD_ELEC_SJ_MOSFET, type: product, name: 超结MOSFET, name_en: Super-Junction MOSFET, parent: PROD_ELEC_SI_MOSFET, segment: SEG_ELEC_POWER_SEMI, import_dependence: medium, aliases: [SJ MOSFET]}
+  - {id: PROD_ELEC_POWER_DIODE, type: product, name: 功率二极管, name_en: Power Diode, parent: PROD_ELEC_POWER_DEVICE, segment: SEG_ELEC_POWER_SEMI, aliases: [整流二极管, 快恢复二极管, FRD, 肖特基二极管]}
+  - {id: PROD_ELEC_THYRISTOR, type: product, name: 晶闸管, name_en: Thyristor, parent: PROD_ELEC_POWER_DEVICE, segment: SEG_ELEC_POWER_SEMI, aliases: [可控硅]}
+  - {id: PROD_ELEC_POWER_MODULE, type: product, name: 功率模块, name_en: Power Module, parent: PROD_ELEC_POWER_DEVICE, segment: SEG_ELEC_POWER_SEMI, aliases: [IPM, 智能功率模块]}
+  - {id: PROD_ELEC_AUTO_POWER_MODULE, type: product, name: 车规功率模块, name_en: Automotive Power Module, parent: PROD_ELEC_POWER_MODULE, segment: SEG_ELEC_POWER_SEMI, import_dependence: medium, aliases: [主驱模块, 电驱功率模块]}
+  - {id: PROD_ELEC_PROTECTION_DEVICE, type: product, name: 保护器件, name_en: Protection Device, segment: SEG_ELEC_DISCRETE, aliases: [TVS, ESD保护器件]}
+  - {id: PROD_ELEC_SMALL_SIGNAL, type: product, name: 小信号器件, name_en: Small-Signal Device, segment: SEG_ELEC_DISCRETE, aliases: [小信号三极管, 小信号二极管]}
+  - {id: PROD_ELEC_SIC_POWDER, type: product, name: 碳化硅粉料, name_en: SiC Powder, segment: SEG_ELEC_COMPOUND_SEMI, aliases: [高纯碳化硅粉]}
+  - {id: PROD_ELEC_SIC_CRYSTAL, type: product, name: 碳化硅晶锭, name_en: SiC Crystal Boule, segment: SEG_ELEC_COMPOUND_SEMI, aliases: [SiC晶体, 碳化硅单晶]}
+  - {id: PROD_ELEC_SIC_SUBSTRATE, type: product, name: 碳化硅衬底, name_en: SiC Substrate, segment: SEG_ELEC_COMPOUND_SEMI, aliases: [SiC衬底, 导电型碳化硅衬底, 半绝缘型碳化硅衬底]}
+  - {id: PROD_ELEC_SIC_EPI, type: product, name: 碳化硅外延片, name_en: SiC Epitaxial Wafer, segment: SEG_ELEC_COMPOUND_SEMI, aliases: [SiC外延片]}
+  - {id: PROD_ELEC_SIC_MOSFET, type: product, name: 碳化硅MOSFET, name_en: SiC MOSFET, parent: PROD_ELEC_POWER_DEVICE, segment: SEG_ELEC_COMPOUND_SEMI, import_dependence: medium, aliases: [SiC MOSFET]}
+  - {id: PROD_ELEC_SIC_SBD, type: product, name: 碳化硅二极管, name_en: SiC Schottky Diode, parent: PROD_ELEC_POWER_DEVICE, segment: SEG_ELEC_COMPOUND_SEMI, aliases: [SiC SBD, 碳化硅肖特基二极管]}
+  - {id: PROD_ELEC_SIC_MODULE, type: product, name: 碳化硅功率模块, name_en: SiC Power Module, parent: PROD_ELEC_POWER_MODULE, segment: SEG_ELEC_COMPOUND_SEMI, import_dependence: medium, aliases: [SiC模块]}
+  - {id: PROD_ELEC_GAN_SUBSTRATE, type: product, name: 氮化镓衬底, name_en: GaN Substrate, segment: SEG_ELEC_COMPOUND_SEMI, import_dependence: medium, aliases: [GaN衬底]}
+  - {id: PROD_ELEC_GAN_EPI, type: product, name: 氮化镓外延片, name_en: GaN Epitaxial Wafer, segment: SEG_ELEC_COMPOUND_SEMI, aliases: [GaN外延片, GaN-on-Si外延片]}
+  - {id: PROD_ELEC_GAN_POWER, type: product, name: 氮化镓功率器件, name_en: GaN Power Device, parent: PROD_ELEC_POWER_DEVICE, segment: SEG_ELEC_COMPOUND_SEMI, aliases: [GaN功率器件, GaN HEMT]}
+  - {id: PROD_ELEC_GAN_RF, type: product, name: 氮化镓射频器件, name_en: GaN RF Device, segment: SEG_ELEC_COMPOUND_SEMI, aliases: [GaN射频器件, GaN RF]}
+  - {id: PROD_ELEC_GAAS_SUBSTRATE, type: product, name: 砷化镓衬底, name_en: GaAs Substrate, segment: SEG_ELEC_COMPOUND_SEMI, aliases: [GaAs衬底]}
+  - {id: PROD_ELEC_INP_SUBSTRATE, type: product, name: 磷化铟衬底, name_en: InP Substrate, segment: SEG_ELEC_COMPOUND_SEMI, import_dependence: medium, aliases: [InP衬底]}
+  - {id: PROD_ELEC_COMPOUND_FOUNDRY, type: product, name: 化合物半导体代工, name_en: Compound Semiconductor Foundry, segment: SEG_ELEC_COMPOUND_SEMI, kind: service, aliases: [砷化镓代工, GaAs Foundry]}
+
+  # ---------------- wafers & fab materials ----------------
+  - {id: PROD_ELEC_ELECTRONIC_POLYSILICON, type: product, name: 电子级多晶硅, name_en: Electronic-Grade Polysilicon, segment: SEG_ELEC_WAFER_SUBSTRATE, import_dependence: medium}
+  - {id: PROD_ELEC_SILICON_WAFER, type: product, name: 半导体硅片, name_en: Silicon Wafer, segment: SEG_ELEC_WAFER_SUBSTRATE, aliases: [硅晶圆, 大硅片]}
+  - {id: PROD_ELEC_300MM_WAFER, type: product, name: 12英寸硅片, name_en: 300mm Wafer, parent: PROD_ELEC_SILICON_WAFER, segment: SEG_ELEC_WAFER_SUBSTRATE, import_dependence: high, aliases: [300mm硅片]}
+  - {id: PROD_ELEC_200MM_WAFER, type: product, name: 8英寸及以下硅片, name_en: 200mm and Smaller Wafer, parent: PROD_ELEC_SILICON_WAFER, segment: SEG_ELEC_WAFER_SUBSTRATE, aliases: [200mm硅片, 8英寸硅片]}
+  - {id: PROD_ELEC_EPI_WAFER, type: product, name: 硅外延片, name_en: Silicon Epitaxial Wafer, parent: PROD_ELEC_SILICON_WAFER, segment: SEG_ELEC_WAFER_SUBSTRATE, import_dependence: medium}
+  - {id: PROD_ELEC_SOI_WAFER, type: product, name: SOI硅片, name_en: SOI Wafer, parent: PROD_ELEC_SILICON_WAFER, segment: SEG_ELEC_WAFER_SUBSTRATE, import_dependence: high, aliases: [绝缘体上硅]}
+  - {id: PROD_ELEC_RECLAIMED_WAFER, type: product, name: 再生晶圆, name_en: Reclaimed Wafer, segment: SEG_ELEC_WAFER_SUBSTRATE, aliases: [测试片, 控挡片]}
+  - {id: PROD_ELEC_SPUTTERING_TARGET, type: product, name: 溅射靶材, name_en: Sputtering Target, segment: SEG_ELEC_FAB_MATERIAL, aliases: [靶材]}
+  - {id: PROD_ELEC_SEMI_TARGET, type: product, name: 半导体靶材, name_en: Semiconductor Target, parent: PROD_ELEC_SPUTTERING_TARGET, segment: SEG_ELEC_FAB_MATERIAL, import_dependence: medium}
+  - {id: PROD_ELEC_DISPLAY_TARGET, type: product, name: 面板靶材, name_en: Display Target, parent: PROD_ELEC_SPUTTERING_TARGET, segment: SEG_ELEC_FAB_MATERIAL, aliases: [显示靶材]}
+  - {id: PROD_ELEC_CMP_SLURRY, type: product, name: CMP抛光液, name_en: CMP Slurry, segment: SEG_ELEC_FAB_MATERIAL, import_dependence: medium, aliases: [抛光液, 化学机械抛光液]}
+  - {id: PROD_ELEC_CMP_PAD, type: product, name: CMP抛光垫, name_en: CMP Pad, segment: SEG_ELEC_FAB_MATERIAL, import_dependence: medium, aliases: [抛光垫]}
+  - {id: PROD_ELEC_PHOTOMASK, type: product, name: 光掩膜版, name_en: Photomask, segment: SEG_ELEC_FAB_MATERIAL, aliases: [掩膜版, 光罩]}
+  - {id: PROD_ELEC_SEMI_PHOTOMASK, type: product, name: 半导体掩膜版, name_en: Semiconductor Photomask, parent: PROD_ELEC_PHOTOMASK, segment: SEG_ELEC_FAB_MATERIAL, import_dependence: high}
+  - {id: PROD_ELEC_FPD_PHOTOMASK, type: product, name: 平板显示掩膜版, name_en: FPD Photomask, parent: PROD_ELEC_PHOTOMASK, segment: SEG_ELEC_FAB_MATERIAL, aliases: [FPD掩膜版]}
+  - {id: PROD_ELEC_PRECURSOR, type: product, name: 半导体前驱体, name_en: Semiconductor Precursor, segment: SEG_ELEC_FAB_MATERIAL, import_dependence: high, aliases: [High-k前驱体, ALD前驱体, 硅前驱体, 金属前驱体]}
+
+  # ---------------- packaging materials ----------------
+  - {id: PROD_ELEC_EMC, type: product, name: 环氧塑封料, name_en: Epoxy Molding Compound, segment: SEG_ELEC_PACKAGING_MATERIAL, import_dependence: medium, aliases: [EMC, 塑封料]}
+  - {id: PROD_ELEC_BONDING_WIRE, type: product, name: 键合丝, name_en: Bonding Wire, segment: SEG_ELEC_PACKAGING_MATERIAL, aliases: [键合金丝, 键合铜丝]}
+  - {id: PROD_ELEC_LEADFRAME, type: product, name: 引线框架, name_en: Lead Frame, segment: SEG_ELEC_PACKAGING_MATERIAL}
+  - {id: PROD_ELEC_SOLDER, type: product, name: 电子焊料, name_en: Electronic Solder, segment: SEG_ELEC_PACKAGING_MATERIAL, aliases: [锡膏, 锡球, Solder Paste]}
+  - {id: PROD_ELEC_UNDERFILL, type: product, name: 底部填充胶, name_en: Underfill, segment: SEG_ELEC_PACKAGING_MATERIAL, import_dependence: high}
+  - {id: PROD_ELEC_DIE_ATTACH, type: product, name: 芯片粘接材料, name_en: Die Attach Material, segment: SEG_ELEC_PACKAGING_MATERIAL, aliases: [固晶胶, 烧结银]}
+  - {id: PROD_ELEC_SPHERICAL_ALUMINA, type: product, name: 球形氧化铝, name_en: Spherical Alumina, segment: SEG_ELEC_PACKAGING_MATERIAL, import_dependence: medium}
+  - {id: PROD_ELEC_CERAMIC_SUBSTRATE, type: product, name: 陶瓷覆铜基板, name_en: Ceramic Copper-Clad Substrate, segment: SEG_ELEC_PACKAGING_MATERIAL, aliases: [陶瓷基板]}
+  - {id: PROD_ELEC_DBC_SUBSTRATE, type: product, name: DBC陶瓷基板, name_en: DBC Substrate, parent: PROD_ELEC_CERAMIC_SUBSTRATE, segment: SEG_ELEC_PACKAGING_MATERIAL, aliases: [直接覆铜陶瓷基板]}
+  - {id: PROD_ELEC_AMB_SUBSTRATE, type: product, name: AMB陶瓷基板, name_en: AMB Substrate, parent: PROD_ELEC_CERAMIC_SUBSTRATE, segment: SEG_ELEC_PACKAGING_MATERIAL, import_dependence: medium, aliases: [活性金属钎焊陶瓷基板, 氮化硅AMB]}
+  - {id: PROD_ELEC_CERAMIC_PACKAGE, type: product, name: 陶瓷封装外壳, name_en: Ceramic Package, segment: SEG_ELEC_PACKAGING_MATERIAL, import_dependence: medium, aliases: [陶瓷管壳, PKG基座, 陶瓷封装基座]}
+
+  # ---------------- digital IC ----------------
+  - {id: PROD_ELEC_CPU, type: product, name: CPU芯片, name_en: CPU, segment: SEG_ELEC_PROCESSOR_CHIP, import_dependence: high, aliases: [CPU, 中央处理器, 处理器芯片]}
+  - {id: PROD_ELEC_SERVER_CPU, type: product, name: 服务器CPU, name_en: Server CPU, parent: PROD_ELEC_CPU, segment: SEG_ELEC_PROCESSOR_CHIP, import_dependence: high}
+  - {id: PROD_ELEC_DESKTOP_CPU, type: product, name: PC处理器, name_en: Desktop/Notebook CPU, parent: PROD_ELEC_CPU, segment: SEG_ELEC_PROCESSOR_CHIP, import_dependence: high, aliases: [桌面CPU, 信创CPU]}
+  - {id: PROD_ELEC_AI_CHIP, type: product, name: AI芯片, name_en: AI Chip, segment: SEG_ELEC_PROCESSOR_CHIP, import_dependence: high, aliases: [人工智能芯片, 算力芯片, AI加速芯片]}
+  - {id: PROD_ELEC_GPGPU, type: product, name: GPGPU芯片, name_en: GPGPU, parent: PROD_ELEC_AI_CHIP, segment: SEG_ELEC_PROCESSOR_CHIP, import_dependence: high, aliases: [GPGPU, AI GPU, 训练芯片, 通用GPU]}
+  - {id: PROD_ELEC_AI_ASIC, type: product, name: AI ASIC芯片, name_en: AI ASIC, parent: PROD_ELEC_AI_CHIP, segment: SEG_ELEC_PROCESSOR_CHIP, import_dependence: high, aliases: [NPU, TPU芯片, 定制AI芯片, ASIC芯片]}
+  - {id: PROD_ELEC_EDGE_AI_CHIP, type: product, name: 端侧AI芯片, name_en: Edge AI Chip, parent: PROD_ELEC_AI_CHIP, segment: SEG_ELEC_PROCESSOR_CHIP, aliases: [端侧推理芯片]}
+  - {id: PROD_ELEC_GRAPHICS_GPU, type: product, name: 图形GPU, name_en: Graphics GPU, segment: SEG_ELEC_PROCESSOR_CHIP, import_dependence: high, aliases: [显卡芯片, 图形处理器]}
+  - {id: PROD_ELEC_FPGA, type: product, name: FPGA芯片, name_en: FPGA, segment: SEG_ELEC_PROCESSOR_CHIP, import_dependence: high, aliases: [FPGA, 可编程逻辑器件]}
+  - {id: PROD_ELEC_DPU, type: product, name: DPU芯片, name_en: DPU, segment: SEG_ELEC_PROCESSOR_CHIP, import_dependence: high, aliases: [DPU, 数据处理器]}
+  - {id: PROD_ELEC_SECURITY_IC, type: product, name: 安全芯片, name_en: Security Chip, segment: SEG_ELEC_PROCESSOR_CHIP, aliases: [智能卡芯片, 安全SE, 密码芯片]}
+  - {id: PROD_ELEC_SPECIAL_IC, type: product, name: 特种集成电路, name_en: Special-Purpose IC, segment: SEG_ELEC_PROCESSOR_CHIP, aliases: [特种芯片, 军用芯片]}
+  - {id: PROD_ELEC_SOC, type: product, name: SoC芯片, name_en: System on Chip, segment: SEG_ELEC_SOC_CHIP, aliases: [SoC]}
+  - {id: PROD_ELEC_MOBILE_SOC, type: product, name: 手机SoC, name_en: Mobile SoC, parent: PROD_ELEC_SOC, segment: SEG_ELEC_SOC_CHIP, import_dependence: high, aliases: [手机处理器, 应用处理器]}
+  - {id: PROD_ELEC_AIOT_SOC, type: product, name: AIoT SoC, name_en: AIoT SoC, parent: PROD_ELEC_SOC, segment: SEG_ELEC_SOC_CHIP, aliases: [智能终端SoC, 智能家居SoC, 机顶盒芯片, 视觉处理SoC]}
+  - {id: PROD_ELEC_AUTO_SOC, type: product, name: 车载SoC, name_en: Automotive SoC, parent: PROD_ELEC_SOC, segment: SEG_ELEC_SOC_CHIP, import_dependence: high, aliases: [智驾芯片, 座舱芯片, 自动驾驶芯片]}
+  - {id: PROD_ELEC_BT_AUDIO_SOC, type: product, name: 蓝牙音频SoC, name_en: Bluetooth Audio SoC, parent: PROD_ELEC_SOC, segment: SEG_ELEC_SOC_CHIP, aliases: [TWS芯片, 智能音频SoC]}
+  - {id: PROD_ELEC_WEARABLE_SOC, type: product, name: 可穿戴SoC, name_en: Wearable SoC, parent: PROD_ELEC_SOC, segment: SEG_ELEC_SOC_CHIP, aliases: [智能手表芯片]}
+  - {id: PROD_ELEC_CONNECTIVITY_CHIP, type: product, name: 无线连接芯片, name_en: Wireless Connectivity Chip, segment: SEG_ELEC_SOC_CHIP, aliases: [WiFi芯片, 蓝牙芯片, Wi-Fi MCU]}
+  - {id: PROD_ELEC_MCU, type: product, name: MCU芯片, name_en: Microcontroller, segment: SEG_ELEC_SOC_CHIP, aliases: [MCU, 微控制器, 单片机]}
+  - {id: PROD_ELEC_AUTO_MCU, type: product, name: 车规MCU, name_en: Automotive MCU, parent: PROD_ELEC_MCU, segment: SEG_ELEC_SOC_CHIP, import_dependence: high}
+  - {id: PROD_ELEC_DISPLAY_DRIVER_IC, type: product, name: 显示驱动芯片, name_en: Display Driver IC, segment: SEG_ELEC_DIGITAL_IC, import_dependence: medium, aliases: [DDIC, TDDI, 显示驱动IC]}
+  - {id: PROD_ELEC_TIMING_CHIP, type: product, name: 时钟芯片, name_en: Clock and Timing IC, segment: SEG_ELEC_DIGITAL_IC, import_dependence: high, aliases: [时钟发生器, Clock IC]}
+  - {id: PROD_ELEC_MEMORY, type: product, name: 存储芯片产品, name_en: Memory Chip, segment: SEG_ELEC_MEMORY_CHIP, import_dependence: high, aliases: [存储器]}
+  - {id: PROD_ELEC_DRAM, type: product, name: DRAM芯片, name_en: DRAM, parent: PROD_ELEC_MEMORY, segment: SEG_ELEC_MEMORY_CHIP, import_dependence: high, aliases: [DRAM, 内存芯片]}
+  - {id: PROD_ELEC_DDR5, type: product, name: DDR5内存颗粒, name_en: DDR5 DRAM, parent: PROD_ELEC_DRAM, segment: SEG_ELEC_MEMORY_CHIP, import_dependence: high, aliases: [DDR5]}
+  - {id: PROD_ELEC_LPDDR, type: product, name: LPDDR内存颗粒, name_en: LPDDR, parent: PROD_ELEC_DRAM, segment: SEG_ELEC_MEMORY_CHIP, import_dependence: high, aliases: [LPDDR5, 移动DRAM]}
+  - {id: PROD_ELEC_HBM, type: product, name: 高带宽存储器, name_en: HBM, parent: PROD_ELEC_DRAM, segment: SEG_ELEC_MEMORY_CHIP, import_dependence: high, aliases: [HBM, HBM3E, HBM4]}
+  - {id: PROD_ELEC_NICHE_DRAM, type: product, name: 利基型DRAM, name_en: Niche DRAM, parent: PROD_ELEC_DRAM, segment: SEG_ELEC_MEMORY_CHIP, aliases: [DDR3, 利基存储]}
+  - {id: PROD_ELEC_NAND, type: product, name: NAND闪存芯片, name_en: NAND Flash, parent: PROD_ELEC_MEMORY, segment: SEG_ELEC_MEMORY_CHIP, import_dependence: high, aliases: [NAND Flash, NAND闪存, 3D NAND]}
+  - {id: PROD_ELEC_NOR, type: product, name: NOR闪存芯片, name_en: NOR Flash, parent: PROD_ELEC_MEMORY, segment: SEG_ELEC_MEMORY_CHIP, aliases: [NOR Flash]}
+  - {id: PROD_ELEC_EEPROM, type: product, name: EEPROM芯片, name_en: EEPROM, parent: PROD_ELEC_MEMORY, segment: SEG_ELEC_MEMORY_CHIP, aliases: [EEPROM]}
+  - {id: PROD_ELEC_MEMORY_CONTROLLER, type: product, name: 存储主控芯片, name_en: Storage Controller, segment: SEG_ELEC_MEMORY_CHIP, import_dependence: medium, aliases: [SSD主控, 存储控制器]}
+  - {id: PROD_ELEC_SSD, type: product, name: 固态硬盘, name_en: Solid-State Drive, segment: SEG_ELEC_STORAGE_MODULE, aliases: [SSD]}
+  - {id: PROD_ELEC_ENTERPRISE_SSD, type: product, name: 企业级固态硬盘, name_en: Enterprise SSD, parent: PROD_ELEC_SSD, segment: SEG_ELEC_STORAGE_MODULE, import_dependence: medium, aliases: [eSSD, 企业级SSD]}
+  - {id: PROD_ELEC_MEMORY_MODULE, type: product, name: 内存模组, name_en: Memory Module, segment: SEG_ELEC_STORAGE_MODULE, aliases: [内存条, DIMM, RDIMM]}
+  - {id: PROD_ELEC_EMBEDDED_STORAGE, type: product, name: 嵌入式存储, name_en: Embedded Storage, segment: SEG_ELEC_STORAGE_MODULE, aliases: [eMMC, UFS, ePOP, uMCP]}
+  - {id: PROD_ELEC_MEMORY_INTERFACE, type: product, name: 内存接口芯片, name_en: Memory Interface Chip, segment: SEG_ELEC_INTERCONNECT_CHIP, aliases: [RCD, 内存缓冲芯片, MRCD, MDB]}
+  - {id: PROD_ELEC_PCIE_RETIMER, type: product, name: PCIe Retimer芯片, name_en: PCIe Retimer, segment: SEG_ELEC_INTERCONNECT_CHIP, import_dependence: high, aliases: [PCIe Retimer]}
+  - {id: PROD_ELEC_PCIE_SWITCH, type: product, name: PCIe交换芯片, name_en: PCIe Switch, segment: SEG_ELEC_INTERCONNECT_CHIP, import_dependence: high, aliases: [PCIe Switch]}
+  - {id: PROD_ELEC_CXL_CHIP, type: product, name: CXL芯片, name_en: CXL Chip, segment: SEG_ELEC_INTERCONNECT_CHIP, import_dependence: high, aliases: [CXL内存扩展控制器, MXC]}
+  - {id: PROD_ELEC_ETHERNET_SWITCH_CHIP, type: product, name: 以太网交换芯片, name_en: Ethernet Switch Chip, segment: SEG_ELEC_INTERCONNECT_CHIP, import_dependence: high, aliases: [交换芯片, Switch ASIC]}
+  - {id: PROD_ELEC_ETHERNET_PHY, type: product, name: 以太网PHY芯片, name_en: Ethernet PHY, segment: SEG_ELEC_INTERCONNECT_CHIP, import_dependence: high, aliases: [PHY芯片, 以太网物理层芯片, 车载以太网PHY]}
+  - {id: PROD_ELEC_SERDES_CHIP, type: product, name: 高速SerDes芯片, name_en: High-Speed SerDes Chip, segment: SEG_ELEC_INTERCONNECT_CHIP, import_dependence: high, aliases: [车载SerDes, SerDes芯片]}
+  - {id: PROD_ELEC_IC_IP, type: product, name: 半导体IP授权, name_en: Semiconductor IP Licensing, kind: service, segment: SEG_ELEC_IC_DESIGN_SERVICE, import_dependence: high, aliases: [SerDes IP, Chiplet IP]}
+  - {id: PROD_ELEC_ASIC_SERVICE, type: product, name: 芯片定制服务, name_en: ASIC Design Service, kind: service, segment: SEG_ELEC_IC_DESIGN_SERVICE, aliases: [ASIC设计服务, 一站式芯片定制, NRE]}
+
+  # ---------------- analog IC ----------------
+  - {id: PROD_ELEC_PMIC, type: product, name: 电源管理芯片产品, name_en: Power Management IC, segment: SEG_ELEC_POWER_IC, import_dependence: medium, aliases: [PMIC, 电源芯片]}
+  - {id: PROD_ELEC_DCDC, type: product, name: DC-DC转换芯片, name_en: DC-DC Converter IC, parent: PROD_ELEC_PMIC, segment: SEG_ELEC_POWER_IC, aliases: [降压芯片]}
+  - {id: PROD_ELEC_VRM_CONTROLLER, type: product, name: 多相控制器, name_en: Multiphase Controller, parent: PROD_ELEC_PMIC, segment: SEG_ELEC_POWER_IC, import_dependence: high, aliases: [多相电源控制器, VR控制器]}
+  - {id: PROD_ELEC_DRMOS, type: product, name: DrMOS智能功率级, name_en: DrMOS Smart Power Stage, parent: PROD_ELEC_PMIC, segment: SEG_ELEC_POWER_IC, import_dependence: high, aliases: [DrMOS, SPS, Smart Power Stage]}
+  - {id: PROD_ELEC_BMS_AFE, type: product, name: 电池管理芯片, name_en: Battery Management IC, parent: PROD_ELEC_PMIC, segment: SEG_ELEC_POWER_IC, import_dependence: medium, aliases: [BMS芯片, AFE, 电量计]}
+  - {id: PROD_ELEC_GATE_DRIVER, type: product, name: 栅极驱动芯片, name_en: Gate Driver, parent: PROD_ELEC_PMIC, segment: SEG_ELEC_POWER_IC, aliases: [Gate Driver, 隔离驱动]}
+  - {id: PROD_ELEC_LED_DRIVER, type: product, name: LED驱动芯片, name_en: LED Driver IC, parent: PROD_ELEC_PMIC, segment: SEG_ELEC_POWER_IC, aliases: [LED Driver, 显示屏驱动芯片]}
+  - {id: PROD_ELEC_CHARGING_IC, type: product, name: 充电芯片, name_en: Charging IC, parent: PROD_ELEC_PMIC, segment: SEG_ELEC_POWER_IC, aliases: [快充芯片, 快充协议芯片, 无线充电芯片]}
+  - {id: PROD_ELEC_ACDC, type: product, name: AC-DC芯片, name_en: AC-DC Controller, parent: PROD_ELEC_PMIC, segment: SEG_ELEC_POWER_IC, aliases: [AC-DC, 电源适配器芯片]}
+  - {id: PROD_ELEC_EFUSE, type: product, name: 热插拔与电子保险丝芯片, name_en: Hot-Swap and eFuse IC, parent: PROD_ELEC_PMIC, segment: SEG_ELEC_POWER_IC, import_dependence: high, aliases: [eFuse, Hot-Swap]}
+  - {id: PROD_ELEC_MOTOR_DRIVER, type: product, name: 电机驱动芯片, name_en: Motor Driver IC, segment: SEG_ELEC_ANALOG_IC, aliases: [Motor Driver]}
+  - {id: PROD_ELEC_SIGNAL_CHAIN_IC, type: product, name: 信号链芯片产品, name_en: Signal Chain IC, segment: SEG_ELEC_SIGNAL_CHAIN, import_dependence: high}
+  - {id: PROD_ELEC_DATA_CONVERTER, type: product, name: 数据转换器, name_en: Data Converter, parent: PROD_ELEC_SIGNAL_CHAIN_IC, segment: SEG_ELEC_SIGNAL_CHAIN, import_dependence: high, aliases: [ADC芯片, DAC芯片, 模数转换器, 数模转换器]}
+  - {id: PROD_ELEC_AMPLIFIER, type: product, name: 运算放大器, name_en: Operational Amplifier, parent: PROD_ELEC_SIGNAL_CHAIN_IC, segment: SEG_ELEC_SIGNAL_CHAIN, import_dependence: medium, aliases: [运放, Op Amp]}
+  - {id: PROD_ELEC_INTERFACE_IC, type: product, name: 接口芯片, name_en: Interface IC, parent: PROD_ELEC_SIGNAL_CHAIN_IC, segment: SEG_ELEC_SIGNAL_CHAIN, import_dependence: medium, aliases: [接口IC, CAN收发器, RS-485]}
+  - {id: PROD_ELEC_ISOLATOR, type: product, name: 数字隔离芯片, name_en: Digital Isolator, parent: PROD_ELEC_SIGNAL_CHAIN_IC, segment: SEG_ELEC_SIGNAL_CHAIN, aliases: [隔离器, 隔离芯片]}
+  - {id: PROD_ELEC_RF_FRONTEND_IC, type: product, name: 射频前端芯片, name_en: RF Front-End IC, segment: SEG_ELEC_RF_FRONTEND, import_dependence: high, aliases: [RFFE]}
+  - {id: PROD_ELEC_RF_PA, type: product, name: 射频功率放大器, name_en: RF Power Amplifier, parent: PROD_ELEC_RF_FRONTEND_IC, segment: SEG_ELEC_RF_FRONTEND, import_dependence: medium, aliases: [PA, 功率放大器芯片]}
+  - {id: PROD_ELEC_RF_SWITCH, type: product, name: 射频开关, name_en: RF Switch, parent: PROD_ELEC_RF_FRONTEND_IC, segment: SEG_ELEC_RF_FRONTEND, aliases: [RF Switch, 天线调谐开关]}
+  - {id: PROD_ELEC_RF_LNA, type: product, name: 低噪声放大器, name_en: Low-Noise Amplifier, parent: PROD_ELEC_RF_FRONTEND_IC, segment: SEG_ELEC_RF_FRONTEND, aliases: [LNA]}
+  - {id: PROD_ELEC_RF_FILTER, type: product, name: 射频滤波器, name_en: RF Filter, parent: PROD_ELEC_RF_FRONTEND_IC, segment: SEG_ELEC_RF_FRONTEND, import_dependence: high, aliases: [SAW滤波器, BAW滤波器, 声表滤波器]}
+  - {id: PROD_ELEC_RF_MODULE, type: product, name: 射频模组, name_en: RF Module, parent: PROD_ELEC_RF_FRONTEND_IC, segment: SEG_ELEC_RF_FRONTEND, import_dependence: high, aliases: [L-PAMiD, PAMiD, DiFEM, L-FEM]}
+  - {id: PROD_ELEC_RF_TRANSCEIVER, type: product, name: 射频收发芯片, name_en: RF Transceiver, segment: SEG_ELEC_RF_FRONTEND, import_dependence: high, aliases: [Transceiver]}
+  - {id: PROD_ELEC_CIS, type: product, name: CMOS图像传感器, name_en: CMOS Image Sensor, segment: SEG_ELEC_SENSOR_CHIP, import_dependence: medium, aliases: [CIS, 图像传感器]}
+  - {id: PROD_ELEC_PHONE_CIS, type: product, name: 手机CIS, name_en: Smartphone CIS, parent: PROD_ELEC_CIS, segment: SEG_ELEC_SENSOR_CHIP, import_dependence: medium}
+  - {id: PROD_ELEC_AUTO_CIS, type: product, name: 车载CIS, name_en: Automotive CIS, parent: PROD_ELEC_CIS, segment: SEG_ELEC_SENSOR_CHIP}
+  - {id: PROD_ELEC_SECURITY_CIS, type: product, name: 安防CIS, name_en: Security CIS, parent: PROD_ELEC_CIS, segment: SEG_ELEC_SENSOR_CHIP}
+  - {id: PROD_ELEC_MEMS_SENSOR, type: product, name: MEMS传感器, name_en: MEMS Sensor, segment: SEG_ELEC_SENSOR_CHIP, import_dependence: medium, aliases: [MEMS, 惯性传感器, 压力传感器]}
+  - {id: PROD_ELEC_FINGERPRINT_SENSOR, type: product, name: 指纹识别芯片, name_en: Fingerprint Sensor, segment: SEG_ELEC_SENSOR_CHIP, aliases: [指纹芯片, 屏下指纹]}
+  - {id: PROD_ELEC_TOF_SENSOR, type: product, name: ToF/SPAD传感器, name_en: ToF/SPAD Sensor, segment: SEG_ELEC_SENSOR_CHIP, import_dependence: high, aliases: [dToF, SPAD, 3D传感]}
+  - {id: PROD_ELEC_MAGNETIC_SENSOR, type: product, name: 磁传感器, name_en: Magnetic Sensor, segment: SEG_ELEC_SENSOR_CHIP, import_dependence: medium, aliases: [霍尔传感器, TMR传感器, 电流传感器芯片]}
+
+  # ---------------- foundry & OSAT ----------------
+  - {id: PROD_ELEC_FOUNDRY, type: product, name: 晶圆代工, name_en: Wafer Foundry, kind: service, segment: SEG_ELEC_FOUNDRY, aliases: [Foundry, 代工服务]}
+  - {id: PROD_ELEC_ADVANCED_FOUNDRY, type: product, name: 先进制程代工, name_en: Advanced-Node Foundry, kind: service, parent: PROD_ELEC_FOUNDRY, segment: SEG_ELEC_FOUNDRY, import_dependence: high, aliases: [先进逻辑代工, FinFET代工]}
+  - {id: PROD_ELEC_MATURE_FOUNDRY, type: product, name: 成熟制程代工, name_en: Mature-Node Foundry, kind: service, parent: PROD_ELEC_FOUNDRY, segment: SEG_ELEC_FOUNDRY, aliases: [成熟制程, 28nm及以上]}
+  - {id: PROD_ELEC_SPECIALTY_FOUNDRY, type: product, name: 特色工艺代工, name_en: Specialty Process Foundry, kind: service, parent: PROD_ELEC_FOUNDRY, segment: SEG_ELEC_FOUNDRY, aliases: [BCD工艺, 功率器件代工, 特色工艺, MEMS代工]}
+  - {id: PROD_ELEC_PACKAGING_TEST, type: product, name: 封装测试服务, name_en: Packaging and Test Service, kind: service, segment: SEG_ELEC_OSAT, aliases: [封测, OSAT]}
+  - {id: PROD_ELEC_TRADITIONAL_PACKAGING, type: product, name: 传统封装, name_en: Conventional Packaging, kind: service, parent: PROD_ELEC_PACKAGING_TEST, segment: SEG_ELEC_OSAT, aliases: [QFN, QFP, DFN, 引线键合封装]}
+  - {id: PROD_ELEC_FLIP_CHIP, type: product, name: 倒装封装, name_en: Flip-Chip Packaging, kind: service, parent: PROD_ELEC_PACKAGING_TEST, segment: SEG_ELEC_OSAT, aliases: [Flip Chip, FCBGA, FCCSP]}
+  - {id: PROD_ELEC_WLP, type: product, name: 晶圆级封装, name_en: Wafer-Level Packaging, kind: service, parent: PROD_ELEC_PACKAGING_TEST, segment: SEG_ELEC_OSAT, aliases: [WLCSP, Fan-out, 扇出型封装]}
+  - {id: PROD_ELEC_25D_3D_PACKAGING, type: product, name: 2.5D/3D封装, name_en: 2.5D/3D Packaging, kind: service, parent: PROD_ELEC_PACKAGING_TEST, segment: SEG_ELEC_OSAT, import_dependence: high, aliases: [类CoWoS封装, 硅中介层封装, Chiplet集成封装, 3D堆叠封装]}
+  - {id: PROD_ELEC_SIP, type: product, name: 系统级封装, name_en: System in Package, kind: service, parent: PROD_ELEC_PACKAGING_TEST, segment: SEG_ELEC_OSAT, aliases: [SiP]}
+  - {id: PROD_ELEC_BUMPING, type: product, name: 凸块制造, name_en: Wafer Bumping, kind: service, parent: PROD_ELEC_PACKAGING_TEST, segment: SEG_ELEC_OSAT, aliases: [Bumping, 晶圆凸块, RDL]}
+  - {id: PROD_ELEC_IC_TESTING, type: product, name: 集成电路测试服务, name_en: IC Testing Service, kind: service, parent: PROD_ELEC_PACKAGING_TEST, segment: SEG_ELEC_OSAT, aliases: [芯片测试, 晶圆测试, CP测试, FT测试, 第三方测试]}
+  - {id: PROD_ELEC_INTERPOSER, type: product, name: 硅中介层, name_en: Silicon Interposer, segment: SEG_ELEC_OSAT, import_dependence: high, aliases: [Interposer, TSV转接板]}
+
+  # ---------------- semiconductor equipment ----------------
+  - {id: PROD_ELEC_FRONTEND_EQUIPMENT, type: product, name: 前道制造设备, name_en: Front-End Wafer Fab Equipment, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [前道设备, WFE, 晶圆制造设备]}
+  - {id: PROD_ELEC_BACKEND_EQUIPMENT, type: product, name: 后道封测设备, name_en: Back-End Equipment, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: medium, aliases: [后道设备, 封测设备, 封装设备, 后道封装设备]}
+  - {id: PROD_ELEC_LITHOGRAPHY, type: product, name: 光刻机, name_en: Lithography Scanner, parent: PROD_ELEC_FRONTEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [光刻设备, Lithography, 步进扫描光刻机]}
+  - {id: PROD_ELEC_ETCH, type: product, name: 刻蚀设备, name_en: Etch Equipment, parent: PROD_ELEC_FRONTEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: medium, aliases: [刻蚀机, Etcher, 干法刻蚀设备]}
+  - {id: PROD_ELEC_CCP_ETCH, type: product, name: CCP刻蚀设备, name_en: CCP Etcher, parent: PROD_ELEC_ETCH, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: medium, aliases: [介质刻蚀, 电容耦合等离子体刻蚀机]}
+  - {id: PROD_ELEC_ICP_ETCH, type: product, name: ICP刻蚀设备, name_en: ICP Etcher, parent: PROD_ELEC_ETCH, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: medium, aliases: [导体刻蚀, 硅刻蚀, 电感耦合等离子体刻蚀机]}
+  - {id: PROD_ELEC_DEPOSITION, type: product, name: 薄膜沉积设备, name_en: Thin-Film Deposition Equipment, parent: PROD_ELEC_FRONTEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [薄膜设备]}
+  - {id: PROD_ELEC_PVD, type: product, name: PVD设备, name_en: PVD Equipment, parent: PROD_ELEC_DEPOSITION, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [物理气相沉积, 物理气相沉积设备, 溅射设备]}
+  - {id: PROD_ELEC_CVD, type: product, name: CVD设备, name_en: CVD Equipment, parent: PROD_ELEC_DEPOSITION, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [PECVD, LPCVD, 化学气相沉积, 化学气相沉积设备, LPCVD设备]}
+  - {id: PROD_ELEC_ALD, type: product, name: ALD设备, name_en: ALD Equipment, parent: PROD_ELEC_DEPOSITION, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [原子层沉积, 原子层沉积设备]}
+  - {id: PROD_ELEC_EPI_EQUIPMENT, type: product, name: 外延设备, name_en: Epitaxy Equipment, parent: PROD_ELEC_DEPOSITION, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: medium, aliases: [外延炉, SiC外延设备]}
+  - {id: PROD_ELEC_MOCVD, type: product, name: MOCVD设备, name_en: MOCVD Equipment, parent: PROD_ELEC_DEPOSITION, segment: SEG_ELEC_SEMI_EQUIPMENT, aliases: [MOCVD, 金属有机化学气相沉积]}
+  - {id: PROD_ELEC_CMP_EQUIPMENT, type: product, name: CMP设备, name_en: CMP Equipment, parent: PROD_ELEC_FRONTEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: medium, aliases: [化学机械抛光设备]}
+  - {id: PROD_ELEC_CLEANING_EQUIPMENT, type: product, name: 清洗设备, name_en: Wafer Cleaning Equipment, parent: PROD_ELEC_FRONTEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, aliases: [湿法清洗设备, 单片清洗设备, 槽式清洗设备]}
+  - {id: PROD_ELEC_COATER_DEVELOPER, type: product, name: 涂胶显影设备, name_en: Coater/Developer, parent: PROD_ELEC_FRONTEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [Track, 涂胶显影机]}
+  - {id: PROD_ELEC_ION_IMPLANT, type: product, name: 离子注入机, name_en: Ion Implanter, parent: PROD_ELEC_FRONTEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [Implanter, 离子注入设备]}
+  - {id: PROD_ELEC_THERMAL_PROCESS, type: product, name: 热处理设备, name_en: Thermal Processing Equipment, parent: PROD_ELEC_FRONTEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, aliases: [氧化扩散炉, RTP, 退火设备, 快速退火设备]}
+  - {id: PROD_ELEC_METROLOGY, type: product, name: 量检测设备, name_en: Metrology and Inspection Equipment, parent: PROD_ELEC_FRONTEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [前道量测, 缺陷检测, 膜厚量测, 前道量检测设备, 缺陷检测设备]}
+  - {id: PROD_ELEC_ELECTROPLATING, type: product, name: 电镀设备, name_en: Electroplating Equipment, parent: PROD_ELEC_FRONTEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, aliases: [ECP, 晶圆电镀]}
+  - {id: PROD_ELEC_CRYSTAL_FURNACE, type: product, name: 晶体生长炉, name_en: Crystal Growth Furnace, segment: SEG_ELEC_SEMI_EQUIPMENT, aliases: [半导体单晶炉, 长晶炉, SiC长晶炉, 碳化硅单晶炉]}
+  - {id: PROD_ELEC_IC_TESTER, type: product, name: 测试机, name_en: Automatic Test Equipment, parent: PROD_ELEC_BACKEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [ATE, SoC测试机, 存储测试机, 半导体测试机]}
+  - {id: PROD_ELEC_PROBER, type: product, name: 探针台, name_en: Wafer Prober, parent: PROD_ELEC_BACKEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [Prober, 晶圆探针台]}
+  - {id: PROD_ELEC_HANDLER, type: product, name: 分选机, name_en: Test Handler, parent: PROD_ELEC_BACKEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, aliases: [Handler, 测试分选机]}
+  - {id: PROD_ELEC_DICING, type: product, name: 划片机, name_en: Dicing Saw, parent: PROD_ELEC_BACKEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [划片设备, 晶圆切割设备, 激光隐切设备]}
+  - {id: PROD_ELEC_GRINDER, type: product, name: 减薄机, name_en: Wafer Grinder, parent: PROD_ELEC_BACKEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [晶圆减薄机, 晶圆减薄设备]}
+  - {id: PROD_ELEC_DIE_BONDER, type: product, name: 固晶机, name_en: Die Bonder, parent: PROD_ELEC_BACKEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, aliases: [Die Bonder, 装片机]}
+  - {id: PROD_ELEC_WIRE_BONDER, type: product, name: 引线键合机, name_en: Wire Bonder, parent: PROD_ELEC_BACKEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [焊线机]}
+  - {id: PROD_ELEC_HYBRID_BONDER, type: product, name: 混合键合设备, name_en: Hybrid Bonder, parent: PROD_ELEC_BACKEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [Hybrid Bonding设备, W2W键合, D2W键合]}
+  - {id: PROD_ELEC_TCB_BONDER, type: product, name: 热压键合机, name_en: Thermo-Compression Bonder, parent: PROD_ELEC_BACKEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high, aliases: [TCB]}
+  - {id: PROD_ELEC_MOLDING_EQ, type: product, name: 塑封设备, name_en: Molding Equipment, parent: PROD_ELEC_BACKEND_EQUIPMENT, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: medium, aliases: [塑封机]}
+  - {id: PROD_ELEC_PROBE_CARD, type: product, name: 探针卡, name_en: Probe Card, segment: SEG_ELEC_SEMI_EQUIPMENT, import_dependence: high}
+  - {id: PROD_ELEC_EQUIP_PARTS, type: product, name: 半导体设备零部件产品, name_en: Semiconductor Equipment Parts, segment: SEG_ELEC_EQUIP_PARTS, import_dependence: high, aliases: [精密零部件, 半导体设备零部件, 设备精密零部件]}
+  - {id: PROD_ELEC_RF_GENERATOR, type: product, name: 射频电源, name_en: RF Generator, parent: PROD_ELEC_EQUIP_PARTS, segment: SEG_ELEC_EQUIP_PARTS, import_dependence: high, aliases: [射频电源发生器, 等离子体射频电源]}
+  - {id: PROD_ELEC_VACUUM_PUMP, type: product, name: 半导体真空泵, name_en: Semiconductor Vacuum Pump, parent: PROD_ELEC_EQUIP_PARTS, segment: SEG_ELEC_EQUIP_PARTS, import_dependence: high, aliases: [干式真空泵, 干泵, 分子泵]}
+  - {id: PROD_ELEC_VACUUM_VALVE, type: product, name: 真空阀门, name_en: Vacuum Valve, parent: PROD_ELEC_EQUIP_PARTS, segment: SEG_ELEC_EQUIP_PARTS, import_dependence: high}
+  - {id: PROD_ELEC_MFC, type: product, name: 质量流量控制器, name_en: Mass Flow Controller, parent: PROD_ELEC_EQUIP_PARTS, segment: SEG_ELEC_EQUIP_PARTS, import_dependence: high, aliases: [MFC]}
+  - {id: PROD_ELEC_QUARTZ_PARTS, type: product, name: 石英零部件, name_en: Quartz Parts, parent: PROD_ELEC_EQUIP_PARTS, segment: SEG_ELEC_EQUIP_PARTS, aliases: [石英件, 石英环]}
+  - {id: PROD_ELEC_SILICON_PARTS, type: product, name: 硅零部件, name_en: Silicon Parts, parent: PROD_ELEC_EQUIP_PARTS, segment: SEG_ELEC_EQUIP_PARTS, aliases: [硅电极, 硅环]}
+  - {id: PROD_ELEC_CERAMIC_PARTS, type: product, name: 精密陶瓷零部件, name_en: Precision Ceramic Parts, parent: PROD_ELEC_EQUIP_PARTS, segment: SEG_ELEC_EQUIP_PARTS, import_dependence: high}
+  - {id: PROD_ELEC_ESC, type: product, name: 静电卡盘, name_en: Electrostatic Chuck, parent: PROD_ELEC_EQUIP_PARTS, segment: SEG_ELEC_EQUIP_PARTS, import_dependence: high, aliases: [静电吸盘, ESC]}
+  - {id: PROD_ELEC_CHAMBER_PARTS, type: product, name: 工艺腔体与金属结构件, name_en: Process Chamber and Metal Parts, parent: PROD_ELEC_EQUIP_PARTS, segment: SEG_ELEC_EQUIP_PARTS, aliases: [腔体, 工艺腔室]}
+  - {id: PROD_ELEC_GAS_DELIVERY, type: product, name: 气体输送系统, name_en: Gas Delivery System, parent: PROD_ELEC_EQUIP_PARTS, segment: SEG_ELEC_EQUIP_PARTS, aliases: [气柜, Gas Box, 特气柜]}
+  - {id: PROD_ELEC_SHOWERHEAD, type: product, name: 喷淋头, name_en: Showerhead, parent: PROD_ELEC_EQUIP_PARTS, segment: SEG_ELEC_EQUIP_PARTS, aliases: [Showerhead]}
+  - {id: PROD_ELEC_PARTS_CLEANING, type: product, name: 零部件清洗与再生, name_en: Parts Cleaning and Refurbishment, kind: service, segment: SEG_ELEC_EQUIP_PARTS, aliases: [精密清洗, 涂层再生]}
+
+  # ---------------- PCB / substrate / CCL ----------------
+  - {id: PROD_ELEC_PCB, type: product, name: 印制电路板产品, name_en: Printed Circuit Board, segment: SEG_ELEC_PCB, aliases: [PCB, 线路板]}
+  - {id: PROD_ELEC_MULTILAYER_PCB, type: product, name: 多层板, name_en: Multilayer PCB, parent: PROD_ELEC_PCB, segment: SEG_ELEC_PCB, aliases: [多层PCB]}
+  - {id: PROD_ELEC_HIGH_LAYER_PCB, type: product, name: 高多层板, name_en: High-Layer-Count PCB, parent: PROD_ELEC_MULTILAYER_PCB, segment: SEG_ELEC_PCB, aliases: [高层板]}
+  - {id: PROD_ELEC_HDI, type: product, name: HDI板, name_en: HDI PCB, parent: PROD_ELEC_PCB, segment: SEG_ELEC_PCB, aliases: [HDI线路板, 高密度互连板]}
+  - {id: PROD_ELEC_ANYLAYER_HDI, type: product, name: 任意层HDI, name_en: Any-Layer HDI, parent: PROD_ELEC_HDI, segment: SEG_ELEC_PCB, aliases: [Any-layer HDI, 高阶HDI]}
+  - {id: PROD_ELEC_SLP, type: product, name: 类载板, name_en: Substrate-Like PCB, parent: PROD_ELEC_PCB, segment: SEG_ELEC_PCB, aliases: [SLP]}
+  - {id: PROD_ELEC_FPC, type: product, name: 柔性电路板, name_en: Flexible PCB, parent: PROD_ELEC_PCB, segment: SEG_ELEC_PCB, aliases: [FPC, 软板, 挠性板]}
+  - {id: PROD_ELEC_RIGID_FLEX, type: product, name: 刚挠结合板, name_en: Rigid-Flex PCB, parent: PROD_ELEC_PCB, segment: SEG_ELEC_PCB, aliases: [软硬结合板]}
+  - {id: PROD_ELEC_HIGH_SPEED_PCB, type: product, name: 高速PCB, name_en: High-Speed PCB, parent: PROD_ELEC_PCB, segment: SEG_ELEC_PCB, aliases: [高速多层板]}
+  - {id: PROD_ELEC_AI_SERVER_PCB, type: product, name: AI服务器PCB, name_en: AI Server PCB, parent: PROD_ELEC_HIGH_SPEED_PCB, segment: SEG_ELEC_PCB, aliases: [GPU板, OAM板, UBB板, 加速卡板]}
+  - {id: PROD_ELEC_SWITCH_PCB, type: product, name: 交换机PCB, name_en: Switch PCB, parent: PROD_ELEC_HIGH_SPEED_PCB, segment: SEG_ELEC_PCB, aliases: [交换机板]}
+  - {id: PROD_ELEC_OPTICAL_MODULE_PCB, type: product, name: 光模块PCB, name_en: Optical Module PCB, parent: PROD_ELEC_HIGH_SPEED_PCB, segment: SEG_ELEC_PCB, aliases: [光模块板]}
+  - {id: PROD_ELEC_SERVER_MB_PCB, type: product, name: 服务器主板PCB, name_en: Server Motherboard PCB, parent: PROD_ELEC_HIGH_SPEED_PCB, segment: SEG_ELEC_PCB, aliases: [服务器板]}
+  - {id: PROD_ELEC_BACKPLANE_PCB, type: product, name: 背板与正交背板, name_en: Backplane and Orthogonal Midplane, parent: PROD_ELEC_HIGH_SPEED_PCB, segment: SEG_ELEC_PCB, aliases: [背板PCB, 正交背板, Midplane]}
+  - {id: PROD_ELEC_HIGH_FREQ_PCB, type: product, name: 高频PCB, name_en: High-Frequency PCB, parent: PROD_ELEC_PCB, segment: SEG_ELEC_PCB, aliases: [射频板, 微波板, 毫米波雷达板]}
+  - {id: PROD_ELEC_AUTO_PCB, type: product, name: 汽车PCB, name_en: Automotive PCB, parent: PROD_ELEC_PCB, segment: SEG_ELEC_PCB, aliases: [车用PCB]}
+  - {id: PROD_ELEC_HEAVY_COPPER_PCB, type: product, name: 厚铜板, name_en: Heavy Copper PCB, parent: PROD_ELEC_PCB, segment: SEG_ELEC_PCB, aliases: [厚铜PCB]}
+  - {id: PROD_ELEC_LDI, type: product, name: 直写光刻设备, name_en: Laser Direct Imaging, parent: PROD_MACH_PCB_EQUIP, segment: SEG_ELEC_PCB, aliases: [LDI, 激光直接成像]}
+  - {id: PROD_ELEC_PCB_DRILLING_MACHINE, type: product, name: PCB钻孔设备, name_en: PCB Drilling Machine, parent: PROD_MACH_PCB_EQUIP, segment: SEG_ELEC_PCB, aliases: [机械钻孔机, 激光钻孔机]}
+  - {id: PROD_ELEC_IC_SUBSTRATE, type: product, name: 封装基板产品, name_en: IC Substrate, segment: SEG_ELEC_IC_SUBSTRATE, import_dependence: high, aliases: [IC载板, 封装载板]}
+  - {id: PROD_ELEC_ABF_SUBSTRATE, type: product, name: ABF载板, name_en: ABF Substrate, parent: PROD_ELEC_IC_SUBSTRATE, segment: SEG_ELEC_IC_SUBSTRATE, import_dependence: high, aliases: [FC-BGA载板]}
+  - {id: PROD_ELEC_BT_SUBSTRATE, type: product, name: BT载板, name_en: BT Substrate, parent: PROD_ELEC_IC_SUBSTRATE, segment: SEG_ELEC_IC_SUBSTRATE, import_dependence: medium, aliases: [存储载板, CSP载板]}
+  - {id: PROD_ELEC_GLASS_CORE_SUBSTRATE, type: product, name: 玻璃芯封装基板, name_en: Glass Core Substrate, parent: PROD_ELEC_IC_SUBSTRATE, segment: SEG_ELEC_IC_SUBSTRATE, aliases: [TGV玻璃基板]}
+  - {id: PROD_ELEC_CCL, type: product, name: 覆铜板产品, name_en: Copper Clad Laminate, segment: SEG_ELEC_CCL, aliases: [CCL, 覆铜箔层压板]}
+  - {id: PROD_ELEC_FR4_CCL, type: product, name: 常规FR-4覆铜板, name_en: Standard FR-4 CCL, parent: PROD_ELEC_CCL, segment: SEG_ELEC_CCL, aliases: [FR-4, 普通覆铜板]}
+  - {id: PROD_ELEC_HIGH_SPEED_CCL, type: product, name: 高速覆铜板, name_en: High-Speed CCL, parent: PROD_ELEC_CCL, segment: SEG_ELEC_CCL, import_dependence: medium, aliases: [高速CCL, M7, M8, M9, 低损耗覆铜板]}
+  - {id: PROD_ELEC_HIGH_FREQ_CCL, type: product, name: 高频覆铜板, name_en: High-Frequency CCL, parent: PROD_ELEC_CCL, segment: SEG_ELEC_CCL, import_dependence: medium, aliases: [PTFE覆铜板, 高频CCL, 碳氢覆铜板]}
+  - {id: PROD_ELEC_FCCL, type: product, name: 挠性覆铜板, name_en: Flexible CCL, parent: PROD_ELEC_CCL, segment: SEG_ELEC_CCL, aliases: [FCCL, 软板基材]}
+  - {id: PROD_ELEC_SUBSTRATE_CCL, type: product, name: 封装基板用覆铜板, name_en: IC Substrate Laminate, parent: PROD_ELEC_CCL, segment: SEG_ELEC_CCL, import_dependence: high, aliases: [BT基材, 载板用覆铜板]}
+  - {id: PROD_ELEC_PREPREG, type: product, name: 半固化片, name_en: Prepreg, segment: SEG_ELEC_CCL, aliases: [PP片]}
+  - {id: PROD_ELEC_COPPER_FOIL, type: product, name: 电子电路铜箔, name_en: Electronic Circuit Copper Foil, segment: SEG_ELEC_PCB_MATERIAL, aliases: [标准铜箔, PCB铜箔]}
+  - {id: PROD_ELEC_HVLP_FOIL, type: product, name: HVLP铜箔, name_en: HVLP Copper Foil, parent: PROD_ELEC_COPPER_FOIL, segment: SEG_ELEC_PCB_MATERIAL, import_dependence: high, aliases: [极低轮廓铜箔, HVLP, RTF铜箔]}
+  - {id: PROD_ELEC_CARRIER_FOIL, type: product, name: 载体铜箔, name_en: Carrier Copper Foil, parent: PROD_ELEC_COPPER_FOIL, segment: SEG_ELEC_PCB_MATERIAL, import_dependence: high, aliases: [超薄载体铜箔]}
+  - {id: PROD_ELEC_QUARTZ_CLOTH, type: product, name: 石英纤维布, name_en: Quartz Fiber Cloth, segment: SEG_ELEC_PCB_MATERIAL, import_dependence: medium, aliases: [Q布, 石英布, 三代布]}
+  - {id: PROD_ELEC_ABF_FILM, type: product, name: ABF积层膜, name_en: ABF Build-up Film, segment: SEG_ELEC_PCB_MATERIAL, import_dependence: high, aliases: [ABF膜, 积层绝缘膜]}
+
+  # ---------------- passive components ----------------
+  - {id: PROD_ELEC_CAPACITOR, type: product, name: 电容器, name_en: Capacitor, segment: SEG_ELEC_PASSIVE}
+  - {id: PROD_ELEC_MLCC, type: product, name: 片式多层陶瓷电容器, name_en: MLCC, parent: PROD_ELEC_CAPACITOR, segment: SEG_ELEC_PASSIVE, import_dependence: medium, aliases: [MLCC]}
+  - {id: PROD_ELEC_ALUMINUM_CAP, type: product, name: 铝电解电容, name_en: Aluminum Electrolytic Capacitor, parent: PROD_ELEC_CAPACITOR, segment: SEG_ELEC_PASSIVE, aliases: [铝电容]}
+  - {id: PROD_ELEC_FILM_CAP, type: product, name: 薄膜电容, name_en: Film Capacitor, parent: PROD_ELEC_CAPACITOR, segment: SEG_ELEC_PASSIVE, aliases: [薄膜电容器]}
+  - {id: PROD_ELEC_SUPERCAP, type: product, name: 超级电容, name_en: Supercapacitor, parent: PROD_ELEC_CAPACITOR, segment: SEG_ELEC_PASSIVE, aliases: [超级电容器]}
+  - {id: PROD_ELEC_POLYMER_CAP, type: product, name: 固态电容, name_en: Polymer Capacitor, parent: PROD_ELEC_CAPACITOR, segment: SEG_ELEC_PASSIVE, import_dependence: medium, aliases: [聚合物电容, 叠层固态电容]}
+  - {id: PROD_ELEC_SILICON_CAP, type: product, name: 硅电容, name_en: Silicon Capacitor, parent: PROD_ELEC_CAPACITOR, segment: SEG_ELEC_PASSIVE, import_dependence: high}
+  - {id: PROD_ELEC_INDUCTOR, type: product, name: 电感, name_en: Inductor, segment: SEG_ELEC_PASSIVE, aliases: [电感器]}
+  - {id: PROD_ELEC_POWER_INDUCTOR, type: product, name: 功率电感, name_en: Power Inductor, parent: PROD_ELEC_INDUCTOR, segment: SEG_ELEC_PASSIVE, aliases: [一体成型电感, 芯片电感, TLVR电感]}
+  - {id: PROD_ELEC_CHIP_INDUCTOR, type: product, name: 片式电感, name_en: Chip Inductor, parent: PROD_ELEC_INDUCTOR, segment: SEG_ELEC_PASSIVE, import_dependence: medium, aliases: [叠层电感, 绕线电感, 射频电感]}
+  - {id: PROD_ELEC_RESISTOR, type: product, name: 电阻器, name_en: Resistor, segment: SEG_ELEC_PASSIVE, aliases: [片式电阻, 贴片电阻]}
+  - {id: PROD_ELEC_SENSITIVE_RESISTOR, type: product, name: 敏感元件, name_en: Thermistor and Varistor, segment: SEG_ELEC_PASSIVE, aliases: [热敏电阻, 压敏电阻, NTC]}
+  - {id: PROD_ELEC_CRYSTAL_OSCILLATOR, type: product, name: 晶振, name_en: Quartz Crystal and Oscillator, segment: SEG_ELEC_PASSIVE, aliases: [石英晶振, 晶体谐振器, 振荡器]}
+  - {id: PROD_ELEC_MAGNETIC_COMPONENT, type: product, name: 磁性元件, name_en: Magnetic Component, segment: SEG_ELEC_PASSIVE, aliases: [电子变压器, 网络变压器]}
+  - {id: PROD_ELEC_MLCC_POWDER, type: product, name: 电子陶瓷粉体, name_en: Electronic Ceramic Powder, segment: SEG_ELEC_PASSIVE, import_dependence: medium, aliases: [MLCC介质粉, 钛酸钡粉体]}
+  - {id: PROD_ELEC_CERAMIC_FERRULE, type: product, name: 陶瓷插芯, name_en: Ceramic Ferrule, segment: SEG_ELEC_COMPONENTS, aliases: [光纤陶瓷插芯]}
+
+  # ---------------- connectors ----------------
+  - {id: PROD_ELEC_CONNECTOR, type: product, name: 连接器产品, name_en: Connector, segment: SEG_ELEC_CONNECTOR, aliases: [接插件]}
+  - {id: PROD_ELEC_HIGH_SPEED_CONNECTOR, type: product, name: 高速连接器, name_en: High-Speed Connector, parent: PROD_ELEC_CONNECTOR, segment: SEG_ELEC_CONNECTOR, import_dependence: high, aliases: [112G/224G连接器]}
+  - {id: PROD_ELEC_BTB_CONNECTOR, type: product, name: 板对板连接器, name_en: Board-to-Board Connector, parent: PROD_ELEC_CONNECTOR, segment: SEG_ELEC_CONNECTOR, import_dependence: medium, aliases: [BTB]}
+  - {id: PROD_ELEC_IO_CONNECTOR, type: product, name: I/O连接器, name_en: I/O Connector, parent: PROD_ELEC_CONNECTOR, segment: SEG_ELEC_CONNECTOR, aliases: [Type-C连接器]}
+  - {id: PROD_ELEC_RF_CONNECTOR, type: product, name: 射频连接器, name_en: RF Connector, parent: PROD_ELEC_CONNECTOR, segment: SEG_ELEC_CONNECTOR, aliases: [同轴连接器]}
+  - {id: PROD_ELEC_POWER_CONNECTOR, type: product, name: 电源连接器, name_en: Power Connector, parent: PROD_ELEC_CONNECTOR, segment: SEG_ELEC_CONNECTOR, aliases: [服务器电源连接器, Busbar连接器]}
+  - {id: PROD_ELEC_AUTO_CONNECTOR, type: product, name: 汽车连接器, name_en: Automotive Connector, parent: PROD_ELEC_CONNECTOR, segment: SEG_ELEC_CONNECTOR, import_dependence: medium, aliases: [车载连接器]}
+  - {id: PROD_ELEC_HV_CONNECTOR, type: product, name: 高压连接器, name_en: High-Voltage Connector, parent: PROD_ELEC_AUTO_CONNECTOR, segment: SEG_ELEC_CONNECTOR, aliases: [新能源高压连接器]}
+  - {id: PROD_ELEC_AUTO_HS_CONNECTOR, type: product, name: 车载高速连接器, name_en: Automotive High-Speed Connector, parent: PROD_ELEC_AUTO_CONNECTOR, segment: SEG_ELEC_CONNECTOR, import_dependence: medium, aliases: [FAKRA, HSD, Mini-FAKRA, 汽车高速连接器]}
+  - {id: PROD_ELEC_CONSUMER_CABLE, type: product, name: 消费电子线缆组件, name_en: Consumer Cable Assembly, segment: SEG_ELEC_CONNECTOR, aliases: [数据线, 线缆组件]}
+
+  # ---------------- display ----------------
+  - {id: PROD_ELEC_DISPLAY_PANEL, type: product, name: 显示面板, name_en: Display Panel, segment: SEG_ELEC_DISPLAY_PANEL}
+  - {id: PROD_ELEC_LCD_PANEL, type: product, name: TFT-LCD面板, name_en: TFT-LCD Panel, parent: PROD_ELEC_DISPLAY_PANEL, segment: SEG_ELEC_DISPLAY_PANEL, aliases: [LCD面板, 液晶面板]}
+  - {id: PROD_ELEC_LCD_TV_PANEL, type: product, name: 大尺寸LCD面板, name_en: Large-Size LCD Panel, parent: PROD_ELEC_LCD_PANEL, segment: SEG_ELEC_DISPLAY_PANEL, aliases: [电视面板, TV面板]}
+  - {id: PROD_ELEC_LCD_IT_PANEL, type: product, name: 中小尺寸LCD面板, name_en: Small/Medium LCD Panel, parent: PROD_ELEC_LCD_PANEL, segment: SEG_ELEC_DISPLAY_PANEL, aliases: [IT面板, 笔电面板, 显示器面板, 车载面板]}
+  - {id: PROD_ELEC_AMOLED_PANEL, type: product, name: AMOLED面板, name_en: AMOLED Panel, parent: PROD_ELEC_DISPLAY_PANEL, segment: SEG_ELEC_DISPLAY_PANEL, aliases: [OLED面板, AMOLED]}
+  - {id: PROD_ELEC_FLEX_OLED, type: product, name: 柔性OLED面板, name_en: Flexible OLED Panel, parent: PROD_ELEC_AMOLED_PANEL, segment: SEG_ELEC_DISPLAY_PANEL, aliases: [柔性屏, LTPO, 折叠屏面板]}
+  - {id: PROD_ELEC_IT_OLED, type: product, name: 中尺寸OLED面板, name_en: Mid-Size OLED Panel, parent: PROD_ELEC_AMOLED_PANEL, segment: SEG_ELEC_DISPLAY_PANEL, aliases: [8.6代OLED, IT OLED, 车载OLED]}
+  - {id: PROD_ELEC_MICRO_OLED, type: product, name: 硅基OLED, name_en: Micro OLED, parent: PROD_ELEC_DISPLAY_PANEL, segment: SEG_ELEC_DISPLAY_PANEL, aliases: [Micro OLED, OLEDoS]}
+  - {id: PROD_ELEC_EPAPER, type: product, name: 电子纸, name_en: E-Paper Display, parent: PROD_ELEC_DISPLAY_PANEL, segment: SEG_ELEC_DISPLAY_PANEL, import_dependence: medium, aliases: [墨水屏, E-paper]}
+  - {id: PROD_ELEC_DISPLAY_MODULE, type: product, name: 显示模组, name_en: Display Module, segment: SEG_ELEC_DISPLAY_PANEL, aliases: [LCM, 液晶显示模组]}
+  - {id: PROD_ELEC_TOUCH_MODULE, type: product, name: 触控模组, name_en: Touch Module, segment: SEG_ELEC_DISPLAY_PANEL, aliases: [触摸屏, 触控屏]}
+  - {id: PROD_ELEC_PANEL_EQUIPMENT, type: product, name: 面板制程与检测设备, name_en: Panel Process and Inspection Equipment, segment: SEG_ELEC_DISPLAY_PANEL, import_dependence: medium, aliases: [模组设备]}
+  - {id: PROD_ELEC_BACKLIGHT, type: product, name: 背光模组, name_en: Backlight Unit, segment: SEG_ELEC_DISPLAY_MATERIAL, aliases: [背光源, BLU]}
+  - {id: PROD_ELEC_POLARIZER, type: product, name: 偏光片, name_en: Polarizer, segment: SEG_ELEC_DISPLAY_MATERIAL, import_dependence: medium, aliases: [POL, 偏光膜]}
+  - {id: PROD_ELEC_TFT_GLASS, type: product, name: 显示玻璃基板, name_en: Display Glass Substrate, segment: SEG_ELEC_DISPLAY_MATERIAL, import_dependence: high, aliases: [TFT-LCD玻璃基板, 液晶玻璃基板, 基板玻璃]}
+  - {id: PROD_ELEC_OLED_MATERIAL, type: product, name: OLED有机材料, name_en: OLED Organic Material, segment: SEG_ELEC_DISPLAY_MATERIAL, import_dependence: high, aliases: [OLED发光材料, OLED终端材料, 发光层材料, OLED成品材料]}
+  - {id: PROD_ELEC_OLED_INTERMEDIATE, type: product, name: OLED中间体, name_en: OLED Intermediate, segment: SEG_ELEC_DISPLAY_MATERIAL, aliases: [OLED升华前材料]}
+  - {id: PROD_ELEC_LIQUID_CRYSTAL, type: product, name: 液晶材料, name_en: Liquid Crystal Material, segment: SEG_ELEC_DISPLAY_MATERIAL, import_dependence: medium, aliases: [混合液晶, 液晶单体, TFT混合液晶]}
+  - {id: PROD_ELEC_PI_MATERIAL, type: product, name: 显示用聚酰亚胺材料, name_en: Display Polyimide, segment: SEG_ELEC_DISPLAY_MATERIAL, import_dependence: high, aliases: [PI浆料, 柔性基板PI]}
+  - {id: PROD_ELEC_OPTICAL_FILM, type: product, name: 光学膜, name_en: Optical Film, segment: SEG_ELEC_DISPLAY_MATERIAL, import_dependence: medium, aliases: [增亮膜, 扩散膜, 反射膜]}
+  - {id: PROD_ELEC_QD_FILM, type: product, name: 量子点膜, name_en: Quantum Dot Film, segment: SEG_ELEC_DISPLAY_MATERIAL, aliases: [QD膜, 量子点材料]}
+  - {id: PROD_ELEC_FMM, type: product, name: 精细金属掩膜版, name_en: Fine Metal Mask, segment: SEG_ELEC_DISPLAY_MATERIAL, import_dependence: high, aliases: [FMM]}
+
+  # ---------------- LED ----------------
+  - {id: PROD_ELEC_SAPPHIRE_SUBSTRATE, type: product, name: 蓝宝石衬底, name_en: Sapphire Substrate, segment: SEG_ELEC_LED, aliases: [蓝宝石晶棒, 图形化衬底, PSS]}
+  - {id: PROD_ELEC_LED_CHIP, type: product, name: LED外延芯片, name_en: LED Epi-Wafer and Chip, segment: SEG_ELEC_LED, aliases: [LED芯片, LED外延片]}
+  - {id: PROD_ELEC_MINI_LED_CHIP, type: product, name: Mini/Micro LED芯片, name_en: Mini/Micro LED Chip, parent: PROD_ELEC_LED_CHIP, segment: SEG_ELEC_LED, aliases: [Mini LED芯片, Micro LED芯片]}
+  - {id: PROD_ELEC_IR_UV_LED, type: product, name: 不可见光LED芯片, name_en: IR/UV LED Chip, parent: PROD_ELEC_LED_CHIP, segment: SEG_ELEC_LED, aliases: [红外LED, 紫外LED, UVC LED]}
+  - {id: PROD_ELEC_LED_PACKAGE, type: product, name: LED封装器件, name_en: Packaged LED, segment: SEG_ELEC_LED, aliases: [LED封装, SMD LED]}
+  - {id: PROD_ELEC_LED_DISPLAY, type: product, name: LED显示屏, name_en: LED Display, segment: SEG_ELEC_LED, aliases: [LED大屏, 户外屏]}
+  - {id: PROD_ELEC_FINE_PITCH_LED, type: product, name: 小间距LED显示, name_en: Fine-Pitch LED Display, parent: PROD_ELEC_LED_DISPLAY, segment: SEG_ELEC_LED, aliases: [小间距, MLED直显, COB直显, MIP]}
+  - {id: PROD_ELEC_MICRO_LED_DISPLAY, type: product, name: Micro LED显示, name_en: Micro LED Display, parent: PROD_ELEC_DISPLAY_PANEL, segment: SEG_ELEC_LED, aliases: [Micro LED, μLED]}
+  - {id: PROD_ELEC_MINI_LED_BACKLIGHT, type: product, name: Mini LED背光, name_en: Mini LED Backlight, parent: PROD_ELEC_BACKLIGHT, segment: SEG_ELEC_LED, aliases: [MiniLED背光]}
+
+  # ---------------- optical components ----------------
+  - {id: PROD_ELEC_OPTICAL_LENS, type: product, name: 光学镜头, name_en: Optical Lens, segment: SEG_ELEC_OPTICAL_COMPONENT, aliases: [镜头]}
+  - {id: PROD_ELEC_PHONE_LENS, type: product, name: 手机镜头, name_en: Smartphone Lens, parent: PROD_ELEC_OPTICAL_LENS, segment: SEG_ELEC_OPTICAL_COMPONENT, aliases: [手机光学镜头]}
+  - {id: PROD_ELEC_AUTO_LENS, type: product, name: 车载镜头, name_en: Automotive Lens, parent: PROD_ELEC_OPTICAL_LENS, segment: SEG_ELEC_OPTICAL_COMPONENT, aliases: [车载光学镜头, ADAS镜头]}
+  - {id: PROD_ELEC_SECURITY_LENS, type: product, name: 安防镜头, name_en: Surveillance Lens, parent: PROD_ELEC_OPTICAL_LENS, segment: SEG_ELEC_OPTICAL_COMPONENT, aliases: [监控镜头]}
+  - {id: PROD_ELEC_MACHINE_VISION_LENS, type: product, name: 机器视觉镜头, name_en: Machine Vision Lens, parent: PROD_ELEC_OPTICAL_LENS, segment: SEG_ELEC_OPTICAL_COMPONENT, import_dependence: medium, aliases: [工业镜头]}
+  - {id: PROD_ELEC_LENS_ELEMENT, type: product, name: 光学镜片, name_en: Optical Lens Element, segment: SEG_ELEC_OPTICAL_COMPONENT, aliases: [玻璃镜片, 模造玻璃, 非球面镜片, 塑料镜片]}
+  - {id: PROD_ELEC_CAMERA_MODULE, type: product, name: 摄像头模组, name_en: Camera Module, segment: SEG_ELEC_OPTICAL_COMPONENT, aliases: [CCM, 摄像模组]}
+  - {id: PROD_ELEC_AUTO_CAMERA_MODULE, type: product, name: 车载摄像头模组, name_en: Automotive Camera Module, parent: PROD_ELEC_CAMERA_MODULE, segment: SEG_ELEC_OPTICAL_COMPONENT, aliases: [车载摄像头, 环视摄像头, 前视摄像头]}
+  - {id: PROD_ELEC_OPTICAL_FILTER, type: product, name: 光学滤光片, name_en: Optical Filter, segment: SEG_ELEC_OPTICAL_COMPONENT, aliases: [红外截止滤光片, IR-CUT, 窄带滤光片]}
+  - {id: PROD_ELEC_PRISM, type: product, name: 光学棱镜, name_en: Optical Prism, segment: SEG_ELEC_OPTICAL_COMPONENT, aliases: [潜望式棱镜]}
+  - {id: PROD_ELEC_VCM, type: product, name: 音圈马达, name_en: Voice Coil Motor, segment: SEG_ELEC_OPTICAL_COMPONENT, aliases: [VCM马达, 对焦马达, OIS马达]}
+  - {id: PROD_ELEC_PRECISION_OPTICS, type: product, name: 精密光学元件, name_en: Precision Optics, segment: SEG_ELEC_OPTICAL_COMPONENT, import_dependence: high, aliases: [精密光学组件, 激光光学, 光刻机光学]}
+  - {id: PROD_ELEC_AR_WAVEGUIDE, type: product, name: AR光波导, name_en: AR Waveguide, segment: SEG_ELEC_OPTICAL_COMPONENT, aliases: [光波导, 衍射光波导, 阵列光波导]}
+
+  # ---------------- consumer electronics ----------------
+  - {id: PROD_ELEC_PHONE_DEVICE, type: product, name: 智能手机整机, name_en: Smartphone Device, segment: SEG_ELEC_BRAND_CONSUMER, aliases: [手机整机]}
+  - {id: PROD_ELEC_TABLET, type: product, name: 平板电脑, name_en: Tablet, segment: SEG_ELEC_BRAND_CONSUMER}
+  - {id: PROD_ELEC_SMARTWATCH, type: product, name: 智能手表与手环, name_en: Smartwatch and Band, segment: SEG_ELEC_BRAND_CONSUMER, aliases: [智能手环]}
+  - {id: PROD_ELEC_TWS, type: product, name: 无线耳机, name_en: TWS Earbuds, segment: SEG_ELEC_BRAND_CONSUMER, aliases: [TWS耳机, 蓝牙耳机]}
+  - {id: PROD_ELEC_XR_HEADSET, type: product, name: XR头显, name_en: XR Headset, segment: SEG_ELEC_BRAND_CONSUMER, aliases: [VR头显, MR头显, VR一体机]}
+  - {id: PROD_ELEC_AI_GLASSES, type: product, name: AI眼镜, name_en: AI Glasses, segment: SEG_ELEC_BRAND_CONSUMER, aliases: [AR眼镜整机]}
+  - {id: PROD_ELEC_SMART_SPEAKER, type: product, name: 智能音频设备, name_en: Smart Audio Device, segment: SEG_ELEC_BRAND_CONSUMER, aliases: [便携音箱]}
+  - {id: PROD_ELEC_EMS_SERVICE, type: product, name: 电子制造服务产品, name_en: EMS, kind: service, segment: SEG_ELEC_EMS, aliases: [EMS, 电子代工]}
+  - {id: PROD_ELEC_ODM, type: product, name: 消费电子ODM, name_en: Consumer Electronics ODM, kind: service, parent: PROD_ELEC_EMS_SERVICE, segment: SEG_ELEC_EMS, aliases: [手机ODM, 平板ODM, 智能硬件ODM]}
+  - {id: PROD_ELEC_ASSEMBLY, type: product, name: 整机组装, name_en: Final Assembly, kind: service, parent: PROD_ELEC_EMS_SERVICE, segment: SEG_ELEC_EMS, aliases: [手机组装, 系统组装]}
+  - {id: PROD_ELEC_SMT, type: product, name: SMT贴片加工, name_en: SMT Assembly, kind: service, parent: PROD_ELEC_EMS_SERVICE, segment: SEG_ELEC_EMS, aliases: [SMT, PCBA]}
+  - {id: PROD_ELEC_METAL_STRUCTURAL, type: product, name: 金属结构件, name_en: Metal Structural Parts, segment: SEG_ELEC_STRUCTURAL_PARTS, aliases: [中框, 金属中框, 精密结构件]}
+  - {id: PROD_ELEC_HINGE, type: product, name: 折叠屏铰链, name_en: Foldable Hinge, segment: SEG_ELEC_STRUCTURAL_PARTS, aliases: [铰链, 转轴]}
+  - {id: PROD_ELEC_MIM, type: product, name: MIM零件, name_en: MIM Parts, segment: SEG_ELEC_STRUCTURAL_PARTS, aliases: [金属注射成型, MIM]}
+  - {id: PROD_ELEC_COVER_GLASS, type: product, name: 盖板玻璃, name_en: Cover Glass, segment: SEG_ELEC_STRUCTURAL_PARTS, aliases: [玻璃盖板, 防护玻璃]}
+  - {id: PROD_ELEC_UTG, type: product, name: 超薄柔性玻璃, name_en: Ultra-Thin Glass, segment: SEG_ELEC_STRUCTURAL_PARTS, import_dependence: medium, aliases: [UTG]}
+  - {id: PROD_ELEC_PLASTIC_STRUCTURAL, type: product, name: 塑胶结构件, name_en: Plastic Structural Parts, segment: SEG_ELEC_STRUCTURAL_PARTS, aliases: [精密注塑件, 外观件]}
+  - {id: PROD_ELEC_MICRO_SPEAKER, type: product, name: 微型扬声器, name_en: Micro Speaker, segment: SEG_ELEC_ACOUSTIC_HAPTIC, aliases: [受话器, 微型电声器件]}
+  - {id: PROD_ELEC_MEMS_MIC, type: product, name: MEMS麦克风, name_en: MEMS Microphone, segment: SEG_ELEC_ACOUSTIC_HAPTIC, aliases: [硅麦]}
+  - {id: PROD_ELEC_HAPTIC_MOTOR, type: product, name: 线性马达, name_en: Haptic Motor, segment: SEG_ELEC_ACOUSTIC_HAPTIC, aliases: [振动马达, X轴马达]}
+  - {id: PROD_ELEC_VAPOR_CHAMBER, type: product, name: 均温板, name_en: Vapor Chamber, segment: SEG_ELEC_THERMAL_FUNCTIONAL, aliases: [VC均热板]}
+  - {id: PROD_ELEC_HEAT_PIPE, type: product, name: 热管, name_en: Heat Pipe, segment: SEG_ELEC_THERMAL_FUNCTIONAL}
+  - {id: PROD_ELEC_GRAPHITE_SHEET, type: product, name: 石墨散热膜, name_en: Graphite Heat Spreader, segment: SEG_ELEC_THERMAL_FUNCTIONAL, aliases: [人工石墨膜, 导热石墨片]}
+  - {id: PROD_ELEC_TIM, type: product, name: 导热界面材料, name_en: Thermal Interface Material, segment: SEG_ELEC_THERMAL_FUNCTIONAL, import_dependence: medium, aliases: [TIM, 导热垫片, 导热凝胶, 导热硅脂]}
+  - {id: PROD_ELEC_EMI_SHIELDING, type: product, name: 电磁屏蔽材料, name_en: EMI Shielding Material, segment: SEG_ELEC_THERMAL_FUNCTIONAL, aliases: [EMI屏蔽, 导电布, 屏蔽件]}
+  - {id: PROD_ELEC_DIE_CUT, type: product, name: 精密功能件, name_en: Precision Die-Cut Parts, segment: SEG_ELEC_THERMAL_FUNCTIONAL, aliases: [模切件, 功能性器件, 精密模切]}
+  - {id: PROD_ELEC_TERMINAL_ANTENNA, type: product, name: 终端天线, name_en: Device Antenna, segment: SEG_ELEC_THERMAL_FUNCTIONAL, aliases: [手机天线, LDS天线]}
+  - {id: PROD_ELEC_WIRELESS_CHARGING_MODULE, type: product, name: 无线充电模组, name_en: Wireless Charging Module, segment: SEG_ELEC_THERMAL_FUNCTIONAL, aliases: [无线充电线圈]}
+  - {id: PROD_ELEC_BATTERY_PACK, type: product, name: 消费电池PACK, name_en: Consumer Battery Pack, segment: SEG_ELEC_CONSUMER_POWER, aliases: [手机电池Pack, 笔电电池Pack]}
+  - {id: PROD_ELEC_CHARGER, type: product, name: 充电器与适配器, name_en: Charger and Adapter, segment: SEG_ELEC_CONSUMER_POWER, aliases: [电源适配器, 快充充电器, 手机充电器]}
+
+  # ---------------- other electronics ----------------
+  - {id: PROD_ELEC_RFID, type: product, name: RFID电子标签, name_en: RFID Tag, segment: SEG_ELEC_OTHER_ELECTRONICS, aliases: [RFID, 电子标签, RFID Inlay]}
+  - {id: PROD_ELEC_SMART_CARD, type: product, name: 智能卡, name_en: Smart Card, segment: SEG_ELEC_OTHER_ELECTRONICS, aliases: [IC卡, SIM卡]}
+  - {id: PROD_ELEC_ESL, type: product, name: 电子价签, name_en: Electronic Shelf Label, segment: SEG_ELEC_OTHER_ELECTRONICS, aliases: [ESL, 电子货架标签]}
+
+  # ---------------- electronic chemicals ----------------
+  - {id: PROD_ELEC_SPECIALTY_GAS, type: product, name: 电子特气, name_en: Electronic Specialty Gas, segment: SEG_ELEC_ELECTRONIC_GAS, import_dependence: medium, aliases: [电子特种气体]}
+  - {id: PROD_ELEC_NF3, type: product, name: 三氟化氮, name_en: Nitrogen Trifluoride, parent: PROD_ELEC_SPECIALTY_GAS, segment: SEG_ELEC_ELECTRONIC_GAS, aliases: [NF3]}
+  - {id: PROD_ELEC_WF6, type: product, name: 六氟化钨, name_en: Tungsten Hexafluoride, parent: PROD_ELEC_SPECIALTY_GAS, segment: SEG_ELEC_ELECTRONIC_GAS, aliases: [WF6]}
+  - {id: PROD_ELEC_FLUOROCARBON_GAS, type: product, name: 含氟刻蚀气体, name_en: Fluorocarbon Etch Gas, parent: PROD_ELEC_SPECIALTY_GAS, segment: SEG_ELEC_ELECTRONIC_GAS, import_dependence: medium, aliases: [四氟化碳, 六氟丁二烯, C4F6, CF4, 含氟蚀刻气体, 八氟环丁烷, 六氟乙烷]}
+  - {id: PROD_ELEC_SILANE, type: product, name: 电子级硅烷, name_en: Electronic-Grade Silane, parent: PROD_ELEC_SPECIALTY_GAS, segment: SEG_ELEC_ELECTRONIC_GAS, aliases: [甲硅烷, SiH4, 乙硅烷]}
+  - {id: PROD_ELEC_RARE_GAS, type: product, name: 电子级稀有气体, name_en: Electronic-Grade Rare Gas, parent: PROD_ELEC_SPECIALTY_GAS, segment: SEG_ELEC_ELECTRONIC_GAS, aliases: [氖气, 氪气, 氙气, 稀有气体, 氦气]}
+  - {id: PROD_ELEC_HIGH_PURITY_AMMONIA, type: product, name: 高纯氨, name_en: High-Purity Ammonia, parent: PROD_ELEC_SPECIALTY_GAS, segment: SEG_ELEC_ELECTRONIC_GAS, aliases: [电子级氨气]}
+  - {id: PROD_ELEC_DOPANT_GAS, type: product, name: 掺杂气体, name_en: Dopant Gas, parent: PROD_ELEC_SPECIALTY_GAS, segment: SEG_ELEC_ELECTRONIC_GAS, import_dependence: high, aliases: [磷烷, 砷烷, 乙硼烷, 电子级氢化物气体, 锗烷]}
+  - {id: PROD_ELEC_BULK_GAS, type: product, name: 电子大宗气体, name_en: Electronic Bulk Gas, segment: SEG_ELEC_ELECTRONIC_GAS, aliases: [高纯氮, 现场制气]}
+  - {id: PROD_ELEC_WET_CHEMICALS, type: product, name: 湿电子化学品, name_en: Wet Electronic Chemicals, segment: SEG_ELEC_WET_CHEMICAL, import_dependence: medium, aliases: [超净高纯试剂]}
+  - {id: PROD_ELEC_HF_ELECTRONIC, type: product, name: 电子级氢氟酸, name_en: Electronic-Grade HF, parent: PROD_ELEC_WET_CHEMICALS, segment: SEG_ELEC_WET_CHEMICAL, aliases: [UPSS级氢氟酸]}
+  - {id: PROD_ELEC_H2SO4_ELECTRONIC, type: product, name: 电子级硫酸, name_en: Electronic-Grade Sulfuric Acid, parent: PROD_ELEC_WET_CHEMICALS, segment: SEG_ELEC_WET_CHEMICAL}
+  - {id: PROD_ELEC_H2O2_ELECTRONIC, type: product, name: 电子级双氧水, name_en: Electronic-Grade Hydrogen Peroxide, parent: PROD_ELEC_WET_CHEMICALS, segment: SEG_ELEC_WET_CHEMICAL}
+  - {id: PROD_ELEC_FUNCTIONAL_WET, type: product, name: 功能性湿化学品, name_en: Formulated Wet Chemicals, parent: PROD_ELEC_WET_CHEMICALS, segment: SEG_ELEC_WET_CHEMICAL, import_dependence: high, aliases: [蚀刻液, 剥离液, 显影液, 清洗液]}
+  - {id: PROD_ELEC_PHOTORESIST, type: product, name: 光刻胶, name_en: Photoresist, segment: SEG_ELEC_PHOTORESIST, import_dependence: high, aliases: [光阻]}
+  - {id: PROD_ELEC_ARF_PR, type: product, name: ArF光刻胶, name_en: ArF Photoresist, parent: PROD_ELEC_PHOTORESIST, segment: SEG_ELEC_PHOTORESIST, import_dependence: high, aliases: [ArF浸没式光刻胶, ArFi光刻胶, 193nm光刻胶]}
+  - {id: PROD_ELEC_KRF_PR, type: product, name: KrF光刻胶, name_en: KrF Photoresist, parent: PROD_ELEC_PHOTORESIST, segment: SEG_ELEC_PHOTORESIST, import_dependence: high, aliases: [248nm光刻胶]}
+  - {id: PROD_ELEC_GI_PR, type: product, name: g/i线光刻胶, name_en: g/i-line Photoresist, parent: PROD_ELEC_PHOTORESIST, segment: SEG_ELEC_PHOTORESIST, import_dependence: medium, aliases: [i线光刻胶, g线光刻胶, I线光刻胶, G线光刻胶]}
+  - {id: PROD_ELEC_EUV_PR, type: product, name: EUV光刻胶, name_en: EUV Photoresist, parent: PROD_ELEC_PHOTORESIST, segment: SEG_ELEC_PHOTORESIST, import_dependence: high, aliases: [极紫外光刻胶, 金属氧化物光刻胶]}
+  - {id: PROD_ELEC_DISPLAY_PR, type: product, name: 面板光刻胶, name_en: Display Photoresist, parent: PROD_ELEC_PHOTORESIST, segment: SEG_ELEC_PHOTORESIST, import_dependence: high, aliases: [彩色光刻胶, 黑色光刻胶, TFT光刻胶, 显示用光刻胶, TFT正胶]}
+  - {id: PROD_ELEC_PCB_PR, type: product, name: PCB光刻胶, name_en: PCB Photoresist, parent: PROD_ELEC_PHOTORESIST, segment: SEG_ELEC_PHOTORESIST, aliases: [感光干膜, 湿膜, 干膜光刻胶, 湿膜光刻胶]}
+  - {id: PROD_ELEC_PSPI, type: product, name: 光敏聚酰亚胺, name_en: Photosensitive Polyimide, parent: PROD_ELEC_PHOTORESIST, segment: SEG_ELEC_PHOTORESIST, import_dependence: high, aliases: [PSPI, YPI]}
+  - {id: PROD_ELEC_PR_RESIN, type: product, name: 光刻胶树脂与单体, name_en: Photoresist Resin and Monomer, segment: SEG_ELEC_PHOTORESIST, import_dependence: high, aliases: [光刻胶树脂, 光刻胶单体, 酚醛树脂光刻胶用, KrF树脂, ArF树脂, 光刻胶用单体]}
+  - {id: PROD_ELEC_PHOTOINITIATOR, type: product, name: 光引发剂, name_en: Photoinitiator, segment: SEG_ELEC_PHOTORESIST, aliases: [光固化引发剂, 光酸及光引发剂, 光致产酸剂, PAG]}
+  - {id: PROD_ELEC_PR_ANCILLARY, type: product, name: 光刻胶配套试剂, name_en: Photoresist Ancillaries, segment: SEG_ELEC_PHOTORESIST, import_dependence: high, aliases: [光刻胶稀释剂, BARC, 抗反射涂层, 光刻配套试剂, 稀释剂, 显影液TMAH]}
+  - {id: PROD_ELEC_PCB_CHEMICALS, type: product, name: PCB电子化学品, name_en: PCB Process Chemicals, segment: SEG_ELEC_ELECTRONIC_CHEMICALS, aliases: [电镀化学品, 沉铜药水, PCB专用化学品]}
+  - {id: PROD_ELEC_CONDUCTIVE_PASTE, type: product, name: 电子浆料, name_en: Electronic Paste, segment: SEG_ELEC_ELECTRONIC_CHEMICALS, import_dependence: medium, aliases: [导电浆料, MLCC内电极浆料]}
+  - {id: PROD_ELEC_ELECTRONIC_ADHESIVE, type: product, name: 电子胶粘剂, name_en: Electronic Adhesive, segment: SEG_ELEC_ELECTRONIC_CHEMICALS, import_dependence: medium, aliases: [电子胶, 导电胶, 电子胶黏剂, 电子灌封胶]}
+
+edges:
+  # --- segment tree ---
+  - [SEG_ELEC_DISCRETE, part_of, SEG_ELEC_SEMICONDUCTOR]
+  - [SEG_ELEC_POWER_SEMI, part_of, SEG_ELEC_DISCRETE]
+  - [SEG_ELEC_COMPOUND_SEMI, part_of, SEG_ELEC_SEMICONDUCTOR]
+  - [SEG_ELEC_SEMI_MATERIAL, part_of, SEG_ELEC_SEMICONDUCTOR]
+  - [SEG_ELEC_WAFER_SUBSTRATE, part_of, SEG_ELEC_SEMI_MATERIAL]
+  - [SEG_ELEC_FAB_MATERIAL, part_of, SEG_ELEC_SEMI_MATERIAL]
+  - [SEG_ELEC_PACKAGING_MATERIAL, part_of, SEG_ELEC_SEMI_MATERIAL]
+  - [SEG_ELEC_DIGITAL_IC, part_of, SEG_ELEC_SEMICONDUCTOR]
+  - [SEG_ELEC_PROCESSOR_CHIP, part_of, SEG_ELEC_DIGITAL_IC]
+  - [SEG_ELEC_SOC_CHIP, part_of, SEG_ELEC_DIGITAL_IC]
+  - [SEG_ELEC_MEMORY_CHIP, part_of, SEG_ELEC_DIGITAL_IC]
+  - [SEG_ELEC_STORAGE_MODULE, part_of, SEG_ELEC_MEMORY_CHIP]
+  - [SEG_ELEC_INTERCONNECT_CHIP, part_of, SEG_ELEC_DIGITAL_IC]
+  - [SEG_ELEC_IC_DESIGN_SERVICE, part_of, SEG_ELEC_DIGITAL_IC]
+  - [SEG_ELEC_ANALOG_IC, part_of, SEG_ELEC_SEMICONDUCTOR]
+  - [SEG_ELEC_POWER_IC, part_of, SEG_ELEC_ANALOG_IC]
+  - [SEG_ELEC_SIGNAL_CHAIN, part_of, SEG_ELEC_ANALOG_IC]
+  - [SEG_ELEC_RF_FRONTEND, part_of, SEG_ELEC_ANALOG_IC]
+  - [SEG_ELEC_SENSOR_CHIP, part_of, SEG_ELEC_SEMICONDUCTOR]
+  - [SEG_ELEC_FOUNDRY, part_of, SEG_ELEC_SEMICONDUCTOR]
+  - [SEG_ELEC_OSAT, part_of, SEG_ELEC_SEMICONDUCTOR]
+  - [SEG_ELEC_SEMI_EQUIPMENT, part_of, SEG_ELEC_SEMICONDUCTOR]
+  - [SEG_ELEC_EQUIP_PARTS, part_of, SEG_ELEC_SEMI_EQUIPMENT]
+  - [SEG_ELEC_PCB, part_of, SEG_ELEC_COMPONENTS]
+  - [SEG_ELEC_IC_SUBSTRATE, part_of, SEG_ELEC_PCB]
+  - [SEG_ELEC_CCL, part_of, SEG_ELEC_PCB]
+  - [SEG_ELEC_PCB_MATERIAL, part_of, SEG_ELEC_PCB]
+  - [SEG_ELEC_PASSIVE, part_of, SEG_ELEC_COMPONENTS]
+  - [SEG_ELEC_CONNECTOR, part_of, SEG_ELEC_COMPONENTS]
+  - [SEG_ELEC_DISPLAY_PANEL, part_of, SEG_ELEC_OPTOELECTRONICS]
+  - [SEG_ELEC_DISPLAY_MATERIAL, part_of, SEG_ELEC_DISPLAY_PANEL]
+  - [SEG_ELEC_LED, part_of, SEG_ELEC_OPTOELECTRONICS]
+  - [SEG_ELEC_OPTICAL_COMPONENT, part_of, SEG_ELEC_OPTOELECTRONICS]
+  - [SEG_ELEC_BRAND_CONSUMER, part_of, SEG_ELEC_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_CONSUMER_PARTS, part_of, SEG_ELEC_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_EMS, part_of, SEG_ELEC_CONSUMER_PARTS]
+  - [SEG_ELEC_STRUCTURAL_PARTS, part_of, SEG_ELEC_CONSUMER_PARTS]
+  - [SEG_ELEC_ACOUSTIC_HAPTIC, part_of, SEG_ELEC_CONSUMER_PARTS]
+  - [SEG_ELEC_THERMAL_FUNCTIONAL, part_of, SEG_ELEC_CONSUMER_PARTS]
+  - [SEG_ELEC_CONSUMER_POWER, part_of, SEG_ELEC_CONSUMER_PARTS]
+  - [SEG_ELEC_ELECTRONIC_GAS, part_of, SEG_ELEC_ELECTRONIC_CHEMICALS]
+  - [SEG_ELEC_WET_CHEMICAL, part_of, SEG_ELEC_ELECTRONIC_CHEMICALS]
+  - [SEG_ELEC_PHOTORESIST, part_of, SEG_ELEC_ELECTRONIC_CHEMICALS]
+  # --- serves ---
+  - [SEG_ELEC_POWER_SEMI, serves, MKT_EV]
+  - [SEG_ELEC_POWER_SEMI, serves, MKT_SOLAR]
+  - [SEG_ELEC_POWER_SEMI, serves, MKT_ENERGY_STORAGE]
+  - [SEG_ELEC_POWER_SEMI, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_ELEC_POWER_SEMI, serves, MKT_HOME_APPLIANCE]
+  - [SEG_ELEC_POWER_SEMI, serves, MKT_POWER_GRID]
+  - [SEG_ELEC_POWER_SEMI, serves, MKT_AI_DATA_CENTER]
+  - [SEG_ELEC_POWER_SEMI, serves, MKT_RAIL]
+  - [SEG_ELEC_DISCRETE, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_COMPOUND_SEMI, serves, MKT_EV]
+  - [SEG_ELEC_COMPOUND_SEMI, serves, MKT_TELECOM_NETWORK]
+  - [SEG_ELEC_COMPOUND_SEMI, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_COMPOUND_SEMI, serves, MKT_DEFENSE]
+  - [SEG_ELEC_SEMI_MATERIAL, serves, MKT_SEMI_FAB]
+  - [SEG_ELEC_WAFER_SUBSTRATE, serves, MKT_SEMI_FAB]
+  - [SEG_ELEC_FAB_MATERIAL, serves, MKT_SEMI_FAB]
+  - [SEG_ELEC_PROCESSOR_CHIP, serves, MKT_AI_DATA_CENTER]
+  - [SEG_ELEC_PROCESSOR_CHIP, serves, MKT_DATA_CENTER]
+  - [SEG_ELEC_PROCESSOR_CHIP, serves, MKT_PC]
+  - [SEG_ELEC_PROCESSOR_CHIP, serves, MKT_ENTERPRISE_IT]
+  - [SEG_ELEC_PROCESSOR_CHIP, serves, MKT_DEFENSE]
+  - [SEG_ELEC_SOC_CHIP, serves, MKT_SMARTPHONE]
+  - [SEG_ELEC_SOC_CHIP, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_SOC_CHIP, serves, MKT_EV]
+  - [SEG_ELEC_SOC_CHIP, serves, MKT_WEARABLES_XR]
+  - [SEG_ELEC_SOC_CHIP, serves, MKT_HOME_APPLIANCE]
+  - [SEG_ELEC_SOC_CHIP, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_ELEC_MEMORY_CHIP, serves, MKT_AI_DATA_CENTER]
+  - [SEG_ELEC_MEMORY_CHIP, serves, MKT_DATA_CENTER]
+  - [SEG_ELEC_MEMORY_CHIP, serves, MKT_SMARTPHONE]
+  - [SEG_ELEC_MEMORY_CHIP, serves, MKT_PC]
+  - [SEG_ELEC_STORAGE_MODULE, serves, MKT_DATA_CENTER]
+  - [SEG_ELEC_STORAGE_MODULE, serves, MKT_PC]
+  - [SEG_ELEC_INTERCONNECT_CHIP, serves, MKT_AI_DATA_CENTER]
+  - [SEG_ELEC_INTERCONNECT_CHIP, serves, MKT_DATA_CENTER]
+  - [SEG_ELEC_INTERCONNECT_CHIP, serves, MKT_TELECOM_NETWORK]
+  - [SEG_ELEC_IC_DESIGN_SERVICE, serves, MKT_AI_DATA_CENTER]
+  - [SEG_ELEC_IC_DESIGN_SERVICE, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_POWER_IC, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_POWER_IC, serves, MKT_AI_DATA_CENTER]
+  - [SEG_ELEC_POWER_IC, serves, MKT_EV]
+  - [SEG_ELEC_SIGNAL_CHAIN, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_ELEC_SIGNAL_CHAIN, serves, MKT_EV]
+  - [SEG_ELEC_SIGNAL_CHAIN, serves, MKT_TELECOM_NETWORK]
+  - [SEG_ELEC_SIGNAL_CHAIN, serves, MKT_HEALTHCARE]
+  - [SEG_ELEC_RF_FRONTEND, serves, MKT_SMARTPHONE]
+  - [SEG_ELEC_RF_FRONTEND, serves, MKT_TELECOM_NETWORK]
+  - [SEG_ELEC_SENSOR_CHIP, serves, MKT_SMARTPHONE]
+  - [SEG_ELEC_SENSOR_CHIP, serves, MKT_EV]
+  - [SEG_ELEC_SENSOR_CHIP, serves, MKT_ROBOTICS]
+  - [SEG_ELEC_FOUNDRY, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_FOUNDRY, serves, MKT_AI_DATA_CENTER]
+  - [SEG_ELEC_FOUNDRY, serves, MKT_EV]
+  - [SEG_ELEC_OSAT, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_OSAT, serves, MKT_AI_DATA_CENTER]
+  - [SEG_ELEC_SEMI_EQUIPMENT, serves, MKT_SEMI_FAB]
+  - [SEG_ELEC_EQUIP_PARTS, serves, MKT_SEMI_FAB]
+  - [SEG_ELEC_PCB, serves, MKT_AI_DATA_CENTER]
+  - [SEG_ELEC_PCB, serves, MKT_TELECOM_NETWORK]
+  - [SEG_ELEC_PCB, serves, MKT_SMARTPHONE]
+  - [SEG_ELEC_PCB, serves, MKT_PC]
+  - [SEG_ELEC_PCB, serves, MKT_EV]
+  - [SEG_ELEC_IC_SUBSTRATE, serves, MKT_AI_DATA_CENTER]
+  - [SEG_ELEC_IC_SUBSTRATE, serves, MKT_SMARTPHONE]
+  - [SEG_ELEC_CCL, serves, MKT_AI_DATA_CENTER]
+  - [SEG_ELEC_CCL, serves, MKT_TELECOM_NETWORK]
+  - [SEG_ELEC_CCL, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_PCB_MATERIAL, serves, MKT_AI_DATA_CENTER]
+  - [SEG_ELEC_PASSIVE, serves, MKT_SMARTPHONE]
+  - [SEG_ELEC_PASSIVE, serves, MKT_EV]
+  - [SEG_ELEC_PASSIVE, serves, MKT_AI_DATA_CENTER]
+  - [SEG_ELEC_PASSIVE, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_ELEC_CONNECTOR, serves, MKT_AI_DATA_CENTER]
+  - [SEG_ELEC_CONNECTOR, serves, MKT_EV]
+  - [SEG_ELEC_CONNECTOR, serves, MKT_TELECOM_NETWORK]
+  - [SEG_ELEC_CONNECTOR, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_CONNECTOR, serves, MKT_DEFENSE]
+  - [SEG_ELEC_DISPLAY_PANEL, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_DISPLAY_PANEL, serves, MKT_SMARTPHONE]
+  - [SEG_ELEC_DISPLAY_PANEL, serves, MKT_PC]
+  - [SEG_ELEC_DISPLAY_PANEL, serves, MKT_EV]
+  - [SEG_ELEC_DISPLAY_PANEL, serves, MKT_WEARABLES_XR]
+  - [SEG_ELEC_LED, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_LED, serves, MKT_GOVERNMENT]
+  - [SEG_ELEC_LED, serves, MKT_EV]
+  - [SEG_ELEC_OPTICAL_COMPONENT, serves, MKT_SMARTPHONE]
+  - [SEG_ELEC_OPTICAL_COMPONENT, serves, MKT_EV]
+  - [SEG_ELEC_OPTICAL_COMPONENT, serves, MKT_GOVERNMENT]
+  - [SEG_ELEC_OPTICAL_COMPONENT, serves, MKT_WEARABLES_XR]
+  - [SEG_ELEC_OPTICAL_COMPONENT, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_ELEC_OTHER_ELECTRONICS, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_ELEC_OTHER_ELECTRONICS, serves, MKT_FINANCE]
+  - [SEG_ELEC_OTHER_ELECTRONICS, serves, MKT_LOGISTICS]
+  - [SEG_ELEC_BRAND_CONSUMER, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_BRAND_CONSUMER, serves, MKT_SMARTPHONE]
+  - [SEG_ELEC_BRAND_CONSUMER, serves, MKT_WEARABLES_XR]
+  - [SEG_ELEC_CONSUMER_PARTS, serves, MKT_SMARTPHONE]
+  - [SEG_ELEC_CONSUMER_PARTS, serves, MKT_PC]
+  - [SEG_ELEC_CONSUMER_PARTS, serves, MKT_WEARABLES_XR]
+  - [SEG_ELEC_CONSUMER_PARTS, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_EMS, serves, MKT_SMARTPHONE]
+  - [SEG_ELEC_EMS, serves, MKT_EV]
+  - [SEG_ELEC_EMS, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_ELEC_THERMAL_FUNCTIONAL, serves, MKT_AI_DATA_CENTER]
+  - [SEG_ELEC_ELECTRONIC_CHEMICALS, serves, MKT_SEMI_FAB]
+  - [SEG_ELEC_ELECTRONIC_GAS, serves, MKT_SEMI_FAB]
+  - [SEG_ELEC_ELECTRONIC_GAS, serves, MKT_SOLAR]
+  - [SEG_ELEC_WET_CHEMICAL, serves, MKT_SEMI_FAB]
+  - [SEG_ELEC_WET_CHEMICAL, serves, MKT_SOLAR]
+  - [SEG_ELEC_PHOTORESIST, serves, MKT_SEMI_FAB]
+  # --- power & compound ---
+  - [PROD_ELEC_SIC_POWDER, upstream_of, PROD_ELEC_SIC_CRYSTAL]
+  - [PROD_ELEC_SIC_CRYSTAL, upstream_of, PROD_ELEC_SIC_SUBSTRATE]
+  - [PROD_ELEC_SIC_SUBSTRATE, upstream_of, PROD_ELEC_SIC_EPI]
+  - [PROD_ELEC_SIC_EPI, upstream_of, PROD_ELEC_SIC_MOSFET]
+  - [PROD_ELEC_SIC_EPI, upstream_of, PROD_ELEC_SIC_SBD]
+  - [PROD_ELEC_SIC_SUBSTRATE, upstream_of, PROD_ELEC_GAN_EPI]
+  - [PROD_ELEC_SIC_MOSFET, component_of, PROD_ELEC_SIC_MODULE]
+  - [PROD_ELEC_SIC_SBD, component_of, PROD_ELEC_SIC_MODULE]
+  - [PROD_ELEC_SIC_POWDER, uses_material, MAT_SILICON_METAL]
+  - [PROD_ELEC_SIC_CRYSTAL, uses_material, MAT_GRAPHITE]
+  - [PROD_ELEC_SIC_MODULE, used_in, MKT_EV]
+  - [PROD_ELEC_SIC_MOSFET, used_in, MKT_SOLAR]
+  - [PROD_ELEC_SIC_MOSFET, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_ELEC_SIC_MOSFET, substitute_for, PROD_ELEC_IGBT]
+  - [PROD_ELEC_SIC_MODULE, substitute_for, PROD_ELEC_IGBT_MODULE]
+  - [PROD_ELEC_GAN_SUBSTRATE, upstream_of, PROD_ELEC_GAN_EPI]
+  - [PROD_ELEC_SILICON_WAFER, upstream_of, PROD_ELEC_GAN_EPI]
+  - [PROD_ELEC_GAN_EPI, upstream_of, PROD_ELEC_GAN_POWER]
+  - [PROD_ELEC_GAN_EPI, upstream_of, PROD_ELEC_GAN_RF]
+  - [PROD_ELEC_GAN_EPI, uses_material, MAT_GALLIUM_GERMANIUM]
+  - [PROD_ELEC_GAN_SUBSTRATE, uses_material, MAT_GALLIUM_GERMANIUM]
+  - [PROD_ELEC_GAN_POWER, substitute_for, PROD_ELEC_SI_MOSFET]
+  - [PROD_ELEC_GAN_POWER, component_of, PROD_ELEC_CHARGER]
+  - [PROD_ELEC_GAN_POWER, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_ELEC_GAN_RF, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_ELEC_GAN_RF, used_in, MKT_DEFENSE]
+  - [PROD_ELEC_GAAS_SUBSTRATE, uses_material, MAT_GALLIUM_GERMANIUM]
+  - [PROD_ELEC_GAAS_SUBSTRATE, upstream_of, PROD_ELEC_COMPOUND_FOUNDRY]
+  - [PROD_ELEC_GAAS_SUBSTRATE, upstream_of, PROD_ELEC_LED_CHIP]
+  - [PROD_ELEC_COMPOUND_FOUNDRY, upstream_of, PROD_ELEC_RF_PA]
+  - [PROD_ELEC_INP_SUBSTRATE, uses_material, MAT_ELEC_INDIUM]
+  - [TECH_SIC_GAN, enables, PROD_ELEC_SIC_SUBSTRATE]
+  - [TECH_SIC_GAN, enables, PROD_ELEC_SIC_EPI]
+  - [TECH_SIC_GAN, enables, PROD_ELEC_SIC_MOSFET]
+  - [TECH_SIC_GAN, enables, PROD_ELEC_SIC_MODULE]
+  - [TECH_SIC_GAN, enables, PROD_ELEC_GAN_EPI]
+  - [TECH_SIC_GAN, enables, PROD_ELEC_GAN_POWER]
+  - [TECH_SIC_GAN, enables, PROD_ELEC_GAN_RF]
+  - [PROD_ELEC_200MM_WAFER, upstream_of, PROD_ELEC_IGBT_CHIP]
+  - [PROD_ELEC_EPI_WAFER, upstream_of, PROD_ELEC_SI_MOSFET]
+  - [PROD_ELEC_IGBT_CHIP, component_of, PROD_ELEC_IGBT_MODULE]
+  - [PROD_ELEC_CERAMIC_SUBSTRATE, component_of, PROD_ELEC_POWER_MODULE]
+  - [PROD_ELEC_DBC_SUBSTRATE, component_of, PROD_ELEC_IGBT_MODULE]
+  - [PROD_ELEC_AMB_SUBSTRATE, component_of, PROD_ELEC_SIC_MODULE]
+  - [PROD_ELEC_CERAMIC_SUBSTRATE, uses_material, MAT_COPPER]
+  - [PROD_ELEC_DIE_ATTACH, upstream_of, PROD_ELEC_POWER_MODULE]
+  - [PROD_ELEC_DIE_ATTACH, uses_material, MAT_SILVER]
+  - [PROD_ELEC_LEADFRAME, component_of, PROD_ELEC_POWER_DEVICE]
+  - [PROD_ELEC_IGBT_MODULE, used_in, MKT_EV]
+  - [PROD_ELEC_IGBT_MODULE, used_in, MKT_SOLAR]
+  - [PROD_ELEC_IGBT_MODULE, used_in, MKT_WIND]
+  - [PROD_ELEC_IGBT_MODULE, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_ELEC_IGBT_MODULE, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_ELEC_IGBT_MODULE, used_in, MKT_RAIL]
+  - [PROD_ELEC_IGBT_MODULE, used_in, MKT_POWER_GRID]
+  - [PROD_ELEC_POWER_MODULE, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_ELEC_AUTO_POWER_MODULE, used_in, MKT_EV]
+  - [PROD_ELEC_SI_MOSFET, used_in, MKT_EV]
+  - [PROD_ELEC_SI_MOSFET, component_of, PROD_ELEC_CHARGER]
+  - [PROD_ELEC_SGT_MOSFET, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_ELEC_SJ_MOSFET, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_ELEC_POWER_DIODE, used_in, MKT_SOLAR]
+  - [PROD_ELEC_THYRISTOR, used_in, MKT_POWER_GRID]
+  - [PROD_ELEC_THYRISTOR, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_ELEC_PROTECTION_DEVICE, used_in, MKT_SMARTPHONE]
+  - [PROD_ELEC_SMALL_SIGNAL, used_in, MKT_CONSUMER_ELECTRONICS]
+  # --- wafers & fab materials ---
+  - [MAT_SILICON_METAL, upstream_of, PROD_ELEC_ELECTRONIC_POLYSILICON]
+  - [PROD_ELEC_ELECTRONIC_POLYSILICON, upstream_of, PROD_ELEC_SILICON_WAFER]
+  - [PROD_ELEC_ELECTRONIC_POLYSILICON, upstream_of, PROD_ELEC_SILICON_PARTS]
+  - [PROD_ELEC_SILICON_WAFER, uses_material, MAT_QUARTZ]
+  - [PROD_ELEC_SILICON_WAFER, upstream_of, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_300MM_WAFER, upstream_of, PROD_ELEC_ADVANCED_FOUNDRY]
+  - [PROD_ELEC_300MM_WAFER, upstream_of, PROD_ELEC_DRAM]
+  - [PROD_ELEC_300MM_WAFER, upstream_of, PROD_ELEC_NAND]
+  - [PROD_ELEC_200MM_WAFER, upstream_of, PROD_ELEC_SPECIALTY_FOUNDRY]
+  - [PROD_ELEC_SOI_WAFER, upstream_of, PROD_ELEC_RF_SWITCH]
+  - [PROD_ELEC_RECLAIMED_WAFER, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_SPUTTERING_TARGET, uses_material, MAT_ELEC_HIGH_PURITY_METALS]
+  - [PROD_ELEC_SEMI_TARGET, uses_material, MAT_ELEC_TANTALUM]
+  - [PROD_ELEC_SEMI_TARGET, upstream_of, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_DISPLAY_TARGET, uses_material, MAT_ELEC_INDIUM]
+  - [PROD_ELEC_DISPLAY_TARGET, upstream_of, PROD_ELEC_DISPLAY_PANEL]
+  - [PROD_ELEC_CMP_SLURRY, upstream_of, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_CMP_PAD, upstream_of, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_SEMI_PHOTOMASK, upstream_of, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_FPD_PHOTOMASK, upstream_of, PROD_ELEC_DISPLAY_PANEL]
+  - [PROD_ELEC_PRECURSOR, upstream_of, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_PRECURSOR, upstream_of, PROD_ELEC_DRAM]
+  - [PROD_ELEC_SPECIALTY_GAS, upstream_of, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_SPECIALTY_GAS, upstream_of, PROD_ELEC_DISPLAY_PANEL]
+  - [PROD_ELEC_NF3, uses_material, MAT_FLUORITE]
+  - [PROD_ELEC_WF6, uses_material, MAT_TUNGSTEN]
+  - [PROD_ELEC_FLUOROCARBON_GAS, uses_material, MAT_FLUORITE]
+  - [PROD_ELEC_SILANE, uses_material, MAT_SILICON_METAL]
+  - [PROD_ELEC_RARE_GAS, used_in, PROD_ELEC_LITHOGRAPHY]
+  - [PROD_ELEC_HIGH_PURITY_AMMONIA, upstream_of, PROD_ELEC_LED_CHIP]
+  - [PROD_ELEC_DOPANT_GAS, upstream_of, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_BULK_GAS, uses_material, MAT_INDUSTRIAL_GASES]
+  - [PROD_ELEC_BULK_GAS, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_WET_CHEMICALS, upstream_of, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_WET_CHEMICALS, upstream_of, PROD_ELEC_DISPLAY_PANEL]
+  - [PROD_ELEC_HF_ELECTRONIC, uses_material, MAT_FLUORITE]
+  - [PROD_ELEC_PHOTORESIST, upstream_of, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_ARF_PR, upstream_of, PROD_ELEC_ADVANCED_FOUNDRY]
+  - [PROD_ELEC_EUV_PR, upstream_of, PROD_ELEC_ADVANCED_FOUNDRY]
+  - [PROD_ELEC_KRF_PR, upstream_of, PROD_ELEC_MATURE_FOUNDRY]
+  - [PROD_ELEC_KRF_PR, upstream_of, PROD_ELEC_NAND]
+  - [PROD_ELEC_GI_PR, upstream_of, PROD_ELEC_SPECIALTY_FOUNDRY]
+  - [PROD_ELEC_DISPLAY_PR, upstream_of, PROD_ELEC_LCD_PANEL]
+  - [PROD_ELEC_PCB_PR, upstream_of, PROD_ELEC_PCB]
+  - [PROD_ELEC_PSPI, upstream_of, PROD_ELEC_WLP]
+  - [PROD_ELEC_PR_RESIN, upstream_of, PROD_ELEC_PHOTORESIST]
+  - [PROD_ELEC_PR_ANCILLARY, upstream_of, PROD_ELEC_FOUNDRY]
+  - [TECH_ELEC_EUV, enables, PROD_ELEC_LITHOGRAPHY]
+  - [TECH_ELEC_EUV, enables, PROD_ELEC_EUV_PR]
+  - [TECH_ELEC_ADVANCED_NODE, enables, PROD_ELEC_ADVANCED_FOUNDRY]
+  # --- packaging materials & OSAT ---
+  - [PROD_CHEM_SPHERICAL_SILICA, upstream_of, PROD_ELEC_HIGH_SPEED_CCL]
+  - [PROD_ELEC_SPHERICAL_ALUMINA, uses_material, MAT_ALUMINUM]
+  - [PROD_ELEC_SPHERICAL_ALUMINA, upstream_of, PROD_ELEC_TIM]
+  - [PROD_ELEC_EMC, upstream_of, PROD_ELEC_PACKAGING_TEST]
+  - [PROD_ELEC_BONDING_WIRE, uses_material, MAT_GOLD]
+  - [PROD_ELEC_BONDING_WIRE, uses_material, MAT_COPPER]
+  - [PROD_ELEC_BONDING_WIRE, upstream_of, PROD_ELEC_TRADITIONAL_PACKAGING]
+  - [PROD_ELEC_LEADFRAME, uses_material, MAT_COPPER]
+  - [PROD_ELEC_LEADFRAME, upstream_of, PROD_ELEC_TRADITIONAL_PACKAGING]
+  - [PROD_ELEC_SOLDER, uses_material, MAT_TIN]
+  - [PROD_ELEC_SOLDER, uses_material, MAT_SILVER]
+  - [PROD_ELEC_SOLDER, used_in, PROD_ELEC_SMT]
+  - [PROD_ELEC_UNDERFILL, uses_material, MAT_EPOXY_RESIN]
+  - [PROD_ELEC_UNDERFILL, upstream_of, PROD_ELEC_FLIP_CHIP]
+  - [PROD_ELEC_CERAMIC_PACKAGE, component_of, PROD_ELEC_CRYSTAL_OSCILLATOR]
+  - [PROD_ELEC_FOUNDRY, upstream_of, PROD_ELEC_PACKAGING_TEST]
+  - [PROD_ELEC_BUMPING, upstream_of, PROD_ELEC_FLIP_CHIP]
+  - [PROD_ELEC_INTERPOSER, component_of, PROD_ELEC_25D_3D_PACKAGING]
+  - [PROD_ELEC_IC_SUBSTRATE, component_of, PROD_ELEC_FLIP_CHIP]
+  - [PROD_ELEC_ABF_SUBSTRATE, component_of, PROD_ELEC_25D_3D_PACKAGING]
+  - [PROD_ELEC_25D_3D_PACKAGING, upstream_of, PROD_ELEC_GPGPU]
+  - [PROD_ELEC_25D_3D_PACKAGING, upstream_of, PROD_ELEC_AI_ASIC]
+  - [PROD_ELEC_SIP, used_in, MKT_WEARABLES_XR]
+  - [PROD_ELEC_SIP, used_in, MKT_SMARTPHONE]
+  - [TECH_ADVANCED_PACKAGING, enables, PROD_ELEC_25D_3D_PACKAGING]
+  - [TECH_ADVANCED_PACKAGING, enables, PROD_ELEC_WLP]
+  - [TECH_ADVANCED_PACKAGING, enables, PROD_ELEC_BUMPING]
+  - [TECH_ADVANCED_PACKAGING, enables, PROD_ELEC_INTERPOSER]
+  - [TECH_ADVANCED_PACKAGING, enables, PROD_ELEC_HBM]
+  - [TECH_ADVANCED_PACKAGING, enables, PROD_ELEC_HYBRID_BONDER]
+  - [TECH_ADVANCED_PACKAGING, enables, PROD_ELEC_TCB_BONDER]
+  - [TECH_ADVANCED_PACKAGING, enables, PROD_ELEC_ABF_SUBSTRATE]
+  # --- equipment & parts ---
+  - [PROD_ELEC_FRONTEND_EQUIPMENT, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_BACKEND_EQUIPMENT, used_in, PROD_ELEC_PACKAGING_TEST]
+  - [PROD_ELEC_LITHOGRAPHY, used_in, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_ETCH, used_in, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_ETCH, used_in, PROD_ELEC_NAND]
+  - [PROD_ELEC_ETCH, used_in, PROD_ELEC_DRAM]
+  - [PROD_ELEC_DEPOSITION, used_in, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_DEPOSITION, used_in, PROD_ELEC_NAND]
+  - [PROD_ELEC_DEPOSITION, used_in, PROD_ELEC_DRAM]
+  - [PROD_ELEC_CMP_EQUIPMENT, used_in, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_CLEANING_EQUIPMENT, used_in, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_COATER_DEVELOPER, used_in, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_ION_IMPLANT, used_in, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_THERMAL_PROCESS, used_in, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_METROLOGY, used_in, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_ELECTROPLATING, used_in, PROD_ELEC_FOUNDRY]
+  - [PROD_ELEC_ELECTROPLATING, used_in, PROD_ELEC_BUMPING]
+  - [PROD_ELEC_MOCVD, used_in, PROD_ELEC_LED_CHIP]
+  - [PROD_ELEC_EPI_EQUIPMENT, used_in, PROD_ELEC_SIC_EPI]
+  - [PROD_ELEC_EPI_EQUIPMENT, used_in, PROD_ELEC_EPI_WAFER]
+  - [PROD_ELEC_CRYSTAL_FURNACE, used_in, PROD_ELEC_SIC_CRYSTAL]
+  - [PROD_ELEC_CRYSTAL_FURNACE, used_in, PROD_ELEC_SILICON_WAFER]
+  - [PROD_ELEC_IC_TESTER, used_in, PROD_ELEC_IC_TESTING]
+  - [PROD_ELEC_PROBER, used_in, PROD_ELEC_IC_TESTING]
+  - [PROD_ELEC_HANDLER, used_in, PROD_ELEC_IC_TESTING]
+  - [PROD_ELEC_PROBE_CARD, used_in, PROD_ELEC_IC_TESTING]
+  - [PROD_ELEC_DICING, used_in, PROD_ELEC_PACKAGING_TEST]
+  - [PROD_ELEC_GRINDER, used_in, PROD_ELEC_PACKAGING_TEST]
+  - [PROD_ELEC_DIE_BONDER, used_in, PROD_ELEC_TRADITIONAL_PACKAGING]
+  - [PROD_ELEC_WIRE_BONDER, used_in, PROD_ELEC_TRADITIONAL_PACKAGING]
+  - [PROD_ELEC_HYBRID_BONDER, used_in, PROD_ELEC_HBM]
+  - [PROD_ELEC_HYBRID_BONDER, used_in, PROD_ELEC_25D_3D_PACKAGING]
+  - [PROD_ELEC_TCB_BONDER, used_in, PROD_ELEC_HBM]
+  - [PROD_ELEC_MOLDING_EQ, used_in, PROD_ELEC_PACKAGING_TEST]
+  - [PROD_ELEC_RF_GENERATOR, component_of, PROD_ELEC_ETCH]
+  - [PROD_ELEC_RF_GENERATOR, component_of, PROD_ELEC_DEPOSITION]
+  - [PROD_ELEC_VACUUM_PUMP, component_of, PROD_ELEC_ETCH]
+  - [PROD_ELEC_VACUUM_PUMP, component_of, PROD_ELEC_DEPOSITION]
+  - [PROD_ELEC_VACUUM_VALVE, component_of, PROD_ELEC_ETCH]
+  - [PROD_ELEC_MFC, component_of, PROD_ELEC_GAS_DELIVERY]
+  - [PROD_ELEC_GAS_DELIVERY, component_of, PROD_ELEC_DEPOSITION]
+  - [PROD_ELEC_GAS_DELIVERY, component_of, PROD_ELEC_ETCH]
+  - [PROD_ELEC_QUARTZ_PARTS, component_of, PROD_ELEC_ETCH]
+  - [PROD_ELEC_QUARTZ_PARTS, component_of, PROD_ELEC_THERMAL_PROCESS]
+  - [PROD_ELEC_QUARTZ_PARTS, uses_material, MAT_QUARTZ]
+  - [PROD_ELEC_SILICON_PARTS, component_of, PROD_ELEC_ETCH]
+  - [PROD_ELEC_CERAMIC_PARTS, component_of, PROD_ELEC_ETCH]
+  - [PROD_ELEC_CERAMIC_PARTS, component_of, PROD_ELEC_DEPOSITION]
+  - [PROD_ELEC_ESC, component_of, PROD_ELEC_ETCH]
+  - [PROD_ELEC_ESC, component_of, PROD_ELEC_DEPOSITION]
+  - [PROD_ELEC_CHAMBER_PARTS, component_of, PROD_ELEC_ETCH]
+  - [PROD_ELEC_CHAMBER_PARTS, component_of, PROD_ELEC_DEPOSITION]
+  - [PROD_ELEC_CHAMBER_PARTS, uses_material, MAT_ALUMINUM]
+  - [PROD_ELEC_CHAMBER_PARTS, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_ELEC_SHOWERHEAD, component_of, PROD_ELEC_DEPOSITION]
+  - [PROD_ELEC_SHOWERHEAD, component_of, PROD_ELEC_ETCH]
+  - [PROD_ELEC_PRECISION_OPTICS, component_of, PROD_ELEC_LITHOGRAPHY]
+  - [PROD_ELEC_PARTS_CLEANING, used_in, MKT_SEMI_FAB]
+  # --- digital IC ---
+  - [PROD_ELEC_ADVANCED_FOUNDRY, upstream_of, PROD_ELEC_GPGPU]
+  - [PROD_ELEC_ADVANCED_FOUNDRY, upstream_of, PROD_ELEC_AI_ASIC]
+  - [PROD_ELEC_ADVANCED_FOUNDRY, upstream_of, PROD_ELEC_MOBILE_SOC]
+  - [PROD_ELEC_ADVANCED_FOUNDRY, upstream_of, PROD_ELEC_SERVER_CPU]
+  - [PROD_ELEC_MATURE_FOUNDRY, upstream_of, PROD_ELEC_MCU]
+  - [PROD_ELEC_MATURE_FOUNDRY, upstream_of, PROD_ELEC_DISPLAY_DRIVER_IC]
+  - [PROD_ELEC_MATURE_FOUNDRY, upstream_of, PROD_ELEC_CIS]
+  - [PROD_ELEC_SPECIALTY_FOUNDRY, upstream_of, PROD_ELEC_PMIC]
+  - [PROD_ELEC_SPECIALTY_FOUNDRY, upstream_of, PROD_ELEC_IGBT_CHIP]
+  - [PROD_ELEC_SPECIALTY_FOUNDRY, upstream_of, PROD_ELEC_SI_MOSFET]
+  - [PROD_ELEC_ASIC_SERVICE, upstream_of, PROD_ELEC_AI_ASIC]
+  - [PROD_ELEC_IC_IP, upstream_of, PROD_ELEC_ASIC_SERVICE]
+  - [PROD_ELEC_HBM, component_of, PROD_ELEC_GPGPU]
+  - [PROD_ELEC_HBM, component_of, PROD_ELEC_AI_ASIC]
+  - [PROD_ELEC_HBM, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_ELEC_GPGPU, component_of, PROD_COMP_AI_ACCELERATOR_CARD]
+  - [PROD_ELEC_AI_ASIC, component_of, PROD_COMP_AI_ACCELERATOR_CARD]
+  - [PROD_ELEC_GPGPU, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_ELEC_AI_ASIC, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_ELEC_SERVER_CPU, component_of, PROD_COMP_GENERAL_SERVER]
+  - [PROD_ELEC_SERVER_CPU, component_of, PROD_COMP_AI_SERVER]
+  - [PROD_ELEC_DESKTOP_CPU, component_of, PROD_COMP_XINCHUANG_PC]
+  - [PROD_ELEC_GRAPHICS_GPU, used_in, MKT_PC]
+  - [PROD_ELEC_EDGE_AI_CHIP, used_in, MKT_ROBOTICS]
+  - [PROD_ELEC_FPGA, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_ELEC_FPGA, used_in, MKT_DEFENSE]
+  - [PROD_ELEC_FPGA, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_ELEC_DPU, used_in, MKT_DATA_CENTER]
+  - [PROD_ELEC_SECURITY_IC, component_of, PROD_ELEC_SMART_CARD]
+  - [PROD_ELEC_SECURITY_IC, component_of, PROD_COMP_POS]
+  - [PROD_ELEC_SECURITY_IC, component_of, PROD_COMP_CRYPTOGRAPHY]
+  - [PROD_ELEC_SPECIAL_IC, used_in, MKT_DEFENSE]
+  - [PROD_ELEC_MOBILE_SOC, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_AIOT_SOC, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_ELEC_AIOT_SOC, component_of, PROD_COMP_SECURITY_CAMERA]
+  - [PROD_ELEC_AUTO_SOC, used_in, MKT_EV]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_ELEC_AUTO_SOC]
+  - [PROD_ELEC_BT_AUDIO_SOC, component_of, PROD_ELEC_TWS]
+  - [PROD_ELEC_WEARABLE_SOC, component_of, PROD_ELEC_SMARTWATCH]
+  - [PROD_ELEC_CONNECTIVITY_CHIP, used_in, MKT_HOME_APPLIANCE]
+  - [TECH_IOT, enables, PROD_ELEC_CONNECTIVITY_CHIP]
+  - [PROD_ELEC_MCU, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_ELEC_MCU, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_ELEC_AUTO_MCU, used_in, MKT_EV]
+  - [PROD_ELEC_AUTO_MCU, used_in, MKT_ICE_VEHICLE]
+  - [PROD_ELEC_DISPLAY_DRIVER_IC, component_of, PROD_ELEC_DISPLAY_MODULE]
+  - [PROD_ELEC_TIMING_CHIP, used_in, MKT_DATA_CENTER]
+  - [TECH_ELEC_ON_DEVICE_AI, enables, PROD_ELEC_EDGE_AI_CHIP]
+  - [TECH_ELEC_ON_DEVICE_AI, enables, PROD_ELEC_AI_GLASSES]
+  - [PROD_ELEC_DDR5, upstream_of, PROD_ELEC_MEMORY_MODULE]
+  - [PROD_ELEC_NAND, upstream_of, PROD_ELEC_SSD]
+  - [PROD_ELEC_NAND, upstream_of, PROD_ELEC_EMBEDDED_STORAGE]
+  - [PROD_ELEC_LPDDR, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_MEMORY_CONTROLLER, component_of, PROD_ELEC_SSD]
+  - [PROD_ELEC_MEMORY_INTERFACE, component_of, PROD_ELEC_MEMORY_MODULE]
+  - [PROD_ELEC_MEMORY_MODULE, component_of, PROD_COMP_GENERAL_SERVER]
+  - [PROD_ELEC_MEMORY_MODULE, component_of, PROD_COMP_AI_SERVER]
+  - [PROD_ELEC_ENTERPRISE_SSD, component_of, PROD_COMP_GENERAL_SERVER]
+  - [PROD_ELEC_ENTERPRISE_SSD, component_of, PROD_COMP_STORAGE_ARRAY]
+  - [PROD_ELEC_ENTERPRISE_SSD, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_ELEC_SSD, used_in, MKT_PC]
+  - [PROD_ELEC_EMBEDDED_STORAGE, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_NOR, component_of, PROD_ELEC_TWS]
+  - [PROD_ELEC_NOR, used_in, MKT_EV]
+  - [PROD_ELEC_NICHE_DRAM, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ELEC_EEPROM, component_of, PROD_ELEC_CAMERA_MODULE]
+  - [PROD_ELEC_PCIE_RETIMER, component_of, PROD_COMP_AI_SERVER]
+  - [PROD_ELEC_PCIE_SWITCH, component_of, PROD_COMP_AI_SERVER]
+  - [PROD_ELEC_CXL_CHIP, used_in, MKT_DATA_CENTER]
+  - [PROD_ELEC_ETHERNET_SWITCH_CHIP, component_of, PROD_COMM_SWITCH]
+  - [PROD_ELEC_ETHERNET_PHY, component_of, PROD_COMM_SWITCH]
+  - [PROD_ELEC_ETHERNET_PHY, used_in, MKT_EV]
+  - [PROD_ELEC_SERDES_CHIP, used_in, MKT_EV]
+  - [TECH_ELEC_HIGH_SPEED_INTERCONNECT, enables, PROD_ELEC_SERDES_CHIP]
+  - [TECH_ELEC_HIGH_SPEED_INTERCONNECT, enables, PROD_ELEC_ETHERNET_SWITCH_CHIP]
+  - [TECH_ELEC_HIGH_SPEED_INTERCONNECT, enables, PROD_ELEC_IC_IP]
+  # --- analog ---
+  - [PROD_ELEC_DCDC, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ELEC_VRM_CONTROLLER, component_of, PROD_COMP_AI_ACCELERATOR_CARD]
+  - [PROD_ELEC_DRMOS, component_of, PROD_COMP_AI_ACCELERATOR_CARD]
+  - [PROD_ELEC_EFUSE, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_ELEC_BMS_AFE, used_in, MKT_EV]
+  - [PROD_ELEC_BMS_AFE, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_ELEC_BMS_AFE, component_of, PROD_ELEC_BATTERY_PACK]
+  - [PROD_ELEC_GATE_DRIVER, used_in, MKT_EV]
+  - [PROD_ELEC_GATE_DRIVER, used_in, MKT_SOLAR]
+  - [PROD_ELEC_LED_DRIVER, used_in, PROD_ELEC_LED_DISPLAY]
+  - [PROD_ELEC_LED_DRIVER, used_in, PROD_ELEC_MINI_LED_BACKLIGHT]
+  - [PROD_ELEC_CHARGING_IC, component_of, PROD_ELEC_CHARGER]
+  - [PROD_ELEC_ACDC, component_of, PROD_ELEC_CHARGER]
+  - [PROD_ELEC_MOTOR_DRIVER, used_in, MKT_ROBOTICS]
+  - [PROD_ELEC_MOTOR_DRIVER, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_ELEC_DATA_CONVERTER, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_ELEC_DATA_CONVERTER, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_ELEC_DATA_CONVERTER, used_in, MKT_HEALTHCARE]
+  - [PROD_ELEC_AMPLIFIER, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_ELEC_INTERFACE_IC, used_in, MKT_EV]
+  - [PROD_ELEC_ISOLATOR, used_in, MKT_EV]
+  - [PROD_ELEC_ISOLATOR, used_in, MKT_SOLAR]
+  - [PROD_ELEC_RF_PA, component_of, PROD_ELEC_RF_MODULE]
+  - [PROD_ELEC_RF_SWITCH, component_of, PROD_ELEC_RF_MODULE]
+  - [PROD_ELEC_RF_LNA, component_of, PROD_ELEC_RF_MODULE]
+  - [PROD_ELEC_RF_FILTER, component_of, PROD_ELEC_RF_MODULE]
+  - [PROD_ELEC_RF_MODULE, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_RF_PA, component_of, PROD_COMM_CELLULAR_MODULE]
+  - [PROD_ELEC_RF_TRANSCEIVER, used_in, MKT_TELECOM_NETWORK]
+  - [TECH_5G6G, enables, PROD_ELEC_RF_MODULE]
+  - [PROD_ELEC_CIS, component_of, PROD_ELEC_CAMERA_MODULE]
+  - [PROD_ELEC_PHONE_CIS, used_in, MKT_SMARTPHONE]
+  - [PROD_ELEC_AUTO_CIS, component_of, PROD_ELEC_AUTO_CAMERA_MODULE]
+  - [PROD_ELEC_SECURITY_CIS, component_of, PROD_COMP_SECURITY_CAMERA]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_ELEC_AUTO_CIS]
+  - [PROD_ELEC_MEMS_SENSOR, used_in, MKT_SMARTPHONE]
+  - [PROD_ELEC_MEMS_SENSOR, used_in, MKT_EV]
+  - [PROD_ELEC_FINGERPRINT_SENSOR, used_in, MKT_SMARTPHONE]
+  - [PROD_ELEC_TOF_SENSOR, used_in, MKT_ROBOTICS]
+  - [PROD_ELEC_TOF_SENSOR, used_in, MKT_SMARTPHONE]
+  - [PROD_ELEC_MAGNETIC_SENSOR, used_in, MKT_EV]
+  # --- PCB / CCL ---
+  - [PROD_ELEC_COPPER_FOIL, uses_material, MAT_COPPER]
+  - [PROD_ELEC_COPPER_FOIL, upstream_of, PROD_ELEC_CCL]
+  - [PROD_ELEC_HVLP_FOIL, upstream_of, PROD_ELEC_HIGH_SPEED_CCL]
+  - [PROD_ELEC_CARRIER_FOIL, upstream_of, PROD_ELEC_BT_SUBSTRATE]
+  - [PROD_ELEC_CARRIER_FOIL, upstream_of, PROD_ELEC_SLP]
+  - [PROD_BM_LOW_DK_CLOTH, uses_material, MAT_GLASS_FIBER]
+  - [PROD_BM_LOW_DK_CLOTH, upstream_of, PROD_ELEC_HIGH_SPEED_CCL]
+  - [PROD_ELEC_QUARTZ_CLOTH, uses_material, MAT_QUARTZ]
+  - [PROD_ELEC_QUARTZ_CLOTH, upstream_of, PROD_ELEC_HIGH_SPEED_CCL]
+  - [PROD_ELEC_QUARTZ_CLOTH, substitute_for, PROD_BM_LOW_DK_CLOTH]
+  - [PROD_BM_LOW_CTE_CLOTH, uses_material, MAT_GLASS_FIBER]
+  - [PROD_BM_LOW_CTE_CLOTH, upstream_of, PROD_ELEC_SUBSTRATE_CCL]
+  - [PROD_BM_LOW_CTE_CLOTH, upstream_of, PROD_ELEC_ABF_SUBSTRATE]
+  - [PROD_CHEM_ELECTRONIC_RESIN, upstream_of, PROD_ELEC_HIGH_SPEED_CCL]
+  - [PROD_CHEM_ELECTRONIC_RESIN, upstream_of, PROD_ELEC_HIGH_FREQ_CCL]
+  - [PROD_ELEC_FR4_CCL, uses_material, MAT_EPOXY_RESIN]
+  - [PROD_ELEC_FR4_CCL, uses_material, MAT_GLASS_FIBER]
+  - [PROD_ELEC_FR4_CCL, uses_material, MAT_COPPER]
+  - [PROD_CHEM_PI_FILM, upstream_of, PROD_ELEC_FCCL]
+  - [PROD_CHEM_PI_FILM, upstream_of, PROD_ELEC_GRAPHITE_SHEET]
+  - [PROD_ELEC_ABF_FILM, uses_material, MAT_EPOXY_RESIN]
+  - [PROD_ELEC_ABF_FILM, upstream_of, PROD_ELEC_ABF_SUBSTRATE]
+  - [PROD_ELEC_SUBSTRATE_CCL, upstream_of, PROD_ELEC_BT_SUBSTRATE]
+  - [PROD_ELEC_CCL, upstream_of, PROD_ELEC_PCB]
+  - [PROD_ELEC_FR4_CCL, upstream_of, PROD_ELEC_MULTILAYER_PCB]
+  - [PROD_ELEC_PREPREG, upstream_of, PROD_ELEC_MULTILAYER_PCB]
+  - [PROD_ELEC_PREPREG, upstream_of, PROD_ELEC_HDI]
+  - [PROD_ELEC_HIGH_SPEED_CCL, upstream_of, PROD_ELEC_HIGH_SPEED_PCB]
+  - [PROD_ELEC_HIGH_FREQ_CCL, upstream_of, PROD_ELEC_HIGH_FREQ_PCB]
+  - [PROD_ELEC_FCCL, upstream_of, PROD_ELEC_FPC]
+  - [PROD_ELEC_FCCL, upstream_of, PROD_ELEC_RIGID_FLEX]
+  - [PROD_ELEC_PCB, uses_material, MAT_COPPER]
+  - [PROD_ELEC_PCB_CHEMICALS, upstream_of, PROD_ELEC_PCB]
+  - [PROD_MACH_PCB_DRILL, used_in, PROD_ELEC_PCB]
+  - [PROD_ELEC_LDI, used_in, PROD_ELEC_PCB]
+  - [PROD_ELEC_LDI, used_in, PROD_ELEC_IC_SUBSTRATE]
+  - [PROD_ELEC_PCB_DRILLING_MACHINE, used_in, PROD_ELEC_PCB]
+  - [PROD_ELEC_AI_SERVER_PCB, component_of, PROD_COMP_AI_SERVER]
+  - [PROD_ELEC_AI_SERVER_PCB, component_of, PROD_COMP_AI_ACCELERATOR_CARD]
+  - [PROD_ELEC_HDI, component_of, PROD_COMP_AI_ACCELERATOR_CARD]
+  - [PROD_ELEC_SWITCH_PCB, component_of, PROD_COMM_SWITCH]
+  - [PROD_ELEC_OPTICAL_MODULE_PCB, component_of, PROD_COMM_OPTICAL_MODULE]
+  - [PROD_ELEC_SERVER_MB_PCB, component_of, PROD_COMP_MOTHERBOARD]
+  - [PROD_ELEC_BACKPLANE_PCB, component_of, PROD_COMP_RACK_SCALE_AI]
+  - [PROD_ELEC_HIGH_SPEED_PCB, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_ELEC_HDI, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_SLP, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_FPC, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_FPC, used_in, MKT_EV]
+  - [PROD_ELEC_RIGID_FLEX, used_in, MKT_WEARABLES_XR]
+  - [PROD_ELEC_AUTO_PCB, used_in, MKT_EV]
+  - [PROD_ELEC_HEAVY_COPPER_PCB, used_in, MKT_EV]
+  - [PROD_ELEC_HIGH_FREQ_PCB, component_of, PROD_COMM_AAU]
+  - [PROD_ELEC_HIGH_FREQ_PCB, used_in, MKT_EV]
+  - [PROD_ELEC_ABF_SUBSTRATE, component_of, PROD_ELEC_GPGPU]
+  - [PROD_ELEC_ABF_SUBSTRATE, component_of, PROD_ELEC_SERVER_CPU]
+  - [PROD_ELEC_BT_SUBSTRATE, component_of, PROD_ELEC_EMBEDDED_STORAGE]
+  - [PROD_ELEC_BT_SUBSTRATE, component_of, PROD_ELEC_RF_MODULE]
+  - [PROD_ELEC_GLASS_CORE_SUBSTRATE, substitute_for, PROD_ELEC_ABF_SUBSTRATE]
+  - [TECH_ELEC_HIGH_SPEED_INTERCONNECT, enables, PROD_ELEC_HIGH_SPEED_CCL]
+  - [TECH_ELEC_HIGH_SPEED_INTERCONNECT, enables, PROD_ELEC_HVLP_FOIL]
+  - [TECH_ELEC_HIGH_SPEED_INTERCONNECT, enables, PROD_ELEC_HIGH_SPEED_CONNECTOR]
+  # --- passive & connectors ---
+  - [PROD_ELEC_MLCC_POWDER, upstream_of, PROD_ELEC_MLCC]
+  - [PROD_ELEC_MLCC_POWDER, uses_material, MAT_TITANIUM_DIOXIDE]
+  - [PROD_ELEC_CONDUCTIVE_PASTE, upstream_of, PROD_ELEC_MLCC]
+  - [PROD_ELEC_CONDUCTIVE_PASTE, uses_material, MAT_SILVER]
+  - [PROD_ELEC_CONDUCTIVE_PASTE, uses_material, MAT_NICKEL]
+  - [PROD_ELEC_MLCC, uses_material, MAT_NICKEL]
+  - [PROD_ELEC_MLCC, used_in, MKT_SMARTPHONE]
+  - [PROD_ELEC_MLCC, used_in, MKT_EV]
+  - [PROD_ELEC_MLCC, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_DEF_TANTALUM_CAPACITOR, uses_material, MAT_ELEC_TANTALUM]
+  - [PROD_DEF_TANTALUM_CAPACITOR, used_in, MKT_DEFENSE]
+  - [PROD_DEF_TANTALUM_CAPACITOR, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_NFM_ELECTRODE_FOIL, uses_material, MAT_ALUMINUM]
+  - [PROD_NFM_ELECTRODE_FOIL, upstream_of, PROD_ELEC_ALUMINUM_CAP]
+  - [PROD_ELEC_ALUMINUM_CAP, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_ELEC_ALUMINUM_CAP, used_in, MKT_SOLAR]
+  - [PROD_ELEC_FILM_CAP, used_in, MKT_EV]
+  - [PROD_ELEC_FILM_CAP, used_in, MKT_SOLAR]
+  - [PROD_ELEC_FILM_CAP, used_in, MKT_POWER_GRID]
+  - [PROD_ELEC_SUPERCAP, used_in, MKT_RAIL]
+  - [PROD_ELEC_POLYMER_CAP, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_ELEC_SILICON_CAP, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_ELEC_POWER_INDUCTOR, component_of, PROD_COMP_AI_ACCELERATOR_CARD]
+  - [PROD_ELEC_POWER_INDUCTOR, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_ELEC_CHIP_INDUCTOR, used_in, MKT_SMARTPHONE]
+  - [PROD_ELEC_RESISTOR, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ELEC_RESISTOR, used_in, MKT_EV]
+  - [PROD_ELEC_SENSITIVE_RESISTOR, used_in, MKT_EV]
+  - [PROD_ELEC_SENSITIVE_RESISTOR, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_ELEC_CRYSTAL_OSCILLATOR, used_in, MKT_SMARTPHONE]
+  - [PROD_ELEC_CRYSTAL_OSCILLATOR, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_ELEC_MAGNETIC_COMPONENT, component_of, PROD_COMM_SWITCH]
+  - [PROD_ELEC_MAGNETIC_COMPONENT, used_in, MKT_SOLAR]
+  - [PROD_ELEC_CERAMIC_FERRULE, component_of, PROD_COMM_FIBER_CONNECTOR]
+  - [PROD_ELEC_CONNECTOR, uses_material, MAT_COPPER]
+  - [PROD_ELEC_CONNECTOR, uses_material, MAT_ENGINEERING_PLASTICS]
+  - [PROD_ELEC_HIGH_SPEED_CONNECTOR, component_of, PROD_COMP_AI_SERVER]
+  - [PROD_ELEC_HIGH_SPEED_CONNECTOR, component_of, PROD_COMM_SWITCH]
+  - [PROD_ELEC_HIGH_SPEED_CONNECTOR, component_of, PROD_COMM_COPPER_BACKPLANE]
+  - [PROD_ELEC_IO_CONNECTOR, component_of, PROD_COMM_SWITCH]
+  - [PROD_ELEC_BTB_CONNECTOR, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_RF_CONNECTOR, used_in, PROD_COMM_BASE_STATION]
+  - [PROD_ELEC_POWER_CONNECTOR, component_of, PROD_COMP_RACK_SCALE_AI]
+  - [PROD_ELEC_AUTO_CONNECTOR, used_in, MKT_EV]
+  - [PROD_ELEC_HV_CONNECTOR, used_in, MKT_EV]
+  - [PROD_ELEC_AUTO_HS_CONNECTOR, used_in, MKT_EV]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_ELEC_AUTO_HS_CONNECTOR]
+  - [PROD_DEF_MIL_CONNECTOR, used_in, MKT_DEFENSE]
+  - [PROD_DEF_MIL_CONNECTOR, used_in, MKT_AEROSPACE]
+  - [PROD_ELEC_CONSUMER_CABLE, uses_material, MAT_COPPER]
+  - [PROD_ELEC_CONSUMER_CABLE, used_in, MKT_CONSUMER_ELECTRONICS]
+  # --- display & LED ---
+  - [PROD_ELEC_TFT_GLASS, upstream_of, PROD_ELEC_LCD_PANEL]
+  - [PROD_ELEC_TFT_GLASS, upstream_of, PROD_ELEC_AMOLED_PANEL]
+  - [PROD_ELEC_LIQUID_CRYSTAL, upstream_of, PROD_ELEC_LCD_PANEL]
+  - [PROD_ELEC_POLARIZER, component_of, PROD_ELEC_LCD_PANEL]
+  - [PROD_ELEC_POLARIZER, component_of, PROD_ELEC_AMOLED_PANEL]
+  - [PROD_ELEC_OLED_INTERMEDIATE, upstream_of, PROD_ELEC_OLED_MATERIAL]
+  - [PROD_ELEC_OLED_MATERIAL, upstream_of, PROD_ELEC_AMOLED_PANEL]
+  - [PROD_ELEC_FMM, used_in, PROD_ELEC_AMOLED_PANEL]
+  - [PROD_ELEC_PI_MATERIAL, upstream_of, PROD_ELEC_FLEX_OLED]
+  - [PROD_ELEC_OPTICAL_FILM, component_of, PROD_ELEC_BACKLIGHT]
+  - [PROD_ELEC_QD_FILM, component_of, PROD_ELEC_BACKLIGHT]
+  - [PROD_ELEC_BACKLIGHT, component_of, PROD_ELEC_DISPLAY_MODULE]
+  - [PROD_ELEC_DISPLAY_PANEL, upstream_of, PROD_ELEC_DISPLAY_MODULE]
+  - [PROD_ELEC_PANEL_EQUIPMENT, used_in, PROD_ELEC_DISPLAY_PANEL]
+  - [PROD_ELEC_AMOLED_PANEL, substitute_for, PROD_ELEC_LCD_PANEL]
+  - [PROD_ELEC_FLEX_OLED, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_LCD_TV_PANEL, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ELEC_LCD_IT_PANEL, used_in, MKT_PC]
+  - [PROD_ELEC_LCD_IT_PANEL, used_in, MKT_EV]
+  - [PROD_ELEC_IT_OLED, used_in, MKT_PC]
+  - [PROD_ELEC_IT_OLED, used_in, MKT_EV]
+  - [PROD_ELEC_MICRO_OLED, component_of, PROD_ELEC_XR_HEADSET]
+  - [PROD_ELEC_MICRO_LED_DISPLAY, used_in, MKT_WEARABLES_XR]
+  - [PROD_ELEC_EPAPER, component_of, PROD_ELEC_ESL]
+  - [PROD_ELEC_TOUCH_MODULE, used_in, MKT_EV]
+  - [TECH_ELEC_FOLDABLE, enables, PROD_ELEC_FLEX_OLED]
+  - [TECH_ELEC_FOLDABLE, enables, PROD_ELEC_HINGE]
+  - [TECH_ELEC_FOLDABLE, enables, PROD_ELEC_UTG]
+  - [PROD_ELEC_SAPPHIRE_SUBSTRATE, upstream_of, PROD_ELEC_LED_CHIP]
+  - [PROD_ELEC_LED_CHIP, upstream_of, PROD_ELEC_LED_PACKAGE]
+  - [PROD_ELEC_LED_PACKAGE, upstream_of, PROD_ELEC_LED_DISPLAY]
+  - [PROD_ELEC_LED_PACKAGE, upstream_of, PROD_HA_LED_LIGHTING]
+  - [PROD_ELEC_MINI_LED_CHIP, upstream_of, PROD_ELEC_FINE_PITCH_LED]
+  - [PROD_ELEC_MINI_LED_CHIP, upstream_of, PROD_ELEC_MINI_LED_BACKLIGHT]
+  - [PROD_ELEC_MINI_LED_CHIP, upstream_of, PROD_ELEC_MICRO_LED_DISPLAY]
+  - [PROD_ELEC_MINI_LED_BACKLIGHT, used_in, PROD_ELEC_LCD_TV_PANEL]
+  - [PROD_ELEC_LED_DISPLAY, used_in, MKT_GOVERNMENT]
+  - [PROD_ELEC_LED_DISPLAY, used_in, MKT_MEDIA_ENTERTAINMENT]
+  - [PROD_HA_LED_LIGHTING, used_in, MKT_CONSTRUCTION]
+  - [TECH_ELEC_MLED, enables, PROD_ELEC_MINI_LED_CHIP]
+  - [TECH_ELEC_MLED, enables, PROD_ELEC_FINE_PITCH_LED]
+  - [TECH_ELEC_MLED, enables, PROD_ELEC_MICRO_LED_DISPLAY]
+  - [TECH_ELEC_MLED, enables, PROD_ELEC_MINI_LED_BACKLIGHT]
+  # --- optics ---
+  - [PROD_ELEC_LENS_ELEMENT, component_of, PROD_ELEC_OPTICAL_LENS]
+  - [PROD_ELEC_PHONE_LENS, component_of, PROD_ELEC_CAMERA_MODULE]
+  - [PROD_ELEC_VCM, component_of, PROD_ELEC_CAMERA_MODULE]
+  - [PROD_ELEC_OPTICAL_FILTER, component_of, PROD_ELEC_CAMERA_MODULE]
+  - [PROD_ELEC_PRISM, component_of, PROD_ELEC_CAMERA_MODULE]
+  - [PROD_ELEC_CAMERA_MODULE, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_AUTO_LENS, component_of, PROD_ELEC_AUTO_CAMERA_MODULE]
+  - [PROD_ELEC_AUTO_CAMERA_MODULE, used_in, MKT_EV]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_ELEC_AUTO_CAMERA_MODULE]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_ELEC_AUTO_LENS]
+  - [PROD_ELEC_SECURITY_LENS, component_of, PROD_COMP_SECURITY_CAMERA]
+  - [PROD_ELEC_MACHINE_VISION_LENS, component_of, PROD_COMP_MACHINE_VISION]
+  - [PROD_ELEC_AR_WAVEGUIDE, component_of, PROD_ELEC_AI_GLASSES]
+  - [PROD_DEF_INFRARED_DETECTOR, used_in, MKT_DEFENSE]
+  - [PROD_DEF_INFRARED_DETECTOR, used_in, MKT_EV]
+  # --- consumer ---
+  - [PROD_ELEC_PHONE_DEVICE, used_in, MKT_SMARTPHONE]
+  - [PROD_ELEC_TABLET, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ELEC_SMARTWATCH, used_in, MKT_WEARABLES_XR]
+  - [PROD_ELEC_TWS, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ELEC_XR_HEADSET, used_in, MKT_WEARABLES_XR]
+  - [PROD_ELEC_AI_GLASSES, used_in, MKT_WEARABLES_XR]
+  - [PROD_ELEC_SMART_SPEAKER, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_HA_PROJECTOR, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ELEC_ODM, upstream_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_ASSEMBLY, upstream_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_SMT, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ELEC_METAL_STRUCTURAL, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_METAL_STRUCTURAL, uses_material, MAT_ALUMINUM]
+  - [PROD_ELEC_METAL_STRUCTURAL, uses_material, MAT_TITANIUM]
+  - [PROD_ELEC_METAL_STRUCTURAL, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_ELEC_HINGE, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_MIM, component_of, PROD_ELEC_HINGE]
+  - [PROD_ELEC_MIM, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_ELEC_COVER_GLASS, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_COVER_GLASS, component_of, PROD_ELEC_SMARTWATCH]
+  - [PROD_ELEC_UTG, component_of, PROD_ELEC_FLEX_OLED]
+  - [PROD_ELEC_PLASTIC_STRUCTURAL, uses_material, MAT_ENGINEERING_PLASTICS]
+  - [PROD_ELEC_PLASTIC_STRUCTURAL, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ELEC_MICRO_SPEAKER, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_MICRO_SPEAKER, component_of, PROD_ELEC_TWS]
+  - [PROD_ELEC_MEMS_MIC, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_MEMS_MIC, component_of, PROD_ELEC_TWS]
+  - [PROD_ELEC_HAPTIC_MOTOR, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_VAPOR_CHAMBER, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_VAPOR_CHAMBER, uses_material, MAT_COPPER]
+  - [PROD_ELEC_HEAT_PIPE, uses_material, MAT_COPPER]
+  - [PROD_ELEC_HEAT_PIPE, used_in, MKT_PC]
+  - [PROD_ELEC_GRAPHITE_SHEET, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_EMI_SHIELDING, used_in, MKT_SMARTPHONE]
+  - [PROD_ELEC_DIE_CUT, used_in, MKT_SMARTPHONE]
+  - [PROD_ELEC_TERMINAL_ANTENNA, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_WIRELESS_CHARGING_MODULE, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_PWR_CONSUMER_BATTERY, upstream_of, PROD_ELEC_BATTERY_PACK]
+  - [PROD_PWR_CONSUMER_BATTERY, uses_material, MAT_LITHIUM_CARBONATE]
+  - [PROD_PWR_CONSUMER_BATTERY, uses_material, MAT_COBALT]
+  - [PROD_ELEC_BATTERY_PACK, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_ELEC_CHARGER, used_in, MKT_SMARTPHONE]
+  - [PROD_ELEC_ELECTRONIC_ADHESIVE, used_in, MKT_SMARTPHONE]
+  # --- other electronics ---
+  - [PROD_ELEC_RFID, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_ELEC_RFID, used_in, MKT_LOGISTICS]
+  - [PROD_ELEC_RFID, used_in, MKT_APPAREL]
+  - [PROD_ELEC_SMART_CARD, used_in, MKT_FINANCE]
+  - [PROD_ELEC_SMART_CARD, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_ELEC_ESL, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_LIGHT_ECIG_DEVICE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_MACH_ELECTRONIC_TEST_INSTRUMENT, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_MACH_ELECTRONIC_TEST_INSTRUMENT, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [TECH_ELEC_HIGH_SPEED_INTERCONNECT, enables, PROD_COMM_ACC]
+  - [PROD_ELEC_IGBT_MODULE, component_of, PROD_AUTO_MOTOR_CONTROLLER]
+  - [PROD_ELEC_IGBT_MODULE, component_of, PROD_PWR_SOLAR_INVERTER]
+  - [PROD_ELEC_IGBT_MODULE, component_of, PROD_PWR_PCS]
+  - [PROD_ELEC_IGBT_MODULE, component_of, PROD_PWR_VSC_VALVE]
+  - [PROD_ELEC_IGBT_MODULE, component_of, PROD_PWR_CHARGING_MODULE]
+  - [PROD_ELEC_IGBT_MODULE, component_of, PROD_PWR_SST]
+  - [PROD_ELEC_SIC_MODULE, component_of, PROD_AUTO_MOTOR_CONTROLLER]
+  - [PROD_ELEC_SIC_MODULE, component_of, PROD_PWR_SOLAR_INVERTER]
+  - [PROD_ELEC_SIC_MODULE, component_of, PROD_PWR_CHARGING_MODULE]
+  - [PROD_ELEC_SIC_MODULE, component_of, PROD_PWR_SST]
+  - [PROD_ELEC_AUTO_POWER_MODULE, component_of, PROD_AUTO_MOTOR_CONTROLLER]
+  - [PROD_ELEC_AUTO_POWER_MODULE, component_of, PROD_AUTO_OBC]
+  - [PROD_ELEC_FILM_CAP, component_of, PROD_PWR_SOLAR_INVERTER]
+  - [PROD_ELEC_FILM_CAP, component_of, PROD_AUTO_MOTOR_CONTROLLER]
+  - [PROD_ELEC_SUPERCAP, used_in, MKT_POWER_GRID]
+  - [PROD_ELEC_GAN_POWER, component_of, PROD_PWR_SERVER_PSU]
+  - [PROD_ELEC_SJ_MOSFET, component_of, PROD_PWR_SERVER_PSU]
+  - [PROD_ELEC_SJ_MOSFET, component_of, PROD_PWR_UPS]
+  - [PROD_ELEC_SIC_MOSFET, component_of, PROD_PWR_SERVER_PSU]
+  - [PROD_ELEC_SIC_MOSFET, component_of, PROD_PWR_HVDC_POWER]
+  - [PROD_ELEC_AUTO_MCU, component_of, PROD_AUTO_ECU]
+  - [PROD_ELEC_AUTO_MCU, component_of, PROD_AUTO_DOMAIN_CONTROLLER]
+  - [PROD_ELEC_AUTO_MCU, component_of, PROD_AUTO_MOTOR_CONTROLLER]
+  - [PROD_ELEC_AUTO_MCU, component_of, PROD_AUTO_OBC]
+  - [PROD_ELEC_AUTO_SOC, component_of, PROD_AUTO_ADAS_DOMAIN]
+  - [PROD_ELEC_AUTO_SOC, component_of, PROD_AUTO_COCKPIT_DOMAIN]
+  - [PROD_ELEC_AUTO_PCB, component_of, PROD_AUTO_DOMAIN_CONTROLLER]
+  - [PROD_ELEC_AUTO_PCB, component_of, PROD_AUTO_ECU]
+  - [PROD_ELEC_MCU, component_of, PROD_HA_CONTROLLER]
+  - [PROD_ELEC_LCD_IT_PANEL, component_of, PROD_AUTO_CENTER_DISPLAY]
+  - [PROD_ELEC_LCD_IT_PANEL, component_of, PROD_AUTO_INSTRUMENT_CLUSTER]
+  - [PROD_ELEC_LCD_TV_PANEL, component_of, PROD_HA_TV]
+  - [PROD_ELEC_MINI_LED_BACKLIGHT, component_of, PROD_HA_TV]
+  - [PROD_ELEC_LED_PACKAGE, component_of, PROD_AUTO_LAMP]
+  - [PROD_ELEC_LED_PACKAGE, component_of, PROD_HA_LED_LIGHTING]
+  - [PROD_ELEC_FPC, component_of, PROD_PWR_CCS]
+  - [PROD_ELEC_MCU, component_of, PROD_PWR_SMART_METER]
+  - [PROD_ELEC_LCD_IT_PANEL, component_of, PROD_PHAR_PATIENT_MONITOR]
+  - [PROD_ELEC_MCU, component_of, PROD_PHAR_PATIENT_MONITOR]
+  - [PROD_ELEC_GAN_EPI, upstream_of, PROD_DEF_GAN_PA]
+  - [PROD_ELEC_GAN_EPI, upstream_of, PROD_DEF_TR_CHIP]
+  - [PROD_ELEC_FRONTEND_EQUIPMENT, used_in, PROD_ELEC_FOUNDRY]
+
+sw_l3_map:
+  "270102": [SEG_ELEC_DISCRETE, SEG_ELEC_POWER_SEMI, SEG_ELEC_COMPOUND_SEMI]
+  "270103": [SEG_ELEC_SEMI_MATERIAL, SEG_ELEC_WAFER_SUBSTRATE, SEG_ELEC_FAB_MATERIAL, SEG_ELEC_PACKAGING_MATERIAL]
+  "270104": [SEG_ELEC_DIGITAL_IC, SEG_ELEC_PROCESSOR_CHIP, SEG_ELEC_SOC_CHIP, SEG_ELEC_MEMORY_CHIP, SEG_ELEC_STORAGE_MODULE, SEG_ELEC_INTERCONNECT_CHIP, SEG_ELEC_IC_DESIGN_SERVICE, SEG_ELEC_SENSOR_CHIP]
+  "270105": [SEG_ELEC_ANALOG_IC, SEG_ELEC_POWER_IC, SEG_ELEC_SIGNAL_CHAIN, SEG_ELEC_RF_FRONTEND, SEG_ELEC_SENSOR_CHIP]
+  "270106": [SEG_ELEC_FOUNDRY]
+  "270107": [SEG_ELEC_OSAT]
+  "270108": [SEG_ELEC_SEMI_EQUIPMENT, SEG_ELEC_EQUIP_PARTS]
+  "270202": [SEG_ELEC_PCB, SEG_ELEC_IC_SUBSTRATE, SEG_ELEC_CCL, SEG_ELEC_PCB_MATERIAL]
+  "270203": [SEG_ELEC_PASSIVE]
+  "270301": [SEG_ELEC_DISPLAY_PANEL, SEG_ELEC_DISPLAY_MATERIAL]
+  "270302": [SEG_ELEC_LED]
+  "270303": [SEG_ELEC_OPTICAL_COMPONENT]
+  "270401": [SEG_ELEC_OTHER_ELECTRONICS, SEG_ELEC_CONNECTOR, SEG_ELEC_EMS]
+  "270503": [SEG_ELEC_BRAND_CONSUMER]
+  "270504": [SEG_ELEC_CONSUMER_PARTS, SEG_ELEC_STRUCTURAL_PARTS, SEG_ELEC_ACOUSTIC_HAPTIC, SEG_ELEC_THERMAL_FUNCTIONAL, SEG_ELEC_CONSUMER_POWER, SEG_ELEC_CONNECTOR, SEG_ELEC_EMS]
+  "270601": [SEG_ELEC_ELECTRONIC_CHEMICALS, SEG_ELEC_ELECTRONIC_GAS, SEG_ELEC_WET_CHEMICAL, SEG_ELEC_PHOTORESIST, SEG_ELEC_DISPLAY_MATERIAL]

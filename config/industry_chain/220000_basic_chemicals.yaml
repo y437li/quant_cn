@@ -1,0 +1,1510 @@
+# Basic chemicals (SW 220000) chain skeleton — plan 12 phase 1, D-097. All edges are priors (general industry knowledge).
+# Commodity nodes (萤石, 磷矿石, 硫酸, 氯碱, 纯碱, 钛白粉, 甲醇, 乙烯, 丙烯, PX/PTA, 通用塑料, 工程塑料 ...) live in
+# _common.yaml as materials; products here are the grades and derivatives a listed company reports.
+# Tyres are SW 汽车/轮胎轮毂 (280204) and are not modelled here; olefins/PET chips come from 750000_petrochemicals.yaml.
+sector: {sw_l1: "220000", name: 基础化工, name_en: Basic Chemicals}
+
+nodes:
+  # ===================== segments =====================
+  - {id: SEG_CHEM_RAW, type: segment, name: 化学原料, name_en: Chemical Raw Materials}
+  - {id: SEG_CHEM_SODA_ASH, type: segment, name: 纯碱生产, name_en: Soda Ash Production, aliases: [联碱, 氨碱]}
+  - {id: SEG_CHEM_CHLOR_ALKALI, type: segment, name: 氯碱化工, name_en: Chlor-Alkali Chemicals}
+  - {id: SEG_CHEM_INORGANIC_SALT, type: segment, name: 无机盐, name_en: Inorganic Salts}
+  - {id: SEG_CHEM_OTHER_RAW, type: segment, name: 其他化学原料, name_en: Other Chemical Raw Materials, aliases: [基础有机原料]}
+  - {id: SEG_CHEM_COAL_CHEM, type: segment, name: 煤化工, name_en: Coal Chemicals, aliases: [现代煤化工]}
+  - {id: SEG_CHEM_TIO2, type: segment, name: 钛白粉生产, name_en: Titanium Dioxide Production, aliases: [钛化工]}
+  - {id: SEG_CHEM_PRODUCTS, type: segment, name: 化学制品, name_en: Chemical Products}
+  - {id: SEG_CHEM_COATINGS, type: segment, name: 涂料油墨, name_en: Coatings and Inks}
+  - {id: SEG_CHEM_EXPLOSIVES, type: segment, name: 民爆制品, name_en: Civil Explosives, aliases: [民爆]}
+  - {id: SEG_CHEM_TEXTILE_CHEM, type: segment, name: 纺织化学制品, name_en: Textile Chemicals, aliases: [染料, 印染助剂]}
+  - {id: SEG_CHEM_OTHER_PRODUCTS, type: segment, name: 其他化学制品, name_en: Other Chemical Products}
+  - {id: SEG_CHEM_ELECTRONIC_CHEM, type: segment, name: 化工系电子材料, name_en: Chemical-Sector Electronic Materials, aliases: [半导体材料化工, 泛半导体化学品]}
+  - {id: SEG_CHEM_NEW_MATERIALS, type: segment, name: 化工新材料, name_en: Advanced Chemical Materials}
+  - {id: SEG_CHEM_FINE_INTERMEDIATES, type: segment, name: 精细化工中间体, name_en: Fine Chemical Intermediates, aliases: [医药农药中间体]}
+  - {id: SEG_CHEM_FLUORO, type: segment, name: 氟化工, name_en: Fluorochemicals}
+  - {id: SEG_CHEM_POLYURETHANE, type: segment, name: 聚氨酯, name_en: Polyurethane}
+  - {id: SEG_CHEM_FOOD_FEED, type: segment, name: 食品及饲料添加剂, name_en: Food and Feed Additives}
+  - {id: SEG_CHEM_SILICONE, type: segment, name: 有机硅, name_en: Organosilicon, aliases: [硅化工]}
+  - {id: SEG_CHEM_ADHESIVES, type: segment, name: 胶黏剂及胶带, name_en: Adhesives and Tapes}
+  - {id: SEG_CHEM_FIBERS, type: segment, name: 化学纤维, name_en: Chemical Fibers, aliases: [化纤]}
+  - {id: SEG_CHEM_POLYESTER_FIBER, type: segment, name: 涤纶制造, name_en: Polyester Fiber Manufacturing}
+  - {id: SEG_CHEM_VISCOSE, type: segment, name: 粘胶, name_en: Viscose, aliases: [粘胶纤维行业]}
+  - {id: SEG_CHEM_OTHER_FIBERS, type: segment, name: 其他化学纤维, name_en: Other Chemical Fibers, aliases: [高性能纤维]}
+  - {id: SEG_CHEM_SPANDEX, type: segment, name: 氨纶, name_en: Spandex, aliases: [氨纶行业]}
+  - {id: SEG_CHEM_NYLON, type: segment, name: 锦纶, name_en: Nylon Fiber, aliases: [尼龙产业链]}
+  - {id: SEG_CHEM_PLASTICS, type: segment, name: 塑料, name_en: Plastics}
+  - {id: SEG_CHEM_PLASTIC_PRODUCTS, type: segment, name: 其他塑料制品, name_en: Other Plastic Products}
+  - {id: SEG_CHEM_MODIFIED_PLASTICS, type: segment, name: 改性塑料, name_en: Modified Plastics, aliases: [塑料改性]}
+  - {id: SEG_CHEM_RESINS, type: segment, name: 合成树脂, name_en: Synthetic Resins}
+  - {id: SEG_CHEM_FILMS, type: segment, name: 膜材料, name_en: Film and Membrane Materials, aliases: [功能膜]}
+  - {id: SEG_CHEM_RUBBER, type: segment, name: 橡胶, name_en: Rubber}
+  - {id: SEG_CHEM_RUBBER_PRODUCTS, type: segment, name: 其他橡胶制品, name_en: Other Rubber Products}
+  - {id: SEG_CHEM_CARBON_BLACK, type: segment, name: 炭黑生产, name_en: Carbon Black Production}
+  - {id: SEG_CHEM_RUBBER_ADDITIVES, type: segment, name: 橡胶助剂, name_en: Rubber Additives}
+  - {id: SEG_CHEM_AGROCHEM, type: segment, name: 农化制品, name_en: Agrochemicals}
+  - {id: SEG_CHEM_NITROGEN, type: segment, name: 氮肥, name_en: Nitrogen Fertilizer}
+  - {id: SEG_CHEM_PHOSPHORUS, type: segment, name: 磷肥及磷化工, name_en: Phosphate Fertilizer and Phosphorus Chemicals, aliases: [磷化工]}
+  - {id: SEG_CHEM_PESTICIDES, type: segment, name: 农药, name_en: Pesticides, aliases: [植保]}
+  - {id: SEG_CHEM_POTASH, type: segment, name: 钾肥生产, name_en: Potash Production, aliases: [钾盐]}
+  - {id: SEG_CHEM_COMPOUND_FERT, type: segment, name: 复合肥, name_en: Compound Fertilizer}
+  - {id: SEG_CHEM_NONMETALLIC, type: segment, name: 非金属材料, name_en: Non-Metallic Minerals and Materials, aliases: [非金属矿物材料]}
+
+  # ===================== technologies =====================
+  - {id: TECH_CHEM_COAL_GASIFICATION, type: technology, name: 煤气化, name_en: Coal Gasification, aliases: [水煤浆气化, 粉煤气化]}
+  - {id: TECH_CHEM_IONIC_MEMBRANE, type: technology, name: 离子膜电解, name_en: Ion-Exchange Membrane Electrolysis}
+  - {id: TECH_CHEM_CHLORIDE_TIO2, type: technology, name: 氯化法钛白工艺, name_en: Chloride-Process TiO2}
+  - {id: TECH_CHEM_ADN_PROCESS, type: technology, name: 己二腈丁二烯法, name_en: Butadiene-Route ADN, aliases: [丁二烯氢氰化法]}
+
+  # ===================== raw materials: soda ash / chlor-alkali =====================
+  - {id: PROD_CHEM_DENSE_SODA, type: product, name: 重质纯碱, name_en: Dense Soda Ash, segment: SEG_CHEM_SODA_ASH, aliases: [重碱]}
+  - {id: PROD_CHEM_LIGHT_SODA, type: product, name: 轻质纯碱, name_en: Light Soda Ash, segment: SEG_CHEM_SODA_ASH, aliases: [轻碱]}
+  - {id: PROD_CHEM_NH4CL, type: product, name: 氯化铵, name_en: Ammonium Chloride, segment: SEG_CHEM_SODA_ASH, aliases: [农用氯化铵]}
+  - {id: PROD_CHEM_BAKING_SODA, type: product, name: 小苏打, name_en: Sodium Bicarbonate, segment: SEG_CHEM_SODA_ASH, aliases: [碳酸氢钠]}
+  - {id: PROD_CHEM_RAW_SALT, type: product, name: 工业盐, name_en: Industrial Salt, segment: SEG_CHEM_CHLOR_ALKALI, aliases: [原盐, 井矿盐, 海盐]}
+  - {id: PROD_CHEM_LIQUID_CAUSTIC, type: product, name: 液碱, name_en: Liquid Caustic Soda, segment: SEG_CHEM_CHLOR_ALKALI, aliases: [离子膜液碱, 32%液碱]}
+  - {id: PROD_CHEM_FLAKE_CAUSTIC, type: product, name: 片碱, name_en: Flake Caustic Soda, segment: SEG_CHEM_CHLOR_ALKALI, aliases: [固碱]}
+  - {id: PROD_CHEM_CALCIUM_CARBIDE, type: product, name: 电石, name_en: Calcium Carbide, segment: SEG_CHEM_CHLOR_ALKALI, aliases: [碳化钙]}
+  - {id: PROD_CHEM_PVC_CARBIDE, type: product, name: 电石法PVC, name_en: Carbide-Route PVC, segment: SEG_CHEM_CHLOR_ALKALI, aliases: [电石法聚氯乙烯]}
+  - {id: PROD_CHEM_PVC_ETHYLENE, type: product, name: 乙烯法PVC, name_en: Ethylene-Route PVC, segment: SEG_CHEM_CHLOR_ALKALI, aliases: [乙烯法聚氯乙烯]}
+  - {id: PROD_CHEM_PVC_PASTE, type: product, name: PVC糊树脂, name_en: PVC Paste Resin, segment: SEG_CHEM_CHLOR_ALKALI}
+  - {id: PROD_CHEM_CPVC, type: product, name: 氯化聚氯乙烯, name_en: CPVC, segment: SEG_CHEM_CHLOR_ALKALI, aliases: [CPVC]}
+  - {id: PROD_CHEM_HCL, type: product, name: 盐酸, name_en: Hydrochloric Acid, segment: SEG_CHEM_CHLOR_ALKALI, aliases: [氯化氢]}
+  - {id: PROD_CHEM_ECH, type: product, name: 环氧氯丙烷, name_en: Epichlorohydrin, segment: SEG_CHEM_CHLOR_ALKALI, aliases: [ECH]}
+  - {id: PROD_CHEM_CHLOROMETHANES, type: product, name: 甲烷氯化物, name_en: Chloromethanes, segment: SEG_CHEM_CHLOR_ALKALI, aliases: [二氯甲烷, 三氯甲烷]}
+  - {id: PROD_CHEM_VCM, type: product, name: 氯乙烯单体, name_en: Vinyl Chloride Monomer, segment: SEG_CHEM_CHLOR_ALKALI, aliases: [VCM单体]}
+
+  # ===================== raw materials: inorganic salts =====================
+  - {id: PROD_CHEM_H2O2, type: product, name: 双氧水, name_en: Hydrogen Peroxide, segment: SEG_CHEM_INORGANIC_SALT, aliases: [过氧化氢]}
+  - {id: PROD_CHEM_BARIUM_SALTS, type: product, name: 钡盐, name_en: Barium Salts, segment: SEG_CHEM_INORGANIC_SALT, aliases: [碳酸钡, 硫酸钡]}
+  - {id: PROD_CHEM_STRONTIUM_SALTS, type: product, name: 锶盐, name_en: Strontium Salts, segment: SEG_CHEM_INORGANIC_SALT, aliases: [碳酸锶]}
+  - {id: PROD_CHEM_NACN, type: product, name: 氰化钠, name_en: Sodium Cyanide, segment: SEG_CHEM_INORGANIC_SALT}
+  - {id: PROD_CHEM_SODIUM_METAL, type: product, name: 金属钠, name_en: Sodium Metal, segment: SEG_CHEM_INORGANIC_SALT}
+  - {id: PROD_CHEM_SODIUM_CHLORATE, type: product, name: 氯酸钠, name_en: Sodium Chlorate, segment: SEG_CHEM_INORGANIC_SALT}
+  - {id: PROD_CHEM_CHROMIUM_SALTS, type: product, name: 铬盐, name_en: Chromium Salts, segment: SEG_CHEM_INORGANIC_SALT, aliases: [重铬酸钠, 铬酸酐, 氧化铬绿]}
+  - {id: PROD_CHEM_ZIRCONIUM_SALTS, type: product, name: 锆化合物, name_en: Zirconium Chemicals, segment: SEG_CHEM_INORGANIC_SALT, aliases: [氧氯化锆, 二氧化锆]}
+  - {id: PROD_CHEM_BROMINE, type: product, name: 溴素, name_en: Bromine, segment: SEG_CHEM_INORGANIC_SALT, aliases: [溴系阻燃剂原料]}
+  - {id: PROD_CHEM_MOLTEN_SALT, type: product, name: 熔盐, name_en: Molten Nitrate Salt, segment: SEG_CHEM_INORGANIC_SALT, aliases: [硝酸钾, 硝酸钠, 光热熔盐]}
+  - {id: PROD_CHEM_PRECIP_SILICA, type: product, name: 沉淀法白炭黑, name_en: Precipitated Silica, segment: SEG_CHEM_INORGANIC_SALT, aliases: [白炭黑, 二氧化硅橡胶补强剂]}
+  - {id: PROD_CHEM_SODIUM_SILICATE, type: product, name: 硅酸钠, name_en: Sodium Silicate, segment: SEG_CHEM_INORGANIC_SALT, aliases: [水玻璃, 泡花碱]}
+  - {id: PROD_CHEM_MANGANESE_SULFATE, type: product, name: 硫酸锰, name_en: Manganese Sulfate, segment: SEG_CHEM_INORGANIC_SALT, aliases: [电池级硫酸锰]}
+
+  # ===================== raw materials: other organics =====================
+  - {id: PROD_CHEM_ACETIC_ACID, type: product, name: 醋酸, name_en: Acetic Acid, segment: SEG_CHEM_OTHER_RAW, aliases: [冰醋酸, 乙酸]}
+  - {id: PROD_CHEM_ADIPIC_ACID, type: product, name: 己二酸, name_en: Adipic Acid, segment: SEG_CHEM_OTHER_RAW}
+  - {id: PROD_CHEM_ANILINE, type: product, name: 苯胺, name_en: Aniline, segment: SEG_CHEM_OTHER_RAW}
+  - {id: PROD_CHEM_NITRIC_ACID, type: product, name: 硝酸, name_en: Nitric Acid, segment: SEG_CHEM_OTHER_RAW}
+  - {id: PROD_CHEM_FORMALDEHYDE, type: product, name: 甲醛, name_en: Formaldehyde, segment: SEG_CHEM_OTHER_RAW}
+  - {id: PROD_CHEM_DMF, type: product, name: DMF, name_en: Dimethylformamide, segment: SEG_CHEM_OTHER_RAW, aliases: [二甲基甲酰胺]}
+  - {id: PROD_CHEM_BPA, type: product, name: 双酚A, name_en: Bisphenol A, segment: SEG_CHEM_OTHER_RAW, aliases: [BPA]}
+  - {id: PROD_CHEM_OXO_ALCOHOLS, type: product, name: 丁辛醇, name_en: Oxo Alcohols, segment: SEG_CHEM_OTHER_RAW, aliases: [正丁醇, 辛醇, 2-乙基己醇]}
+  - {id: PROD_CHEM_MALEIC_ANHYDRIDE, type: product, name: 顺酐, name_en: Maleic Anhydride, segment: SEG_CHEM_OTHER_RAW, aliases: [顺丁烯二酸酐]}
+  - {id: PROD_CHEM_BDO, type: product, name: "1,4-丁二醇", name_en: "1,4-Butanediol", segment: SEG_CHEM_OTHER_RAW, aliases: [BDO]}
+  - {id: PROD_CHEM_DMC_CARBONATE, type: product, name: 碳酸二甲酯, name_en: Dimethyl Carbonate, segment: SEG_CHEM_OTHER_RAW, aliases: [DMC碳酸酯]}
+  - {id: PROD_CHEM_MMA, type: product, name: 甲基丙烯酸甲酯, name_en: Methyl Methacrylate, segment: SEG_CHEM_OTHER_RAW, aliases: [MMA]}
+  - {id: PROD_CHEM_PHTHALIC_ANHYDRIDE, type: product, name: 苯酐, name_en: Phthalic Anhydride, segment: SEG_CHEM_OTHER_RAW, aliases: [邻苯二甲酸酐]}
+  - {id: PROD_CHEM_PLASTICIZER, type: product, name: 增塑剂, name_en: Plasticizers, segment: SEG_CHEM_OTHER_RAW, aliases: [DOTP, DOP, 环保增塑剂]}
+  - {id: PROD_CHEM_OXALIC_ACID, type: product, name: 草酸, name_en: Oxalic Acid, segment: SEG_CHEM_OTHER_RAW}
+  - {id: PROD_CHEM_IPA, type: product, name: 异丙醇, name_en: Isopropanol, segment: SEG_CHEM_OTHER_RAW, aliases: [IPA]}
+  - {id: PROD_CHEM_VAM, type: product, name: 醋酸乙烯, name_en: Vinyl Acetate Monomer, segment: SEG_CHEM_OTHER_RAW, aliases: [VAM, 醋酸乙烯酯]}
+  - {id: PROD_CHEM_PVA, type: product, name: 聚乙烯醇, name_en: Polyvinyl Alcohol, segment: SEG_CHEM_OTHER_RAW, aliases: [PVA]}
+
+  # ===================== raw materials: coal chemicals =====================
+  - {id: PROD_CHEM_COAL_METHANOL, type: product, name: 煤制甲醇, name_en: Coal-to-Methanol, segment: SEG_CHEM_COAL_CHEM}
+  - {id: PROD_CHEM_MTO, type: product, name: 甲醇制烯烃, name_en: Methanol-to-Olefins, segment: SEG_CHEM_COAL_CHEM, aliases: [MTO, 煤制烯烃, CTO]}
+  - {id: PROD_CHEM_COAL_MEG, type: product, name: 煤制乙二醇, name_en: Coal-to-MEG, segment: SEG_CHEM_COAL_CHEM, aliases: [合成气制乙二醇]}
+  - {id: PROD_CHEM_COAL_SNG, type: product, name: 煤制天然气, name_en: Coal-to-SNG, segment: SEG_CHEM_COAL_CHEM, aliases: [煤制气, SNG]}
+  - {id: PROD_CHEM_CTL, type: product, name: 煤制油, name_en: Coal-to-Liquids, segment: SEG_CHEM_COAL_CHEM, aliases: [煤直接液化, 煤间接液化]}
+  - {id: PROD_CHEM_SYNGAS, type: product, name: 合成气, name_en: Syngas, segment: SEG_CHEM_COAL_CHEM, aliases: [水煤气]}
+  - {id: PROD_CHEM_COAL_PO_PE, type: product, name: 煤基聚烯烃, name_en: Coal-Based Polyolefins, segment: SEG_CHEM_COAL_CHEM, aliases: [煤制聚乙烯, 煤制聚丙烯]}
+
+  # ===================== raw materials: titanium dioxide =====================
+  - {id: PROD_CHEM_TI_SLAG, type: product, name: 高钛渣, name_en: High-Titanium Slag, segment: SEG_CHEM_TIO2, aliases: [氯化钛渣]}
+  - {id: PROD_CHEM_TICL4, type: product, name: 四氯化钛, name_en: Titanium Tetrachloride, segment: SEG_CHEM_TIO2}
+  - {id: PROD_CHEM_TIO2_SULFATE, type: product, name: 硫酸法钛白粉, name_en: Sulfate-Process TiO2, segment: SEG_CHEM_TIO2, aliases: [锐钛型钛白粉]}
+  - {id: PROD_CHEM_TIO2_CHLORIDE, type: product, name: 氯化法钛白粉, name_en: Chloride-Process TiO2, segment: SEG_CHEM_TIO2, aliases: [金红石型钛白粉]}
+  - {id: PROD_CHEM_FERROUS_SULFATE, type: product, name: 硫酸亚铁, name_en: Ferrous Sulfate, segment: SEG_CHEM_TIO2, aliases: [七水硫酸亚铁, 钛白副产硫酸亚铁]}
+
+  # ===================== coatings and inks =====================
+  - {id: PROD_CHEM_ARCH_COATING, type: product, name: 建筑涂料, name_en: Architectural Coatings, segment: SEG_CHEM_COATINGS}
+  - {id: PROD_CHEM_AUTO_COATING, type: product, name: 汽车涂料, name_en: Automotive Coatings, segment: SEG_CHEM_COATINGS, import_dependence: medium, aliases: [汽车原厂漆, 汽车修补漆]}
+  - {id: PROD_CHEM_INDUSTRIAL_COATING, type: product, name: 工业防腐涂料, name_en: Industrial Protective Coatings, segment: SEG_CHEM_COATINGS, aliases: [重防腐涂料, 船舶涂料, 集装箱涂料]}
+  - {id: PROD_CHEM_POWDER_COATING, type: product, name: 粉末涂料, name_en: Powder Coatings, segment: SEG_CHEM_COATINGS}
+  - {id: PROD_CHEM_COIL_COATING, type: product, name: 卷材涂料, name_en: Coil Coatings, segment: SEG_CHEM_COATINGS}
+  - {id: PROD_CHEM_ELECTRONIC_COATING, type: product, name: 3C电子涂料, name_en: Consumer Electronics Coatings, segment: SEG_CHEM_COATINGS, aliases: [光固化涂料, UV涂料]}
+  - {id: PROD_CHEM_PRINTING_INK, type: product, name: 印刷油墨, name_en: Printing Inks, segment: SEG_CHEM_COATINGS, aliases: [包装油墨, 胶印油墨]}
+  - {id: PROD_CHEM_PCB_INK, type: product, name: PCB油墨, name_en: PCB Inks, segment: SEG_CHEM_COATINGS, import_dependence: medium, aliases: [阻焊油墨, 线路油墨, 感光阻焊油墨]}
+  - {id: PROD_CHEM_RESIN_COATING_BINDER, type: product, name: 涂料树脂, name_en: Coating Resins, segment: SEG_CHEM_COATINGS, aliases: [醇酸树脂, 丙烯酸乳液, 聚酯树脂]}
+  - {id: PROD_CHEM_PIGMENT_ORGANIC, type: product, name: 有机颜料, name_en: Organic Pigments, segment: SEG_CHEM_COATINGS, aliases: [酞菁颜料, 偶氮颜料]}
+  - {id: PROD_CHEM_IRON_OXIDE_PIGMENT, type: product, name: 氧化铁颜料, name_en: Iron Oxide Pigments, segment: SEG_CHEM_COATINGS, aliases: [铁红, 铁黄]}
+
+  # ===================== civil explosives =====================
+  - {id: PROD_CHEM_INDUSTRIAL_EXPLOSIVE, type: product, name: 工业炸药, name_en: Industrial Explosives, segment: SEG_CHEM_EXPLOSIVES, aliases: [乳化炸药, 膨化硝铵炸药, 现场混装炸药]}
+  - {id: PROD_CHEM_DETONATOR, type: product, name: 工业雷管, name_en: Detonators, segment: SEG_CHEM_EXPLOSIVES, aliases: [电子雷管, 数码电子雷管]}
+  - {id: PROD_CHEM_DETONATING_CORD, type: product, name: 工业索类, name_en: Detonating Cord, segment: SEG_CHEM_EXPLOSIVES, aliases: [导爆索, 导爆管]}
+  - {id: PROD_CHEM_BLASTING_SVC, type: product, kind: service, name: 爆破服务, name_en: Blasting Services, segment: SEG_CHEM_EXPLOSIVES, aliases: [矿山爆破一体化]}
+  - {id: PROD_CHEM_AMMONIUM_NITRATE, type: product, name: 硝酸铵, name_en: Ammonium Nitrate, segment: SEG_CHEM_EXPLOSIVES, aliases: [多孔硝铵]}
+
+  # ===================== textile chemicals / dyes =====================
+  - {id: PROD_CHEM_DISPERSE_DYE, type: product, name: 分散染料, name_en: Disperse Dyes, segment: SEG_CHEM_TEXTILE_CHEM}
+  - {id: PROD_CHEM_REACTIVE_DYE, type: product, name: 活性染料, name_en: Reactive Dyes, segment: SEG_CHEM_TEXTILE_CHEM}
+  - {id: PROD_CHEM_DYE_INTERMEDIATE, type: product, name: 染料中间体, name_en: Dye Intermediates, segment: SEG_CHEM_TEXTILE_CHEM, aliases: [间苯二胺, H酸, 还原物]}
+  - {id: PROD_CHEM_TEXTILE_AUXILIARY, type: product, name: 印染助剂, name_en: Textile Auxiliaries, segment: SEG_CHEM_TEXTILE_CHEM, aliases: [纺织助剂, 有机硅柔软剂]}
+  - {id: PROD_CHEM_INDIGO, type: product, name: 靛蓝, name_en: Indigo Dye, segment: SEG_CHEM_TEXTILE_CHEM, aliases: [还原染料]}
+
+  # ===================== fluorochemicals =====================
+  - {id: PROD_CHEM_AHF, type: product, name: 无水氟化氢, name_en: Anhydrous Hydrogen Fluoride, segment: SEG_CHEM_FLUORO, aliases: [AHF, 无水氢氟酸]}
+  - {id: PROD_CHEM_FLUORITE_CONC, type: product, name: 萤石精粉, name_en: Acid-Grade Fluorspar, segment: SEG_CHEM_NONMETALLIC, aliases: [酸级萤石, 冶金级萤石块矿]}
+  - {id: PROD_CHEM_R22, type: product, name: R22制冷剂, name_en: R22 Refrigerant, segment: SEG_CHEM_FLUORO, aliases: [二氟一氯甲烷, HCFC-22]}
+  - {id: PROD_CHEM_R32, type: product, name: R32制冷剂, name_en: R32 Refrigerant, segment: SEG_CHEM_FLUORO, aliases: [二氟甲烷, HFC-32]}
+  - {id: PROD_CHEM_R134A, type: product, name: R134a制冷剂, name_en: R134a Refrigerant, segment: SEG_CHEM_FLUORO, aliases: [四氟乙烷, HFC-134a]}
+  - {id: PROD_CHEM_R125, type: product, name: R125制冷剂, name_en: R125 Refrigerant, segment: SEG_CHEM_FLUORO, aliases: [五氟乙烷, HFC-125]}
+  - {id: PROD_CHEM_R410A, type: product, name: R410A混配制冷剂, name_en: R410A Blend, segment: SEG_CHEM_FLUORO, aliases: [混配制冷剂]}
+  - {id: PROD_CHEM_HFO, type: product, name: HFO制冷剂, name_en: HFO Refrigerants, segment: SEG_CHEM_FLUORO, import_dependence: high, aliases: [R1234yf, R1234ze, 第四代制冷剂]}
+  - {id: PROD_CHEM_PTFE, type: product, name: 聚四氟乙烯, name_en: PTFE, segment: SEG_CHEM_FLUORO, aliases: [PTFE, 特氟龙]}
+  - {id: PROD_CHEM_PVDF, type: product, name: 聚偏氟乙烯, name_en: PVDF, segment: SEG_CHEM_FLUORO, aliases: [PVDF, 锂电级PVDF]}
+  - {id: PROD_CHEM_FEP, type: product, name: 全氟乙烯丙烯共聚物, name_en: FEP, segment: SEG_CHEM_FLUORO, import_dependence: medium, aliases: [FEP]}
+  - {id: PROD_CHEM_PFA, type: product, name: 可熔性聚四氟乙烯, name_en: PFA, segment: SEG_CHEM_FLUORO, import_dependence: high, aliases: [PFA]}
+  - {id: PROD_CHEM_FKM, type: product, name: 氟橡胶, name_en: Fluoroelastomer, segment: SEG_CHEM_FLUORO, import_dependence: medium, aliases: [FKM, 全氟醚橡胶]}
+  - {id: PROD_CHEM_TFE, type: product, name: 四氟乙烯单体, name_en: Tetrafluoroethylene, segment: SEG_CHEM_FLUORO, aliases: [TFE]}
+  - {id: PROD_CHEM_VDF, type: product, name: 偏氟乙烯单体, name_en: Vinylidene Fluoride, segment: SEG_CHEM_FLUORO, aliases: [VDF, R142b]}
+  - {id: PROD_CHEM_HFP, type: product, name: 六氟丙烯, name_en: Hexafluoropropylene, segment: SEG_CHEM_FLUORO, aliases: [HFP]}
+  - {id: PROD_CHEM_PERFLUORO_FINE, type: product, name: 含氟精细化学品, name_en: Fluorinated Fine Chemicals, segment: SEG_CHEM_FLUORO, aliases: [含氟医药中间体, 含氟农药中间体]}
+  - {id: PROD_CHEM_FLUORINATED_COOLANT, type: product, name: 氟化液, name_en: Fluorinated Coolants, segment: SEG_CHEM_FLUORO, import_dependence: high, aliases: [电子氟化液, 全氟聚醚, 浸没式冷却液]}
+  - {id: PROD_CHEM_PFSA_MEMBRANE, type: product, name: 全氟磺酸离子膜, name_en: Perfluorosulfonic Acid Membrane, segment: SEG_CHEM_FLUORO, import_dependence: high, aliases: [氯碱离子膜]}
+  - {id: PROD_CHEM_ALF3, type: product, name: 氟化铝, name_en: Aluminum Fluoride, segment: SEG_CHEM_FLUORO, aliases: [冰晶石]}
+  - {id: PROD_CHEM_LIF, type: product, name: 氟化锂, name_en: Lithium Fluoride, segment: SEG_CHEM_FLUORO}
+  - {id: PROD_CHEM_PF5, type: product, name: 五氟化磷, name_en: Phosphorus Pentafluoride, segment: SEG_CHEM_FLUORO, aliases: [PF5]}
+
+  # ===================== polyurethane =====================
+  - {id: PROD_CHEM_PMDI, type: product, name: 聚合MDI, name_en: Polymeric MDI, segment: SEG_CHEM_POLYURETHANE, aliases: [PM200, 聚合二苯基甲烷二异氰酸酯]}
+  - {id: PROD_CHEM_MMDI, type: product, name: 纯MDI, name_en: Pure MDI, segment: SEG_CHEM_POLYURETHANE, aliases: [MDI-100, 纯二苯基甲烷二异氰酸酯]}
+  - {id: PROD_CHEM_TDI, type: product, name: TDI, name_en: Toluene Diisocyanate, segment: SEG_CHEM_POLYURETHANE, aliases: [甲苯二异氰酸酯]}
+  - {id: PROD_CHEM_ADI, type: product, name: 脂肪族异氰酸酯, name_en: Aliphatic Isocyanates, segment: SEG_CHEM_POLYURETHANE, import_dependence: medium, aliases: [HDI异氰酸酯, IPDI, HMDI, ADI]}
+  - {id: PROD_CHEM_POLYETHER_POLYOL, type: product, name: 聚醚多元醇, name_en: Polyether Polyols, segment: SEG_CHEM_POLYURETHANE, aliases: [软泡聚醚, 硬泡聚醚, POP]}
+  - {id: PROD_CHEM_POLYESTER_POLYOL, type: product, name: 聚酯多元醇, name_en: Polyester Polyols, segment: SEG_CHEM_POLYURETHANE}
+  - {id: PROD_CHEM_TPU, type: product, name: 热塑性聚氨酯弹性体, name_en: TPU, segment: SEG_CHEM_POLYURETHANE, aliases: [TPU弹性体]}
+  - {id: PROD_CHEM_PU_FOAM, type: product, name: 聚氨酯泡沫, name_en: PU Foam, segment: SEG_CHEM_POLYURETHANE, aliases: [海绵, 硬泡保温材料]}
+  - {id: PROD_CHEM_PU_LEATHER, type: product, name: 聚氨酯合成革, name_en: PU Synthetic Leather, segment: SEG_CHEM_POLYURETHANE, aliases: [PU革, 浆料]}
+  - {id: PROD_CHEM_PU_ADHESIVE_SEALANT, type: product, name: 聚氨酯胶黏剂, name_en: PU Adhesives and Sealants, segment: SEG_CHEM_POLYURETHANE}
+
+  # ===================== food and feed additives =====================
+  - {id: PROD_CHEM_VITAMIN_A, type: product, name: 维生素A, name_en: Vitamin A, segment: SEG_CHEM_FOOD_FEED, aliases: [VA], parent: PROD_PHAR_VITAMIN_API}
+  - {id: PROD_CHEM_VITAMIN_E, type: product, name: 维生素E, name_en: Vitamin E, segment: SEG_CHEM_FOOD_FEED, aliases: [VE], parent: PROD_PHAR_VITAMIN_API}
+  - {id: PROD_CHEM_VITAMIN_B, type: product, name: B族维生素, name_en: B Vitamins, segment: SEG_CHEM_FOOD_FEED, aliases: [维生素B2, 维生素B6, 泛酸钙, 生物素, 维生素B族, 维生素B1], parent: PROD_PHAR_VITAMIN_API}
+  - {id: PROD_CHEM_VITAMIN_D3, type: product, name: 维生素D3, name_en: Vitamin D3, segment: SEG_CHEM_FOOD_FEED, aliases: [VD3, 胆固醇], parent: PROD_PHAR_VITAMIN_API}
+  - {id: PROD_CHEM_METHIONINE, type: product, name: 蛋氨酸, name_en: Methionine, segment: SEG_CHEM_FOOD_FEED, import_dependence: medium, aliases: [固体蛋氨酸, 液体蛋氨酸]}
+  - {id: PROD_CHEM_LYSINE, type: product, name: 赖氨酸, name_en: Lysine, segment: SEG_CHEM_FOOD_FEED}
+  - {id: PROD_CHEM_THREONINE, type: product, name: 苏氨酸, name_en: Threonine, segment: SEG_CHEM_FOOD_FEED, aliases: [色氨酸, 缬氨酸]}
+  - {id: PROD_CHEM_SUCRALOSE, type: product, name: 三氯蔗糖, name_en: Sucralose, segment: SEG_CHEM_FOOD_FEED}
+  - {id: PROD_CHEM_ACESULFAME, type: product, name: 安赛蜜, name_en: Acesulfame-K, segment: SEG_CHEM_FOOD_FEED, aliases: [AK糖]}
+  - {id: PROD_CHEM_STEVIA, type: product, name: 甜菊糖苷, name_en: Steviol Glycosides, segment: SEG_CHEM_FOOD_FEED, aliases: [赤藓糖醇, 阿洛酮糖, 代糖]}
+  - {id: PROD_CHEM_FLAVORS, type: product, name: 香精香料, name_en: Flavors and Fragrances, segment: SEG_CHEM_FOOD_FEED, aliases: [麦芽酚, 香兰素, 薄荷醇]}
+  - {id: PROD_CHEM_FOOD_PHOSPHATE, type: product, name: 食品级磷酸盐, name_en: Food-Grade Phosphates, segment: SEG_CHEM_FOOD_FEED, aliases: [三聚磷酸钠, 六偏磷酸钠]}
+  - {id: PROD_CHEM_FEED_PHOSPHATE, type: product, name: 饲料级磷酸氢钙, name_en: Feed-Grade Dicalcium Phosphate, segment: SEG_CHEM_FOOD_FEED, aliases: [DCP, MCP, 磷酸二氢钙]}
+  - {id: PROD_CHEM_CAROTENOID, type: product, name: 类胡萝卜素, name_en: Carotenoids, segment: SEG_CHEM_FOOD_FEED, aliases: [虾青素, 叶黄素, 角黄素]}
+  - {id: PROD_CHEM_PRESERVATIVE, type: product, name: 食品防腐剂, name_en: Food Preservatives, segment: SEG_CHEM_FOOD_FEED, aliases: [山梨酸钾, 苯甲酸钠]}
+  - {id: PROD_CHEM_FEED_ENZYME, type: product, name: 饲用酶制剂, name_en: Feed Enzymes, segment: SEG_CHEM_FOOD_FEED, aliases: [植酸酶]}
+  - {id: PROD_CHEM_CITRAL, type: product, name: 柠檬醛, name_en: Citral, segment: SEG_CHEM_FOOD_FEED}
+
+  # ===================== organosilicon =====================
+  - {id: PROD_CHEM_METHYL_CHLOROSILANE, type: product, name: 甲基氯硅烷单体, name_en: Methylchlorosilane Monomer, segment: SEG_CHEM_SILICONE, aliases: [有机硅单体, 二甲基二氯硅烷]}
+  - {id: PROD_CHEM_DMC_SILOXANE, type: product, name: 二甲基硅氧烷混合环体, name_en: Dimethylcyclosiloxane (DMC), segment: SEG_CHEM_SILICONE, aliases: [有机硅DMC, D4]}
+  - {id: PROD_CHEM_HTV_RUBBER, type: product, name: 高温硅橡胶, name_en: HTV Silicone Rubber, segment: SEG_CHEM_SILICONE, aliases: [HTV, 混炼胶, 生胶]}
+  - {id: PROD_CHEM_RTV_RUBBER, type: product, name: 室温硅橡胶, name_en: RTV Silicone Rubber, segment: SEG_CHEM_SILICONE, aliases: [RTV, 硅酮结构胶, 光伏组件密封胶]}
+  - {id: PROD_CHEM_LSR, type: product, name: 液体硅橡胶, name_en: Liquid Silicone Rubber, segment: SEG_CHEM_SILICONE, import_dependence: medium, aliases: [LSR]}
+  - {id: PROD_CHEM_SILICONE_OIL, type: product, name: 硅油, name_en: Silicone Fluids, segment: SEG_CHEM_SILICONE, aliases: [二甲基硅油, 107胶]}
+  - {id: PROD_CHEM_SILANE_COUPLING, type: product, name: 硅烷偶联剂, name_en: Silane Coupling Agents, segment: SEG_CHEM_SILICONE, aliases: [功能性硅烷, 含硫硅烷]}
+  - {id: PROD_CHEM_FUMED_SILICA, type: product, name: 气相白炭黑, name_en: Fumed Silica, segment: SEG_CHEM_SILICONE, aliases: [气相二氧化硅]}
+  - {id: PROD_CHEM_SILICONE_RESIN, type: product, name: 有机硅树脂, name_en: Silicone Resins, segment: SEG_CHEM_SILICONE}
+  - {id: PROD_CHEM_TRICHLOROSILANE, type: product, name: 三氯氢硅, name_en: Trichlorosilane, segment: SEG_CHEM_SILICONE, aliases: [TCS]}
+
+  # ===================== adhesives and tapes =====================
+  - {id: PROD_CHEM_STRUCTURAL_ADHESIVE, type: product, name: 结构胶, name_en: Structural Adhesives, segment: SEG_CHEM_ADHESIVES, aliases: [环氧结构胶, 动力电池结构胶]}
+  - {id: PROD_CHEM_HOT_MELT, type: product, name: 热熔胶, name_en: Hot-Melt Adhesives, segment: SEG_CHEM_ADHESIVES}
+  - {id: PROD_CHEM_TAPE, type: product, name: 胶粘带, name_en: Adhesive Tapes, segment: SEG_CHEM_ADHESIVES, aliases: [BOPP胶带, 电子胶带, 美纹纸胶带]}
+  - {id: PROD_CHEM_CONSTRUCTION_SEALANT, type: product, name: 建筑密封胶, name_en: Construction Sealants, segment: SEG_CHEM_ADHESIVES, aliases: [硅酮密封胶]}
+  - {id: PROD_CHEM_PRESSURE_SENSITIVE, type: product, name: 压敏胶, name_en: Pressure-Sensitive Adhesives, segment: SEG_CHEM_ADHESIVES, aliases: [光学胶, OCA光学胶]}
+
+  # ===================== electronic chemicals and materials =====================
+  - {id: PROD_CHEM_EG_PHOSPHORIC, type: product, name: 电子级磷酸, name_en: Electronic-Grade Phosphoric Acid, parent: PROD_ELEC_WET_CHEMICALS, segment: SEG_CHEM_ELECTRONIC_CHEM}
+  - {id: PROD_CHEM_CMP_ABRASIVE, type: product, name: 抛光研磨颗粒, name_en: CMP Abrasive Particles, segment: SEG_CHEM_ELECTRONIC_CHEM, import_dependence: high, aliases: [胶体二氧化硅, 氧化铈研磨粒子]}
+  - {id: PROD_CHEM_OLED_INTERMEDIATE, type: product, name: OLED中间体及升华前材料, name_en: OLED Intermediates, segment: SEG_CHEM_ELECTRONIC_CHEM, aliases: [OLED单体粗品]}
+  - {id: PROD_CHEM_ELECTROPLATING_CHEM, type: product, name: 电子电镀化学品, name_en: Electroplating Chemicals, segment: SEG_CHEM_ELECTRONIC_CHEM, import_dependence: medium, aliases: [电镀液, 电镀添加剂, PCB电镀药水]}
+  - {id: PROD_CHEM_ELECTRONIC_RESIN, type: product, name: 电子树脂, name_en: Electronic Resins for CCL, segment: SEG_CHEM_ELECTRONIC_CHEM, import_dependence: medium, aliases: [覆铜板树脂, PPO树脂, 碳氢树脂, BMI树脂, 高速树脂]}
+
+  # ===================== new materials =====================
+  - {id: PROD_CHEM_ADSORPTION_RESIN, type: product, name: 吸附分离树脂, name_en: Adsorption and Separation Resins, segment: SEG_CHEM_NEW_MATERIALS, aliases: [离子交换树脂, 盐湖提锂吸附剂]}
+  - {id: PROD_CHEM_MOLECULAR_SIEVE, type: product, name: 分子筛, name_en: Molecular Sieves, segment: SEG_CHEM_NEW_MATERIALS, aliases: [沸石分子筛, 汽车尾气分子筛]}
+  - {id: PROD_CHEM_REFINING_CATALYST, type: product, name: 石化催化剂, name_en: Refining and Petrochemical Catalysts, segment: SEG_CHEM_NEW_MATERIALS, import_dependence: medium, aliases: [FCC催化剂, 加氢催化剂, 聚烯烃催化剂, 茂金属催化剂]}
+  - {id: PROD_CHEM_CNT, type: product, name: 碳纳米管, name_en: Carbon Nanotubes, segment: SEG_CHEM_NEW_MATERIALS, aliases: [CNT, 单壁碳纳米管, 多壁碳纳米管]}
+  - {id: PROD_CHEM_GRAPHENE, type: product, name: 石墨烯, name_en: Graphene, segment: SEG_CHEM_NEW_MATERIALS}
+  - {id: PROD_CHEM_AEROGEL, type: product, name: 气凝胶, name_en: Aerogel, segment: SEG_CHEM_NEW_MATERIALS, aliases: [二氧化硅气凝胶毡]}
+  - {id: PROD_CHEM_PEEK, type: product, name: 聚醚醚酮, name_en: PEEK, segment: SEG_CHEM_NEW_MATERIALS, import_dependence: high, aliases: [PEEK]}
+  - {id: PROD_CHEM_PI_RESIN, type: product, name: 聚酰亚胺树脂, name_en: Polyimide Resin, segment: SEG_CHEM_NEW_MATERIALS, import_dependence: medium, aliases: [PI树脂]}
+  - {id: PROD_CHEM_HOLLOW_GLASS_MICROSPHERE, type: product, name: 空心玻璃微珠, name_en: Hollow Glass Microspheres, segment: SEG_CHEM_NEW_MATERIALS}
+  - {id: PROD_CHEM_PHOTOINITIATOR_UV, type: product, name: UV光固化材料, name_en: UV-Curing Materials, segment: SEG_CHEM_NEW_MATERIALS, aliases: [光固化单体, 低聚物]}
+
+  # ===================== battery chemicals =====================
+  - {id: PROD_CHEM_NMP, type: product, name: NMP溶剂, name_en: NMP Solvent, segment: SEG_PWR_BATTERY_CHEM, aliases: [N-甲基吡咯烷酮, NMP回收]}
+
+  # ===================== fine intermediates / other =====================
+  - {id: PROD_CHEM_PYRIDINE, type: product, name: 吡啶及衍生物, name_en: Pyridine and Derivatives, segment: SEG_CHEM_FINE_INTERMEDIATES, aliases: [吡啶, 3-甲基吡啶]}
+  - {id: PROD_CHEM_WATER_TREATMENT, type: product, name: 水处理剂, name_en: Water Treatment Chemicals, segment: SEG_CHEM_OTHER_PRODUCTS, aliases: [聚丙烯酰胺, PAM, 阻垢剂, 水处理药剂, 絮凝剂, 碳源]}
+  - {id: PROD_CHEM_OILFIELD_CHEM, type: product, name: 油田化学品, name_en: Oilfield Chemicals, segment: SEG_CHEM_OTHER_PRODUCTS, aliases: [压裂液, 驱油剂, 钻井液助剂]}
+  - {id: PROD_CHEM_FLAME_RETARDANT, type: product, name: 阻燃剂, name_en: Flame Retardants, segment: SEG_CHEM_OTHER_PRODUCTS, aliases: [磷系阻燃剂, 溴系阻燃剂, 无卤阻燃剂]}
+  - {id: PROD_CHEM_PLASTIC_ADDITIVE, type: product, name: 塑料助剂, name_en: Plastic Additives, segment: SEG_CHEM_OTHER_PRODUCTS, aliases: [抗氧剂, 光稳定剂, 成核剂]}
+  - {id: PROD_CHEM_SURFACTANT, type: product, name: 表面活性剂, name_en: Surfactants, segment: SEG_CHEM_OTHER_PRODUCTS, aliases: [日化原料, AES, 非离子表活]}
+  - {id: PROD_CHEM_CELLULOSE_ETHER, type: product, name: 纤维素醚, name_en: Cellulose Ethers, segment: SEG_CHEM_OTHER_PRODUCTS, aliases: [HPMC, 羟丙基甲基纤维素]}
+  - {id: PROD_CHEM_DIESEL_EXHAUST_FLUID, type: product, name: 车用尿素溶液, name_en: Diesel Exhaust Fluid, segment: SEG_CHEM_OTHER_PRODUCTS, aliases: [AdBlue, 尿素水]}
+  - {id: PROD_CHEM_CHEM_PARK_UTILITIES, type: product, kind: service, name: 化工园区公用工程, name_en: Chemical Park Utilities, segment: SEG_CHEM_OTHER_PRODUCTS, aliases: [园区蒸汽供应, 工业气体岛]}
+  - {id: PROD_CHEM_SYNBIO_MATERIAL, type: product, name: 合成生物基材料, name_en: Synthetic-Biology Materials, segment: SEG_CHEM_OTHER_PRODUCTS, aliases: [生物基戊二胺, 长链二元酸, PHA]}
+  - {id: PROD_CHEM_PLA, type: product, name: 聚乳酸, name_en: Polylactic Acid, segment: SEG_CHEM_RESINS, aliases: [PLA, 丙交酯]}
+
+  # ===================== non-metallic minerals =====================
+  - {id: PROD_CHEM_SPHERICAL_SILICA, type: product, name: 球形硅微粉, name_en: Spherical Silica Powder, segment: SEG_CHEM_NONMETALLIC, import_dependence: medium, aliases: [硅微粉, 电子填料, 球形二氧化硅]}
+  - {id: PROD_CHEM_QUARTZ_SAND_HP, type: product, name: 高纯石英砂产品, name_en: High-Purity Quartz Sand Products, segment: SEG_CHEM_NONMETALLIC, aliases: [光伏坩埚砂, 半导体级石英砂]}
+  - {id: PROD_CHEM_QUARTZ_GLASS, type: product, name: 石英玻璃制品, name_en: Quartz Glass Products, segment: SEG_CHEM_NONMETALLIC, import_dependence: medium, aliases: [石英管, 石英锭]}
+  - {id: PROD_CHEM_PEARLESCENT, type: product, name: 珠光颜料, name_en: Pearlescent Pigments, segment: SEG_CHEM_NONMETALLIC, aliases: [合成云母, 效果颜料]}
+  - {id: PROD_CHEM_STRUCTURAL_CERAMIC_POWDER, type: product, name: 结构陶瓷粉体, name_en: Structural Ceramic Powders, segment: SEG_CHEM_NONMETALLIC, aliases: [纳米氧化锆, 氮化硅粉体, 氧化铝陶瓷粉]}
+  - {id: PROD_CHEM_DIATOMITE, type: product, name: 硅藻土, name_en: Diatomite, segment: SEG_CHEM_NONMETALLIC, aliases: [助滤剂]}
+  - {id: PROD_CHEM_BENTONITE, type: product, name: 膨润土, name_en: Bentonite, segment: SEG_CHEM_NONMETALLIC}
+  - {id: PROD_CHEM_KAOLIN, type: product, name: 高岭土, name_en: Kaolin, segment: SEG_CHEM_NONMETALLIC}
+  - {id: PROD_CHEM_BORON_NITRIDE, type: product, name: 氮化硼, name_en: Boron Nitride, segment: SEG_CHEM_NONMETALLIC, aliases: [六方氮化硼]}
+  - {id: PROD_CHEM_GYPSUM, type: product, name: 工业副产石膏, name_en: By-Product Gypsum, segment: SEG_CHEM_NONMETALLIC, aliases: [磷石膏]}
+
+  # ===================== chemical fibers =====================
+  - {id: PROD_CHEM_PET_POY, type: product, name: 涤纶POY, name_en: Polyester POY, segment: SEG_CHEM_POLYESTER_FIBER, aliases: [预取向丝]}
+  - {id: PROD_CHEM_PET_FDY, type: product, name: 涤纶FDY, name_en: Polyester FDY, segment: SEG_CHEM_POLYESTER_FIBER, aliases: [全拉伸丝]}
+  - {id: PROD_CHEM_PET_DTY, type: product, name: 涤纶DTY, name_en: Polyester DTY, segment: SEG_CHEM_POLYESTER_FIBER, aliases: [拉伸变形丝, 加弹丝]}
+  - {id: PROD_CHEM_PSF, type: product, name: 涤纶短纤, name_en: Polyester Staple Fiber, segment: SEG_CHEM_POLYESTER_FIBER, aliases: [PSF, 直纺涤短]}
+  - {id: PROD_CHEM_PET_INDUSTRIAL_YARN, type: product, name: 涤纶工业丝, name_en: Polyester Industrial Yarn, segment: SEG_CHEM_POLYESTER_FIBER, aliases: [安全带丝, 帘子布用丝]}
+  - {id: PROD_CHEM_RECYCLED_PET_FIBER, type: product, name: 再生涤纶, name_en: Recycled Polyester Fiber, segment: SEG_CHEM_POLYESTER_FIBER, aliases: [再生聚酯纤维, rPET纤维]}
+  - {id: PROD_CHEM_VSF, type: product, name: 粘胶短纤, name_en: Viscose Staple Fiber, segment: SEG_CHEM_VISCOSE, aliases: [人造棉, VSF, 粘胶纤维, 人造纤维, 莱赛尔]}
+  - {id: PROD_CHEM_VFY, type: product, name: 粘胶长丝, name_en: Viscose Filament Yarn, segment: SEG_CHEM_VISCOSE, aliases: [人造丝]}
+  - {id: PROD_CHEM_LYOCELL, type: product, name: 莱赛尔纤维, name_en: Lyocell, segment: SEG_CHEM_VISCOSE, aliases: [Lyocell, 天丝]}
+  - {id: PROD_CHEM_DISSOLVING_PULP, type: product, name: 溶解浆, name_en: Dissolving Pulp, segment: SEG_CHEM_VISCOSE, import_dependence: high, aliases: [化纤浆粕, 棉浆粕]}
+  - {id: PROD_CHEM_SPANDEX_YARN, type: product, name: 氨纶丝, name_en: Spandex Yarn, segment: SEG_CHEM_SPANDEX, aliases: [莱卡, 弹性纤维, 氨纶]}
+  - {id: PROD_CHEM_PTMEG, type: product, name: PTMEG, name_en: Polytetramethylene Ether Glycol, segment: SEG_CHEM_SPANDEX, aliases: [聚四氢呋喃]}
+  - {id: PROD_CHEM_CAPROLACTAM, type: product, name: 己内酰胺, name_en: Caprolactam, segment: SEG_CHEM_NYLON, aliases: [CPL]}
+  - {id: PROD_CHEM_PA6_CHIP, type: product, name: PA6切片, name_en: PA6 Chips, segment: SEG_CHEM_NYLON, aliases: [尼龙6切片, 锦纶切片]}
+  - {id: PROD_CHEM_ADN, type: product, name: 己二腈, name_en: Adiponitrile, segment: SEG_CHEM_NYLON, import_dependence: medium, aliases: [ADN]}
+  - {id: PROD_CHEM_HMDA, type: product, name: 己二胺, name_en: Hexamethylenediamine, segment: SEG_CHEM_NYLON, import_dependence: medium, aliases: [HMDA]}
+  - {id: PROD_CHEM_PA66_RESIN, type: product, name: PA66树脂, name_en: PA66 Resin, segment: SEG_CHEM_NYLON, import_dependence: medium, aliases: [尼龙66切片, 尼龙66盐]}
+  - {id: PROD_CHEM_NYLON_FILAMENT, type: product, name: 锦纶长丝, name_en: Nylon Filament, segment: SEG_CHEM_NYLON, aliases: [锦纶6长丝, 锦纶66长丝]}
+  - {id: PROD_CHEM_NYLON_INDUSTRIAL_YARN, type: product, name: 锦纶工业丝, name_en: Nylon Industrial Yarn, segment: SEG_CHEM_NYLON, aliases: [气囊丝]}
+  - {id: PROD_CHEM_PA56, type: product, name: 生物基PA56, name_en: Bio-Based PA56, segment: SEG_CHEM_NYLON, aliases: [生物基聚酰胺]}
+  - {id: PROD_CHEM_LONG_CHAIN_PA, type: product, name: 长碳链尼龙, name_en: Long-Chain Polyamides, segment: SEG_CHEM_NYLON, import_dependence: high, aliases: [PA12, PA1010, PA612]}
+  - {id: PROD_CHEM_PARA_ARAMID, type: product, name: 对位芳纶, name_en: Para-Aramid, segment: SEG_CHEM_OTHER_FIBERS, import_dependence: high, aliases: [芳纶1414, Kevlar类]}
+  - {id: PROD_CHEM_META_ARAMID, type: product, name: 间位芳纶, name_en: Meta-Aramid, segment: SEG_CHEM_OTHER_FIBERS, aliases: [芳纶1313]}
+  - {id: PROD_CHEM_UHMWPE_FIBER, type: product, name: 超高分子量聚乙烯纤维, name_en: UHMWPE Fiber, segment: SEG_CHEM_OTHER_FIBERS, aliases: [UHMWPE纤维, 超高强纤维]}
+  - {id: PROD_CHEM_ACRYLIC_FIBER, type: product, name: 腈纶, name_en: Acrylic Fiber, segment: SEG_CHEM_OTHER_FIBERS, aliases: [聚丙烯腈纤维]}
+  - {id: PROD_CHEM_PAN_PRECURSOR, type: product, name: 碳纤维原丝, name_en: PAN Carbon Fiber Precursor, segment: SEG_CHEM_OTHER_FIBERS, aliases: [PAN原丝]}
+  - {id: PROD_CHEM_PPS_FIBER, type: product, name: PPS纤维, name_en: PPS Fiber, segment: SEG_CHEM_OTHER_FIBERS, aliases: [聚苯硫醚纤维]}
+  - {id: PROD_CHEM_PI_FIBER, type: product, name: 聚酰亚胺纤维, name_en: Polyimide Fiber, segment: SEG_CHEM_OTHER_FIBERS}
+  - {id: PROD_CHEM_PP_FIBER, type: product, name: 丙纶, name_en: Polypropylene Fiber, segment: SEG_CHEM_OTHER_FIBERS, aliases: [丙纶纤维, 无纺布用丙纶]}
+  - {id: PROD_CHEM_PBO_FIBER, type: product, name: PBO纤维, name_en: PBO Fiber, segment: SEG_CHEM_OTHER_FIBERS, import_dependence: high}
+
+  # ===================== synthetic resins =====================
+  - {id: PROD_CHEM_PC_RESIN, type: product, name: 聚碳酸酯, name_en: Polycarbonate Resin, segment: SEG_CHEM_RESINS, import_dependence: medium, aliases: [PC树脂]}
+  - {id: PROD_CHEM_POM_RESIN, type: product, name: 聚甲醛, name_en: POM Resin, segment: SEG_CHEM_RESINS, import_dependence: medium, aliases: [POM树脂]}
+  - {id: PROD_CHEM_PBT_RESIN, type: product, name: PBT树脂, name_en: PBT Resin, segment: SEG_CHEM_RESINS, aliases: [聚对苯二甲酸丁二醇酯]}
+  - {id: PROD_CHEM_PPS_RESIN, type: product, name: 聚苯硫醚树脂, name_en: PPS Resin, segment: SEG_CHEM_RESINS, import_dependence: medium, aliases: [PPS树脂]}
+  - {id: PROD_CHEM_LCP_RESIN, type: product, name: 液晶聚合物, name_en: LCP Resin, segment: SEG_CHEM_RESINS, import_dependence: high, aliases: [LCP树脂]}
+  - {id: PROD_CHEM_PPO_RESIN, type: product, name: 聚苯醚, name_en: PPO/PPE Resin, segment: SEG_CHEM_RESINS, import_dependence: high, aliases: [PPO, PPE, MPPO]}
+  - {id: PROD_CHEM_PSU_RESIN, type: product, name: 聚砜类树脂, name_en: Polysulfones, segment: SEG_CHEM_RESINS, import_dependence: high, aliases: [PSU, PES, PPSU]}
+  - {id: PROD_CHEM_PMMA, type: product, name: PMMA树脂, name_en: PMMA Resin, segment: SEG_CHEM_RESINS, import_dependence: medium, aliases: [亚克力, 有机玻璃, 光学级PMMA]}
+  - {id: PROD_CHEM_ABS, type: product, name: ABS树脂, name_en: ABS Resin, segment: SEG_CHEM_RESINS}
+  - {id: PROD_CHEM_PS, type: product, name: 聚苯乙烯, name_en: Polystyrene, segment: SEG_CHEM_RESINS, aliases: [GPPS, HIPS]}
+  - {id: PROD_CHEM_PBAT, type: product, name: PBAT, name_en: PBAT, segment: SEG_CHEM_RESINS, aliases: [可降解塑料, PBS]}
+  - {id: PROD_CHEM_PETG, type: product, name: 共聚酯, name_en: Copolyester, segment: SEG_CHEM_RESINS, import_dependence: high, aliases: [PETG, PCTG]}
+  - {id: PROD_CHEM_PHENOLIC_RESIN, type: product, name: 酚醛树脂, name_en: Phenolic Resin, segment: SEG_CHEM_RESINS, aliases: [电子酚醛树脂, 铸造树脂]}
+  - {id: PROD_CHEM_UPR, type: product, name: 不饱和聚酯树脂, name_en: Unsaturated Polyester Resin, segment: SEG_CHEM_RESINS, aliases: [UPR, 乙烯基酯树脂]}
+  - {id: PROD_CHEM_EPOXY_GRADE, type: product, name: 液体环氧树脂, name_en: Liquid Epoxy Resin, segment: SEG_CHEM_RESINS, aliases: [风电环氧, 电子级环氧]}
+  - {id: PROD_CHEM_COC, type: product, name: 环烯烃共聚物, name_en: COC/COP, segment: SEG_CHEM_RESINS, import_dependence: high, aliases: [COC, COP]}
+  - {id: PROD_CHEM_UHMWPE_RESIN, type: product, name: 超高分子量聚乙烯树脂, name_en: UHMWPE Resin, segment: SEG_CHEM_RESINS, import_dependence: medium}
+  - {id: PROD_CHEM_SEMI_AROMATIC_PA, type: product, name: 半芳香族聚酰胺, name_en: Semi-Aromatic Polyamides, segment: SEG_CHEM_RESINS, import_dependence: high, aliases: [PA6T, PA10T, PA9T, 高温尼龙]}
+
+  # ===================== modified plastics =====================
+  - {id: PROD_CHEM_MOD_PP, type: product, name: 改性聚丙烯, name_en: Modified PP Compounds, segment: SEG_CHEM_MODIFIED_PLASTICS, aliases: [车用改性PP, 长玻纤增强PP]}
+  - {id: PROD_CHEM_MOD_PA, type: product, name: 改性尼龙, name_en: Modified PA Compounds, segment: SEG_CHEM_MODIFIED_PLASTICS, aliases: [玻纤增强尼龙]}
+  - {id: PROD_CHEM_MOD_PC_ALLOY, type: product, name: PC/ABS合金, name_en: PC/ABS Alloys, segment: SEG_CHEM_MODIFIED_PLASTICS, aliases: [改性PC, 塑料合金]}
+  - {id: PROD_CHEM_FLAME_RETARDANT_COMPOUND, type: product, name: 阻燃改性塑料, name_en: Flame-Retardant Compounds, segment: SEG_CHEM_MODIFIED_PLASTICS, aliases: [无卤阻燃塑料]}
+  - {id: PROD_CHEM_MOD_ABS_HIPS, type: product, name: 改性苯乙烯类塑料, name_en: Modified Styrenics, segment: SEG_CHEM_MODIFIED_PLASTICS, aliases: [改性ABS, 改性HIPS]}
+  - {id: PROD_CHEM_TPE, type: product, name: 热塑性弹性体, name_en: Thermoplastic Elastomers, segment: SEG_CHEM_MODIFIED_PLASTICS, aliases: [TPE, TPV, SEBS料]}
+  - {id: PROD_CHEM_COLOR_MASTERBATCH, type: product, name: 色母粒, name_en: Color Masterbatch, segment: SEG_CHEM_MODIFIED_PLASTICS, aliases: [功能母粒]}
+  - {id: PROD_CHEM_RECYCLED_PLASTIC, type: product, name: 再生塑料, name_en: Recycled Plastics, segment: SEG_CHEM_MODIFIED_PLASTICS, aliases: [再生PET, 再生PP, 化学回收塑料]}
+  - {id: PROD_CHEM_SPECIAL_COMPOUND, type: product, name: 特种工程塑料改性料, name_en: Specialty Engineering Compounds, segment: SEG_CHEM_MODIFIED_PLASTICS, import_dependence: medium, aliases: [改性PPS, 改性LCP, 改性PEEK]}
+
+  # ===================== films and membranes =====================
+  - {id: PROD_CHEM_BOPP_FILM, type: product, name: BOPP薄膜, name_en: BOPP Film, segment: SEG_CHEM_FILMS, aliases: [双向拉伸聚丙烯薄膜]}
+  - {id: PROD_CHEM_BOPET_FILM, type: product, name: BOPET薄膜, name_en: BOPET Film, segment: SEG_CHEM_FILMS, aliases: [聚酯薄膜, 双向拉伸聚酯薄膜]}
+  - {id: PROD_CHEM_OPTICAL_PET_FILM, type: product, name: 光学聚酯薄膜, name_en: Optical PET Film, segment: SEG_CHEM_FILMS, import_dependence: medium, aliases: [光学基膜, 离型膜, MLCC离型膜基膜]}
+  - {id: PROD_CHEM_BOPA_FILM, type: product, name: BOPA薄膜, name_en: BOPA Film, segment: SEG_CHEM_FILMS, aliases: [尼龙薄膜]}
+  - {id: PROD_CHEM_CAPACITOR_BOPP, type: product, name: 电容膜, name_en: Capacitor Film, segment: SEG_CHEM_FILMS, import_dependence: medium, aliases: [薄膜电容基膜, 超薄BOPP]}
+  - {id: PROD_CHEM_PI_FILM, type: product, name: 聚酰亚胺薄膜, name_en: Polyimide Film, segment: SEG_CHEM_FILMS, import_dependence: high, aliases: [PI膜, CPI膜, 电子级PI薄膜, 电子级PI膜]}
+  - {id: PROD_CHEM_TAC_FILM, type: product, name: TAC膜, name_en: TAC Film, segment: SEG_CHEM_FILMS, import_dependence: high, aliases: [三醋酸纤维素膜]}
+  - {id: PROD_CHEM_PVA_FILM, type: product, name: PVA光学膜, name_en: Optical PVA Film, segment: SEG_CHEM_FILMS, import_dependence: high}
+  - {id: PROD_CHEM_WINDOW_FILM, type: product, name: 汽车功能膜, name_en: Automotive Window and Paint Films, segment: SEG_CHEM_FILMS, import_dependence: medium, aliases: [窗膜, 隐形车衣, TPU车衣]}
+  - {id: PROD_CHEM_PVB_FILM, type: product, name: PVB中间膜, name_en: PVB Interlayer, segment: SEG_CHEM_FILMS, import_dependence: medium, aliases: [PVB胶片, 汽车玻璃中间膜]}
+  - {id: PROD_CHEM_COMPOSITE_CU_FOIL_FILM, type: product, name: 复合集流体基膜, name_en: Composite Current Collector Film, segment: SEG_CHEM_FILMS, aliases: [复合铜箔基膜]}
+  - {id: PROD_CHEM_PTFE_MEMBRANE, type: product, name: PTFE微孔膜, name_en: ePTFE Membrane, segment: SEG_CHEM_FILMS, aliases: [ePTFE膜]}
+
+  # ===================== other plastic products =====================
+  - {id: PROD_CHEM_PLASTIC_PIPE, type: product, name: 塑料管道, name_en: Plastic Pipes, segment: SEG_CHEM_PLASTIC_PRODUCTS, aliases: [PVC管, PE管, PPR管]}
+  - {id: PROD_CHEM_AGRI_FILM, type: product, name: 农用薄膜, name_en: Agricultural Film, segment: SEG_CHEM_PLASTIC_PRODUCTS, aliases: [农膜, 地膜, 棚膜]}
+  - {id: PROD_CHEM_PLASTIC_PROFILE, type: product, name: 塑料型材, name_en: Plastic Profiles, segment: SEG_CHEM_PLASTIC_PRODUCTS, aliases: [塑钢门窗型材, 木塑]}
+  - {id: PROD_CHEM_PLASTIC_HOUSEWARE, type: product, name: 塑料日用品, name_en: Plastic Housewares, segment: SEG_CHEM_PLASTIC_PRODUCTS, aliases: [一次性塑料制品, 塑料餐具]}
+  - {id: PROD_CHEM_FOAM_PRODUCTS, type: product, name: 发泡材料, name_en: Foam Materials, segment: SEG_CHEM_PLASTIC_PRODUCTS, aliases: [XPE, IXPE, PMI泡沫, EPP]}
+  - {id: PROD_CHEM_ARTIFICIAL_TURF, type: product, name: 人造草坪, name_en: Artificial Turf, segment: SEG_CHEM_PLASTIC_PRODUCTS}
+  - {id: PROD_CHEM_PLASTIC_PALLET, type: product, name: 塑料托盘及周转箱, name_en: Plastic Pallets and Crates, segment: SEG_CHEM_PLASTIC_PRODUCTS}
+  - {id: PROD_CHEM_WOVEN_PLASTIC, type: product, name: 塑料编织制品, name_en: Woven Plastic Products, segment: SEG_CHEM_PLASTIC_PRODUCTS, aliases: [编织袋, 集装袋]}
+
+  # ===================== rubber =====================
+  - {id: PROD_CHEM_RUBBER_BELT, type: product, name: 橡胶输送带, name_en: Rubber Conveyor Belts, segment: SEG_CHEM_RUBBER_PRODUCTS, aliases: [输送带, 传动带]}
+  - {id: PROD_CHEM_RUBBER_HOSE, type: product, name: 橡胶软管, name_en: Rubber Hoses, segment: SEG_CHEM_RUBBER_PRODUCTS, aliases: [胶管]}
+  - {id: PROD_CHEM_RUBBER_SEAL, type: product, name: 橡胶密封件, name_en: Rubber Seals, segment: SEG_CHEM_RUBBER_PRODUCTS, aliases: [O型圈]}
+  - {id: PROD_CHEM_RUBBER_DAMPING, type: product, name: 橡胶减振制品, name_en: Rubber Anti-Vibration Products, segment: SEG_CHEM_RUBBER_PRODUCTS, aliases: [轨交减振, 汽车悬置]}
+  - {id: PROD_CHEM_RUBBER_TRACK, type: product, name: 橡胶履带, name_en: Rubber Tracks, segment: SEG_CHEM_RUBBER_PRODUCTS}
+  - {id: PROD_CHEM_RECLAIMED_RUBBER, type: product, name: 再生橡胶, name_en: Reclaimed Rubber, segment: SEG_CHEM_RUBBER_PRODUCTS, aliases: [胶粉]}
+  - {id: PROD_CHEM_SPECIALTY_RUBBER, type: product, name: 特种合成橡胶, name_en: Specialty Synthetic Rubber, segment: SEG_CHEM_RUBBER_PRODUCTS, import_dependence: medium, aliases: [三元乙丙橡胶, EPDM, 氢化丁腈橡胶, SEBS]}
+  - {id: PROD_CHEM_CB_RUBBER_GRADE, type: product, name: 橡胶用炭黑, name_en: Rubber-Grade Carbon Black, segment: SEG_CHEM_CARBON_BLACK, aliases: [N330, N220, 硬质炭黑, 软质炭黑]}
+  - {id: PROD_CHEM_CB_CONDUCTIVE, type: product, name: 导电炭黑, name_en: Conductive Carbon Black, segment: SEG_CHEM_CARBON_BLACK, import_dependence: high, aliases: [乙炔炭黑, 锂电导电炭黑]}
+  - {id: PROD_CHEM_CB_PIGMENT, type: product, name: 色素炭黑, name_en: Specialty Pigment Carbon Black, segment: SEG_CHEM_CARBON_BLACK, import_dependence: medium, aliases: [特种炭黑]}
+  - {id: PROD_CHEM_RUBBER_ACCELERATOR, type: product, name: 橡胶促进剂, name_en: Rubber Accelerators, segment: SEG_CHEM_RUBBER_ADDITIVES, aliases: [促进剂CBS, 促进剂TBBS, 促进剂M]}
+  - {id: PROD_CHEM_RUBBER_ANTIOXIDANT, type: product, name: 橡胶防老剂, name_en: Rubber Antioxidants, segment: SEG_CHEM_RUBBER_ADDITIVES, aliases: [防老剂6PPD, 防老剂TMQ]}
+  - {id: PROD_CHEM_INSOLUBLE_SULFUR, type: product, name: 不溶性硫磺, name_en: Insoluble Sulfur, segment: SEG_CHEM_RUBBER_ADDITIVES, aliases: [硫化剂]}
+
+  # ===================== agrochemicals: nitrogen =====================
+  - {id: PROD_CHEM_AMMONIA, type: product, name: 合成氨, name_en: Synthetic Ammonia, segment: SEG_CHEM_NITROGEN, aliases: [液氨, 绿氨]}
+  - {id: PROD_CHEM_UREA, type: product, name: 尿素, name_en: Urea, segment: SEG_CHEM_NITROGEN, aliases: [农用尿素, 车用级尿素]}
+  - {id: PROD_CHEM_MELAMINE, type: product, name: 三聚氰胺, name_en: Melamine, segment: SEG_CHEM_NITROGEN}
+  - {id: PROD_CHEM_AMMONIUM_SULFATE, type: product, name: 硫酸铵, name_en: Ammonium Sulfate, segment: SEG_CHEM_NITROGEN, aliases: [硫铵]}
+
+  # ===================== agrochemicals: phosphorus =====================
+  - {id: PROD_CHEM_PHOSPHATE_CONC, type: product, name: 磷精矿, name_en: Phosphate Concentrate, segment: SEG_CHEM_PHOSPHORUS, aliases: [商品磷矿, 30%品位磷矿]}
+  - {id: PROD_CHEM_WET_PHOSPHORIC, type: product, name: 湿法磷酸, name_en: Wet-Process Phosphoric Acid, segment: SEG_CHEM_PHOSPHORUS, aliases: [净化磷酸, 工业级磷酸]}
+  - {id: PROD_CHEM_YELLOW_PHOSPHORUS, type: product, name: 黄磷, name_en: Yellow Phosphorus, segment: SEG_CHEM_PHOSPHORUS, aliases: [白磷]}
+  - {id: PROD_CHEM_THERMAL_PHOSPHORIC, type: product, name: 热法磷酸, name_en: Thermal-Process Phosphoric Acid, segment: SEG_CHEM_PHOSPHORUS}
+  - {id: PROD_CHEM_PCL3, type: product, name: 三氯化磷, name_en: Phosphorus Trichloride, segment: SEG_CHEM_PHOSPHORUS, aliases: [三氯氧磷, 五硫化二磷]}
+  - {id: PROD_CHEM_DAP, type: product, name: 磷酸二铵, name_en: Diammonium Phosphate, segment: SEG_CHEM_PHOSPHORUS, aliases: [DAP]}
+  - {id: PROD_CHEM_MAP, type: product, name: 磷酸一铵, name_en: Monoammonium Phosphate, segment: SEG_CHEM_PHOSPHORUS, aliases: [MAP, 工业级磷酸一铵]}
+  - {id: PROD_CHEM_SSP_TSP, type: product, name: 过磷酸钙, name_en: Superphosphate, segment: SEG_CHEM_PHOSPHORUS, aliases: [普钙, 重钙]}
+  - {id: PROD_CHEM_INDUSTRIAL_PHOSPHATE, type: product, name: 工业磷酸盐, name_en: Industrial Phosphates, segment: SEG_CHEM_PHOSPHORUS, aliases: [磷酸钠盐, 次磷酸钠]}
+  - {id: PROD_CHEM_SPECIALTY_PHOSPHORUS, type: product, name: 精细磷化工品, name_en: Specialty Phosphorus Chemicals, segment: SEG_CHEM_PHOSPHORUS, aliases: [电子级黄磷, 磷系精细化学品]}
+  - {id: PROD_CHEM_GLYPHOSATE_TECH, type: product, name: 草甘膦原药, name_en: Glyphosate Technical, segment: SEG_CHEM_PESTICIDES, aliases: [草甘膦]}
+
+  # ===================== agrochemicals: pesticides =====================
+  - {id: PROD_CHEM_GLUFOSINATE, type: product, name: 草铵膦, name_en: Glufosinate, segment: SEG_CHEM_PESTICIDES, aliases: [精草铵膦]}
+  - {id: PROD_CHEM_DIQUAT_PARAQUAT, type: product, name: 敌草快百草枯, name_en: Diquat and Paraquat, segment: SEG_CHEM_PESTICIDES, aliases: [敌草快, 百草枯]}
+  - {id: PROD_CHEM_OTHER_HERBICIDE, type: product, name: 其他除草剂原药, name_en: Other Herbicides, segment: SEG_CHEM_PESTICIDES, aliases: [莠去津, "2,4-D", 麦草畏, 硝磺草酮]}
+  - {id: PROD_CHEM_PYRETHROID, type: product, name: 菊酯类杀虫剂, name_en: Pyrethroid Insecticides, segment: SEG_CHEM_PESTICIDES, aliases: [联苯菊酯, 高效氯氟氰菊酯]}
+  - {id: PROD_CHEM_DIAMIDE_INSECTICIDE, type: product, name: 双酰胺类杀虫剂, name_en: Diamide Insecticides, segment: SEG_CHEM_PESTICIDES, aliases: [氯虫苯甲酰胺, 溴氰虫酰胺]}
+  - {id: PROD_CHEM_OTHER_INSECTICIDE, type: product, name: 其他杀虫剂原药, name_en: Other Insecticides, segment: SEG_CHEM_PESTICIDES, aliases: [吡虫啉, 啶虫脒, 阿维菌素, 甲维盐]}
+  - {id: PROD_CHEM_FUNGICIDE, type: product, name: 杀菌剂原药, name_en: Fungicides, segment: SEG_CHEM_PESTICIDES, aliases: [代森锰锌, 嘧菌酯, 吡唑醚菌酯, 戊唑醇]}
+  - {id: PROD_CHEM_PESTICIDE_FORMULATION, type: product, name: 农药制剂, name_en: Pesticide Formulations, segment: SEG_CHEM_PESTICIDES, aliases: [制剂, 植保制剂]}
+  - {id: PROD_CHEM_PESTICIDE_INTERMEDIATE, type: product, name: 农药中间体, name_en: Pesticide Intermediates, segment: SEG_CHEM_PESTICIDES, aliases: [甘氨酸, 亚磷酸二甲酯, IDA]}
+  - {id: PROD_CHEM_PGR, type: product, name: 植物生长调节剂, name_en: Plant Growth Regulators, segment: SEG_CHEM_PESTICIDES, aliases: [赤霉酸, 乙烯利]}
+  - {id: PROD_CHEM_BIOPESTICIDE, type: product, name: 生物农药, name_en: Biopesticides, segment: SEG_CHEM_PESTICIDES, aliases: [微生物农药]}
+  - {id: PROD_CHEM_HOUSEHOLD_INSECTICIDE, type: product, name: 卫生杀虫剂, name_en: Household Insecticides, segment: SEG_CHEM_PESTICIDES, aliases: [蚊香原药, 卫生用药]}
+
+  # ===================== agrochemicals: potash / compound =====================
+  - {id: PROD_CHEM_KCL, type: product, name: 国产氯化钾, name_en: Domestic Potassium Chloride, segment: SEG_CHEM_POTASH, aliases: [盐湖钾肥, 老挝钾肥, 海外钾矿]}
+  - {id: PROD_CHEM_SOP, type: product, name: 硫酸钾, name_en: Potassium Sulfate, segment: SEG_CHEM_POTASH}
+  - {id: PROD_CHEM_POTASSIUM_NITRATE, type: product, name: 硝酸钾肥, name_en: Potassium Nitrate Fertilizer, segment: SEG_CHEM_POTASH}
+  - {id: PROD_CHEM_NPK, type: product, name: 三元复合肥, name_en: NPK Compound Fertilizer, segment: SEG_CHEM_COMPOUND_FERT, aliases: [NPK, 硫基复合肥, 氯基复合肥]}
+  - {id: PROD_CHEM_NEW_FERTILIZER, type: product, name: 新型肥料, name_en: Specialty Fertilizers, segment: SEG_CHEM_COMPOUND_FERT, aliases: [水溶肥, 缓控释肥, 生物有机肥]}
+  - {id: PROD_CHEM_AGRI_SERVICE, type: product, kind: service, name: 农化服务, name_en: Agronomic Services, segment: SEG_CHEM_COMPOUND_FERT, aliases: [测土配方, 农资分销]}
+  # --- added by merge 2026-11-07 ---
+  - {id: PROD_CHEM_POLYETHER_MONOMER, type: product, name: 聚醚单体, name_en: Polyether Macromonomer, segment: SEG_CHEM_OTHER_PRODUCTS, aliases: [减水剂单体, TPEG, HPEG]}
+
+edges:
+  # ===================== segment tree =====================
+  - [SEG_CHEM_SODA_ASH, part_of, SEG_CHEM_RAW]
+  - [SEG_CHEM_CHLOR_ALKALI, part_of, SEG_CHEM_RAW]
+  - [SEG_CHEM_INORGANIC_SALT, part_of, SEG_CHEM_RAW]
+  - [SEG_CHEM_OTHER_RAW, part_of, SEG_CHEM_RAW]
+  - [SEG_CHEM_COAL_CHEM, part_of, SEG_CHEM_RAW]
+  - [SEG_CHEM_TIO2, part_of, SEG_CHEM_RAW]
+  - [SEG_CHEM_COATINGS, part_of, SEG_CHEM_PRODUCTS]
+  - [SEG_CHEM_EXPLOSIVES, part_of, SEG_CHEM_PRODUCTS]
+  - [SEG_CHEM_TEXTILE_CHEM, part_of, SEG_CHEM_PRODUCTS]
+  - [SEG_CHEM_OTHER_PRODUCTS, part_of, SEG_CHEM_PRODUCTS]
+  - [SEG_CHEM_ELECTRONIC_CHEM, part_of, SEG_CHEM_OTHER_PRODUCTS]
+  - [SEG_CHEM_NEW_MATERIALS, part_of, SEG_CHEM_OTHER_PRODUCTS]
+  - [SEG_CHEM_FINE_INTERMEDIATES, part_of, SEG_CHEM_OTHER_PRODUCTS]
+  - [SEG_CHEM_FLUORO, part_of, SEG_CHEM_PRODUCTS]
+  - [SEG_CHEM_POLYURETHANE, part_of, SEG_CHEM_PRODUCTS]
+  - [SEG_CHEM_FOOD_FEED, part_of, SEG_CHEM_PRODUCTS]
+  - [SEG_CHEM_SILICONE, part_of, SEG_CHEM_PRODUCTS]
+  - [SEG_CHEM_ADHESIVES, part_of, SEG_CHEM_PRODUCTS]
+  - [SEG_CHEM_POLYESTER_FIBER, part_of, SEG_CHEM_FIBERS]
+  - [SEG_CHEM_VISCOSE, part_of, SEG_CHEM_FIBERS]
+  - [SEG_CHEM_OTHER_FIBERS, part_of, SEG_CHEM_FIBERS]
+  - [SEG_CHEM_SPANDEX, part_of, SEG_CHEM_FIBERS]
+  - [SEG_CHEM_NYLON, part_of, SEG_CHEM_FIBERS]
+  - [SEG_CHEM_PLASTIC_PRODUCTS, part_of, SEG_CHEM_PLASTICS]
+  - [SEG_CHEM_MODIFIED_PLASTICS, part_of, SEG_CHEM_PLASTICS]
+  - [SEG_CHEM_RESINS, part_of, SEG_CHEM_PLASTICS]
+  - [SEG_CHEM_FILMS, part_of, SEG_CHEM_PLASTICS]
+  - [SEG_CHEM_RUBBER_PRODUCTS, part_of, SEG_CHEM_RUBBER]
+  - [SEG_CHEM_CARBON_BLACK, part_of, SEG_CHEM_RUBBER]
+  - [SEG_CHEM_RUBBER_ADDITIVES, part_of, SEG_CHEM_RUBBER]
+  - [SEG_CHEM_NITROGEN, part_of, SEG_CHEM_AGROCHEM]
+  - [SEG_CHEM_PHOSPHORUS, part_of, SEG_CHEM_AGROCHEM]
+  - [SEG_CHEM_PESTICIDES, part_of, SEG_CHEM_AGROCHEM]
+  - [SEG_CHEM_POTASH, part_of, SEG_CHEM_AGROCHEM]
+  - [SEG_CHEM_COMPOUND_FERT, part_of, SEG_CHEM_AGROCHEM]
+
+  # ===================== segment → end markets =====================
+  - [SEG_CHEM_RAW, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_CHEM_SODA_ASH, serves, MKT_CONSTRUCTION]
+  - [SEG_CHEM_SODA_ASH, serves, MKT_SOLAR]
+  - [SEG_CHEM_CHLOR_ALKALI, serves, MKT_CONSTRUCTION]
+  - [SEG_CHEM_CHLOR_ALKALI, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_CHEM_INORGANIC_SALT, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_CHEM_OTHER_RAW, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_CHEM_COAL_CHEM, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_CHEM_TIO2, serves, MKT_CONSTRUCTION]
+  - [SEG_CHEM_TIO2, serves, MKT_PACKAGING]
+  - [SEG_CHEM_COATINGS, serves, MKT_REAL_ESTATE]
+  - [SEG_CHEM_COATINGS, serves, MKT_CONSTRUCTION]
+  - [SEG_CHEM_COATINGS, serves, MKT_ICE_VEHICLE]
+  - [SEG_CHEM_EXPLOSIVES, serves, MKT_MINING]
+  - [SEG_CHEM_EXPLOSIVES, serves, MKT_CONSTRUCTION]
+  - [SEG_CHEM_TEXTILE_CHEM, serves, MKT_APPAREL]
+  - [SEG_CHEM_OTHER_PRODUCTS, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_CHEM_ELECTRONIC_CHEM, serves, MKT_SEMI_FAB]
+  - [SEG_CHEM_ELECTRONIC_CHEM, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_CHEM_ELECTRONIC_CHEM, serves, MKT_SOLAR]
+  - [SEG_CHEM_NEW_MATERIALS, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_CHEM_NEW_MATERIALS, serves, MKT_ENVIRONMENTAL]
+  - [SEG_PWR_BATTERY_CHEM, serves, MKT_EV]
+  - [SEG_PWR_BATTERY_CHEM, serves, MKT_ENERGY_STORAGE]
+  - [SEG_CHEM_FINE_INTERMEDIATES, serves, MKT_PHARMA_RD]
+  - [SEG_CHEM_FINE_INTERMEDIATES, serves, MKT_AGRICULTURE]
+  - [SEG_CHEM_FLUORO, serves, MKT_HOME_APPLIANCE]
+  - [SEG_CHEM_FLUORO, serves, MKT_EV]
+  - [SEG_CHEM_FLUORO, serves, MKT_SEMI_FAB]
+  - [SEG_CHEM_POLYURETHANE, serves, MKT_HOME_APPLIANCE]
+  - [SEG_CHEM_POLYURETHANE, serves, MKT_CONSTRUCTION]
+  - [SEG_CHEM_POLYURETHANE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_CHEM_FOOD_FEED, serves, MKT_AGRICULTURE]
+  - [SEG_CHEM_FOOD_FEED, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_CHEM_SILICONE, serves, MKT_CONSTRUCTION]
+  - [SEG_CHEM_SILICONE, serves, MKT_SOLAR]
+  - [SEG_CHEM_SILICONE, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_CHEM_ADHESIVES, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_CHEM_ADHESIVES, serves, MKT_EV]
+  - [SEG_CHEM_ADHESIVES, serves, MKT_PACKAGING]
+  - [SEG_CHEM_FIBERS, serves, MKT_APPAREL]
+  - [SEG_CHEM_POLYESTER_FIBER, serves, MKT_APPAREL]
+  - [SEG_CHEM_VISCOSE, serves, MKT_APPAREL]
+  - [SEG_CHEM_SPANDEX, serves, MKT_APPAREL]
+  - [SEG_CHEM_NYLON, serves, MKT_APPAREL]
+  - [SEG_CHEM_NYLON, serves, MKT_ICE_VEHICLE]
+  - [SEG_CHEM_OTHER_FIBERS, serves, MKT_DEFENSE]
+  - [SEG_CHEM_OTHER_FIBERS, serves, MKT_TELECOM_NETWORK]
+  - [SEG_CHEM_PLASTICS, serves, MKT_PACKAGING]
+  - [SEG_CHEM_PLASTIC_PRODUCTS, serves, MKT_CONSTRUCTION]
+  - [SEG_CHEM_PLASTIC_PRODUCTS, serves, MKT_AGRICULTURE]
+  - [SEG_CHEM_PLASTIC_PRODUCTS, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_CHEM_MODIFIED_PLASTICS, serves, MKT_HOME_APPLIANCE]
+  - [SEG_CHEM_MODIFIED_PLASTICS, serves, MKT_ICE_VEHICLE]
+  - [SEG_CHEM_MODIFIED_PLASTICS, serves, MKT_EV]
+  - [SEG_CHEM_RESINS, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_CHEM_FILMS, serves, MKT_PACKAGING]
+  - [SEG_CHEM_FILMS, serves, MKT_SOLAR]
+  - [SEG_CHEM_FILMS, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_CHEM_FILMS, serves, MKT_EV]
+  - [SEG_CHEM_RUBBER_PRODUCTS, serves, MKT_MINING]
+  - [SEG_CHEM_RUBBER_PRODUCTS, serves, MKT_ICE_VEHICLE]
+  - [SEG_CHEM_RUBBER_PRODUCTS, serves, MKT_HEALTHCARE]
+  - [SEG_CHEM_CARBON_BLACK, serves, MKT_ICE_VEHICLE]
+  - [SEG_CHEM_RUBBER_ADDITIVES, serves, MKT_ICE_VEHICLE]
+  - [SEG_CHEM_AGROCHEM, serves, MKT_AGRICULTURE]
+  - [SEG_CHEM_NITROGEN, serves, MKT_AGRICULTURE]
+  - [SEG_CHEM_PHOSPHORUS, serves, MKT_AGRICULTURE]
+  - [SEG_CHEM_PHOSPHORUS, serves, MKT_EV]
+  - [SEG_CHEM_PESTICIDES, serves, MKT_AGRICULTURE]
+  - [SEG_CHEM_POTASH, serves, MKT_AGRICULTURE]
+  - [SEG_CHEM_COMPOUND_FERT, serves, MKT_AGRICULTURE]
+  - [SEG_CHEM_NONMETALLIC, serves, MKT_SEMI_FAB]
+  - [SEG_CHEM_NONMETALLIC, serves, MKT_SOLAR]
+  - [SEG_CHEM_NONMETALLIC, serves, MKT_CONSUMER_ELECTRONICS]
+
+  # ===================== technologies =====================
+  - [TECH_CHEM_COAL_GASIFICATION, enables, PROD_CHEM_SYNGAS]
+  - [TECH_CHEM_IONIC_MEMBRANE, enables, PROD_CHEM_LIQUID_CAUSTIC]
+  - [TECH_CHEM_CHLORIDE_TIO2, enables, PROD_CHEM_TIO2_CHLORIDE]
+  - [TECH_CHEM_ADN_PROCESS, enables, PROD_CHEM_ADN]
+  - [TECH_SOLID_STATE_BATTERY, enables, PROD_PWR_SULFIDE_ELECTROLYTE]
+  - [TECH_SODIUM_ION, enables, PROD_PWR_NAPF6]
+  - [TECH_LIQUID_COOLING, enables, PROD_CHEM_FLUORINATED_COOLANT]
+  - [TECH_BIOTECH, enables, PROD_CHEM_SYNBIO_MATERIAL]
+  - [TECH_BIOTECH, enables, PROD_CHEM_PA56]
+  - [TECH_ADVANCED_PACKAGING, enables, PROD_ELEC_EMC]
+  - [TECH_ADVANCED_PACKAGING, enables, PROD_ELEC_PSPI]
+
+  # ===================== soda ash / chlor-alkali =====================
+  - [PROD_CHEM_RAW_SALT, upstream_of, PROD_CHEM_DENSE_SODA]
+  - [PROD_CHEM_RAW_SALT, upstream_of, PROD_CHEM_LIGHT_SODA]
+  - [PROD_CHEM_RAW_SALT, upstream_of, PROD_CHEM_LIQUID_CAUSTIC]
+  - [PROD_CHEM_DENSE_SODA, uses_material, MAT_SODA_ASH]
+  - [PROD_CHEM_LIGHT_SODA, uses_material, MAT_SODA_ASH]
+  - [PROD_CHEM_DENSE_SODA, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_DENSE_SODA, used_in, MKT_SOLAR]
+  - [PROD_CHEM_LIGHT_SODA, upstream_of, PROD_CHEM_BAKING_SODA]
+  - [PROD_CHEM_LIGHT_SODA, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CHEM_BAKING_SODA, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_CHEM_NH4CL, used_in, PROD_CHEM_NPK]
+  - [PROD_CHEM_LIQUID_CAUSTIC, upstream_of, PROD_CHEM_FLAKE_CAUSTIC]
+  - [PROD_CHEM_LIQUID_CAUSTIC, uses_material, MAT_CHLOR_ALKALI]
+  - [PROD_CHEM_LIQUID_CAUSTIC, uses_material, MAT_ELECTRICITY]
+  - [PROD_CHEM_LIQUID_CAUSTIC, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CHEM_FLAKE_CAUSTIC, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CHEM_PFSA_MEMBRANE, used_in, PROD_CHEM_LIQUID_CAUSTIC]
+  - [PROD_CHEM_CALCIUM_CARBIDE, upstream_of, PROD_CHEM_PVC_CARBIDE]
+  - [PROD_CHEM_CALCIUM_CARBIDE, uses_material, MAT_ELECTRICITY]
+  - [PROD_CHEM_CALCIUM_CARBIDE, uses_material, MAT_COKE]
+  - [PROD_CHEM_VCM, upstream_of, PROD_CHEM_PVC_ETHYLENE]
+  - [PROD_CHEM_VCM, upstream_of, PROD_CHEM_PVC_PASTE]
+  - [MAT_ETHYLENE, upstream_of, PROD_CHEM_VCM]
+  - [PROD_CHEM_PVC_CARBIDE, uses_material, MAT_CHLOR_ALKALI]
+  - [PROD_CHEM_PVC_ETHYLENE, uses_material, MAT_CHLOR_ALKALI]
+  - [PROD_CHEM_PVC_ETHYLENE, substitute_for, PROD_CHEM_PVC_CARBIDE]
+  - [PROD_CHEM_PVC_CARBIDE, upstream_of, PROD_CHEM_CPVC]
+  - [PROD_CHEM_PVC_CARBIDE, upstream_of, PROD_CHEM_PLASTIC_PIPE]
+  - [PROD_CHEM_PVC_CARBIDE, upstream_of, PROD_CHEM_PLASTIC_PROFILE]
+  - [PROD_CHEM_PVC_CARBIDE, upstream_of, PROD_LIGHT_SPC_FLOOR]
+  - [PROD_CHEM_PVC_ETHYLENE, upstream_of, PROD_CHEM_PLASTIC_PIPE]
+  - [PROD_CHEM_PVC_PASTE, used_in, MKT_HEALTHCARE]
+  - [PROD_CHEM_CPVC, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_HCL, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CHEM_ECH, upstream_of, PROD_CHEM_EPOXY_GRADE]
+  - [PROD_CHEM_CHLOROMETHANES, upstream_of, PROD_CHEM_R22]
+  - [PROD_CHEM_CHLOROMETHANES, upstream_of, PROD_CHEM_R32]
+  - [PROD_CHEM_CHLOROMETHANES, upstream_of, PROD_CHEM_METHYL_CHLOROSILANE]
+  - [PROD_CHEM_CHLOROMETHANES, uses_material, MAT_CHLOR_ALKALI]
+  - [PROD_CHEM_CHLOROMETHANES, uses_material, MAT_METHANOL]
+
+  # ===================== inorganic salts =====================
+  - [PROD_CHEM_H2O2, upstream_of, PROD_ELEC_H2O2_ELECTRONIC]
+  - [PROD_CHEM_H2O2, used_in, PROD_PETRO_PO]
+  - [PROD_CHEM_H2O2, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CHEM_BARIUM_SALTS, upstream_of, PROD_ELEC_MLCC_POWDER]
+  - [PROD_CHEM_BARIUM_SALTS, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_STRONTIUM_SALTS, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_CHEM_NACN, used_in, MKT_MINING]
+  - [PROD_CHEM_NACN, upstream_of, PROD_CHEM_PESTICIDE_INTERMEDIATE]
+  - [PROD_CHEM_SODIUM_METAL, used_in, MKT_PHARMA_RD]
+  - [PROD_CHEM_SODIUM_METAL, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_CHEM_SODIUM_CHLORATE, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_CHROMIUM_SALTS, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CHEM_CHROMIUM_SALTS, used_in, MKT_AEROSPACE]
+  - [PROD_CHEM_ZIRCONIUM_SALTS, upstream_of, PROD_CHEM_STRUCTURAL_CERAMIC_POWDER]
+  - [PROD_CHEM_ZIRCONIUM_SALTS, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_CHEM_BROMINE, upstream_of, PROD_CHEM_FLAME_RETARDANT]
+  - [PROD_CHEM_BROMINE, upstream_of, PROD_PHAR_INTERMEDIATE]
+  - [PROD_CHEM_MOLTEN_SALT, used_in, MKT_SOLAR]
+  - [PROD_CHEM_MOLTEN_SALT, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_CHEM_SODIUM_SILICATE, upstream_of, PROD_CHEM_PRECIP_SILICA]
+  - [PROD_CHEM_DENSE_SODA, upstream_of, PROD_CHEM_SODIUM_SILICATE]
+  - [PROD_CHEM_PRECIP_SILICA, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_PRECIP_SILICA, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_CHEM_MANGANESE_SULFATE, upstream_of, PROD_PWR_LMFP]
+  - [PROD_CHEM_MANGANESE_SULFATE, used_in, MKT_EV]
+  - [PROD_CHEM_MANGANESE_SULFATE, uses_material, MAT_SULFURIC_ACID]
+
+  # ===================== other organics =====================
+  - [MAT_METHANOL, upstream_of, PROD_CHEM_ACETIC_ACID]
+  - [MAT_METHANOL, upstream_of, PROD_CHEM_FORMALDEHYDE]
+  - [MAT_METHANOL, upstream_of, PROD_CHEM_DMF]
+  - [MAT_METHANOL, upstream_of, PROD_CHEM_MTO]
+  - [MAT_METHANOL, upstream_of, PROD_CHEM_DMC_CARBONATE]
+  - [MAT_METHANOL, upstream_of, PROD_CHEM_MMA]
+  - [PROD_CHEM_ACETIC_ACID, upstream_of, PROD_CHEM_VAM]
+  - [PROD_CHEM_VAM, upstream_of, PROD_CHEM_PVA]
+  - [PROD_CHEM_VAM, upstream_of, PROD_PETRO_EVA]
+  - [PROD_CHEM_PVA, upstream_of, PROD_CHEM_PVA_FILM]
+  - [PROD_CHEM_PVA, upstream_of, PROD_CHEM_PVB_FILM]
+  - [PROD_CHEM_ACETIC_ACID, used_in, PROD_PETRO_PTA_TOLLING]
+  - [PROD_CHEM_NITRIC_ACID, upstream_of, PROD_CHEM_ANILINE]
+  - [PROD_PETRO_BENZENE, upstream_of, PROD_CHEM_ANILINE]
+  - [PROD_CHEM_ANILINE, upstream_of, PROD_CHEM_PMDI]
+  - [PROD_CHEM_ANILINE, upstream_of, PROD_CHEM_MMDI]
+  - [PROD_CHEM_ANILINE, upstream_of, PROD_CHEM_RUBBER_ACCELERATOR]
+  - [PROD_CHEM_ANILINE, upstream_of, PROD_CHEM_RUBBER_ANTIOXIDANT]
+  - [PROD_CHEM_ANILINE, upstream_of, PROD_CHEM_DYE_INTERMEDIATE]
+  - [PROD_CHEM_FORMALDEHYDE, upstream_of, PROD_CHEM_PMDI]
+  - [PROD_CHEM_FORMALDEHYDE, upstream_of, PROD_CHEM_POM_RESIN]
+  - [PROD_CHEM_FORMALDEHYDE, upstream_of, PROD_CHEM_PHENOLIC_RESIN]
+  - [PROD_CHEM_FORMALDEHYDE, upstream_of, PROD_CHEM_BDO]
+  - [PROD_CHEM_FORMALDEHYDE, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_DMF, used_in, PROD_CHEM_PU_LEATHER]
+  - [PROD_CHEM_DMF, used_in, PROD_CHEM_SPANDEX_YARN]
+  - [PROD_PETRO_PHENOL_ACETONE, upstream_of, PROD_CHEM_BPA]
+  - [PROD_CHEM_BPA, upstream_of, PROD_CHEM_PC_RESIN]
+  - [PROD_CHEM_BPA, upstream_of, PROD_CHEM_EPOXY_GRADE]
+  - [MAT_PROPYLENE, upstream_of, PROD_CHEM_OXO_ALCOHOLS]
+  - [PROD_CHEM_OXO_ALCOHOLS, upstream_of, PROD_CHEM_PLASTICIZER]
+  - [PROD_CHEM_OXO_ALCOHOLS, upstream_of, PROD_PETRO_ACRYLIC_ACID]
+  - [PROD_CHEM_PHTHALIC_ANHYDRIDE, upstream_of, PROD_CHEM_PLASTICIZER]
+  - [PROD_PETRO_OX, upstream_of, PROD_CHEM_PHTHALIC_ANHYDRIDE]
+  - [PROD_CHEM_PLASTICIZER, used_in, PROD_LIGHT_SPC_FLOOR]
+  - [PROD_CHEM_PLASTICIZER, used_in, PROD_CHEM_PVC_PASTE]
+  - [PROD_PETRO_C4, upstream_of, PROD_CHEM_MALEIC_ANHYDRIDE]
+  - [PROD_CHEM_MALEIC_ANHYDRIDE, upstream_of, PROD_CHEM_BDO]
+  - [PROD_CHEM_MALEIC_ANHYDRIDE, upstream_of, PROD_CHEM_UPR]
+  - [PROD_CHEM_CALCIUM_CARBIDE, upstream_of, PROD_CHEM_BDO]
+  - [PROD_CHEM_BDO, upstream_of, PROD_CHEM_PTMEG]
+  - [PROD_CHEM_BDO, upstream_of, PROD_CHEM_PBT_RESIN]
+  - [PROD_CHEM_BDO, upstream_of, PROD_CHEM_PBAT]
+  - [PROD_CHEM_BDO, upstream_of, PROD_CHEM_NMP]
+  - [PROD_CHEM_BDO, upstream_of, PROD_PWR_ELECTROLYTE_SOLVENT]
+  - [PROD_CHEM_DMC_CARBONATE, upstream_of, PROD_PWR_ELECTROLYTE_SOLVENT]
+  - [PROD_CHEM_DMC_CARBONATE, upstream_of, PROD_CHEM_PC_RESIN]
+  - [PROD_CHEM_MMA, upstream_of, PROD_CHEM_PMMA]
+  - [PROD_PETRO_PHENOL_ACETONE, upstream_of, PROD_CHEM_MMA]
+  - [PROD_CHEM_OXALIC_ACID, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CHEM_IPA, used_in, PROD_ELEC_WET_CHEMICALS]
+  - [PROD_PETRO_PHENOL_ACETONE, upstream_of, PROD_CHEM_IPA]
+
+  # ===================== coal chemicals =====================
+  - [PROD_CHEM_SYNGAS, uses_material, MAT_THERMAL_COAL]
+  - [PROD_COAL_STEAM_COAL, upstream_of, PROD_CHEM_SYNGAS]
+  - [PROD_COAL_ANTHRACITE, upstream_of, PROD_CHEM_SYNGAS]
+  - [PROD_CHEM_SYNGAS, upstream_of, PROD_CHEM_COAL_METHANOL]
+  - [PROD_CHEM_SYNGAS, upstream_of, PROD_CHEM_COAL_MEG]
+  - [PROD_CHEM_SYNGAS, upstream_of, PROD_CHEM_COAL_SNG]
+  - [PROD_CHEM_SYNGAS, upstream_of, PROD_CHEM_CTL]
+  - [PROD_CHEM_SYNGAS, upstream_of, PROD_CHEM_AMMONIA]
+  - [PROD_CHEM_SYNGAS, upstream_of, PROD_CHEM_ACETIC_ACID]
+  - [PROD_CHEM_COAL_METHANOL, upstream_of, PROD_CHEM_MTO]
+  - [PROD_CHEM_COAL_METHANOL, upstream_of, PROD_CHEM_FORMALDEHYDE]
+  - [PROD_CHEM_COAL_METHANOL, uses_material, MAT_THERMAL_COAL]
+  - [PROD_CHEM_MTO, upstream_of, PROD_CHEM_COAL_PO_PE]
+  - [PROD_CHEM_MTO, uses_material, MAT_METHANOL]
+  - [PROD_CHEM_COAL_PO_PE, substitute_for, PROD_PETRO_HDPE]
+  - [PROD_CHEM_COAL_PO_PE, substitute_for, PROD_PETRO_PP_HOMO]
+  - [PROD_CHEM_COAL_PO_PE, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_COAL_MEG, substitute_for, PROD_PETRO_MEG]
+  - [PROD_CHEM_COAL_MEG, upstream_of, PROD_PETRO_FIBER_PET_CHIP]
+  - [PROD_CHEM_COAL_SNG, substitute_for, PROD_PETRO_PIPELINE_GAS_SALES]
+  - [PROD_CHEM_CTL, substitute_for, PROD_PETRO_DIESEL]
+  - [PROD_CHEM_CTL, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_COAL_COG_METHANOL, substitute_for, PROD_CHEM_COAL_METHANOL]
+  - [PROD_COAL_CB_OIL, upstream_of, PROD_CHEM_CB_RUBBER_GRADE]
+  - [PROD_COAL_CB_OIL, upstream_of, PROD_CHEM_CB_PIGMENT]
+  - [PROD_COAL_INDUSTRIAL_NAPHTHALENE, upstream_of, PROD_CHEM_DYE_INTERMEDIATE]
+  - [PROD_COAL_INDUSTRIAL_NAPHTHALENE, upstream_of, PROD_BM_ADMIXTURE]
+  - [PROD_COAL_PURE_BENZENE, upstream_of, PROD_CHEM_ANILINE]
+  - [PROD_COAL_SEMI_COKE, upstream_of, PROD_CHEM_CALCIUM_CARBIDE]
+
+  # ===================== titanium dioxide =====================
+  - [PROD_NFM_TITANIUM_CONCENTRATE, upstream_of, PROD_CHEM_TIO2_SULFATE]
+  - [PROD_NFM_TITANIUM_CONCENTRATE, upstream_of, PROD_CHEM_TI_SLAG]
+  - [PROD_CHEM_TI_SLAG, upstream_of, PROD_CHEM_TICL4]
+  - [PROD_CHEM_TICL4, upstream_of, PROD_CHEM_TIO2_CHLORIDE]
+  - [PROD_CHEM_TIO2_SULFATE, uses_material, MAT_SULFURIC_ACID]
+  - [PROD_CHEM_TIO2_SULFATE, uses_material, MAT_TITANIUM_DIOXIDE]
+  - [PROD_CHEM_TIO2_CHLORIDE, uses_material, MAT_CHLOR_ALKALI]
+  - [PROD_CHEM_TIO2_CHLORIDE, substitute_for, PROD_CHEM_TIO2_SULFATE]
+  - [PROD_CHEM_TIO2_SULFATE, upstream_of, PROD_CHEM_FERROUS_SULFATE]
+  - [PROD_CHEM_FERROUS_SULFATE, upstream_of, PROD_PWR_IRON_PHOSPHATE]
+  - [PROD_CHEM_TIO2_SULFATE, upstream_of, PROD_CHEM_ARCH_COATING]
+  - [PROD_CHEM_TIO2_CHLORIDE, upstream_of, PROD_CHEM_AUTO_COATING]
+  - [PROD_CHEM_TIO2_CHLORIDE, upstream_of, PROD_CHEM_INDUSTRIAL_COATING]
+  - [PROD_CHEM_TIO2_SULFATE, upstream_of, PROD_CHEM_COLOR_MASTERBATCH]
+  - [PROD_CHEM_TIO2_SULFATE, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_TICL4, used_in, MKT_AEROSPACE]
+  - [MAT_TITANIUM_DIOXIDE, upstream_of, PROD_CHEM_POWDER_COATING]
+
+  # ===================== coatings / inks / explosives / dyes =====================
+  - [PROD_CHEM_RESIN_COATING_BINDER, upstream_of, PROD_CHEM_ARCH_COATING]
+  - [PROD_CHEM_RESIN_COATING_BINDER, upstream_of, PROD_BM_WOOD_COATING]
+  - [PROD_CHEM_RESIN_COATING_BINDER, upstream_of, PROD_CHEM_INDUSTRIAL_COATING]
+  - [PROD_CHEM_RESIN_COATING_BINDER, upstream_of, PROD_CHEM_COIL_COATING]
+  - [PROD_CHEM_RESIN_COATING_BINDER, upstream_of, PROD_CHEM_POWDER_COATING]
+  - [PROD_PETRO_ACRYLIC_ACID, upstream_of, PROD_CHEM_RESIN_COATING_BINDER]
+  - [PROD_CHEM_EPOXY_GRADE, upstream_of, PROD_CHEM_INDUSTRIAL_COATING]
+  - [PROD_CHEM_ADI, upstream_of, PROD_CHEM_AUTO_COATING]
+  - [PROD_CHEM_ADI, upstream_of, PROD_BM_WOOD_COATING]
+  - [PROD_CHEM_PIGMENT_ORGANIC, upstream_of, PROD_CHEM_PRINTING_INK]
+  - [PROD_CHEM_PIGMENT_ORGANIC, upstream_of, PROD_CHEM_AUTO_COATING]
+  - [PROD_CHEM_IRON_OXIDE_PIGMENT, upstream_of, PROD_CHEM_ARCH_COATING]
+  - [PROD_CHEM_PEARLESCENT, upstream_of, PROD_CHEM_AUTO_COATING]
+  - [PROD_CHEM_CB_PIGMENT, upstream_of, PROD_CHEM_PRINTING_INK]
+  - [PROD_CHEM_ARCH_COATING, used_in, MKT_REAL_ESTATE]
+  - [PROD_BM_WATERPROOF_COATING, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_WOOD_COATING, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_CHEM_AUTO_COATING, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_AUTO_COATING, used_in, MKT_EV]
+  - [PROD_CHEM_INDUSTRIAL_COATING, used_in, MKT_SHIPBUILDING]
+  - [PROD_CHEM_INDUSTRIAL_COATING, used_in, MKT_WIND]
+  - [PROD_CHEM_INDUSTRIAL_COATING, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_POWDER_COATING, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_CHEM_COIL_COATING, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_CHEM_COIL_COATING, uses_material, MAT_STEEL]
+  - [PROD_CHEM_ELECTRONIC_COATING, used_in, MKT_SMARTPHONE]
+  - [PROD_CHEM_PRINTING_INK, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_PCB_INK, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_CHEM_PCB_INK, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_CHEM_NITRIC_ACID, upstream_of, PROD_CHEM_AMMONIUM_NITRATE]
+  - [PROD_CHEM_AMMONIA, upstream_of, PROD_CHEM_NITRIC_ACID]
+  - [PROD_CHEM_AMMONIA, upstream_of, PROD_CHEM_AMMONIUM_NITRATE]
+  - [PROD_CHEM_AMMONIUM_NITRATE, upstream_of, PROD_CHEM_INDUSTRIAL_EXPLOSIVE]
+  - [PROD_CHEM_INDUSTRIAL_EXPLOSIVE, upstream_of, PROD_CHEM_BLASTING_SVC]
+  - [PROD_CHEM_DETONATOR, upstream_of, PROD_CHEM_BLASTING_SVC]
+  - [PROD_CHEM_DETONATING_CORD, upstream_of, PROD_CHEM_BLASTING_SVC]
+  - [PROD_CHEM_INDUSTRIAL_EXPLOSIVE, used_in, MKT_MINING]
+  - [PROD_CHEM_DETONATOR, used_in, MKT_MINING]
+  - [PROD_CHEM_BLASTING_SVC, used_in, MKT_MINING]
+  - [PROD_CHEM_BLASTING_SVC, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_DYE_INTERMEDIATE, upstream_of, PROD_CHEM_DISPERSE_DYE]
+  - [PROD_CHEM_DYE_INTERMEDIATE, upstream_of, PROD_CHEM_REACTIVE_DYE]
+  - [PROD_CHEM_DISPERSE_DYE, used_in, PROD_CHEM_PET_DTY]
+  - [PROD_CHEM_DISPERSE_DYE, used_in, MKT_APPAREL]
+  - [PROD_CHEM_REACTIVE_DYE, used_in, MKT_APPAREL]
+  - [PROD_CHEM_REACTIVE_DYE, uses_material, MAT_COTTON]
+  - [PROD_CHEM_INDIGO, used_in, MKT_APPAREL]
+  - [PROD_CHEM_TEXTILE_AUXILIARY, used_in, MKT_APPAREL]
+  - [PROD_CHEM_SILICONE_OIL, upstream_of, PROD_CHEM_TEXTILE_AUXILIARY]
+
+  # ===================== fluorochemicals =====================
+  - [PROD_CHEM_FLUORITE_CONC, upstream_of, PROD_CHEM_AHF]
+  - [PROD_CHEM_FLUORITE_CONC, uses_material, MAT_FLUORITE]
+  - [PROD_CHEM_AHF, uses_material, MAT_FLUORITE]
+  - [PROD_CHEM_AHF, uses_material, MAT_SULFURIC_ACID]
+  - [PROD_CHEM_AHF, upstream_of, PROD_CHEM_R22]
+  - [PROD_CHEM_AHF, upstream_of, PROD_CHEM_R32]
+  - [PROD_CHEM_AHF, upstream_of, PROD_CHEM_R134A]
+  - [PROD_CHEM_AHF, upstream_of, PROD_CHEM_R125]
+  - [PROD_CHEM_AHF, upstream_of, PROD_CHEM_VDF]
+  - [PROD_CHEM_AHF, upstream_of, PROD_ELEC_HF_ELECTRONIC]
+  - [PROD_CHEM_AHF, upstream_of, PROD_CHEM_PF5]
+  - [PROD_CHEM_AHF, upstream_of, PROD_CHEM_LIF]
+  - [PROD_CHEM_AHF, upstream_of, PROD_CHEM_ALF3]
+  - [PROD_CHEM_AHF, upstream_of, PROD_ELEC_NF3]
+  - [PROD_CHEM_AHF, upstream_of, PROD_ELEC_WF6]
+  - [PROD_CHEM_AHF, upstream_of, PROD_CHEM_PERFLUORO_FINE]
+  - [PROD_CHEM_R32, upstream_of, PROD_CHEM_R410A]
+  - [PROD_CHEM_R125, upstream_of, PROD_CHEM_R410A]
+  - [PROD_CHEM_R22, upstream_of, PROD_CHEM_TFE]
+  - [PROD_CHEM_TFE, upstream_of, PROD_CHEM_PTFE]
+  - [PROD_CHEM_TFE, upstream_of, PROD_CHEM_HFP]
+  - [PROD_CHEM_TFE, upstream_of, PROD_CHEM_FEP]
+  - [PROD_CHEM_TFE, upstream_of, PROD_CHEM_PFA]
+  - [PROD_CHEM_TFE, upstream_of, PROD_CHEM_PFSA_MEMBRANE]
+  - [PROD_CHEM_HFP, upstream_of, PROD_CHEM_FEP]
+  - [PROD_CHEM_HFP, upstream_of, PROD_CHEM_FKM]
+  - [PROD_CHEM_HFP, upstream_of, PROD_CHEM_FLUORINATED_COOLANT]
+  - [PROD_CHEM_VDF, upstream_of, PROD_CHEM_PVDF]
+  - [PROD_CHEM_VDF, upstream_of, PROD_CHEM_FKM]
+  - [PROD_CHEM_HFO, substitute_for, PROD_CHEM_R134A]
+  - [PROD_CHEM_R32, substitute_for, PROD_CHEM_R22]
+  - [PROD_CHEM_R32, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_CHEM_R22, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_CHEM_R410A, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_CHEM_R134A, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_R134A, used_in, MKT_PHARMA_RD]
+  - [PROD_CHEM_HFO, used_in, MKT_EV]
+  - [PROD_CHEM_PTFE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CHEM_PTFE, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_CHEM_PTFE, upstream_of, PROD_CHEM_PTFE_MEMBRANE]
+  - [PROD_CHEM_PVDF, upstream_of, PROD_PWR_BINDER]
+  - [PROD_CHEM_PVDF, used_in, MKT_EV]
+  - [PROD_CHEM_PVDF, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_FEP, used_in, MKT_DATA_CENTER]
+  - [PROD_CHEM_PFA, used_in, MKT_SEMI_FAB]
+  - [PROD_CHEM_FKM, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_FKM, used_in, MKT_SEMI_FAB]
+  - [PROD_CHEM_FLUORINATED_COOLANT, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_CHEM_FLUORINATED_COOLANT, used_in, MKT_SEMI_FAB]
+  - [PROD_CHEM_PFSA_MEMBRANE, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_CHEM_ALF3, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CHEM_ALF3, uses_material, MAT_FLUORITE]
+  - [PROD_CHEM_PERFLUORO_FINE, upstream_of, PROD_PHAR_INTERMEDIATE]
+  - [PROD_CHEM_PERFLUORO_FINE, upstream_of, PROD_CHEM_PESTICIDE_INTERMEDIATE]
+  - [PROD_CHEM_PF5, upstream_of, PROD_PWR_LIPF6]
+  - [PROD_CHEM_LIF, upstream_of, PROD_PWR_LIPF6]
+  - [PROD_CHEM_LIF, uses_material, MAT_LITHIUM_CARBONATE]
+
+  # ===================== polyurethane =====================
+  - [PROD_CHEM_PMDI, upstream_of, PROD_CHEM_PU_FOAM]
+  - [PROD_CHEM_MMDI, upstream_of, PROD_CHEM_TPU]
+  - [PROD_CHEM_MMDI, upstream_of, PROD_CHEM_SPANDEX_YARN]
+  - [PROD_CHEM_MMDI, upstream_of, PROD_CHEM_PU_LEATHER]
+  - [PROD_CHEM_MMDI, upstream_of, PROD_CHEM_PU_ADHESIVE_SEALANT]
+  - [PROD_CHEM_TDI, upstream_of, PROD_CHEM_PU_FOAM]
+  - [PROD_PETRO_TOLUENE, upstream_of, PROD_CHEM_TDI]
+  - [PROD_CHEM_NITRIC_ACID, upstream_of, PROD_CHEM_TDI]
+  - [PROD_PETRO_PO, upstream_of, PROD_CHEM_POLYETHER_POLYOL]
+  - [PROD_CHEM_POLYETHER_POLYOL, upstream_of, PROD_CHEM_PU_FOAM]
+  - [PROD_CHEM_ADIPIC_ACID, upstream_of, PROD_CHEM_POLYESTER_POLYOL]
+  - [PROD_CHEM_POLYESTER_POLYOL, upstream_of, PROD_CHEM_PU_LEATHER]
+  - [PROD_CHEM_POLYESTER_POLYOL, upstream_of, PROD_CHEM_TPU]
+  - [PROD_CHEM_PU_FOAM, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_CHEM_PU_FOAM, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_PU_FOAM, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_CHEM_PMDI, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_TPU, used_in, MKT_APPAREL]
+  - [PROD_CHEM_TPU, upstream_of, PROD_CHEM_WINDOW_FILM]
+  - [PROD_CHEM_PU_LEATHER, used_in, MKT_APPAREL]
+  - [PROD_CHEM_PU_LEATHER, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_PU_ADHESIVE_SEALANT, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_ADI, used_in, MKT_ICE_VEHICLE]
+
+  # ===================== food and feed additives =====================
+  - [PROD_CHEM_CITRAL, upstream_of, PROD_CHEM_VITAMIN_A]
+  - [PROD_CHEM_CITRAL, upstream_of, PROD_CHEM_VITAMIN_E]
+  - [PROD_CHEM_CITRAL, upstream_of, PROD_CHEM_FLAVORS]
+  - [PROD_CHEM_CITRAL, upstream_of, PROD_CHEM_CAROTENOID]
+  - [PROD_CHEM_VITAMIN_A, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_VITAMIN_E, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_VITAMIN_E, used_in, MKT_HEALTHCARE]
+  - [PROD_CHEM_VITAMIN_B, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_VITAMIN_D3, used_in, MKT_AGRICULTURE]
+  - [PROD_PHAR_VITAMIN_C, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_PHAR_VITAMIN_C, used_in, MKT_HEALTHCARE]
+  - [PROD_CHEM_METHIONINE, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_METHIONINE, uses_material, MAT_PROPYLENE]
+  - [PROD_CHEM_NACN, upstream_of, PROD_CHEM_METHIONINE]
+  - [PROD_CHEM_LYSINE, uses_material, MAT_GRAIN]
+  - [PROD_CHEM_LYSINE, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_LYSINE, substitute_for, PROD_CHEM_THREONINE]
+  - [PROD_CHEM_THREONINE, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_THREONINE, uses_material, MAT_SOYBEAN_MEAL]
+  - [PROD_CHEM_SUCRALOSE, substitute_for, PROD_CHEM_ACESULFAME]
+  - [PROD_CHEM_STEVIA, substitute_for, PROD_CHEM_SUCRALOSE]
+  - [PROD_CHEM_SUCRALOSE, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_CHEM_ACESULFAME, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_CHEM_STEVIA, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_CHEM_SUCRALOSE, uses_material, MAT_SUGAR]
+  - [PROD_CHEM_FLAVORS, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_CHEM_FLAVORS, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_CHEM_PRESERVATIVE, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_CHEM_CAROTENOID, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_FEED_ENZYME, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_FEED_PHOSPHATE, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_FOOD_PHOSPHATE, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_CHEM_WET_PHOSPHORIC, upstream_of, PROD_CHEM_FEED_PHOSPHATE]
+  - [PROD_CHEM_THERMAL_PHOSPHORIC, upstream_of, PROD_CHEM_FOOD_PHOSPHATE]
+
+  # ===================== organosilicon =====================
+  - [PROD_CHEM_METHYL_CHLOROSILANE, uses_material, MAT_SILICON_METAL]
+  - [PROD_CHEM_METHYL_CHLOROSILANE, uses_material, MAT_METHANOL]
+  - [PROD_CHEM_METHYL_CHLOROSILANE, upstream_of, PROD_CHEM_DMC_SILOXANE]
+  - [PROD_CHEM_METHYL_CHLOROSILANE, upstream_of, PROD_CHEM_FUMED_SILICA]
+  - [PROD_CHEM_METHYL_CHLOROSILANE, upstream_of, PROD_CHEM_SILICONE_RESIN]
+  - [PROD_CHEM_DMC_SILOXANE, upstream_of, PROD_CHEM_HTV_RUBBER]
+  - [PROD_CHEM_DMC_SILOXANE, upstream_of, PROD_CHEM_RTV_RUBBER]
+  - [PROD_CHEM_DMC_SILOXANE, upstream_of, PROD_CHEM_LSR]
+  - [PROD_CHEM_DMC_SILOXANE, upstream_of, PROD_CHEM_SILICONE_OIL]
+  - [PROD_CHEM_FUMED_SILICA, upstream_of, PROD_CHEM_HTV_RUBBER]
+  - [PROD_CHEM_TRICHLOROSILANE, upstream_of, PROD_CHEM_SILANE_COUPLING]
+  - [PROD_CHEM_TRICHLOROSILANE, upstream_of, PROD_ELEC_SILANE]
+  - [PROD_CHEM_TRICHLOROSILANE, uses_material, MAT_SILICON_METAL]
+  - [PROD_CHEM_TRICHLOROSILANE, used_in, MKT_SOLAR]
+  - [PROD_CHEM_HTV_RUBBER, used_in, MKT_POWER_GRID]
+  - [PROD_CHEM_HTV_RUBBER, used_in, MKT_EV]
+  - [PROD_CHEM_RTV_RUBBER, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_RTV_RUBBER, used_in, MKT_SOLAR]
+  - [PROD_CHEM_RTV_RUBBER, upstream_of, PROD_CHEM_CONSTRUCTION_SEALANT]
+  - [PROD_CHEM_LSR, used_in, MKT_HEALTHCARE]
+  - [PROD_CHEM_LSR, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_CHEM_SILICONE_OIL, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_CHEM_SILANE_COUPLING, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_SILANE_COUPLING, used_in, PROD_CHEM_PRECIP_SILICA]
+  - [PROD_CHEM_SILICONE_RESIN, used_in, MKT_CONSTRUCTION]
+
+  # ===================== adhesives =====================
+  - [PROD_CHEM_EPOXY_GRADE, upstream_of, PROD_CHEM_STRUCTURAL_ADHESIVE]
+  - [PROD_CHEM_EPOXY_GRADE, upstream_of, PROD_ELEC_ELECTRONIC_ADHESIVE]
+  - [PROD_CHEM_EPOXY_GRADE, uses_material, MAT_EPOXY_RESIN]
+  - [PROD_CHEM_SILICONE_OIL, upstream_of, PROD_ELEC_TIM]
+  - [PROD_CHEM_SPHERICAL_SILICA, upstream_of, PROD_ELEC_TIM]
+  - [PROD_CHEM_SPHERICAL_SILICA, upstream_of, PROD_ELEC_EMC]
+  - [PROD_CHEM_SPHERICAL_SILICA, upstream_of, PROD_CHEM_ELECTRONIC_RESIN]
+  - [PROD_CHEM_STRUCTURAL_ADHESIVE, used_in, MKT_EV]
+  - [PROD_CHEM_STRUCTURAL_ADHESIVE, used_in, MKT_WIND]
+  - [PROD_ELEC_ELECTRONIC_ADHESIVE, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ELEC_TIM, used_in, MKT_EV]
+  - [PROD_ELEC_TIM, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_CHEM_HOT_MELT, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_TAPE, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_TAPE, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_CHEM_BOPP_FILM, upstream_of, PROD_CHEM_TAPE]
+  - [PROD_CHEM_PRESSURE_SENSITIVE, upstream_of, PROD_CHEM_TAPE]
+  - [PROD_PETRO_ACRYLIC_ACID, upstream_of, PROD_CHEM_PRESSURE_SENSITIVE]
+  - [PROD_CHEM_PRESSURE_SENSITIVE, used_in, MKT_SMARTPHONE]
+  - [PROD_CHEM_CONSTRUCTION_SEALANT, used_in, MKT_REAL_ESTATE]
+
+  # ===================== electronic chemicals =====================
+  - [PROD_ELEC_HF_ELECTRONIC, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_H2SO4_ELECTRONIC, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_H2SO4_ELECTRONIC, uses_material, MAT_SULFURIC_ACID]
+  - [PROD_ELEC_H2O2_ELECTRONIC, used_in, MKT_SEMI_FAB]
+  - [PROD_CHEM_EG_PHOSPHORIC, used_in, MKT_SEMI_FAB]
+  - [PROD_CHEM_THERMAL_PHOSPHORIC, upstream_of, PROD_CHEM_EG_PHOSPHORIC]
+  - [PROD_ELEC_FUNCTIONAL_WET, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_FUNCTIONAL_WET, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ELEC_WET_CHEMICALS, used_in, MKT_SOLAR]
+  - [PROD_ELEC_NF3, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_NF3, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ELEC_WF6, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_FLUOROCARBON_GAS, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_SILANE, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_SILANE, used_in, MKT_SOLAR]
+  - [PROD_ELEC_DOPANT_GAS, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_HIGH_PURITY_AMMONIA, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_HIGH_PURITY_AMMONIA, used_in, MKT_SOLAR]
+  - [PROD_CHEM_AMMONIA, upstream_of, PROD_ELEC_HIGH_PURITY_AMMONIA]
+  - [PROD_ELEC_RARE_GAS, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_RARE_GAS, uses_material, MAT_INDUSTRIAL_GASES]
+  - [PROD_ELEC_SPECIALTY_GAS, uses_material, MAT_INDUSTRIAL_GASES]
+  - [PROD_ELEC_PR_RESIN, upstream_of, PROD_ELEC_ARF_PR]
+  - [PROD_ELEC_PR_RESIN, upstream_of, PROD_ELEC_KRF_PR]
+  - [PROD_ELEC_PR_RESIN, upstream_of, PROD_ELEC_GI_PR]
+  - [PROD_ELEC_PR_RESIN, upstream_of, PROD_ELEC_EUV_PR]
+  - [PROD_ELEC_PHOTOINITIATOR, upstream_of, PROD_ELEC_ARF_PR]
+  - [PROD_ELEC_PHOTOINITIATOR, upstream_of, PROD_ELEC_KRF_PR]
+  - [PROD_ELEC_PHOTOINITIATOR, upstream_of, PROD_ELEC_PCB_PR]
+  - [PROD_ELEC_PHOTOINITIATOR, upstream_of, PROD_ELEC_DISPLAY_PR]
+  - [PROD_CHEM_PHENOLIC_RESIN, upstream_of, PROD_ELEC_GI_PR]
+  - [PROD_ELEC_ARF_PR, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_KRF_PR, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_GI_PR, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_EUV_PR, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_PR_ANCILLARY, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_PCB_PR, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ELEC_DISPLAY_PR, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_CHEM_CMP_ABRASIVE, upstream_of, PROD_ELEC_CMP_SLURRY]
+  - [PROD_ELEC_CMP_SLURRY, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_CMP_PAD, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_CMP_PAD, uses_material, MAT_ENGINEERING_PLASTICS]
+  - [PROD_ELEC_PRECURSOR, used_in, MKT_SEMI_FAB]
+  - [PROD_CHEM_OLED_INTERMEDIATE, upstream_of, PROD_ELEC_OLED_MATERIAL]
+  - [PROD_ELEC_OLED_MATERIAL, used_in, MKT_SMARTPHONE]
+  - [PROD_ELEC_OLED_MATERIAL, used_in, MKT_WEARABLES_XR]
+  - [PROD_ELEC_LIQUID_CRYSTAL, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ELEC_PSPI, used_in, MKT_SEMI_FAB]
+  - [PROD_ELEC_PSPI, used_in, MKT_SMARTPHONE]
+  - [PROD_ELEC_EMC, uses_material, MAT_EPOXY_RESIN]
+  - [PROD_ELEC_EMC, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_CHEM_ELECTROPLATING_CHEM, used_in, MKT_SEMI_FAB]
+  - [PROD_CHEM_ELECTROPLATING_CHEM, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_CHEM_ELECTRONIC_RESIN, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_CHEM_ELECTRONIC_RESIN, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_CHEM_PPO_RESIN, upstream_of, PROD_CHEM_ELECTRONIC_RESIN]
+  - [PROD_CHEM_PHENOLIC_RESIN, upstream_of, PROD_CHEM_ELECTRONIC_RESIN]
+
+  # ===================== new materials =====================
+  - [PROD_CHEM_ADSORPTION_RESIN, used_in, MKT_PHARMA_RD]
+  - [PROD_CHEM_ADSORPTION_RESIN, used_in, MKT_ENVIRONMENTAL]
+  - [PROD_CHEM_ADSORPTION_RESIN, uses_material, MAT_LITHIUM_ORE]
+  - [PROD_PHAR_CHROMATOGRAPHY_RESIN, used_in, MKT_PHARMA_RD]
+  - [PROD_CHEM_MOLECULAR_SIEVE, upstream_of, PROD_AUTO_CATALYST]
+  - [PROD_CHEM_MOLECULAR_SIEVE, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_CHEM_MOLECULAR_SIEVE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_AUTO_CATALYST, used_in, MKT_ICE_VEHICLE]
+  - [PROD_AUTO_CATALYST, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_AUTO_CATALYST, uses_material, MAT_RARE_EARTH]
+  - [PROD_CHEM_REFINING_CATALYST, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CHEM_REFINING_CATALYST, used_in, PROD_PETRO_MPE]
+  - [PROD_CHEM_REFINING_CATALYST, used_in, PROD_PETRO_POE]
+  - [PROD_NFM_PM_CATALYST, used_in, MKT_PHARMA_RD]
+  - [PROD_ENV_DENOX_CATALYST, used_in, MKT_THERMAL_POWER]
+  - [PROD_CHEM_CNT, upstream_of, PROD_PWR_CONDUCTIVE_AGENT]
+  - [PROD_CHEM_GRAPHENE, upstream_of, PROD_PWR_CONDUCTIVE_AGENT]
+  - [PROD_CHEM_CNT, uses_material, MAT_NATURAL_GAS]
+  - [PROD_CHEM_AEROGEL, used_in, MKT_EV]
+  - [PROD_CHEM_AEROGEL, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CHEM_PEEK, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_CHEM_PEEK, used_in, MKT_AEROSPACE]
+  - [PROD_CHEM_PEEK, used_in, MKT_HEALTHCARE]
+  - [PROD_CHEM_PEEK, upstream_of, PROD_CHEM_SPECIAL_COMPOUND]
+  - [PROD_CHEM_PI_RESIN, upstream_of, PROD_CHEM_PI_FILM]
+  - [PROD_CHEM_PI_RESIN, upstream_of, PROD_CHEM_PI_FIBER]
+  - [PROD_CHEM_PI_RESIN, upstream_of, PROD_ELEC_PSPI]
+  - [PROD_CHEM_HOLLOW_GLASS_MICROSPHERE, used_in, MKT_SHIPBUILDING]
+  - [PROD_CHEM_HOLLOW_GLASS_MICROSPHERE, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_PHOTOINITIATOR_UV, upstream_of, PROD_CHEM_ELECTRONIC_COATING]
+  - [PROD_ELEC_PHOTOINITIATOR, upstream_of, PROD_CHEM_PHOTOINITIATOR_UV]
+
+  # ===================== battery chemicals =====================
+  - [PROD_PWR_LIPF6, upstream_of, PROD_PWR_ELECTROLYTE]
+  - [PROD_PWR_LIFSI, upstream_of, PROD_PWR_ELECTROLYTE]
+  - [PROD_PWR_ELECTROLYTE_SOLVENT, upstream_of, PROD_PWR_ELECTROLYTE]
+  - [PROD_PWR_ELECTROLYTE_ADDITIVE, upstream_of, PROD_PWR_ELECTROLYTE]
+  - [PROD_PWR_LIFSI, substitute_for, PROD_PWR_LIPF6]
+  - [PROD_PWR_LIPF6, uses_material, MAT_LITHIUM_CARBONATE]
+  - [PROD_PWR_LIFSI, uses_material, MAT_LITHIUM_CARBONATE]
+  - [PROD_PWR_ELECTROLYTE, used_in, MKT_EV]
+  - [PROD_PWR_ELECTROLYTE, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_PWR_NAPF6, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_CHEM_PF5, upstream_of, PROD_PWR_NAPF6]
+  - [PROD_CHEM_WET_PHOSPHORIC, upstream_of, PROD_PWR_IRON_PHOSPHATE]
+  - [PROD_PWR_IRON_PHOSPHATE, upstream_of, PROD_PWR_LFP]
+  - [PROD_PWR_IRON_PHOSPHATE, upstream_of, PROD_PWR_LMFP]
+  - [PROD_PWR_LFP, uses_material, MAT_LITHIUM_CARBONATE]
+  - [PROD_PWR_LMFP, uses_material, MAT_LITHIUM_CARBONATE]
+  - [PROD_PWR_LMFP, substitute_for, PROD_PWR_LFP]
+  - [PROD_PWR_LFP, used_in, MKT_EV]
+  - [PROD_PWR_LFP, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_PWR_LMFP, used_in, MKT_EV]
+  - [PROD_PWR_BINDER, used_in, MKT_EV]
+  - [PROD_PWR_CONDUCTIVE_AGENT, used_in, MKT_EV]
+  - [PROD_CHEM_CB_CONDUCTIVE, upstream_of, PROD_PWR_CONDUCTIVE_AGENT]
+  - [PROD_CHEM_CNT, substitute_for, PROD_CHEM_CB_CONDUCTIVE]
+  - [PROD_CHEM_NMP, used_in, MKT_EV]
+  - [PROD_PWR_SULFIDE_ELECTROLYTE, substitute_for, PROD_PWR_ELECTROLYTE]
+  - [PROD_PWR_SULFIDE_ELECTROLYTE, uses_material, MAT_LITHIUM_HYDROXIDE]
+  - [PROD_PWR_ELECTROLYTE_ADDITIVE, used_in, MKT_ENERGY_STORAGE]
+
+  # ===================== fine intermediates / other products =====================
+  - [PROD_PHAR_INTERMEDIATE, used_in, MKT_PHARMA_RD]
+  - [PROD_CHEM_PYRIDINE, upstream_of, PROD_CHEM_DIQUAT_PARAQUAT]
+  - [PROD_CHEM_PYRIDINE, upstream_of, PROD_CHEM_OTHER_INSECTICIDE]
+  - [PROD_CHEM_PYRIDINE, upstream_of, PROD_CHEM_VITAMIN_B]
+  - [PROD_CHEM_WATER_TREATMENT, used_in, MKT_ENVIRONMENTAL]
+  - [PROD_CHEM_WATER_TREATMENT, used_in, PROD_CHEM_OILFIELD_CHEM]
+  - [PROD_PETRO_ACRYLONITRILE, upstream_of, PROD_CHEM_WATER_TREATMENT]
+  - [PROD_CHEM_OILFIELD_CHEM, used_in, MKT_OIL_GAS]
+  - [PROD_CHEM_OILFIELD_CHEM, used_in, PROD_PETRO_FRACTURING_SVC]
+  - [PROD_CHEM_FLAME_RETARDANT, upstream_of, PROD_CHEM_FLAME_RETARDANT_COMPOUND]
+  - [PROD_CHEM_FLAME_RETARDANT, used_in, MKT_EV]
+  - [PROD_CHEM_PLASTIC_ADDITIVE, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_PLASTIC_ADDITIVE, upstream_of, PROD_CHEM_MOD_PP]
+  - [PROD_PETRO_EO, upstream_of, PROD_CHEM_SURFACTANT]
+  - [PROD_PETRO_EO, upstream_of, PROD_BM_ADMIXTURE]
+  - [PROD_CHEM_SURFACTANT, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_CHEM_CELLULOSE_ETHER, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_CELLULOSE_ETHER, used_in, MKT_PHARMA_RD]
+  - [PROD_CHEM_CELLULOSE_ETHER, uses_material, MAT_COTTON]
+  - [PROD_BM_ADMIXTURE, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_UREA, upstream_of, PROD_CHEM_DIESEL_EXHAUST_FLUID]
+  - [PROD_CHEM_DIESEL_EXHAUST_FLUID, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_TRAN_HAZMAT_LOGISTICS, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CHEM_CHEM_PARK_UTILITIES, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CHEM_SYNBIO_MATERIAL, upstream_of, PROD_CHEM_PA56]
+  - [PROD_CHEM_SYNBIO_MATERIAL, upstream_of, PROD_CHEM_LONG_CHAIN_PA]
+  - [PROD_CHEM_SYNBIO_MATERIAL, uses_material, MAT_GRAIN]
+  - [PROD_CHEM_PLA, uses_material, MAT_GRAIN]
+  - [PROD_CHEM_PLA, substitute_for, PROD_CHEM_PBAT]
+  - [PROD_CHEM_PLA, used_in, MKT_PACKAGING]
+
+  # ===================== non-metallic =====================
+  - [PROD_CHEM_SPHERICAL_SILICA, uses_material, MAT_QUARTZ]
+  - [PROD_CHEM_SPHERICAL_SILICA, used_in, MKT_SEMI_FAB]
+  - [PROD_CHEM_QUARTZ_SAND_HP, uses_material, MAT_QUARTZ]
+  - [PROD_CHEM_QUARTZ_SAND_HP, upstream_of, PROD_CHEM_QUARTZ_GLASS]
+  - [PROD_CHEM_QUARTZ_SAND_HP, used_in, MKT_SOLAR]
+  - [PROD_CHEM_QUARTZ_GLASS, used_in, MKT_SEMI_FAB]
+  - [PROD_CHEM_QUARTZ_GLASS, used_in, MKT_SOLAR]
+  - [PROD_CHEM_PEARLESCENT, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_ELEC_MLCC_POWDER, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_CHEM_STRUCTURAL_CERAMIC_POWDER, used_in, MKT_HEALTHCARE]
+  - [PROD_CHEM_STRUCTURAL_CERAMIC_POWDER, used_in, MKT_SMARTPHONE]
+  - [PROD_CHEM_DIATOMITE, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_CHEM_BENTONITE, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_CHEM_BENTONITE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_CHEM_KAOLIN, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_KAOLIN, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_BORON_NITRIDE, upstream_of, PROD_ELEC_TIM]
+  - [PROD_CHEM_GYPSUM, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_FLUORITE_CONC, used_in, MKT_STEEL_INDUSTRY]
+
+  # ===================== fibers =====================
+  - [PROD_CHEM_PET_POY, upstream_of, PROD_CHEM_PET_DTY]
+  - [PROD_CHEM_PET_POY, uses_material, MAT_PX_PTA]
+  - [PROD_CHEM_PET_FDY, uses_material, MAT_PX_PTA]
+  - [PROD_CHEM_PSF, uses_material, MAT_PX_PTA]
+  - [PROD_CHEM_PET_POY, uses_material, MAT_POLYESTER]
+  - [PROD_PETRO_MEG, upstream_of, PROD_CHEM_PET_POY]
+  - [PROD_PETRO_MEG, upstream_of, PROD_CHEM_PSF]
+  - [PROD_PETRO_FIBER_PET_CHIP, upstream_of, PROD_CHEM_PET_INDUSTRIAL_YARN]
+  - [PROD_PETRO_BOTTLE_PET_CHIP, upstream_of, PROD_CHEM_RECYCLED_PET_FIBER]
+  - [PROD_PETRO_FIBER_PET_CHIP, upstream_of, PROD_CHEM_BOPET_FILM]
+  - [PROD_CHEM_PET_DTY, used_in, MKT_APPAREL]
+  - [PROD_CHEM_PET_FDY, used_in, MKT_APPAREL]
+  - [PROD_CHEM_PSF, used_in, MKT_APPAREL]
+  - [PROD_CHEM_PSF, upstream_of, PROD_TEX_NONWOVEN]
+  - [PROD_CHEM_PSF, substitute_for, PROD_CHEM_VSF]
+  - [PROD_CHEM_PET_INDUSTRIAL_YARN, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_RECYCLED_PET_FIBER, substitute_for, PROD_CHEM_PSF]
+  - [PROD_CHEM_DISSOLVING_PULP, upstream_of, PROD_CHEM_VSF]
+  - [PROD_CHEM_DISSOLVING_PULP, upstream_of, PROD_CHEM_VFY]
+  - [PROD_CHEM_DISSOLVING_PULP, upstream_of, PROD_CHEM_LYOCELL]
+  - [PROD_CHEM_DISSOLVING_PULP, upstream_of, PROD_CHEM_TAC_FILM]
+  - [PROD_CHEM_DISSOLVING_PULP, uses_material, MAT_PULP]
+  - [PROD_CHEM_VSF, uses_material, MAT_CHLOR_ALKALI]
+  - [PROD_CHEM_VSF, uses_material, MAT_SULFURIC_ACID]
+  - [PROD_CHEM_VSF, substitute_for, PROD_CHEM_LYOCELL]
+  - [PROD_CHEM_VSF, used_in, MKT_APPAREL]
+  - [PROD_CHEM_VFY, used_in, MKT_APPAREL]
+  - [PROD_CHEM_LYOCELL, used_in, MKT_APPAREL]
+  - [PROD_CHEM_PTMEG, upstream_of, PROD_CHEM_SPANDEX_YARN]
+  - [PROD_CHEM_SPANDEX_YARN, used_in, MKT_APPAREL]
+  - [PROD_PETRO_BENZENE, upstream_of, PROD_CHEM_CAPROLACTAM]
+  - [PROD_CHEM_H2O2, upstream_of, PROD_CHEM_CAPROLACTAM]
+  - [PROD_CHEM_CAPROLACTAM, upstream_of, PROD_CHEM_PA6_CHIP]
+  - [PROD_CHEM_CAPROLACTAM, uses_material, MAT_SULFURIC_ACID]
+  - [PROD_CHEM_PA6_CHIP, upstream_of, PROD_CHEM_NYLON_FILAMENT]
+  - [PROD_CHEM_PA6_CHIP, upstream_of, PROD_CHEM_MOD_PA]
+  - [PROD_CHEM_PA6_CHIP, upstream_of, PROD_CHEM_BOPA_FILM]
+  - [PROD_PETRO_BUTADIENE, upstream_of, PROD_CHEM_ADN]
+  - [PROD_PETRO_ACRYLONITRILE, upstream_of, PROD_CHEM_ADN]
+  - [PROD_CHEM_ADN, upstream_of, PROD_CHEM_HMDA]
+  - [PROD_CHEM_HMDA, upstream_of, PROD_CHEM_PA66_RESIN]
+  - [PROD_CHEM_HMDA, upstream_of, PROD_CHEM_ADI]
+  - [PROD_CHEM_ADIPIC_ACID, upstream_of, PROD_CHEM_PA66_RESIN]
+  - [PROD_PETRO_BENZENE, upstream_of, PROD_CHEM_ADIPIC_ACID]
+  - [PROD_CHEM_PA66_RESIN, upstream_of, PROD_CHEM_NYLON_INDUSTRIAL_YARN]
+  - [PROD_CHEM_PA66_RESIN, upstream_of, PROD_CHEM_MOD_PA]
+  - [PROD_CHEM_PA66_RESIN, upstream_of, PROD_CHEM_NYLON_FILAMENT]
+  - [PROD_CHEM_PA56, substitute_for, PROD_CHEM_PA66_RESIN]
+  - [PROD_CHEM_NYLON_FILAMENT, used_in, MKT_APPAREL]
+  - [PROD_CHEM_NYLON_INDUSTRIAL_YARN, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_LONG_CHAIN_PA, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_LONG_CHAIN_PA, used_in, MKT_EV]
+  - [PROD_CHEM_PARA_ARAMID, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_CHEM_PARA_ARAMID, used_in, MKT_DEFENSE]
+  - [PROD_CHEM_PARA_ARAMID, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_META_ARAMID, used_in, MKT_DEFENSE]
+  - [PROD_CHEM_META_ARAMID, used_in, MKT_POWER_GRID]
+  - [PROD_CHEM_UHMWPE_RESIN, upstream_of, PROD_CHEM_UHMWPE_FIBER]
+  - [PROD_CHEM_UHMWPE_RESIN, upstream_of, PROD_PWR_SEPARATOR]
+  - [PROD_CHEM_UHMWPE_FIBER, used_in, MKT_DEFENSE]
+  - [PROD_CHEM_UHMWPE_FIBER, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_CHEM_UHMWPE_FIBER, used_in, MKT_SHIPBUILDING]
+  - [PROD_CHEM_UHMWPE_FIBER, substitute_for, PROD_CHEM_PARA_ARAMID]
+  - [PROD_PETRO_ACRYLONITRILE, upstream_of, PROD_CHEM_ACRYLIC_FIBER]
+  - [PROD_PETRO_ACRYLONITRILE, upstream_of, PROD_CHEM_PAN_PRECURSOR]
+  - [PROD_PETRO_ACRYLONITRILE, upstream_of, PROD_CHEM_ABS]
+  - [PROD_CHEM_ACRYLIC_FIBER, used_in, MKT_APPAREL]
+  - [PROD_CHEM_PAN_PRECURSOR, used_in, MKT_WIND]
+  - [PROD_CHEM_PAN_PRECURSOR, used_in, MKT_AEROSPACE]
+  - [PROD_CHEM_PPS_RESIN, upstream_of, PROD_CHEM_PPS_FIBER]
+  - [PROD_CHEM_PPS_FIBER, used_in, MKT_ENVIRONMENTAL]
+  - [PROD_CHEM_PI_FIBER, used_in, MKT_ENVIRONMENTAL]
+  - [PROD_CHEM_PBO_FIBER, used_in, MKT_DEFENSE]
+  - [PROD_PETRO_PP_HOMO, upstream_of, PROD_CHEM_PP_FIBER]
+  - [PROD_CHEM_PP_FIBER, upstream_of, PROD_TEX_NONWOVEN]
+
+  # ===================== resins =====================
+  - [PROD_CHEM_PC_RESIN, uses_material, MAT_ENGINEERING_PLASTICS]
+  - [PROD_CHEM_PC_RESIN, upstream_of, PROD_CHEM_MOD_PC_ALLOY]
+  - [PROD_CHEM_PC_RESIN, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_CHEM_PC_RESIN, used_in, MKT_EV]
+  - [PROD_CHEM_POM_RESIN, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_POM_RESIN, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_CHEM_PBT_RESIN, used_in, MKT_EV]
+  - [PROD_CHEM_PBT_RESIN, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_CHEM_PPS_RESIN, upstream_of, PROD_CHEM_SPECIAL_COMPOUND]
+  - [PROD_CHEM_PPS_RESIN, used_in, MKT_EV]
+  - [PROD_CHEM_PPS_RESIN, uses_material, MAT_CHLOR_ALKALI]
+  - [PROD_CHEM_LCP_RESIN, upstream_of, PROD_CHEM_SPECIAL_COMPOUND]
+  - [PROD_CHEM_LCP_RESIN, used_in, MKT_SMARTPHONE]
+  - [PROD_CHEM_LCP_RESIN, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_CHEM_PPO_RESIN, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_CHEM_PSU_RESIN, used_in, MKT_HEALTHCARE]
+  - [PROD_CHEM_PSU_RESIN, upstream_of, PROD_ENV_MEMBRANE]
+  - [PROD_CHEM_PMMA, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_CHEM_PMMA, used_in, MKT_ICE_VEHICLE]
+  - [PROD_PETRO_STYRENE, upstream_of, PROD_CHEM_ABS]
+  - [PROD_PETRO_BUTADIENE, upstream_of, PROD_CHEM_ABS]
+  - [PROD_PETRO_STYRENE, upstream_of, PROD_CHEM_PS]
+  - [PROD_CHEM_ABS, upstream_of, PROD_CHEM_MOD_ABS_HIPS]
+  - [PROD_CHEM_ABS, upstream_of, PROD_CHEM_MOD_PC_ALLOY]
+  - [PROD_CHEM_ABS, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_CHEM_PS, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_PS, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_CHEM_PBAT, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_PBAT, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_ADIPIC_ACID, upstream_of, PROD_CHEM_PBAT]
+  - [PROD_CHEM_PETG, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_PETG, used_in, MKT_HEALTHCARE]
+  - [PROD_CHEM_PHENOLIC_RESIN, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_UPR, used_in, MKT_WIND]
+  - [PROD_CHEM_UPR, uses_material, MAT_GLASS_FIBER]
+  - [PROD_CHEM_EPOXY_GRADE, used_in, MKT_WIND]
+  - [PROD_CHEM_EPOXY_GRADE, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_CHEM_COC, used_in, MKT_HEALTHCARE]
+  - [PROD_CHEM_COC, used_in, MKT_SMARTPHONE]
+  - [PROD_CHEM_UHMWPE_RESIN, uses_material, MAT_ETHYLENE]
+  - [PROD_CHEM_SEMI_AROMATIC_PA, upstream_of, PROD_CHEM_SPECIAL_COMPOUND]
+  - [PROD_CHEM_SEMI_AROMATIC_PA, used_in, MKT_CONSUMER_ELECTRONICS]
+
+  # ===================== modified plastics =====================
+  - [PROD_PETRO_PP_COPO, upstream_of, PROD_CHEM_MOD_PP]
+  - [PROD_CHEM_MOD_PP, uses_material, MAT_PLASTICS]
+  - [PROD_CHEM_MOD_PP, uses_material, MAT_GLASS_FIBER]
+  - [PROD_CHEM_MOD_PP, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_MOD_PP, used_in, MKT_EV]
+  - [PROD_CHEM_MOD_PP, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_CHEM_MOD_PA, uses_material, MAT_GLASS_FIBER]
+  - [PROD_CHEM_MOD_PA, used_in, MKT_EV]
+  - [PROD_CHEM_MOD_PA, used_in, MKT_POWER_GRID]
+  - [PROD_CHEM_MOD_PC_ALLOY, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_CHEM_MOD_PC_ALLOY, used_in, MKT_EV]
+  - [PROD_CHEM_FLAME_RETARDANT_COMPOUND, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_CHEM_FLAME_RETARDANT_COMPOUND, used_in, MKT_EV]
+  - [PROD_CHEM_MOD_ABS_HIPS, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_CHEM_TPE, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_TPE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_CHEM_TPE, uses_material, MAT_SYNTHETIC_RUBBER]
+  - [PROD_CHEM_COLOR_MASTERBATCH, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_RECYCLED_PLASTIC, substitute_for, PROD_CHEM_MOD_PP]
+  - [PROD_CHEM_RECYCLED_PLASTIC, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_SPECIAL_COMPOUND, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_CHEM_SPECIAL_COMPOUND, used_in, MKT_EV]
+  - [PROD_CHEM_SPECIAL_COMPOUND, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_CHEM_SPECIAL_COMPOUND, uses_material, MAT_CARBON_FIBER]
+
+  # ===================== films =====================
+  - [PROD_PETRO_PP_HOMO, upstream_of, PROD_CHEM_BOPP_FILM]
+  - [PROD_PETRO_PP_HOMO, upstream_of, PROD_CHEM_CAPACITOR_BOPP]
+  - [PROD_CHEM_BOPP_FILM, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_BOPET_FILM, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_BOPET_FILM, upstream_of, PROD_PWR_BACKSHEET]
+  - [PROD_CHEM_BOPET_FILM, upstream_of, PROD_CHEM_COMPOSITE_CU_FOIL_FILM]
+  - [PROD_CHEM_OPTICAL_PET_FILM, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_CHEM_OPTICAL_PET_FILM, upstream_of, PROD_ELEC_POLARIZER]
+  - [PROD_CHEM_BOPA_FILM, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_CAPACITOR_BOPP, used_in, MKT_EV]
+  - [PROD_CHEM_CAPACITOR_BOPP, used_in, MKT_SOLAR]
+  - [PROD_CHEM_PI_FILM, used_in, MKT_SMARTPHONE]
+  - [PROD_CHEM_PI_FILM, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_PETRO_EVA, upstream_of, PROD_PWR_ENCAP_FILM]
+  - [PROD_PETRO_POE, upstream_of, PROD_PWR_ENCAP_FILM]
+  - [PROD_PWR_ENCAP_FILM, used_in, MKT_SOLAR]
+  - [PROD_PWR_BACKSHEET, used_in, MKT_SOLAR]
+  - [PROD_CHEM_PVDF, upstream_of, PROD_PWR_BACKSHEET]
+  - [PROD_PETRO_HDPE, upstream_of, PROD_PWR_SEPARATOR]
+  - [PROD_PWR_SEPARATOR, used_in, MKT_EV]
+  - [PROD_PWR_SEPARATOR, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_CHEM_PVA_FILM, upstream_of, PROD_ELEC_POLARIZER]
+  - [PROD_CHEM_TAC_FILM, upstream_of, PROD_ELEC_POLARIZER]
+  - [PROD_ELEC_POLARIZER, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_ENV_MEMBRANE, used_in, MKT_ENVIRONMENTAL]
+  - [PROD_CHEM_WINDOW_FILM, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_WINDOW_FILM, used_in, MKT_EV]
+  - [PROD_CHEM_PVB_FILM, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_PVB_FILM, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_COMPOSITE_CU_FOIL_FILM, used_in, MKT_EV]
+  - [PROD_CHEM_PTFE_MEMBRANE, used_in, MKT_APPAREL]
+  - [PROD_CHEM_PTFE_MEMBRANE, used_in, MKT_ENVIRONMENTAL]
+
+  # ===================== plastic products =====================
+  - [PROD_PETRO_HDPE, upstream_of, PROD_CHEM_PLASTIC_PIPE]
+  - [PROD_CHEM_PLASTIC_PIPE, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_PLASTIC_PIPE, used_in, MKT_REAL_ESTATE]
+  - [PROD_PETRO_LLDPE, upstream_of, PROD_CHEM_AGRI_FILM]
+  - [PROD_CHEM_AGRI_FILM, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_PLASTIC_PROFILE, used_in, MKT_REAL_ESTATE]
+  - [PROD_LIGHT_SPC_FLOOR, used_in, MKT_REAL_ESTATE]
+  - [PROD_CHEM_PLASTIC_HOUSEWARE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_CHEM_PLASTIC_HOUSEWARE, uses_material, MAT_PLASTICS]
+  - [PROD_CHEM_FOAM_PRODUCTS, used_in, MKT_EV]
+  - [PROD_CHEM_FOAM_PRODUCTS, used_in, MKT_WIND]
+  - [PROD_CHEM_FOAM_PRODUCTS, uses_material, MAT_PLASTICS]
+  - [PROD_CHEM_ARTIFICIAL_TURF, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_CHEM_ARTIFICIAL_TURF, uses_material, MAT_PLASTICS]
+  - [PROD_TEX_NONWOVEN, used_in, MKT_HEALTHCARE]
+  - [PROD_TEX_NONWOVEN, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_CHEM_PLASTIC_PALLET, used_in, MKT_LOGISTICS]
+  - [PROD_CHEM_PLASTIC_PALLET, uses_material, MAT_PLASTICS]
+  - [PROD_CHEM_WOVEN_PLASTIC, used_in, MKT_PACKAGING]
+  - [PROD_CHEM_WOVEN_PLASTIC, uses_material, MAT_PLASTICS]
+
+  # ===================== rubber =====================
+  - [PROD_CHEM_RUBBER_BELT, uses_material, MAT_NATURAL_RUBBER]
+  - [PROD_CHEM_RUBBER_BELT, uses_material, MAT_CARBON_BLACK]
+  - [PROD_CHEM_RUBBER_BELT, used_in, MKT_MINING]
+  - [PROD_CHEM_RUBBER_BELT, used_in, MKT_LOGISTICS]
+  - [PROD_CHEM_RUBBER_HOSE, uses_material, MAT_SYNTHETIC_RUBBER]
+  - [PROD_CHEM_RUBBER_HOSE, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_RUBBER_SEAL, uses_material, MAT_SYNTHETIC_RUBBER]
+  - [PROD_CHEM_RUBBER_SEAL, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_RUBBER_SEAL, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_CHEM_FKM, upstream_of, PROD_CHEM_RUBBER_SEAL]
+  - [PROD_CHEM_RUBBER_DAMPING, used_in, MKT_RAIL]
+  - [PROD_CHEM_RUBBER_DAMPING, used_in, MKT_ICE_VEHICLE]
+  - [PROD_PHAR_MEDICAL_GLOVE, uses_material, MAT_SYNTHETIC_RUBBER]
+  - [PROD_PHAR_MEDICAL_GLOVE, used_in, MKT_HEALTHCARE]
+  - [PROD_CHEM_RUBBER_TRACK, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_RUBBER_TRACK, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_RECLAIMED_RUBBER, substitute_for, PROD_CHEM_SPECIALTY_RUBBER]
+  - [PROD_CHEM_RECLAIMED_RUBBER, used_in, MKT_ICE_VEHICLE]
+  - [PROD_PETRO_BUTADIENE, upstream_of, PROD_CHEM_SPECIALTY_RUBBER]
+  - [PROD_CHEM_SPECIALTY_RUBBER, upstream_of, PROD_CHEM_RUBBER_SEAL]
+  - [PROD_CHEM_SPECIALTY_RUBBER, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_CB_RUBBER_GRADE, uses_material, MAT_CARBON_BLACK]
+  - [PROD_CHEM_CB_RUBBER_GRADE, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_CB_RUBBER_GRADE, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_CHEM_CB_RUBBER_GRADE, upstream_of, PROD_CHEM_RUBBER_BELT]
+  - [PROD_CHEM_CB_CONDUCTIVE, used_in, MKT_EV]
+  - [PROD_CHEM_CB_PIGMENT, upstream_of, PROD_CHEM_COLOR_MASTERBATCH]
+  - [PROD_CHEM_PRECIP_SILICA, substitute_for, PROD_CHEM_CB_RUBBER_GRADE]
+  - [PROD_CHEM_RUBBER_ACCELERATOR, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_RUBBER_ANTIOXIDANT, used_in, MKT_ICE_VEHICLE]
+  - [PROD_CHEM_INSOLUBLE_SULFUR, used_in, MKT_ICE_VEHICLE]
+  - [PROD_PETRO_SULFUR, upstream_of, PROD_CHEM_INSOLUBLE_SULFUR]
+
+  # ===================== agrochemicals =====================
+  - [PROD_CHEM_AMMONIA, upstream_of, PROD_CHEM_UREA]
+  - [PROD_CHEM_AMMONIA, upstream_of, PROD_CHEM_AMMONIUM_SULFATE]
+  - [PROD_CHEM_AMMONIA, upstream_of, PROD_CHEM_DAP]
+  - [PROD_CHEM_AMMONIA, upstream_of, PROD_CHEM_MAP]
+  - [PROD_CHEM_AMMONIA, upstream_of, PROD_CHEM_NH4CL]
+  - [PROD_CHEM_AMMONIA, uses_material, MAT_NATURAL_GAS]
+  - [PROD_CHEM_AMMONIA, uses_material, MAT_HYDROGEN]
+  - [PROD_CHEM_UREA, upstream_of, PROD_CHEM_MELAMINE]
+  - [PROD_CHEM_UREA, upstream_of, PROD_CHEM_NPK]
+  - [PROD_CHEM_UREA, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_UREA, uses_material, MAT_THERMAL_COAL]
+  - [PROD_CHEM_MELAMINE, used_in, MKT_CONSTRUCTION]
+  - [PROD_CHEM_AMMONIUM_SULFATE, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_AMMONIUM_SULFATE, uses_material, MAT_SULFURIC_ACID]
+  - [PROD_CHEM_PHOSPHATE_CONC, uses_material, MAT_PHOSPHATE_ROCK]
+  - [PROD_CHEM_PHOSPHATE_CONC, upstream_of, PROD_CHEM_WET_PHOSPHORIC]
+  - [PROD_CHEM_PHOSPHATE_CONC, upstream_of, PROD_CHEM_YELLOW_PHOSPHORUS]
+  - [PROD_CHEM_PHOSPHATE_CONC, upstream_of, PROD_CHEM_SSP_TSP]
+  - [PROD_CHEM_WET_PHOSPHORIC, uses_material, MAT_SULFURIC_ACID]
+  - [PROD_CHEM_WET_PHOSPHORIC, upstream_of, PROD_CHEM_DAP]
+  - [PROD_CHEM_WET_PHOSPHORIC, upstream_of, PROD_CHEM_MAP]
+  - [PROD_CHEM_WET_PHOSPHORIC, upstream_of, PROD_CHEM_INDUSTRIAL_PHOSPHATE]
+  - [PROD_CHEM_WET_PHOSPHORIC, upstream_of, PROD_CHEM_GYPSUM]
+  - [PROD_CHEM_YELLOW_PHOSPHORUS, uses_material, MAT_ELECTRICITY]
+  - [PROD_CHEM_YELLOW_PHOSPHORUS, uses_material, MAT_COKE]
+  - [PROD_CHEM_YELLOW_PHOSPHORUS, upstream_of, PROD_CHEM_THERMAL_PHOSPHORIC]
+  - [PROD_CHEM_YELLOW_PHOSPHORUS, upstream_of, PROD_CHEM_PCL3]
+  - [PROD_CHEM_YELLOW_PHOSPHORUS, upstream_of, PROD_CHEM_SPECIALTY_PHOSPHORUS]
+  - [PROD_CHEM_YELLOW_PHOSPHORUS, upstream_of, PROD_CHEM_PF5]
+  - [PROD_CHEM_PCL3, upstream_of, PROD_CHEM_GLYPHOSATE_TECH]
+  - [PROD_CHEM_PCL3, upstream_of, PROD_CHEM_GLUFOSINATE]
+  - [PROD_CHEM_PCL3, upstream_of, PROD_CHEM_FLAME_RETARDANT]
+  - [PROD_CHEM_PCL3, upstream_of, PROD_CHEM_PESTICIDE_INTERMEDIATE]
+  - [PROD_CHEM_PCL3, upstream_of, PROD_PWR_ELECTROLYTE_ADDITIVE]
+  - [PROD_CHEM_PESTICIDE_INTERMEDIATE, upstream_of, PROD_CHEM_GLYPHOSATE_TECH]
+  - [PROD_CHEM_MAP, upstream_of, PROD_PWR_IRON_PHOSPHATE]
+  - [PROD_CHEM_MAP, upstream_of, PROD_CHEM_NPK]
+  - [PROD_CHEM_DAP, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_MAP, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_SSP_TSP, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_INDUSTRIAL_PHOSPHATE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CHEM_SPECIALTY_PHOSPHORUS, used_in, MKT_SEMI_FAB]
+  - [PROD_CHEM_GLYPHOSATE_TECH, upstream_of, PROD_CHEM_PESTICIDE_FORMULATION]
+  - [PROD_CHEM_GLUFOSINATE, upstream_of, PROD_CHEM_PESTICIDE_FORMULATION]
+  - [PROD_CHEM_GLUFOSINATE, substitute_for, PROD_CHEM_DIQUAT_PARAQUAT]
+  - [PROD_CHEM_GLUFOSINATE, substitute_for, PROD_CHEM_GLYPHOSATE_TECH]
+  - [PROD_CHEM_DIQUAT_PARAQUAT, upstream_of, PROD_CHEM_PESTICIDE_FORMULATION]
+  - [PROD_CHEM_OTHER_HERBICIDE, upstream_of, PROD_CHEM_PESTICIDE_FORMULATION]
+  - [PROD_CHEM_PYRETHROID, upstream_of, PROD_CHEM_PESTICIDE_FORMULATION]
+  - [PROD_CHEM_PYRETHROID, upstream_of, PROD_CHEM_HOUSEHOLD_INSECTICIDE]
+  - [PROD_CHEM_DIAMIDE_INSECTICIDE, upstream_of, PROD_CHEM_PESTICIDE_FORMULATION]
+  - [PROD_CHEM_OTHER_INSECTICIDE, upstream_of, PROD_CHEM_PESTICIDE_FORMULATION]
+  - [PROD_CHEM_FUNGICIDE, upstream_of, PROD_CHEM_PESTICIDE_FORMULATION]
+  - [PROD_CHEM_PESTICIDE_INTERMEDIATE, upstream_of, PROD_CHEM_DIAMIDE_INSECTICIDE]
+  - [PROD_CHEM_PESTICIDE_INTERMEDIATE, upstream_of, PROD_CHEM_PYRETHROID]
+  - [PROD_CHEM_PESTICIDE_INTERMEDIATE, upstream_of, PROD_CHEM_FUNGICIDE]
+  - [PROD_CHEM_GLYPHOSATE_TECH, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_PESTICIDE_FORMULATION, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_PGR, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_BIOPESTICIDE, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_BIOPESTICIDE, substitute_for, PROD_CHEM_OTHER_INSECTICIDE]
+  - [PROD_CHEM_HOUSEHOLD_INSECTICIDE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_CHEM_KCL, uses_material, MAT_POTASH]
+  - [PROD_CHEM_KCL, upstream_of, PROD_CHEM_SOP]
+  - [PROD_CHEM_KCL, upstream_of, PROD_CHEM_POTASSIUM_NITRATE]
+  - [PROD_CHEM_KCL, upstream_of, PROD_CHEM_NPK]
+  - [PROD_CHEM_KCL, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_SOP, upstream_of, PROD_CHEM_NPK]
+  - [PROD_CHEM_SOP, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_POTASSIUM_NITRATE, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_NPK, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_NPK, upstream_of, PROD_CHEM_AGRI_SERVICE]
+  - [PROD_CHEM_NEW_FERTILIZER, used_in, MKT_AGRICULTURE]
+  - [PROD_CHEM_NEW_FERTILIZER, substitute_for, PROD_CHEM_NPK]
+  - [PROD_CHEM_AGRI_SERVICE, used_in, MKT_AGRICULTURE]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_CHEM_FEP, upstream_of, PROD_COMM_FOAM_INSULATION]
+  - [PROD_CHEM_PTFE, upstream_of, PROD_COMM_FOAM_INSULATION]
+  - [PROD_CHEM_BOPET_FILM, upstream_of, PROD_COMM_SHIELD_TAPE]
+  - [PROD_CHEM_FLUORINATED_COOLANT, used_in, PROD_COMP_IMMERSION_TANK]
+  - [PROD_CHEM_ELECTRONIC_RESIN, upstream_of, PROD_ELEC_CCL]
+  - [PROD_CHEM_SPHERICAL_SILICA, upstream_of, PROD_ELEC_CCL]
+  - [PROD_CHEM_PCB_INK, used_in, PROD_ELEC_PCB]
+  - [PROD_CHEM_QUARTZ_GLASS, upstream_of, PROD_ELEC_QUARTZ_PARTS]
+  - [PROD_CHEM_UHMWPE_RESIN, upstream_of, PROD_PWR_WET_SEPARATOR]
+  - [PROD_CHEM_PAN_PRECURSOR, upstream_of, MAT_CARBON_FIBER]
+  - [PROD_CHEM_RESIN_COATING_BINDER, upstream_of, PROD_BM_INTERIOR_PAINT]
+  - [PROD_CHEM_RESIN_COATING_BINDER, upstream_of, PROD_BM_EXTERIOR_PAINT]
+  - [PROD_CHEM_POLYETHER_MONOMER, upstream_of, PROD_BM_PCE]
+  - [PROD_CHEM_COAL_METHANOL, upstream_of, MAT_METHANOL]
+  - [PROD_CHEM_DENSE_SODA, upstream_of, MAT_SODA_ASH]
+  - [PROD_CHEM_LIQUID_CAUSTIC, upstream_of, MAT_CHLOR_ALKALI]
+  - [PROD_CHEM_TIO2_SULFATE, upstream_of, MAT_TITANIUM_DIOXIDE]
+  - [PROD_CHEM_TIO2_CHLORIDE, upstream_of, MAT_TITANIUM_DIOXIDE]
+  - [PROD_CHEM_CB_RUBBER_GRADE, upstream_of, MAT_CARBON_BLACK]
+  - [PROD_CHEM_TRICHLOROSILANE, upstream_of, MAT_POLYSILICON]
+  - [PROD_CHEM_CB_RUBBER_GRADE, used_in, PROD_AUTO_TIRE]
+  - [PROD_CHEM_RUBBER_ACCELERATOR, used_in, PROD_AUTO_TIRE]
+  - [PROD_CHEM_PET_INDUSTRIAL_YARN, used_in, PROD_AUTO_TIRE]
+  - [PROD_CHEM_NYLON_INDUSTRIAL_YARN, used_in, PROD_AUTO_TIRE]
+  - [PROD_CHEM_VITAMIN_A, used_in, PROD_AGRI_PREMIX]
+  - [PROD_CHEM_VITAMIN_E, used_in, PROD_AGRI_PREMIX]
+  - [PROD_CHEM_VITAMIN_B, used_in, PROD_AGRI_PREMIX]
+  - [PROD_CHEM_VITAMIN_D3, used_in, PROD_AGRI_PREMIX]
+  - [PROD_CHEM_METHIONINE, used_in, PROD_AGRI_FEED]
+  - [PROD_CHEM_FEED_PHOSPHATE, used_in, PROD_AGRI_FEED]
+  - [PROD_CHEM_FEED_ENZYME, used_in, PROD_AGRI_FEED]
+  - [PROD_CHEM_UREA, used_in, PROD_AGRI_FARMED_GRAIN]
+  - [PROD_CHEM_NPK, used_in, PROD_AGRI_FARMED_GRAIN]
+  - [PROD_CHEM_PESTICIDE_FORMULATION, used_in, PROD_AGRI_FARMED_GRAIN]
+  - [PROD_CHEM_PESTICIDE_FORMULATION, used_in, PROD_AGRI_FRUIT_FARMING]
+  - [PROD_CHEM_R32, used_in, PROD_HA_SPLIT_AC]
+  - [PROD_CHEM_R32, used_in, PROD_HA_AIR_SOURCE_HEAT_PUMP]
+  - [PROD_CHEM_R410A, used_in, PROD_HA_CENTRAL_AC]
+  - [PROD_CHEM_HFO, used_in, PROD_AUTO_HEAT_PUMP]
+  - [PROD_CHEM_R134A, used_in, PROD_AUTO_HVAC_MODULE]
+  - [PROD_CHEM_NYLON_FILAMENT, upstream_of, PROD_TEX_WOVEN_FABRIC]
+  - [PROD_CHEM_NYLON_FILAMENT, upstream_of, PROD_TEX_KNIT_FABRIC]
+  - [PROD_CHEM_PU_FOAM, used_in, PROD_LIGHT_SOFA]
+  - [PROD_CHEM_PU_FOAM, used_in, PROD_LIGHT_MATTRESS]
+  - [PROD_CHEM_META_ARAMID, upstream_of, PROD_LIGHT_ARAMID_PAPER]
+
+sw_l3_map:
+  "220201": [SEG_CHEM_SODA_ASH]
+  "220202": [SEG_CHEM_CHLOR_ALKALI]
+  "220203": [SEG_CHEM_INORGANIC_SALT]
+  "220204": [SEG_CHEM_OTHER_RAW]
+  "220205": [SEG_CHEM_COAL_CHEM]
+  "220206": [SEG_CHEM_TIO2]
+  "220305": [SEG_CHEM_COATINGS]
+  "220307": [SEG_CHEM_EXPLOSIVES]
+  "220308": [SEG_CHEM_TEXTILE_CHEM]
+  "220309": [SEG_CHEM_OTHER_PRODUCTS, SEG_CHEM_ELECTRONIC_CHEM, SEG_CHEM_NEW_MATERIALS, SEG_PWR_BATTERY_CHEM, SEG_CHEM_FINE_INTERMEDIATES]
+  "220311": [SEG_CHEM_FLUORO]
+  "220313": [SEG_CHEM_POLYURETHANE]
+  "220315": [SEG_CHEM_FOOD_FEED]
+  "220316": [SEG_CHEM_SILICONE]
+  "220317": [SEG_CHEM_ADHESIVES]
+  "220401": [SEG_CHEM_POLYESTER_FIBER]
+  "220403": [SEG_CHEM_VISCOSE]
+  "220404": [SEG_CHEM_OTHER_FIBERS]
+  "220405": [SEG_CHEM_SPANDEX]
+  "220406": [SEG_CHEM_NYLON]
+  "220501": [SEG_CHEM_PLASTIC_PRODUCTS]
+  "220503": [SEG_CHEM_MODIFIED_PLASTICS]
+  "220504": [SEG_CHEM_RESINS]
+  "220505": [SEG_CHEM_FILMS]
+  "220602": [SEG_CHEM_RUBBER_PRODUCTS]
+  "220603": [SEG_CHEM_CARBON_BLACK]
+  "220604": [SEG_CHEM_RUBBER_ADDITIVES]
+  "220801": [SEG_CHEM_NITROGEN]
+  "220802": [SEG_CHEM_PHOSPHORUS]
+  "220803": [SEG_CHEM_PESTICIDES]
+  "220804": [SEG_CHEM_POTASH]
+  "220805": [SEG_CHEM_COMPOUND_FERT]
+  "220901": [SEG_CHEM_NONMETALLIC]

@@ -1,0 +1,776 @@
+<title>A股产业链图谱</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: chain canvas on the left (upstream → downstream), a tabbed dossier on the right; stacks on phones. */
+:root {
+  --bg: #eef1f4; --panel: #ffffff; --ink: #172230; --muted: #5d6b7b; --line: #d5dce4; --soft: #e4e9ef;
+  --company: #23395b; --product: #f7f9fb; --product-line: #8a9bb0; --material: #b9852f; --tech: #6d4fa3;
+  --market: #2f7d63; --segment: #7c8794; --evidence: #1f6feb; --customer: #2f7d63; --supplier: #b9852f;
+  --prior: #a7b2bf; --risk: #c4372d; --accent: #23395b;
+  --display: "Noto Serif SC", "Songti SC", serif; --body: "Noto Sans SC", "PingFang SC", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #10151c; --panel: #171e27; --ink: #e3e9f0; --muted: #93a1b1; --line: #2c3743; --soft: #212a35;
+  --company: #8fb0e0; --product: #1d2630; --product-line: #6b7d92; --material: #d9a64f; --tech: #a98ae0;
+  --market: #5cc29c; --segment: #8d98a6; --evidence: #6aa6ff; --customer: #5cc29c; --supplier: #d9a64f;
+  --prior: #4d5a68; --risk: #ef6b5f; --accent: #8fb0e0; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #10151c; --panel: #171e27; --ink: #e3e9f0; --muted: #93a1b1; --line: #2c3743; --soft: #212a35;
+  --company: #8fb0e0; --product: #1d2630; --product-line: #6b7d92; --material: #d9a64f; --tech: #a98ae0;
+  --market: #5cc29c; --segment: #8d98a6; --evidence: #6aa6ff; --customer: #5cc29c; --supplier: #d9a64f;
+  --prior: #4d5a68; --risk: #ef6b5f; --accent: #8fb0e0; color-scheme: dark }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 14px; }
+.app { height: 100%; display: grid; grid-template-rows: auto 1fr; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 12px; gap: 12px; box-sizing: border-box; }
+header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+h1 { font-family: var(--display); font-weight: 900; font-size: 22px; margin: 0; letter-spacing: .02em; }
+h1 small { font-family: var(--body); font-weight: 400; font-size: 12px; color: var(--muted); margin-left: 8px; letter-spacing: 0; }
+.search { position: relative; flex: 1 1 260px; max-width: 420px; }
+.search input { width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); font: inherit; }
+.search input:focus-visible, button:focus-visible { outline: 2px solid var(--evidence); outline-offset: 1px; }
+.results { position: absolute; z-index: 20; left: 0; right: 0; top: 100%; margin-top: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; max-height: 320px; overflow: auto; box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+.results button { display: flex; width: 100%; justify-content: space-between; gap: 8px; border: 0; background: none; color: var(--ink); padding: 7px 12px; text-align: left; font: inherit; cursor: pointer; }
+.results button:hover, .results button.on { background: var(--soft); }
+.results .kind { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.sector { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; }
+.sector select { font: inherit; font-size: 13px; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; }
+.quick { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 999px; padding: 3px 10px; font: inherit; font-size: 12px; cursor: pointer; }
+.chip:hover { border-color: var(--accent); }
+.chip.on { background: var(--company); border-color: var(--company); color: var(--panel); }
+main { --dw: 440px; display: grid; grid-template-columns: minmax(0, 1fr) 8px var(--dw); gap: 4px; min-height: 0; }
+.splitter { cursor: col-resize; border-radius: 4px; background: transparent; touch-action: none; }
+.splitter::after { content: ""; display: block; width: 2px; height: 48px; margin: calc(50vh - 80px) auto 0; background: var(--line); border-radius: 1px; }
+.splitter:hover::after, .splitter.drag::after { background: var(--accent); }
+.stage { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; min-height: 420px; overflow: hidden; }
+#cy { position: absolute; inset: 0; }
+.controls { position: absolute; z-index: 5; top: 10px; left: 10px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; background: color-mix(in srgb, var(--panel) 88%, transparent); padding: 6px 8px; border-radius: 6px; border: 1px solid var(--line); font-size: 12px; }
+.controls label { display: flex; align-items: center; gap: 4px; color: var(--muted); }
+.zoom { display: inline-flex; gap: 4px; }
+.zoom button { font: inherit; font-size: 12px; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 4px; padding: 2px 8px; cursor: pointer; }
+.zoom button:hover { border-color: var(--accent); }
+main.wide { grid-template-columns: minmax(0, 1fr); }
+main.wide .dossier, main.wide .splitter { display: none; }
+.stage:fullscreen { border-radius: 0; }
+.controls select { font: inherit; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 4px; padding: 2px 4px; }
+.legend { position: absolute; z-index: 5; bottom: 10px; left: 10px; display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 11px; color: var(--muted); background: color-mix(in srgb, var(--panel) 88%, transparent); padding: 6px 8px; border-radius: 6px; border: 1px solid var(--line); max-width: calc(100% - 20px); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+.legend .ln { width: 18px; height: 0; border-top: 2px solid; border-radius: 0; vertical-align: 3px; }
+.dossier { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; display: grid; grid-template-rows: auto auto 1fr; min-height: 0; overflow: hidden; }
+.head { padding: 14px 16px 10px; border-bottom: 1px solid var(--line); }
+.head .eyebrow { font-size: 11px; letter-spacing: .08em; color: var(--muted); text-transform: uppercase; }
+.head h2 { font-family: var(--display); font-weight: 600; font-size: 20px; margin: 2px 0 4px; text-wrap: balance; }
+.head .meta { color: var(--muted); font-size: 12px; display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.tabs { display: flex; gap: 2px; padding: 0 8px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tabs button { border: 0; background: none; color: var(--muted); font: inherit; padding: 9px 10px; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; }
+.tabs button.on { color: var(--ink); border-bottom-color: var(--accent); font-weight: 500; }
+.tabs .n { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-left: 3px; }
+.body { overflow: auto; padding: 12px 16px 20px; min-width: 0; }
+.body h3 { font-size: 12px; letter-spacing: .06em; color: var(--muted); margin: 14px 0 6px; font-weight: 500; }
+.body h3:first-child { margin-top: 2px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; font-weight: 500; color: var(--muted); font-size: 12px; padding: 4px 6px; border-bottom: 1px solid var(--line); }
+td { padding: 6px; border-bottom: 1px solid var(--soft); vertical-align: top; }
+td.num, th.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bar { height: 6px; background: var(--soft); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.bar > span { display: block; height: 100%; background: var(--accent); }
+.bar.cust > span { background: var(--customer); } .bar.supp > span { background: var(--supplier); }
+.link { border: 0; background: none; color: var(--evidence); padding: 0; font: inherit; cursor: pointer; text-align: left; }
+.link:hover { text-decoration: underline; }
+.tag { display: inline-block; font-size: 11px; padding: 1px 6px; border-radius: 3px; background: var(--soft); color: var(--muted); margin: 1px 2px 1px 0; white-space: nowrap; }
+.tag.risk { background: color-mix(in srgb, var(--risk) 16%, transparent); color: var(--risk); }
+.tag.ev { background: color-mix(in srgb, var(--evidence) 14%, transparent); color: var(--evidence); }
+.tag.prior { border: 1px dashed var(--prior); background: none; }
+.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.kpi { border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; }
+.kpi b { display: block; font-family: var(--mono); font-size: 18px; font-weight: 500; }
+.kpi span { font-size: 11px; color: var(--muted); }
+.note { color: var(--muted); font-size: 12px; line-height: 1.6; }
+.list { display: flex; flex-direction: column; gap: 2px; }
+.row { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px solid var(--soft); }
+.empty { color: var(--muted); padding: 24px 0; text-align: center; }
+@media (max-width: 860px) {
+  .app { height: auto; }
+  main { grid-template-columns: minmax(0, 1fr); }
+  .splitter { display: none; }
+  .stage { height: 62vh; }
+  .dossier { max-height: none; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="app">
+  <header>
+    <h1>A股产业链图谱<small>全市场 · 2025 年报 + 2026 半年报 · 计划 12</small></h1>
+    <div class="search">
+      <input id="q" type="search" placeholder="搜索公司、产品、材料、终端市场…" autocomplete="off" aria-label="搜索">
+      <div class="results" id="results" hidden></div>
+    </div>
+    <label class="sector" for="sector">按行业看 <select id="sector"><option value="">申万一级行业…</option></select></label>
+    <div class="quick" id="quick"></div>
+  </header>
+  <main>
+    <section class="stage" aria-label="产业链网络">
+      <div class="controls">
+        <label for="depth">层数 <select id="depth"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option></select></label>
+        <label for="dir">方向 <select id="dir"><option value="both" selected>上下游</option><option value="up">只看上游</option><option value="down">只看下游</option></select></label>
+        <label><input type="checkbox" id="showCp" checked> 客户/供应商</label>
+        <label title="选行业时：显示该行业公司之间的客户、供应商、竞争关系"><input type="checkbox" id="net" checked> 行业看公司网络</label>
+        <span class="zoom">
+          <button type="button" id="zin" title="放大" aria-label="放大">＋</button>
+          <button type="button" id="zout" title="缩小" aria-label="缩小">－</button>
+          <button type="button" id="zfit" title="适配窗口">适配</button>
+          <button type="button" id="wide" title="收起 / 展开右侧详情">收起详情</button>
+          <button type="button" id="full" title="全屏">全屏</button>
+        </span>
+
+      </div>
+      <div id="cy"></div>
+      <div class="legend" id="legend"></div>
+    </section>
+    <div class="splitter" id="splitter" role="separator" aria-orientation="vertical" aria-label="拖动调整详情宽度" title="拖动调整宽度，双击恢复"></div>
+    <section class="dossier" aria-label="详情">
+      <div class="head" id="head"></div>
+      <nav class="tabs" id="tabs"></nav>
+      <div class="body" id="body"></div>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
+<script>
+"use strict";
+const TYPE_ZH = { company: "公司", product: "产品", service: "服务", material: "材料", technology: "技术", end_market: "终端市场", segment: "细分" };
+const REL_ZH = { upstream_of: "上游", component_of: "部件", uses_material: "原料", used_in: "用于", enables: "技术支撑", serves: "服务于", substitute_for: "替代" };
+const HOW_ZH = { manual: "人工映射", rule: "规则匹配", exact: "名称一致", contains: "名称包含", overlap: "名称相近（同行业）", part: "拆分匹配", sector: "按申万行业推断（低置信）", generic: "无法归类（其他 / 会计科目）", none: "未匹配" };
+const IMP_ZH = { high: "进口依赖高", medium: "进口依赖中", low: "进口依赖低" };
+let D, N = {}, OUT = {}, IN = {}, MAKERS = {}, C = {}, cy = null, sel = null, tab = null;
+let SEGP = {}, GOUT = {}, GIN = {};  // segment → products; group-level flows (segment / material / market)
+const groupOf = id => { const n = N[id]; if (!n) return null; return n.t === "product" ? n.s || id : id; };
+
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const yi = v => v == null ? "—" : (v / 1e8).toLocaleString("zh-CN", { maximumFractionDigits: 2 }) + " 亿";
+const pct = v => v == null ? "—" : Number(v).toFixed(2) + "%";
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const typeOf = n => n.t === "product" && n.k === "service" ? "service" : n.t;
+
+// downstream flow: every chain edge becomes from → to with from upstream of to
+function addFlow(from, to, rel) {
+  (OUT[from] ||= []).push({ to, rel }); (IN[to] ||= []).push({ from, rel });
+}
+function index() {
+  D.nodes.forEach(n => N[n.id] = n);
+  for (const [s, r, o] of D.edges) {
+    if (r === "uses_material") addFlow(o, s, r);
+    else if (r === "part_of" || r === "substitute_for") continue;
+    else addFlow(s, o, r);
+  }
+  D.nodes.forEach(n => { if (n.t === "product" && n.s) (SEGP[n.s] ||= []).push(n.id); });
+  const bump = (m, a, b) => { (m[a] ||= {})[b] = (m[a][b] || 0) + 1; };
+  for (const from in OUT) for (const e of OUT[from]) {
+    const a = groupOf(from), b = groupOf(e.to);
+    if (a && b && a !== b) { bump(GOUT, a, b); bump(GIN, b, a); }
+  }
+  D.companies.forEach(c => {
+    C[c.code] = c; c.customers ||= { rows: [] }; c.suppliers ||= { rows: [] };
+    c.vector = {};
+    c.revenue.forEach(r => r.pids.forEach(p => {
+      (MAKERS[p] ||= []).push({ code: c.code, pct: r.pct / r.pids.length, item: r.item, how: r.how });
+      c.vector[p] = (c.vector[p] || 0) + r.pct / r.pids.length;
+    }));
+  });
+}
+
+// neighbourhood of a set of chain nodes, `depth` hops up and/or down, capped per hop
+function walk(seeds, depth, dir, cap = 14) {
+  const seen = new Map(seeds.map(s => [s, 0])), edges = [];
+  let frontierUp = [...seeds], frontierDown = [...seeds];
+  for (let d = 1; d <= depth; d++) {
+    if (dir !== "down") {
+      const next = [];
+      for (const id of frontierUp) for (const e of (IN[id] || []).slice(0, cap)) {
+        edges.push([e.from, id, e.rel]); if (!seen.has(e.from)) { seen.set(e.from, -d); next.push(e.from); }
+      }
+      frontierUp = next;
+    }
+    if (dir !== "up") {
+      const next = [];
+      for (const id of frontierDown) for (const e of (OUT[id] || []).slice(0, cap)) {
+        edges.push([id, e.to, e.rel]); if (!seen.has(e.to)) { seen.set(e.to, d); next.push(e.to); }
+      }
+      frontierDown = next;
+    }
+  }
+  return { nodes: seen, edges };
+}
+
+function peersOf(code) {
+  const v = C[code].vector, out = [];
+  for (const other of D.companies) {
+    if (other.code === code) continue;
+    const shared = Object.keys(v).filter(p => other.vector[p]);
+    if (!shared.length) continue;
+    let dot = 0, a = 0, b = 0;
+    for (const p in v) a += v[p] ** 2;
+    for (const p in other.vector) b += other.vector[p] ** 2;
+    shared.forEach(p => dot += v[p] * other.vector[p]);
+    out.push({ code: other.code, score: dot / Math.sqrt(a * b), shared });
+  }
+  return out.sort((x, y) => y.score - x.score);
+}
+
+function groupNode(id) {
+  const n = N[id], sec = n.sec && D.sectors[n.sec] ? `\n${D.sectors[n.sec]}` : "";
+  return { data: { id, label: n.t === "segment" ? n.n + sec : n.n, type: typeOf(n), imp: n.imp || "", focus: 0 } };
+}
+function chainNode(id, focus) {
+  const n = N[id];
+  return { data: { id, label: n.n, type: typeOf(n), imp: n.imp || "", focus: focus ? 1 : 0 } };
+}
+
+function graphFor() {
+  const depth = +document.getElementById("depth").value, dir = document.getElementById("dir").value;
+  const showCp = document.getElementById("showCp").checked;
+  const els = [], ids = new Set();
+  const add = el => { if (!ids.has(el.data.id)) { ids.add(el.data.id); els.push(el); } };
+  const edge = (s, t, kind, label = "") => add({ data: { id: `${s}>${t}>${kind}`, source: s, target: t, kind, label } });
+  if (sel.kind === "company") {
+    // swim lanes: suppliers | upstream | own products | downstream | end markets | customers
+    const c = C[sel.id], cid = "CO:" + c.code, lane = {};
+    const put = (el, col, rank = 0) => { el.data.col = col; el.data.rank = rank; add(el); lane[el.data.id] ??= col; };
+    const own = [];
+    [...c.revenue].sort((a, x) => x.pct - a.pct).forEach(r => r.pids.forEach((p, i) => { if (!own.includes(p)) { own.push(p); put(chainNode(p, true), 2, r.pct - i); } }));
+    put({ data: { id: cid, label: c.name, type: "company", focus: 1 } }, 2, 1e9);
+    own.forEach(p => edge(cid, p, "produces", ""));
+    c.revenue.forEach(r => r.pids.slice(0, 1).forEach(p => { const e = els.find(x => x.data.id === `${cid}>${p}>produces`); if (e) e.data.label = pct(r.pct); }));
+    if (c.internal.length === 2 && c.eliminations.length) {
+      const [a, b] = c.internal.map(item => (c.revenue.find(r => r.item === item) || {}).pids || []);
+      const amount = Math.abs(c.eliminations.reduce((s, e) => s + e.sales, 0));
+      if (a.length && b.length) edge(a[0], b[0], "internal", `内部 ${yi(amount)}`);
+    }
+    if (dir !== "down") {
+      const w = walk(own, Math.max(1, depth - 1), "up", 6);
+      w.nodes.forEach((d, id) => { if (d < 0 && !own.includes(id)) put(chainNode(id, false), 1, d); });
+      w.edges.forEach(([s0, t, r]) => { if (ids.has(s0) && ids.has(t)) edge(s0, t, "prior", ""); });
+    }
+    if (dir !== "up") {
+      const w = walk(own, depth, "down", 6);
+      w.nodes.forEach((d, id) => { if (d > 0 && !own.includes(id)) put(chainNode(id, false), N[id].t === "end_market" ? 4 : 3, -d); });
+      w.edges.forEach(([s0, t, r]) => { if (ids.has(s0) && ids.has(t)) edge(s0, t, "prior", ""); });
+    }
+    if (showCp) {
+      // a counterparty sits in the lane of the stage it operates at: next to the product it makes when known
+      const placeKnown = (r, side) => {
+        const code = r.code || (r.inferred ? r.inferred.code : null), other = code && code !== c.code && C[code];
+        const id = other ? "CO:" + code : `${side === "u" ? "SU" : "CU"}:${c.code}:${r.rank}`;
+        const label = other ? `${other.name}\n${side === "u" ? "供应商" : "客户"}${r.rank} · ${pct(r.pct)}${r.inferred ? " · 推断" : r.group ? " · 子公司" : ""}` : (r.anon ? `${side === "u" ? "供应商" : "客户"}${r.rank}` : r.name) + `\n${pct(r.pct)}${r.anon ? " · 未识别" : ""}`;
+        put({ data: { id, label, type: other ? "company" : "counterparty", focus: 0 } }, side === "u" ? 1 : 3, other ? 500 + r.pct : -500 + r.pct);
+        const k = other && r.inferred ? "inferred" : side === "u" ? "buys" : "sells";
+        if (side === "u") edge(id, cid, k, ""); else edge(cid, id, k, "");
+        const llmStage = r.profile && r.profile.llm_stages && r.profile.llm_stages.find(x => x.id && N[x.id]);
+        if (!other && r.profile && (llmStage || r.profile.stages.length)) {
+          const st = llmStage ? llmStage.id : r.profile.stages[0].id;
+          if (!ids.has(st)) put(chainNode(st, false), 3, 0);
+          edge(id, st, "stage", "可能环节");
+          els.find(x => x.data.id === id).data.label += r.profile.region === "不确定" ? "" : " · " + r.profile.region;
+        }
+        if (other) {   // tie the counterparty to its own product in that lane
+          const theirs = other.revenue.flatMap(x => x.pids).filter(p => ids.has(p) || true).slice(0, 1);
+          theirs.forEach(p => { if (!ids.has(p)) put(chainNode(p, false), side === "u" ? 1 : 3, 499 + r.pct); edge(id, p, "produces", ""); });
+        }
+      };
+      c.suppliers.rows.forEach(r => placeKnown(r, "u"));
+      c.customers.rows.forEach(r => placeKnown(r, "d"));
+      c.named.slice(0, 12).forEach(r => { const listed = r.code && r.code !== c.code && C[r.code]; const id = listed ? "CO:" + r.code : "EXT:" + r.name; put({ data: { id, label: (listed ? C[r.code].name : r.name) + `\n点名客户${r.detail ? " · " + r.detail.slice(0, 6) : ""}`, type: listed ? "company" : "foreign" } }, 3, 400); edge(cid, id, "named", ""); });
+      // downstream applications DeepSeek read in the filing (evidence, not prior)
+      c.revenue.forEach(rv => (c.apps && c.apps[rv.item] || []).filter(a => a.node_id && N[a.node_id]).slice(0, 4).forEach(a => {
+        put(chainNode(a.node_id, false), N[a.node_id].t === "end_market" ? 4 : 3, a.weight === "主要" ? 50 : 10);
+        const from = rv.pids[0] && ids.has(rv.pids[0]) ? rv.pids[0] : cid;
+        edge(from, a.node_id, "app", a.weight);
+      }));
+    }
+    const titles = ["", "上游：原料 / 部件 + 供应商", "本公司及其产品", "下游：产品 + 客户", "终端市场", ""];
+    titles.forEach((t, i) => { if (t && els.some(e => e.data.col === i && !e.data.source)) add({ data: { id: "LANE:" + i, label: t, type: "lane", col: i, rank: 2e9 } }); });
+  } else if (sel.kind === "sector" && document.getElementById("net").checked) {
+    const inSec = D.companies.filter(c => c.l1 === sel.id && c.links.length).sort((a, b) => b.links.length - a.links.length).slice(0, 90);
+    const node = (code, focus) => add({ data: { id: "CO:" + code, label: C[code].name, type: focus ? "company" : "counterparty", focus: 0 } });
+    inSec.forEach(c => node(c.code, true));
+    const core = new Set(inSec.map(c => c.code)), deg = {};  // other companies: keep the 70 most connected
+    inSec.forEach(c => c.links.forEach(([o]) => { if (C[o] && !core.has(o) && (showCp || C[o].l1 === sel.id)) deg[o] = (deg[o] || 0) + 1; }));
+    const outside = new Set(Object.entries(deg).sort((a, b) => b[1] - a[1]).slice(0, 70).map(([o]) => o));
+    inSec.forEach(c => c.links.forEach(([o, k, p]) => {
+      if (!C[o] || o === c.code || !(core.has(o) || outside.has(o))) return;
+      node(o, C[o].l1 === sel.id);
+      const lab = p != null ? pct(p) : "";
+      if (k === "c" || k === "C") edge("CO:" + c.code, "CO:" + o, k === "c" ? "sells" : "named", lab);
+      else if (k === "s" || k === "S") edge("CO:" + o, "CO:" + c.code, "buys", lab);
+      else edge("CO:" + c.code, "CO:" + o, "peer", k === "P" ? "竞争" : "合作");
+    }));
+  } else if (sel.kind === "sector") {
+    const segs = D.nodes.filter(n => n.t === "segment" && n.sec === sel.id).map(n => n.id);
+    segs.forEach(id => add({ data: { id, label: `${N[id].n}\n${(SEGP[id] || []).length} 项`, type: "segment", focus: 1 } }));
+    const top = (m, id) => Object.entries(m[id] || {}).sort((a, b) => b[1] - a[1]).slice(0, depth + 2);
+    segs.forEach(id => {
+      if (dir !== "down") top(GIN, id).forEach(([g, k]) => { add(groupNode(g)); edge(g, id, "prior", String(k)); });
+      if (dir !== "up") top(GOUT, id).forEach(([g, k]) => { add(groupNode(g)); edge(id, g, "prior", String(k)); });
+    });
+  } else if (N[sel.id].t === "segment") {
+    const ps = (SEGP[sel.id] || []).slice(0, 60);
+    ps.forEach(id => add(chainNode(id, true)));
+    const w = walk(ps, 1, dir, 6);
+    w.nodes.forEach((_, id) => add(chainNode(id, ps.includes(id))));
+    w.edges.forEach(([s, t, r]) => edge(s, t, "prior", ""));
+    ps.forEach(p => (MAKERS[p] || []).forEach(m => { const cid = "CO:" + m.code; add({ data: { id: cid, label: C[m.code].name, type: "company", focus: 0 } }); edge(cid, p, "produces", pct(m.pct)); }));
+  } else {
+    const w = walk([sel.id], depth, dir, 12);
+    w.nodes.forEach((_, id) => add(chainNode(id, id === sel.id)));
+    w.edges.forEach(([s, t, r]) => edge(s, t, "prior", REL_ZH[r] || ""));
+    (MAKERS[sel.id] || []).forEach(m => { const cid = "CO:" + m.code; add({ data: { id: cid, label: C[m.code].name, type: "company", focus: 0 } }); edge(cid, sel.id, "produces", pct(m.pct)); });
+  }
+  return els;
+}
+
+function styles() {
+  const v = n => css(n);
+  return [
+    { selector: "node", style: { label: "data(label)", "font-family": css("--body"), "font-size": 11, color: v("--ink"), "text-valign": "center", "text-halign": "center", "text-wrap": "wrap", "text-max-width": 96, width: "label", height: "label", padding: 8, shape: "round-rectangle", "background-color": v("--product"), "border-width": 1, "border-color": v("--product-line") } },
+    { selector: "node[type='service']", style: { "border-style": "dashed" } },
+    { selector: "node[type='company']", style: { "background-color": v("--company"), color: v("--panel"), "border-width": 0, "font-weight": 700, "font-size": 12, padding: 10 } },
+    { selector: "node[type='material']", style: { shape: "cut-rectangle", "background-color": v("--panel"), "border-color": v("--material"), "border-width": 2, color: v("--material") } },
+    { selector: "node[type='technology']", style: { shape: "round-octagon", "background-color": v("--panel"), "border-color": v("--tech"), "border-width": 2, color: v("--tech") } },
+    { selector: "node[type='end_market']", style: { shape: "barrel", "background-color": v("--market"), "border-width": 0, color: v("--panel"), "font-weight": 700 } },
+    { selector: "node[type='segment']", style: { shape: "round-tag", "border-color": v("--segment"), "border-width": 1.5, "background-color": v("--panel") } },
+    { selector: "node[type='counterparty']", style: { shape: "ellipse", "background-color": v("--soft"), "border-color": v("--line"), color: v("--muted"), "font-size": 10, padding: 6 } },
+    { selector: "node[type='foreign']", style: { shape: "ellipse", "background-color": v("--panel"), "border-color": v("--customer"), "border-width": 2, color: v("--ink"), "font-size": 11 } },
+    { selector: "node[imp='high']", style: { "border-color": v("--risk"), "border-width": 2.5 } },
+    { selector: "node[imp='medium']", style: { "border-color": v("--risk"), "border-width": 1.5, "border-style": "dashed" } },
+    { selector: "node[focus=1]", style: { "border-width": 3, "border-color": v("--evidence") } },
+    { selector: "edge", style: { width: 1.2, "curve-style": "bezier", "target-arrow-shape": "triangle", "arrow-scale": .8, "line-color": v("--prior"), "target-arrow-color": v("--prior"), "line-style": "dashed", label: "data(label)", "font-size": 9, color: v("--muted"), "text-background-color": v("--panel"), "text-background-opacity": .9, "text-background-padding": 2, "font-family": css("--mono") } },
+    { selector: "edge[kind='produces']", style: { "line-style": "solid", width: 2.4, "line-color": v("--evidence"), "target-arrow-color": v("--evidence"), color: v("--evidence") } },
+    { selector: "edge[kind='sells']", style: { "line-style": "solid", width: 2, "line-color": v("--customer"), "target-arrow-color": v("--customer"), color: v("--customer") } },
+    { selector: "edge[kind='buys']", style: { "line-style": "solid", width: 2, "line-color": v("--supplier"), "target-arrow-color": v("--supplier"), color: v("--supplier") } },
+    { selector: "edge[kind='named']", style: { "line-style": "dotted", width: 2, "line-color": v("--customer"), "target-arrow-color": v("--customer"), color: v("--customer") } },
+    { selector: "edge[kind='internal']", style: { "line-style": "solid", width: 3, "line-color": v("--tech"), "target-arrow-color": v("--tech"), color: v("--tech"), "curve-style": "unbundled-bezier", "control-point-distances": [40] } },
+    { selector: "edge[kind='inferred']", style: { "line-style": "dashed", width: 2.4, "line-color": v("--customer"), "target-arrow-color": v("--customer"), "line-dash-pattern": [6, 3] } },
+    { selector: "edge[kind='app']", style: { "line-style": "solid", width: 1.8, "line-color": v("--market"), "target-arrow-color": v("--market"), color: v("--market") } },
+    { selector: "edge[kind='stage']", style: { "line-style": "dotted", width: 1.5, "line-color": v("--muted"), "target-arrow-shape": "none", color: v("--muted") } },
+    { selector: "edge[kind='peer']", style: { "line-style": "solid", width: 1, "line-color": v("--line"), "target-arrow-color": v("--line") } },
+    { selector: "node[type='lane']", style: { shape: "rectangle", "background-opacity": 0, "border-width": 0, color: v("--muted"), "font-size": 11, "font-weight": 700, events: "no" } },
+    { selector: "node:selected", style: { "overlay-opacity": .08 } },
+  ];
+}
+
+function legend() {
+  const items = [["var(--company)", "公司"], ["var(--product-line)", "产品 / 服务（虚框）"], ["var(--material)", "材料"], ["var(--tech)", "技术"], ["var(--market)", "终端市场"], ["var(--risk)", "进口依赖高"]];
+  const lines = [["var(--evidence)", "solid", "营收占比（年报）"], ["var(--tech)", "solid", "公司内部供应（抵消额）"], ["var(--customer)", "solid", "客户占比"], ["var(--supplier)", "solid", "供应商占比"], ["var(--customer)", "dotted", "正文点名客户（DeepSeek）"], ["var(--market)", "solid", "下游应用（DeepSeek 读年报）"], ["var(--prior)", "dashed", "产业链先验"]];
+  document.getElementById("legend").innerHTML = items.map(([c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join("") +
+    lines.map(([c, s, t]) => `<span><i class="ln" style="border-top-color:${c};border-top-style:${s}"></i>${t}</span>`).join("");
+}
+
+function draw() {
+  const els = graphFor();
+  if (!cy) {
+    cy = cytoscape({ container: document.getElementById("cy"), wheelSensitivity: .25, minZoom: .1, maxZoom: 4 });
+    cy.on("tap", "node", e => {
+      const id = e.target.id();
+      if (id.startsWith("CO:")) select({ kind: "company", id: id.slice(3) });
+      else if (N[id]) select({ kind: "node", id });
+    });
+  }
+  cy.style(styles());
+  cy.elements().remove();
+  cy.add(els);
+  if (sel.kind === "company") {
+    const cols = {};
+    cy.nodes().forEach(n => (cols[n.data("col")] ||= []).push(n));
+    const width = cy.container().clientWidth, colW = Math.max(170, width / 4.2);
+    Object.entries(cols).forEach(([col, list]) => {
+      list.sort((a, b) => b.data("rank") - a.data("rank"));
+      list.forEach((n, i) => n.position({ x: (+col - 1) * colW, y: i * 58 }));
+    });
+    cy.nodes("[type='lane']").forEach(n => n.position({ x: n.position("x"), y: -50 }));
+    cy.layout({ name: "preset", fit: false }).run();
+  } else if (sel.kind === "sector" && document.getElementById("net").checked) {
+    cy.layout({ name: "cose", animate: false, nodeRepulsion: 9000, idealEdgeLength: 90, numIter: 1500 }).run();
+  } else {
+    cy.layout({ name: "dagre", rankDir: "LR", nodeSep: 14, rankSep: 70, edgeSep: 8, animate: false }).run();
+  }
+  cy.fit(undefined, 30);
+}
+
+// ---------- dossier ----------
+function head(html) { document.getElementById("head").innerHTML = html; }
+function setTabs(list) {
+  if (!list.some(t => t.key === tab)) tab = list[0].key;
+  const el = document.getElementById("tabs");
+  el.innerHTML = list.map(t => `<button type="button" data-k="${t.key}" class="${t.key === tab ? "on" : ""}">${t.label}${t.n != null ? `<span class="n">${t.n}</span>` : ""}</button>`).join("");
+  el.onclick = e => { const b = e.target.closest("button"); if (b) { tab = b.dataset.k; renderDossier(); } };
+}
+function nodeLink(id, extra = "") {
+  const n = N[id]; if (!n) return esc(id);
+  const imp = n.imp && n.imp !== "low" ? ` <span class="tag risk">${IMP_ZH[n.imp]}</span>` : "";
+  return `<button type="button" class="link" data-node="${esc(id)}">${esc(n.n)}</button> <span class="tag">${TYPE_ZH[typeOf(n)]}</span>${imp}${extra}`;
+}
+function companyLink(code) { return `<button type="button" class="link" data-co="${esc(code)}">${esc(C[code].name)}</button>`; }
+
+function profileCell(r) {
+  const p = r.profile; if (!p) return "";
+  if (p.llm_stages && (p.llm_stages.length || p.customer_types.length)) {
+    const st = p.llm_stages.map(x => x.id && N[x.id] ? `<button type="button" class="link" data-node="${esc(x.id)}">${esc(x.name)}</button>` : esc(x.name)).join(" / ");
+    const q = p.llm_stages[0];
+    return `<div class="note"><span class="tag ev">DeepSeek 读年报</span> ${p.lines.length ? `买的是「${esc(p.lines[0])}」` : ""}${p.customer_types.length ? `；客户类型：${p.customer_types.map(esc).join("、")}` : ""}${st ? `；主要应用：${st}` : ""}；地区 <span class="tag ${p.region.includes("境外") ? "risk" : ""}">${p.region}</span>${q ? `<br>原文（第 ${q.page} 页）：“${esc(q.quote)}”` : ""}</div>`;
+  }
+  const st = p.stages.map(x => `<button type="button" class="link" data-node="${esc(x.id)}">${esc(x.name)}</button>`).join(" / ");
+  return `<div class="note">推断：${p.lines.length ? `买的是「${esc(p.lines[0])}」` : "业务条目不确定"}${st ? `，处在下游 ${st}` : ""}；地区 <span class="tag ${p.region.includes("境外") ? "risk" : ""}">${p.region}</span>${p.hints.length ? `；概念线索 ${p.hints.map(h => `<span class="tag prior">${esc(h)}</span>`).join("")}` : ""}</div>`;
+}
+const ROLE_ZH = { customer: "客户", supplier: "供应商", partner: "合作伙伴", competitor: "竞争对手 / 同行", subsidiary: "子公司 / 关联方", mention: "仅提及（行业背景、举例、图表来源）" };
+function parties(c) {
+  const groups = ["customer", "supplier", "partner", "competitor", "subsidiary", "mention"].map(role => [role, c.llm.counterparties.filter(p => p.role === role)]).filter(([, l]) => l.length);
+  return `<h3>年报 / 半年报正文提到的公司（DeepSeek 区分角色，原文已核对；悬停页码看原文）</h3>` + groups.map(([role, l]) =>
+    `<div class="note" style="margin-top:6px">${ROLE_ZH[role]} · ${l.length}</div><div class="list">${l.map(p => `<div class="row"><span>${p.code && C[p.code] ? companyLink(p.code) : esc(p.name)} <span class="tag">${esc(p.detail)}</span></span><span class="tag ${role === "mention" ? "" : "ev"}" title="${esc(p.evidence.quote)}">${esc(p.src || "")} 第 ${p.evidence.page} 页</span></div>`).join("")}</div>`).join("");
+}
+function cpTable(t, kind) {
+  if (!t.total_pct && !t.rows.length) return `<p class="empty">报告未披露</p>`;
+  const cls = kind === "customer" ? "cust" : "supp";
+  const word = kind === "customer" ? "销售" : "采购";
+  let h = `<div class="kpis"><div class="kpi"><b>${pct(t.total_pct)}</b><span>前五名合计占${word}</span></div><div class="kpi"><b>${yi(t.total)}</b><span>前五名合计金额</span></div><div class="kpi"><b>${t.rows.length ? (t.consistent ? "一致" : "不一致") : "仅合计"}</b><span>明细与合计核对</span></div></div>`;
+  if (t.rows.length) h += `<table><thead><tr><th>#</th><th>名称</th><th class="num">金额</th><th class="num">占比</th></tr></thead><tbody>` +
+    t.rows.map(r => `<tr><td>${r.rank}</td><td>${esc(r.name)} ${r.anon ? '<span class="tag">匿名</span>' : '<span class="tag ev">实名</span>'}${r.code && C[r.code] && r.code !== sel.id ? ` → ${companyLink(r.code)}${r.group ? ' <span class="tag prior">按简称前缀，可能是其子公司</span>' : ""}` : ""}${r.inferred ? ` → ${companyLink(r.inferred.code)} <span class="tag prior">推断：对方${kind === "customer" ? "供应商" : "客户"}${r.inferred.their_rank}，金额差 ${r.inferred.diff}%</span>` : ""}<div class="bar ${cls}"><span style="width:${Math.min(100, r.pct * 2)}%"></span></div>${profileCell(r)}</td><td class="num">${yi(r.amount)}</td><td class="num">${pct(r.pct)}</td></tr>`).join("") + `</tbody></table>`;
+  else h += `<p class="note">上交所主板格式只披露前五名合计，不列明细。</p>`;
+  return h;
+}
+
+function brokerLine(v, scope) {
+  if (!v) return "";
+  const m = v.methods.map(([k, n]) => `${esc(k)} ${n}`).join("、");
+  const years = Object.entries(v.pe_by_year || {}).map(([y, [m, n]]) => `${y} ${m}x（${n}）`).join("、");
+  const pe = [years ? `现价隐含 PE 中位：${years}` : "", v.pe_target != null ? `目标 PE 中位 ${v.pe_target}x（${v.pe_target_n}）` : "", v.pb != null ? `PB 中位 ${v.pb}x（${v.pb_n}）` : ""].filter(Boolean).join(" · ");
+  const warn = v.loss_share >= 0.3 ? `<br><span class="tag risk">${Math.round(v.loss_share * 100)}% 的研报预测近期亏损：PE 多基于之后扭亏年份，属于反转押注，不是常规估值</span>` : "";
+  const bare = v.bare_share >= 0.2 ? ` <span class="tag">${Math.round(v.bare_share * 100)}% 的研报未给估值倍数</span>` : "";
+  return `<div class="note" style="margin-top:4px"><span class="tag ev">研报 · ${scope} · ${v.n} 篇</span>${bare}${m ? ` 估值方法：${m}` : ""}${pe ? `；${pe}` : ""}${warn}${v.metrics.length ? `<br>关注指标：${v.metrics.map(([k, n]) => `<span class="tag">${esc(k)} ${n}</span>`).join("")}` : ""}</div>`;
+}
+function kpisFor(c) {
+  const cfg = D.kpis[c.l1]; if (!cfg) return [];
+  const out = cfg.kpis.length ? [{ name: D.sectors[c.l1] + "（全行业）", kpis: cfg.kpis }] : [];
+  cfg.groups.forEach(g => { if (g.sw.some(x => (c.sw || []).includes(x))) out.push(g); });
+  return out;
+}
+let VIEWS = null, VIEWS_P = null;
+function loadViews() { return VIEWS_P ||= fetch("views.json").then(r => r.ok ? r.json() : { product: {}, industry: {} }).then(v => (VIEWS = v)).catch(() => (VIEWS = { product: {}, industry: {} })); }
+const VIEW_ZH = { multiple_reasons: "倍数高低的理由", drivers: "核心驱动", bull: "看多逻辑", risks: "主要风险", divergence: "券商分歧", recent_change: "近期变化" };
+function viewCard(v, scope) {
+  if (!v) return "";
+  const src = refs => refs.map(r => `<span class="tag" title="${esc(v.refs[r] || r)}">${esc(r)}</span>`).join("");
+  const mr = v.multiple_range || {};
+  const range = (lo, hi) => lo == null && hi == null ? "—" : `${lo ?? "?"}–${hi ?? "?"}x`;
+  let h = `<div class="note" style="margin:6px 0"><span class="tag ev">${scope} · ${v.n_reports} 篇研报归纳（送入 ${v.n_sent} 篇）</span></div><p>${esc(v.summary)}</p>
+    <table><tbody><tr><td>估值方法</td><td>${esc(v.method_consensus || "—")}</td></tr>
+    <tr><td>倍数（${esc(mr.metric || "")} ${esc(mr.base_year || "")}）</td><td>现价隐含 ${range(mr.implied_low, mr.implied_high)} · 目标 ${range(mr.target_low, mr.target_high)}${mr.note ? `<div class="note">${esc(mr.note)}</div>` : ""}</td></tr></tbody></table>`;
+  for (const [k, label] of Object.entries(VIEW_ZH)) {
+    const pts = (v.points || {})[k] || [];
+    if (pts.length) h += `<div class="note" style="margin-top:8px"><b>${label}</b></div><div class="list">${pts.map(p => `<div class="row"><span>${p.metric ? `<span class="tag ev">${esc(p.metric)}${p.unit ? " · " + esc(p.unit) : ""}</span> ` : ""}${esc(p.point)}</span><span>${src(p.sources)}</span></div>`).join("")}</div>`;
+  }
+  return h;
+}
+function valuationFrame(c) {
+  const prods = [...new Set(c.revenue.flatMap(r => r.pids))].filter(p => D.broker_prod[p]);
+  const ind = D.broker_ind[c.l3];
+  const groups = kpisFor(c);
+  const vp = VIEWS ? VIEWS.product : {}, vi = VIEWS ? VIEWS.industry : {};
+  const prodsV = [...new Set(c.revenue.flatMap(r => r.pids))].filter(p => vp[p] || D.broker_prod[p]);
+  let h = c.broker_view ? `<h3>本公司：研报观点归纳</h3>${viewCard(c.broker_view, "本公司")}` : "";
+  h += `<h3>按产品 / 服务：研报的估值规律</h3>` + (prodsV.length ? prodsV.map(p => `<div style="margin-top:10px">${nodeLink(p)}${vp[p] ? viewCard(vp[p], "该产品") : ""}${brokerLine(D.broker_prod[p], "统计")}</div>`).join("") : `<p class="note">本公司的产品还没有足够的研报样本（每个产品至少 3 篇）。</p>`);
+  h += `<h3>所属行业（申万三级 ${esc(c.l3 || "—")}）</h3>` + (vi[c.l3] ? viewCard(vi[c.l3], "行业") : "") + (ind ? brokerLine(ind, "统计") : (vi[c.l3] ? "" : `<p class="note">行业研报样本不足。</p>`));
+  h += `<h3>行业专属指标（配置 · Opus 先验，待研报与披露确认）</h3>` + (groups.length ? groups.map(g => `<div class="note" style="margin-top:6px">${esc(g.name)}</div><table><tbody>${g.kpis.map(k => `<tr><td>${esc(k.name)}${k.unit ? ` <span class="tag">${esc(k.unit)}</span>` : ""}</td><td class="note">${esc(k.definition || "")}</td><td class="num">${esc({ monthly: "月", quarterly: "季", semiannual: "半年", annual: "年" }[k.freq] || "")}</td></tr>`).join("")}</tbody></table>`).join("") : `<p class="note">该行业没有配置专属指标。</p>`);
+  return h + `<p class="note">产品层统计：研报的估值方法按其标注的业务分部归到产品；没写分部的，归到公司营收占比 ≥40% 的主营产品。“现价隐含”是研报写的“当前股价对应 PE”，“目标”是研报给出的目标倍数（D-109）。括号里是样本数。</p>`;
+}
+const PRICING_ZH = { market: "随市场价", spread: "加工价差", negotiated: "议价", bid: "招投标", brand: "品牌定价", regulated: "政府定价", contract: "合同定价" };
+const PASS_ZH = { full: "成本可完全传导", lagged: "滞后传导", partial: "部分传导", none: "不能传导" };
+const PHASES = ["复苏", "扩张", "过剩", "出清"];
+const DRIVER_ZH = { volume: "销量", price: "价格", unit_cost: "单位成本", unit_margin: "单位毛利", capacity: "产能", utilisation: "产能利用率", efficiency: "生产效率", reserves: "资源储量", self_sufficiency: "资源自给率", mix: "产品结构", revenue: "收入", margin: "毛利率", overseas_share: "境外收入占比", rd_ratio: "研发投入占比", customer_concentration: "客户集中度", receivables: "应收账款", capex: "资本开支", revenue_per_staff: "人均创收", contract_liabilities: "合同负债", market_share: "市场份额", inventory: "存货", capacity_growth: "产能增长", marketing_ratio: "销售费用率", orders: "新签订单", backlog: "在手订单", deliveries: "交付量", spread: "加工价差", throughput: "处理量", tariff: "费率 / 电价", users: "用户数", arpu: "单用户收入", aum: "管理规模", loans: "贷款", nim: "净息差", npl: "不良率", stores: "门店数", same_store: "同店增长", traffic: "客流", pipeline: "在研管线", approvals: "获批品种" };
+const pctS = v => v == null ? "—" : (v * 100).toFixed(1) + "%";
+function phaseChips(v) {
+  if (!v) return `<span class="tag">样本不足</span>`;
+  return [...PHASES, "过渡"].map(ph => `<span class="tag ${ph === v.phase ? "ev" : ""}" style="${ph === v.phase ? "font-weight:700" : "opacity:.55"}">${ph}</span>`).join("") +
+    `<div class="note">营收 ${pctS(v.demand)} · 毛利率 ${v.margin_pp > 0 ? "+" : ""}${v.margin_pp} 个百分点 · 资本开支 ${pctS(v.capex)} · ${v.n} 家（2025 对比 2024）</div>`;
+}
+function kpiName(id) {
+  for (const sec of Object.values(D.kpis)) for (const k of [...sec.kpis, ...sec.groups.flatMap(g => g.kpis)]) if (k.id === id) return k.name + (k.unit ? `（${k.unit}）` : "");
+  return id;
+}
+function businessTab(c) {
+  const bz = c.business || {}, def = bz.default, a = def && D.archetypes[def.archetype];
+  let h = `<h3>商业模式（申万三级“${esc(c.l3 || "—")}”的默认原型 · Opus 先验，待按公司经营模式文本确认）</h3>`;
+  if (a) {
+    h += `<div class="kpis"><div class="kpi"><b>${esc(def.archetype)}</b><span>${esc(a.name)}</span></div><div class="kpi"><b style="font-size:13px">${esc(PRICING_ZH[a.pricing] || a.pricing || "—")}</b><span>定价方式</span></div><div class="kpi"><b style="font-size:13px">${esc(PASS_ZH[a.pass_through] || a.pass_through || "—")}</b><span>成本传导</span></div></div>
+      <table><tbody><tr><td>收入公式</td><td>${esc(a.revenue_formula)}</td></tr><tr><td>利润关键</td><td>${esc(a.profit_hinge || "")}</td></tr>
+      ${(def.secondary || []).length ? `<tr><td>次要原型</td><td>${def.secondary.map(x => esc(x + " " + (D.archetypes[x] || {}).name)).join("、")}</td></tr>` : ""}
+      <tr><td>常用估值</td><td>${(a.valuation_methods || []).map(x => `<span class="tag">${esc(x)}</span>`).join("")}</td></tr>
+      <tr><td>典型护城河</td><td>${(a.moat_types || []).map(x => `<span class="tag">${esc({ cost: "成本", switching: "转换成本", intangible: "品牌/牌照/专利", network: "网络效应", efficient_scale: "有效规模" }[x] || x)}</span>`).join("")}</td></tr></tbody></table>`;
+    const drv = Object.entries(def.drivers || {});
+    if (drv.length) h += `<h3>收入驱动 → 行业指标</h3><table><tbody>${drv.map(([role, ids]) => { const d = (a.drivers || []).find(x => x.role === role); return `<tr><td>${esc(DRIVER_ZH[role] || role)}${d ? `<div class="note">${esc(d.description)}</div>` : ""}</td><td>${[].concat(ids).map(i => `<span class="tag">${esc(kpiName(i))}</span>`).join("")}</td></tr>`; }).join("")}</tbody></table>`;
+    const vs = (def.common_variants || []).map(v => a.variants[v] && [v, a.variants[v]]).filter(Boolean);
+    if (vs.length) h += `<h3>行业里常见的经营模式变体</h3><div class="list">${vs.map(([, v]) => `<div class="row"><span><b>${esc(v.name)}</b><div class="note">${esc(v.description)}</div></span></div>`).join("")}</div>`;
+  } else h += `<p class="note">该三级行业没有默认原型。</p>`;
+  const L = bz.life || {};
+  h += `<h3>生命周期（规则 · 2025 年报）</h3><div>${["扩张期", "运营期", "收缩期"].map(x => `<span class="tag ${x === L.label ? "ev" : ""}" style="${x === L.label ? "font-weight:700" : "opacity:.55"}">${x}</span>`).join("")}${L.label === "数据不足" ? '<span class="tag">数据不足</span>' : ""}</div>` +
+    (L.capex_dep != null ? `<table><tbody><tr><td>资本开支 / 折旧</td><td class="num">${L.capex_dep}</td></tr><tr><td>在建工程增速</td><td class="num">${pctS(L.cip_g)}</td></tr><tr><td>营收增速（行业中位）</td><td class="num">${pctS(L.rev_g)}（${pctS(L.peer_rev_g)}）</td></tr><tr><td>自由现金流</td><td class="num">${yi(L.fcf)}</td></tr></tbody></table>` : "") +
+    `<p class="note">扩张期：资本开支 > 1.5 倍折旧，且在建工程增加或营收增速高于行业中位；收缩期：资本开支 < 0.8 倍折旧且增速不高于行业；其余为运营期（设计 §4.1）。</p>`;
+  h += `<h3>周期时钟 · 行业（${esc(c.l3 || "—")}）</h3>${phaseChips(D.clock_l3[c.l3])}`;
+  const prods = [...new Set(c.revenue.flatMap(r => r.pids))].filter(p => D.clock_prod[p]);
+  if (prods.length) h += `<h3>周期时钟 · 产品</h3>${prods.map(p => `<div style="margin-top:8px">${nodeLink(p)}<div>${phaseChips(D.clock_prod[p])}</div></div>`).join("")}`;
+  h += `<p class="note">需求 = 营收增速，盈利 = 毛利率变化，供给 = 资本开支增速；复苏：需求↑ 盈利↑ 开支低；扩张：需求↑；过剩：盈利↓ 开支仍↑；出清：需求↓ 盈利↓；其余为过渡（设计 §4.2）。产品层用映射到该产品的主营构成，生产公司至少 3 家。</p>`;
+  const roic = Object.entries(bz.roic || {});
+  h += `<h3>护城河线索（数字，待与年报“核心竞争力”声明对照）</h3><table><tbody><tr><td>ROIC</td><td>${roic.length ? roic.map(([y, v]) => `${y}: ${Number(v).toFixed(1)}%`).join(" · ") : "—"}</td></tr><tr><td>毛利率（行业中位）</td><td class="num">${pctS(bz.gm)}（${pctS(bz.peer_gm)}）</td></tr></tbody></table>
+    <p class="note">待完成（设计 §5）：公司自身的经营模式变体、定价与成本传导（DeepSeek 读经营模式文本）；护城河认定（声明 vs 数字）与持久性；会计质量、治理、竞争格局、敏感性。</p>`;
+  return h;
+}
+function appsCell(c, item) {
+  const list = (c.apps && c.apps[item]) || [];
+  if (!list.length) return "";
+  return `<div class="note" style="margin-top:4px">下游应用：${list.map(a => `${a.node_id && N[a.node_id] ? `<button type="button" class="link" data-node="${esc(a.node_id)}">${esc(N[a.node_id].n)}</button>` : esc(a.name)} <span class="tag ${a.weight === "主要" ? "ev" : ""}" title="${esc(a.evidence.quote)}">${a.weight} · p${a.evidence.page}</span>`).join(" ")}</div>`;
+}
+function integration(c) {
+  if (!c.eliminations.length) return "";
+  const amount = Math.abs(c.eliminations.reduce((s, e) => s + e.sales, 0));
+  const down = c.internal.length === 2 ? c.revenue.find(r => r.item === c.internal[1]) : null;
+  const cover = down ? amount / down.sales * 100 : null;
+  return `<p class="note"><span class="tag ev">垂直一体化</span> 业务之间内部交易 ${yi(amount)}${down ? `，相当于「${esc(down.item)}」收入的 ${cover.toFixed(0)}%：${cover >= 90 ? "下游业务的原料基本来自自产" : "下游业务部分原料来自自产"}` : ""}。各项之和超过 100% 是因为内部交易在合并时抵消。</p>`;
+}
+
+function relatedChain(c, dir) {
+  const seeds = [...new Set(c.revenue.flatMap(r => r.pids))];
+  const w = walk(seeds, 2, dir, 30), out = [];
+  w.nodes.forEach((d, id) => { if (d !== 0) out.push([id, Math.abs(d)]); });
+  return out.sort((a, b) => a[1] - b[1]);
+}
+
+function renderCompany() {
+  const c = C[sel.id];
+  const up = relatedChain(c, "up"), down = relatedChain(c, "down"), peers = peersOf(c.code);
+  const named = c.named.length;
+  head(`<div class="eyebrow">公司 · ${esc(c.code)}</div><h2>${esc(c.name)}</h2><div class="meta"><span>来源：${esc(c.source)}</span><span>${c.pages} 页</span><span>管理层讨论与分析 第 ${c.sections.chapter?.[0]}–${c.sections.chapter?.[1]} 页（占全文 ${(c.md_share * 100).toFixed(0)}%）</span></div>`);
+  setTabs([
+    { key: "overview", label: "概览" }, { key: "products", label: "产品与服务", n: c.revenue.length },
+    { key: "customers", label: "客户", n: c.customers.rows.length + named }, { key: "suppliers", label: "供应商", n: c.suppliers.rows.length },
+    { key: "peers", label: "同行", n: peers.length }, { key: "chain", label: "上下游", n: up.length + down.length },
+    { key: "valuation", label: "估值与指标", n: (c.valuations || []).length }, { key: "quarterly", label: "季报要点", n: (c.quarterly || []).length }, { key: "business", label: "商业模式" }, { key: "evidence", label: "证据" },
+  ]);
+  const b = document.getElementById("body");
+  if (tab === "overview") {
+    const top = [...c.revenue].sort((a, x) => x.pct - a.pct);
+    b.innerHTML = `<div class="kpis"><div class="kpi"><b>${pct(c.customers.total_pct)}</b><span>前五名客户占销售</span></div><div class="kpi"><b>${pct(c.suppliers.total_pct)}</b><span>前五名供应商占采购</span></div><div class="kpi"><b>${pct(c.regions.length ? c.regions.filter(r => /境外|海外|国外/.test(r.item)).reduce((s, r) => s + r.pct, 0) : null)}</b><span>境外收入占比</span></div></div>
+      <h3>营收结构（2025 年，主营构成，占合并营收）</h3>${top.map(r => `<div class="row"><span>${esc(r.item)}</span><span class="num">${pct(r.pct)}</span></div><div class="bar"><span style="width:${Math.max(0, Math.min(100, r.pct))}%"></span></div>`).join("")}
+      ${c.eliminations.map(e => `<div class="row"><span>${esc(e.item)}</span><span class="num">${pct(e.pct)}</span></div>`).join("")}
+      ${integration(c)}
+      <h3>地区</h3>${c.regions.length ? c.regions.sort((a, x) => x.pct - a.pct).map(r => `<div class="row"><span>${esc(r.item)}</span><span class="num">${pct(r.pct)}</span></div>`).join("") : '<p class="note">未拆分地区</p>'}
+      <h3>关联一览</h3><p class="note">产品与服务 ${c.revenue.length} 项 · 前五名客户 ${c.customers.rows.length} 家${named ? ` + 点名客户 ${named} 家` : ""} · 前五名供应商 ${c.suppliers.rows.length} 家 · 同行 ${peers.length} 家 · 上游节点 ${up.length} 个 · 下游节点 ${down.length} 个</p>`;
+  } else if (tab === "products") {
+    b.innerHTML = integration(c) + `<table><thead><tr><th>主营构成</th><th class="num">占营收</th><th class="num">毛利率</th></tr></thead><tbody>` +
+      [...c.revenue].sort((a, x) => x.pct - a.pct).map(r => `<tr><td>${esc(r.item)}<div>${r.pids.map(p => nodeLink(p)).join("<br>") || `<span class="tag">${HOW_ZH[r.how]}</span>`}</div>${r.pids.length ? `<span class="tag">${HOW_ZH[r.how]}</span>` : ""}${appsCell(c, r.item)}${r.pids[0] && D.broker_prod[r.pids[0]] ? brokerLine(D.broker_prod[r.pids[0]], "该产品") : ""}</td><td class="num">${pct(r.pct)}</td><td class="num">${r.gm == null ? "—" : r.gm + "%"}</td></tr>`).join("") +
+      c.eliminations.map(e => `<tr><td>${esc(e.item)} <span class="tag">内部抵消</span></td><td class="num">${pct(e.pct)}</td><td class="num">—</td></tr>`).join("") +
+      `</tbody></table><p class="note">占比来自 Tushare 主营业务构成（按产品），与年报“营业收入构成”表同源。产品节点目前按名称规则匹配；下游应用由 DeepSeek flash 读年报业务章节得出，每条附原文页码（悬停查看原文）。</p>`;
+  } else if (tab === "customers") {
+    b.innerHTML = `<h3>前五名客户</h3>${cpTable(c.customers, "customer")}` +
+      (c.llm ? parties(c) : (named ? `<h3>正文点名的客户（无比例）</h3><div class="list">${c.named.map(r => `<div class="row"><span>${esc(r.name)}</span><span class="tag ev">年报第 ${r.page} 页</span></div>`).join("")}</div>` : "")) +
+      `<p class="note">匿名客户的画像是推断（D-102）：业务条目由金额不超过该业务收入判断；下游环节来自产业链先验里该产品的直接下游；地区：客户占比超过全部境内收入占比时“确定境外”（反之“确定境内”），否则按境外收入占比 ≥80% / ≤20% 判断“大概率”；概念线索来自同花顺概念板块，只作提示。名字要等招股书、问询回复或对方年报确认。</p>`;
+  } else if (tab === "suppliers") {
+    b.innerHTML = `<h3>前五名供应商</h3>${cpTable(c.suppliers, "supplier")}`;
+  } else if (tab === "peers") {
+    const comps = c.llm ? c.llm.counterparties.filter(p => p.role === "competitor") : [];
+    const named = comps.length ? `<h3>年报点名的竞争对手（DeepSeek，原文已核对）</h3><div class="list">${comps.map(p => { const hit = D.companies.find(x => p.name.includes(x.name) || x.name.includes(p.name)); return `<div class="row"><span>${hit ? companyLink(hit.code) : esc(p.name)} <span class="tag">${esc(p.detail)}</span></span><span class="tag ev" title="${esc(p.evidence.quote)}">第 ${p.evidence.page} 页</span></div>`; }).join("")}</div><h3>产品结构相似的公司</h3>` : "";
+    b.innerHTML = named + (peers.length ? `<table><thead><tr><th>公司</th><th>共同产品 / 服务</th><th class="num">相似度</th></tr></thead><tbody>` +
+      peers.map(p => `<tr><td>${companyLink(p.code)}</td><td>${p.shared.map(s => nodeLink(s)).join("<br>")}</td><td class="num">${p.score.toFixed(2)}</td></tr>`).join("") +
+      `</tbody></table><p class="note">相似度 = 按营收占比加权的产品向量余弦相似度（全市场）。之后还会合并研报里的“可比公司”和共同客户（D-102）。</p>` : `<p class="empty">没有找到产品结构相同的公司（营收条目未匹配到产品节点）</p>`);
+  } else if (tab === "valuation") {
+    if (!VIEWS) { b.innerHTML = `<p class="note">正在加载研报归纳…</p>`; loadViews().then(() => { if (sel.kind === "company" && sel.id === c.code && tab === "valuation") renderCompany(); }); return; }
+    const vs = c.valuations || [];
+    const frame = valuationFrame(c) + `<h3>本公司最近的研报（证据）</h3>`;
+    const fmtM = m => `${esc(m.method || "—")}${m.multiple != null ? " " + m.multiple + "x" : ""}${m.base_year ? " · " + esc(m.base_year) : ""}${m.multiple_kind ? ` <span class="tag ${m.multiple_kind === "target" ? "ev" : ""}">${m.multiple_kind === "target" ? "目标倍数" : "现价隐含"}</span>` : ""}${m.applied_to && m.applied_to !== "整体" ? " · " + esc(m.applied_to) : ""}`;
+    b.innerHTML = frame + (vs.length ? vs.map(r => {
+      const v = r.valuation, tp = v.target_price && v.target_price.value != null ? `${v.target_price.value} ${esc(v.target_price.currency || "")}` : "未给出";
+      return `<h3>${esc(r.org)} · ${esc(r.date)} · ${esc(v.rating || "—")}</h3><div class="note">《${esc(r.title)}》</div>
+        <table><tbody><tr><td>方法</td><td>${(v.methods || []).map(fmtM).join("<br>") || "未说明"}</td></tr><tr><td>目标价</td><td>${tp}</td></tr>
+        ${(v.forecasts || []).length ? `<tr><td>盈利预测</td><td>${v.forecasts.map(f => `${esc(f.year)}：净利 ${f.net_profit_bn ?? "—"} 亿 · EPS ${f.eps ?? "—"} · PE ${f.pe ?? "—"}`).join("<br>")}</td></tr>` : ""}
+        ${(v.comparables || []).length ? `<tr><td>可比公司</td><td>${v.comparables.map(x => `${esc(x.name)}${x.multiple != null ? " " + x.multiple + "x" : ""}`).join("、")}</td></tr>` : ""}</tbody></table>
+        <p class="note">${esc(v.logic || "")}</p>
+        ${(v.assumptions || []).length ? `<div class="list">${v.assumptions.map(a => `<div class="row"><span>${esc(a.segment)} · ${esc(a.metric)} · ${esc(a.year || "")}</span><span class="num">${esc(a.value ?? "")} ${esc(a.unit || "")} <span class="tag ev" title="${esc(a.quote)}">p${a.page}</span></span></div>`).join("")}</div>` : ""}`;
+    }).join("") + `<p class="note">DeepSeek 读研报，方法、目标价、假设均附原文页码。注意：A 股券商多写“当前股价对应 PE”，是现价隐含倍数，不是目标倍数；外资 / 港资券商才常给目标价和 DCF。</p>` : `<p class="empty">最近 12 个月没有该公司的个股研报</p>`);
+  } else if (tab === "business") {
+    b.innerHTML = businessTab(c);
+  } else if (tab === "quarterly") {
+    const KIND_ZH = { order: "订单 / 合同", customer: "客户", capacity: "产能", driver: "业绩驱动", product: "产品", other: "其他" };
+    const qs = c.quarterly || [];
+    b.innerHTML = qs.length ? ["order", "customer", "capacity", "driver", "product", "other"].map(k => [k, qs.filter(q => q.kind === k)]).filter(([, l]) => l.length).map(([k, l]) =>
+      `<h3>${KIND_ZH[k]} · ${l.length}</h3><div class="list">${l.map(q => `<div class="row"><span>${esc(q.summary)}${q.value ? ` <span class="tag ev">${esc(q.value)} ${esc(q.unit || "")}</span>` : ""}${q.counterparty ? ` <span class="tag">${esc(q.counterparty)}</span>` : ""}</span><span class="tag" title="${esc(q.evidence.quote)}">${esc(q.period)} p${q.evidence.page}</span></div>`).join("")}</div>`).join("") +
+      `<p class="note">DeepSeek 读 2026 年一季报、三季报的“其他提醒事项”和营收类变动原因；悬停页码看原文。</p>` : `<p class="empty">季报没有可读的经营信息（多数公司“其他提醒事项”为不适用）</p>`;
+  } else if (tab === "chain") {
+    const list = (arr, word) => arr.length ? `<div class="list">${arr.map(([id, d]) => `<div class="row"><span>${nodeLink(id)}</span><span class="tag prior">${word}${d}层</span></div>`).join("")}</div>` : `<p class="empty">无</p>`;
+    b.innerHTML = `<h3>上游：原料、部件、技术</h3>${list(up, "上游")}<h3>下游：应用与终端市场</h3>${list(down, "下游")}<p class="note">这些链接是 Opus 写的产业链先验（虚线），不是该公司的交易证据。</p>`;
+  } else {
+    const keys = { chapter: "管理层讨论与分析", business: "主营业务", industry: "行业情况", competitiveness: "核心竞争力", revenue_mix: "营业收入构成", capacity: "产能 / 产销", costs_materials: "成本与原材料", counterparties: "前五名客户和供应商", competition: "竞争格局", risks: "风险" };
+    b.innerHTML = `<h3>${esc(c.source)}：定位到的章节</h3><table><thead><tr><th>章节</th><th class="num">页码</th></tr></thead><tbody>` +
+      Object.entries(c.sections).map(([k, [a, z]]) => `<tr><td>${keys[k] || k}</td><td class="num">${a}–${z}</td></tr>`).join("") +
+      `</tbody></table><h3>证据等级</h3><div class="list"><div class="row"><span><span class="tag ev">年报表格</span> 前五名客户、供应商、主营构成</span><span>规则解析</span></div><div class="row"><span><span class="tag ev">年报正文</span> 点名客户</span><span>原型人工标注，正式版由 DeepSeek 抽取</span></div><div class="row"><span><span class="tag prior">先验</span> 产品之间的上下游</span><span>Opus 产业链骨架</span></div></div>`;
+  }
+}
+
+function renderNode() {
+  const n = N[sel.id], makers = MAKERS[sel.id] || [];
+  const ups = (IN[sel.id] || []).map(e => [e.from, e.rel]), downs = (OUT[sel.id] || []).map(e => [e.to, e.rel]);
+  const seg = n.s && N[n.s] ? N[n.s].n : null, parent = n.p && N[n.p] ? n.p : null;
+  head(`<div class="eyebrow">${TYPE_ZH[typeOf(n)]}${n.sec && D.sectors[n.sec] ? " · 申万 " + esc(D.sectors[n.sec]) : ""}</div><h2>${esc(n.n)}</h2><div class="meta">${n.en ? `<span>${esc(n.en)}</span>` : ""}${seg ? `<span>细分：${esc(seg)}</span>` : ""}${n.imp ? `<span class="tag risk">${IMP_ZH[n.imp]}</span>` : ""}</div>`);
+  const bv = D.broker_prod[sel.id], hasView = VIEWS && VIEWS.product[sel.id];
+  setTabs([{ key: "up", label: "上游", n: ups.length }, { key: "down", label: "下游", n: downs.length }, { key: "makers", label: "生产公司", n: makers.length }, { key: "val", label: "估值与指标", n: bv ? bv.n : (hasView ? hasView.n_reports : 0) }, { key: "attr", label: "属性" }]);
+  const b = document.getElementById("body");
+  const rel = arr => arr.length ? `<div class="list">${arr.map(([id, r]) => `<div class="row"><span>${nodeLink(id)}</span><span class="tag prior">${REL_ZH[r] || r}</span></div>`).join("")}</div>` : `<p class="empty">骨架中没有记录</p>`;
+  if (tab === "val" && !VIEWS) { b.innerHTML = `<p class="note">正在加载研报归纳…</p>`; loadViews().then(() => { if (sel.kind === "node" && tab === "val") renderNode(); }); return; }
+  if (tab === "val") b.innerHTML = (VIEWS.product[sel.id] ? viewCard(VIEWS.product[sel.id], "该产品") : "") + (bv ? brokerLine(bv, "统计") + `<p class="note">来自生产该产品的公司的个股研报（最近 12 个月）。</p>` : (VIEWS.product[sel.id] ? "" : `<p class="empty">该产品研报样本不足（少于 3 篇）</p>`));
+  else if (tab === "up") b.innerHTML = rel(ups);
+  else if (tab === "down") b.innerHTML = rel(downs);
+  else if (tab === "makers") b.innerHTML = makers.length ? `<table><thead><tr><th>公司</th><th>主营构成条目</th><th class="num">占其营收</th></tr></thead><tbody>${makers.map(m => `<tr><td>${companyLink(m.code)}</td><td>${esc(m.item)}</td><td class="num">${pct(m.pct)}</td></tr>`).join("")}</tbody></table><p class="note">按营收条目名称匹配，覆盖全部 A 股。</p>` : `<p class="empty">没有公司的营收条目匹配到该产品</p>`;
+  else b.innerHTML = `<table><tbody><tr><td>编号</td><td>${esc(n.id)}</td></tr><tr><td>类型</td><td>${TYPE_ZH[typeOf(n)]}</td></tr>${parent ? `<tr><td>上级</td><td>${nodeLink(parent)}</td></tr>` : ""}${n.s ? `<tr><td>细分</td><td>${nodeLink(n.s)}</td></tr>` : ""}<tr><td>别名</td><td>${(n.al || []).map(a => `<span class="tag">${esc(a)}</span>`).join("") || "—"}</td></tr><tr><td>来源</td><td><span class="tag prior">产业链先验（Opus）</span></td></tr></tbody></table>`;
+}
+
+function groupList(m, id) {
+  const rows = Object.entries(m[id] || {}).sort((a, b) => b[1] - a[1]);
+  return rows.length ? `<div class="list">${rows.map(([g, k]) => `<div class="row"><span>${nodeLink(g)}${N[g].sec && D.sectors[N[g].sec] ? ` <span class="tag">${esc(D.sectors[N[g].sec])}</span>` : ""}</span><span class="tag prior">${k} 条关系</span></div>`).join("")}</div>` : `<p class="empty">无</p>`;
+}
+function renderSector() {
+  const segs = D.nodes.filter(n => n.t === "segment" && n.sec === sel.id);
+  const prods = segs.reduce((s, n) => s + (SEGP[n.id] || []).length, 0);
+  const agg = m => { const out = {}; segs.forEach(sg => Object.entries(m[sg.id] || {}).forEach(([g, k]) => { if (N[g].sec !== sel.id) out[g] = (out[g] || 0) + k; })); return out; };
+  const ups = agg(GIN), downs = agg(GOUT), cos = D.companies.filter(c => c.l1 === sel.id).sort((a, b) => b.links.length - a.links.length);
+  head(`<div class="eyebrow">申万一级行业 · ${esc(sel.id)}</div><h2>${esc(D.sectors[sel.id])}</h2><div class="meta"><span>${segs.length} 个细分</span><span>${prods} 个产品 / 服务</span><span>产业链先验（Opus）</span></div>`);
+  setTabs([{ key: "segs", label: "细分", n: segs.length }, { key: "up", label: "上游来自", n: Object.keys(ups).length }, { key: "down", label: "下游去向", n: Object.keys(downs).length }, { key: "cos", label: "公司", n: cos.length }]);
+  const b = document.getElementById("body");
+  const lst = m => { const rows = Object.entries(m).sort((a, x) => x[1] - a[1]); return rows.length ? `<div class="list">${rows.map(([g, k]) => `<div class="row"><span>${nodeLink(g)}${N[g].sec && D.sectors[N[g].sec] ? ` <span class="tag">${esc(D.sectors[N[g].sec])}</span>` : ""}</span><span class="tag prior">${k} 条</span></div>`).join("")}</div>` : `<p class="empty">无</p>`; };
+  if (tab === "segs") b.innerHTML = `<div class="list">${segs.sort((a, x) => (SEGP[x.id] || []).length - (SEGP[a.id] || []).length).map(n => `<div class="row"><span>${nodeLink(n.id)}</span><span class="num">${(SEGP[n.id] || []).length} 项</span></div>`).join("")}</div><p class="note">图中每条线是细分之间产品级上下游关系的汇总，线上数字为关系条数。点击细分可展开其中的产品和服务。</p>`;
+  else if (tab === "up") b.innerHTML = lst(ups) + `<p class="note">其他行业流入本行业的细分、材料和技术。</p>`;
+  else if (tab === "down") b.innerHTML = lst(downs) + `<p class="note">本行业流向的其他行业细分和终端市场。</p>`;
+  else b.innerHTML = cos.length ? `<div class="list">${cos.map(c => `<div class="row"><span>${companyLink(c.code)} <span class="tag">${esc(c.l3 || "")}</span></span><span class="tag ev">${c.links.length} 条关系</span></div>`).join("")}</div>` : `<p class="empty">无</p>`;
+}
+function renderSegment() {
+  const n = N[sel.id], ps = SEGP[sel.id] || [];
+  head(`<div class="eyebrow">细分${n.sec && D.sectors[n.sec] ? " · 申万 " + esc(D.sectors[n.sec]) : ""}</div><h2>${esc(n.n)}</h2><div class="meta">${n.en ? `<span>${esc(n.en)}</span>` : ""}<span>${ps.length} 个产品 / 服务</span>${n.sec ? `<button type="button" class="link" data-sector="${esc(n.sec)}">返回行业</button>` : ""}</div>`);
+  setTabs([{ key: "prods", label: "产品与服务", n: ps.length }, { key: "up", label: "上游细分", n: Object.keys(GIN[sel.id] || {}).length }, { key: "down", label: "下游细分", n: Object.keys(GOUT[sel.id] || {}).length }]);
+  const b = document.getElementById("body");
+  if (tab === "prods") b.innerHTML = ps.length ? `<div class="list">${ps.map(p => `<div class="row"><span>${nodeLink(p)}</span><span>${MAKERS[p] ? `<span class="tag ev">${MAKERS[p].length} 家公司</span>` : ""}</span></div>`).join("")}</div>` : `<p class="empty">无</p>`;
+  else if (tab === "up") b.innerHTML = groupList(GIN, sel.id);
+  else b.innerHTML = groupList(GOUT, sel.id);
+}
+function renderDossier() {
+  if (sel.kind === "company") renderCompany();
+  else if (sel.kind === "sector") renderSector();
+  else if (N[sel.id].t === "segment") renderSegment();
+  else renderNode();
+}
+const SHARDS = {};
+function loadDetail(code) {
+  const c = C[code]; if (c.loaded) return Promise.resolve();
+  const sec = c.l1 || "other";
+  SHARDS[sec] ||= fetch(`co/${sec}.json`).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); });
+  return SHARDS[sec].then(all => { Object.assign(c, all[code] || {}); c.loaded = true; });
+}
+window.select = select;
+async function select(s) {
+  if (s.kind === "company" && !C[s.id]) return;
+  if (s.kind === "company") {
+    head(`<div class="eyebrow">公司 · ${esc(s.id)}</div><h2>${esc(C[s.id].name)}</h2><div class="meta">正在加载…</div>`);
+    try { await loadDetail(s.id); } catch (err) { document.getElementById("body").innerHTML = `<p class="empty">公司详情没有加载出来：${esc(err.message)}。请重试。</p>`; return; }
+  }
+  sel = s; tab = null; draw(); renderDossier(); renderQuick();
+  const ss = document.getElementById("sector"); if (ss) ss.value = s.kind === "sector" ? s.id : "";
+}
+document.addEventListener("click", e => {
+  const n = e.target.closest("[data-node]"), co = e.target.closest("[data-co]");
+  if (n && N[n.dataset.node]) select({ kind: "node", id: n.dataset.node });
+  if (co) select({ kind: "company", id: co.dataset.co });
+  const sc = e.target.closest("[data-sector]");
+  if (sc) select({ kind: "sector", id: sc.dataset.sector });
+});
+
+// ---------- search ----------
+function renderQuick() {
+  document.getElementById("quick").innerHTML = D.quick.filter(code => C[code]).map(code => C[code]).map(c => `<button type="button" class="chip ${sel.kind === "company" && sel.id === c.code ? "on" : ""}" data-co="${c.code}">${esc(c.name)}</button>`).join("");
+}
+function setupSearch() {
+  const q = document.getElementById("q"), res = document.getElementById("results");
+  let hits = [], cur = 0;
+  const show = () => {
+    const s = q.value.trim().toLowerCase();
+    if (!s) { res.hidden = true; return; }
+    const cos = D.companies.filter(c => c.name.toLowerCase().includes(s) || c.code.toLowerCase().includes(s)).slice(0, 15).map(c => ({ kind: "company", id: c.code, label: c.name, sub: "公司 " + c.code }));
+    const ns = D.nodes.filter(n => (String(n.n).toLowerCase().includes(s) || String(n.en || "").toLowerCase().includes(s) || (n.al || []).some(a => String(a).toLowerCase().includes(s))))
+      .slice(0, 30).map(n => ({ kind: "node", id: n.id, label: n.n, sub: TYPE_ZH[typeOf(n)] + (MAKERS[n.id] ? ` · ${MAKERS[n.id].length} 家公司` : "") }));
+    hits = [...cos, ...ns].slice(0, 30); cur = 0;
+    res.innerHTML = hits.length ? hits.map((h, i) => `<button type="button" data-i="${i}" class="${i === 0 ? "on" : ""}"><span>${esc(h.label)}</span><span class="kind">${esc(h.sub)}</span></button>`).join("") : `<div class="empty">没有匹配项</div>`;
+    res.hidden = false;
+  };
+  const pick = i => { const h = hits[i]; if (!h) return; res.hidden = true; q.value = ""; select({ kind: h.kind, id: h.id }); };
+  q.addEventListener("input", show);
+  q.addEventListener("keydown", e => {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); cur = (cur + (e.key === "ArrowDown" ? 1 : -1) + hits.length) % Math.max(1, hits.length); [...res.children].forEach((b, i) => b.classList.toggle("on", i === cur)); }
+    if (e.key === "Enter") pick(cur);
+    if (e.key === "Escape") res.hidden = true;
+  });
+  res.addEventListener("click", e => { const b = e.target.closest("button[data-i]"); if (b) pick(+b.dataset.i); });
+  document.addEventListener("click", e => { if (!e.target.closest(".search")) res.hidden = true; });
+}
+
+(function setupSplitter() {
+  const main = document.querySelector("main"), bar = document.getElementById("splitter");
+  const set = w => { main.style.setProperty("--dw", Math.round(Math.max(280, Math.min(w, main.clientWidth - 320))) + "px"); };
+  try { const saved = +localStorage.getItem("chainViewDossierWidth"); if (saved) set(saved); } catch (e) {}
+  let dragging = false;
+  bar.addEventListener("pointerdown", e => { dragging = true; bar.classList.add("drag"); bar.setPointerCapture(e.pointerId); });
+  bar.addEventListener("pointermove", e => { if (dragging) set(main.getBoundingClientRect().right - e.clientX); });
+  const stop = () => {
+    if (!dragging) return; dragging = false; bar.classList.remove("drag");
+    try { localStorage.setItem("chainViewDossierWidth", parseInt(getComputedStyle(main).getPropertyValue("--dw"))); } catch (e) {}
+    if (cy) cy.resize();
+  };
+  bar.addEventListener("pointerup", stop); bar.addEventListener("pointercancel", stop);
+  bar.addEventListener("dblclick", () => { set(440); try { localStorage.removeItem("chainViewDossierWidth"); } catch (e) {} if (cy) cy.resize(); });
+})();
+const zoomBy = f => { if (!cy) return; cy.zoom({ level: cy.zoom() * f, renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } }); };
+document.getElementById("zin").addEventListener("click", () => zoomBy(1.25));
+document.getElementById("zout").addEventListener("click", () => zoomBy(0.8));
+document.getElementById("zfit").addEventListener("click", () => cy && cy.fit(undefined, 30));
+document.getElementById("wide").addEventListener("click", e => {
+  const m = document.querySelector("main"); m.classList.toggle("wide");
+  e.target.textContent = m.classList.contains("wide") ? "展开详情" : "收起详情";
+  setTimeout(() => { if (cy) { cy.resize(); cy.fit(undefined, 30); } }, 50);
+});
+document.getElementById("full").addEventListener("click", () => {
+  const st = document.querySelector(".stage");
+  if (document.fullscreenElement) document.exitFullscreen(); else if (st.requestFullscreen) st.requestFullscreen();
+});
+document.addEventListener("fullscreenchange", () => {
+  document.getElementById("full").textContent = document.fullscreenElement ? "退出全屏" : "全屏";
+  setTimeout(() => { if (cy) { cy.resize(); cy.fit(undefined, 30); } }, 80);
+});
+["depth", "dir", "showCp", "net"].forEach(id => document.getElementById(id).addEventListener("change", () => draw()));
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => cy && cy.style(styles()));
+new MutationObserver(() => cy && cy.style(styles())).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+fetch("view_data.json").then(r => r.json()).then(data => {
+  D = data; index(); legend(); setupSearch();
+  const sectorSel = document.getElementById("sector");
+  sectorSel.innerHTML += Object.entries(D.sectors).sort().map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join("");
+  sectorSel.addEventListener("change", () => { if (sectorSel.value) select({ kind: "sector", id: sectorSel.value }); });
+  const fromHash = () => { const m = location.hash.match(/co=([\w.]+)/); return m && C[m[1]] ? m[1] : null; };
+  addEventListener("hashchange", () => { const code = fromHash(); if (code) select({ kind: "company", id: code }); });
+  select({ kind: "company", id: fromHash() || "002714.SZ" }).catch(err => {
+    document.getElementById("body").innerHTML = `<p class="empty">出错了：${esc(err.message)}</p>`;
+  });
+}).catch(err => {
+  document.getElementById("body").innerHTML = `<p class="empty">数据没有加载出来：${esc(err.message)}。请刷新页面重试。</p>`;
+});
+</script>

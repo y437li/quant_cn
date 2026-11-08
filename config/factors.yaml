@@ -1,0 +1,21 @@
+# Factor library (plan 04 phase 4, FACTOR_LIBRARY §8). One line per factor: name (FACTOR_PANEL.factor),
+# class (a BaseFactor subclass under quant_cn/factor/library/), params (constructor keyword arguments).
+factors:
+  - {name: ep_ttm, class: EarningsYieldFactor}
+  - {name: roe_ttm, class: RoeFactor}
+  - {name: profit_growth_ttm, class: ProfitGrowthFactor}
+  - {name: momentum_12_1, class: MomentumFactor, params: {window: 252, skip: 21}}
+  - {name: reversal_1m, class: ReversalFactor, params: {window: 21}}
+  - {name: turnover_60d, class: TurnoverFactor, params: {window: 60, min_obs: 40}}
+
+# Campaign settings (plan 04 phase 5): id for the TrialLog and reports, preprocessing chain, horizons,
+# signal weights (score = weighted mean of the processed z-scores).
+campaign:
+  id: factor_campaign_01
+  start: "20190101"
+  horizons: [1, 5, 10, 20, 60]
+  winsorize_k: 5.0          # MAD multiple; null = skip
+  standardize: true
+  neutralize: true          # Shenwan L1 (l1_grouping) + log market cap (D-093)
+  weights: {ep_ttm: 1.0, roe_ttm: 1.0, profit_growth_ttm: 1.0, momentum_12_1: 1.0, reversal_1m: 1.0, turnover_60d: 1.0}
+  min_factors: 3            # a stock needs this many factors for a score

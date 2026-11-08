@@ -1,0 +1,154 @@
+# Cross-sector nodes (plan 12 phase 1, D-097). Sector files reference these ids and never redefine them.
+# Format: README.md beside this file. All edges here are priors.
+
+nodes:
+  # --- end markets: where final demand comes from ---
+  - {id: MKT_AI_DATA_CENTER, type: end_market, name: AI数据中心, name_en: AI Data Center, aliases: [智算中心, 算力中心, AIDC]}
+  - {id: MKT_DATA_CENTER, type: end_market, name: 数据中心, name_en: Data Center, aliases: [IDC]}
+  - {id: MKT_TELECOM_NETWORK, type: end_market, name: 通信网络, name_en: Telecom Network, aliases: [运营商网络, 5G网络]}
+  - {id: MKT_EV, type: end_market, name: 新能源汽车, name_en: New Energy Vehicle, aliases: [电动汽车, NEV, EV]}
+  - {id: MKT_ICE_VEHICLE, type: end_market, name: 燃油汽车, name_en: Internal Combustion Vehicle, aliases: [传统燃油车]}
+  - {id: MKT_COMMERCIAL_VEHICLE, type: end_market, name: 商用车, name_en: Commercial Vehicle, aliases: [重卡, 客车]}
+  - {id: MKT_SOLAR, type: end_market, name: 光伏发电, name_en: Solar Power, aliases: [光伏电站, 太阳能发电]}
+  - {id: MKT_WIND, type: end_market, name: 风力发电, name_en: Wind Power, aliases: [风电, 海上风电]}
+  - {id: MKT_ENERGY_STORAGE, type: end_market, name: 储能, name_en: Energy Storage, aliases: [电化学储能, 储能电站]}
+  - {id: MKT_POWER_GRID, type: end_market, name: 电网, name_en: Power Grid, aliases: [输配电, 国家电网, 南方电网, 特高压]}
+  - {id: MKT_THERMAL_POWER, type: end_market, name: 火力发电, name_en: Thermal Power}
+  - {id: MKT_NUCLEAR_POWER, type: end_market, name: 核电, name_en: Nuclear Power}
+  - {id: MKT_HYDRO_POWER, type: end_market, name: 水电, name_en: Hydropower}
+  - {id: MKT_CONSUMER_ELECTRONICS, type: end_market, name: 消费电子, name_en: Consumer Electronics, aliases: [3C]}
+  - {id: MKT_SMARTPHONE, type: end_market, name: 智能手机, name_en: Smartphone, aliases: [手机]}
+  - {id: MKT_PC, type: end_market, name: 个人电脑, name_en: Personal Computer, aliases: [PC, 笔记本电脑]}
+  - {id: MKT_WEARABLES_XR, type: end_market, name: 可穿戴与XR设备, name_en: Wearables and XR, aliases: [AR, VR, MR, 智能眼镜, 智能手表]}
+  - {id: MKT_HOME_APPLIANCE, type: end_market, name: 家电, name_en: Home Appliances}
+  - {id: MKT_INDUSTRIAL_AUTOMATION, type: end_market, name: 工业自动化, name_en: Industrial Automation, aliases: [智能制造, 工控]}
+  - {id: MKT_ROBOTICS, type: end_market, name: 机器人, name_en: Robotics, aliases: [工业机器人, 服务机器人]}
+  - {id: MKT_HUMANOID_ROBOT, type: end_market, name: 人形机器人, name_en: Humanoid Robot, aliases: [具身智能]}
+  - {id: MKT_LOW_ALTITUDE, type: end_market, name: 低空经济, name_en: Low-Altitude Economy, aliases: [eVTOL, 无人机]}
+  - {id: MKT_AEROSPACE, type: end_market, name: 航空航天, name_en: Aerospace, aliases: [商业航天, 卫星]}
+  - {id: MKT_DEFENSE, type: end_market, name: 国防装备, name_en: Defense, aliases: [军工]}
+  - {id: MKT_RAIL, type: end_market, name: 轨道交通, name_en: Rail Transit, aliases: [高铁, 地铁]}
+  - {id: MKT_SHIPBUILDING, type: end_market, name: 船舶海工, name_en: Shipbuilding and Offshore}
+  - {id: MKT_CONSTRUCTION, type: end_market, name: 建筑与基建, name_en: Construction and Infrastructure, aliases: [基建, 房屋建筑]}
+  - {id: MKT_REAL_ESTATE, type: end_market, name: 房地产, name_en: Real Estate}
+  - {id: MKT_OIL_GAS, type: end_market, name: 油气开采, name_en: Oil and Gas}
+  - {id: MKT_MINING, type: end_market, name: 矿山开采, name_en: Mining}
+  - {id: MKT_CHEMICAL_INDUSTRY, type: end_market, name: 化工生产, name_en: Chemical Industry}
+  - {id: MKT_STEEL_INDUSTRY, type: end_market, name: 钢铁生产, name_en: Steelmaking}
+  - {id: MKT_AGRICULTURE, type: end_market, name: 农业生产, name_en: Agriculture}
+  - {id: MKT_FOOD_CONSUMPTION, type: end_market, name: 食品消费, name_en: Food Consumption}
+  - {id: MKT_HEALTHCARE, type: end_market, name: 医疗健康, name_en: Healthcare, aliases: [医院, 医疗机构]}
+  - {id: MKT_PHARMA_RD, type: end_market, name: 医药研发, name_en: Pharmaceutical R&D, aliases: [新药研发]}
+  - {id: MKT_RETAIL_CONSUMER, type: end_market, name: 居民消费, name_en: Household Consumption}
+  - {id: MKT_APPAREL, type: end_market, name: 服装消费, name_en: Apparel}
+  - {id: MKT_PACKAGING, type: end_market, name: 包装, name_en: Packaging}
+  - {id: MKT_LOGISTICS, type: end_market, name: 物流, name_en: Logistics}
+  - {id: MKT_FINANCE, type: end_market, name: 金融机构, name_en: Financial Institutions, aliases: [银行, 券商, 保险]}
+  - {id: MKT_GOVERNMENT, type: end_market, name: 政府与公共事业, name_en: Government and Public Sector, aliases: [政务, 智慧城市]}
+  - {id: MKT_ENTERPRISE_IT, type: end_market, name: 企业IT, name_en: Enterprise IT, aliases: [企业数字化, 信创]}
+  - {id: MKT_MEDIA_ENTERTAINMENT, type: end_market, name: 文娱传媒, name_en: Media and Entertainment, aliases: [游戏, 影视]}
+  - {id: MKT_ENVIRONMENTAL, type: end_market, name: 环境治理, name_en: Environmental Services}
+  - {id: MKT_SEMI_FAB, type: end_market, name: 晶圆制造, name_en: Semiconductor Fabs, aliases: [晶圆厂, Fab]}
+
+  # --- materials used across sectors ---
+  - {id: MAT_COPPER, type: material, name: 铜, name_en: Copper, aliases: [电解铜, 阴极铜]}
+  - {id: MAT_ALUMINUM, type: material, name: 铝, name_en: Aluminum, aliases: [电解铝, 原铝]}
+  - {id: MAT_NICKEL, type: material, name: 镍, name_en: Nickel}
+  - {id: MAT_COBALT, type: material, name: 钴, name_en: Cobalt}
+  - {id: MAT_LITHIUM_CARBONATE, type: material, name: 碳酸锂, name_en: Lithium Carbonate}
+  - {id: MAT_LITHIUM_HYDROXIDE, type: material, name: 氢氧化锂, name_en: Lithium Hydroxide}
+  - {id: MAT_LITHIUM_ORE, type: material, name: 锂矿, name_en: Lithium Ore, aliases: [锂辉石, 锂云母, 盐湖卤水]}
+  - {id: MAT_ZINC, type: material, name: 锌, name_en: Zinc}
+  - {id: MAT_LEAD, type: material, name: 铅, name_en: Lead}
+  - {id: MAT_TIN, type: material, name: 锡, name_en: Tin}
+  - {id: MAT_GOLD, type: material, name: 黄金, name_en: Gold}
+  - {id: MAT_SILVER, type: material, name: 白银, name_en: Silver, aliases: [银粉]}
+  - {id: MAT_RARE_EARTH, type: material, name: 稀土, name_en: Rare Earths, aliases: [氧化镨钕, 镨钕]}
+  - {id: MAT_TUNGSTEN, type: material, name: 钨, name_en: Tungsten}
+  - {id: MAT_MOLYBDENUM, type: material, name: 钼, name_en: Molybdenum}
+  - {id: MAT_TITANIUM, type: material, name: 钛, name_en: Titanium, aliases: [海绵钛, 钛材]}
+  - {id: MAT_MAGNESIUM, type: material, name: 镁, name_en: Magnesium}
+  - {id: MAT_ANTIMONY, type: material, name: 锑, name_en: Antimony}
+  - {id: MAT_GALLIUM_GERMANIUM, type: material, name: 镓锗, name_en: Gallium and Germanium, aliases: [镓, 锗]}
+  - {id: MAT_IRON_ORE, type: material, name: 铁矿石, name_en: Iron Ore}
+  - {id: MAT_STEEL, type: material, name: 钢材, name_en: Steel, aliases: [钢铁]}
+  - {id: MAT_SPECIAL_STEEL, type: material, name: 特钢, name_en: Special Steel, aliases: [特殊钢, 合金钢]}
+  - {id: MAT_ELECTRICAL_STEEL, type: material, name: 电工钢, name_en: Electrical Steel, aliases: [硅钢, 取向硅钢, 无取向硅钢]}
+  - {id: MAT_STAINLESS_STEEL, type: material, name: 不锈钢, name_en: Stainless Steel}
+  - {id: MAT_COKING_COAL, type: material, name: 焦煤, name_en: Coking Coal, aliases: [炼焦煤]}
+  - {id: MAT_THERMAL_COAL, type: material, name: 动力煤, name_en: Thermal Coal}
+  - {id: MAT_COKE, type: material, name: 焦炭, name_en: Coke}
+  - {id: MAT_CRUDE_OIL, type: material, name: 原油, name_en: Crude Oil}
+  - {id: MAT_NATURAL_GAS, type: material, name: 天然气, name_en: Natural Gas, aliases: [LNG]}
+  - {id: MAT_ETHYLENE, type: material, name: 乙烯, name_en: Ethylene}
+  - {id: MAT_PROPYLENE, type: material, name: 丙烯, name_en: Propylene}
+  - {id: MAT_PX_PTA, type: material, name: PX/PTA, name_en: Paraxylene and PTA, aliases: [对二甲苯, 精对苯二甲酸]}
+  - {id: MAT_METHANOL, type: material, name: 甲醇, name_en: Methanol}
+  - {id: MAT_PLASTICS, type: material, name: 通用塑料, name_en: Commodity Plastics, aliases: [聚乙烯, 聚丙烯, PE, PP, PVC]}
+  - {id: MAT_ENGINEERING_PLASTICS, type: material, name: 工程塑料, name_en: Engineering Plastics, aliases: [PC, PA, POM, PBT, PPS, LCP]}
+  - {id: MAT_EPOXY_RESIN, type: material, name: 环氧树脂, name_en: Epoxy Resin}
+  - {id: MAT_SYNTHETIC_RUBBER, type: material, name: 合成橡胶, name_en: Synthetic Rubber}
+  - {id: MAT_NATURAL_RUBBER, type: material, name: 天然橡胶, name_en: Natural Rubber}
+  - {id: MAT_CARBON_BLACK, type: material, name: 炭黑, name_en: Carbon Black}
+  - {id: MAT_CARBON_FIBER, type: material, name: 碳纤维, name_en: Carbon Fiber}
+  - {id: MAT_GLASS_FIBER, type: material, name: 玻璃纤维, name_en: Glass Fiber, aliases: [玻纤, 电子纱, 电子布]}
+  - {id: MAT_SILICON_METAL, type: material, name: 工业硅, name_en: Silicon Metal, aliases: [金属硅]}
+  - {id: MAT_POLYSILICON, type: material, name: 多晶硅, name_en: Polysilicon}
+  - {id: MAT_QUARTZ, type: material, name: 高纯石英, name_en: High-Purity Quartz, aliases: [高纯石英砂]}
+  - {id: MAT_GRAPHITE, type: material, name: 石墨, name_en: Graphite, aliases: [天然石墨, 人造石墨原料, 针状焦]}
+  - {id: MAT_FLUORITE, type: material, name: 萤石, name_en: Fluorite, aliases: [氢氟酸]}
+  - {id: MAT_PHOSPHATE_ROCK, type: material, name: 磷矿石, name_en: Phosphate Rock}
+  - {id: MAT_POTASH, type: material, name: 钾肥原料, name_en: Potash, aliases: [氯化钾]}
+  - {id: MAT_SULFURIC_ACID, type: material, name: 硫酸, name_en: Sulfuric Acid}
+  - {id: MAT_CHLOR_ALKALI, type: material, name: 氯碱, name_en: Chlor-Alkali, aliases: [烧碱, 液氯]}
+  - {id: MAT_SODA_ASH, type: material, name: 纯碱, name_en: Soda Ash}
+  - {id: MAT_TITANIUM_DIOXIDE, type: material, name: 钛白粉, name_en: Titanium Dioxide}
+  - {id: MAT_CEMENT, type: material, name: 水泥, name_en: Cement}
+  - {id: MAT_FLAT_GLASS, type: material, name: 平板玻璃, name_en: Flat Glass, aliases: [浮法玻璃]}
+  - {id: MAT_PULP, type: material, name: 纸浆, name_en: Pulp, aliases: [木浆]}
+  - {id: MAT_TIMBER, type: material, name: 木材, name_en: Timber}
+  - {id: MAT_COTTON, type: material, name: 棉花, name_en: Cotton}
+  - {id: MAT_POLYESTER, type: material, name: 涤纶, name_en: Polyester Fiber, aliases: [涤纶长丝, 聚酯]}
+  - {id: MAT_GRAIN, type: material, name: 粮食, name_en: Grain, aliases: [玉米, 小麦, 稻谷, 大豆]}
+  - {id: MAT_SOYBEAN_MEAL, type: material, name: 豆粕, name_en: Soybean Meal}
+  - {id: MAT_SUGAR, type: material, name: 糖, name_en: Sugar}
+  - {id: MAT_LIVE_HOGS, type: material, name: 生猪, name_en: Live Hogs}
+  - {id: MAT_RAW_MILK, type: material, name: 生鲜乳, name_en: Raw Milk}
+  - {id: MAT_INDUSTRIAL_GASES, type: material, name: 工业气体, name_en: Industrial Gases, aliases: [氧气, 氮气, 氩气]}
+  - {id: MAT_ELECTRICITY, type: material, name: 电力, name_en: Electricity, aliases: [电能]}
+  - {id: MAT_HYDROGEN, type: material, name: 氢气, name_en: Hydrogen, aliases: [绿氢]}
+  - {id: MAT_WATER, type: material, name: 工业用水, name_en: Water}
+
+  # --- technologies used across sectors ---
+  - {id: TECH_AI_LARGE_MODEL, type: technology, name: 大模型, name_en: Large AI Models, aliases: [AIGC, 生成式AI, LLM]}
+  - {id: TECH_CLOUD_COMPUTING, type: technology, name: 云计算, name_en: Cloud Computing}
+  - {id: TECH_5G6G, type: technology, name: 5G/6G通信, name_en: 5G and 6G}
+  - {id: TECH_LIQUID_COOLING, type: technology, name: 液冷, name_en: Liquid Cooling, aliases: [冷板式液冷, 浸没式液冷]}
+  - {id: TECH_CPO, type: technology, name: 共封装光学, name_en: Co-Packaged Optics, aliases: [CPO, LPO]}
+  - {id: TECH_ADVANCED_PACKAGING, type: technology, name: 先进封装, name_en: Advanced Packaging, aliases: [CoWoS, Chiplet, 2.5D封装, 3D封装, HBM封装]}
+  - {id: TECH_SIC_GAN, type: technology, name: 第三代半导体, name_en: Wide-Bandgap Semiconductors, aliases: [SiC, GaN, 碳化硅, 氮化镓]}
+  - {id: TECH_SOLID_STATE_BATTERY, type: technology, name: 固态电池, name_en: Solid-State Battery, aliases: [半固态电池]}
+  - {id: TECH_SODIUM_ION, type: technology, name: 钠离子电池, name_en: Sodium-Ion Battery}
+  - {id: TECH_TOPCON, type: technology, name: TOPCon电池技术, name_en: TOPCon}
+  - {id: TECH_HJT, type: technology, name: 异质结电池技术, name_en: HJT, aliases: [HJT]}
+  - {id: TECH_BC_CELL, type: technology, name: BC电池技术, name_en: Back-Contact Cell, aliases: [BC, HPBC, TBC]}
+  - {id: TECH_PEROVSKITE, type: technology, name: 钙钛矿电池技术, name_en: Perovskite}
+  - {id: TECH_AUTONOMOUS_DRIVING, type: technology, name: 智能驾驶, name_en: Autonomous Driving, aliases: [自动驾驶, ADAS, 高阶智驾]}
+  - {id: TECH_UHV, type: technology, name: 特高压输电, name_en: Ultra-High Voltage Transmission, aliases: [特高压]}
+  - {id: TECH_IOT, type: technology, name: 物联网, name_en: Internet of Things, aliases: [IoT]}
+  - {id: TECH_INDUSTRIAL_SOFTWARE, type: technology, name: 工业软件, name_en: Industrial Software, aliases: [CAD, CAE, EDA, MES]}
+  - {id: TECH_BIOTECH, type: technology, name: 生物技术, name_en: Biotechnology, aliases: [合成生物, 抗体药, 细胞治疗, 基因治疗]}
+  - {id: TECH_ADDITIVE_MANUFACTURING, type: technology, name: 增材制造, name_en: Additive Manufacturing, aliases: [3D打印]}
+  - {id: TECH_CCUS, type: technology, name: 碳捕集利用与封存, name_en: CCUS}
+  # --- added by merge 2026-11-07 ---
+  - {id: MAT_URANIUM, type: material, name: 铀, name_en: Uranium, import_dependence: high, aliases: [天然铀, 铀矿, 八氧化三铀]}
+  - {id: MAT_LIMESTONE, type: material, name: 石灰石, name_en: Limestone, aliases: [石灰岩]}
+  - {id: MAT_ASPHALT, type: material, name: 沥青, name_en: Asphalt, aliases: [道路沥青原料]}
+  - {id: MAT_LPG, type: material, name: 液化石油气, name_en: LPG and Propane, aliases: [LPG, 丙烷, 丁烷]}
+  - {id: MAT_JET_FUEL, type: material, name: 航空燃油, name_en: Jet Fuel, aliases: [航油, 喷气燃油]}
+  - {id: MAT_BUNKER_FUEL, type: material, name: 船用燃料, name_en: Bunker Fuel, aliases: [船燃, 保税燃料油]}
+  - {id: MAT_LEATHER, type: material, name: 皮革, name_en: Leather, aliases: [原皮, 牛皮, 真皮]}
+  - {id: MAT_SILICA_SAND, type: material, name: 硅砂, name_en: Silica Sand, aliases: [石英砂, 低铁石英砂, 光伏砂]}
+  - {id: MKT_TOBACCO, type: end_market, name: 烟草, name_en: Tobacco, aliases: [卷烟, 烟草行业]}
+
+edges: []

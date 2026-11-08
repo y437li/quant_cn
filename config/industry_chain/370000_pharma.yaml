@@ -1,0 +1,845 @@
+# 医药生物 (SW 370000) — product taxonomy prior (plan 12 phase 1, D-097). All edges are priors.
+# Format: README.md beside this file.
+sector: {sw_l1: "370000", name: 医药生物, name_en: Pharmaceuticals and Biotech}
+
+nodes:
+  # ================= segments =================
+  - {id: SEG_PHAR_CHEM_PHARMA, type: segment, name: 化学制药, name_en: Chemical Pharmaceuticals}
+  - {id: SEG_PHAR_API, type: segment, name: 原料药与医药中间体, name_en: APIs and Pharmaceutical Intermediates, parent: SEG_PHAR_CHEM_PHARMA}
+  - {id: SEG_PHAR_CHEM_FORMULATION, type: segment, name: 化学制剂, name_en: Chemical Formulations, parent: SEG_PHAR_CHEM_PHARMA}
+  - {id: SEG_PHAR_GENERICS, type: segment, name: 仿制药, name_en: Generic Drugs, parent: SEG_PHAR_CHEM_FORMULATION}
+  - {id: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE, type: segment, name: 创新小分子药, name_en: Innovative Small-Molecule Drugs, parent: SEG_PHAR_CHEM_FORMULATION}
+  - {id: SEG_PHAR_EXCIPIENT_PACKAGING, type: segment, name: 药用辅料与药包材, name_en: Pharmaceutical Excipients and Packaging, parent: SEG_PHAR_CHEM_PHARMA}
+  - {id: SEG_PHAR_TCM, type: segment, name: 中药, name_en: Traditional Chinese Medicine}
+  - {id: SEG_PHAR_TCM_HERBS, type: segment, name: 中药材种植与贸易, name_en: TCM Raw Herbs, parent: SEG_PHAR_TCM}
+  - {id: SEG_PHAR_TCM_PIECES, type: segment, name: 中药饮片与配方颗粒, name_en: TCM Decoction Pieces and Granules, parent: SEG_PHAR_TCM}
+  - {id: SEG_PHAR_TCM_PATENT, type: segment, name: 中成药, name_en: Patent TCM, parent: SEG_PHAR_TCM}
+  - {id: SEG_PHAR_BIOLOGICS, type: segment, name: 生物制品, name_en: Biologics}
+  - {id: SEG_PHAR_BLOOD_PRODUCTS, type: segment, name: 血液制品, name_en: Blood Products, parent: SEG_PHAR_BIOLOGICS}
+  - {id: SEG_PHAR_VACCINES, type: segment, name: 疫苗, name_en: Vaccines, parent: SEG_PHAR_BIOLOGICS}
+  - {id: SEG_PHAR_OTHER_BIOLOGICS, type: segment, name: 其他生物制品, name_en: Other Biologics, parent: SEG_PHAR_BIOLOGICS}
+  - {id: SEG_PHAR_ANTIBODY, type: segment, name: 抗体药物, name_en: Antibody Drugs, parent: SEG_PHAR_OTHER_BIOLOGICS}
+  - {id: SEG_PHAR_RECOMBINANT_PROTEIN, type: segment, name: 重组蛋白与多肽药物, name_en: Recombinant Proteins and Peptides, parent: SEG_PHAR_OTHER_BIOLOGICS}
+  - {id: SEG_PHAR_CELL_GENE_THERAPY, type: segment, name: 细胞与基因治疗及核酸药物, name_en: Cell Gene and Nucleic Acid Therapies, parent: SEG_PHAR_OTHER_BIOLOGICS}
+  - {id: SEG_PHAR_LIFE_SCI_TOOLS, type: segment, name: 生命科学上游, name_en: Life-Science Tools and Bioprocess Supplies}
+  - {id: SEG_PHAR_COMMERCE, type: segment, name: 医药商业, name_en: Pharmaceutical Commerce}
+  - {id: SEG_PHAR_DISTRIBUTION, type: segment, name: 医药流通, name_en: Pharmaceutical Distribution, parent: SEG_PHAR_COMMERCE}
+  - {id: SEG_PHAR_RETAIL_PHARMACY, type: segment, name: 线下药店, name_en: Retail Pharmacies, parent: SEG_PHAR_COMMERCE}
+  - {id: SEG_PHAR_ONLINE_PHARMACY, type: segment, name: 互联网药店, name_en: Online Pharmacies, parent: SEG_PHAR_COMMERCE}
+  - {id: SEG_PHAR_MED_DEVICES, type: segment, name: 医疗器械, name_en: Medical Devices}
+  - {id: SEG_PHAR_MED_EQUIPMENT, type: segment, name: 医疗设备, name_en: Medical Equipment, parent: SEG_PHAR_MED_DEVICES}
+  - {id: SEG_PHAR_HOME_MED_DEVICES, type: segment, name: 家用医疗器械, name_en: Home Medical Devices, parent: SEG_PHAR_MED_DEVICES}
+  - {id: SEG_PHAR_MED_CONSUMABLES, type: segment, name: 医疗耗材, name_en: Medical Consumables, parent: SEG_PHAR_MED_DEVICES}
+  - {id: SEG_PHAR_HIGH_VALUE_CONSUMABLES, type: segment, name: 高值医用耗材, name_en: High-Value Medical Consumables, parent: SEG_PHAR_MED_CONSUMABLES}
+  - {id: SEG_PHAR_LOW_VALUE_CONSUMABLES, type: segment, name: 低值医用耗材, name_en: Low-Value Medical Consumables, parent: SEG_PHAR_MED_CONSUMABLES}
+  - {id: SEG_PHAR_IVD, type: segment, name: 体外诊断, name_en: In-Vitro Diagnostics, parent: SEG_PHAR_MED_DEVICES}
+  - {id: SEG_PHAR_MED_SERVICES, type: segment, name: 医疗服务, name_en: Medical Services}
+  - {id: SEG_PHAR_DIAG_SERVICES, type: segment, name: 诊断服务, name_en: Diagnostic Services, parent: SEG_PHAR_MED_SERVICES}
+  - {id: SEG_PHAR_CXO, type: segment, name: 医疗研发外包, name_en: Pharma R&D and Manufacturing Outsourcing (CXO), parent: SEG_PHAR_MED_SERVICES}
+  - {id: SEG_PHAR_PRECLINICAL_CRO, type: segment, name: 临床前CRO, name_en: Discovery and Preclinical CRO, parent: SEG_PHAR_CXO}
+  - {id: SEG_PHAR_CLINICAL_CRO, type: segment, name: 临床CRO, name_en: Clinical CRO, parent: SEG_PHAR_CXO}
+  - {id: SEG_PHAR_CDMO, type: segment, name: CDMO, name_en: Contract Development and Manufacturing, parent: SEG_PHAR_CXO}
+  - {id: SEG_PHAR_HOSPITALS, type: segment, name: 医院, name_en: Hospitals, parent: SEG_PHAR_MED_SERVICES}
+  - {id: SEG_PHAR_SPECIALTY_HOSPITALS, type: segment, name: 专科医疗连锁, name_en: Specialty Care Chains, parent: SEG_PHAR_HOSPITALS}
+  - {id: SEG_PHAR_OTHER_MED_SERVICES, type: segment, name: 其他医疗服务, name_en: Other Medical Services, parent: SEG_PHAR_MED_SERVICES}
+
+  # ================= APIs and intermediates =================
+  - {id: PROD_PHAR_INTERMEDIATE, type: product, name: 医药中间体, name_en: Pharmaceutical Intermediates, segment: SEG_PHAR_API, aliases: [医药化工中间体]}
+  - {id: PROD_PHAR_CUSTOM_INTERMEDIATE, type: product, name: 定制医药中间体, name_en: Custom Pharmaceutical Intermediates, parent: PROD_PHAR_INTERMEDIATE, segment: SEG_PHAR_API, aliases: [专利药中间体, 定制中间体]}
+  - {id: PROD_PHAR_PENICILLIN_SALT, type: product, name: 青霉素工业盐, name_en: Penicillin Industrial Salt, parent: PROD_PHAR_INTERMEDIATE, segment: SEG_PHAR_API, aliases: [青霉素G钾盐]}
+  - {id: PROD_PHAR_6APA, type: product, name: 6-APA, name_en: 6-Aminopenicillanic Acid, parent: PROD_PHAR_INTERMEDIATE, segment: SEG_PHAR_API, aliases: [6-氨基青霉烷酸]}
+  - {id: PROD_PHAR_7ACA, type: product, name: 7-ACA, name_en: 7-Aminocephalosporanic Acid, parent: PROD_PHAR_INTERMEDIATE, segment: SEG_PHAR_API, aliases: [7-氨基头孢烷酸, 7-ADCA]}
+  - {id: PROD_PHAR_STEROID_INTERMEDIATE, type: product, name: 甾体激素中间体, name_en: Steroid Intermediates, parent: PROD_PHAR_INTERMEDIATE, segment: SEG_PHAR_API, aliases: [雄烯二酮, 4-AD, 皂素]}
+  - {id: PROD_PHAR_SARTAN_INTERMEDIATE, type: product, name: 沙坦类中间体, name_en: Sartan Intermediates, parent: PROD_PHAR_INTERMEDIATE, segment: SEG_PHAR_API, aliases: [沙坦联苯]}
+  - {id: PROD_PHAR_API, type: product, name: 原料药, name_en: Active Pharmaceutical Ingredients, segment: SEG_PHAR_API, aliases: [API]}
+  - {id: PROD_PHAR_BULK_API, type: product, name: 大宗原料药, name_en: Bulk APIs, parent: PROD_PHAR_API, segment: SEG_PHAR_API}
+  - {id: PROD_PHAR_SPECIALTY_API, type: product, name: 特色原料药, name_en: Specialty APIs, parent: PROD_PHAR_API, segment: SEG_PHAR_API, aliases: [特色API, 高端原料药]}
+  - {id: PROD_PHAR_VITAMIN_API, type: product, name: 维生素原料, name_en: Vitamin APIs, parent: PROD_PHAR_BULK_API, segment: SEG_PHAR_API, aliases: [维生素]}
+  - {id: PROD_PHAR_VITAMIN_C, type: product, name: 维生素C, name_en: Vitamin C, parent: PROD_PHAR_VITAMIN_API, segment: SEG_PHAR_API}
+  - {id: PROD_PHAR_ANTIBIOTIC_API, type: product, name: 抗生素原料药, name_en: Antibiotic APIs, parent: PROD_PHAR_BULK_API, segment: SEG_PHAR_API}
+  - {id: PROD_PHAR_PENICILLIN_API, type: product, name: 青霉素类原料药, name_en: Penicillin-Class APIs, parent: PROD_PHAR_ANTIBIOTIC_API, segment: SEG_PHAR_API, aliases: [阿莫西林原料药, 氨苄西林]}
+  - {id: PROD_PHAR_CEPHALOSPORIN_API, type: product, name: 头孢类原料药, name_en: Cephalosporin APIs, parent: PROD_PHAR_ANTIBIOTIC_API, segment: SEG_PHAR_API, aliases: [头孢菌素原料药]}
+  - {id: PROD_PHAR_ANTIPYRETIC_API, type: product, name: 解热镇痛原料药, name_en: Antipyretic-Analgesic APIs, parent: PROD_PHAR_BULK_API, segment: SEG_PHAR_API, aliases: [对乙酰氨基酚, 布洛芬原料药, 安乃近, 阿司匹林原料药]}
+  - {id: PROD_PHAR_STEROID_API, type: product, name: 甾体激素原料药, name_en: Steroid Hormone APIs, parent: PROD_PHAR_BULK_API, segment: SEG_PHAR_API, aliases: [激素原料药, 地塞米松原料药]}
+  - {id: PROD_PHAR_CRUDE_HEPARIN, type: product, name: 肝素粗品, name_en: Crude Heparin, parent: PROD_PHAR_INTERMEDIATE, segment: SEG_PHAR_API, aliases: [粗品肝素, 肠衣副产品]}
+  - {id: PROD_PHAR_HEPARIN_API, type: product, name: 肝素原料药, name_en: Heparin Sodium API, parent: PROD_PHAR_BULK_API, segment: SEG_PHAR_API, aliases: [肝素钠原料药, 依诺肝素原料药]}
+  - {id: PROD_PHAR_SARTAN_API, type: product, name: 沙坦类原料药, name_en: Sartan APIs, parent: PROD_PHAR_SPECIALTY_API, segment: SEG_PHAR_API, aliases: [缬沙坦原料药, 氯沙坦原料药]}
+  - {id: PROD_PHAR_STATIN_API, type: product, name: 他汀类原料药, name_en: Statin APIs, parent: PROD_PHAR_SPECIALTY_API, segment: SEG_PHAR_API}
+  - {id: PROD_PHAR_ANTIDIABETIC_API, type: product, name: 降糖类原料药, name_en: Antidiabetic APIs, parent: PROD_PHAR_SPECIALTY_API, segment: SEG_PHAR_API, aliases: [西格列汀原料药, 二甲双胍原料药]}
+  - {id: PROD_PHAR_ANTIVIRAL_API, type: product, name: 抗病毒原料药, name_en: Antiviral APIs, parent: PROD_PHAR_SPECIALTY_API, segment: SEG_PHAR_API}
+  - {id: PROD_PHAR_ONCOLOGY_API, type: product, name: 抗肿瘤原料药, name_en: Oncology APIs, parent: PROD_PHAR_SPECIALTY_API, segment: SEG_PHAR_API, aliases: [高活原料药, HPAPI]}
+  - {id: PROD_PHAR_CNS_API, type: product, name: 精神神经类原料药, name_en: CNS APIs, parent: PROD_PHAR_SPECIALTY_API, segment: SEG_PHAR_API}
+  - {id: PROD_PHAR_CONTRAST_API, type: product, name: 造影剂原料药, name_en: Contrast Agent APIs, parent: PROD_PHAR_SPECIALTY_API, segment: SEG_PHAR_API, aliases: [碘海醇原料药, 碘克沙醇原料药]}
+  - {id: PROD_PHAR_PEPTIDE_API, type: product, name: 多肽原料药, name_en: Peptide APIs, parent: PROD_PHAR_SPECIALTY_API, segment: SEG_PHAR_API, aliases: [司美格鲁肽原料药, 利拉鲁肽原料药]}
+  - {id: PROD_PHAR_PROSTAGLANDIN_API, type: product, name: 前列腺素类原料药, name_en: Prostaglandin APIs, parent: PROD_PHAR_SPECIALTY_API, segment: SEG_PHAR_API}
+
+  # ================= excipients and pharma packaging =================
+  - {id: PROD_PHAR_EXCIPIENT, type: product, name: 药用辅料, name_en: Pharmaceutical Excipients, segment: SEG_PHAR_EXCIPIENT_PACKAGING, aliases: [辅料]}
+  - {id: PROD_PHAR_EMPTY_CAPSULE, type: product, name: 药用空心胶囊, name_en: Empty Hard Capsules, parent: PROD_PHAR_EXCIPIENT, segment: SEG_PHAR_EXCIPIENT_PACKAGING, aliases: [空心胶囊, 明胶空心胶囊, 植物胶囊]}
+  - {id: PROD_PHAR_PHARMA_PACKAGING, type: product, name: 药品包装材料, name_en: Pharmaceutical Packaging, segment: SEG_PHAR_EXCIPIENT_PACKAGING, aliases: [药包材]}
+  - {id: PROD_PHAR_PHARMA_GLASS, type: product, name: 药用玻璃, name_en: Pharmaceutical Glass, parent: PROD_PHAR_PHARMA_PACKAGING, segment: SEG_PHAR_EXCIPIENT_PACKAGING, import_dependence: medium, aliases: [中硼硅药用玻璃, 模制瓶, 管制瓶, 安瓿瓶]}
+  - {id: PROD_PHAR_RUBBER_STOPPER, type: product, name: 药用胶塞, name_en: Pharmaceutical Rubber Stoppers, parent: PROD_PHAR_PHARMA_PACKAGING, segment: SEG_PHAR_EXCIPIENT_PACKAGING, aliases: [覆膜胶塞, 卤化丁基胶塞]}
+  - {id: PROD_PHAR_PREFILLED_SYRINGE, type: product, name: 预灌封注射器, name_en: Prefilled Syringes, parent: PROD_PHAR_PHARMA_PACKAGING, segment: SEG_PHAR_EXCIPIENT_PACKAGING, import_dependence: medium, aliases: [预充式注射器]}
+
+  # ================= chemical formulations =================
+  - {id: PROD_PHAR_CHEM_FORMULATION, type: product, name: 化学药制剂, name_en: Chemical Drug Formulations, segment: SEG_PHAR_CHEM_FORMULATION, aliases: [化药制剂]}
+  - {id: PROD_PHAR_GENERIC_DRUG, type: product, name: 仿制药制剂, name_en: Generic Drug Products, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [一致性评价品种, 集采品种, 首仿药]}
+  - {id: PROD_PHAR_ORAL_SOLID, type: product, name: 口服固体制剂, name_en: Oral Solid Dosage Forms, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [片剂, 胶囊剂, OSD]}
+  - {id: PROD_PHAR_INJECTABLE, type: product, name: 注射剂, name_en: Injectables, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [小容量注射剂, 冻干粉针]}
+  - {id: PROD_PHAR_LVP, type: product, name: 大输液, name_en: Large-Volume Parenterals, parent: PROD_PHAR_INJECTABLE, segment: SEG_PHAR_GENERICS, aliases: [输液, 大容量注射剂]}
+  - {id: PROD_PHAR_PARENTERAL_NUTRITION, type: product, name: 肠外营养制剂, name_en: Parenteral Nutrition, parent: PROD_PHAR_INJECTABLE, segment: SEG_PHAR_GENERICS, aliases: [脂肪乳注射液, 氨基酸注射液]}
+  - {id: PROD_PHAR_COMPLEX_INJECTABLE, type: product, name: 高端复杂注射剂, name_en: Complex Injectables, parent: PROD_PHAR_INJECTABLE, segment: SEG_PHAR_GENERICS, aliases: [复杂制剂, 改良型新药注射剂]}
+  - {id: PROD_PHAR_MICROSPHERE, type: product, name: 微球制剂, name_en: Microsphere Formulations, parent: PROD_PHAR_COMPLEX_INJECTABLE, segment: SEG_PHAR_GENERICS, aliases: [长效微球]}
+  - {id: PROD_PHAR_LIPOSOME, type: product, name: 脂质体制剂, name_en: Liposome Formulations, parent: PROD_PHAR_COMPLEX_INJECTABLE, segment: SEG_PHAR_GENERICS, aliases: [脂质体]}
+  - {id: PROD_PHAR_INHALATION, type: product, name: 吸入制剂, name_en: Inhalation Products, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [吸入气雾剂, 吸入粉雾剂, 雾化吸入剂]}
+  - {id: PROD_PHAR_TRANSDERMAL, type: product, name: 透皮贴剂, name_en: Transdermal Patches, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [贴剂, 凝胶贴膏]}
+  - {id: PROD_PHAR_OPHTHALMIC_DRUG, type: product, name: 眼科药物, name_en: Ophthalmic Drugs, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [滴眼液]}
+  - {id: PROD_PHAR_LOW_DOSE_ATROPINE, type: product, name: 低浓度阿托品滴眼液, name_en: Low-Dose Atropine Eye Drops, parent: PROD_PHAR_OPHTHALMIC_DRUG, segment: SEG_PHAR_GENERICS, aliases: [低浓度阿托品, 0.01%阿托品]}
+  - {id: PROD_PHAR_SODIUM_HYALURONATE_INJ, type: product, name: 玻璃酸钠注射液, name_en: Sodium Hyaluronate Injection, parent: PROD_PHAR_INJECTABLE, segment: SEG_PHAR_GENERICS, aliases: [关节腔注射玻璃酸钠]}
+  - {id: PROD_PHAR_ANESTHETIC, type: product, name: 麻醉镇痛药, name_en: Anesthetics and Analgesics, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [麻醉药, 丙泊酚, 瑞芬太尼, 舒芬太尼]}
+  - {id: PROD_PHAR_PSYCHIATRIC_DRUG, type: product, name: 精神神经类药物, name_en: CNS and Psychiatric Drugs, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [精神类药物, 抗抑郁药, 抗精神病药]}
+  - {id: PROD_PHAR_ANTI_INFECTIVE, type: product, name: 抗感染药物, name_en: Anti-Infective Drugs, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [抗生素制剂, 抗菌药]}
+  - {id: PROD_PHAR_CARDIOVASCULAR_DRUG, type: product, name: 心血管化学药, name_en: Cardiovascular Drugs, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [降压药, 降脂药, 抗血栓药]}
+  - {id: PROD_PHAR_ORAL_ANTIDIABETIC, type: product, name: 口服降糖药, name_en: Oral Antidiabetic Drugs, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [DPP-4抑制剂, SGLT-2抑制剂]}
+  - {id: PROD_PHAR_CHEMO_DRUG, type: product, name: 化疗药物, name_en: Chemotherapy Drugs, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [细胞毒类抗肿瘤药, 紫杉醇, 培美曲塞]}
+  - {id: PROD_PHAR_CONTRAST_AGENT, type: product, name: 造影剂制剂, name_en: Contrast Agents, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [造影剂, 碘造影剂, 钆造影剂]}
+  - {id: PROD_PHAR_HORMONE_DRUG, type: product, name: 激素类制剂, name_en: Hormone Drugs, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [糖皮质激素, 性激素, 避孕药]}
+  - {id: PROD_PHAR_LMWH, type: product, name: 低分子肝素制剂, name_en: Low-Molecular-Weight Heparin, parent: PROD_PHAR_INJECTABLE, segment: SEG_PHAR_GENERICS, aliases: [依诺肝素钠注射液, 那屈肝素]}
+  - {id: PROD_PHAR_DIGESTIVE_DRUG, type: product, name: 消化系统化学药, name_en: Gastrointestinal Drugs, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [质子泵抑制剂, PPI]}
+  - {id: PROD_PHAR_OTC_CHEM, type: product, name: 化学药OTC, name_en: OTC Chemical Drugs, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [非处方药, 感冒药, 维矿类OTC]}
+  - {id: PROD_PHAR_ED_DRUG, type: product, name: 男科用药, name_en: Erectile Dysfunction Drugs, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_GENERICS, aliases: [西地那非, 他达拉非]}
+  - {id: PROD_PHAR_INNOVATIVE_SMALL_MOLECULE, type: product, name: 创新小分子药, name_en: Innovative Small-Molecule Drugs, parent: PROD_PHAR_CHEM_FORMULATION, segment: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE, aliases: [化药1类新药, 小分子创新药]}
+  - {id: PROD_PHAR_TKI, type: product, name: 小分子靶向药, name_en: Small-Molecule Targeted Therapies, parent: PROD_PHAR_INNOVATIVE_SMALL_MOLECULE, segment: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE, aliases: [TKI, 激酶抑制剂]}
+  - {id: PROD_PHAR_EGFR_TKI, type: product, name: EGFR-TKI, name_en: EGFR Tyrosine Kinase Inhibitors, parent: PROD_PHAR_TKI, segment: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE, aliases: [EGFR抑制剂, 阿美替尼, 伏美替尼, 奥希替尼]}
+  - {id: PROD_PHAR_BTK_INHIBITOR, type: product, name: BTK抑制剂, name_en: BTK Inhibitors, parent: PROD_PHAR_TKI, segment: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE, aliases: [泽布替尼, 奥布替尼]}
+  - {id: PROD_PHAR_ALK_INHIBITOR, type: product, name: ALK抑制剂, name_en: ALK Inhibitors, parent: PROD_PHAR_TKI, segment: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE}
+  - {id: PROD_PHAR_KRAS_INHIBITOR, type: product, name: KRAS抑制剂, name_en: KRAS Inhibitors, parent: PROD_PHAR_TKI, segment: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE}
+  - {id: PROD_PHAR_MULTI_KINASE_INHIBITOR, type: product, name: 多靶点抗血管生成抑制剂, name_en: Multi-Kinase Anti-Angiogenic Inhibitors, parent: PROD_PHAR_TKI, segment: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE, aliases: [阿帕替尼, 安罗替尼, 呋喹替尼]}
+  - {id: PROD_PHAR_PARP_INHIBITOR, type: product, name: PARP抑制剂, name_en: PARP Inhibitors, parent: PROD_PHAR_INNOVATIVE_SMALL_MOLECULE, segment: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE}
+  - {id: PROD_PHAR_JAK_INHIBITOR, type: product, name: JAK抑制剂, name_en: JAK Inhibitors, parent: PROD_PHAR_INNOVATIVE_SMALL_MOLECULE, segment: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE}
+  - {id: PROD_PHAR_PCAB, type: product, name: P-CAB抑酸药, name_en: Potassium-Competitive Acid Blockers, parent: PROD_PHAR_INNOVATIVE_SMALL_MOLECULE, segment: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE, aliases: [P-CAB, 伏诺拉生, 凯普拉生]}
+  - {id: PROD_PHAR_ORAL_GLP1, type: product, name: 口服小分子GLP-1, name_en: Oral Small-Molecule GLP-1 Agonists, parent: PROD_PHAR_INNOVATIVE_SMALL_MOLECULE, segment: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE, aliases: [小分子GLP-1受体激动剂]}
+  - {id: PROD_PHAR_PROTAC, type: product, name: 蛋白降解剂, name_en: Targeted Protein Degraders, parent: PROD_PHAR_INNOVATIVE_SMALL_MOLECULE, segment: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE, aliases: [PROTAC, 分子胶]}
+  - {id: PROD_PHAR_INNOVATIVE_ANTIVIRAL, type: product, name: 创新抗病毒药, name_en: Innovative Antivirals, parent: PROD_PHAR_INNOVATIVE_SMALL_MOLECULE, segment: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE, aliases: [抗流感创新药, 抗乙肝创新药]}
+  - {id: PROD_PHAR_NOVEL_ANALGESIC, type: product, name: 创新镇痛药, name_en: Novel Analgesics, parent: PROD_PHAR_INNOVATIVE_SMALL_MOLECULE, segment: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE, aliases: [非阿片类镇痛药, Nav1.8抑制剂]}
+  - {id: PROD_PHAR_LICENSE_OUT, type: product, name: 创新药授权许可, name_en: Drug Out-Licensing Deals, parent: PROD_PHAR_INNOVATIVE_SMALL_MOLECULE, segment: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE, kind: service, aliases: [License-out, BD授权, 首付款与里程碑]}
+
+  # ================= TCM =================
+  - {id: PROD_PHAR_TCM_HERBS, type: product, name: 中药材, name_en: TCM Raw Herbs, segment: SEG_PHAR_TCM_HERBS, aliases: [道地药材]}
+  - {id: PROD_PHAR_GINSENG, type: product, name: 人参, name_en: Ginseng, parent: PROD_PHAR_TCM_HERBS, segment: SEG_PHAR_TCM_HERBS, aliases: [西洋参, 红参]}
+  - {id: PROD_PHAR_NOTOGINSENG, type: product, name: 三七, name_en: Panax Notoginseng, parent: PROD_PHAR_TCM_HERBS, segment: SEG_PHAR_TCM_HERBS, aliases: [三七总皂苷]}
+  - {id: PROD_PHAR_BEZOAR, type: product, name: 牛黄, name_en: Bezoar, parent: PROD_PHAR_TCM_HERBS, segment: SEG_PHAR_TCM_HERBS, aliases: [天然牛黄, 体外培育牛黄, 人工牛黄]}
+  - {id: PROD_PHAR_MUSK, type: product, name: 麝香, name_en: Musk, parent: PROD_PHAR_TCM_HERBS, segment: SEG_PHAR_TCM_HERBS, import_dependence: medium, aliases: [天然麝香, 人工麝香]}
+  - {id: PROD_PHAR_DONKEY_HIDE, type: product, name: 驴皮, name_en: Donkey Hide, parent: PROD_PHAR_TCM_HERBS, segment: SEG_PHAR_TCM_HERBS, import_dependence: medium}
+  - {id: PROD_PHAR_PLANT_EXTRACT, type: product, name: 植物提取物, name_en: Botanical Extracts, segment: SEG_PHAR_TCM_HERBS, aliases: [中药提取物, 天然提取物, 罗汉果甜苷]}
+  - {id: PROD_PHAR_TCM_DECOCTION_PIECES, type: product, name: 中药饮片, name_en: TCM Decoction Pieces, segment: SEG_PHAR_TCM_PIECES, aliases: [精制饮片, 毒性饮片]}
+  - {id: PROD_PHAR_TCM_FORMULA_GRANULES, type: product, name: 中药配方颗粒, name_en: TCM Dispensing Granules, segment: SEG_PHAR_TCM_PIECES, aliases: [配方颗粒, 免煎颗粒]}
+  - {id: PROD_PHAR_PATENT_TCM, type: product, name: 中成药, name_en: Patent TCM Products, segment: SEG_PHAR_TCM_PATENT, aliases: [中药制剂]}
+  - {id: PROD_PHAR_TCM_INJECTION, type: product, name: 中药注射剂, name_en: TCM Injections, parent: PROD_PHAR_PATENT_TCM, segment: SEG_PHAR_TCM_PATENT, aliases: [血栓通, 丹红注射液, 喜炎平]}
+  - {id: PROD_PHAR_TCM_CARDIO, type: product, name: 心脑血管中成药, name_en: Cardio-Cerebrovascular TCM, parent: PROD_PHAR_PATENT_TCM, segment: SEG_PHAR_TCM_PATENT, aliases: [复方丹参滴丸, 通心络, 速效救心丸]}
+  - {id: PROD_PHAR_TCM_RESPIRATORY, type: product, name: 呼吸系统中成药, name_en: Respiratory TCM, parent: PROD_PHAR_PATENT_TCM, segment: SEG_PHAR_TCM_PATENT, aliases: [感冒类中成药, 连花清瘟, 止咳类中成药]}
+  - {id: PROD_PHAR_TCM_GYNECOLOGY, type: product, name: 妇科中成药, name_en: Gynecological TCM, parent: PROD_PHAR_PATENT_TCM, segment: SEG_PHAR_TCM_PATENT}
+  - {id: PROD_PHAR_TCM_PEDIATRIC, type: product, name: 儿科中成药, name_en: Pediatric TCM, parent: PROD_PHAR_PATENT_TCM, segment: SEG_PHAR_TCM_PATENT}
+  - {id: PROD_PHAR_TCM_DIGESTIVE, type: product, name: 消化系统中成药, name_en: Digestive TCM, parent: PROD_PHAR_PATENT_TCM, segment: SEG_PHAR_TCM_PATENT}
+  - {id: PROD_PHAR_TCM_ORTHOPEDIC, type: product, name: 骨科中成药, name_en: Orthopaedic TCM, parent: PROD_PHAR_PATENT_TCM, segment: SEG_PHAR_TCM_PATENT, aliases: [骨伤科中成药, 膏药]}
+  - {id: PROD_PHAR_TCM_TONIC, type: product, name: 补益类中成药, name_en: Tonic TCM, parent: PROD_PHAR_PATENT_TCM, segment: SEG_PHAR_TCM_PATENT, aliases: [滋补类中成药, 六味地黄丸]}
+  - {id: PROD_PHAR_EJIAO, type: product, name: 阿胶, name_en: Ejiao Donkey-Hide Gelatin, parent: PROD_PHAR_TCM_TONIC, segment: SEG_PHAR_TCM_PATENT, aliases: [阿胶块, 复方阿胶浆]}
+  - {id: PROD_PHAR_PIANZAIHUANG, type: product, name: 片仔癀, name_en: Pien Tze Huang, parent: PROD_PHAR_PATENT_TCM, segment: SEG_PHAR_TCM_PATENT}
+  - {id: PROD_PHAR_ANGONG_NIUHUANG, type: product, name: 安宫牛黄丸, name_en: Angong Niuhuang Pill, parent: PROD_PHAR_PATENT_TCM, segment: SEG_PHAR_TCM_PATENT}
+  - {id: PROD_PHAR_TCM_OTC, type: product, name: 中药OTC, name_en: OTC TCM Products, parent: PROD_PHAR_PATENT_TCM, segment: SEG_PHAR_TCM_PATENT, aliases: [品牌中成药, 中药大健康]}
+  - {id: PROD_PHAR_TCM_INNOVATIVE, type: product, name: 中药创新药, name_en: Innovative TCM Drugs, parent: PROD_PHAR_PATENT_TCM, segment: SEG_PHAR_TCM_PATENT, aliases: [中药1类新药]}
+  - {id: PROD_PHAR_CLASSIC_FORMULA, type: product, name: 古代经典名方制剂, name_en: Classical TCM Formula Products, parent: PROD_PHAR_PATENT_TCM, segment: SEG_PHAR_TCM_PATENT, aliases: [经典名方, 中药3.1类]}
+
+  # ================= blood products =================
+  - {id: PROD_PHAR_SOURCE_PLASMA, type: product, name: 原料血浆, name_en: Source Plasma, segment: SEG_PHAR_BLOOD_PRODUCTS, import_dependence: medium, aliases: [采浆, 单采血浆站, 采浆量]}
+  - {id: PROD_PHAR_BLOOD_PRODUCT, type: product, name: 血液制品, name_en: Plasma-Derived Products, segment: SEG_PHAR_BLOOD_PRODUCTS, aliases: [血制品]}
+  - {id: PROD_PHAR_ALBUMIN, type: product, name: 人血白蛋白, name_en: Human Albumin, parent: PROD_PHAR_BLOOD_PRODUCT, segment: SEG_PHAR_BLOOD_PRODUCTS, import_dependence: medium, aliases: [白蛋白]}
+  - {id: PROD_PHAR_IVIG, type: product, name: 静注人免疫球蛋白, name_en: Intravenous Immunoglobulin, parent: PROD_PHAR_BLOOD_PRODUCT, segment: SEG_PHAR_BLOOD_PRODUCTS, aliases: [静丙, IVIG, pH4静丙]}
+  - {id: PROD_PHAR_HYPERIMMUNE_GLOBULIN, type: product, name: 特异性免疫球蛋白, name_en: Hyperimmune Globulins, parent: PROD_PHAR_BLOOD_PRODUCT, segment: SEG_PHAR_BLOOD_PRODUCTS, aliases: [狂犬病人免疫球蛋白, 破伤风人免疫球蛋白, 乙肝人免疫球蛋白]}
+  - {id: PROD_PHAR_COAGULATION_FACTOR, type: product, name: 凝血因子类制品, name_en: Plasma-Derived Coagulation Factors, parent: PROD_PHAR_BLOOD_PRODUCT, segment: SEG_PHAR_BLOOD_PRODUCTS, aliases: [人凝血因子VIII, 人凝血酶原复合物, 人纤维蛋白原]}
+
+  # ================= vaccines =================
+  - {id: PROD_PHAR_VACCINE, type: product, name: 人用疫苗, name_en: Human Vaccines, segment: SEG_PHAR_VACCINES, aliases: [疫苗产品, 一类苗, 二类苗]}
+  - {id: PROD_PHAR_HPV_VACCINE, type: product, name: HPV疫苗, name_en: HPV Vaccine, parent: PROD_PHAR_VACCINE, segment: SEG_PHAR_VACCINES, import_dependence: medium, aliases: [宫颈癌疫苗, 二价HPV, 九价HPV]}
+  - {id: PROD_PHAR_PNEUMOCOCCAL_VACCINE, type: product, name: 肺炎球菌疫苗, name_en: Pneumococcal Vaccine, parent: PROD_PHAR_VACCINE, segment: SEG_PHAR_VACCINES, import_dependence: medium, aliases: [PCV13, PPV23, 13价肺炎疫苗, 23价肺炎疫苗]}
+  - {id: PROD_PHAR_FLU_VACCINE, type: product, name: 流感疫苗, name_en: Influenza Vaccine, parent: PROD_PHAR_VACCINE, segment: SEG_PHAR_VACCINES, aliases: [四价流感疫苗, 鼻喷流感疫苗]}
+  - {id: PROD_PHAR_RABIES_VACCINE, type: product, name: 狂犬病疫苗, name_en: Rabies Vaccine, parent: PROD_PHAR_VACCINE, segment: SEG_PHAR_VACCINES, aliases: [人用狂犬疫苗]}
+  - {id: PROD_PHAR_ZOSTER_VACCINE, type: product, name: 带状疱疹疫苗, name_en: Herpes Zoster Vaccine, parent: PROD_PHAR_VACCINE, segment: SEG_PHAR_VACCINES, import_dependence: medium, aliases: [重组带状疱疹疫苗]}
+  - {id: PROD_PHAR_HEPB_VACCINE, type: product, name: 乙肝疫苗, name_en: Hepatitis B Vaccine, parent: PROD_PHAR_VACCINE, segment: SEG_PHAR_VACCINES}
+  - {id: PROD_PHAR_ROTAVIRUS_VACCINE, type: product, name: 轮状病毒疫苗, name_en: Rotavirus Vaccine, parent: PROD_PHAR_VACCINE, segment: SEG_PHAR_VACCINES, import_dependence: medium}
+  - {id: PROD_PHAR_POLIO_VACCINE, type: product, name: 脊灰疫苗, name_en: Polio Vaccine, parent: PROD_PHAR_VACCINE, segment: SEG_PHAR_VACCINES, aliases: [sIPV, 脊髓灰质炎灭活疫苗]}
+  - {id: PROD_PHAR_DTAP_VACCINE, type: product, name: 百白破疫苗, name_en: DTaP Vaccine, parent: PROD_PHAR_VACCINE, segment: SEG_PHAR_VACCINES, aliases: [DTaP, 多联苗, 四联苗, 五联苗]}
+  - {id: PROD_PHAR_VARICELLA_VACCINE, type: product, name: 水痘疫苗, name_en: Varicella Vaccine, parent: PROD_PHAR_VACCINE, segment: SEG_PHAR_VACCINES}
+  - {id: PROD_PHAR_MENINGOCOCCAL_VACCINE, type: product, name: 流脑疫苗, name_en: Meningococcal Vaccine, parent: PROD_PHAR_VACCINE, segment: SEG_PHAR_VACCINES, aliases: [MCV4, 脑膜炎球菌结合疫苗]}
+  - {id: PROD_PHAR_HIB_VACCINE, type: product, name: Hib疫苗, name_en: Hib Vaccine, parent: PROD_PHAR_VACCINE, segment: SEG_PHAR_VACCINES, aliases: [b型流感嗜血杆菌疫苗]}
+  - {id: PROD_PHAR_EV71_VACCINE, type: product, name: EV71疫苗, name_en: EV71 Vaccine, parent: PROD_PHAR_VACCINE, segment: SEG_PHAR_VACCINES, aliases: [手足口病疫苗]}
+  - {id: PROD_PHAR_MRNA_VACCINE, type: product, name: mRNA疫苗, name_en: mRNA Vaccine, parent: PROD_PHAR_VACCINE, segment: SEG_PHAR_VACCINES}
+  - {id: PROD_PHAR_RSV_VACCINE, type: product, name: RSV疫苗, name_en: RSV Vaccine, parent: PROD_PHAR_VACCINE, segment: SEG_PHAR_VACCINES, aliases: [呼吸道合胞病毒疫苗]}
+
+  # ================= recombinant proteins and peptides =================
+  - {id: PROD_PHAR_RECOMBINANT_PROTEIN, type: product, name: 重组蛋白药物, name_en: Recombinant Protein Drugs, segment: SEG_PHAR_RECOMBINANT_PROTEIN, aliases: [基因工程药物]}
+  - {id: PROD_PHAR_INSULIN, type: product, name: 胰岛素, name_en: Insulin, parent: PROD_PHAR_RECOMBINANT_PROTEIN, segment: SEG_PHAR_RECOMBINANT_PROTEIN}
+  - {id: PROD_PHAR_HUMAN_INSULIN, type: product, name: 人胰岛素, name_en: Human Insulin, parent: PROD_PHAR_INSULIN, segment: SEG_PHAR_RECOMBINANT_PROTEIN, aliases: [二代胰岛素]}
+  - {id: PROD_PHAR_INSULIN_ANALOG, type: product, name: 胰岛素类似物, name_en: Insulin Analogues, parent: PROD_PHAR_INSULIN, segment: SEG_PHAR_RECOMBINANT_PROTEIN, aliases: [三代胰岛素, 甘精胰岛素, 门冬胰岛素, 德谷胰岛素]}
+  - {id: PROD_PHAR_GLP1, type: product, name: GLP-1受体激动剂, name_en: GLP-1 Receptor Agonists, parent: PROD_PHAR_RECOMBINANT_PROTEIN, segment: SEG_PHAR_RECOMBINANT_PROTEIN, aliases: [GLP-1, 司美格鲁肽, 利拉鲁肽, 替尔泊肽, 减重药]}
+  - {id: PROD_PHAR_GROWTH_HORMONE, type: product, name: 生长激素, name_en: Growth Hormone, parent: PROD_PHAR_RECOMBINANT_PROTEIN, segment: SEG_PHAR_RECOMBINANT_PROTEIN, aliases: [重组人生长激素, 长效生长激素, rhGH]}
+  - {id: PROD_PHAR_GCSF, type: product, name: 粒细胞集落刺激因子, name_en: G-CSF, parent: PROD_PHAR_RECOMBINANT_PROTEIN, segment: SEG_PHAR_RECOMBINANT_PROTEIN, aliases: [G-CSF, 升白针, 长效升白针, 聚乙二醇化rhG-CSF]}
+  - {id: PROD_PHAR_EPO, type: product, name: 促红细胞生成素, name_en: Erythropoietin, parent: PROD_PHAR_RECOMBINANT_PROTEIN, segment: SEG_PHAR_RECOMBINANT_PROTEIN, aliases: [EPO]}
+  - {id: PROD_PHAR_INTERFERON, type: product, name: 干扰素, name_en: Interferon, parent: PROD_PHAR_RECOMBINANT_PROTEIN, segment: SEG_PHAR_RECOMBINANT_PROTEIN, aliases: [长效干扰素]}
+  - {id: PROD_PHAR_RECOMBINANT_FACTOR, type: product, name: 重组凝血因子, name_en: Recombinant Coagulation Factors, parent: PROD_PHAR_RECOMBINANT_PROTEIN, segment: SEG_PHAR_RECOMBINANT_PROTEIN, import_dependence: medium, aliases: [重组人凝血因子VIII]}
+  - {id: PROD_PHAR_THROMBOLYTIC, type: product, name: 重组溶栓药, name_en: Recombinant Thrombolytics, parent: PROD_PHAR_RECOMBINANT_PROTEIN, segment: SEG_PHAR_RECOMBINANT_PROTEIN, aliases: [阿替普酶, 替奈普酶, 尿激酶原]}
+  - {id: PROD_PHAR_FERTILITY_HORMONE, type: product, name: 辅助生殖用药, name_en: Fertility Hormones, parent: PROD_PHAR_RECOMBINANT_PROTEIN, segment: SEG_PHAR_RECOMBINANT_PROTEIN, aliases: [促卵泡激素, FSH, 尿促性素]}
+  - {id: PROD_PHAR_BIOCHEMICAL_DRUG, type: product, name: 生化药品, name_en: Biochemical Drugs, segment: SEG_PHAR_RECOMBINANT_PROTEIN, aliases: [动物源生化药, 胸腺五肽, 小牛血清去蛋白]}
+
+  # ================= antibodies =================
+  - {id: PROD_PHAR_ANTIBODY_DRUG, type: product, name: 抗体药物, name_en: Antibody Therapeutics, segment: SEG_PHAR_ANTIBODY, aliases: [生物药大分子]}
+  - {id: PROD_PHAR_MAB, type: product, name: 单克隆抗体, name_en: Monoclonal Antibodies, parent: PROD_PHAR_ANTIBODY_DRUG, segment: SEG_PHAR_ANTIBODY, aliases: [单抗, mAb]}
+  - {id: PROD_PHAR_PD1_MAB, type: product, name: PD-1/PD-L1单抗, name_en: PD-1/PD-L1 Antibodies, parent: PROD_PHAR_MAB, segment: SEG_PHAR_ANTIBODY, aliases: [PD-1, PD-L1, 免疫检查点抑制剂]}
+  - {id: PROD_PHAR_HER2_MAB, type: product, name: HER2单抗, name_en: HER2 Antibodies, parent: PROD_PHAR_MAB, segment: SEG_PHAR_ANTIBODY, aliases: [曲妥珠单抗, 帕妥珠单抗]}
+  - {id: PROD_PHAR_AUTOIMMUNE_MAB, type: product, name: 自身免疫单抗, name_en: Autoimmune Antibodies, parent: PROD_PHAR_MAB, segment: SEG_PHAR_ANTIBODY, aliases: [IL-17单抗, IL-4R单抗, TNF-α单抗, 自免生物药]}
+  - {id: PROD_PHAR_LIPID_MAB, type: product, name: 降脂单抗, name_en: Lipid-Lowering Antibodies, parent: PROD_PHAR_MAB, segment: SEG_PHAR_ANTIBODY, aliases: [PCSK9单抗]}
+  - {id: PROD_PHAR_BIOSIMILAR, type: product, name: 生物类似药, name_en: Biosimilars, parent: PROD_PHAR_MAB, segment: SEG_PHAR_ANTIBODY, aliases: [生物类似物, 贝伐珠单抗类似药, 阿达木单抗类似药]}
+  - {id: PROD_PHAR_ANTI_VEGF, type: product, name: 抗VEGF眼科药物, name_en: Anti-VEGF Ophthalmic Biologics, parent: PROD_PHAR_ANTIBODY_DRUG, segment: SEG_PHAR_ANTIBODY, aliases: [康柏西普, 雷珠单抗, 阿柏西普]}
+  - {id: PROD_PHAR_BISPECIFIC, type: product, name: 双特异性抗体, name_en: Bispecific Antibodies, parent: PROD_PHAR_ANTIBODY_DRUG, segment: SEG_PHAR_ANTIBODY, aliases: [双抗, PD-1/VEGF双抗, BsAb]}
+  - {id: PROD_PHAR_ADC, type: product, name: 抗体偶联药物, name_en: Antibody-Drug Conjugates, parent: PROD_PHAR_ANTIBODY_DRUG, segment: SEG_PHAR_ANTIBODY, aliases: [ADC药物, TROP2-ADC, HER2-ADC]}
+  - {id: PROD_PHAR_ADC_PAYLOAD_LINKER, type: product, name: ADC毒素连接子, name_en: ADC Payload-Linkers, segment: SEG_PHAR_ANTIBODY, aliases: [毒素-连接子, Payload-Linker]}
+  - {id: PROD_PHAR_FUSION_PROTEIN, type: product, name: 融合蛋白, name_en: Fusion Proteins, parent: PROD_PHAR_ANTIBODY_DRUG, segment: SEG_PHAR_ANTIBODY, aliases: [Fc融合蛋白, 泰它西普]}
+
+  # ================= cell, gene, nucleic-acid therapies =================
+  - {id: PROD_PHAR_CAR_T, type: product, name: CAR-T疗法, name_en: CAR-T Therapy, segment: SEG_PHAR_CELL_GENE_THERAPY, aliases: [CAR-T, 嵌合抗原受体T细胞]}
+  - {id: PROD_PHAR_STEM_CELL, type: product, name: 干细胞产品, name_en: Stem-Cell Products, segment: SEG_PHAR_CELL_GENE_THERAPY, aliases: [间充质干细胞, 干细胞存储, 脐带血存储]}
+  - {id: PROD_PHAR_AAV_GENE_THERAPY, type: product, name: AAV基因治疗药物, name_en: AAV Gene Therapies, segment: SEG_PHAR_CELL_GENE_THERAPY, aliases: [AAV, 基因疗法]}
+  - {id: PROD_PHAR_NUCLEIC_ACID_DRUG, type: product, name: 核酸药物, name_en: Nucleic-Acid Drugs, segment: SEG_PHAR_CELL_GENE_THERAPY, aliases: [寡核苷酸药物]}
+  - {id: PROD_PHAR_SIRNA, type: product, name: siRNA药物, name_en: siRNA Drugs, parent: PROD_PHAR_NUCLEIC_ACID_DRUG, segment: SEG_PHAR_CELL_GENE_THERAPY, aliases: [小干扰RNA, RNAi]}
+  - {id: PROD_PHAR_ASO, type: product, name: 反义寡核苷酸, name_en: Antisense Oligonucleotides, parent: PROD_PHAR_NUCLEIC_ACID_DRUG, segment: SEG_PHAR_CELL_GENE_THERAPY, aliases: [ASO]}
+  - {id: PROD_PHAR_RADIOPHARMA, type: product, name: 放射性药物, name_en: Radiopharmaceuticals, segment: SEG_PHAR_OTHER_BIOLOGICS, aliases: [核药, RDC, 放射性核素偶联药物, 锝99m]}
+  - {id: PROD_PHAR_MICROBIOME, type: product, name: 微生态制剂, name_en: Live Biotherapeutics, segment: SEG_PHAR_OTHER_BIOLOGICS, aliases: [活菌制剂, 双歧杆菌制剂]}
+  - {id: PROD_PHAR_ALLERGEN, type: product, name: 脱敏治疗药物, name_en: Allergen Immunotherapy, segment: SEG_PHAR_OTHER_BIOLOGICS, aliases: [尘螨滴剂, 变应原制剂]}
+  - {id: PROD_PHAR_DIAG_BIOLOGIC, type: product, name: 体内诊断生物制品, name_en: In-Vivo Diagnostic Biologics, segment: SEG_PHAR_OTHER_BIOLOGICS, aliases: [结核菌素, PPD]}
+
+  # ================= life-science tools / bioprocess upstream =================
+  - {id: PROD_PHAR_BIOPROCESS_SUPPLIES, type: product, name: 生物工艺耗材, name_en: Bioprocess Consumables, segment: SEG_PHAR_LIFE_SCI_TOOLS, aliases: [生物制药上游耗材]}
+  - {id: PROD_PHAR_CELL_CULTURE_MEDIA, type: product, name: 细胞培养基, name_en: Cell Culture Media, parent: PROD_PHAR_BIOPROCESS_SUPPLIES, segment: SEG_PHAR_LIFE_SCI_TOOLS, import_dependence: high, aliases: [培养基, 无血清培养基, CHO培养基]}
+  - {id: PROD_PHAR_SERUM, type: product, name: 胎牛血清, name_en: Fetal Bovine Serum, parent: PROD_PHAR_BIOPROCESS_SUPPLIES, segment: SEG_PHAR_LIFE_SCI_TOOLS, import_dependence: high, aliases: [血清, FBS]}
+  - {id: PROD_PHAR_CHROMATOGRAPHY_RESIN, type: product, name: 层析填料, name_en: Chromatography Resins, parent: PROD_PHAR_BIOPROCESS_SUPPLIES, segment: SEG_PHAR_LIFE_SCI_TOOLS, import_dependence: high, aliases: [层析介质, Protein A填料, 色谱填料]}
+  - {id: PROD_PHAR_SINGLE_USE_BAG, type: product, name: 一次性生物工艺袋, name_en: Single-Use Bioprocess Bags, parent: PROD_PHAR_BIOPROCESS_SUPPLIES, segment: SEG_PHAR_LIFE_SCI_TOOLS, import_dependence: high, aliases: [一次性储液袋, 一次性系统]}
+  - {id: PROD_PHAR_BIOPROCESS_FILTER, type: product, name: 生物工艺过滤器, name_en: Bioprocess Filtration, parent: PROD_PHAR_BIOPROCESS_SUPPLIES, segment: SEG_PHAR_LIFE_SCI_TOOLS, import_dependence: high, aliases: [除病毒过滤器, 超滤膜包, 深层过滤]}
+  - {id: PROD_PHAR_BIOREACTOR, type: product, name: 生物反应器, name_en: Bioreactors, segment: SEG_PHAR_LIFE_SCI_TOOLS, import_dependence: medium, aliases: [一次性生物反应器, 不锈钢生物反应器, 生物工艺设备]}
+  - {id: PROD_PHAR_PHARMA_EQUIPMENT, type: product, name: 制药装备, name_en: Pharmaceutical Process Equipment, segment: SEG_PHAR_LIFE_SCI_TOOLS, aliases: [冻干机, 制药设备, 无菌灌装线, 制药机械]}
+  - {id: PROD_PHAR_LAB_CONSUMABLES, type: product, name: 实验室耗材, name_en: Laboratory Consumables, segment: SEG_PHAR_LIFE_SCI_TOOLS, import_dependence: medium, aliases: [移液吸头, 离心管, 细胞培养皿, 科研耗材]}
+  - {id: PROD_PHAR_MOLECULAR_REAGENTS, type: product, name: 分子生物学试剂, name_en: Molecular Biology Reagents, segment: SEG_PHAR_LIFE_SCI_TOOLS, import_dependence: medium, aliases: [工具酶, 分子酶, 科研试剂]}
+  - {id: PROD_PHAR_RESEARCH_PROTEINS, type: product, name: 科研用重组蛋白与抗体, name_en: Research Proteins and Antibodies, segment: SEG_PHAR_LIFE_SCI_TOOLS, import_dependence: medium, aliases: [重组蛋白试剂, 抗体试剂, 靶点蛋白]}
+  - {id: PROD_PHAR_CHEMICAL_REAGENTS, type: product, name: 科研化学试剂, name_en: Research Chemicals, segment: SEG_PHAR_LIFE_SCI_TOOLS, import_dependence: medium, aliases: [分子砌块, 高端化学试剂]}
+  - {id: PROD_PHAR_ANIMAL_MODEL, type: product, name: 实验动物模型, name_en: Laboratory Animal Models, segment: SEG_PHAR_LIFE_SCI_TOOLS, aliases: [基因编辑小鼠, 模式动物, 实验小鼠]}
+  - {id: PROD_PHAR_LAB_MONKEY, type: product, name: 实验猴, name_en: Laboratory Monkeys, segment: SEG_PHAR_PRECLINICAL_CRO, aliases: [食蟹猴, 实验用非人灵长类]}
+
+  # ================= CXO =================
+  - {id: PROD_PHAR_DRUG_DISCOVERY, type: product, name: 药物发现服务, name_en: Drug Discovery Services, segment: SEG_PHAR_PRECLINICAL_CRO, kind: service, aliases: [化合物合成, DEL, 药物筛选, 药物化学服务]}
+  - {id: PROD_PHAR_SAFETY_ASSESSMENT, type: product, name: 临床前安全性评价, name_en: Preclinical Safety Assessment, segment: SEG_PHAR_PRECLINICAL_CRO, kind: service, aliases: [GLP毒理, 安评, 药理毒理]}
+  - {id: PROD_PHAR_DMPK, type: product, name: 药代动力学服务, name_en: DMPK Services, segment: SEG_PHAR_PRECLINICAL_CRO, kind: service, aliases: [DMPK, 药代]}
+  - {id: PROD_PHAR_CLINICAL_TRIAL_SERVICES, type: product, name: 临床试验运营服务, name_en: Clinical Trial Operations, segment: SEG_PHAR_CLINICAL_CRO, kind: service, aliases: [注册临床, 临床监查, CRA]}
+  - {id: PROD_PHAR_SMO, type: product, name: 临床现场管理服务, name_en: Site Management (SMO), segment: SEG_PHAR_CLINICAL_CRO, kind: service, aliases: [SMO, CRC]}
+  - {id: PROD_PHAR_DATA_BIOSTAT, type: product, name: 临床数据管理与统计, name_en: Clinical Data Management and Biostatistics, segment: SEG_PHAR_CLINICAL_CRO, kind: service, aliases: [数统, 生物统计]}
+  - {id: PROD_PHAR_BE_TRIAL, type: product, name: 生物等效性试验, name_en: Bioequivalence Studies, segment: SEG_PHAR_CLINICAL_CRO, kind: service, aliases: [BE试验, 一致性评价服务]}
+  - {id: PROD_PHAR_DEVICE_CRO, type: product, name: 医疗器械临床服务, name_en: Medical Device CRO, segment: SEG_PHAR_CLINICAL_CRO, kind: service, aliases: [器械CRO]}
+  - {id: PROD_PHAR_SMALL_MOLECULE_CDMO, type: product, name: 小分子CDMO, name_en: Small-Molecule CDMO, segment: SEG_PHAR_CDMO, kind: service, aliases: [化学药CDMO, 原料药CDMO, 小分子CMO]}
+  - {id: PROD_PHAR_FORMULATION_CDMO, type: product, name: 制剂CDMO, name_en: Formulation CDMO, segment: SEG_PHAR_CDMO, kind: service, aliases: [制剂CMO, MAH委托生产]}
+  - {id: PROD_PHAR_TIDES_CDMO, type: product, name: 多肽与寡核苷酸CDMO, name_en: Peptide and Oligonucleotide CDMO, segment: SEG_PHAR_CDMO, kind: service, aliases: [TIDES, 多肽CDMO]}
+  - {id: PROD_PHAR_BIOLOGICS_CDMO, type: product, name: 大分子CDMO, name_en: Biologics CDMO, segment: SEG_PHAR_CDMO, kind: service, aliases: [抗体CDMO, 生物药CDMO, CDMO生物药]}
+  - {id: PROD_PHAR_XDC_CDMO, type: product, name: 偶联药物CDMO, name_en: Conjugate (XDC) CDMO, segment: SEG_PHAR_CDMO, kind: service, aliases: [ADC CDMO, XDC]}
+  - {id: PROD_PHAR_CGT_CDMO, type: product, name: 细胞与基因治疗CDMO, name_en: Cell and Gene Therapy CDMO, segment: SEG_PHAR_CDMO, kind: service, aliases: [CGT CDMO, 病毒载体CDMO, 质粒CDMO]}
+
+  # ================= medical equipment =================
+  - {id: PROD_PHAR_MED_EQUIPMENT, type: product, name: 医疗设备整机, name_en: Medical Equipment, segment: SEG_PHAR_MED_EQUIPMENT, aliases: [医疗器械设备]}
+  - {id: PROD_PHAR_MED_IMAGING, type: product, name: 医学影像设备, name_en: Medical Imaging Equipment, parent: PROD_PHAR_MED_EQUIPMENT, segment: SEG_PHAR_MED_EQUIPMENT, aliases: [影像设备]}
+  - {id: PROD_PHAR_CT, type: product, name: CT, name_en: CT Scanner, parent: PROD_PHAR_MED_IMAGING, segment: SEG_PHAR_MED_EQUIPMENT, import_dependence: medium, aliases: [计算机断层扫描, 光子计数CT]}
+  - {id: PROD_PHAR_MRI, type: product, name: 磁共振成像设备, name_en: MRI Scanner, parent: PROD_PHAR_MED_IMAGING, segment: SEG_PHAR_MED_EQUIPMENT, import_dependence: medium, aliases: [MRI, 核磁共振, 3.0T磁共振]}
+  - {id: PROD_PHAR_ULTRASOUND, type: product, name: 超声诊断设备, name_en: Ultrasound Systems, parent: PROD_PHAR_MED_IMAGING, segment: SEG_PHAR_MED_EQUIPMENT, aliases: [彩超, 超声]}
+  - {id: PROD_PHAR_XRAY, type: product, name: X射线设备, name_en: X-Ray Systems, parent: PROD_PHAR_MED_IMAGING, segment: SEG_PHAR_MED_EQUIPMENT, aliases: [DR, DSA, 数字化X射线摄影, 乳腺机]}
+  - {id: PROD_PHAR_PET_CT, type: product, name: 分子影像设备, name_en: Molecular Imaging (PET-CT / PET-MR), parent: PROD_PHAR_MED_IMAGING, segment: SEG_PHAR_MED_EQUIPMENT, import_dependence: high, aliases: [PET-CT, PET-MR]}
+  - {id: PROD_PHAR_ENDOSCOPE, type: product, name: 内窥镜, name_en: Endoscopes, parent: PROD_PHAR_MED_EQUIPMENT, segment: SEG_PHAR_MED_EQUIPMENT, import_dependence: medium, aliases: [软镜, 硬镜, 电子内镜, 胃肠镜]}
+  - {id: PROD_PHAR_XRAY_TUBE, type: product, name: X射线球管, name_en: X-Ray Tubes, segment: SEG_PHAR_MED_EQUIPMENT, import_dependence: high, aliases: [CT球管, 球管]}
+  - {id: PROD_PHAR_FLAT_PANEL_DETECTOR, type: product, name: X射线平板探测器, name_en: X-Ray Flat-Panel Detectors, segment: SEG_PHAR_MED_EQUIPMENT, aliases: [平板探测器, FPD]}
+  - {id: PROD_PHAR_CT_DETECTOR, type: product, name: CT探测器, name_en: CT Detectors, segment: SEG_PHAR_MED_EQUIPMENT, import_dependence: high}
+  - {id: PROD_PHAR_MRI_MAGNET, type: product, name: 超导磁体, name_en: Superconducting MRI Magnets, segment: SEG_PHAR_MED_EQUIPMENT, import_dependence: high, aliases: [MRI磁体]}
+  - {id: PROD_PHAR_ULTRASOUND_PROBE, type: product, name: 超声探头, name_en: Ultrasound Transducers, segment: SEG_PHAR_MED_EQUIPMENT, import_dependence: medium, aliases: [超声换能器]}
+  - {id: PROD_PHAR_LIFE_SUPPORT, type: product, name: 生命信息与支持设备, name_en: Patient Monitoring and Life Support, parent: PROD_PHAR_MED_EQUIPMENT, segment: SEG_PHAR_MED_EQUIPMENT, aliases: [生命信息支持]}
+  - {id: PROD_PHAR_PATIENT_MONITOR, type: product, name: 监护仪, name_en: Patient Monitors, parent: PROD_PHAR_LIFE_SUPPORT, segment: SEG_PHAR_MED_EQUIPMENT, aliases: [多参数监护仪]}
+  - {id: PROD_PHAR_VENTILATOR, type: product, name: 医用呼吸机, name_en: Ventilators, parent: PROD_PHAR_LIFE_SUPPORT, segment: SEG_PHAR_MED_EQUIPMENT, aliases: [有创呼吸机, ICU呼吸机]}
+  - {id: PROD_PHAR_ANESTHESIA_MACHINE, type: product, name: 麻醉机, name_en: Anesthesia Machines, parent: PROD_PHAR_LIFE_SUPPORT, segment: SEG_PHAR_MED_EQUIPMENT}
+  - {id: PROD_PHAR_DEFIBRILLATOR, type: product, name: 除颤仪, name_en: Defibrillators, parent: PROD_PHAR_LIFE_SUPPORT, segment: SEG_PHAR_MED_EQUIPMENT, aliases: [AED, 自动体外除颤器]}
+  - {id: PROD_PHAR_INFUSION_PUMP, type: product, name: 输注泵, name_en: Infusion and Syringe Pumps, parent: PROD_PHAR_LIFE_SUPPORT, segment: SEG_PHAR_MED_EQUIPMENT, aliases: [输液泵, 注射泵]}
+  - {id: PROD_PHAR_ECMO, type: product, name: ECMO, name_en: ECMO Systems, parent: PROD_PHAR_LIFE_SUPPORT, segment: SEG_PHAR_MED_EQUIPMENT, import_dependence: high, aliases: [体外膜肺氧合]}
+  - {id: PROD_PHAR_SURGICAL_ROBOT, type: product, name: 手术机器人, name_en: Surgical Robots, parent: PROD_PHAR_MED_EQUIPMENT, segment: SEG_PHAR_MED_EQUIPMENT}
+  - {id: PROD_PHAR_LAPAROSCOPIC_ROBOT, type: product, name: 腔镜手术机器人, name_en: Laparoscopic Surgical Robots, parent: PROD_PHAR_SURGICAL_ROBOT, segment: SEG_PHAR_MED_EQUIPMENT, import_dependence: high}
+  - {id: PROD_PHAR_ORTHO_ROBOT, type: product, name: 骨科手术机器人, name_en: Orthopaedic Surgical Robots, parent: PROD_PHAR_SURGICAL_ROBOT, segment: SEG_PHAR_MED_EQUIPMENT}
+  - {id: PROD_PHAR_VASCULAR_ROBOT, type: product, name: 血管介入手术机器人, name_en: Vascular Interventional Robots, parent: PROD_PHAR_SURGICAL_ROBOT, segment: SEG_PHAR_MED_EQUIPMENT}
+  - {id: PROD_PHAR_RADIOTHERAPY, type: product, name: 放疗设备, name_en: Radiotherapy Equipment, parent: PROD_PHAR_MED_EQUIPMENT, segment: SEG_PHAR_MED_EQUIPMENT, import_dependence: high, aliases: [医用直线加速器, 质子治疗系统]}
+  - {id: PROD_PHAR_DIALYSIS_MACHINE, type: product, name: 血液透析设备, name_en: Hemodialysis Machines, parent: PROD_PHAR_MED_EQUIPMENT, segment: SEG_PHAR_MED_EQUIPMENT, import_dependence: high, aliases: [透析机]}
+  - {id: PROD_PHAR_ELECTROPHYSIOLOGY_SYSTEM, type: product, name: 三维电生理标测系统, name_en: 3D Electrophysiology Mapping Systems, parent: PROD_PHAR_MED_EQUIPMENT, segment: SEG_PHAR_MED_EQUIPMENT, import_dependence: medium, aliases: [电生理设备, 脉冲电场消融设备, PFA设备]}
+  - {id: PROD_PHAR_ENERGY_SURGICAL, type: product, name: 能量外科设备, name_en: Energy-Based Surgical Devices, parent: PROD_PHAR_MED_EQUIPMENT, segment: SEG_PHAR_MED_EQUIPMENT, import_dependence: medium, aliases: [超声刀, 高频电刀, 超声骨刀]}
+  - {id: PROD_PHAR_DENTAL_EQUIPMENT, type: product, name: 口腔设备, name_en: Dental Equipment, parent: PROD_PHAR_MED_EQUIPMENT, segment: SEG_PHAR_MED_EQUIPMENT, aliases: [口腔CBCT, 口内扫描仪, 牙科综合治疗台]}
+  - {id: PROD_PHAR_OPHTHALMIC_EQUIPMENT, type: product, name: 眼科设备, name_en: Ophthalmic Equipment, parent: PROD_PHAR_MED_EQUIPMENT, segment: SEG_PHAR_MED_EQUIPMENT, aliases: [眼科OCT, 验光设备]}
+  - {id: PROD_PHAR_STERILIZATION_EQUIPMENT, type: product, name: 医用消毒灭菌设备, name_en: Sterilization Equipment, parent: PROD_PHAR_MED_EQUIPMENT, segment: SEG_PHAR_MED_EQUIPMENT, aliases: [灭菌器, 感控设备]}
+  - {id: PROD_PHAR_REHAB_EQUIPMENT, type: product, name: 康复设备, name_en: Rehabilitation Equipment, parent: PROD_PHAR_MED_EQUIPMENT, segment: SEG_PHAR_MED_EQUIPMENT, aliases: [康复机器人, 理疗设备]}
+  - {id: PROD_PHAR_GENE_SEQUENCER, type: product, name: 基因测序仪, name_en: Gene Sequencers, parent: PROD_PHAR_MED_EQUIPMENT, segment: SEG_PHAR_MED_EQUIPMENT, import_dependence: medium, aliases: [测序仪, NGS测序仪]}
+  - {id: PROD_PHAR_HOSPITAL_FURNITURE, type: product, name: 医用病床与手术台, name_en: Hospital Beds and Operating Tables, parent: PROD_PHAR_MED_EQUIPMENT, segment: SEG_PHAR_MED_EQUIPMENT, aliases: [手术无影灯, 医用吊塔]}
+
+  # ================= home medical devices =================
+  - {id: PROD_PHAR_HOME_MED_DEVICE, type: product, name: 家用医疗器械产品, name_en: Home Medical Devices, segment: SEG_PHAR_HOME_MED_DEVICES, aliases: [家用器械]}
+  - {id: PROD_PHAR_BP_MONITOR, type: product, name: 电子血压计, name_en: Blood Pressure Monitors, parent: PROD_PHAR_HOME_MED_DEVICE, segment: SEG_PHAR_HOME_MED_DEVICES, aliases: [血压计]}
+  - {id: PROD_PHAR_GLUCOSE_METER, type: product, name: 血糖仪, name_en: Blood Glucose Meters, parent: PROD_PHAR_HOME_MED_DEVICE, segment: SEG_PHAR_HOME_MED_DEVICES, aliases: [BGM, 血糖试纸]}
+  - {id: PROD_PHAR_CGM, type: product, name: 连续血糖监测系统, name_en: Continuous Glucose Monitors, parent: PROD_PHAR_HOME_MED_DEVICE, segment: SEG_PHAR_HOME_MED_DEVICES, import_dependence: medium, aliases: [CGM, 动态血糖仪]}
+  - {id: PROD_PHAR_OXYGEN_CONCENTRATOR, type: product, name: 制氧机, name_en: Oxygen Concentrators, parent: PROD_PHAR_HOME_MED_DEVICE, segment: SEG_PHAR_HOME_MED_DEVICES, aliases: [家用制氧机]}
+  - {id: PROD_PHAR_HOME_VENTILATOR, type: product, name: 家用呼吸机, name_en: Home Ventilators and CPAP, parent: PROD_PHAR_HOME_MED_DEVICE, segment: SEG_PHAR_HOME_MED_DEVICES, aliases: [睡眠呼吸机, CPAP]}
+  - {id: PROD_PHAR_NEBULIZER, type: product, name: 雾化器, name_en: Nebulizers, parent: PROD_PHAR_HOME_MED_DEVICE, segment: SEG_PHAR_HOME_MED_DEVICES}
+  - {id: PROD_PHAR_MOBILITY_AID, type: product, name: 康复辅具, name_en: Mobility Aids, parent: PROD_PHAR_HOME_MED_DEVICE, segment: SEG_PHAR_HOME_MED_DEVICES, aliases: [轮椅, 助行器, 电动轮椅]}
+  - {id: PROD_PHAR_HEARING_AID, type: product, name: 助听器, name_en: Hearing Aids, parent: PROD_PHAR_HOME_MED_DEVICE, segment: SEG_PHAR_HOME_MED_DEVICES, import_dependence: high}
+  - {id: PROD_PHAR_THERMOMETER, type: product, name: 医用体温计, name_en: Medical Thermometers, parent: PROD_PHAR_HOME_MED_DEVICE, segment: SEG_PHAR_HOME_MED_DEVICES, aliases: [红外体温计, 额温枪]}
+  - {id: PROD_PHAR_INSULIN_PUMP, type: product, name: 胰岛素泵, name_en: Insulin Pumps, parent: PROD_PHAR_HOME_MED_DEVICE, segment: SEG_PHAR_HOME_MED_DEVICES, import_dependence: medium, aliases: [贴敷式胰岛素泵]}
+
+  # ================= high-value consumables =================
+  - {id: PROD_PHAR_VASCULAR_INTERVENTION, type: product, name: 血管介入耗材, name_en: Vascular Interventional Devices, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [心血管介入耗材]}
+  - {id: PROD_PHAR_CORONARY_STENT, type: product, name: 冠脉支架, name_en: Coronary Stents, parent: PROD_PHAR_VASCULAR_INTERVENTION, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [药物洗脱支架, DES, 生物可吸收支架]}
+  - {id: PROD_PHAR_BALLOON_CATHETER, type: product, name: 球囊导管, name_en: Balloon Catheters, parent: PROD_PHAR_VASCULAR_INTERVENTION, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [药物球囊, 药物涂层球囊, PTCA球囊]}
+  - {id: PROD_PHAR_PERIPHERAL_STENT, type: product, name: 外周血管介入耗材, name_en: Peripheral Vascular Devices, parent: PROD_PHAR_VASCULAR_INTERVENTION, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [外周支架, 腔静脉滤器]}
+  - {id: PROD_PHAR_AORTIC_STENT_GRAFT, type: product, name: 主动脉覆膜支架, name_en: Aortic Stent Grafts, parent: PROD_PHAR_VASCULAR_INTERVENTION, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [主动脉支架, 术中支架]}
+  - {id: PROD_PHAR_HEART_VALVE, type: product, name: 心脏瓣膜, name_en: Heart Valves, parent: PROD_PHAR_VASCULAR_INTERVENTION, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, import_dependence: medium, aliases: [TAVR, 经导管主动脉瓣, 生物瓣膜]}
+  - {id: PROD_PHAR_NEURO_INTERVENTION, type: product, name: 神经介入耗材, name_en: Neurovascular Devices, parent: PROD_PHAR_VASCULAR_INTERVENTION, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [取栓支架, 弹簧圈, 颅内支架]}
+  - {id: PROD_PHAR_EP_CATHETER, type: product, name: 电生理导管, name_en: Electrophysiology Catheters, parent: PROD_PHAR_VASCULAR_INTERVENTION, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, import_dependence: medium, aliases: [射频消融导管, 脉冲消融导管, 标测导管]}
+  - {id: PROD_PHAR_PACEMAKER, type: product, name: 心脏起搏器, name_en: Pacemakers, parent: PROD_PHAR_VASCULAR_INTERVENTION, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, import_dependence: high, aliases: [起搏器, 心律管理器械]}
+  - {id: PROD_PHAR_GUIDEWIRE, type: product, name: 介入导丝导管, name_en: Guidewires and Access Catheters, parent: PROD_PHAR_VASCULAR_INTERVENTION, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [导丝, 造影导管, 鞘管]}
+  - {id: PROD_PHAR_ORTHO_IMPLANT, type: product, name: 骨科植入耗材, name_en: Orthopaedic Implants, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [骨科耗材]}
+  - {id: PROD_PHAR_JOINT_PROSTHESIS, type: product, name: 人工关节, name_en: Joint Prostheses, parent: PROD_PHAR_ORTHO_IMPLANT, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [关节假体, 髋关节, 膝关节]}
+  - {id: PROD_PHAR_SPINE_IMPLANT, type: product, name: 脊柱植入物, name_en: Spinal Implants, parent: PROD_PHAR_ORTHO_IMPLANT, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [脊柱类耗材, 椎间融合器]}
+  - {id: PROD_PHAR_TRAUMA_IMPLANT, type: product, name: 创伤类植入物, name_en: Trauma Implants, parent: PROD_PHAR_ORTHO_IMPLANT, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [接骨板, 髓内钉]}
+  - {id: PROD_PHAR_SPORTS_MEDICINE, type: product, name: 运动医学耗材, name_en: Sports Medicine Implants, parent: PROD_PHAR_ORTHO_IMPLANT, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [带线锚钉, 韧带重建]}
+  - {id: PROD_PHAR_BONE_GRAFT, type: product, name: 骨修复材料, name_en: Bone Graft Substitutes, parent: PROD_PHAR_ORTHO_IMPLANT, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [人工骨, 骨填充材料]}
+  - {id: PROD_PHAR_OPHTHALMIC_CONSUMABLE, type: product, name: 眼科耗材, name_en: Ophthalmic Consumables, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES}
+  - {id: PROD_PHAR_IOL, type: product, name: 人工晶状体, name_en: Intraocular Lenses, parent: PROD_PHAR_OPHTHALMIC_CONSUMABLE, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, import_dependence: medium, aliases: [IOL, 人工晶体]}
+  - {id: PROD_PHAR_ORTHO_K, type: product, name: 角膜塑形镜, name_en: Orthokeratology Lenses, parent: PROD_PHAR_OPHTHALMIC_CONSUMABLE, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [OK镜, 离焦镜片]}
+  - {id: PROD_PHAR_CONTACT_LENS, type: product, name: 隐形眼镜, name_en: Contact Lenses, parent: PROD_PHAR_OPHTHALMIC_CONSUMABLE, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [软性角膜接触镜, 彩色隐形眼镜, 美瞳]}
+  - {id: PROD_PHAR_PHAKIC_IOL, type: product, name: 有晶体眼人工晶体, name_en: Phakic IOL (ICL), parent: PROD_PHAR_OPHTHALMIC_CONSUMABLE, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, import_dependence: high, aliases: [ICL晶体, 屈光晶体, 后房型有晶体眼人工晶体]}
+  - {id: PROD_PHAR_OVD, type: product, name: 眼科粘弹剂, name_en: Ophthalmic Viscoelastic Devices, parent: PROD_PHAR_OPHTHALMIC_CONSUMABLE, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [OVD, 医用透明质酸钠凝胶]}
+  - {id: PROD_PHAR_DENTAL_CONSUMABLE, type: product, name: 口腔耗材, name_en: Dental Consumables, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES}
+  - {id: PROD_PHAR_DENTAL_IMPLANT, type: product, name: 种植牙系统, name_en: Dental Implants, parent: PROD_PHAR_DENTAL_CONSUMABLE, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, import_dependence: medium, aliases: [种植体, 牙种植体]}
+  - {id: PROD_PHAR_CLEAR_ALIGNER, type: product, name: 隐形矫治器, name_en: Clear Aligners, parent: PROD_PHAR_DENTAL_CONSUMABLE, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [隐形正畸, 无托槽隐形矫治]}
+  - {id: PROD_PHAR_DENTURE, type: product, name: 义齿, name_en: Dental Prosthetics, parent: PROD_PHAR_DENTAL_CONSUMABLE, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [定制式义齿, 牙冠, 氧化锆全瓷牙]}
+  - {id: PROD_PHAR_SURGICAL_STAPLER, type: product, name: 吻合器, name_en: Surgical Staplers, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [腔镜吻合器, 管型吻合器]}
+  - {id: PROD_PHAR_HEMOSTATIC, type: product, name: 止血与组织修复材料, name_en: Hemostats and Tissue Repair Materials, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [可吸收止血材料, 生物蛋白胶, 人工硬脑膜, 疝修补片]}
+  - {id: PROD_PHAR_DIALYSIS_CONSUMABLE, type: product, name: 血液净化耗材, name_en: Blood Purification Consumables, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [透析器, 血液灌流器, 透析管路]}
+  - {id: PROD_PHAR_ENDO_CONSUMABLE, type: product, name: 内镜诊疗耗材, name_en: Endoscopic Consumables, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, aliases: [止血夹, 活检钳, 圈套器]}
+  - {id: PROD_PHAR_NEUROMODULATION, type: product, name: 神经调控器械, name_en: Neuromodulation Devices, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, import_dependence: high, aliases: [脑起搏器, DBS, 迷走神经刺激器]}
+  - {id: PROD_PHAR_COCHLEAR_IMPLANT, type: product, name: 人工耳蜗, name_en: Cochlear Implants, segment: SEG_PHAR_HIGH_VALUE_CONSUMABLES, import_dependence: high}
+
+  # ================= low-value consumables =================
+  - {id: PROD_PHAR_LOW_VALUE_CONSUMABLE, type: product, name: 低值医用耗材产品, name_en: Low-Value Medical Consumables, segment: SEG_PHAR_LOW_VALUE_CONSUMABLES, aliases: [基础耗材]}
+  - {id: PROD_PHAR_SYRINGE, type: product, name: 一次性注射器, name_en: Disposable Syringes, parent: PROD_PHAR_LOW_VALUE_CONSUMABLE, segment: SEG_PHAR_LOW_VALUE_CONSUMABLES, aliases: [注射器, 安全注射器, 胰岛素笔用针头]}
+  - {id: PROD_PHAR_INFUSION_SET, type: product, name: 一次性输液器, name_en: Disposable Infusion Sets, parent: PROD_PHAR_LOW_VALUE_CONSUMABLE, segment: SEG_PHAR_LOW_VALUE_CONSUMABLES, aliases: [输液器, 精密输液器]}
+  - {id: PROD_PHAR_IV_CATHETER, type: product, name: 留置针, name_en: IV Catheters, parent: PROD_PHAR_LOW_VALUE_CONSUMABLE, segment: SEG_PHAR_LOW_VALUE_CONSUMABLES, aliases: [静脉留置针, PICC]}
+  - {id: PROD_PHAR_MEDICAL_GLOVE, type: product, name: 医用手套, name_en: Medical Gloves, parent: PROD_PHAR_LOW_VALUE_CONSUMABLE, segment: SEG_PHAR_LOW_VALUE_CONSUMABLES, aliases: [一次性手套, 检查手套, 橡胶手套]}
+  - {id: PROD_PHAR_NITRILE_GLOVE, type: product, name: 丁腈手套, name_en: Nitrile Gloves, parent: PROD_PHAR_MEDICAL_GLOVE, segment: SEG_PHAR_LOW_VALUE_CONSUMABLES}
+  - {id: PROD_PHAR_PVC_GLOVE, type: product, name: PVC手套, name_en: Vinyl Gloves, parent: PROD_PHAR_MEDICAL_GLOVE, segment: SEG_PHAR_LOW_VALUE_CONSUMABLES, aliases: [丁腈PVC混合手套]}
+  - {id: PROD_PHAR_LATEX_GLOVE, type: product, name: 乳胶手套, name_en: Latex Gloves, parent: PROD_PHAR_MEDICAL_GLOVE, segment: SEG_PHAR_LOW_VALUE_CONSUMABLES}
+  - {id: PROD_PHAR_WOUND_DRESSING, type: product, name: 医用敷料, name_en: Wound Dressings, parent: PROD_PHAR_LOW_VALUE_CONSUMABLE, segment: SEG_PHAR_LOW_VALUE_CONSUMABLES, aliases: [纱布, 高端伤口敷料, 创口贴]}
+  - {id: PROD_PHAR_MASK_GOWN, type: product, name: 医用防护用品, name_en: Medical Masks and Protective Wear, parent: PROD_PHAR_LOW_VALUE_CONSUMABLE, segment: SEG_PHAR_LOW_VALUE_CONSUMABLES, aliases: [医用口罩, 防护服, 手术衣]}
+  - {id: PROD_PHAR_CATHETER_TUBE, type: product, name: 医用导管, name_en: Medical Tubing and Catheters, parent: PROD_PHAR_LOW_VALUE_CONSUMABLE, segment: SEG_PHAR_LOW_VALUE_CONSUMABLES, aliases: [导尿管, 气管插管, 引流管]}
+  - {id: PROD_PHAR_BLOOD_COLLECTION, type: product, name: 真空采血系统, name_en: Vacuum Blood Collection Systems, parent: PROD_PHAR_LOW_VALUE_CONSUMABLE, segment: SEG_PHAR_LOW_VALUE_CONSUMABLES, aliases: [采血管, 采血针]}
+  - {id: PROD_PHAR_INSULIN_PEN, type: product, name: 胰岛素注射笔, name_en: Insulin Pen Injectors, parent: PROD_PHAR_LOW_VALUE_CONSUMABLE, segment: SEG_PHAR_LOW_VALUE_CONSUMABLES, aliases: [注射笔, 自动注射器]}
+  - {id: PROD_PHAR_ANESTHESIA_CONSUMABLE, type: product, name: 麻醉呼吸耗材, name_en: Anesthesia and Respiratory Consumables, parent: PROD_PHAR_LOW_VALUE_CONSUMABLE, segment: SEG_PHAR_LOW_VALUE_CONSUMABLES, aliases: [麻醉面罩, 呼吸回路]}
+
+  # ================= IVD =================
+  - {id: PROD_PHAR_IVD_RAW_MATERIAL, type: product, name: IVD上游原料, name_en: IVD Raw Materials, segment: SEG_PHAR_IVD, import_dependence: medium, aliases: [抗原抗体原料, 诊断酶, 磁珠]}
+  - {id: PROD_PHAR_IVD_REAGENT, type: product, name: 体外诊断试剂, name_en: IVD Reagents, segment: SEG_PHAR_IVD, aliases: [IVD试剂, 诊断试剂]}
+  - {id: PROD_PHAR_BIOCHEM_REAGENT, type: product, name: 生化诊断试剂, name_en: Clinical Chemistry Reagents, parent: PROD_PHAR_IVD_REAGENT, segment: SEG_PHAR_IVD, aliases: [生化试剂]}
+  - {id: PROD_PHAR_IMMUNO_REAGENT, type: product, name: 免疫诊断试剂, name_en: Immunoassay Reagents, parent: PROD_PHAR_IVD_REAGENT, segment: SEG_PHAR_IVD, import_dependence: medium, aliases: [化学发光试剂, 酶联免疫试剂, 发光试剂]}
+  - {id: PROD_PHAR_MOLECULAR_REAGENT, type: product, name: 分子诊断试剂, name_en: Molecular Diagnostic Reagents, parent: PROD_PHAR_IVD_REAGENT, segment: SEG_PHAR_IVD, aliases: [PCR试剂, 核酸检测试剂, NGS试剂]}
+  - {id: PROD_PHAR_HEMATOLOGY_REAGENT, type: product, name: 血液学诊断试剂, name_en: Hematology Reagents, parent: PROD_PHAR_IVD_REAGENT, segment: SEG_PHAR_IVD, aliases: [血球试剂, 血细胞试剂]}
+  - {id: PROD_PHAR_COAGULATION_REAGENT, type: product, name: 凝血诊断试剂, name_en: Coagulation Reagents, parent: PROD_PHAR_IVD_REAGENT, segment: SEG_PHAR_IVD, import_dependence: medium}
+  - {id: PROD_PHAR_POCT_REAGENT, type: product, name: POCT试剂, name_en: POCT Reagents, parent: PROD_PHAR_IVD_REAGENT, segment: SEG_PHAR_IVD, aliases: [即时检测试剂, 胶体金试剂, 抗原检测试剂]}
+  - {id: PROD_PHAR_MICROBIO_REAGENT, type: product, name: 微生物诊断试剂, name_en: Microbiology Reagents, parent: PROD_PHAR_IVD_REAGENT, segment: SEG_PHAR_IVD, aliases: [药敏试剂, 血培养瓶]}
+  - {id: PROD_PHAR_PATHOLOGY_REAGENT, type: product, name: 病理诊断试剂, name_en: Pathology Reagents, parent: PROD_PHAR_IVD_REAGENT, segment: SEG_PHAR_IVD, aliases: [免疫组化试剂, 伴随诊断试剂]}
+  - {id: PROD_PHAR_IVD_INSTRUMENT, type: product, name: 体外诊断仪器, name_en: IVD Analyzers, segment: SEG_PHAR_IVD, aliases: [IVD仪器, 诊断仪器]}
+  - {id: PROD_PHAR_BIOCHEM_ANALYZER, type: product, name: 生化分析仪, name_en: Clinical Chemistry Analyzers, parent: PROD_PHAR_IVD_INSTRUMENT, segment: SEG_PHAR_IVD}
+  - {id: PROD_PHAR_CLIA_ANALYZER, type: product, name: 化学发光免疫分析仪, name_en: Chemiluminescence Immunoassay Analyzers, parent: PROD_PHAR_IVD_INSTRUMENT, segment: SEG_PHAR_IVD, import_dependence: medium, aliases: [化学发光仪, 发光仪]}
+  - {id: PROD_PHAR_HEMATOLOGY_ANALYZER, type: product, name: 血细胞分析仪, name_en: Hematology Analyzers, parent: PROD_PHAR_IVD_INSTRUMENT, segment: SEG_PHAR_IVD, aliases: [血球仪]}
+  - {id: PROD_PHAR_PCR_INSTRUMENT, type: product, name: 分子诊断仪器, name_en: Molecular Diagnostic Instruments, parent: PROD_PHAR_IVD_INSTRUMENT, segment: SEG_PHAR_IVD, aliases: [PCR仪, 核酸提取仪, 荧光定量PCR仪]}
+  - {id: PROD_PHAR_COAGULATION_ANALYZER, type: product, name: 凝血分析仪, name_en: Coagulation Analyzers, parent: PROD_PHAR_IVD_INSTRUMENT, segment: SEG_PHAR_IVD, import_dependence: medium}
+  - {id: PROD_PHAR_POCT_INSTRUMENT, type: product, name: POCT仪器, name_en: POCT Analyzers, parent: PROD_PHAR_IVD_INSTRUMENT, segment: SEG_PHAR_IVD, aliases: [即时检测仪]}
+  - {id: PROD_PHAR_LAB_AUTOMATION, type: product, name: 实验室自动化流水线, name_en: Laboratory Automation Lines, parent: PROD_PHAR_IVD_INSTRUMENT, segment: SEG_PHAR_IVD, import_dependence: high, aliases: [检验流水线, 生化免疫流水线]}
+  - {id: PROD_PHAR_MICROBIO_ANALYZER, type: product, name: 微生物检测仪器, name_en: Microbiology Analyzers, parent: PROD_PHAR_IVD_INSTRUMENT, segment: SEG_PHAR_IVD, import_dependence: high, aliases: [质谱微生物鉴定仪, 血培养仪]}
+
+  # ================= diagnostic services =================
+  - {id: PROD_PHAR_ICL, type: product, name: 第三方医学检验, name_en: Independent Clinical Laboratories, segment: SEG_PHAR_DIAG_SERVICES, kind: service, aliases: [ICL, 独立医学实验室, 第三方检验]}
+  - {id: PROD_PHAR_PATHOLOGY_SERVICE, type: product, name: 病理诊断服务, name_en: Pathology Services, segment: SEG_PHAR_DIAG_SERVICES, kind: service, aliases: [第三方病理]}
+  - {id: PROD_PHAR_GENETIC_TESTING, type: product, name: 基因检测服务, name_en: Genetic Testing Services, segment: SEG_PHAR_DIAG_SERVICES, kind: service, aliases: [肿瘤基因检测, 无创产前检测, NIPT, 遗传病检测]}
+  - {id: PROD_PHAR_IMAGING_CENTER, type: product, name: 第三方医学影像中心, name_en: Independent Imaging Centers, segment: SEG_PHAR_DIAG_SERVICES, kind: service, aliases: [第三方影像]}
+
+  # ================= hospitals and medical services =================
+  - {id: PROD_PHAR_GENERAL_HOSPITAL, type: product, name: 综合医院服务, name_en: General Hospital Services, segment: SEG_PHAR_HOSPITALS, kind: service, aliases: [民营医院, 综合医院]}
+  - {id: PROD_PHAR_ONCOLOGY_HOSPITAL, type: product, name: 肿瘤专科医院, name_en: Oncology Hospitals, segment: SEG_PHAR_SPECIALTY_HOSPITALS, kind: service}
+  - {id: PROD_PHAR_EYE_HOSPITAL, type: product, name: 眼科医疗服务, name_en: Ophthalmology Services, segment: SEG_PHAR_SPECIALTY_HOSPITALS, kind: service, aliases: [眼科医院, 眼科连锁, 屈光手术, 白内障手术, 视光服务]}
+  - {id: PROD_PHAR_DENTAL_SERVICE, type: product, name: 口腔医疗服务, name_en: Dental Services, segment: SEG_PHAR_SPECIALTY_HOSPITALS, kind: service, aliases: [口腔连锁, 口腔医院, 牙科诊所]}
+  - {id: PROD_PHAR_IVF_SERVICE, type: product, name: 辅助生殖服务, name_en: Assisted Reproduction Services, segment: SEG_PHAR_SPECIALTY_HOSPITALS, kind: service, aliases: [试管婴儿, IVF]}
+  - {id: PROD_PHAR_MATERNITY_HOSPITAL, type: product, name: 妇产儿科医院, name_en: Maternity and Pediatric Hospitals, segment: SEG_PHAR_SPECIALTY_HOSPITALS, kind: service, aliases: [妇儿医院]}
+  - {id: PROD_PHAR_PSYCH_HOSPITAL, type: product, name: 精神专科医院, name_en: Psychiatric Hospitals, segment: SEG_PHAR_SPECIALTY_HOSPITALS, kind: service}
+  - {id: PROD_PHAR_REHAB_HOSPITAL, type: product, name: 康复与护理医院, name_en: Rehabilitation and Nursing Hospitals, segment: SEG_PHAR_SPECIALTY_HOSPITALS, kind: service, aliases: [康复医院, 医养结合]}
+  - {id: PROD_PHAR_DIALYSIS_CENTER, type: product, name: 血液透析中心, name_en: Dialysis Centers, segment: SEG_PHAR_OTHER_MED_SERVICES, kind: service, aliases: [独立透析中心]}
+  - {id: PROD_PHAR_HEALTH_CHECKUP, type: product, name: 健康体检服务, name_en: Health Check-Up Services, segment: SEG_PHAR_OTHER_MED_SERVICES, kind: service, aliases: [体检, 体检中心]}
+  - {id: PROD_PHAR_INTERNET_HEALTHCARE, type: product, name: 互联网医疗, name_en: Internet Healthcare, segment: SEG_PHAR_OTHER_MED_SERVICES, kind: service, aliases: [在线问诊]}
+  - {id: PROD_PHAR_MED_EQUIP_SERVICE, type: product, name: 医疗设备维保与运营, name_en: Medical Equipment Servicing and Leasing, segment: SEG_PHAR_OTHER_MED_SERVICES, kind: service, aliases: [医疗设备融资租赁, 设备维保]}
+
+  # ================= commerce =================
+  - {id: PROD_PHAR_DRUG_WHOLESALE, type: product, name: 药品批发配送, name_en: Drug Wholesale and Distribution, segment: SEG_PHAR_DISTRIBUTION, kind: service, aliases: [医药分销, 药品配送, 两票制配送]}
+  - {id: PROD_PHAR_DEVICE_DISTRIBUTION, type: product, name: 医疗器械流通, name_en: Medical Device Distribution, segment: SEG_PHAR_DISTRIBUTION, kind: service, aliases: [器械配送, SPD, 耗材集中配送]}
+  - {id: PROD_PHAR_PHARMA_LOGISTICS, type: product, name: 医药物流, name_en: Pharmaceutical Logistics, segment: SEG_PHAR_DISTRIBUTION, kind: service, aliases: [医药冷链, 医药第三方物流]}
+  - {id: PROD_PHAR_CSO, type: product, name: 医药推广服务, name_en: Contract Sales (CSO), segment: SEG_PHAR_DISTRIBUTION, kind: service, aliases: [CSO, 医药营销外包, 代理推广]}
+  - {id: PROD_PHAR_RETAIL_PHARMACY, type: product, name: 零售药店, name_en: Retail Pharmacy Chains, segment: SEG_PHAR_RETAIL_PHARMACY, kind: service, aliases: [连锁药店, 药房, DTP药房]}
+  - {id: PROD_PHAR_ONLINE_PHARMACY, type: product, name: 医药电商, name_en: Online Pharmacy, segment: SEG_PHAR_ONLINE_PHARMACY, kind: service, aliases: [互联网售药, B2C医药, O2O送药]}
+
+edges:
+  - [PROD_FOOD_HOG_SLAUGHTER, upstream_of, PROD_PHAR_BIOCHEMICAL_DRUG]  # pancreas and other organs from slaughter (fix 2026-11-07)
+  - [PROD_FOOD_HOG_SLAUGHTER, upstream_of, PROD_PHAR_CRUDE_HEPARIN]  # intestinal mucosa from slaughter (fix 2026-11-07)
+  # ---------- segment tree ----------
+  - [SEG_PHAR_API, part_of, SEG_PHAR_CHEM_PHARMA]
+  - [SEG_PHAR_CHEM_FORMULATION, part_of, SEG_PHAR_CHEM_PHARMA]
+  - [SEG_PHAR_GENERICS, part_of, SEG_PHAR_CHEM_FORMULATION]
+  - [SEG_PHAR_INNOVATIVE_SMALL_MOLECULE, part_of, SEG_PHAR_CHEM_FORMULATION]
+  - [SEG_PHAR_EXCIPIENT_PACKAGING, part_of, SEG_PHAR_CHEM_PHARMA]
+  - [SEG_PHAR_TCM_HERBS, part_of, SEG_PHAR_TCM]
+  - [SEG_PHAR_TCM_PIECES, part_of, SEG_PHAR_TCM]
+  - [SEG_PHAR_TCM_PATENT, part_of, SEG_PHAR_TCM]
+  - [SEG_PHAR_BLOOD_PRODUCTS, part_of, SEG_PHAR_BIOLOGICS]
+  - [SEG_PHAR_VACCINES, part_of, SEG_PHAR_BIOLOGICS]
+  - [SEG_PHAR_OTHER_BIOLOGICS, part_of, SEG_PHAR_BIOLOGICS]
+  - [SEG_PHAR_ANTIBODY, part_of, SEG_PHAR_OTHER_BIOLOGICS]
+  - [SEG_PHAR_RECOMBINANT_PROTEIN, part_of, SEG_PHAR_OTHER_BIOLOGICS]
+  - [SEG_PHAR_CELL_GENE_THERAPY, part_of, SEG_PHAR_OTHER_BIOLOGICS]
+  - [SEG_PHAR_DISTRIBUTION, part_of, SEG_PHAR_COMMERCE]
+  - [SEG_PHAR_RETAIL_PHARMACY, part_of, SEG_PHAR_COMMERCE]
+  - [SEG_PHAR_ONLINE_PHARMACY, part_of, SEG_PHAR_COMMERCE]
+  - [SEG_PHAR_MED_EQUIPMENT, part_of, SEG_PHAR_MED_DEVICES]
+  - [SEG_PHAR_HOME_MED_DEVICES, part_of, SEG_PHAR_MED_DEVICES]
+  - [SEG_PHAR_MED_CONSUMABLES, part_of, SEG_PHAR_MED_DEVICES]
+  - [SEG_PHAR_HIGH_VALUE_CONSUMABLES, part_of, SEG_PHAR_MED_CONSUMABLES]
+  - [SEG_PHAR_LOW_VALUE_CONSUMABLES, part_of, SEG_PHAR_MED_CONSUMABLES]
+  - [SEG_PHAR_IVD, part_of, SEG_PHAR_MED_DEVICES]
+  - [SEG_PHAR_DIAG_SERVICES, part_of, SEG_PHAR_MED_SERVICES]
+  - [SEG_PHAR_CXO, part_of, SEG_PHAR_MED_SERVICES]
+  - [SEG_PHAR_PRECLINICAL_CRO, part_of, SEG_PHAR_CXO]
+  - [SEG_PHAR_CLINICAL_CRO, part_of, SEG_PHAR_CXO]
+  - [SEG_PHAR_CDMO, part_of, SEG_PHAR_CXO]
+  - [SEG_PHAR_HOSPITALS, part_of, SEG_PHAR_MED_SERVICES]
+  - [SEG_PHAR_SPECIALTY_HOSPITALS, part_of, SEG_PHAR_HOSPITALS]
+  - [SEG_PHAR_OTHER_MED_SERVICES, part_of, SEG_PHAR_MED_SERVICES]
+
+  # ---------- segments -> end markets ----------
+  - [SEG_PHAR_CHEM_PHARMA, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_API, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_API, serves, MKT_AGRICULTURE]
+  - [SEG_PHAR_CHEM_FORMULATION, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_GENERICS, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_INNOVATIVE_SMALL_MOLECULE, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_EXCIPIENT_PACKAGING, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_TCM, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_TCM_HERBS, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_TCM_PIECES, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_TCM_PATENT, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_TCM_PATENT, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_PHAR_BIOLOGICS, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_BLOOD_PRODUCTS, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_VACCINES, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_VACCINES, serves, MKT_GOVERNMENT]
+  - [SEG_PHAR_OTHER_BIOLOGICS, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_ANTIBODY, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_RECOMBINANT_PROTEIN, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_CELL_GENE_THERAPY, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_LIFE_SCI_TOOLS, serves, MKT_PHARMA_RD]
+  - [SEG_PHAR_COMMERCE, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_DISTRIBUTION, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_RETAIL_PHARMACY, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_PHAR_ONLINE_PHARMACY, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_PHAR_MED_DEVICES, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_MED_EQUIPMENT, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_HOME_MED_DEVICES, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_PHAR_MED_CONSUMABLES, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_HIGH_VALUE_CONSUMABLES, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_LOW_VALUE_CONSUMABLES, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_IVD, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_MED_SERVICES, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_DIAG_SERVICES, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_CXO, serves, MKT_PHARMA_RD]
+  - [SEG_PHAR_PRECLINICAL_CRO, serves, MKT_PHARMA_RD]
+  - [SEG_PHAR_CLINICAL_CRO, serves, MKT_PHARMA_RD]
+  - [SEG_PHAR_CDMO, serves, MKT_PHARMA_RD]
+  - [SEG_PHAR_HOSPITALS, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_SPECIALTY_HOSPITALS, serves, MKT_HEALTHCARE]
+  - [SEG_PHAR_SPECIALTY_HOSPITALS, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_PHAR_OTHER_MED_SERVICES, serves, MKT_HEALTHCARE]
+
+  # ---------- API chain ----------
+  - [PROD_PHAR_INTERMEDIATE, upstream_of, PROD_PHAR_API]
+  - [PROD_PHAR_CUSTOM_INTERMEDIATE, upstream_of, PROD_PHAR_SPECIALTY_API]
+  - [PROD_PHAR_PENICILLIN_SALT, upstream_of, PROD_PHAR_6APA]
+  - [PROD_PHAR_6APA, upstream_of, PROD_PHAR_PENICILLIN_API]
+  - [PROD_PHAR_7ACA, upstream_of, PROD_PHAR_CEPHALOSPORIN_API]
+  - [PROD_PHAR_PENICILLIN_SALT, uses_material, MAT_GRAIN]
+  - [PROD_PHAR_PENICILLIN_SALT, uses_material, MAT_SUGAR]
+  - [PROD_PHAR_VITAMIN_C, uses_material, MAT_GRAIN]
+  - [PROD_PHAR_PENICILLIN_API, upstream_of, PROD_PHAR_ANTI_INFECTIVE]
+  - [PROD_PHAR_CEPHALOSPORIN_API, upstream_of, PROD_PHAR_ANTI_INFECTIVE]
+  - [PROD_PHAR_STEROID_INTERMEDIATE, upstream_of, PROD_PHAR_STEROID_API]
+  - [PROD_PHAR_STEROID_API, upstream_of, PROD_PHAR_HORMONE_DRUG]
+  - [PROD_PHAR_SARTAN_INTERMEDIATE, upstream_of, PROD_PHAR_SARTAN_API]
+  - [PROD_PHAR_SARTAN_API, upstream_of, PROD_PHAR_CARDIOVASCULAR_DRUG]
+  - [PROD_PHAR_STATIN_API, upstream_of, PROD_PHAR_CARDIOVASCULAR_DRUG]
+  - [PROD_PHAR_ANTIDIABETIC_API, upstream_of, PROD_PHAR_ORAL_ANTIDIABETIC]
+  - [PROD_PHAR_ANTIPYRETIC_API, upstream_of, PROD_PHAR_OTC_CHEM]
+  - [PROD_PHAR_ONCOLOGY_API, upstream_of, PROD_PHAR_CHEMO_DRUG]
+  - [PROD_PHAR_ONCOLOGY_API, upstream_of, PROD_PHAR_TKI]
+  - [PROD_PHAR_CNS_API, upstream_of, PROD_PHAR_PSYCHIATRIC_DRUG]
+  - [PROD_PHAR_ANTIVIRAL_API, upstream_of, PROD_PHAR_INNOVATIVE_ANTIVIRAL]
+  - [PROD_PHAR_CONTRAST_API, upstream_of, PROD_PHAR_CONTRAST_AGENT]
+  - [PROD_PHAR_PEPTIDE_API, upstream_of, PROD_PHAR_GLP1]
+  - [PROD_PHAR_CRUDE_HEPARIN, upstream_of, PROD_PHAR_HEPARIN_API]
+  - [PROD_PHAR_HEPARIN_API, upstream_of, PROD_PHAR_LMWH]
+  - [PROD_PHAR_API, upstream_of, PROD_PHAR_CHEM_FORMULATION]
+  - [PROD_PHAR_API, upstream_of, PROD_PHAR_GENERIC_DRUG]
+  - [PROD_PHAR_VITAMIN_API, used_in, MKT_AGRICULTURE]
+  - [PROD_PHAR_VITAMIN_API, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_PHAR_PROSTAGLANDIN_API, upstream_of, PROD_PHAR_CHEM_FORMULATION]
+  - [PROD_PHAR_API, used_in, MKT_HEALTHCARE]
+  # ---------- excipients / packaging ----------
+  - [PROD_PHAR_EXCIPIENT, upstream_of, PROD_PHAR_CHEM_FORMULATION]
+  - [PROD_PHAR_EMPTY_CAPSULE, component_of, PROD_PHAR_ORAL_SOLID]
+  - [PROD_PHAR_PHARMA_GLASS, component_of, PROD_PHAR_INJECTABLE]
+  - [PROD_PHAR_PHARMA_GLASS, component_of, PROD_PHAR_VACCINE]
+  - [PROD_PHAR_PHARMA_GLASS, uses_material, MAT_QUARTZ]
+  - [PROD_PHAR_RUBBER_STOPPER, component_of, PROD_PHAR_INJECTABLE]
+  - [PROD_PHAR_RUBBER_STOPPER, uses_material, MAT_SYNTHETIC_RUBBER]
+  - [PROD_PHAR_PREFILLED_SYRINGE, component_of, PROD_PHAR_VACCINE]
+  - [PROD_PHAR_PREFILLED_SYRINGE, component_of, PROD_PHAR_GLP1]
+  - [PROD_PHAR_LVP, uses_material, MAT_PLASTICS]
+  - [PROD_PHAR_LVP, uses_material, MAT_GRAIN]
+  # ---------- formulations ----------
+  - [PROD_PHAR_GENERIC_DRUG, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_INNOVATIVE_SMALL_MOLECULE, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_GENERIC_DRUG, substitute_for, PROD_PHAR_INNOVATIVE_SMALL_MOLECULE]
+  - [PROD_PHAR_OTC_CHEM, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_SODIUM_HYALURONATE_INJ, uses_material, MAT_GRAIN]
+  - [PROD_PHAR_LOW_DOSE_ATROPINE, substitute_for, PROD_PHAR_ORTHO_K]
+  - [PROD_PHAR_PCAB, substitute_for, PROD_PHAR_DIGESTIVE_DRUG]
+  - [PROD_PHAR_ORAL_GLP1, substitute_for, PROD_PHAR_GLP1]
+  - [PROD_PHAR_MICROSPHERE, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_CONTRAST_AGENT, used_in, PROD_PHAR_CT]
+  - [PROD_PHAR_CONTRAST_AGENT, used_in, PROD_PHAR_MRI]
+  - [PROD_PHAR_ANESTHETIC, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_LICENSE_OUT, used_in, MKT_PHARMA_RD]
+  - [TECH_BIOTECH, enables, PROD_CHEM_VITAMIN_B]
+  # ---------- TCM ----------
+  - [PROD_PHAR_TCM_HERBS, upstream_of, PROD_PHAR_TCM_DECOCTION_PIECES]
+  - [PROD_PHAR_TCM_HERBS, upstream_of, PROD_PHAR_PLANT_EXTRACT]
+  - [PROD_PHAR_TCM_DECOCTION_PIECES, upstream_of, PROD_PHAR_TCM_FORMULA_GRANULES]
+  - [PROD_PHAR_TCM_DECOCTION_PIECES, upstream_of, PROD_PHAR_PATENT_TCM]
+  - [PROD_PHAR_PLANT_EXTRACT, upstream_of, PROD_PHAR_PATENT_TCM]
+  - [PROD_PHAR_PLANT_EXTRACT, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_PHAR_NOTOGINSENG, upstream_of, PROD_PHAR_PIANZAIHUANG]
+  - [PROD_PHAR_NOTOGINSENG, upstream_of, PROD_PHAR_TCM_INJECTION]
+  - [PROD_PHAR_NOTOGINSENG, upstream_of, PROD_PHAR_TCM_CARDIO]
+  - [PROD_PHAR_MUSK, upstream_of, PROD_PHAR_PIANZAIHUANG]
+  - [PROD_PHAR_BEZOAR, upstream_of, PROD_PHAR_PIANZAIHUANG]
+  - [PROD_PHAR_BEZOAR, upstream_of, PROD_PHAR_ANGONG_NIUHUANG]
+  - [PROD_PHAR_MUSK, upstream_of, PROD_PHAR_ANGONG_NIUHUANG]
+  - [PROD_PHAR_DONKEY_HIDE, upstream_of, PROD_PHAR_EJIAO]
+  - [PROD_PHAR_GINSENG, upstream_of, PROD_PHAR_TCM_TONIC]
+  - [PROD_PHAR_TCM_HERBS, used_in, MKT_AGRICULTURE]
+  - [PROD_PHAR_PATENT_TCM, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_TCM_OTC, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_EJIAO, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_PIANZAIHUANG, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_TCM_FORMULA_GRANULES, substitute_for, PROD_PHAR_TCM_DECOCTION_PIECES]
+  - [PROD_PHAR_TCM_FORMULA_GRANULES, used_in, MKT_HEALTHCARE]
+  # ---------- blood products ----------
+  - [PROD_PHAR_SOURCE_PLASMA, upstream_of, PROD_PHAR_BLOOD_PRODUCT]
+  - [PROD_PHAR_SOURCE_PLASMA, upstream_of, PROD_PHAR_ALBUMIN]
+  - [PROD_PHAR_SOURCE_PLASMA, upstream_of, PROD_PHAR_IVIG]
+  - [PROD_PHAR_SOURCE_PLASMA, upstream_of, PROD_PHAR_HYPERIMMUNE_GLOBULIN]
+  - [PROD_PHAR_SOURCE_PLASMA, upstream_of, PROD_PHAR_COAGULATION_FACTOR]
+  - [PROD_PHAR_RECOMBINANT_FACTOR, substitute_for, PROD_PHAR_COAGULATION_FACTOR]
+  - [PROD_PHAR_BLOOD_PRODUCT, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_HYPERIMMUNE_GLOBULIN, used_in, PROD_PHAR_RABIES_VACCINE]
+  # ---------- vaccines ----------
+  - [PROD_PHAR_VACCINE, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_VACCINE, used_in, MKT_GOVERNMENT]
+  - [TECH_BIOTECH, enables, PROD_PHAR_HPV_VACCINE]
+  - [TECH_BIOTECH, enables, PROD_PHAR_MRNA_VACCINE]
+  - [TECH_BIOTECH, enables, PROD_PHAR_ZOSTER_VACCINE]
+  - [TECH_BIOTECH, enables, PROD_PHAR_PNEUMOCOCCAL_VACCINE]
+  - [PROD_PHAR_CELL_CULTURE_MEDIA, upstream_of, PROD_PHAR_VACCINE]
+  - [PROD_PHAR_BIOREACTOR, used_in, PROD_PHAR_VACCINE]
+  # ---------- recombinant proteins ----------
+  - [TECH_BIOTECH, enables, PROD_PHAR_RECOMBINANT_PROTEIN]
+  - [TECH_BIOTECH, enables, PROD_PHAR_INSULIN_ANALOG]
+  - [TECH_BIOTECH, enables, PROD_PHAR_GLP1]
+  - [TECH_BIOTECH, enables, PROD_PHAR_GROWTH_HORMONE]
+  - [PROD_PHAR_INSULIN_ANALOG, substitute_for, PROD_PHAR_HUMAN_INSULIN]
+  - [PROD_PHAR_GLP1, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_INSULIN, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_INSULIN_PEN, used_in, PROD_PHAR_INSULIN]
+  - [PROD_PHAR_INSULIN_PEN, used_in, PROD_PHAR_GLP1]
+  - [PROD_PHAR_INSULIN_PUMP, used_in, PROD_PHAR_INSULIN]
+  - [PROD_PHAR_FERTILITY_HORMONE, used_in, PROD_PHAR_IVF_SERVICE]
+  # ---------- antibodies ----------
+  - [TECH_BIOTECH, enables, PROD_PHAR_ANTIBODY_DRUG]
+  - [TECH_BIOTECH, enables, PROD_PHAR_MAB]
+  - [TECH_BIOTECH, enables, PROD_PHAR_BISPECIFIC]
+  - [TECH_BIOTECH, enables, PROD_PHAR_ADC]
+  - [PROD_PHAR_MAB, upstream_of, PROD_PHAR_ADC]
+  - [PROD_PHAR_ADC_PAYLOAD_LINKER, upstream_of, PROD_PHAR_ADC]
+  - [PROD_PHAR_ONCOLOGY_API, upstream_of, PROD_PHAR_ADC_PAYLOAD_LINKER]
+  - [PROD_PHAR_BIOSIMILAR, substitute_for, PROD_PHAR_MAB]
+  - [PROD_PHAR_BISPECIFIC, substitute_for, PROD_PHAR_PD1_MAB]
+  - [PROD_PHAR_ANTIBODY_DRUG, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_ANTI_VEGF, used_in, PROD_PHAR_EYE_HOSPITAL]
+  - [PROD_PHAR_CELL_CULTURE_MEDIA, upstream_of, PROD_PHAR_ANTIBODY_DRUG]
+  - [PROD_PHAR_CHROMATOGRAPHY_RESIN, upstream_of, PROD_PHAR_ANTIBODY_DRUG]
+  - [PROD_PHAR_BIOPROCESS_FILTER, upstream_of, PROD_PHAR_ANTIBODY_DRUG]
+  - [PROD_PHAR_SINGLE_USE_BAG, upstream_of, PROD_PHAR_ANTIBODY_DRUG]
+  - [PROD_PHAR_BIOREACTOR, used_in, PROD_PHAR_ANTIBODY_DRUG]
+  - [PROD_PHAR_CELL_CULTURE_MEDIA, upstream_of, PROD_PHAR_RECOMBINANT_PROTEIN]
+  - [PROD_PHAR_CHROMATOGRAPHY_RESIN, upstream_of, PROD_PHAR_RECOMBINANT_PROTEIN]
+  - [PROD_PHAR_CHROMATOGRAPHY_RESIN, upstream_of, PROD_PHAR_BLOOD_PRODUCT]
+  - [PROD_PHAR_CHROMATOGRAPHY_RESIN, upstream_of, PROD_PHAR_INSULIN]
+  - [PROD_PHAR_CHROMATOGRAPHY_RESIN, upstream_of, PROD_PHAR_PEPTIDE_API]
+  - [PROD_PHAR_FUSION_PROTEIN, used_in, MKT_HEALTHCARE]
+  # ---------- CGT and others ----------
+  - [TECH_BIOTECH, enables, PROD_PHAR_CAR_T]
+  - [TECH_BIOTECH, enables, PROD_PHAR_AAV_GENE_THERAPY]
+  - [TECH_BIOTECH, enables, PROD_PHAR_STEM_CELL]
+  - [TECH_BIOTECH, enables, PROD_PHAR_NUCLEIC_ACID_DRUG]
+  - [TECH_BIOTECH, enables, PROD_PHAR_SIRNA]
+  - [TECH_BIOTECH, enables, PROD_PHAR_MICROBIOME]
+  - [PROD_PHAR_CELL_CULTURE_MEDIA, upstream_of, PROD_PHAR_CAR_T]
+  - [PROD_PHAR_SERUM, upstream_of, PROD_PHAR_STEM_CELL]
+  - [PROD_PHAR_CAR_T, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_RADIOPHARMA, used_in, PROD_PHAR_PET_CT]
+  - [PROD_PHAR_RADIOPHARMA, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_ALLERGEN, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_DIAG_BIOLOGIC, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_NUCLEIC_ACID_DRUG, used_in, MKT_HEALTHCARE]
+  # ---------- life-science tools ----------
+  - [PROD_PHAR_SINGLE_USE_BAG, uses_material, MAT_PLASTICS]
+  - [PROD_PHAR_LAB_CONSUMABLES, uses_material, MAT_PLASTICS]
+  - [PROD_PHAR_BIOREACTOR, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_PHAR_PHARMA_EQUIPMENT, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_PHAR_PHARMA_EQUIPMENT, used_in, PROD_PHAR_INJECTABLE]
+  - [PROD_PHAR_PHARMA_EQUIPMENT, used_in, PROD_PHAR_VACCINE]
+  - [PROD_PHAR_LAB_CONSUMABLES, used_in, MKT_PHARMA_RD]
+  - [PROD_PHAR_MOLECULAR_REAGENTS, used_in, MKT_PHARMA_RD]
+  - [PROD_PHAR_MOLECULAR_REAGENTS, upstream_of, PROD_PHAR_MOLECULAR_REAGENT]
+  - [PROD_PHAR_RESEARCH_PROTEINS, used_in, MKT_PHARMA_RD]
+  - [PROD_PHAR_RESEARCH_PROTEINS, upstream_of, PROD_PHAR_IVD_RAW_MATERIAL]
+  - [PROD_PHAR_CHEMICAL_REAGENTS, used_in, MKT_PHARMA_RD]
+  - [PROD_PHAR_CHEMICAL_REAGENTS, used_in, PROD_PHAR_DRUG_DISCOVERY]
+  - [PROD_PHAR_ANIMAL_MODEL, used_in, PROD_PHAR_DRUG_DISCOVERY]
+  - [PROD_PHAR_ANIMAL_MODEL, used_in, PROD_PHAR_SAFETY_ASSESSMENT]
+  - [PROD_PHAR_LAB_MONKEY, used_in, PROD_PHAR_SAFETY_ASSESSMENT]
+  - [PROD_PHAR_LAB_MONKEY, used_in, PROD_PHAR_DMPK]
+  - [PROD_PHAR_SERUM, used_in, MKT_PHARMA_RD]
+  # ---------- CXO ----------
+  - [PROD_PHAR_DRUG_DISCOVERY, upstream_of, PROD_PHAR_SAFETY_ASSESSMENT]
+  - [PROD_PHAR_SAFETY_ASSESSMENT, upstream_of, PROD_PHAR_CLINICAL_TRIAL_SERVICES]
+  - [PROD_PHAR_DRUG_DISCOVERY, used_in, MKT_PHARMA_RD]
+  - [PROD_PHAR_SAFETY_ASSESSMENT, used_in, MKT_PHARMA_RD]
+  - [PROD_PHAR_DMPK, used_in, MKT_PHARMA_RD]
+  - [PROD_PHAR_CLINICAL_TRIAL_SERVICES, used_in, MKT_PHARMA_RD]
+  - [PROD_PHAR_SMO, used_in, PROD_PHAR_CLINICAL_TRIAL_SERVICES]
+  - [PROD_PHAR_DATA_BIOSTAT, used_in, PROD_PHAR_CLINICAL_TRIAL_SERVICES]
+  - [PROD_PHAR_BE_TRIAL, used_in, PROD_PHAR_GENERIC_DRUG]
+  - [PROD_PHAR_DEVICE_CRO, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_SMALL_MOLECULE_CDMO, used_in, PROD_PHAR_INNOVATIVE_SMALL_MOLECULE]
+  - [PROD_PHAR_SMALL_MOLECULE_CDMO, used_in, MKT_PHARMA_RD]
+  - [PROD_PHAR_CUSTOM_INTERMEDIATE, used_in, PROD_PHAR_SMALL_MOLECULE_CDMO]
+  - [PROD_PHAR_FORMULATION_CDMO, used_in, PROD_PHAR_CHEM_FORMULATION]
+  - [PROD_PHAR_TIDES_CDMO, used_in, PROD_PHAR_GLP1]
+  - [PROD_PHAR_TIDES_CDMO, used_in, PROD_PHAR_NUCLEIC_ACID_DRUG]
+  - [PROD_PHAR_BIOLOGICS_CDMO, used_in, PROD_PHAR_ANTIBODY_DRUG]
+  - [PROD_PHAR_XDC_CDMO, used_in, PROD_PHAR_ADC]
+  - [PROD_PHAR_CGT_CDMO, used_in, PROD_PHAR_CAR_T]
+  - [PROD_PHAR_CGT_CDMO, used_in, PROD_PHAR_AAV_GENE_THERAPY]
+  - [PROD_PHAR_CELL_CULTURE_MEDIA, used_in, PROD_PHAR_BIOLOGICS_CDMO]
+  - [PROD_PHAR_CHROMATOGRAPHY_RESIN, used_in, PROD_PHAR_BIOLOGICS_CDMO]
+  - [PROD_PHAR_BIOREACTOR, used_in, PROD_PHAR_BIOLOGICS_CDMO]
+  # ---------- medical equipment ----------
+  - [PROD_PHAR_XRAY_TUBE, component_of, PROD_PHAR_CT]
+  - [PROD_PHAR_XRAY_TUBE, component_of, PROD_PHAR_XRAY]
+  - [PROD_PHAR_CT_DETECTOR, component_of, PROD_PHAR_CT]
+  - [PROD_PHAR_CT_DETECTOR, component_of, PROD_PHAR_PET_CT]
+  - [PROD_PHAR_FLAT_PANEL_DETECTOR, component_of, PROD_PHAR_XRAY]
+  - [PROD_PHAR_FLAT_PANEL_DETECTOR, component_of, PROD_PHAR_DENTAL_EQUIPMENT]
+  - [PROD_PHAR_MRI_MAGNET, component_of, PROD_PHAR_MRI]
+  - [PROD_PHAR_ULTRASOUND_PROBE, component_of, PROD_PHAR_ULTRASOUND]
+  - [PROD_PHAR_XRAY_TUBE, uses_material, MAT_TUNGSTEN]
+  - [PROD_PHAR_XRAY_TUBE, uses_material, MAT_MOLYBDENUM]
+  - [PROD_PHAR_CT_DETECTOR, uses_material, MAT_RARE_EARTH]
+  - [PROD_PHAR_MRI_MAGNET, uses_material, MAT_COPPER]
+  - [PROD_PHAR_FLAT_PANEL_DETECTOR, uses_material, MAT_FLAT_GLASS]
+  - [PROD_PHAR_MED_IMAGING, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_PET_CT, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_LIFE_SUPPORT, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_SURGICAL_ROBOT, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_SURGICAL_ROBOT, used_in, MKT_ROBOTICS]
+  - [PROD_PHAR_LAPAROSCOPIC_ROBOT, substitute_for, PROD_PHAR_ENDOSCOPE]
+  - [PROD_PHAR_ENDOSCOPE, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_ENDO_CONSUMABLE, used_in, PROD_PHAR_ENDOSCOPE]
+  - [PROD_PHAR_RADIOTHERAPY, used_in, PROD_PHAR_ONCOLOGY_HOSPITAL]
+  - [PROD_PHAR_DIALYSIS_MACHINE, used_in, PROD_PHAR_DIALYSIS_CENTER]
+  - [PROD_PHAR_DIALYSIS_CONSUMABLE, used_in, PROD_PHAR_DIALYSIS_MACHINE]
+  - [PROD_PHAR_ELECTROPHYSIOLOGY_SYSTEM, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_EP_CATHETER, used_in, PROD_PHAR_ELECTROPHYSIOLOGY_SYSTEM]
+  - [PROD_PHAR_ENERGY_SURGICAL, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_DENTAL_EQUIPMENT, used_in, PROD_PHAR_DENTAL_SERVICE]
+  - [PROD_PHAR_OPHTHALMIC_EQUIPMENT, used_in, PROD_PHAR_EYE_HOSPITAL]
+  - [PROD_PHAR_STERILIZATION_EQUIPMENT, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_REHAB_EQUIPMENT, used_in, PROD_PHAR_REHAB_HOSPITAL]
+  - [PROD_PHAR_GENE_SEQUENCER, used_in, PROD_PHAR_GENETIC_TESTING]
+  - [PROD_PHAR_GENE_SEQUENCER, used_in, MKT_PHARMA_RD]
+  - [PROD_PHAR_HOSPITAL_FURNITURE, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_ECMO, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_MED_EQUIP_SERVICE, used_in, MKT_HEALTHCARE]
+  # ---------- home devices ----------
+  - [PROD_PHAR_HOME_MED_DEVICE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_CGM, substitute_for, PROD_PHAR_GLUCOSE_METER]
+  - [PROD_PHAR_CGM, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_BP_MONITOR, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_OXYGEN_CONCENTRATOR, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_HOME_VENTILATOR, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_MOBILITY_AID, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_HEARING_AID, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_HEARING_AID, substitute_for, PROD_PHAR_COCHLEAR_IMPLANT]
+  - [PROD_PHAR_NEBULIZER, used_in, PROD_PHAR_INHALATION]
+  - [PROD_PHAR_THERMOMETER, used_in, MKT_RETAIL_CONSUMER]
+  # ---------- high-value consumables ----------
+  - [PROD_PHAR_CORONARY_STENT, uses_material, MAT_COBALT]
+  - [PROD_PHAR_CORONARY_STENT, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_PHAR_PERIPHERAL_STENT, uses_material, MAT_NICKEL]
+  - [PROD_PHAR_PERIPHERAL_STENT, uses_material, MAT_TITANIUM]
+  - [PROD_PHAR_NEURO_INTERVENTION, uses_material, MAT_NICKEL]
+  - [PROD_PHAR_HEART_VALVE, uses_material, MAT_NICKEL]
+  - [PROD_PHAR_AORTIC_STENT_GRAFT, uses_material, MAT_POLYESTER]
+  - [PROD_PHAR_BALLOON_CATHETER, substitute_for, PROD_PHAR_CORONARY_STENT]
+  - [PROD_PHAR_GUIDEWIRE, used_in, PROD_PHAR_CORONARY_STENT]
+  - [PROD_PHAR_GUIDEWIRE, used_in, PROD_PHAR_VASCULAR_ROBOT]
+  - [PROD_PHAR_VASCULAR_INTERVENTION, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_PACEMAKER, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_JOINT_PROSTHESIS, uses_material, MAT_TITANIUM]
+  - [PROD_PHAR_JOINT_PROSTHESIS, uses_material, MAT_COBALT]
+  - [PROD_PHAR_JOINT_PROSTHESIS, uses_material, MAT_PLASTICS]
+  - [PROD_PHAR_SPINE_IMPLANT, uses_material, MAT_TITANIUM]
+  - [PROD_PHAR_SPINE_IMPLANT, uses_material, MAT_ENGINEERING_PLASTICS]
+  - [PROD_PHAR_TRAUMA_IMPLANT, uses_material, MAT_TITANIUM]
+  - [PROD_PHAR_TRAUMA_IMPLANT, uses_material, MAT_STAINLESS_STEEL]
+  - [TECH_ADDITIVE_MANUFACTURING, enables, PROD_PHAR_JOINT_PROSTHESIS]
+  - [TECH_ADDITIVE_MANUFACTURING, enables, PROD_PHAR_SPINE_IMPLANT]
+  - [PROD_PHAR_ORTHO_IMPLANT, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_ORTHO_ROBOT, used_in, PROD_PHAR_JOINT_PROSTHESIS]
+  - [PROD_PHAR_SPORTS_MEDICINE, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_IOL, used_in, PROD_PHAR_EYE_HOSPITAL]
+  - [PROD_PHAR_PHAKIC_IOL, used_in, PROD_PHAR_EYE_HOSPITAL]
+  - [PROD_PHAR_OVD, used_in, PROD_PHAR_EYE_HOSPITAL]
+  - [PROD_PHAR_ORTHO_K, used_in, PROD_PHAR_EYE_HOSPITAL]
+  - [PROD_PHAR_CONTACT_LENS, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_DENTAL_IMPLANT, uses_material, MAT_TITANIUM]
+  - [PROD_PHAR_DENTAL_IMPLANT, used_in, PROD_PHAR_DENTAL_SERVICE]
+  - [PROD_PHAR_CLEAR_ALIGNER, used_in, PROD_PHAR_DENTAL_SERVICE]
+  - [PROD_PHAR_CLEAR_ALIGNER, uses_material, MAT_ENGINEERING_PLASTICS]
+  - [PROD_PHAR_DENTURE, used_in, PROD_PHAR_DENTAL_SERVICE]
+  - [PROD_PHAR_SURGICAL_STAPLER, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_SURGICAL_STAPLER, used_in, PROD_PHAR_LAPAROSCOPIC_ROBOT]
+  - [PROD_PHAR_HEMOSTATIC, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_NEUROMODULATION, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_COCHLEAR_IMPLANT, used_in, MKT_HEALTHCARE]
+  # ---------- low-value consumables ----------
+  - [PROD_PHAR_NITRILE_GLOVE, uses_material, MAT_SYNTHETIC_RUBBER]
+  - [PROD_PHAR_PVC_GLOVE, uses_material, MAT_PLASTICS]
+  - [PROD_PHAR_LATEX_GLOVE, uses_material, MAT_NATURAL_RUBBER]
+  - [PROD_PHAR_NITRILE_GLOVE, substitute_for, PROD_PHAR_LATEX_GLOVE]
+  - [PROD_PHAR_PVC_GLOVE, substitute_for, PROD_PHAR_NITRILE_GLOVE]
+  - [PROD_PHAR_MEDICAL_GLOVE, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_PHAR_SYRINGE, uses_material, MAT_PLASTICS]
+  - [PROD_PHAR_SYRINGE, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_PHAR_INFUSION_SET, uses_material, MAT_PLASTICS]
+  - [PROD_PHAR_INFUSION_SET, used_in, PROD_PHAR_LVP]
+  - [PROD_PHAR_IV_CATHETER, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_CATHETER_TUBE, uses_material, MAT_PLASTICS]
+  - [PROD_PHAR_WOUND_DRESSING, uses_material, MAT_COTTON]
+  - [PROD_PHAR_MASK_GOWN, uses_material, MAT_PLASTICS]
+  - [PROD_PHAR_LOW_VALUE_CONSUMABLE, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_BLOOD_COLLECTION, used_in, PROD_PHAR_ICL]
+  - [PROD_PHAR_BLOOD_COLLECTION, uses_material, MAT_PLASTICS]
+  - [PROD_PHAR_ANESTHESIA_CONSUMABLE, used_in, PROD_PHAR_ANESTHESIA_MACHINE]
+  # ---------- IVD ----------
+  - [PROD_PHAR_IVD_RAW_MATERIAL, upstream_of, PROD_PHAR_IVD_REAGENT]
+  - [PROD_PHAR_IVD_RAW_MATERIAL, upstream_of, PROD_PHAR_IMMUNO_REAGENT]
+  - [PROD_PHAR_IVD_RAW_MATERIAL, upstream_of, PROD_PHAR_POCT_REAGENT]
+  - [PROD_PHAR_IVD_RAW_MATERIAL, upstream_of, PROD_PHAR_MOLECULAR_REAGENT]
+  - [TECH_BIOTECH, enables, PROD_PHAR_IVD_RAW_MATERIAL]
+  - [PROD_PHAR_BIOCHEM_REAGENT, used_in, PROD_PHAR_BIOCHEM_ANALYZER]
+  - [PROD_PHAR_IMMUNO_REAGENT, used_in, PROD_PHAR_CLIA_ANALYZER]
+  - [PROD_PHAR_HEMATOLOGY_REAGENT, used_in, PROD_PHAR_HEMATOLOGY_ANALYZER]
+  - [PROD_PHAR_MOLECULAR_REAGENT, used_in, PROD_PHAR_PCR_INSTRUMENT]
+  - [PROD_PHAR_MOLECULAR_REAGENT, used_in, PROD_PHAR_GENE_SEQUENCER]
+  - [PROD_PHAR_COAGULATION_REAGENT, used_in, PROD_PHAR_COAGULATION_ANALYZER]
+  - [PROD_PHAR_POCT_REAGENT, used_in, PROD_PHAR_POCT_INSTRUMENT]
+  - [PROD_PHAR_MICROBIO_REAGENT, used_in, PROD_PHAR_MICROBIO_ANALYZER]
+  - [PROD_PHAR_BIOCHEM_ANALYZER, component_of, PROD_PHAR_LAB_AUTOMATION]
+  - [PROD_PHAR_CLIA_ANALYZER, component_of, PROD_PHAR_LAB_AUTOMATION]
+  - [PROD_PHAR_IVD_REAGENT, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_IVD_REAGENT, used_in, PROD_PHAR_ICL]
+  - [PROD_PHAR_IVD_INSTRUMENT, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_PATHOLOGY_REAGENT, used_in, PROD_PHAR_PATHOLOGY_SERVICE]
+  - [PROD_PHAR_POCT_REAGENT, used_in, MKT_RETAIL_CONSUMER]
+  # ---------- services ----------
+  - [PROD_PHAR_ICL, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_GENETIC_TESTING, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_IMAGING_CENTER, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_MED_IMAGING, used_in, PROD_PHAR_IMAGING_CENTER]
+  - [PROD_PHAR_GENERAL_HOSPITAL, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_EYE_HOSPITAL, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_DENTAL_SERVICE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_IVF_SERVICE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_HEALTH_CHECKUP, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_INTERNET_HEALTHCARE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_INTERNET_HEALTHCARE, substitute_for, PROD_PHAR_GENERAL_HOSPITAL]
+  - [PROD_PHAR_DIALYSIS_CENTER, used_in, MKT_HEALTHCARE]
+  # ---------- commerce ----------
+  - [PROD_PHAR_CHEM_FORMULATION, upstream_of, PROD_PHAR_DRUG_WHOLESALE]
+  - [PROD_PHAR_PATENT_TCM, upstream_of, PROD_PHAR_DRUG_WHOLESALE]
+  - [PROD_PHAR_ANTIBODY_DRUG, upstream_of, PROD_PHAR_DRUG_WHOLESALE]
+  - [PROD_PHAR_DRUG_WHOLESALE, upstream_of, PROD_PHAR_RETAIL_PHARMACY]
+  - [PROD_PHAR_DRUG_WHOLESALE, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_DEVICE_DISTRIBUTION, used_in, MKT_HEALTHCARE]
+  - [PROD_PHAR_PHARMA_LOGISTICS, used_in, PROD_PHAR_DRUG_WHOLESALE]
+  - [PROD_PHAR_PHARMA_LOGISTICS, used_in, PROD_PHAR_VACCINE]
+  - [PROD_PHAR_CSO, used_in, PROD_PHAR_CHEM_FORMULATION]
+  - [PROD_PHAR_RETAIL_PHARMACY, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_ONLINE_PHARMACY, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PHAR_ONLINE_PHARMACY, substitute_for, PROD_PHAR_RETAIL_PHARMACY]
+
+sw_l3_map:
+  "370101": [SEG_PHAR_API]
+  "370102": [SEG_PHAR_CHEM_FORMULATION, SEG_PHAR_GENERICS, SEG_PHAR_INNOVATIVE_SMALL_MOLECULE, SEG_PHAR_EXCIPIENT_PACKAGING]
+  "370201": [SEG_PHAR_TCM_PATENT, SEG_PHAR_TCM_PIECES, SEG_PHAR_TCM_HERBS]
+  "370302": [SEG_PHAR_BLOOD_PRODUCTS]
+  "370303": [SEG_PHAR_VACCINES]
+  "370304": [SEG_PHAR_OTHER_BIOLOGICS, SEG_PHAR_ANTIBODY, SEG_PHAR_RECOMBINANT_PROTEIN, SEG_PHAR_CELL_GENE_THERAPY, SEG_PHAR_LIFE_SCI_TOOLS]
+  "370402": [SEG_PHAR_DISTRIBUTION]
+  "370403": [SEG_PHAR_RETAIL_PHARMACY]
+  "370404": [SEG_PHAR_ONLINE_PHARMACY]
+  "370502": [SEG_PHAR_MED_EQUIPMENT, SEG_PHAR_HOME_MED_DEVICES]
+  "370503": [SEG_PHAR_MED_CONSUMABLES, SEG_PHAR_HIGH_VALUE_CONSUMABLES, SEG_PHAR_LOW_VALUE_CONSUMABLES, SEG_PHAR_LIFE_SCI_TOOLS]
+  "370504": [SEG_PHAR_IVD]
+  "370602": [SEG_PHAR_DIAG_SERVICES]
+  "370603": [SEG_PHAR_CXO, SEG_PHAR_PRECLINICAL_CRO, SEG_PHAR_CLINICAL_CRO, SEG_PHAR_CDMO]
+  "370604": [SEG_PHAR_HOSPITALS, SEG_PHAR_SPECIALTY_HOSPITALS]
+  "370605": [SEG_PHAR_OTHER_MED_SERVICES]

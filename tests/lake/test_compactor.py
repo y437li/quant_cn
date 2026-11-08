@@ -1,0 +1,101 @@
+from __future__ import annotations
+
+import json
+
+import pandas as pd
+import pytest
+
+from quant_cn.core.config import Config
+from quant_cn.lake.compactor import Compactor
+from tests.support import MiniLake, Sample
+
+
+@pytest.fixture
+def compactor(lake: MiniLake) -> Compactor:
+    return Compactor(lake.catalog, lake.query, lake.writer, lake.clock)
+
+
+def write_days(lake: MiniLake, config: Config, days: list[str]) -> None:
+    for day in days:
+        lake.writer.write_raw(
+            config.get_dataset("stk_limit"),
+            day,
+            Sample.build_bars(day).rename(columns={"close": "up_limit"}).assign(down_limit=1.0),
+        )
+
+
+# TC-CO-001
+def test_tc_co_001_yearly_partitions(lake: MiniLake, config: Config, compactor: Compactor) -> None:
+    write_days(lake, config, ["20251231", "20260105", "20260102"])
+    report = compactor.rebuild(config.get_dataset("stk_limit"))
+    assert (report.keys_total, report.rows) == (2, 6)
+    part = pd.read_parquet(
+        lake.lake_root / "curated" / "stk_limit" / "year=2026" / "part-0.parquet"
+    )
+    assert part["trade_date"].tolist() == sorted(part["trade_date"].tolist())
+    assert part["up_limit"].dtype == "float64"
+
+
+# TC-CO-002
+def test_tc_co_002_duplicates_dropped(lake: MiniLake, config: Config, compactor: Compactor) -> None:
+    spec = config.get_dataset("stock_basic")
+    row = {c: "x" for c in spec.fields} | {"ts_code": "000001.SZ"}
+    lake.writer.write_raw(spec, "L", pd.DataFrame([row]))
+    lake.writer.write_raw(spec, "D", pd.DataFrame([row | {"list_status": "D"}]))
+    report = compactor.rebuild(spec)
+    assert report.rows == 1 and report.skipped == 1
+    manifest = json.loads((lake.lake_root / "meta" / "manifest" / "stock_basic.json").read_text())
+    assert manifest["duplicate_keys_dropped"] == 1
+
+
+# TC-CO-003
+def test_tc_co_003_single_file(lake: MiniLake, config: Config, compactor: Compactor) -> None:
+    lake.writer.write_raw(
+        config.get_dataset("trade_cal"), "all", Sample.build_trade_cal(["20260828"], ["20260829"])
+    )
+    compactor.rebuild(config.get_dataset("trade_cal"))
+    assert (lake.lake_root / "curated" / "reference" / "trade_cal.parquet").exists()
+
+
+# TC-CO-004
+def test_tc_co_004_no_raw(lake: MiniLake, config: Config, compactor: Compactor) -> None:
+    report = compactor.rebuild(config.get_dataset("daily"))
+    assert report.rows == 0 and report.message == "no raw files"
+    assert not (lake.lake_root / "curated" / "daily").exists()
+
+
+# TC-CO-005
+def test_tc_co_005_curated_view(lake: MiniLake, config: Config, compactor: Compactor) -> None:
+    write_days(lake, config, ["20260102"])
+    compactor.rebuild(config.get_dataset("stk_limit"))
+    df = lake.query.sql("SELECT year, count(*) n FROM curated.stk_limit GROUP BY year")
+    assert df.values.tolist() == [[2026, 2]]
+
+
+# TC-CO-006
+def test_tc_co_006_key_defaults(lake: MiniLake, config: Config, compactor: Compactor) -> None:
+    spec = config.get_dataset("report_rc")
+    base = {f: None for f in spec.fields}
+    rows = [
+        base
+        | {
+            "ts_code": "600519.SH",
+            "report_date": "20260914",
+            "org_name": "A",
+            "report_title": "t",
+            "quarter": "2026Q4",
+            "eps": 1.0,
+        },
+        base
+        | {
+            "ts_code": "600519.SH",
+            "report_date": "20260914",
+            "org_name": "B",
+            "report_title": "rating only",
+            "quarter": None,
+        },
+    ]
+    lake.writer.write_raw(spec, "20260914", pd.DataFrame(rows))
+    assert compactor.rebuild(spec).rows == 2
+    out = lake.query.sql("SELECT org_name, quarter FROM curated.report_rc ORDER BY org_name")
+    assert out["quarter"].tolist() == ["2026Q4", ""]

@@ -1,0 +1,13 @@
+# Member-category totals that fut_holding mixes in among the broker rows (D-079).
+# derived.fut_holding_brokers drops rows whose (exchange, broker) matches an entry; `first`/`last` record
+# where each label was seen in the 2019-2026 backfill (documentation only: a category name is never a
+# real broker). Found by the plan 11 phase 4 check: with them, DCE "top-20 long" exceeded total OI.
+categories:
+  - {exchange: CFFEX, broker: 期货公司, first: "20190102", last: "20200313"}
+  - {exchange: CFFEX, broker: 非期货公司, first: "20190102", last: "20200313"}
+  - {exchange: CFFEX, broker: 非期货公司结算会员, first: "20200914", last: "20230418"}
+  - {exchange: DCE, broker: 期货公司会员, first: "20190102", last: "20240517"}
+  - {exchange: SHFE, broker: 期货公司, first: "20190102", last: "20250812"}
+  - {exchange: SHFE, broker: 非期货公司, first: "20190102", last: "20250812"}
+  - {exchange: SHFE, broker: 期货公司会员/境外特殊经纪参与者, first: "20250813", last: "20260928"}
+  - {exchange: SHFE, broker: 非期货公司会员/境外特殊非经纪参与者, first: "20250813", last: "20260928"}

@@ -1,0 +1,357 @@
+# 食品饮料 (SW 340000) — product taxonomy prior (plan 12 phase 1, D-097). All edges are priors.
+# Format: README.md beside this file.
+sector: {sw_l1: "340000", name: 食品饮料, name_en: Food and Beverage}
+
+nodes:
+  # ================= segments =================
+  - {id: SEG_FOOD_PROCESSING, type: segment, name: 食品加工, name_en: Food Processing}
+  - {id: SEG_FOOD_MEAT, type: segment, name: 肉制品, name_en: Meat Products, parent: SEG_FOOD_PROCESSING}
+  - {id: SEG_FOOD_OTHER, type: segment, name: 其他食品, name_en: Other Foods, parent: SEG_FOOD_PROCESSING}
+  - {id: SEG_FOOD_PREPARED, type: segment, name: 预加工食品, name_en: Frozen and Prepared Foods, parent: SEG_FOOD_PROCESSING}
+  - {id: SEG_FOOD_SUPPLEMENTS, type: segment, name: 保健品, name_en: Health Supplements, parent: SEG_FOOD_PROCESSING}
+  - {id: SEG_FOOD_BAIJIU, type: segment, name: 白酒, name_en: Baijiu}
+  - {id: SEG_FOOD_NON_BAIJIU, type: segment, name: 非白酒, name_en: Non-Baijiu Alcoholic Beverages}
+  - {id: SEG_FOOD_BEER, type: segment, name: 啤酒, name_en: Beer, parent: SEG_FOOD_NON_BAIJIU}
+  - {id: SEG_FOOD_OTHER_LIQUOR, type: segment, name: 其他酒类, name_en: Other Alcoholic Beverages, parent: SEG_FOOD_NON_BAIJIU}
+  - {id: SEG_FOOD_BEVERAGE_DAIRY, type: segment, name: 饮料乳品, name_en: Beverages and Dairy}
+  - {id: SEG_FOOD_SOFT_DRINKS, type: segment, name: 软饮料, name_en: Soft Drinks, parent: SEG_FOOD_BEVERAGE_DAIRY}
+  - {id: SEG_FOOD_DAIRY, type: segment, name: 乳品, name_en: Dairy, parent: SEG_FOOD_BEVERAGE_DAIRY}
+  - {id: SEG_FOOD_SNACKS_SEG, type: segment, name: 休闲食品, name_en: Snack Foods}
+  - {id: SEG_FOOD_SNACKS, type: segment, name: 零食, name_en: Snacks, parent: SEG_FOOD_SNACKS_SEG}
+  - {id: SEG_FOOD_BAKERY, type: segment, name: 烘焙食品, name_en: Bakery, parent: SEG_FOOD_SNACKS_SEG}
+  - {id: SEG_FOOD_COOKED, type: segment, name: 熟食, name_en: Braised and Cooked Foods, parent: SEG_FOOD_SNACKS_SEG}
+  - {id: SEG_FOOD_CONDIMENTS, type: segment, name: 调味发酵品, name_en: Condiments and Fermented Products}
+
+  # ================= baijiu =================
+  - {id: PROD_FOOD_BAIJIU, type: product, name: 白酒产品, name_en: Baijiu, segment: SEG_FOOD_BAIJIU, aliases: [中国白酒]}
+  - {id: PROD_FOOD_BAIJIU_PREMIUM, type: product, name: 高端白酒, name_en: Premium Baijiu, parent: PROD_FOOD_BAIJIU, segment: SEG_FOOD_BAIJIU, aliases: [千元价格带白酒, 飞天茅台, 普五, 国窖1573]}
+  - {id: PROD_FOOD_BAIJIU_SUBPREMIUM, type: product, name: 次高端白酒, name_en: Sub-Premium Baijiu, parent: PROD_FOOD_BAIJIU, segment: SEG_FOOD_BAIJIU, aliases: [300-800元价格带]}
+  - {id: PROD_FOOD_BAIJIU_MIDRANGE, type: product, name: 中端白酒, name_en: Mid-Range Baijiu, parent: PROD_FOOD_BAIJIU, segment: SEG_FOOD_BAIJIU, aliases: [区域酒, 100-300元价格带]}
+  - {id: PROD_FOOD_BAIJIU_MASS, type: product, name: 大众光瓶白酒, name_en: Mass-Market Baijiu, parent: PROD_FOOD_BAIJIU, segment: SEG_FOOD_BAIJIU, aliases: [光瓶酒, 低端白酒]}
+  - {id: PROD_FOOD_BAIJIU_SAUCE, type: product, name: 酱香型白酒, name_en: Sauce-Aroma Baijiu, parent: PROD_FOOD_BAIJIU, segment: SEG_FOOD_BAIJIU, aliases: [酱酒]}
+  - {id: PROD_FOOD_BAIJIU_STRONG, type: product, name: 浓香型白酒, name_en: Strong-Aroma Baijiu, parent: PROD_FOOD_BAIJIU, segment: SEG_FOOD_BAIJIU}
+  - {id: PROD_FOOD_BAIJIU_LIGHT, type: product, name: 清香型白酒, name_en: Light-Aroma Baijiu, parent: PROD_FOOD_BAIJIU, segment: SEG_FOOD_BAIJIU, aliases: [汾酒类]}
+  - {id: PROD_FOOD_BASE_LIQUOR, type: product, name: 基酒, name_en: Base Liquor, segment: SEG_FOOD_BAIJIU, aliases: [原酒, 散酒, 调味酒]}
+  - {id: PROD_FOOD_DAQU, type: product, name: 酒曲, name_en: Distilling Starter (Qu), segment: SEG_FOOD_BAIJIU, aliases: [大曲, 小曲]}
+
+  # ================= beer and other liquor =================
+  - {id: PROD_FOOD_BEER, type: product, name: 啤酒产品, name_en: Beer Products, segment: SEG_FOOD_BEER, aliases: [啤酒销量]}
+  - {id: PROD_FOOD_BEER_PREMIUM, type: product, name: 中高端啤酒, name_en: Premium Beer, parent: PROD_FOOD_BEER, segment: SEG_FOOD_BEER, aliases: [高端啤酒, 次高端啤酒]}
+  - {id: PROD_FOOD_BEER_MAINSTREAM, type: product, name: 大众啤酒, name_en: Mainstream Beer, parent: PROD_FOOD_BEER, segment: SEG_FOOD_BEER, aliases: [经济型啤酒]}
+  - {id: PROD_FOOD_CRAFT_BEER, type: product, name: 精酿啤酒, name_en: Craft Beer, parent: PROD_FOOD_BEER, segment: SEG_FOOD_BEER, aliases: [精酿]}
+  - {id: PROD_FOOD_MALT, type: product, name: 啤酒麦芽, name_en: Brewing Malt, segment: SEG_FOOD_BEER, import_dependence: high, aliases: [麦芽, 大麦芽]}
+  - {id: PROD_FOOD_WINE, type: product, name: 葡萄酒, name_en: Wine, segment: SEG_FOOD_OTHER_LIQUOR, import_dependence: high, aliases: [红酒, 干红]}
+  - {id: PROD_FOOD_HUANGJIU, type: product, name: 黄酒, name_en: Huangjiu Rice Wine, segment: SEG_FOOD_OTHER_LIQUOR, aliases: [绍兴黄酒, 米酒]}
+  - {id: PROD_FOOD_RTD_COCKTAIL, type: product, name: 预调酒, name_en: Ready-to-Drink Cocktails, segment: SEG_FOOD_OTHER_LIQUOR, aliases: [鸡尾酒, 低度酒, 微醺]}
+  - {id: PROD_FOOD_HEALTH_LIQUOR, type: product, name: 保健酒, name_en: Herbal Health Liquor, segment: SEG_FOOD_OTHER_LIQUOR, aliases: [露酒, 劲酒]}
+  - {id: PROD_FOOD_WHISKY, type: product, name: 威士忌与洋酒, name_en: Whisky and Spirits, segment: SEG_FOOD_OTHER_LIQUOR, import_dependence: high, aliases: [威士忌, 国产威士忌]}
+
+  # ================= soft drinks =================
+  - {id: PROD_FOOD_PACKAGED_WATER, type: product, name: 包装饮用水, name_en: Packaged Drinking Water, segment: SEG_FOOD_SOFT_DRINKS, aliases: [矿泉水, 纯净水, 天然水]}
+  - {id: PROD_FOOD_ENERGY_DRINK, type: product, name: 能量饮料, name_en: Energy Drinks, segment: SEG_FOOD_SOFT_DRINKS, aliases: [功能饮料, 牛磺酸饮料]}
+  - {id: PROD_FOOD_SPORTS_DRINK, type: product, name: 电解质饮料, name_en: Sports and Electrolyte Drinks, segment: SEG_FOOD_SOFT_DRINKS, aliases: [运动饮料, 电解质水]}
+  - {id: PROD_FOOD_PLANT_PROTEIN_DRINK, type: product, name: 植物蛋白饮料, name_en: Plant-Protein Drinks, segment: SEG_FOOD_SOFT_DRINKS, aliases: [核桃乳, 椰汁, 杏仁露, 豆奶]}
+  - {id: PROD_FOOD_TEA_DRINK, type: product, name: 茶饮料, name_en: RTD Tea, segment: SEG_FOOD_SOFT_DRINKS, aliases: [无糖茶, 凉茶]}
+  - {id: PROD_FOOD_CARBONATED, type: product, name: 碳酸饮料, name_en: Carbonated Soft Drinks, segment: SEG_FOOD_SOFT_DRINKS, aliases: [汽水]}
+  - {id: PROD_FOOD_JUICE_DRINK, type: product, name: 果汁饮料, name_en: Juice Drinks, segment: SEG_FOOD_SOFT_DRINKS, aliases: [果汁, NFC果汁]}
+  - {id: PROD_FOOD_COFFEE_DRINK, type: product, name: 即饮咖啡, name_en: RTD Coffee, segment: SEG_FOOD_SOFT_DRINKS, aliases: [咖啡饮料]}
+
+  # ================= dairy =================
+  - {id: PROD_FOOD_DAIRY, type: product, name: 乳制品, name_en: Dairy Products, segment: SEG_FOOD_DAIRY, aliases: [奶制品]}
+  - {id: PROD_FOOD_LIQUID_MILK, type: product, name: 液态奶, name_en: Liquid Milk, parent: PROD_FOOD_DAIRY, segment: SEG_FOOD_DAIRY}
+  - {id: PROD_FOOD_UHT_MILK, type: product, name: 常温白奶, name_en: UHT Milk, parent: PROD_FOOD_LIQUID_MILK, segment: SEG_FOOD_DAIRY, aliases: [常温奶, 纯牛奶, 高端白奶]}
+  - {id: PROD_FOOD_FRESH_MILK, type: product, name: 低温鲜奶, name_en: Pasteurized Fresh Milk, parent: PROD_FOOD_LIQUID_MILK, segment: SEG_FOOD_DAIRY, aliases: [巴氏奶, 鲜牛奶]}
+  - {id: PROD_FOOD_YOGURT, type: product, name: 酸奶, name_en: Yogurt, parent: PROD_FOOD_LIQUID_MILK, segment: SEG_FOOD_DAIRY, aliases: [低温酸奶, 常温酸奶, 发酵乳]}
+  - {id: PROD_FOOD_MILK_POWDER, type: product, name: 奶粉, name_en: Milk Powder, parent: PROD_FOOD_DAIRY, segment: SEG_FOOD_DAIRY, aliases: [成人奶粉, 工业奶粉]}
+  - {id: PROD_FOOD_INFANT_FORMULA, type: product, name: 婴幼儿配方奶粉, name_en: Infant Formula, parent: PROD_FOOD_MILK_POWDER, segment: SEG_FOOD_DAIRY, import_dependence: medium, aliases: [婴配粉, 羊奶粉]}
+  - {id: PROD_FOOD_CHEESE, type: product, name: 奶酪, name_en: Cheese, parent: PROD_FOOD_DAIRY, segment: SEG_FOOD_DAIRY, import_dependence: medium, aliases: [芝士, 奶酪棒, 再制干酪]}
+  - {id: PROD_FOOD_CREAM_BUTTER, type: product, name: 稀奶油与黄油, name_en: Cream and Butter, parent: PROD_FOOD_DAIRY, segment: SEG_FOOD_DAIRY, import_dependence: medium, aliases: [稀奶油, 黄油, 乳脂]}
+  - {id: PROD_FOOD_ICE_CREAM, type: product, name: 冷饮冰淇淋, name_en: Ice Cream, segment: SEG_FOOD_DAIRY, aliases: [雪糕, 冰淇淋]}
+
+  # ================= condiments =================
+  - {id: PROD_FOOD_SOY_SAUCE, type: product, name: 酱油, name_en: Soy Sauce, segment: SEG_FOOD_CONDIMENTS, aliases: [生抽, 老抽, 零添加酱油]}
+  - {id: PROD_FOOD_VINEGAR, type: product, name: 食醋, name_en: Vinegar, segment: SEG_FOOD_CONDIMENTS, aliases: [醋, 陈醋, 香醋]}
+  - {id: PROD_FOOD_OYSTER_SAUCE, type: product, name: 蚝油, name_en: Oyster Sauce, segment: SEG_FOOD_CONDIMENTS}
+  - {id: PROD_FOOD_COOKING_WINE, type: product, name: 料酒, name_en: Cooking Wine, segment: SEG_FOOD_CONDIMENTS}
+  - {id: PROD_FOOD_COMPOUND_SEASONING, type: product, name: 复合调味料, name_en: Compound Seasonings, segment: SEG_FOOD_CONDIMENTS, aliases: [复调]}
+  - {id: PROD_FOOD_HOTPOT_BASE, type: product, name: 火锅底料, name_en: Hotpot Soup Base, parent: PROD_FOOD_COMPOUND_SEASONING, segment: SEG_FOOD_CONDIMENTS, aliases: [火锅调料]}
+  - {id: PROD_FOOD_CHINESE_SEASONING, type: product, name: 中式菜品调料, name_en: Chinese Dish Seasonings, parent: PROD_FOOD_COMPOUND_SEASONING, segment: SEG_FOOD_CONDIMENTS, aliases: [酸菜鱼调料, 小龙虾调料, 定制调味品]}
+  - {id: PROD_FOOD_CHILI_SAUCE, type: product, name: 辣椒酱, name_en: Chili Sauce, parent: PROD_FOOD_COMPOUND_SEASONING, segment: SEG_FOOD_CONDIMENTS, aliases: [豆瓣酱, 风味酱]}
+  - {id: PROD_FOOD_MSG, type: product, name: 味精, name_en: Monosodium Glutamate, segment: SEG_FOOD_CONDIMENTS, aliases: [谷氨酸钠, 鸡精, 鸡粉]}
+  - {id: PROD_FOOD_YEAST, type: product, name: 酵母, name_en: Yeast, segment: SEG_FOOD_CONDIMENTS, aliases: [面包酵母, 活性干酵母]}
+  - {id: PROD_FOOD_YEAST_EXTRACT, type: product, name: 酵母抽提物, name_en: Yeast Extract, parent: PROD_FOOD_YEAST, segment: SEG_FOOD_CONDIMENTS, aliases: [YE, 酵母提取物]}
+  - {id: PROD_FOOD_ZHACAI, type: product, name: 榨菜, name_en: Preserved Mustard Tuber, segment: SEG_FOOD_CONDIMENTS, aliases: [下饭菜]}
+  - {id: PROD_FOOD_SALT, type: product, name: 食用盐, name_en: Edible Salt, segment: SEG_FOOD_CONDIMENTS, aliases: [食盐, 加碘盐]}
+
+  # ================= meat =================
+  - {id: PROD_FOOD_HOG_SLAUGHTER, type: product, name: 生猪屠宰, name_en: Hog Slaughtering, segment: SEG_FOOD_MEAT, aliases: [屠宰, 屠宰量]}
+  - {id: PROD_FOOD_FRESH_PORK, type: product, name: 冷鲜猪肉, name_en: Chilled Pork, segment: SEG_FOOD_MEAT, aliases: [冷鲜肉, 白条猪, 分割肉, 冻肉]}
+  - {id: PROD_FOOD_LOW_TEMP_MEAT, type: product, name: 低温肉制品, name_en: Chilled Processed Meat, segment: SEG_FOOD_MEAT, aliases: [低温火腿, 西式肉制品]}
+  - {id: PROD_FOOD_HIGH_TEMP_MEAT, type: product, name: 高温肉制品, name_en: Shelf-Stable Processed Meat, segment: SEG_FOOD_MEAT, aliases: [火腿肠]}
+  - {id: PROD_FOOD_CHINESE_CURED_MEAT, type: product, name: 中式肉制品, name_en: Chinese Cured Meats, segment: SEG_FOOD_MEAT, aliases: [腊肠, 腊肉, 火腿]}
+  - {id: PROD_FOOD_BEEF_MUTTON, type: product, name: 牛羊肉制品, name_en: Beef and Mutton Products, segment: SEG_FOOD_MEAT, aliases: [牛肉制品]}
+
+  # ================= prepared and other foods =================
+  - {id: PROD_FOOD_FROZEN_FOOD, type: product, name: 速冻食品, name_en: Frozen Foods, segment: SEG_FOOD_PREPARED, aliases: [冷冻食品]}
+  - {id: PROD_FOOD_FROZEN_DUMPLING, type: product, name: 速冻米面制品, name_en: Frozen Rice and Flour Products, parent: PROD_FOOD_FROZEN_FOOD, segment: SEG_FOOD_PREPARED, aliases: [水饺, 汤圆, 速冻面点, 手抓饼]}
+  - {id: PROD_FOOD_FROZEN_HOTPOT, type: product, name: 速冻火锅料, name_en: Frozen Hotpot Ingredients, parent: PROD_FOOD_FROZEN_FOOD, segment: SEG_FOOD_PREPARED, aliases: [鱼丸, 肉丸, 鱼糜制品]}
+  - {id: PROD_FOOD_PREPARED_DISH, type: product, name: 预制菜, name_en: Prepared Dishes, parent: PROD_FOOD_FROZEN_FOOD, segment: SEG_FOOD_PREPARED, aliases: [菜肴制品, 预制菜肴, 半成品菜]}
+  - {id: PROD_FOOD_SURIMI, type: product, name: 鱼糜, name_en: Surimi, segment: SEG_FOOD_PREPARED, aliases: [冷冻鱼糜]}
+  - {id: PROD_FOOD_INSTANT_NOODLE, type: product, name: 方便食品, name_en: Instant Foods, segment: SEG_FOOD_OTHER, aliases: [方便面, 自热食品, 螺蛳粉]}
+  - {id: PROD_FOOD_CANNED_FOOD, type: product, name: 罐头食品, name_en: Canned Foods, segment: SEG_FOOD_OTHER, aliases: [肉类罐头, 八宝粥]}
+  - {id: PROD_FOOD_CEREAL, type: product, name: 冲调食品, name_en: Cereal and Instant Drink Mixes, segment: SEG_FOOD_OTHER, aliases: [麦片, 芝麻糊, 冲调粉]}
+
+  # ================= supplements =================
+  - {id: PROD_FOOD_SUPPLEMENT, type: product, name: 膳食营养补充剂, name_en: Dietary Supplements, segment: SEG_FOOD_SUPPLEMENTS, aliases: [VDS, 保健食品, 蓝帽子]}
+  - {id: PROD_FOOD_VITAMIN_MINERAL, type: product, name: 维生素矿物质补充剂, name_en: Vitamin and Mineral Supplements, parent: PROD_FOOD_SUPPLEMENT, segment: SEG_FOOD_SUPPLEMENTS, aliases: [钙片, 复合维生素]}
+  - {id: PROD_FOOD_PROBIOTIC, type: product, name: 益生菌, name_en: Probiotics, parent: PROD_FOOD_SUPPLEMENT, segment: SEG_FOOD_SUPPLEMENTS, import_dependence: medium, aliases: [益生菌粉, 菌粉]}
+  - {id: PROD_FOOD_FISH_OIL, type: product, name: 鱼油, name_en: Fish Oil and Omega-3, parent: PROD_FOOD_SUPPLEMENT, segment: SEG_FOOD_SUPPLEMENTS, import_dependence: medium, aliases: [DHA藻油, Omega-3]}
+  - {id: PROD_FOOD_FUNCTIONAL_FOOD, type: product, name: 功能性食品, name_en: Functional Foods, parent: PROD_FOOD_SUPPLEMENT, segment: SEG_FOOD_SUPPLEMENTS, aliases: [代餐, 口服美容, 胶原蛋白肽]}
+  - {id: PROD_FOOD_SUPPLEMENT_CDMO, type: product, name: 营养保健品代工, name_en: Supplement CDMO, segment: SEG_FOOD_SUPPLEMENTS, kind: service, aliases: [保健品CDMO, 软胶囊代工, 软糖代工]}
+
+  # ================= snacks =================
+  - {id: PROD_FOOD_SNACK, type: product, name: 休闲零食, name_en: Snack Foods, segment: SEG_FOOD_SNACKS, aliases: [零食]}
+  - {id: PROD_FOOD_NUTS, type: product, name: 坚果炒货, name_en: Nuts and Seeds, parent: PROD_FOOD_SNACK, segment: SEG_FOOD_SNACKS, aliases: [瓜子, 每日坚果, 坚果]}
+  - {id: PROD_FOOD_SPICY_STRIPS, type: product, name: 辣条, name_en: Spicy Gluten Strips, parent: PROD_FOOD_SNACK, segment: SEG_FOOD_SNACKS, aliases: [调味面制品]}
+  - {id: PROD_FOOD_KONJAC_SNACK, type: product, name: 魔芋零食, name_en: Konjac Snacks, parent: PROD_FOOD_SNACK, segment: SEG_FOOD_SNACKS, aliases: [魔芋爽]}
+  - {id: PROD_FOOD_EGG_SNACK, type: product, name: 蛋类零食, name_en: Egg Snacks, parent: PROD_FOOD_SNACK, segment: SEG_FOOD_SNACKS, aliases: [鹌鹑蛋]}
+  - {id: PROD_FOOD_MEAT_SNACK, type: product, name: 肉类零食, name_en: Meat Snacks, parent: PROD_FOOD_SNACK, segment: SEG_FOOD_SNACKS, aliases: [肉干, 肉脯, 鸡爪, 鱼干]}
+  - {id: PROD_FOOD_CANDY, type: product, name: 糖果巧克力, name_en: Confectionery, parent: PROD_FOOD_SNACK, segment: SEG_FOOD_SNACKS, aliases: [糖果, 巧克力, 果冻]}
+  - {id: PROD_FOOD_PUFFED_SNACK, type: product, name: 膨化食品, name_en: Puffed Snacks, parent: PROD_FOOD_SNACK, segment: SEG_FOOD_SNACKS, aliases: [薯片]}
+
+  # ================= bakery =================
+  - {id: PROD_FOOD_BAKERY, type: product, name: 烘焙食品产品, name_en: Bakery Products, segment: SEG_FOOD_BAKERY, aliases: [烘焙]}
+  - {id: PROD_FOOD_BREAD, type: product, name: 面包, name_en: Bread, parent: PROD_FOOD_BAKERY, segment: SEG_FOOD_BAKERY, aliases: [短保面包, 吐司]}
+  - {id: PROD_FOOD_PASTRY, type: product, name: 糕点, name_en: Pastries and Cakes, parent: PROD_FOOD_BAKERY, segment: SEG_FOOD_BAKERY, aliases: [蛋糕, 月饼, 蛋黄酥]}
+  - {id: PROD_FOOD_BISCUIT, type: product, name: 饼干, name_en: Biscuits, parent: PROD_FOOD_BAKERY, segment: SEG_FOOD_BAKERY, aliases: [苏打饼干, 威化]}
+  - {id: PROD_FOOD_FROZEN_BAKERY, type: product, name: 冷冻烘焙半成品, name_en: Frozen Bakery Semi-Finished Goods, parent: PROD_FOOD_BAKERY, segment: SEG_FOOD_BAKERY, aliases: [冷冻面团, 冷冻蛋挞皮]}
+  - {id: PROD_FOOD_BAKING_INGREDIENTS, type: product, name: 烘焙原料, name_en: Baking Ingredients, segment: SEG_FOOD_BAKERY, aliases: [植脂奶油, 烘焙油脂, 酱料馅料]}
+
+  # ================= cooked =================
+  - {id: PROD_FOOD_BRAISED_FOOD, type: product, name: 卤制品, name_en: Braised Foods, segment: SEG_FOOD_COOKED, aliases: [卤味, 鸭脖, 鸭货]}
+  - {id: PROD_FOOD_COOKED_MEAT, type: product, name: 中式熟食, name_en: Chinese Deli Meats, segment: SEG_FOOD_COOKED, aliases: [熟食, 酱卤肉制品, 烧鸡]}
+
+edges:
+  # ---------- segment tree ----------
+  - [SEG_FOOD_MEAT, part_of, SEG_FOOD_PROCESSING]
+  - [SEG_FOOD_OTHER, part_of, SEG_FOOD_PROCESSING]
+  - [SEG_FOOD_PREPARED, part_of, SEG_FOOD_PROCESSING]
+  - [SEG_FOOD_SUPPLEMENTS, part_of, SEG_FOOD_PROCESSING]
+  - [SEG_FOOD_BEER, part_of, SEG_FOOD_NON_BAIJIU]
+  - [SEG_FOOD_OTHER_LIQUOR, part_of, SEG_FOOD_NON_BAIJIU]
+  - [SEG_FOOD_SOFT_DRINKS, part_of, SEG_FOOD_BEVERAGE_DAIRY]
+  - [SEG_FOOD_DAIRY, part_of, SEG_FOOD_BEVERAGE_DAIRY]
+  - [SEG_FOOD_SNACKS, part_of, SEG_FOOD_SNACKS_SEG]
+  - [SEG_FOOD_BAKERY, part_of, SEG_FOOD_SNACKS_SEG]
+  - [SEG_FOOD_COOKED, part_of, SEG_FOOD_SNACKS_SEG]
+  # ---------- serves ----------
+  - [SEG_FOOD_PROCESSING, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_FOOD_MEAT, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_FOOD_OTHER, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_FOOD_PREPARED, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_FOOD_SUPPLEMENTS, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_FOOD_SUPPLEMENTS, serves, MKT_HEALTHCARE]
+  - [SEG_FOOD_BAIJIU, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_FOOD_BAIJIU, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_FOOD_NON_BAIJIU, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_FOOD_BEER, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_FOOD_OTHER_LIQUOR, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_FOOD_BEVERAGE_DAIRY, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_FOOD_SOFT_DRINKS, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_FOOD_DAIRY, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_FOOD_SNACKS_SEG, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_FOOD_SNACKS, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_FOOD_BAKERY, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_FOOD_COOKED, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_FOOD_CONDIMENTS, serves, MKT_FOOD_CONSUMPTION]
+  # ---------- baijiu ----------
+  - [PROD_FOOD_DAQU, upstream_of, PROD_FOOD_BASE_LIQUOR]
+  - [PROD_FOOD_BASE_LIQUOR, upstream_of, PROD_FOOD_BAIJIU]
+  - [PROD_FOOD_BASE_LIQUOR, uses_material, MAT_GRAIN]
+  - [PROD_FOOD_DAQU, uses_material, MAT_GRAIN]
+  - [PROD_FOOD_BAIJIU, uses_material, MAT_GRAIN]
+  - [PROD_FOOD_BAIJIU, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_BAIJIU_PREMIUM, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_FOOD_BAIJIU_SUBPREMIUM, substitute_for, PROD_FOOD_BAIJIU_PREMIUM]
+  - [PROD_FOOD_BAIJIU_MASS, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_BAIJIU_SAUCE, substitute_for, PROD_FOOD_BAIJIU_STRONG]
+  # ---------- beer / other liquor ----------
+  - [PROD_FOOD_MALT, upstream_of, PROD_FOOD_BEER]
+  - [PROD_FOOD_MALT, uses_material, MAT_GRAIN]
+  - [PROD_FOOD_BEER, uses_material, MAT_GRAIN]
+  - [PROD_FOOD_BEER, uses_material, MAT_ALUMINUM]
+  - [PROD_FOOD_BEER, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_BEER_PREMIUM, substitute_for, PROD_FOOD_BEER_MAINSTREAM]
+  - [PROD_FOOD_CRAFT_BEER, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_WINE, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_HUANGJIU, uses_material, MAT_GRAIN]
+  - [PROD_FOOD_HUANGJIU, upstream_of, PROD_FOOD_COOKING_WINE]
+  - [PROD_FOOD_RTD_COCKTAIL, uses_material, MAT_SUGAR]
+  - [PROD_FOOD_RTD_COCKTAIL, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_HEALTH_LIQUOR, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_WHISKY, uses_material, MAT_GRAIN]
+  - [PROD_FOOD_WHISKY, substitute_for, PROD_FOOD_BAIJIU]
+  # ---------- soft drinks ----------
+  - [PROD_FOOD_PACKAGED_WATER, uses_material, MAT_PLASTICS]
+  - [PROD_FOOD_PACKAGED_WATER, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_ENERGY_DRINK, uses_material, MAT_SUGAR]
+  - [PROD_FOOD_ENERGY_DRINK, uses_material, MAT_PLASTICS]
+  - [PROD_FOOD_ENERGY_DRINK, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_SPORTS_DRINK, uses_material, MAT_PLASTICS]
+  - [PROD_FOOD_SPORTS_DRINK, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_PLANT_PROTEIN_DRINK, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_PLANT_PROTEIN_DRINK, uses_material, MAT_ALUMINUM]
+  - [PROD_FOOD_PLANT_PROTEIN_DRINK, substitute_for, PROD_FOOD_LIQUID_MILK]
+  - [PROD_FOOD_TEA_DRINK, uses_material, MAT_PLASTICS]
+  - [PROD_FOOD_TEA_DRINK, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_TEA, upstream_of, PROD_FOOD_TEA_DRINK]
+  - [PROD_FOOD_CARBONATED, uses_material, MAT_SUGAR]
+  - [PROD_FOOD_CARBONATED, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_STARCH_SUGAR, upstream_of, PROD_FOOD_CARBONATED]
+  - [PROD_AGRI_FRUIT_JUICE_CONC, upstream_of, PROD_FOOD_JUICE_DRINK]
+  - [PROD_FOOD_JUICE_DRINK, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_COFFEE_DRINK, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_COFFEE_DRINK, uses_material, MAT_RAW_MILK]
+  # ---------- dairy ----------
+  - [PROD_AGRI_DAIRY_FARMING, upstream_of, PROD_FOOD_DAIRY]
+  - [PROD_FOOD_DAIRY, uses_material, MAT_RAW_MILK]
+  - [PROD_FOOD_LIQUID_MILK, uses_material, MAT_RAW_MILK]
+  - [PROD_FOOD_UHT_MILK, uses_material, MAT_RAW_MILK]
+  - [PROD_FOOD_FRESH_MILK, uses_material, MAT_RAW_MILK]
+  - [PROD_FOOD_YOGURT, uses_material, MAT_RAW_MILK]
+  - [PROD_FOOD_YOGURT, uses_material, MAT_SUGAR]
+  - [PROD_FOOD_MILK_POWDER, uses_material, MAT_RAW_MILK]
+  - [PROD_FOOD_INFANT_FORMULA, uses_material, MAT_RAW_MILK]
+  - [PROD_FOOD_CHEESE, uses_material, MAT_RAW_MILK]
+  - [PROD_FOOD_CREAM_BUTTER, uses_material, MAT_RAW_MILK]
+  - [PROD_FOOD_FRESH_MILK, substitute_for, PROD_FOOD_UHT_MILK]
+  - [PROD_FOOD_DAIRY, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_CREAM_BUTTER, upstream_of, PROD_FOOD_BAKERY]
+  - [PROD_FOOD_MILK_POWDER, upstream_of, PROD_FOOD_ICE_CREAM]
+  - [PROD_FOOD_ICE_CREAM, uses_material, MAT_SUGAR]
+  - [PROD_FOOD_ICE_CREAM, used_in, MKT_FOOD_CONSUMPTION]
+  # ---------- condiments ----------
+  - [PROD_FOOD_SOY_SAUCE, uses_material, MAT_GRAIN]
+  - [PROD_FOOD_SOY_SAUCE, uses_material, MAT_SOYBEAN_MEAL]
+  - [PROD_FOOD_SOY_SAUCE, uses_material, MAT_SUGAR]
+  - [PROD_FOOD_SOY_SAUCE, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_VINEGAR, uses_material, MAT_GRAIN]
+  - [PROD_FOOD_VINEGAR, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_OYSTER_SAUCE, uses_material, MAT_SUGAR]
+  - [PROD_FOOD_OYSTER_SAUCE, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_SHELLFISH, upstream_of, PROD_FOOD_OYSTER_SAUCE]
+  - [PROD_FOOD_COOKING_WINE, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_COMPOUND_SEASONING, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_COMPOUND_SEASONING, upstream_of, PROD_FOOD_PREPARED_DISH]
+  - [PROD_FOOD_HOTPOT_BASE, uses_material, MAT_GRAIN]
+  - [PROD_AGRI_EDIBLE_OIL, upstream_of, PROD_FOOD_HOTPOT_BASE]
+  - [PROD_AGRI_EDIBLE_OIL, upstream_of, PROD_FOOD_CHILI_SAUCE]
+  - [PROD_FOOD_MSG, uses_material, MAT_GRAIN]
+  - [PROD_FOOD_MSG, upstream_of, PROD_FOOD_COMPOUND_SEASONING]
+  - [PROD_FOOD_YEAST, uses_material, MAT_SUGAR]
+  - [PROD_FOOD_YEAST, upstream_of, PROD_FOOD_BREAD]
+  - [PROD_FOOD_YEAST, upstream_of, PROD_FOOD_BAIJIU]
+  - [PROD_FOOD_YEAST, upstream_of, PROD_FOOD_BEER]
+  - [PROD_FOOD_YEAST_EXTRACT, upstream_of, PROD_FOOD_COMPOUND_SEASONING]
+  - [PROD_FOOD_YEAST_EXTRACT, used_in, MKT_AGRICULTURE]
+  - [TECH_BIOTECH, enables, PROD_FOOD_YEAST]
+  - [TECH_BIOTECH, enables, PROD_FOOD_YEAST_EXTRACT]
+  - [PROD_FOOD_ZHACAI, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_SALT, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_SALT, upstream_of, PROD_FOOD_SOY_SAUCE]
+  # ---------- meat ----------
+  - [MAT_LIVE_HOGS, upstream_of, PROD_FOOD_HOG_SLAUGHTER]
+  - [PROD_FOOD_HOG_SLAUGHTER, uses_material, MAT_LIVE_HOGS]
+  - [PROD_FOOD_HOG_SLAUGHTER, upstream_of, PROD_FOOD_FRESH_PORK]
+  - [PROD_FOOD_HOG_SLAUGHTER, upstream_of, PROD_AGRI_CASING]
+  - [PROD_FOOD_FRESH_PORK, upstream_of, PROD_FOOD_LOW_TEMP_MEAT]
+  - [PROD_FOOD_FRESH_PORK, upstream_of, PROD_FOOD_HIGH_TEMP_MEAT]
+  - [PROD_FOOD_FRESH_PORK, upstream_of, PROD_FOOD_CHINESE_CURED_MEAT]
+  - [PROD_FOOD_FRESH_PORK, upstream_of, PROD_FOOD_FROZEN_HOTPOT]
+  - [PROD_FOOD_FRESH_PORK, upstream_of, PROD_FOOD_FROZEN_DUMPLING]
+  - [PROD_FOOD_FRESH_PORK, upstream_of, PROD_FOOD_PREPARED_DISH]
+  - [PROD_FOOD_FRESH_PORK, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_CHICKEN_MEAT, upstream_of, PROD_FOOD_HIGH_TEMP_MEAT]
+  - [PROD_AGRI_CHICKEN_MEAT, upstream_of, PROD_FOOD_PREPARED_DISH]
+  - [PROD_AGRI_CASING, upstream_of, PROD_FOOD_LOW_TEMP_MEAT]
+  - [PROD_AGRI_CASING, upstream_of, PROD_FOOD_CHINESE_CURED_MEAT]
+  - [PROD_AGRI_BEEF_CATTLE, upstream_of, PROD_FOOD_BEEF_MUTTON]
+  - [PROD_AGRI_SHEEP, upstream_of, PROD_FOOD_BEEF_MUTTON]
+  - [PROD_FOOD_LOW_TEMP_MEAT, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_HIGH_TEMP_MEAT, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_BEEF_MUTTON, used_in, MKT_FOOD_CONSUMPTION]
+  # ---------- prepared foods ----------
+  - [PROD_AGRI_FLOUR, upstream_of, PROD_FOOD_FROZEN_DUMPLING]
+  - [PROD_AGRI_RICE_MILLING, upstream_of, PROD_FOOD_FROZEN_DUMPLING]
+  - [PROD_FOOD_SURIMI, upstream_of, PROD_FOOD_FROZEN_HOTPOT]
+  - [PROD_AGRI_FROZEN_SEAFOOD_PROCESSING, upstream_of, PROD_FOOD_SURIMI]
+  - [PROD_AGRI_FROZEN_SEAFOOD_PROCESSING, upstream_of, PROD_FOOD_PREPARED_DISH]
+  - [PROD_AGRI_PROCESSED_CHICKEN, substitute_for, PROD_FOOD_PREPARED_DISH]
+  - [PROD_FOOD_FROZEN_FOOD, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_PREPARED_DISH, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_FLOUR, upstream_of, PROD_FOOD_INSTANT_NOODLE]
+  - [PROD_AGRI_EDIBLE_OIL, upstream_of, PROD_FOOD_INSTANT_NOODLE]
+  - [PROD_FOOD_INSTANT_NOODLE, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_CANNED_FOOD, uses_material, MAT_STEEL]
+  - [PROD_FOOD_CANNED_FOOD, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_CEREAL, uses_material, MAT_GRAIN]
+  - [PROD_FOOD_CEREAL, used_in, MKT_FOOD_CONSUMPTION]
+  # ---------- supplements ----------
+  - [PROD_PHAR_VITAMIN_API, upstream_of, PROD_FOOD_VITAMIN_MINERAL]
+  - [PROD_BEAU_HA_FOOD_GRADE, upstream_of, PROD_FOOD_FUNCTIONAL_FOOD]
+  - [PROD_BEAU_RECOMBINANT_COLLAGEN, upstream_of, PROD_FOOD_FUNCTIONAL_FOOD]
+  - [PROD_PHAR_PLANT_EXTRACT, upstream_of, PROD_FOOD_SUPPLEMENT]
+  - [TECH_BIOTECH, enables, PROD_FOOD_PROBIOTIC]
+  - [PROD_FOOD_PROBIOTIC, upstream_of, PROD_FOOD_YOGURT]
+  - [PROD_FOOD_SUPPLEMENT, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_FOOD_FISH_OIL, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_FOOD_FISH_OIL, upstream_of, PROD_FOOD_INFANT_FORMULA]
+  - [PROD_FOOD_SUPPLEMENT_CDMO, used_in, PROD_FOOD_SUPPLEMENT]
+  # ---------- snacks ----------
+  - [PROD_AGRI_NUT_PROCESSING, upstream_of, PROD_FOOD_NUTS]
+  - [PROD_FOOD_NUTS, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_FLOUR, upstream_of, PROD_FOOD_SPICY_STRIPS]
+  - [PROD_AGRI_EDIBLE_OIL, upstream_of, PROD_FOOD_SPICY_STRIPS]
+  - [PROD_FOOD_SPICY_STRIPS, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_KONJAC_SNACK, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_EGGS, upstream_of, PROD_FOOD_EGG_SNACK]
+  - [PROD_FOOD_EGG_SNACK, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_AGRI_CHICKEN_MEAT, upstream_of, PROD_FOOD_MEAT_SNACK]
+  - [PROD_FOOD_MEAT_SNACK, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_CANDY, uses_material, MAT_SUGAR]
+  - [PROD_FOOD_CANDY, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_PUFFED_SNACK, uses_material, MAT_GRAIN]
+  - [PROD_FOOD_PUFFED_SNACK, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_SNACK, upstream_of, PROD_RETL_DISCOUNT_SNACK]
+  - [PROD_RETL_DISCOUNT_SNACK, used_in, MKT_RETAIL_CONSUMER]
+  # ---------- bakery ----------
+  - [PROD_AGRI_FLOUR, upstream_of, PROD_FOOD_BAKERY]
+  - [PROD_AGRI_EGGS, upstream_of, PROD_FOOD_BAKERY]
+  - [PROD_FOOD_BAKERY, uses_material, MAT_SUGAR]
+  - [PROD_FOOD_BAKING_INGREDIENTS, upstream_of, PROD_FOOD_BAKERY]
+  - [PROD_AGRI_EDIBLE_OIL, upstream_of, PROD_FOOD_BAKING_INGREDIENTS]
+  - [PROD_FOOD_FROZEN_BAKERY, upstream_of, PROD_FOOD_PASTRY]
+  - [PROD_FOOD_FROZEN_BAKERY, upstream_of, PROD_FOOD_BREAD]
+  - [PROD_FOOD_BAKERY, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_BISCUIT, used_in, MKT_FOOD_CONSUMPTION]
+  # ---------- cooked ----------
+  - [PROD_AGRI_DUCK, upstream_of, PROD_FOOD_BRAISED_FOOD]
+  - [PROD_AGRI_CHICKEN_MEAT, upstream_of, PROD_FOOD_BRAISED_FOOD]
+  - [PROD_FOOD_FRESH_PORK, upstream_of, PROD_FOOD_COOKED_MEAT]
+  - [PROD_FOOD_BRAISED_FOOD, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_FOOD_COOKED_MEAT, used_in, MKT_FOOD_CONSUMPTION]
+
+sw_l3_map:
+  "340401": [SEG_FOOD_MEAT]
+  "340404": [SEG_FOOD_OTHER]
+  "340406": [SEG_FOOD_PREPARED]
+  "340407": [SEG_FOOD_SUPPLEMENTS]
+  "340501": [SEG_FOOD_BAIJIU]
+  "340601": [SEG_FOOD_BEER]
+  "340602": [SEG_FOOD_OTHER_LIQUOR]
+  "340701": [SEG_FOOD_SOFT_DRINKS]
+  "340702": [SEG_FOOD_DAIRY]
+  "340801": [SEG_FOOD_SNACKS]
+  "340802": [SEG_FOOD_BAKERY]
+  "340803": [SEG_FOOD_COOKED]
+  "340901": [SEG_FOOD_CONDIMENTS]

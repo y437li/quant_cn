@@ -1,0 +1,67 @@
+# Which documents DocumentDownloader fetches and where they land (plan 12 phase 2, D-101).
+# Per source: the curated metadata dataset, its columns, the PDF URL and file name templates,
+# download concurrency (workers, min_interval_s: the spacing of request starts, i.e. the site's rate
+# limit; run one download per site at a time: Eastmoney answered HTTP 567 at ~8-11 req/s, D-110)
+# and throttle_codes / cooldown_s (default [429, 567] and 900 s: every worker pauses on a throttle reply)
+# ({column} placeholders), and either a doc-type column or title rules (first match wins).
+
+sources:
+  cninfo:
+    dataset: cninfo_announcements
+    id_column: ann_id
+    code_column: sec_code
+    date_column: ann_date
+    title_column: title
+    url_template: "http://static.cninfo.com.cn/{adjunct_url}"
+    file_template: "{sec_code}_{ann_id}.pdf"
+    a_share_only: true
+    workers: 4
+    min_interval_s: 0.25
+    rules: &cninfo_rules
+      - {doc_type: semiannual, include: "半年度报告", exclude: &noise "摘要|英文|English|更正公告|补充公告|提示性公告|取消|延期|披露的公告|说明|意见"}
+      - {doc_type: annual, include: "年度报告", exclude: *noise}
+      - {doc_type: q1, include: "第一季度报告|一季度报告", exclude: *noise}
+      - {doc_type: q3, include: "第三季度报告|三季度报告", exclude: *noise}
+      - {doc_type: prospectus, include: "招股说明书", exclude: "摘要|提示性|附录|意见|核查|法律|发行结果|上市公告"}
+      - {doc_type: ir_record, include: "投资者关系活动记录|投资者关系管理信息|调研活动"}
+      - {doc_type: inquiry_reply, include: "问询函.*回复|回复.*问询函", exclude: "延期|提示性"}
+      - {doc_type: restructuring, include: "重组报告书|重大资产购买|发行股份购买资产.*报告书", exclude: "摘要|提示性"}
+      - {doc_type: major_contract, include: "重大合同|中标"}
+      - {doc_type: investment, include: "对外投资|投资建设|项目投资|投资项目"}
+  cninfo_kw:
+    dataset: cninfo_keyword_announcements
+    id_column: ann_id
+    code_column: sec_code
+    date_column: ann_date
+    title_column: title
+    url_template: "http://static.cninfo.com.cn/{adjunct_url}"
+    file_template: "{sec_code}_{ann_id}.pdf"
+    folder: cninfo
+    a_share_only: true
+    workers: 4
+    min_interval_s: 0.25
+    rules: *cninfo_rules
+  em_industry:
+    dataset: em_industry_reports
+    id_column: info_code
+    code_column: em_industry_code
+    date_column: publish_date
+    title_column: title
+    url_template: "https://pdf.dfcfw.com/pdf/H3_{info_code}_1.pdf"
+    file_template: "{em_industry_code}_{info_code}.pdf"
+    folder: eastmoney
+    doc_type: industry_report
+    workers: 3
+    min_interval_s: 0.3         # ~3 req/s; 8 workers at 0.12 s got HTTP 567 and a temporary IP block
+  em_stock:
+    dataset: em_stock_reports
+    id_column: info_code
+    code_column: stock_code
+    date_column: publish_date
+    title_column: title
+    url_template: "https://pdf.dfcfw.com/pdf/H3_{info_code}_1.pdf"
+    file_template: "{stock_code}_{info_code}.pdf"
+    folder: eastmoney
+    doc_type: stock_report
+    workers: 3
+    min_interval_s: 0.3

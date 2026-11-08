@@ -1,0 +1,13 @@
+# Shenwan 510000 综合 — product taxonomy prior (plan 12 phase 1, D-097). Format: README.md.
+# Members are diversified holding companies; their real products are mapped from documents (plan 12 ph4-5).
+sector: {sw_l1: "510000", name: 综合, name_en: Conglomerates}
+
+nodes:
+  - {id: SEG_CONG_DIVERSIFIED, type: segment, name: 综合, name_en: Diversified Conglomerates, aliases: [综合Ⅱ, 综合Ⅲ, 多元化控股]}
+
+edges:
+  - [SEG_CONG_DIVERSIFIED, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_CONG_DIVERSIFIED, serves, MKT_REAL_ESTATE]
+
+sw_l3_map:
+  "510101": [SEG_CONG_DIVERSIFIED]

@@ -1,0 +1,17 @@
+{"nodes": [{"id": "PROD_A", "t": "product", "n": "动力电池", "en": "Power Battery", "al": ["锂电"]},
+           {"id": "MKT_EV", "t": "end_market", "n": "新能源汽车", "en": "EV", "al": []}],
+ "edges": [["PROD_A", "used_in", "MKT_EV"]],
+ "sectors": {"630000": "电力设备", "280000": "汽车"},
+ "quick": ["300750.SZ"],
+ "companies": [
+  {"code": "300750.SZ", "name": "宁德时代", "l1": "630000", "l3": "锂电池", "sw": ["630700", "630701"],
+   "revenue": [{"item": "动力电池系统", "pct": 70.0, "gm": 23.1, "pids": ["PROD_A"], "how": "contains"}],
+   "links": [["002594.SZ", "c", 9.5], ["600104.SH", "C", null], ["300014.SZ", "P", null]]},
+  {"code": "002594.SZ", "name": "比亚迪", "l1": "280000", "l3": "乘用车", "sw": [],
+   "revenue": [{"item": "汽车", "pct": 80.0, "gm": 20.0, "pids": ["MKT_EV"], "how": "exact"},
+               {"item": "电池", "pct": 10.0, "gm": 15.0, "pids": ["PROD_A"], "how": "exact"}],
+   "links": [["300750.SZ", "s", 3.0]]},
+  {"code": "300014.SZ", "name": "亿纬锂能", "l1": "630000", "l3": "锂电池", "sw": [],
+   "revenue": [{"item": "动力电池", "pct": 50.0, "gm": 17.0, "pids": ["PROD_A"], "how": "exact"}], "links": []},
+  {"code": "600104.SH", "name": "上汽集团", "l1": "280000", "l3": "乘用车", "sw": [], "revenue": [], "links": []}
+ ]}
