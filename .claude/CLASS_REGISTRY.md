@@ -28,7 +28,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `TermSelector` | `quant_cn.calculation.term_selector` | 4 | none | Choose the two nearest expiries with at least `min_days` calendar days to expiry. | 1 | `calculation.VixCalculator` | `tests/calculation/test_term_selector.py` (TC-TS-001..002) | 2026-09-27 |
 | `VarianceStripCalculator` | `quant_cn.calculation.variance_strip_calculator` | 4 | none | sigma^2 = (2/T) sum(dK/K^2 e^{RT} Q(K)) - (1/T)(F/K0 - 1)^2 over puts below K0, calls above K0 and the call/put average at K0 | 1 | `calculation.VixCalculator` | `tests/calculation/test_variance_strip_calculator.py` (TC-VSC-001..003) | 2026-09-27 |
 | `VixCalculator` | `quant_cn.calculation.vix_calculator` | 4 | none | Orchestrate the white-paper steps per trading day: select near/next terms, rate per term, forward and K0, variance strip, interpolation on the chosen clock | 1 | `research_space/notebooks/20260927_vix_calculation.ipynb` | `tests/calculation/test_vix_calculator.py` (TC-VC-001..003) | 2026-09-27 |
-| `QuantCnCli` | `quant_cn.cli` | 8 | none | `python -m quant_cn.cli <command>`: doctor, download, compact, curate, rebuild, backup, project-catalog, query | 1 | `Makefile targets doctor, download, compact, lake-rebuild, lake-backup` | `tests/test_cli.py` (TC-QCC-001..007) | 2026-09-27 |
+| `QuantCnCli` | `quant_cn.cli` | 8 | none | `python -m quant_cn.cli <command>`: doctor, download, compact, curate, rebuild, backup, project-catalog, query | 1 | `Makefile targets doctor, download, compact, lake-rebuild, lake-backup`, `cli.DocumentCommands` | `tests/test_cli.py` (TC-QCC-001..007) | 2026-09-27 |
 | `ResearchCommands` | `quant_cn.cli` | 8 | none | The research-side CLI commands, kept apart so QuantCnCli stays within its size limit: `release-lags` (D-086) and `evaluate` (factor campaign reports and trial log, plan 04 phase 5) | 0 | `cli.QuantCnCli` | `tests/test_cli.py` (TC-QCC-008..009) | 2026-09-27 |
 | `BaseApiClient` | `quant_cn.core.base_api_client` | 1 | ABC | Abstract vendor client: one logical query returns all pages as one DataFrame. | 1 | `data_loading.TushareClient`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
 | `BaseFetchLog` | `quant_cn.core.base_fetch_log` | 1 | ABC | Abstract record of which (dataset, key) pairs are fully downloaded. | 5 | `lake.FetchLog`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher` | `tests/lake/test_fetch_log.py` (TC-FL-001..003) | 2026-09-27 |
@@ -36,7 +36,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `BaseRunLog` | `quant_cn.core.base_run_log` | 1 | ABC | Abstract append-only log of runs and per-key events | 3 | `lake.RunLog`, `core.BaseFetcher.run`, `pipeline.LocalRunner`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `pipeline.PrefectRunner`, `data_loading.DateWindowFetcher` | `tests/lake/test_run_log.py` (TC-RL-001..001) | 2026-09-27 |
 | `BaseStep` | `quant_cn.core.base_step` | 1 | ABC | Abstract unit of pipeline work: list its units, then run and report. | 3 | `pipeline.FetchStep`, `pipeline.BaseRunner.run`, `pipeline.LocalRunner.run`, `pipeline.CompactStep`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep`, `pipeline.EvaluationStep`, `pipeline.FeatureStep` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
 | `BaseStore` | `quant_cn.core.base_store` | 1 | ABC | Abstract sink for raw fetch results and curated partitions. | 2 | `lake.ParquetWriter`, `core.BaseFetcher`, `lake.Compactor`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
-| `Clock` | `quant_cn.core.clock` | 1 | none | The single source of wall time, monotonic time and sleeping | 4 | `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.FetcherFactory`, `data_loading.PeriodSweepFetcher`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `lake.RebuildAudit`, `cli.ResearchCommands` | `tests/core/test_clock.py` (TC-CL-001..002) | 2026-09-27 |
+| `Clock` | `quant_cn.core.clock` | 1 | none | The single source of wall time, monotonic time and sleeping | 4 | `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.FetcherFactory`, `data_loading.PeriodSweepFetcher`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `lake.RebuildAudit`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader`, `data_loading.RequestPacer` | `tests/core/test_clock.py` (TC-CL-001..002) | 2026-09-27 |
 | `LakeConfig` | `quant_cn.core.config` | 1 | BaseModel | Where the lake lives and whether it may sit inside the repository. | 0 | `core.Config` | `tests/core/test_config.py` (TC-C-001..001) | 2026-09-27 |
 | `TushareConfig` | `quant_cn.core.config` | 1 | BaseModel | Tushare endpoint, paging, retry and rate-limit settings | 0 | `core.Config`, `data_loading.TushareClient` | `tests/core/test_config.py` (TC-C-002..002) | 2026-09-27 |
 | `DownloadConfig` | `quant_cn.core.config` | 1 | BaseModel | Which datasets to download, in what order, and from which start dates (D-015b). | 0 | `core.Config` | `tests/core/test_config.py` (TC-C-004..004) | 2026-09-27 |
@@ -45,7 +45,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `UniverseConfig` | `quant_cn.core.config` | 1 | BaseModel | Rules of the tradeable universe per session (FACTOR_TESTING_DESIGN §11, D-054). | 0 | `core.Config`, `pipeline.UniverseStep` | `tests/core/test_config.py` (TC-C-011..011) | 2026-09-27 |
 | `FuturesCategory` | `quant_cn.core.config` | 1 | BaseModel | One member-category label that `fut_holding` lists among real brokers (D-079). | 0 | `core.Config`, `lake.DerivedViews` | `tests/core/test_config.py` (TC-C-009..009) | 2026-09-27 |
 | `TickerAlias` | `quant_cn.core.config` | 1 | BaseModel | One retired code and the code its company trades on afterwards (D-053, D-089). | 0 | `core.Config`, `lake.TickerAliasMap`, `lake.DerivedViews` | `tests/core/test_config.py` (TC-C-010..010) | 2026-09-27 |
-| `Config` | `quant_cn.core.config` | 1 | BaseModel | The typed configuration injected everywhere: YAML defaults, machine overrides, environment. | 3 | `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands` | `tests/core/test_config.py` (TC-C-001..013) | 2026-09-27 |
+| `Config` | `quant_cn.core.config` | 1 | BaseModel | The typed configuration injected everywhere: YAML defaults, machine overrides, environment. | 3 | `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands`, `cli.DocumentCommands` | `tests/core/test_config.py` (TC-C-001..013) | 2026-09-27 |
 | `ValuesFromDataset` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Enumerate sweep keys from another curated dataset (e.g | 0 | `core.SweepSpec` | `tests/data_loading/test_fetcher_factory.py` (TC-FF-003..003) | 2026-09-27 |
 | `SweepSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | How a dataset is swept so each call returns the whole market for one key. | 1 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
 | `CuratedSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Where a dataset lands in `curated/` and which date column drives its yearly partition. | 0 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
@@ -83,7 +83,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `RepoFiles` | `quant_cn.core.docs.repo_files` | 1 | none | The set of repository files a linter should see: `git ls-files --cached --others --exclude-standard`, so .gitignore (caches, .env, lake guards) decides what is ignored. | 2 | `core.docs.IndexChecker`, `core.docs.ContractLinter`, `core.docs.DocTableBuilder`, `cli.ServiceBuilder` | `tests/core/docs/test_repo_files.py` (TC-RF-001..003) | 2026-09-27 |
 | `SizeChecker` | `quant_cn.core.docs.size_checker` | 1 | BaseChecker | Fail any .py file over 600 lines, class over 300, function or method over 50 (physical lines, docstrings included), and INDEX.md / SKILL.md / execution plan over 300 lines. | 1 | `core.docs.ContractLinter` | `tests/core/docs/test_size_checker.py` (TC-SC-001..002) | 2026-09-27 |
 | `Schema` | `quant_cn.core.schema` | 1 | none | Declare and enforce a DataFrame shape: text columns are pandas `string`, all other declared columns are `float64`, and the primary key is unique and non-null. | 4 | `core.DatasetSpec.build_schema`, `lake.LakeReader` | `tests/core/test_schema.py` (TC-S-001..006) | 2026-09-27 |
-| `StepReport` | `quant_cn.core.step_report` | 1 | none | Counts and status of one step (usually one dataset's fetch) so runs can be summarised. | 0 | `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `pipeline.FetchStep`, `pipeline.PipelineReport`, `pipeline.CompactStep`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep`, `pipeline.EvaluationStep`, `pipeline.FeatureStep` | `tests/core/test_base_fetcher.py` (TC-BF-001..001) | 2026-09-27 |
+| `StepReport` | `quant_cn.core.step_report` | 1 | none | Counts and status of one step (usually one dataset's fetch) so runs can be summarised. | 0 | `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `pipeline.FetchStep`, `pipeline.PipelineReport`, `pipeline.CompactStep`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `data_loading.DocumentDownloader` | `tests/core/test_base_fetcher.py` (TC-BF-001..001) | 2026-09-27 |
 | `TickerNormalizer` | `quant_cn.core.ticker_normalizer` | 1 | none | Turn common A-share ticker spellings into Tushare `ts_code` and check `ts_code` validity. | 2 | (none yet) | `tests/core/test_ticker_normalizer.py` (TC-TN-001..004) | 2026-09-27 |
 | `AkshareClient` | `quant_cn.data_loading.akshare_client` | 3 | BaseApiClient | Call one AkShare function per query (`api_name` = function name, `params` = its keyword arguments) and return its frame with dates normalised to YYYYMMDD strings, so the lake's schema and PIT rules apply unchanged | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_akshare_client.py` (TC-AKC-001..002) | 2026-09-27 |
 | `BaostockClient` | `quant_cn.data_loading.baostock_client` | 3 | BaseApiClient | Call one BaoStock query per request (`api_name` = method, e.g | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_baostock_client.py` (TC-BSC-001..003) | 2026-09-27 |
@@ -93,7 +93,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `DateSweepFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Whole-market daily sweeps: trade_date and nav_date keys are trading days (daily, adj_factor, daily_basic, moneyflow, stk_limit, fund_nav) | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-DSF-001..005) | 2026-09-27 |
 | `PeriodSweepFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Whole-market report-period sweeps (the *_vip fundamentals): one key per quarter end. | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-PSF-001..001) | 2026-09-27 |
 | `DateWindowFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Range-only endpoints swept by calendar window (D-063): one call per month ("YYYYMM" keys) or year ("YYYY" keys) with start_date / end_date clipped to the run range | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-DWF-001..004) | 2026-09-27 |
-| `HttpTransport` | `quant_cn.data_loading.http_transport` | 3 | none | Send one JSON POST and return the decoded JSON object. | 1 | `data_loading.TushareClient` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..001) | 2026-09-27 |
+| `HttpTransport` | `quant_cn.data_loading.http_transport` | 3 | none | Send one HTTP request and return the decoded JSON object or the raw bytes (JSON POST, form POST, GET JSON, GET bytes). | 4 | `data_loading.TushareClient`, `data_loading.CninfoClient`, `data_loading.EastmoneyReportClient`, `data_loading.BaseWebClient`, `data_loading.DocumentDownloader` | `tests/data_loading/test_tushare_client.py`, `test_http_transport.py` (TC-TC-001, TC-HT-001) | 2026-09-27 |
 | `TushareClient` | `quant_cn.data_loading.tushare_client` | 3 | BaseApiClient | Query Tushare Pro: one logical query follows limit/offset paging until a short page and returns all rows | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..009) | 2026-09-27 |
 | `FactorInputs` | `quant_cn.factor.base_factor` | 5 | none | The panels a factor may read, loaded once by FactorFactory for all factors of a run | 1 | `factor.BaseFactor`, `factor.FactorFactory`, `factor.library.EarningsYieldFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor` | `tests/factor/test_base_factor.py` (TC-FIN-001..001) | 2026-09-27 |
 | `BaseFactor` | `quant_cn.factor.base_factor` | 5 | ABC | Abstract factor: declares which inputs, fundamentals fields and daily_basic columns it needs and how many sessions of price history before the first output date | 3 | `factor.FactorFactory`, `factor.library.*`, `factor.library.EarningsYieldFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor`, `pipeline.FeatureStep` | `tests/factor/test_base_factor.py` (TC-BFA-001..002) | 2026-09-27 |
@@ -114,12 +114,12 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `EffectiveDateResolver` | `quant_cn.lake.effective_date_resolver` | 2 | none | Turn a dataset's `known_on` value into `effective_date`, the first China trading session the row may be used (FACTOR_TESTING_DESIGN §11): as_is          -> that session, or the next one if the day is closed (same-day data) | 2 | (none yet) | `tests/lake/test_effective_date_resolver.py` (TC-EDR-001..006) | 2026-09-27 |
 | `ExposureReader` | `quant_cn.lake.exposure_reader` | 2 | none | Per universe member and session: the Shenwan L1 group in effect (derived.industry_l1, l1_grouping = the PIT row or the back-filled first-known L1, flagged | 1 | `pipeline.FeatureStep`, `cli.ServiceBuilder` | `tests/lake/test_lake_reader.py` (TC-EXR-001..001) | 2026-09-27 |
 | `FetchLog` | `quant_cn.lake.fetch_log` | 2 | BaseFetchLog | Record finished (dataset, key) pairs in `meta.fetch_log`, mirror them to `meta/fetch_log.parquet` on save, and rebuild the table after the DuckDB file is lost. | 6 | `cli.QuantCnCli`, `cli.ServiceBuilder` | `tests/lake/test_fetch_log.py` (TC-FL-001..006) | 2026-09-27 |
-| `LakeCatalog` | `quant_cn.lake.lake_catalog` | 2 | none | Own the lake's single DuckDB connection (`meta/quant_cn.duckdb`): schemas `raw`, `curated`, `meta` | 8 | `lake.FetchLog`, `lake.RunLog`, `lake.LakeQuery`, `lake.Compactor`, `pipeline.FetchStep.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `lake.DerivedViews`, `lake.PitAligner`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `lake.QualityViews`, `lake.LakeReader`, `lake.TickerAliasMap`, `cli.ResearchCommands` | `tests/lake/test_lake_catalog.py` (TC-LC-001..005) | 2026-09-27 |
-| `LakeQuery` | `quant_cn.lake.lake_query` | 2 | none | Run read queries against the catalog views | 5 | `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `cli.ResearchCommands` | `tests/lake/test_lake_query.py` (TC-LQ-001..005) | 2026-09-27 |
+| `LakeCatalog` | `quant_cn.lake.lake_catalog` | 2 | none | Own the lake's single DuckDB connection (`meta/quant_cn.duckdb`): schemas `raw`, `curated`, `meta` | 8 | `lake.FetchLog`, `lake.RunLog`, `lake.LakeQuery`, `lake.Compactor`, `pipeline.FetchStep.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `lake.DerivedViews`, `lake.PitAligner`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `lake.QualityViews`, `lake.LakeReader`, `lake.TickerAliasMap`, `cli.ResearchCommands`, `cli.DocumentCommands` | `tests/lake/test_lake_catalog.py` (TC-LC-001..005) | 2026-09-27 |
+| `LakeQuery` | `quant_cn.lake.lake_query` | 2 | none | Run read queries against the catalog views | 5 | `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader` | `tests/lake/test_lake_query.py` (TC-LQ-001..005) | 2026-09-27 |
 | `LakeReader` | `quant_cn.lake.lake_reader` | 2 | none | The read API factors, the universe step and notebooks use (SRC_DESIGN §2.2b, D-089): one curated dataset as a panel, dense or sparse prices, point-in-time fundamentals, reference tables (in-memory frames and view discovery: LakeQuery) | 5 | `cli.ServiceBuilder`, (none yet), `factor.FactorFactory`, `pipeline.EvaluationStep`, `pipeline.FeatureStep` | `tests/lake/test_lake_reader.py` (TC-LRD-001..007) | 2026-09-27 |
 | `PanelCache` | `quant_cn.lake.panel_cache` | 2 | none | Keep recently read panels in memory, keyed by (method, arguments), least recently used evicted first once the total size exceeds `max_bytes` | 4 | `lake.LakeReader`, `cli.ServiceBuilder` | `tests/lake/test_panel_cache.py` (TC-PCH-001..003) | 2026-09-27 |
 | `ParquetWriter` | `quant_cn.lake.parquet_writer` | 2 | BaseStore | Write raw fetch results and curated partitions as zstd parquet, atomically (write `.tmp`, fsync, rename), so a crash never leaves a half-written file. | 6 | `cli.QuantCnCli`, `cli.ServiceBuilder`, `pipeline.UniverseStep`, `pipeline.EvaluationStep`, `pipeline.FeatureStep` | `tests/lake/test_parquet_writer.py` (TC-PW-001..008) | 2026-09-27 |
-| `PitAligner` | `quant_cn.lake.pit_aligner` | 2 | none | Align fundamentals to trading days without look-ahead | 2 | `pipeline.CuratePipeline`, `research_space/main.ipynb`, `pipeline.DeriveStep`, `cli.ServiceBuilder`, `lake.LakeReader` | `tests/lake/test_pit_aligner.py` (TC-PA-001..005) | 2026-09-27 |
+| `PitAligner` | `quant_cn.lake.pit_aligner` | 2 | none | Align fundamentals to trading days without look-ahead | 2 | `pipeline.CuratePipeline`, `research_space/main.ipynb`, `pipeline.DeriveStep`, `cli.ServiceBuilder`, `lake.LakeReader` | `tests/lake/test_pit_aligner.py` (TC-PAD-001..003) | 2026-09-27 |
 | `ProjectCatalog` | `quant_cn.lake.project_catalog` | 2 | none | Rebuild schema `project` in the lake's DuckDB from the repository: folders, files, classes, methods, used_by, contracts, test_cases, decisions, plans, phases, datasets, lint_findings, plus views tree, class_graph, stale and todo | 1 | `cli.ServiceBuilder` | `tests/lake/test_project_catalog.py` (TC-PJC-001..004) | 2026-09-27 |
 | `QualityViews` | `quant_cn.lake.quality_views` | 2 | none | Create the `quality` schema: cross-source comparisons that report, never overwrite (D-065) | 1 | `lake.DerivedViews.refresh` | `tests/lake/test_quality_views.py` (TC-QV-001..003) | 2026-09-27 |
 | `RebuildAudit` | `quant_cn.lake.rebuild_audit` | 2 | none | Record, on `rebuild`, what changed below raw/ since the last one | 2 | `cli.QuantCnCli` | `tests/lake/test_rebuild_audit.py` (TC-RA-001..002) | 2026-09-27 |
@@ -155,6 +155,63 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `ChartTheme` | `quant_cn.visualization.chart_theme` | 7 | none | The colour and font tokens every chart reads, so charts are written against roles, never raw hex | 1 | `visualization.BaseChart`, `visualization.PriceChart`, `visualization.FactorChart` | `tests/visualization/test_charts.py` (TC-CT-001..001) | 2026-09-27 |
 | `FactorChart` | `quant_cn.visualization.factor_chart` | 7 | BaseChart | The four views of a factor campaign (plan 04 phase 6), one single-series chart each so identity never rests on colour: "ic_series" (IC_SERIES) the rolling mean IC of one factor and horizon with a band of +/- 1.96 sd / sqrt(window / h), the effective number of non-overlapping observations | 1 | `research_space/notebooks/20260930_factor_campaign_01.ipynb`, `plan 06 ReportBuilder` | `tests/visualization/test_factor_chart.py` (TC-FC-001..004) | 2026-09-27 |
 | `PriceChart` | `quant_cn.visualization.price_chart` | 7 | BaseChart | Daily candles (backward-adjusted by default: OHLC x adj_factor) over a volume panel for one ticker | 1 | `research_space/main.ipynb` | `tests/visualization/test_charts.py` (TC-PC-001..003) | 2026-09-27 |
+| `DocumentRule` | `quant_cn.core.document_source` | 1 | BaseModel | One title rule: a title matching `include` and not `exclude` (regular expressions) is a document of `doc_type` | 0 | `core.DocumentSource`, `data_loading.DocumentClassifier` | `tests/core/test_document_source.py` (TC-DSR-001..001) | 2026-11-07 |
+| `DocumentSource` | `quant_cn.core.document_source` | 1 | BaseModel | One document source of config/documents.yaml: the curated metadata dataset listing the documents, its key columns, the PDF URL and file-name templates (`{column}` placeholders), the folder under `documents/`, and how a row gets its doc type (a fixed `doc_type` or title `rules`, first match wins) | 0 | `core.Config`, `data_loading.DocumentClassifier`, `data_loading.DocumentDownloader` | `tests/core/test_document_source.py` (TC-DSR-001..002) | 2026-11-07 |
+| `DocumentViews` | `quant_cn.lake.document_views` | 2 | none | Expose the document manifest in the catalog. | 1 | `lake.LakeCatalog.refresh_views`, `cli.DocumentCommands` | `tests/lake/test_document_views.py` (TC-DOV-001..001) | 2026-11-07 |
+| `RequestPacer` | `quant_cn.data_loading.request_pacer` | 3 | none | Run one request callable at a time-spaced rate with retries: request starts are at least `min_interval_s` apart across all threads sharing the pacer, and a call raising OSError, ValueError or KeyError is retried after `retry_sleep_s` up to `retries` times | 2 | `data_loading.BaseWebClient`, `data_loading.DocumentDownloader` | `tests/data_loading/test_document_downloader.py` (TC-RP-001..002) | 2026-11-07 |
+| `BaseWebClient` | `quant_cn.data_loading.base_web_client` | 3 | BaseApiClient | Base for vendor clients that page a public website's JSON API (CNINFO, Eastmoney). | 1 | `data_loading.CninfoClient`, `data_loading.EastmoneyReportClient` | `tests/data_loading/test_web_clients.py` (TC-BWC-001..002) | 2026-11-07 |
+| `CninfoClient` | `quant_cn.data_loading.cninfo_client` | 3 | BaseWebClient | List CNINFO announcements for the whole A-share market (`column=szse` covers SZ, SH and BJ) over a date range, optionally one category (e.g. | 2 | `cli.ServiceBuilder` | `tests/data_loading/test_web_clients.py` (TC-CNC-001..003) | 2026-11-07 |
+| `EastmoneyReportClient` | `quant_cn.data_loading.eastmoney_report_client` | 3 | BaseWebClient | List Eastmoney (东方财富) broker research reports published in a date range for one report kind (`q_type` "0" stock, "1" industry, "2" strategy), following `pageNo` until `TotalPage`. | 2 | `cli.ServiceBuilder` | `tests/data_loading/test_web_clients.py` (TC-EMR-001..002) | 2026-11-07 |
+| `DocumentClassifier` | `quant_cn.data_loading.document_classifier` | 3 | none | Give each listed document its type: the source's fixed `doc_type`, or the first title rule whose `include` matches and whose `exclude` does not (e.g. | 1 | `data_loading.DocumentDownloader` | `tests/data_loading/test_document_downloader.py` (TC-DCL-001..002) | 2026-11-07 |
+| `DocumentDownloader` | `quant_cn.data_loading.document_downloader` | 3 | none | Download the PDFs listed in a document source's curated metadata (config/documents.yaml) into `documents/<folder>/<doc_type>/<YYYY>/<MM>/<file>` (D-101). | 3 | `cli.DocumentCommands` | `tests/data_loading/test_document_downloader.py` (TC-DD-001..004) | 2026-11-07 |
+| `DocumentCommands` | `quant_cn.cli` | 8 | none | The document-side CLI command `download-docs` (plan 12 phase 2, D-101): for each source, print candidate counts per doc type (`--dry-run`) or download the PDFs not yet in the manifest and print the outcome | 1 | `cli.QuantCnCli` | `tests/test_cli.py` (TC-QCC-010..010) | 2026-11-07 |
+| `ReportPages` | `quant_cn.quant_cn.industry_graph.pdf_text_extractor` | 4 | none | The text of one report PDF, page by page, plus its outline (bookmarks) when present. | 1 | `industry_graph.PdfTextExtractor`, `industry_graph.SectionDetector`, `industry_graph.AnnualReportParser` | `tests/industry_graph/test_report_parsing.py` (TC-PTE-001..001) | 2026-11-07 |
+| `PdfTextExtractor` | `quant_cn.quant_cn.industry_graph.pdf_text_extractor` | 4 | none | Read the native text layer of a PDF page by page (no OCR; D-102) and remove the running header and footer: a line with at least four letters or CJK characters that, with digits ignored, appears on at least `header_share` of the pages (e.g. | 2 | `industry_graph.AnnualReportParser` | `tests/industry_graph/test_report_parsing.py` (TC-PTE-001..003) | 2026-11-07 |
+| `Section` | `quant_cn.quant_cn.industry_graph.section_detector` | 4 | none | One located section: its key, the heading-matched start page and the page before the next section (or the chapter end), 1-based, inclusive. | 0 | `industry_graph.SectionDetector`, `industry_graph.ParsedReport` | `tests/industry_graph/test_report_parsing.py` (TC-SD-001..001) | 2026-11-07 |
+| `SectionDetector` | `quant_cn.quant_cn.industry_graph.section_detector` | 4 | none | Locate the MD&A chapter (管理层讨论与分析, 第三节 in the 2021 standard; 第二节/第四节 in older or exchange-specific layouts; 第二章 董事会报告 for A+H; BSE 业务概要 / 第五节 重大事件) and the chain sections inside it by heading text, not by number. | 3 | `industry_graph.AnnualReportParser` | `tests/industry_graph/test_report_parsing.py` (TC-SD-001..005) | 2026-11-07 |
+| `CounterpartyRow` | `quant_cn.quant_cn.industry_graph.counterparty_table_parser` | 4 | none | One ranked customer or supplier of a top-5 table. | 1 | `industry_graph.CounterpartyTable`, `industry_graph.CounterpartyTableParser` | `tests/industry_graph/test_report_parsing.py` (TC-CTP-001..001) | 2026-11-07 |
+| `CounterpartyTable` | `quant_cn.quant_cn.industry_graph.counterparty_table_parser` | 4 | none | The top-5 customers or suppliers of one report: stated totals and the ranked rows (empty when only the totals sentence is disclosed, as on the SSE main board). | 1 | `industry_graph.CounterpartyTableParser`, `industry_graph.ParsedReport` | `tests/industry_graph/test_report_parsing.py` (TC-CTP-004..004) | 2026-11-07 |
+| `CounterpartyTableParser` | `quant_cn.quant_cn.industry_graph.counterparty_table_parser` | 4 | none | Parse the "主要销售客户和主要供应商情况" block into a customer and a supplier CounterpartyTable. | 1 | `industry_graph.AnnualReportParser` | `tests/industry_graph/test_report_parsing.py` (TC-CTP-001..010) | 2026-11-07 |
+| `ParsedReport` | `quant_cn.quant_cn.industry_graph.annual_report_parser` | 4 | none | What the rule-based pass extracts from one annual report. | 1 | `industry_graph.AnnualReportParser` | `tests/industry_graph/test_report_parsing.py` (TC-ARP-001..001) | 2026-11-07 |
+| `AnnualReportParser` | `quant_cn.quant_cn.industry_graph.annual_report_parser` | 4 | none | Run the rule-based pass of plan 12 phase 3 on one annual report: read the pages (PdfTextExtractor), locate the MD&A chapter and chain sections (SectionDetector), and parse the top-5 customer and supplier tables (CounterpartyTableParser). | 2 | `research_space` | `tests/industry_graph/test_report_parsing.py` (TC-ARP-001..003) | 2026-11-07 |
+| `LlmReply` | `quant_cn.quant_cn.core.base_llm_client` | 1 | none | One LLM answer as parsed JSON, with the model and token usage, and whether it came from the response cache (a cached reply costs nothing and makes rebuilds deterministic). | 0 | `core.BaseLlmClient`, `data_loading.DeepSeekClient` | `tests/data_loading/test_deep_seek_client.py` (TC-DSC-001..001) | 2026-11-07 |
+| `BaseLlmClient` | `quant_cn.quant_cn.core.base_llm_client` | 1 | ABC | Abstract chat-completion client that returns a JSON object: one system prompt, one user message, an optional model override. | 1 | `data_loading.DeepSeekClient`, `industry_graph.ApplicationExtractor` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-11-07 |
+| `LlmConfig` | `quant_cn.quant_cn.core.config` | 1 | BaseModel | The LLM endpoint used for extraction (D-098): OpenAI-compatible chat completions URL, default model, limits, and the API key, which comes from env DEEPSEEK_API_KEY only. | 0 | `core.Config`, `data_loading.DeepSeekClient` | `tests/core/test_config.py` (TC-C-014..014) | 2026-11-07 |
+| `DeepSeekClient` | `quant_cn.quant_cn.data_loading.deep_seek_client` | 3 | BaseLlmClient | Call the DeepSeek (OpenAI-compatible) chat-completions endpoint with JSON output and temperature 0 and model reasoning off unless LlmConfig.thinking, paced and retried by RequestPacer. | 4 | `research_space` | `tests/data_loading/test_deep_seek_client.py` (TC-DSC-001..003) | 2026-11-07 |
+| `Evidence` | `quant_cn.quant_cn.industry_graph.application_extractor` | 4 | none | A verbatim quote and the page it was found on (after the quote check). | 0 | `industry_graph.ApplicationResult` | `tests/industry_graph/test_application_extractor.py` (TC-AE-002..002) | 2026-11-07 |
+| `ApplicationResult` | `quant_cn.quant_cn.industry_graph.application_extractor` | 4 | none | What the model found in one report, after validation: per revenue line the downstream applications (taxonomy node or proposed name, main/secondary, evidence) and customer types; named counterparties with role and evidence; and the items dropped because their quote was not in the text. | 0 | `industry_graph.ApplicationExtractor` | `tests/industry_graph/test_application_extractor.py` (TC-AE-001..001) | 2026-11-07 |
+| `ApplicationExtractor` | `quant_cn.quant_cn.industry_graph.application_extractor` | 4 | none | Send the business / industry pages of one report, its revenue lines and the candidate downstream taxonomy nodes to the LLM, and keep only answers whose verbatim quote is found in the supplied pages (whitespace ignored). | 1 | `research_space` | `tests/industry_graph/test_application_extractor.py` (TC-AE-001..003) | 2026-11-07 |
+| `ApplicationItem` | `quant_cn.quant_cn.industry_graph.application_extractor` | 4 | BaseModel | One downstream application of a revenue line as the LLM returned it. | 0 | `industry_graph.LineItem` | `tests/industry_graph/test_application_extractor.py` (TC-AE-003..003) | 2026-11-07 |
+| `LineItem` | `quant_cn.quant_cn.industry_graph.application_extractor` | 4 | BaseModel | One revenue line with its applications and customer types as returned. | 0 | `industry_graph.ApplicationReply` | `tests/industry_graph/test_application_extractor.py` (TC-AE-003..003) | 2026-11-07 |
+| `CounterpartyItem` | `quant_cn.quant_cn.industry_graph.application_extractor` | 4 | BaseModel | One company named in the text, with its role, as returned. | 0 | `industry_graph.ApplicationReply` | `tests/industry_graph/test_application_extractor.py` (TC-AE-003..003) | 2026-11-07 |
+| `ApplicationReply` | `quant_cn.quant_cn.industry_graph.application_extractor` | 4 | BaseModel | The whole LLM reply of one report, validated before the quote check. | 0 | `industry_graph.ApplicationExtractor` | `tests/industry_graph/test_application_extractor.py` (TC-AE-003..003) | 2026-11-07 |
+| `QuoteChecker` | `quant_cn.quant_cn.industry_graph.quote_checker` | 4 | none | Hold the pages sent to an LLM and accept a returned quote only if it occurs verbatim (whitespace ignored) on one of them. | 2 | `industry_graph.ApplicationExtractor`, `industry_graph.ValuationExtractor` | `tests/industry_graph/test_valuation_extractor.py` (TC-QC-001..002) | 2026-11-07 |
+| `ValuationItem` | `quant_cn.quant_cn.industry_graph.valuation_extractor` | 4 | BaseModel | Base of the reply shapes: unknown keys ignored, so a richer reply still validates. | 0 | `industry_graph.ValuationReply` | `tests/industry_graph/test_valuation_extractor.py` (TC-VE-003..003) | 2026-11-07 |
+| `ValuationReply` | `quant_cn.quant_cn.industry_graph.valuation_extractor` | 4 | ValuationItem | The LLM reply for one broker report, before the quote check: rating, target price, methods (multiple, implied or target, base year), forecasts, comparables, assumptions. | 0 | `industry_graph.ValuationExtractor` | `tests/industry_graph/test_valuation_extractor.py` (TC-VE-003..003) | 2026-11-07 |
+| `ValuationResult` | `quant_cn.quant_cn.industry_graph.valuation_extractor` | 4 | none | One report's valuation after validation: only quote-checked target price, methods and assumptions; methods carry `multiple_kind` (D-109) and a base year; comparables carry a ts_code when it could be resolved. | 0 | `industry_graph.ValuationExtractor` | `tests/industry_graph/test_valuation_extractor.py` (TC-VE-001..001) | 2026-11-07 |
+| `ValuationExtractor` | `quant_cn.quant_cn.industry_graph.valuation_extractor` | 4 | none | Extract how a broker values a company (plan 13, D-105, D-109). | 2 | `research_space` | `tests/industry_graph/test_valuation_extractor.py` (TC-VE-001..003) | 2026-11-07 |
+| `QuarterlyNoteItem` | `quant_cn.quant_cn.industry_graph.quarterly_note_extractor` | 4 | BaseModel | One fact the LLM found in the notes, before the quote check. | 0 | `industry_graph.QuarterlyNoteReply` | `tests/industry_graph/test_quarterly_note_extractor.py` (TC-QNE-003..003) | 2026-11-07 |
+| `QuarterlyNoteReply` | `quant_cn.quant_cn.industry_graph.quarterly_note_extractor` | 4 | BaseModel | The LLM reply for one quarterly report. | 0 | `industry_graph.QuarterlyNoteExtractor` | `tests/industry_graph/test_quarterly_note_extractor.py` (TC-QNE-003..003) | 2026-11-07 |
+| `QuarterlyNoteResult` | `quant_cn.quant_cn.industry_graph.quarterly_note_extractor` | 4 | none | The quote-checked facts of one quarterly report. | 0 | `industry_graph.QuarterlyNoteExtractor` | `tests/industry_graph/test_quarterly_note_extractor.py` (TC-QNE-002..002) | 2026-11-07 |
+| `QuarterlyNoteExtractor` | `quant_cn.quant_cn.industry_graph.quarterly_note_extractor` | 4 | none | Q1 and Q3 reports carry no business chapter; their only narrative is the "主要会计数据、 财务指标发生变动的情况及原因" table and the "其他提醒事项" note. | 3 | `lake` | `tests/industry_graph/test_quarterly_note_extractor.py` (TC-QNE-001..003) | 2026-11-07 |
+| `TaxonomyNode` | `quant_cn.quant_cn.industry_graph.product_taxonomy` | 4 | none | One node of the taxonomy as the matcher and views need it. | 1 | `industry_graph.ProductTaxonomy`, `industry_graph.ProductMatcher` | `tests/industry_graph/test_product_matcher.py` (TC-PT-001..001) | 2026-11-07 |
+| `ProductTaxonomy` | `quant_cn.quant_cn.industry_graph.product_taxonomy` | 4 | none | Load config/industry_chain/*.yaml once: nodes (names and aliases always strings, even when YAML reads "1,4-丁二醇" style values as numbers), the merged-id map, and the Shenwan L3 → segment map (`sw_l3_map`). | 4 | `industry_graph.ProductMatcher`, `research_space` | `tests/industry_graph/test_product_matcher.py` (TC-PT-001..003) | 2026-11-07 |
+| `ProductMatch` | `quant_cn.quant_cn.industry_graph.product_matcher` | 4 | none | One taxonomy node a revenue line maps to, with how it was found. | 0 | `industry_graph.ProductMatcher` | `tests/industry_graph/test_product_matcher.py` (TC-PM-001..001) | 2026-11-07 |
+| `ProductMatcher` | `quant_cn.quant_cn.industry_graph.product_matcher` | 4 | none | Map a company's revenue line to taxonomy nodes without the LLM. | 2 | `research_space` | `tests/industry_graph/test_product_matcher.py` (TC-PM-001..004) | 2026-11-07 |
+| `ReportDigest` | `quant_cn.quant_cn.industry_graph.broker_view_synthesizer` | 4 | none | One broker report reduced to what the synthesis needs: the quote-checked fields of a ValuationExtractor result (plan 13), tagged with a short id the model must cite. | 1 | `industry_graph.BrokerViewSynthesizer` | `tests/industry_graph/test_broker_view_synthesizer.py` (TC-BVS-001..001) | 2026-11-07 |
+| `ViewPoint` | `quant_cn.quant_cn.industry_graph.broker_view_synthesizer` | 4 | BaseModel | One synthesized point with the report refs it rests on. | 0 | `industry_graph.BrokerViewReply` | `tests/industry_graph/test_broker_view_synthesizer.py` (TC-BVS-002..002) | 2026-11-07 |
+| `BrokerViewReply` | `quant_cn.quant_cn.industry_graph.broker_view_synthesizer` | 4 | BaseModel | The LLM reply before the citation check. | 0 | `industry_graph.BrokerViewSynthesizer` | `tests/industry_graph/test_broker_view_synthesizer.py` (TC-BVS-003..003) | 2026-11-07 |
+| `BrokerView` | `quant_cn.quant_cn.industry_graph.broker_view_synthesizer` | 4 | none | The synthesized view after the citation check. | 0 | `industry_graph.BrokerViewSynthesizer` | `tests/industry_graph/test_broker_view_synthesizer.py` (TC-BVS-001..001) | 2026-11-07 |
+| `BrokerViewSynthesizer` | `quant_cn.quant_cn.industry_graph.broker_view_synthesizer` | 4 | none | Synthesize the broker view of one product, Shenwan L3 industry or company from many report digests (user, 2026-11-08: the broker part must be the pattern across reports, not a list). | 1 | `lake` | `tests/industry_graph/test_broker_view_synthesizer.py` (TC-BVS-001..003) | 2026-11-07 |
+| `ModeClaim` | `quant_cn.quant_cn.industry_graph.business_mode_extractor` | 4 | BaseModel | One quoted answer: a value (variant id, pricing mode, pass-through) with its evidence. | 0 | `industry_graph.BusinessModeReply` | `tests/industry_graph/test_business_mode_extractor.py` (TC-BME-003..003) | 2026-11-07 |
+| `PriceAction` | `quant_cn.quant_cn.industry_graph.business_mode_extractor` | 4 | BaseModel | A stated price move: direction, what, magnitude, evidence. | 0 | `industry_graph.BusinessModeReply` | `tests/industry_graph/test_business_mode_extractor.py` (TC-BME-002..002) | 2026-11-07 |
+| `BusinessModeReply` | `quant_cn.quant_cn.industry_graph.business_mode_extractor` | 4 | BaseModel | The LLM reply for one report before validation. | 0 | `industry_graph.BusinessModeExtractor` | `tests/industry_graph/test_business_mode_extractor.py` (TC-BME-003..003) | 2026-11-07 |
+| `BusinessModeResult` | `quant_cn.quant_cn.industry_graph.business_mode_extractor` | 4 | none | The quote-checked reading: each claim is a dict {value, reason, evidence} or None. | 0 | `industry_graph.BusinessModeExtractor` | `tests/industry_graph/test_business_mode_extractor.py` (TC-BME-001..001) | 2026-11-07 |
+| `BusinessModeExtractor` | `quant_cn.quant_cn.industry_graph.business_mode_extractor` | 4 | none | Read the business-section pages of one annual report for the business-model fields that only the text can give (BUSINESS_MODEL_DESIGN §4.5 T1, §4b.7): which candidate variant of the company's archetype fits (or a proposed new one), the pricing mode, the cost pass-through and the stated price actions. | 1 | `lake` | `tests/industry_graph/test_business_mode_extractor.py` (TC-BME-001..003) | 2026-11-07 |
+| `Reason` | `quant_cn.quant_cn.industry_graph.pricing_adjudicator` | 4 | BaseModel | One reason for the verdict with the evidence keys it rests on. | 0 | `industry_graph.AdjudicationReply` | `tests/industry_graph/test_pricing_adjudicator.py` (TC-PAD-002..002) | 2026-11-07 |
+| `AdjudicationReply` | `quant_cn.quant_cn.industry_graph.pricing_adjudicator` | 4 | BaseModel | The LLM reply before validation. | 0 | `industry_graph.PricingAdjudicator` | `tests/industry_graph/test_pricing_adjudicator.py` (TC-PAD-003..003) | 2026-11-07 |
+| `Adjudication` | `quant_cn.quant_cn.industry_graph.pricing_adjudicator` | 4 | none | The validated verdict. | 0 | `industry_graph.PricingAdjudicator` | `tests/industry_graph/test_pricing_adjudicator.py` (TC-PAD-001..003) | 2026-11-07 |
+| `PricingAdjudicator` | `quant_cn.quant_cn.industry_graph.pricing_adjudicator` | 4 | none | For a company whose rule-based pricing-power label is insufficient or whose archetype check is inconsistent (BUSINESS_MODEL_DESIGN §4.5, §4b.7), give the model every measured signal, the annual-report claims and the broker-view summary, each under a key, and ask for one label, a confidence, whether the default archetype holds (or which allowed archetype fits) and the reasons. | 1 | `lake` | `tests/industry_graph/test_pricing_adjudicator.py` (TC-PAD-001..003) | 2026-11-07 |
 
 ## B. Class details (one block per class; methods carry their own purpose)
 
@@ -320,7 +377,7 @@ never column lists (those live in section E).
 ### `QuantCnCli` — `quant_cn.cli` (L8)
 - **Purpose:** `python -m quant_cn.cli <command>`: doctor, download, compact, curate, rebuild, backup, project-catalog, query. Builds every service from Config (the only place objects are wired) and prints summaries.
 - **Base:** none. **Depends on (injected):** Config | None, Console | None.
-- **Used by:** `Makefile targets doctor, download, compact, lake-rebuild, lake-backup`.
+- **Used by:** `Makefile targets doctor, download, compact, lake-rebuild, lake-backup`, `cli.DocumentCommands`.
 - **Tests:** `tests/test_cli.py` (TC-QCC-001..007).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -418,7 +475,7 @@ never column lists (those live in section E).
 ### `Clock` — `quant_cn.core.clock` (L1)
 - **Purpose:** The single source of wall time, monotonic time and sleeping; tests inject a fake subclass.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.FetcherFactory`, `data_loading.PeriodSweepFetcher`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `lake.RebuildAudit`, `cli.ResearchCommands`.
+- **Used by:** `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.FetcherFactory`, `data_loading.PeriodSweepFetcher`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `lake.RebuildAudit`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader`, `data_loading.RequestPacer`.
 - **Tests:** `tests/core/test_clock.py` (TC-CL-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -503,7 +560,7 @@ never column lists (those live in section E).
 ### `Config` — `quant_cn.core.config` (L1)
 - **Purpose:** The typed configuration injected everywhere: YAML defaults, machine overrides, environment.
 - **Base:** BaseModel. **Depends on (injected):** —.
-- **Used by:** `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands`.
+- **Used by:** `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands`, `cli.DocumentCommands`.
 - **Tests:** `tests/core/test_config.py` (TC-C-001..013).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -912,7 +969,7 @@ never column lists (those live in section E).
 ### `StepReport` — `quant_cn.core.step_report` (L1)
 - **Purpose:** Counts and status of one step (usually one dataset's fetch) so runs can be summarised.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `pipeline.FetchStep`, `pipeline.PipelineReport`, `pipeline.CompactStep`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`.
+- **Used by:** `core.BaseFetcher.run`, `core.BaseStep.run`, `lake.Compactor.rebuild`, `pipeline.LocalRunner.run`, `pipeline.DownloadPipeline.run`, `pipeline.FetchStep`, `pipeline.PipelineReport`, `pipeline.CompactStep`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `data_loading.DocumentDownloader`.
 - **Tests:** `tests/core/test_base_fetcher.py` (TC-BF-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1022,14 +1079,17 @@ never column lists (those live in section E).
 | `build_params` | start_date / end_date of the window, clipped to the run range (+ the swept value). | str, str, str -> dict[str, str] | — | as class | see class |
 
 ### `HttpTransport` — `quant_cn.data_loading.http_transport` (L3)
-- **Purpose:** Send one JSON POST and return the decoded JSON object.
+- **Purpose:** Send one HTTP request and return the decoded JSON object or the raw bytes: a JSON POST (Tushare), a form POST (CNINFO, D-096), a GET returning JSON (Eastmoney report lists) and a GET returning bytes (PDF downloads). Browser-like User-Agent on every call.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `data_loading.TushareClient`.
+- **Used by:** `data_loading.TushareClient`, `data_loading.CninfoClient`, `data_loading.EastmoneyReportClient`, `data_loading.BaseWebClient`, `data_loading.DocumentDownloader`.
 - **Tests:** `tests/data_loading/test_tushare_client.py` (TC-TC-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
 | `fetch_json` | POST `payload` as JSON to `url`. | str, Mapping[str, Any], float -> dict[str, Any] | `OSError`, `ValueError` | as class | see class |
+| `fetch_form_json` | POST `form` url-encoded to `url` and decode the JSON reply. | str, Mapping[str, str], float -> dict[str, Any] | `OSError`, `ValueError` | `data_loading.CninfoClient` | TC-CNC-001 |
+| `fetch_get_json` | GET `url` and decode the JSON reply. | str, float -> dict[str, Any] | `OSError`, `ValueError` | `data_loading.EastmoneyReportClient` | TC-EMR-001 |
+| `fetch_bytes` | GET `url` and return the body (a PDF download). | str, float -> bytes | `OSError` | `data_loading.DocumentDownloader` | TC-DD-002 |
 
 ### `TushareClient` — `quant_cn.data_loading.tushare_client` (L3)
 - **Purpose:** Query Tushare Pro: one logical query follows limit/offset paging until a short page and returns all rows; rate-limit replies wait and retry without spending retries; permission replies fail fast as PermissionDeniedError; other failures retry up to `retries`.
@@ -1268,7 +1328,7 @@ never column lists (those live in section E).
 ### `LakeCatalog` — `quant_cn.lake.lake_catalog` (L2)
 - **Purpose:** Own the lake's single DuckDB connection (`meta/quant_cn.duckdb`): schemas `raw`, `curated`, `meta`; one view per dataset and zone; `meta.dataset_meta`; generated INDEX.md files. The DuckDB file is disposable: `rebuild()` recreates it from the parquet files.
 - **Base:** none. **Depends on (injected):** Path, Mapping[str, DatasetSpec], bool.
-- **Used by:** `lake.FetchLog`, `lake.RunLog`, `lake.LakeQuery`, `lake.Compactor`, `pipeline.FetchStep.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `lake.DerivedViews`, `lake.PitAligner`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `lake.QualityViews`, `lake.LakeReader`, `lake.TickerAliasMap`, `cli.ResearchCommands`.
+- **Used by:** `lake.FetchLog`, `lake.RunLog`, `lake.LakeQuery`, `lake.Compactor`, `pipeline.FetchStep.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `lake.DerivedViews`, `lake.PitAligner`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `lake.QualityViews`, `lake.LakeReader`, `lake.TickerAliasMap`, `cli.ResearchCommands`, `cli.DocumentCommands`.
 - **Tests:** `tests/lake/test_lake_catalog.py` (TC-LC-001..005).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1287,7 +1347,7 @@ never column lists (those live in section E).
 ### `LakeQuery` — `quant_cn.lake.lake_query` (L2)
 - **Purpose:** Run read queries against the catalog views; the only way code above the lake reads data.
 - **Base:** none. **Depends on (injected):** LakeCatalog.
-- **Used by:** `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `cli.ResearchCommands`.
+- **Used by:** `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader`.
 - **Tests:** `tests/lake/test_lake_query.py` (TC-LQ-001..005).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1349,7 +1409,7 @@ never column lists (those live in section E).
 - **Purpose:** Align fundamentals to trading days without look-ahead. A version announced on `known_on` (f_ann_date / ann_date) becomes effective on the first trading day strictly after it; on each day the visible value of a field is the latest report period effective so far, in its latest effective restatement. Older-period restatements never replace a newer period. Built as the DuckDB view `derived.fundamentals_states` (one row per change) and read with an ASOF JOIN from trading days.
 - **Base:** none. **Depends on (injected):** LakeCatalog, LakeQuery, DateCodec.
 - **Used by:** `pipeline.CuratePipeline`, `research_space/main.ipynb`, `pipeline.DeriveStep`, `cli.ServiceBuilder`, `lake.LakeReader`.
-- **Tests:** `tests/lake/test_pit_aligner.py` (TC-PA-001..005).
+- **Tests:** `tests/lake/test_pit_aligner.py` (TC-PAD-001..003).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -1794,11 +1854,593 @@ never column lists (those live in section E).
 | `__init__` | wire dependencies | ChartTheme, str, DateCodec, bool, int, int -> None | — | callers of the class | — |
 | `build_figure` | Candles and volume for `ts_code`. | pd.DataFrame -> go.Figure | `SchemaError`, `ValueError` | as class | see class |
 
+### `DocumentRule` — `quant_cn.core.document_source` (L1)
+- **Purpose:** One title rule: a title matching `include` and not `exclude` (regular expressions) is a document of `doc_type`.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `core.DocumentSource`, `data_loading.DocumentClassifier`.
+- **Tests:** `tests/core/test_document_source.py` (TC-DSR-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `DocumentSource` — `quant_cn.core.document_source` (L1)
+- **Purpose:** One document source of config/documents.yaml: the curated metadata dataset listing the documents, its key columns, the PDF URL and file-name templates (`{column}` placeholders), the folder under `documents/`, and how a row gets its doc type (a fixed `doc_type` or title `rules`, first match wins).
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `core.Config`, `data_loading.DocumentClassifier`, `data_loading.DocumentDownloader`.
+- **Tests:** `tests/core/test_document_source.py` (TC-DSR-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `DocumentViews` — `quant_cn.lake.document_views` (L2)
+- **Purpose:** Expose the document manifest in the catalog. `meta.document_attempts` holds every manifest row (one per download attempt). `meta.documents` holds the latest attempt per doc_id, so `WHERE status = 'ok'` lists the PDFs present under `documents/`.
+- **Base:** none. **Depends on (injected):** Path, duckdb.DuckDBPyConnection.
+- **Used by:** `lake.LakeCatalog.refresh_views`, `cli.DocumentCommands`.
+- **Tests:** `tests/lake/test_document_views.py` (TC-DOV-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Path, duckdb.DuckDBPyConnection -> None | — | callers of the class | — |
+| `refresh` | (Re)create both views, or drop them when no manifest file exists. | — -> None | `LakeError` | as class | see class |
+
+### `RequestPacer` — `quant_cn.data_loading.request_pacer` (L3)
+- **Purpose:** Run one request callable at a time-spaced rate with retries: request starts are at least `min_interval_s` apart across all threads sharing the pacer, and a call raising OSError, ValueError or KeyError is retried after `retry_sleep_s` up to `retries` times.
+- **Base:** none. **Depends on (injected):** Clock, str, float, int, float.
+- **Used by:** `data_loading.BaseWebClient`, `data_loading.DocumentDownloader`.
+- **Tests:** `tests/data_loading/test_document_downloader.py` (TC-RP-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Clock, str, float, int, float -> None | — | callers of the class | — |
+| `run` | Wait for this request's turn, run `call`, retry on transport errors. | str, Callable[[], T] -> T | `DataSourceError` | as class | see class |
+| `record_throttle` | Record that the site throttled us: no request (from any thread) starts for `cooldown_s` seconds from now. | float -> None | — | as class | TC-RP-003 |
+
+### `BaseWebClient` — `quant_cn.data_loading.base_web_client` (L3)
+- **Purpose:** Base for vendor clients that page a public website's JSON API (CNINFO, Eastmoney). It holds the transport, the timeout and a RequestPacer. Every request is spaced by `min_interval_s` and transport failures are retried after `retry_sleep_s`, so a long sweep survives short outages without hammering the site.
+- **Base:** BaseApiClient. **Depends on (injected):** Clock, HttpTransport | None, float, int, float, float.
+- **Used by:** `data_loading.CninfoClient`, `data_loading.EastmoneyReportClient`.
+- **Tests:** `tests/data_loading/test_web_clients.py` (TC-BWC-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Clock, HttpTransport \| None, float, int, float, float -> None | — | callers of the class | — |
+| `get_vendor_name` | Short vendor name used in error messages. | — -> str | — | as class | see class |
+
+### `CninfoClient` — `quant_cn.data_loading.cninfo_client` (L3)
+- **Purpose:** List CNINFO announcements for the whole A-share market (`column=szse` covers SZ, SH and BJ) over a date range, optionally one category (e.g. "category_ndbg_szsh" annual reports), following `pageNum` until `totalpages`. Rows are de-duplicated on (ann_id, sec_code) because the list can shift while a busy day is paged; `<em>` highlight tags are removed from titles; `announcementTime` (epoch ms) becomes `ann_time` "YYYYMMDD HH:MM:SS" and `ann_date` YYYYMMDD in Beijing time.
+- **Base:** BaseWebClient. **Depends on (injected):** Clock, HttpTransport | None, float, int, float.
+- **Used by:** `cli.ServiceBuilder`.
+- **Tests:** `tests/data_loading/test_web_clients.py` (TC-CNC-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Clock, HttpTransport \| None, float, int, float -> None | — | callers of the class | — |
+| `get_vendor_name` | Vendor name for messages. | — -> str | — | as class | see class |
+| `query` | Every announcement in the date range (and category), all pages. | str, Mapping[str, str], Sequence[str] -> pd.DataFrame | `DataSourceError` | as class | see class |
+
+### `EastmoneyReportClient` — `quant_cn.data_loading.eastmoney_report_client` (L3)
+- **Purpose:** List Eastmoney (东方财富) broker research reports published in a date range for one report kind (`q_type` "0" stock, "1" industry, "2" strategy), following `pageNo` until `TotalPage`. The PDF of a row is https://pdf.dfcfw.com/pdf/H3_<info_code>_1.pdf. `publishDate` carries no time of day, so `publish_date` is YYYYMMDD and the lake rule makes it usable from the next session.
+- **Base:** BaseWebClient. **Depends on (injected):** Clock, HttpTransport | None, float, int, float.
+- **Used by:** `cli.ServiceBuilder`.
+- **Tests:** `tests/data_loading/test_web_clients.py` (TC-EMR-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Clock, HttpTransport \| None, float, int, float -> None | — | callers of the class | — |
+| `get_vendor_name` | Vendor name for messages. | — -> str | — | as class | see class |
+| `query` | Every report of one kind published in [start_date, end_date]. | str, Mapping[str, str], Sequence[str] -> pd.DataFrame | `DataSourceError` | as class | see class |
+
+### `DocumentClassifier` — `quant_cn.data_loading.document_classifier` (L3)
+- **Purpose:** Give each listed document its type: the source's fixed `doc_type`, or the first title rule whose `include` matches and whose `exclude` does not (e.g. "2025年年度报告" → annual; "2025年年度报告摘要" → none; "2025年半年度报告" → semiannual because that rule comes first).
+- **Base:** none. **Depends on (injected):** DocumentSource.
+- **Used by:** `data_loading.DocumentDownloader`.
+- **Tests:** `tests/data_loading/test_document_downloader.py` (TC-DCL-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | DocumentSource -> None | — | callers of the class | — |
+| `compute_doc_types` | Document type per title. | pd.Series -> pd.Series | — | as class | see class |
+
+### `DocumentDownloader` — `quant_cn.data_loading.document_downloader` (L3)
+- **Purpose:** Download the PDFs listed in a document source's curated metadata (config/documents.yaml) into `documents/<folder>/<doc_type>/<YYYY>/<MM>/<file>` (D-101). Rows are typed by DocumentClassifier, optionally limited to A-share codes (`curated.stock_basic.symbol`), de-duplicated on the document id, and skipped when the manifest already holds an `ok` attempt whose file exists. Each file is written atomically (tmp + rename) after its body is checked to start with %PDF-; one manifest row per attempt (sha256, bytes, status ok | not_pdf | failed) is appended to `meta/document_manifest/part-*.parquet` every `flush_every` documents, so an interrupted run resumes where it stopped.
+- **Base:** none. **Depends on (injected):** Path, LakeQuery, Mapping[str, DocumentSource], Clock, HttpTransport | None, int, float, int, float, int.
+- **Used by:** `cli.DocumentCommands`.
+- **Tests:** `tests/data_loading/test_document_downloader.py` (TC-DD-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Path, LakeQuery, Mapping[str, DocumentSource], Clock, HttpTransport \| None, int \| None, int, float, int -> None | — | callers of the class | — |
+| `list_candidates` | Every wanted document of a source, typed and with its URL and target path. | str, Sequence[str] \| None, str \| None, str \| None -> pd.DataFrame | `ConfigError`, `LakeError` | as class | see class |
+| `list_todo` | Candidates without an `ok` manifest attempt whose file exists: the work of `run`. | str, Sequence[str] \| None, str \| None, str \| None -> pd.DataFrame | `ConfigError`, `LakeError` | as class | see class |
+| `run` | Download the documents of `todo` (from list_todo); no catalog access. | pd.DataFrame, int \| None, Progress \| None -> StepReport | `LakeError` | as class | see class |
+
+### `DocumentCommands` — `quant_cn.cli` (L8)
+- **Purpose:** The document-side CLI command `download-docs` (plan 12 phase 2, D-101): for each source, print candidate counts per doc type (`--dry-run`) or download the PDFs not yet in the manifest and print the outcome.
+- **Base:** none. **Depends on (injected):** Console.
+- **Used by:** `cli.QuantCnCli`.
+- **Tests:** `tests/test_cli.py` (TC-QCC-010..010).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Console -> None | — | callers of the class | — |
+| `build_parser` | Add the `download-docs` subcommand and its options to the CLI parser. | argparse._SubParsersAction -> None | — | as class | see class |
+
+### `ReportPages` — `quant_cn.quant_cn.industry_graph.pdf_text_extractor` (L4)
+- **Purpose:** The text of one report PDF, page by page, plus its outline (bookmarks) when present.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.PdfTextExtractor`, `industry_graph.SectionDetector`, `industry_graph.AnnualReportParser`.
+- **Tests:** `tests/industry_graph/test_report_parsing.py` (TC-PTE-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `n_chars` | Characters over all pages (for section-share statistics). | — -> int | — | as class | see class |
+
+### `PdfTextExtractor` — `quant_cn.quant_cn.industry_graph.pdf_text_extractor` (L4)
+- **Purpose:** Read the native text layer of a PDF page by page (no OCR; D-102) and remove the running header and footer: a line with at least four letters or CJK characters that, with digits ignored, appears on at least `header_share` of the pages (e.g. "牧原食品股份有限公司2025 年年度报告全文"), and bare page numbers ("31", "36 / 251"). Tables that cross a page break then read as one block, which the top-5 table parser needs (a header inside the table split rows in the hog-sector prototype).
+- **Base:** none. **Depends on (injected):** float.
+- **Used by:** `industry_graph.AnnualReportParser`.
+- **Tests:** `tests/industry_graph/test_report_parsing.py` (TC-PTE-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | float -> None | — | callers of the class | — |
+| `read_pages` | Text and outline of one PDF, headers and footers removed. | Path -> ReportPages | `DataSourceError` | as class | see class |
+| `normalize_pages` | Remove running headers/footers and page-number lines from raw page texts. | list[str] -> list[str] | — | as class | see class |
+
+### `Section` — `quant_cn.quant_cn.industry_graph.section_detector` (L4)
+- **Purpose:** One located section: its key, the heading-matched start page and the page before the next section (or the chapter end), 1-based, inclusive.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.SectionDetector`, `industry_graph.ParsedReport`.
+- **Tests:** `tests/industry_graph/test_report_parsing.py` (TC-SD-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `SectionDetector` — `quant_cn.quant_cn.industry_graph.section_detector` (L4)
+- **Purpose:** Locate the MD&A chapter (管理层讨论与分析, 第三节 in the 2021 standard; 第二节/第四节 in older or exchange-specific layouts) and the chain sections inside it by heading text, not by number, so SSE, SZSE and BSE layouts all work. A chapter heading must stand on its own line (body text often cites "第三节管理层讨论与分析"). A table-of-contents page (dot leaders, or three or more 第X节 headings) never counts as a chapter start. Only these pages go to later steps (D-102); in the prototype the chapter was 12-19% of a report's text.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.AnnualReportParser`.
+- **Tests:** `tests/industry_graph/test_report_parsing.py` (TC-SD-001..005).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `find_chapter` | First and last page (1-based, inclusive) of the MD&A chapter. | ReportPages -> tuple[int, int] \| None | — | as class | see class |
+| `list_sections` | The MD&A chapter and every chain section found in it. | ReportPages -> list[Section] | — | as class | see class |
+| `find_heading_page` | First non-TOC page (1-based) anywhere in the report that carries a section's heading, for reports whose MD&A chapter is missing or named differently. | ReportPages, str -> int \| None | KeyError | `industry_graph.AnnualReportParser` | TC-SD-005 |
+
+### `CounterpartyRow` — `quant_cn.quant_cn.industry_graph.counterparty_table_parser` (L4)
+- **Purpose:** One ranked customer or supplier of a top-5 table.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.CounterpartyTable`, `industry_graph.CounterpartyTableParser`.
+- **Tests:** `tests/industry_graph/test_report_parsing.py` (TC-CTP-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `is_anonymous` | True when the report hides the name ("客户一", "供应商A", "第三名"). | — -> bool | — | as class | see class |
+
+### `CounterpartyTable` — `quant_cn.quant_cn.industry_graph.counterparty_table_parser` (L4)
+- **Purpose:** The top-5 customers or suppliers of one report: stated totals and the ranked rows (empty when only the totals sentence is disclosed, as on the SSE main board).
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.CounterpartyTableParser`, `industry_graph.ParsedReport`.
+- **Tests:** `tests/industry_graph/test_report_parsing.py` (TC-CTP-004..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `is_consistent` | Rows complete and their shares add up to the stated total. | — -> bool | — | as class | see class |
+
+### `CounterpartyTableParser` — `quant_cn.quant_cn.industry_graph.counterparty_table_parser` (L4)
+- **Purpose:** Parse the "主要销售客户和主要供应商情况" block into a customer and a supplier CounterpartyTable. Three layouts are covered (prototype on 10 FY2025 reports): SZSE (totals as label + value, table in 元 or 千元 with % signs), STAR (totals sentence in 万元, table in 万元 without % and with a related-party column), SSE main board (totals sentence only, no table). Amounts are converted to CNY. Text is expected without running headers (PdfTextExtractor), so a table crossing a page break reads as one block.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.AnnualReportParser`.
+- **Tests:** `tests/industry_graph/test_report_parsing.py` (TC-CTP-001..010).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `parse_tables` | Customer and supplier tables from the block text. | str -> tuple[CounterpartyTable, CounterpartyTable] | — | as class | see class |
+
+### `ParsedReport` — `quant_cn.quant_cn.industry_graph.annual_report_parser` (L4)
+- **Purpose:** What the rule-based pass extracts from one annual report.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.AnnualReportParser`.
+- **Tests:** `tests/industry_graph/test_report_parsing.py` (TC-ARP-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `get_section` | The section with this key, if located. | str -> Section \| None | — | as class | see class |
+
+### `AnnualReportParser` — `quant_cn.quant_cn.industry_graph.annual_report_parser` (L4)
+- **Purpose:** Run the rule-based pass of plan 12 phase 3 on one annual report: read the pages (PdfTextExtractor), locate the MD&A chapter and chain sections (SectionDetector), and parse the top-5 customer and supplier tables (CounterpartyTableParser). Nothing here calls an LLM; the located section pages are what phase 4 sends to DeepSeek.
+- **Base:** none. **Depends on (injected):** PdfTextExtractor, SectionDetector, CounterpartyTableParser.
+- **Used by:** `research_space`.
+- **Tests:** `tests/industry_graph/test_report_parsing.py` (TC-ARP-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | PdfTextExtractor, SectionDetector, CounterpartyTableParser -> None | — | callers of the class | — |
+| `parse_report` | Read and parse one PDF. | Path -> ParsedReport | `DataSourceError` | as class | see class |
+| `parse_pages` | Parse already-read pages (lets callers reuse or synthesise ReportPages). | Path, ReportPages -> ParsedReport | — | as class | see class |
+
+### `LlmReply` — `quant_cn.quant_cn.core.base_llm_client` (L1)
+- **Purpose:** One LLM answer as parsed JSON, with the model and token usage, and whether it came from the response cache (a cached reply costs nothing and makes rebuilds deterministic).
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `core.BaseLlmClient`, `data_loading.DeepSeekClient`.
+- **Tests:** `tests/data_loading/test_deep_seek_client.py` (TC-DSC-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `BaseLlmClient` — `quant_cn.quant_cn.core.base_llm_client` (L1)
+- **Purpose:** Abstract chat-completion client that returns a JSON object: one system prompt, one user message, an optional model override. Vendors subclass it; extractors depend on this.
+- **Base:** ABC. **Depends on (injected):** —.
+- **Used by:** `data_loading.DeepSeekClient`, `industry_graph.ApplicationExtractor`.
+- **Tests:** `tests/core/test_base_classes.py` (TC-BAC-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `fetch_json` | Ask the model and return its answer parsed as a JSON object. | str, str, str \| None, Sequence[str] -> LlmReply | `DataSourceError`, `ConfigError` | as class | see class |
+
+### `LlmConfig` — `quant_cn.quant_cn.core.config` (L1)
+- **Purpose:** The LLM endpoint used for extraction (D-098): OpenAI-compatible chat completions URL, default model, limits, and the API key, which comes from env DEEPSEEK_API_KEY only.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `core.Config`, `data_loading.DeepSeekClient`.
+- **Tests:** `tests/core/test_config.py` (TC-C-014..014).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `DeepSeekClient` — `quant_cn.quant_cn.data_loading.deep_seek_client` (L3)
+- **Purpose:** Call the DeepSeek (OpenAI-compatible) chat-completions endpoint with JSON output and temperature 0 and model reasoning off unless LlmConfig.thinking, paced and retried by RequestPacer. Every reply is cached on disk under `cache_dir/<hash[:2]>/<hash>.json`, keyed by model + system + user + stop, so a re-run costs nothing and gives the same graph (D-098). The key comes from LlmConfig (env only).
+- **Base:** BaseLlmClient. **Depends on (injected):** LlmConfig, Clock, Path | None, HttpTransport | None.
+- **Used by:** `research_space`.
+- **Tests:** `tests/data_loading/test_deep_seek_client.py` (TC-DSC-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | LlmConfig, Clock, Path \| None, HttpTransport \| None -> None | — | callers of the class | — |
+| `fetch_json` | One JSON answer, from the cache when the same request was made before. | str, str, str \| None, Sequence[str] -> LlmReply | `ConfigError`, `DataSourceError` | as class | see class |
+| `get_usage` | Calls, local-cache hits, tokens and money spent since construction. | — -> dict[str, float] | — | as class | see class |
+| `record_usage` | Append this client's usage so far as one JSON line to the cost ledger. | Path, str -> dict[str, Any] | `OSError` | as class | see class |
+| `compute_cost` | CNY cost of one call at the configured peak prices, halved off-peak (Beijing time). | str, int, int, int -> float | — | as class | see class |
+
+### `Evidence` — `quant_cn.quant_cn.industry_graph.application_extractor` (L4)
+- **Purpose:** A verbatim quote and the page it was found on (after the quote check).
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.ApplicationResult`.
+- **Tests:** `tests/industry_graph/test_application_extractor.py` (TC-AE-002..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `ApplicationResult` — `quant_cn.quant_cn.industry_graph.application_extractor` (L4)
+- **Purpose:** What the model found in one report, after validation: per revenue line the downstream applications (taxonomy node or proposed name, main/secondary, evidence) and customer types; named counterparties with role and evidence; and the items dropped because their quote was not in the text.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.ApplicationExtractor`.
+- **Tests:** `tests/industry_graph/test_application_extractor.py` (TC-AE-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `ApplicationExtractor` — `quant_cn.quant_cn.industry_graph.application_extractor` (L4)
+- **Purpose:** Send the business / industry pages of one report, its revenue lines and the candidate downstream taxonomy nodes to the LLM, and keep only answers whose verbatim quote is found in the supplied pages (whitespace ignored). A quote found on another page than claimed is kept with the page corrected. Unknown node ids become proposals (node_id None). Roles outside ROLES (customer, supplier, partner, competitor, subsidiary, mention) are dropped; competitor mentions are peer evidence (D-102).
+- **Base:** none. **Depends on (injected):** BaseLlmClient, int, str | None.
+- **Used by:** `research_space`.
+- **Tests:** `tests/industry_graph/test_application_extractor.py` (TC-AE-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | BaseLlmClient, int, str \| None -> None | — | callers of the class | — |
+| `fetch_applications` | Ask the model about one report and validate the answer against the text. | str, Sequence[tuple[int, str]], Sequence[str], Sequence[tuple[str, str]] -> ApplicationResult | `DataSourceError` | as class | see class |
+
+### `ApplicationItem` — `quant_cn.quant_cn.industry_graph.application_extractor` (L4)
+- **Purpose:** One downstream application of a revenue line as the LLM returned it.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.LineItem`.
+- **Tests:** `tests/industry_graph/test_application_extractor.py` (TC-AE-003..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `LineItem` — `quant_cn.quant_cn.industry_graph.application_extractor` (L4)
+- **Purpose:** One revenue line with its applications and customer types as returned.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.ApplicationReply`.
+- **Tests:** `tests/industry_graph/test_application_extractor.py` (TC-AE-003..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `CounterpartyItem` — `quant_cn.quant_cn.industry_graph.application_extractor` (L4)
+- **Purpose:** One company named in the text, with its role, as returned.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.ApplicationReply`.
+- **Tests:** `tests/industry_graph/test_application_extractor.py` (TC-AE-003..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `ApplicationReply` — `quant_cn.quant_cn.industry_graph.application_extractor` (L4)
+- **Purpose:** The whole LLM reply of one report, validated before the quote check.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.ApplicationExtractor`.
+- **Tests:** `tests/industry_graph/test_application_extractor.py` (TC-AE-003..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `QuoteChecker` — `quant_cn.quant_cn.industry_graph.quote_checker` (L4)
+- **Purpose:** Hold the pages sent to an LLM and accept a returned quote only if it occurs verbatim (whitespace ignored) on one of them. The claimed page is preferred; a quote found on another sent page is kept with that page. Also assembles the page-tagged text ("[第N页]") sent to the model, truncated in page order to a character budget, so the checked pages are exactly the sent pages.
+- **Base:** none. **Depends on (injected):** Sequence[tuple[int, str]].
+- **Used by:** `industry_graph.ApplicationExtractor`, `industry_graph.ValuationExtractor`.
+- **Tests:** `tests/industry_graph/test_valuation_extractor.py` (TC-QC-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Sequence[tuple[int, str]] -> None | — | callers of the class | — |
+| `build_prompt_text` | Page-tagged text for the prompt and the pages it contains. | Sequence[tuple[int, str]], int -> tuple[str, list[tuple[int, str]]] | — | as class | see class |
+| `find_evidence` | Accept a quote if it occurs on a sent page. | str, int -> Evidence \| None | — | as class | see class |
+
+### `ValuationItem` — `quant_cn.quant_cn.industry_graph.valuation_extractor` (L4)
+- **Purpose:** Base of the reply shapes: unknown keys ignored, so a richer reply still validates.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.ValuationReply`.
+- **Tests:** `tests/industry_graph/test_valuation_extractor.py` (TC-VE-003..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `ValuationReply` — `quant_cn.quant_cn.industry_graph.valuation_extractor` (L4)
+- **Purpose:** The LLM reply for one broker report, before the quote check: rating, target price, methods (multiple, implied or target, base year), forecasts, comparables, assumptions.
+- **Base:** ValuationItem. **Depends on (injected):** —.
+- **Used by:** `industry_graph.ValuationExtractor`.
+- **Tests:** `tests/industry_graph/test_valuation_extractor.py` (TC-VE-003..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `ValuationResult` — `quant_cn.quant_cn.industry_graph.valuation_extractor` (L4)
+- **Purpose:** One report's valuation after validation: only quote-checked target price, methods and assumptions; methods carry `multiple_kind` (D-109) and a base year; comparables carry a ts_code when it could be resolved.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.ValuationExtractor`.
+- **Tests:** `tests/industry_graph/test_valuation_extractor.py` (TC-VE-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `ValuationExtractor` — `quant_cn.quant_cn.industry_graph.valuation_extractor` (L4)
+- **Purpose:** Extract how a broker values a company (plan 13, D-105, D-109). Pages sent: the first LEAD_PAGES plus every page matching KEYWORDS, within a character budget. Kept: a target price and methods whose quotes are on a sent page; methods with a multiple must have a base year and a multiple_kind of "implied_at_price" or "target" (otherwise dropped); assumptions with a checked quote. Comparables are resolved to ts_codes through an injected name → code map when the report gives no code.
+- **Base:** none. **Depends on (injected):** BaseLlmClient, int, str | None.
+- **Used by:** `research_space`.
+- **Tests:** `tests/industry_graph/test_valuation_extractor.py` (TC-VE-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | BaseLlmClient, int, str \| None -> None | — | callers of the class | — |
+| `list_pages` | The pages of a report worth sending, as (page number, text). | Sequence[str] -> list[tuple[int, str]] | — | as class | see class |
+| `fetch_valuation` | Ask the model about one report and keep only what the text supports. | str, Sequence[tuple[int, str]], Mapping[str, str] \| None -> ValuationResult | `DataSourceError` | as class | see class |
+
+### `QuarterlyNoteItem` — `quant_cn.quant_cn.industry_graph.quarterly_note_extractor` (L4)
+- **Purpose:** One fact the LLM found in the notes, before the quote check.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.QuarterlyNoteReply`.
+- **Tests:** `tests/industry_graph/test_quarterly_note_extractor.py` (TC-QNE-003..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `QuarterlyNoteReply` — `quant_cn.quant_cn.industry_graph.quarterly_note_extractor` (L4)
+- **Purpose:** The LLM reply for one quarterly report.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.QuarterlyNoteExtractor`.
+- **Tests:** `tests/industry_graph/test_quarterly_note_extractor.py` (TC-QNE-003..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `QuarterlyNoteResult` — `quant_cn.quant_cn.industry_graph.quarterly_note_extractor` (L4)
+- **Purpose:** The quote-checked facts of one quarterly report.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.QuarterlyNoteExtractor`.
+- **Tests:** `tests/industry_graph/test_quarterly_note_extractor.py` (TC-QNE-002..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `QuarterlyNoteExtractor` — `quant_cn.quant_cn.industry_graph.quarterly_note_extractor` (L4)
+- **Purpose:** Q1 and Q3 reports carry no business chapter; their only narrative is the "主要会计数据、 财务指标发生变动的情况及原因" table and the "其他提醒事项" note. `list_note_pages` cuts those pages (from the first NOTE_START page up to the statements), `compute_note_chars` measures the text so the caller can skip near-empty notes, and `fetch_notes` asks the LLM for orders and contracts, customers won, capacity changes, profit drivers and new products, keeping only items whose verbatim quote is on a sent page and whose kind is in KINDS (plan 12 phase 4, user request 2026-11-07).
+- **Base:** none. **Depends on (injected):** BaseLlmClient, int, str | None.
+- **Used by:** `lake`.
+- **Tests:** `tests/industry_graph/test_quarterly_note_extractor.py` (TC-QNE-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | BaseLlmClient, int, str \| None -> None | — | callers of the class | — |
+| `list_note_pages` | The narrative pages (1-based) of a quarterly report. | Sequence[str] -> list[tuple[int, str]] | — | as class | see class |
+| `compute_note_chars` | Characters of real note text: "□适用 √不适用" placeholders and whitespace removed. | Sequence[tuple[int, str]] -> int | — | as class | see class |
+| `fetch_notes` | Ask the model about one report's notes and validate the answer against the text. | str, str, Sequence[tuple[int, str]] -> QuarterlyNoteResult | `DataSourceError` | as class | see class |
+
+### `TaxonomyNode` — `quant_cn.quant_cn.industry_graph.product_taxonomy` (L4)
+- **Purpose:** One node of the taxonomy as the matcher and views need it.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.ProductTaxonomy`, `industry_graph.ProductMatcher`.
+- **Tests:** `tests/industry_graph/test_product_matcher.py` (TC-PT-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `labels` | Name and aliases. | — -> tuple[str, ...] | — | as class | see class |
+
+### `ProductTaxonomy` — `quant_cn.quant_cn.industry_graph.product_taxonomy` (L4)
+- **Purpose:** Load config/industry_chain/*.yaml once: nodes (names and aliases always strings, even when YAML reads "1,4-丁二醇" style values as numbers), the merged-id map, and the Shenwan L3 → segment map (`sw_l3_map`). Answers which segments and products belong to a company's Shenwan codes, which is the context ProductMatcher uses.
+- **Base:** none. **Depends on (injected):** Path.
+- **Used by:** `industry_graph.ProductMatcher`, `research_space`.
+- **Tests:** `tests/industry_graph/test_product_matcher.py` (TC-PT-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Path -> None | — | callers of the class | — |
+| `get_node` | The node for an id, after translating a merged id. | str -> TaxonomyNode \| None | — | as class | see class |
+| `get_surviving_id` | Translate an id removed by the cross-sector merge to its surviving id. | str -> str | — | as class | see class |
+| `list_nodes` | Nodes of the given types, in file order. | tuple[str, ...] -> list[TaxonomyNode] | — | as class | see class |
+| `list_context_ids` | Segments mapped to the company's Shenwan codes (with their child segments) and the products in those segments. | list[str] -> set[str] | — | as class | see class |
+
+### `ProductMatch` — `quant_cn.quant_cn.industry_graph.product_matcher` (L4)
+- **Purpose:** One taxonomy node a revenue line maps to, with how it was found.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.ProductMatcher`.
+- **Tests:** `tests/industry_graph/test_product_matcher.py` (TC-PM-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `ProductMatcher` — `quant_cn.quant_cn.industry_graph.product_matcher` (L4)
+- **Purpose:** Map a company's revenue line to taxonomy nodes without the LLM. Order: generic lines (其他, 投资收益, 抵销, ...) map to nothing and `is_generic` says so, so callers can drop them from the denominator; the name is normalized (parentheses and suffixes such as 收入/业务/产品 removed; for "A:B:C" the leaf is tried first, then the top level); each product, segment or material label scores exact 1.0, contains 0.6-0.9 by length share, character-bigram overlap up to 0.6; labels inside the company's Shenwan context (ProductTaxonomy.list_context_ids) get CONTEXT_BONUS; the best label at or above MIN_SCORE wins (products before segments on ties). A compound line ("A、B及C") is split first; when two or more parts match, each part is a match, otherwise the whole line (or its one matching part) is matched. Last resort: a company whose Shenwan codes map to exactly one segment gets that segment with how="sector".
+- **Base:** none. **Depends on (injected):** ProductTaxonomy.
+- **Used by:** `research_space`.
+- **Tests:** `tests/industry_graph/test_product_matcher.py` (TC-PM-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | ProductTaxonomy -> None | — | callers of the class | — |
+| `is_generic` | True for lines that name no product (residuals, accounting items, eliminations). | str -> bool | — | as class | see class |
+| `find_matches` | Taxonomy nodes for one revenue line. | str, list[str] -> list[ProductMatch] | — | as class | see class |
+
+### `ReportDigest` — `quant_cn.quant_cn.industry_graph.broker_view_synthesizer` (L4)
+- **Purpose:** One broker report reduced to what the synthesis needs: the quote-checked fields of a ValuationExtractor result (plan 13), tagged with a short id the model must cite.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.BrokerViewSynthesizer`.
+- **Tests:** `tests/industry_graph/test_broker_view_synthesizer.py` (TC-BVS-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `format_text` | The digest as one prompt block. | — -> str | — | as class | see class |
+
+### `ViewPoint` — `quant_cn.quant_cn.industry_graph.broker_view_synthesizer` (L4)
+- **Purpose:** One synthesized point with the report refs it rests on.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.BrokerViewReply`.
+- **Tests:** `tests/industry_graph/test_broker_view_synthesizer.py` (TC-BVS-002..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `BrokerViewReply` — `quant_cn.quant_cn.industry_graph.broker_view_synthesizer` (L4)
+- **Purpose:** The LLM reply before the citation check.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.BrokerViewSynthesizer`.
+- **Tests:** `tests/industry_graph/test_broker_view_synthesizer.py` (TC-BVS-003..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `BrokerView` — `quant_cn.quant_cn.industry_graph.broker_view_synthesizer` (L4)
+- **Purpose:** The synthesized view after the citation check.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.BrokerViewSynthesizer`.
+- **Tests:** `tests/industry_graph/test_broker_view_synthesizer.py` (TC-BVS-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `BrokerViewSynthesizer` — `quant_cn.quant_cn.industry_graph.broker_view_synthesizer` (L4)
+- **Purpose:** Synthesize the broker view of one product, Shenwan L3 industry or company from many report digests (user, 2026-11-08: the broker part must be the pattern across reports, not a list). The model may use only the digests; every point must cite digest refs, and refs not among the digests are removed; a point left without a valid ref is dropped (the citation check plays the role QuoteChecker plays for single documents). Digests are sent newest first within a character budget.
+- **Base:** none. **Depends on (injected):** BaseLlmClient, int, str | None.
+- **Used by:** `lake`.
+- **Tests:** `tests/industry_graph/test_broker_view_synthesizer.py` (TC-BVS-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | BaseLlmClient, int, str \| None -> None | — | callers of the class | — |
+| `fetch_view` | Ask the model for the synthesized view and check its citations. | str, str, Sequence[ReportDigest] -> BrokerView | `DataSourceError` | as class | see class |
+
+### `ModeClaim` — `quant_cn.quant_cn.industry_graph.business_mode_extractor` (L4)
+- **Purpose:** One quoted answer: a value (variant id, pricing mode, pass-through) with its evidence.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.BusinessModeReply`.
+- **Tests:** `tests/industry_graph/test_business_mode_extractor.py` (TC-BME-003..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `PriceAction` — `quant_cn.quant_cn.industry_graph.business_mode_extractor` (L4)
+- **Purpose:** A stated price move: direction, what, magnitude, evidence.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.BusinessModeReply`.
+- **Tests:** `tests/industry_graph/test_business_mode_extractor.py` (TC-BME-002..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `BusinessModeReply` — `quant_cn.quant_cn.industry_graph.business_mode_extractor` (L4)
+- **Purpose:** The LLM reply for one report before validation.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.BusinessModeExtractor`.
+- **Tests:** `tests/industry_graph/test_business_mode_extractor.py` (TC-BME-003..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `BusinessModeResult` — `quant_cn.quant_cn.industry_graph.business_mode_extractor` (L4)
+- **Purpose:** The quote-checked reading: each claim is a dict {value, reason, evidence} or None.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.BusinessModeExtractor`.
+- **Tests:** `tests/industry_graph/test_business_mode_extractor.py` (TC-BME-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `BusinessModeExtractor` — `quant_cn.quant_cn.industry_graph.business_mode_extractor` (L4)
+- **Purpose:** Read the business-section pages of one annual report for the business-model fields that only the text can give (BUSINESS_MODEL_DESIGN §4.5 T1, §4b.7): which candidate variant of the company's archetype fits (or a proposed new one), the pricing mode, the cost pass-through and the stated price actions. Kept: claims whose verbatim quote is on a sent page and whose value is allowed (variant among the candidates, pricing in PRICING, pass-through in PASS_THROUGH, direction in DIRECTIONS); the rest is dropped and counted.
+- **Base:** none. **Depends on (injected):** BaseLlmClient, int, str | None.
+- **Used by:** `lake`.
+- **Tests:** `tests/industry_graph/test_business_mode_extractor.py` (TC-BME-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | BaseLlmClient, int, str \| None -> None | — | callers of the class | — |
+| `fetch_mode` | Ask the model about one report and validate the answer against the text. | str, str, Sequence[tuple[str, str, str]], Sequence[tuple[int, str]] -> BusinessModeResult | `DataSourceError` | as class | see class |
+
+### `Reason` — `quant_cn.quant_cn.industry_graph.pricing_adjudicator` (L4)
+- **Purpose:** One reason for the verdict with the evidence keys it rests on.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.AdjudicationReply`.
+- **Tests:** `tests/industry_graph/test_pricing_adjudicator.py` (TC-PAD-002..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `AdjudicationReply` — `quant_cn.quant_cn.industry_graph.pricing_adjudicator` (L4)
+- **Purpose:** The LLM reply before validation.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.PricingAdjudicator`.
+- **Tests:** `tests/industry_graph/test_pricing_adjudicator.py` (TC-PAD-003..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `Adjudication` — `quant_cn.quant_cn.industry_graph.pricing_adjudicator` (L4)
+- **Purpose:** The validated verdict.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.PricingAdjudicator`.
+- **Tests:** `tests/industry_graph/test_pricing_adjudicator.py` (TC-PAD-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `PricingAdjudicator` — `quant_cn.quant_cn.industry_graph.pricing_adjudicator` (L4)
+- **Purpose:** For a company whose rule-based pricing-power label is insufficient or whose archetype check is inconsistent (BUSINESS_MODEL_DESIGN §4.5, §4b.7), give the model every measured signal, the annual-report claims and the broker-view summary, each under a key, and ask for one label, a confidence, whether the default archetype holds (or which allowed archetype fits) and the reasons. The citation check: reasons must cite supplied keys (unknown keys removed; a reason left with none is dropped); a label, confidence or archetype outside the allowed values raises (label) or is cleared (archetype) so nothing unverifiable is stored.
+- **Base:** none. **Depends on (injected):** BaseLlmClient, str | None.
+- **Used by:** `lake`.
+- **Tests:** `tests/industry_graph/test_pricing_adjudicator.py` (TC-PAD-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | BaseLlmClient, str \| None -> None | — | callers of the class | — |
+| `fetch_verdict` | Ask for the verdict and validate it. | str, str, Mapping[str, str], Mapping[str, str] -> Adjudication | `DataSourceError` | as class | see class |
+
 ## C. Abstract base classes / extension points
 
 | Class | Module | Layer | Purpose | Abstract methods (purpose each) | Known subclasses | Added |
 |---|---|---|---|---|---|---|
-| `BaseApiClient` | `quant_cn.core.base_api_client` | 1 | Abstract vendor client: one logical query returns all pages as one DataFrame. | `query`: Run one query and return every row across pages. | `AkshareClient`, `BaostockClient`, `TushareClient` | 2026-09-27 |
+| `BaseApiClient` | `quant_cn.core.base_api_client` | 1 | Abstract vendor client: one logical query returns all pages as one DataFrame. | `query`: Run one query and return every row across pages. | `AkshareClient`, `BaostockClient`, `TushareClient`, `BaseWebClient` | 2026-09-27 |
 | `BaseFetchLog` | `quant_cn.core.base_fetch_log` | 1 | Abstract record of which (dataset, key) pairs are fully downloaded. | `read_done_keys`: All keys recorded as done for a dataset.; `mark_done`: Record a finished key, replacing any earlier record for it.; `save`: Make recorded keys durable (e.g. write the parquet mirror). | `FetchLog` | 2026-09-27 |
 | `BaseFetcher` | `quant_cn.core.base_fetcher` | 1 | Download one dataset as a sequence of keys | `list_keys`: All fetch keys for [start, end], ascending.; `build_params`: API parameters for one key. | `SingleCallFetcher`, `EnumFetcher`, `DateSweepFetcher`, `PeriodSweepFetcher`, `DateWindowFetcher` | 2026-09-27 |
 | `BaseRunLog` | `quant_cn.core.base_run_log` | 1 | Abstract append-only log of runs and per-key events | `open_run`: Open a run and return its id.; `record_event`: Append one event (fetched / skipped / empty / failed / blocked).; `close_run`: Close a run with its final status. | `RunLog` | 2026-09-27 |
@@ -1808,17 +2450,19 @@ never column lists (those live in section E).
 | `BaseFactor` | `quant_cn.factor.base_factor` | 5 | Abstract factor: declares which inputs, fundamentals fields and daily_basic columns it needs and how many sessions of price history before the first output date | `compute_raw`: The raw factor value per stock and session. | `EarningsYieldFactor`, `MomentumFactor`, `ProfitGrowthFactor`, `ReversalFactor`, `RoeFactor`, `TurnoverFactor` | 2026-09-27 |
 | `BaseRunner` | `quant_cn.pipeline.runner` | 6 | Extension point for how steps are executed (local now, Prefect later, D-022) | `run`: Execute steps in order under one run id. | `PrefectRunner`, `LocalRunner` | 2026-09-27 |
 | `BaseChart` | `quant_cn.visualization.base_chart` | 7 | Abstract chart: subclasses build a plotly figure from a DataFrame (frames only, never objects from other packages) | `build_figure`: Build the unthemed figure from the input frame. | `FactorChart`, `PriceChart` | 2026-09-27 |
+| `BaseWebClient` | `quant_cn.data_loading.base_web_client` | 3 | Base for vendor clients that page a public website's JSON API (CNINFO, Eastmoney). | `get_vendor_name`: Short vendor name used in error messages. | `CninfoClient`, `EastmoneyReportClient` | 2026-11-07 |
+| `BaseLlmClient` | `quant_cn.quant_cn.core.base_llm_client` | 1 | Abstract chat-completion client that returns a JSON object: one system prompt, one user message, an optional model override. | `fetch_json`: Ask the model and return its answer parsed as a JSON object. |  | 2026-11-07 |
 
 ## D. Exceptions
 
 | Class | Module | Parent | Purpose / raised when | Raised by | Added |
 |---|---|---|---|---|---|
 | `QuantCnError` | `quant_cn.core.exceptions` | `Exception` | Root of every exception the package raises, so callers catch project errors in one place. | `pipeline.LocalRunner.run`, `cli.QuantCnCli.run`, `core.ConfigError`, `core.DataSourceError`, `core.LakeError`, `core.SchemaError`, `pipeline.PrefectRunner` | 2026-09-27 |
-| `ConfigError` | `quant_cn.core.exceptions` | `QuantCnError` | Configuration is missing, malformed or unsafe (e.g. lake root inside the repository). | `core.Config.load`, `core.Config.get_dataset`, `data_loading.TushareClient`, `data_loading.FetcherFactory.build`, `pipeline.DownloadPipeline.run`, `pipeline.CuratePipeline`, `factor.FactorFactory` | 2026-09-27 |
+| `ConfigError` | `quant_cn.core.exceptions` | `QuantCnError` | Configuration is missing, malformed or unsafe (e.g. lake root inside the repository). | `core.Config.load`, `core.Config.get_dataset`, `data_loading.TushareClient`, `data_loading.FetcherFactory.build`, `pipeline.DownloadPipeline.run`, `pipeline.CuratePipeline`, `factor.FactorFactory`, `data_loading.DocumentDownloader` | 2026-09-27 |
 | `SchemaError` | `quant_cn.core.exceptions` | `QuantCnError` | A DataFrame does not satisfy its declared Schema (columns, dtypes, primary key). | `core.Schema.normalize`, `core.Schema.validate` | 2026-09-27 |
-| `DataSourceError` | `quant_cn.core.exceptions` | `QuantCnError` | The external data source failed: API error code, retries exhausted, malformed response. | `data_loading.TushareClient.query`, `core.BaseFetcher.run`, `core.PermissionDeniedError`, `data_loading.AkshareClient`, `data_loading.BaostockClient` | 2026-09-27 |
+| `DataSourceError` | `quant_cn.core.exceptions` | `QuantCnError` | The external data source failed: API error code, retries exhausted, malformed response. | `data_loading.TushareClient.query`, `core.BaseFetcher.run`, `core.PermissionDeniedError`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `data_loading.DocumentDownloader`, `data_loading.RequestPacer` | 2026-09-27 |
 | `PermissionDeniedError` | `quant_cn.core.exceptions` | `DataSourceError` | The account lacks permission (points) for an endpoint; the dataset is blocked, not broken. | `data_loading.TushareClient.query`, `pipeline.LocalRunner.run`, `pipeline.PrefectRunner` | 2026-09-27 |
-| `LakeError` | `quant_cn.core.exceptions` | `QuantCnError` | The local lake cannot be read or written: missing dataset, failed atomic write, bad catalog. | `lake.ParquetWriter`, `lake.TradingCalendar`, `lake.LakeQuery.sql`, `cli.QuantCnCli`, `lake.Compactor`, `pipeline.DownloadPipeline`, `lake.FetchLog`, `lake.LakeCatalog`, `lake.RunLog`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `lake.ProjectCatalog`, `lake.QualityViews`, `lake.RebuildAudit`, `lake.LakeReader`, `lake.TickerAliasMap` | 2026-09-27 |
+| `LakeError` | `quant_cn.core.exceptions` | `QuantCnError` | The local lake cannot be read or written: missing dataset, failed atomic write, bad catalog. | `lake.ParquetWriter`, `lake.TradingCalendar`, `lake.LakeQuery.sql`, `cli.QuantCnCli`, `lake.Compactor`, `pipeline.DownloadPipeline`, `lake.FetchLog`, `lake.LakeCatalog`, `lake.RunLog`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `lake.ProjectCatalog`, `lake.QualityViews`, `lake.RebuildAudit`, `lake.LakeReader`, `lake.TickerAliasMap`, `data_loading.DocumentDownloader`, `lake.DocumentViews`, `cli.DocumentCommands` | 2026-09-27 |
 
 ## E. Schemas (DataFrame / typed records)
 

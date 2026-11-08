@@ -1,0 +1,132 @@
+# Shenwan 460000 社会服务 — product taxonomy prior (plan 12 phase 1, D-097). Format: README.md.
+sector: {sw_l1: "460000", name: 社会服务, name_en: Social Services}
+
+nodes:
+  # --- segments ---
+  - {id: SEG_SERV_SPORTS, type: segment, name: 体育, name_en: Sports, aliases: [体育Ⅱ, 体育Ⅲ]}
+  - {id: SEG_SERV_LOCAL_LIFE, type: segment, name: 本地生活服务, name_en: Local Lifestyle Services}
+  - {id: SEG_SERV_PROFESSIONAL, type: segment, name: 专业服务, name_en: Professional Services}
+  - {id: SEG_SERV_HR, type: segment, name: 人力资源服务, name_en: Human Resources Services}
+  - {id: SEG_SERV_TIC, type: segment, name: 检测服务, name_en: "Testing, Inspection and Certification", aliases: [检验检测, 第三方检测]}
+  - {id: SEG_SERV_EXHIBITION, type: segment, name: 会展服务, name_en: Exhibition Services}
+  - {id: SEG_SERV_OTHER_PROFESSIONAL, type: segment, name: 其他专业服务, name_en: Other Professional Services}
+  - {id: SEG_SERV_HOTEL_DINING, type: segment, name: 酒店餐饮, name_en: Hotels and Restaurants}
+  - {id: SEG_SERV_HOTEL, type: segment, name: 酒店, name_en: Hotels}
+  - {id: SEG_SERV_RESTAURANT, type: segment, name: 餐饮, name_en: Restaurants}
+  - {id: SEG_SERV_TOURISM, type: segment, name: 旅游及景区, name_en: Tourism and Scenic Areas}
+  - {id: SEG_SERV_GAMING, type: segment, name: 博彩, name_en: Gaming and Casinos}
+  - {id: SEG_SERV_THEME_PARK, type: segment, name: 人工景区, name_en: Man-Made Attractions, aliases: [主题公园]}
+  - {id: SEG_SERV_NATURAL_SCENIC, type: segment, name: 自然景区, name_en: Natural Scenic Areas}
+  - {id: SEG_SERV_TRAVEL_INTEGRATED, type: segment, name: 旅游综合, name_en: Integrated Travel Services}
+  - {id: SEG_SERV_EDUCATION, type: segment, name: 教育, name_en: Education}
+  - {id: SEG_SERV_ACADEMIC_EDU, type: segment, name: 学历教育, name_en: Degree Education}
+  - {id: SEG_SERV_TRAINING_EDU, type: segment, name: 培训教育, name_en: Training and Tutoring}
+  - {id: SEG_SERV_EDU_OPERATION, type: segment, name: 教育运营及其他, name_en: Education Operation and Others}
+
+  # --- services ---
+  - {id: PROD_SERV_SPORTS_EVENT, type: product, kind: service, name: 体育赛事运营, name_en: Sports Event Operation, segment: SEG_SERV_SPORTS, aliases: [赛事运营, 马拉松]}
+  - {id: PROD_SERV_SPORTS_VENUE, type: product, kind: service, name: 体育场馆运营, name_en: Sports Venue Operation, segment: SEG_SERV_SPORTS, aliases: [健身房]}
+  - {id: PROD_SERV_LOCAL_PLATFORM, type: product, kind: service, name: 本地生活平台, name_en: Local Lifestyle Platform, segment: SEG_SERV_LOCAL_LIFE, aliases: [外卖平台, 到店团购]}
+  - {id: PROD_SERV_FLEXIBLE_STAFFING, type: product, kind: service, name: 灵活用工, name_en: Flexible Staffing, segment: SEG_SERV_HR, aliases: [劳务派遣]}
+  - {id: PROD_SERV_RECRUITMENT, type: product, kind: service, name: 招聘服务, name_en: Recruitment Services, segment: SEG_SERV_HR, aliases: [猎头, 网络招聘]}
+  - {id: PROD_SERV_HR_SAAS, type: product, kind: service, name: 人力资源SaaS, name_en: HR SaaS, segment: SEG_SERV_HR, aliases: [薪酬社保代理]}
+  - {id: PROD_SERV_FOOD_TESTING, type: product, kind: service, name: 食品环境检测, name_en: Food and Environmental Testing, segment: SEG_SERV_TIC, aliases: [环境检测, 食品检测]}
+  - {id: PROD_SERV_INDUSTRIAL_TESTING, type: product, kind: service, name: 工业品检测, name_en: Industrial Product Testing, segment: SEG_SERV_TIC, aliases: [电子电气检测, 计量校准]}
+  - {id: PROD_SERV_CONSTRUCTION_TESTING, type: product, kind: service, name: 建设工程检测, name_en: Construction Testing, segment: SEG_SERV_TIC, aliases: [建筑工程检测, 工程检测]}
+  - {id: PROD_SERV_MILITARY_TESTING, type: product, kind: service, name: 军工及半导体检测, name_en: Defense and Semiconductor Testing, segment: SEG_SERV_TIC, aliases: [失效分析]}
+  - {id: PROD_SERV_EXHIBITION_ORGANIZING, type: product, kind: service, name: 展会主办, name_en: Exhibition Organizing, segment: SEG_SERV_EXHIBITION, aliases: [会展主办]}
+  - {id: PROD_SERV_EXHIBITION_DESIGN, type: product, kind: service, name: 展览展示搭建, name_en: Exhibition Design and Build, segment: SEG_SERV_EXHIBITION, aliases: [展台搭建, 展馆运营]}
+  - {id: PROD_SERV_CONSULTING, type: product, kind: service, name: 咨询服务, name_en: Consulting Services, segment: SEG_SERV_OTHER_PROFESSIONAL, aliases: [工程咨询, 管理咨询]}
+  - {id: PROD_SERV_FULL_SERVICE_HOTEL, type: product, kind: service, name: 中高端酒店, name_en: Mid-to-Upscale Hotels, segment: SEG_SERV_HOTEL, aliases: [高端酒店, 中端酒店]}
+  - {id: PROD_SERV_ECONOMY_HOTEL, type: product, kind: service, name: 经济型酒店, name_en: Economy Hotels, segment: SEG_SERV_HOTEL}
+  - {id: PROD_SERV_HOTEL_FRANCHISE, type: product, kind: service, name: 酒店加盟管理, name_en: Hotel Franchising and Management, segment: SEG_SERV_HOTEL, aliases: [管理加盟]}
+  - {id: PROD_SERV_CHAIN_RESTAURANT, type: product, kind: service, name: 连锁餐饮, name_en: Chain Restaurants, segment: SEG_SERV_RESTAURANT, aliases: [中式正餐, 火锅, 快餐]}
+  - {id: PROD_SERV_CATERING, type: product, kind: service, name: 团餐, name_en: Contract Catering, segment: SEG_SERV_RESTAURANT, aliases: [团膳]}
+  - {id: PROD_SERV_CASINO, type: product, kind: service, name: 博彩娱乐场, name_en: Casino Operation, segment: SEG_SERV_GAMING}
+  - {id: PROD_SERV_THEME_PARK, type: product, kind: service, name: 主题乐园运营, name_en: Theme Park Operation, segment: SEG_SERV_THEME_PARK, aliases: [主题乐园, 演艺]}
+  - {id: PROD_SERV_SCENIC_TICKET, type: product, kind: service, name: 景区门票, name_en: Scenic Area Tickets, segment: SEG_SERV_NATURAL_SCENIC}
+  - {id: PROD_SERV_SCENIC_TRANSPORT, type: product, kind: service, name: 景区索道客运, name_en: Scenic Cableways and Shuttles, segment: SEG_SERV_NATURAL_SCENIC, aliases: [索道]}
+  - {id: PROD_SERV_TRAVEL_AGENCY, type: product, kind: service, name: 旅行社服务, name_en: Travel Agency, segment: SEG_SERV_TRAVEL_INTEGRATED, aliases: [出境游, 跟团游]}
+  - {id: PROD_SERV_OTA, type: product, kind: service, name: 在线旅游, name_en: Online Travel Agency, segment: SEG_SERV_TRAVEL_INTEGRATED, aliases: [OTA]}
+  - {id: PROD_SERV_HIGHER_EDU, type: product, kind: service, name: 民办高等教育, name_en: Private Higher Education, segment: SEG_SERV_ACADEMIC_EDU, aliases: [民办高校, 职业院校]}
+  - {id: PROD_SERV_K12_SCHOOL, type: product, kind: service, name: 民办K12学校, name_en: Private K-12 Schools, segment: SEG_SERV_ACADEMIC_EDU, aliases: [国际学校]}
+  - {id: PROD_SERV_CIVIL_SERVICE_TRAINING, type: product, kind: service, name: 公考培训, name_en: Civil Service Exam Training, segment: SEG_SERV_TRAINING_EDU, aliases: [公务员考试培训, 招录培训]}
+  - {id: PROD_SERV_VOCATIONAL_TRAINING, type: product, kind: service, name: 职业技能培训, name_en: Vocational Training, segment: SEG_SERV_TRAINING_EDU, aliases: [职业教育, IT培训]}
+  - {id: PROD_SERV_K12_TUTORING, type: product, kind: service, name: 素质教育与学科培训, name_en: K-12 Tutoring and Enrichment, segment: SEG_SERV_TRAINING_EDU, aliases: [素质教育]}
+
+edges:
+  - [PROD_FOOD_FRESH_PORK, used_in, PROD_SERV_CHAIN_RESTAURANT]  # restaurants buy pork, not live hogs (fix 2026-11-07)
+  - [SEG_SERV_HR, part_of, SEG_SERV_PROFESSIONAL]
+  - [SEG_SERV_TIC, part_of, SEG_SERV_PROFESSIONAL]
+  - [SEG_SERV_EXHIBITION, part_of, SEG_SERV_PROFESSIONAL]
+  - [SEG_SERV_OTHER_PROFESSIONAL, part_of, SEG_SERV_PROFESSIONAL]
+  - [SEG_SERV_HOTEL, part_of, SEG_SERV_HOTEL_DINING]
+  - [SEG_SERV_RESTAURANT, part_of, SEG_SERV_HOTEL_DINING]
+  - [SEG_SERV_GAMING, part_of, SEG_SERV_TOURISM]
+  - [SEG_SERV_THEME_PARK, part_of, SEG_SERV_TOURISM]
+  - [SEG_SERV_NATURAL_SCENIC, part_of, SEG_SERV_TOURISM]
+  - [SEG_SERV_TRAVEL_INTEGRATED, part_of, SEG_SERV_TOURISM]
+  - [SEG_SERV_ACADEMIC_EDU, part_of, SEG_SERV_EDUCATION]
+  - [SEG_SERV_TRAINING_EDU, part_of, SEG_SERV_EDUCATION]
+  - [SEG_SERV_EDU_OPERATION, part_of, SEG_SERV_EDUCATION]
+  - [SEG_SERV_SPORTS, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_SERV_SPORTS, serves, MKT_MEDIA_ENTERTAINMENT]
+  - [SEG_SERV_LOCAL_LIFE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_SERV_HR, serves, MKT_ENTERPRISE_IT]
+  - [SEG_SERV_TIC, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_SERV_TIC, serves, MKT_ENVIRONMENTAL]
+  - [SEG_SERV_TIC, serves, MKT_CONSTRUCTION]
+  - [SEG_SERV_TIC, serves, MKT_EV]
+  - [SEG_SERV_TIC, serves, MKT_DEFENSE]
+  - [SEG_SERV_TIC, serves, MKT_GOVERNMENT]
+  - [SEG_SERV_EXHIBITION, serves, MKT_ENTERPRISE_IT]
+  - [SEG_SERV_OTHER_PROFESSIONAL, serves, MKT_GOVERNMENT]
+  - [SEG_SERV_HOTEL_DINING, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_SERV_RESTAURANT, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_SERV_TOURISM, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_SERV_EDUCATION, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_SERV_EDU_OPERATION, serves, MKT_GOVERNMENT]
+  - [PROD_SERV_FOOD_TESTING, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_SERV_FOOD_TESTING, used_in, MKT_ENVIRONMENTAL]
+  - [PROD_SERV_INDUSTRIAL_TESTING, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_AUTO_VEHICLE_INSPECTION, used_in, MKT_EV]
+  - [PROD_AUTO_VEHICLE_INSPECTION, used_in, MKT_ICE_VEHICLE]
+  - [PROD_SERV_CONSTRUCTION_TESTING, used_in, MKT_CONSTRUCTION]
+  - [PROD_SERV_MILITARY_TESTING, used_in, MKT_DEFENSE]
+  - [PROD_SERV_MILITARY_TESTING, used_in, MKT_SEMI_FAB]
+  - [PROD_SERV_HOTEL_FRANCHISE, used_in, PROD_SERV_ECONOMY_HOTEL]
+  - [PROD_SERV_HOTEL_FRANCHISE, used_in, PROD_SERV_FULL_SERVICE_HOTEL]
+  - [PROD_SERV_CHAIN_RESTAURANT, uses_material, MAT_GRAIN]
+  - [PROD_SERV_CATERING, uses_material, MAT_GRAIN]
+  - [PROD_SERV_OTA, substitute_for, PROD_SERV_TRAVEL_AGENCY]
+  - [PROD_SERV_OTA, used_in, PROD_SERV_FULL_SERVICE_HOTEL]
+  - [PROD_SERV_OTA, used_in, PROD_SERV_SCENIC_TICKET]
+  - [PROD_SERV_LOCAL_PLATFORM, used_in, PROD_SERV_CHAIN_RESTAURANT]
+  - [PROD_SERV_SCENIC_TRANSPORT, used_in, PROD_SERV_SCENIC_TICKET]
+  - [PROD_SERV_EXHIBITION_DESIGN, used_in, PROD_SERV_EXHIBITION_ORGANIZING]
+  - [PROD_SERV_FLEXIBLE_STAFFING, used_in, MKT_LOGISTICS]
+  - [PROD_SERV_RECRUITMENT, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_EDU_IT, used_in, MKT_GOVERNMENT]
+  - [PROD_SERV_VOCATIONAL_TRAINING, used_in, MKT_RETAIL_CONSUMER]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_SERV_FULL_SERVICE_HOTEL, operates, PROD_RE_HOTEL_PROPERTY]
+  - [SEG_SERV_TIC, serves, MKT_PHARMA_RD]
+  - [SEG_SERV_TIC, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_SERV_TIC, serves, MKT_SEMI_FAB]
+
+sw_l3_map:
+  "460601": [SEG_SERV_SPORTS]
+  "460701": [SEG_SERV_LOCAL_LIFE]
+  "460801": [SEG_SERV_HR]
+  "460802": [SEG_SERV_TIC]
+  "460803": [SEG_SERV_EXHIBITION]
+  "460804": [SEG_SERV_OTHER_PROFESSIONAL]
+  "460901": [SEG_SERV_HOTEL]
+  "460902": [SEG_SERV_RESTAURANT]
+  "461001": [SEG_SERV_GAMING]
+  "461002": [SEG_SERV_THEME_PARK]
+  "461003": [SEG_SERV_NATURAL_SCENIC]
+  "461004": [SEG_SERV_TRAVEL_INTEGRATED]
+  "461101": [SEG_SERV_ACADEMIC_EDU]
+  "461102": [SEG_SERV_TRAINING_EDU]
+  "461103": [SEG_SERV_EDU_OPERATION]

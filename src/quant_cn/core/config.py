@@ -13,11 +13,13 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from quant_cn.core.dataset_spec import DatasetSpec
 from quant_cn.core.date_codec import DateCodec
+from quant_cn.core.document_source import DocumentSource
 from quant_cn.core.exceptions import ConfigError
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 ENV_LAKE_ROOT = "QUANT_CN_LAKE_ROOT"
 ENV_TOKEN = "TUSHARE_TOKEN"
+ENV_LLM_KEY = "DEEPSEEK_API_KEY"
 
 
 class LakeConfig(BaseModel):
@@ -117,6 +119,54 @@ class DownloadConfig(BaseModel):
     long_history_start: str
     long_history_datasets: list[str]
     end: str | None = None
+
+
+class LlmConfig(BaseModel):
+    """
+    Purpose:
+        The LLM endpoint used for extraction (D-098): OpenAI-compatible chat completions URL,
+        default model, limits, and the API key, which comes from env DEEPSEEK_API_KEY only.
+
+    Contract:
+        Input:
+            url:            str        -- chat-completions endpoint
+            model:          str        -- default model, e.g. "deepseek-flash"
+            timeout_s:      float > 0
+            retries:        int >= 0
+            retry_sleep_s:  float >= 0
+            min_interval_s: float >= 0 -- spacing between requests
+            max_tokens:     int > 0    -- completion cap per call (reasoning counts too)
+            thinking:       bool       -- model reasoning on/off; off for extraction
+            api_key:        str        -- env DEEPSEEK_API_KEY only; hidden from repr
+            prices:         dict[str, dict[str, float]]  -- model → peak CNY per 1M tokens:
+                                          input_hit, input_miss, output (off-peak is half)
+            peak_hours:     list[list[int]]  -- Beijing-time [start, end) hours, weekdays
+        Output:
+            frozen pydantic model
+        Raises:
+            pydantic.ValidationError
+
+    Used by:
+        core.Config                  -- field `llm`
+        data_loading.DeepSeekClient  -- endpoint, model, limits, key
+
+    Test cases:
+        TC-C-014  base.yaml llm section loads; key read from env only and hidden from repr
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    url: str = "https://api.deepseek.com/chat/completions"
+    model: str = "deepseek-flash"
+    timeout_s: float = Field(default=120.0, gt=0)
+    retries: int = Field(default=3, ge=0)
+    retry_sleep_s: float = Field(default=10.0, ge=0)
+    min_interval_s: float = Field(default=0.2, ge=0)
+    max_tokens: int = Field(default=8000, gt=0)
+    thinking: bool = False
+    prices: dict[str, dict[str, float]] = Field(default_factory=dict)
+    peak_hours: list[list[int]] = Field(default_factory=lambda: [[9, 12], [14, 18]])
+    api_key: str = Field(default="", repr=False)
 
 
 class FactorSpec(BaseModel):
@@ -297,6 +347,8 @@ class Config(BaseModel):
             universe:    UniverseConfig          -- base.yaml `universe` (plan 04 phase 3)
             factors:     list[FactorSpec]        -- config/factors.yaml (plan 04 phase 4)
             campaign:    CampaignConfig          -- config/factors.yaml `campaign` (phase 5)
+            documents:   dict[str, DocumentSource] -- config/documents.yaml `sources` (D-101)
+            llm:         LlmConfig               -- base.yaml `llm` + DEEPSEEK_API_KEY (D-098)
         Output:
             frozen pydantic model
         Raises:
@@ -309,6 +361,7 @@ class Config(BaseModel):
         pipeline.CuratePipeline      -- injected type or call
         cli.ServiceBuilder           -- injected type or call
         cli.ResearchCommands         -- injected type or call
+        cli.DocumentCommands  -- documents sources and lake root
 
     Test cases:
         TC-C-001  env > local.yaml > base.yaml precedence for lake.lake_root
@@ -324,6 +377,7 @@ class Config(BaseModel):
         TC-C-011  base.yaml universe section loads; missing section gives the defaults
         TC-C-012  config/factors.yaml loads six factors with their classes; missing file = []
         TC-C-013  config/factors.yaml campaign loads; missing section gives the defaults
+        TC-C-014  base.yaml llm section loads; key read from env only and hidden from repr
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -339,6 +393,8 @@ class Config(BaseModel):
     universe: UniverseConfig = Field(default_factory=UniverseConfig)
     factors: list[FactorSpec] = Field(default_factory=list)
     campaign: CampaignConfig = Field(default_factory=CampaignConfig)
+    documents: dict[str, DocumentSource] = Field(default_factory=dict)
+    llm: LlmConfig = Field(default_factory=LlmConfig)
 
     @classmethod
     def load(
@@ -383,6 +439,7 @@ class Config(BaseModel):
                 enum_values=merged.get("enum_values", {}),
                 datasets={name: DatasetSpec(name=name, **spec) for name, spec in datasets.items()},
                 universe=UniverseConfig(**merged.get("universe", {})),
+                llm=LlmConfig(**{**merged.get("llm", {}), "api_key": environ.get(ENV_LLM_KEY, "")}),
                 **extras,
             )
         except (ValidationError, TypeError) as exc:
@@ -451,15 +508,17 @@ class Config(BaseModel):
 
     @classmethod
     def _read_extras(cls, root: Path) -> dict[str, Any]:
-        """The optional list files: futures categories, ticker aliases, factors."""
+        """The optional list files: futures categories, ticker aliases, factors, documents."""
         categories = cls._read_yaml(root / "config" / "futures_categories.yaml", required=False)
         aliases = cls._read_yaml(root / "config" / "ticker_aliases.yaml", required=False)
         factors = cls._read_yaml(root / "config" / "factors.yaml", required=False)
+        documents = cls._read_yaml(root / "config" / "documents.yaml", required=False)
         return {
             "futures_categories": [FuturesCategory(**c) for c in categories.get("categories", [])],
             "ticker_aliases": [TickerAlias(**a) for a in aliases.get("aliases", [])],
             "factors": [FactorSpec(**f) for f in factors.get("factors", [])],
             "campaign": CampaignConfig(**factors.get("campaign", {})),
+            "documents": {k: DocumentSource(**v) for k, v in documents.get("sources", {}).items()},
         }
 
     @staticmethod

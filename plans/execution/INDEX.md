@@ -14,4 +14,7 @@ Execution plans, `NN_<slug>.md`, from the `plan` skill template. `ROADMAP.md` is
 | `09_positioning_flows.md` | dealer gamma exposure, futures positioning, margin liquidation ladder for the CSI 300; datasets, notebook, event-study validation | 6 phases, class table, risks |
 | `10_macro_commodity_sectors.md` | commodity futures, gold, macro and sector data; second source; continuous series; factors and risk descriptors | 5 phases, class table, risks |
 | `11_lake_expansion.md` | multi-source data loading and every dataset the research asks need, in nine ordered phases with permission checks and reconciliations | 9 phases, class table, risks |
+| `12_industry_chain_graph.md` | evidence-backed A-share industry-chain graph: Opus taxonomy, CNINFO documents, DeepSeek extraction/validation, graph query | 6 phases, class table, risks |
+| `13_broker_valuation.md` | broker valuation logic from research reports: method, multiples, target price, comparables, assumptions; per-industry induction | 4 phases, risks |
+| `15_chain_web_app.md` | industry-chain web app: React front end, Go read-only API, Python graph export | |
 | `ROADMAP.md` | every plan with what it builds, which design it implements, dependencies and status | roadmap table, status vocabulary |

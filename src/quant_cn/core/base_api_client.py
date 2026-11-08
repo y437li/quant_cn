@@ -31,6 +31,7 @@ class BaseApiClient(ABC):
         data_loading.DateWindowFetcher   -- injected type or call
         data_loading.AkshareClient       -- subclass
         data_loading.BaostockClient      -- subclass
+        data_loading.BaseWebClient       -- subclass
 
     Test cases:
         TC-BAC-001  cannot be instantiated; subclass must implement query

@@ -48,6 +48,8 @@ class LakeQuery:
         pipeline.EvaluationStep      -- injected type or call
         pipeline.FeatureStep         -- injected type or call
         cli.ResearchCommands         -- injected type or call
+        cli.DocumentCommands             -- injected type or call
+        data_loading.DocumentDownloader  -- metadata and manifest reads
 
     Test cases:
         TC-LQ-001  sql returns a DataFrame with parameters bound

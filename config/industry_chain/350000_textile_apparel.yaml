@@ -1,0 +1,190 @@
+# Shenwan 350000 纺织服饰 — product taxonomy prior (plan 12 phase 1, D-097). Format: README.md.
+sector: {sw_l1: "350000", name: 纺织服饰, name_en: Textiles and Apparel}
+
+nodes:
+  # --- segments ---
+  - {id: SEG_TEX_TEXTILE_MFG, type: segment, name: 纺织制造, name_en: Textile Manufacturing}
+  - {id: SEG_TEX_COTTON_SPINNING, type: segment, name: 棉纺, name_en: Cotton Spinning, aliases: [棉纺织]}
+  - {id: SEG_TEX_DYEING, type: segment, name: 印染, name_en: Dyeing and Printing, aliases: [印染加工]}
+  - {id: SEG_TEX_ACCESSORIES, type: segment, name: 服装辅料, name_en: Apparel Accessories and Trims, aliases: [辅料]}
+  - {id: SEG_TEX_OTHER_TEXTILE, type: segment, name: 其他纺织, name_en: Other Textiles}
+  - {id: SEG_TEX_GARMENT_OEM, type: segment, name: 服装代工, name_en: Garment OEM/ODM, aliases: [成衣制造, 纺织服装代工]}
+  - {id: SEG_TEX_FOOTWEAR_MFG, type: segment, name: 纺织鞋类制造, name_en: Footwear Manufacturing, aliases: [制鞋代工]}
+  - {id: SEG_TEX_APPAREL_HOME, type: segment, name: 服装家纺, name_en: Apparel and Home Textiles}
+  - {id: SEG_TEX_FOOTWEAR_HATS, type: segment, name: 鞋帽及其他, name_en: "Footwear, Hats and Others"}
+  - {id: SEG_TEX_HOME_TEXTILE, type: segment, name: 家纺, name_en: Home Textiles}
+  - {id: SEG_TEX_SPORTSWEAR, type: segment, name: 运动服装, name_en: Sportswear}
+  - {id: SEG_TEX_NONSPORT_APPAREL, type: segment, name: 非运动服装, name_en: Non-Sports Apparel, aliases: [品牌服装]}
+  - {id: SEG_TEX_ADORNMENTS, type: segment, name: 饰品, name_en: Adornments}
+  - {id: SEG_TEX_JEWELRY_WATCH, type: segment, name: 钟表珠宝, name_en: Jewellery and Watches}
+  - {id: SEG_TEX_LUXURY, type: segment, name: 多品类奢侈品, name_en: Multi-Category Luxury}
+  - {id: SEG_TEX_OTHER_ADORNMENT, type: segment, name: 其他饰品, name_en: Other Adornments}
+
+  # --- spinning and fibres ---
+  - {id: PROD_TEX_COTTON_YARN, type: product, name: 棉纱, name_en: Cotton Yarn, segment: SEG_TEX_COTTON_SPINNING, aliases: [纯棉纱]}
+  - {id: PROD_TEX_BLENDED_YARN, type: product, name: 混纺纱, name_en: Blended Yarn, segment: SEG_TEX_COTTON_SPINNING, aliases: [混纺纱线]}
+  - {id: PROD_TEX_MELANGE_YARN, type: product, name: 色纺纱线, name_en: Melange Yarn, parent: PROD_TEX_BLENDED_YARN, segment: SEG_TEX_COTTON_SPINNING}
+  - {id: PROD_TEX_WOOL_YARN, type: product, name: 毛纺纱线, name_en: Wool Yarn, segment: SEG_TEX_OTHER_TEXTILE, aliases: [羊毛纱, 精纺毛纱]}
+  - {id: PROD_TEX_CASHMERE, type: product, name: 羊绒制品, name_en: Cashmere Products, segment: SEG_TEX_OTHER_TEXTILE, aliases: [羊绒纱, 羊绒衫]}
+  - {id: PROD_TEX_SILK, type: product, name: 丝绸, name_en: Silk, segment: SEG_TEX_OTHER_TEXTILE, aliases: [蚕丝, 真丝]}
+  - {id: PROD_TEX_LINEN, type: product, name: 麻纺织品, name_en: Linen Textiles, segment: SEG_TEX_OTHER_TEXTILE, aliases: [亚麻纱, 亚麻布]}
+  # --- fabrics ---
+  - {id: PROD_TEX_FABRIC, type: product, name: 面料, name_en: Fabric, segment: SEG_TEX_OTHER_TEXTILE, aliases: [坯布, 织物]}
+  - {id: PROD_TEX_WOVEN_FABRIC, type: product, name: 梭织面料, name_en: Woven Fabric, parent: PROD_TEX_FABRIC, segment: SEG_TEX_OTHER_TEXTILE, aliases: [色织布, 牛仔布]}
+  - {id: PROD_TEX_KNIT_FABRIC, type: product, name: 针织面料, name_en: Knitted Fabric, parent: PROD_TEX_FABRIC, segment: SEG_TEX_OTHER_TEXTILE}
+  - {id: PROD_TEX_FUNCTIONAL_FABRIC, type: product, name: 功能性面料, name_en: Functional Fabric, parent: PROD_TEX_FABRIC, segment: SEG_TEX_OTHER_TEXTILE}
+  - {id: PROD_TEX_NONWOVEN, type: product, name: 无纺布, name_en: Nonwoven Fabric, segment: SEG_TEX_OTHER_TEXTILE, aliases: [非织造布, 熔喷布, 水刺布, 纺粘无纺布]}
+  - {id: PROD_TEX_INDUSTRIAL_TEXTILE, type: product, name: 产业用纺织品, name_en: Technical Textiles, segment: SEG_TEX_OTHER_TEXTILE, aliases: [工业用布]}
+  - {id: PROD_TEX_DYED_FABRIC, type: product, name: 印染布, name_en: Dyed and Printed Fabric, segment: SEG_TEX_DYEING, aliases: [染整加工, 印花布]}
+  - {id: PROD_TEX_YARN_DYEING, type: product, name: 纱线染色, name_en: Yarn Dyeing, segment: SEG_TEX_DYEING}
+  # --- trims and accessories ---
+  - {id: PROD_TEX_ZIPPER, type: product, name: 拉链, name_en: Zipper, segment: SEG_TEX_ACCESSORIES}
+  - {id: PROD_TEX_BUTTON, type: product, name: 纽扣, name_en: Button, segment: SEG_TEX_ACCESSORIES}
+  - {id: PROD_TEX_LABEL_TRIM, type: product, name: 商标织带, name_en: Labels and Webbing, segment: SEG_TEX_ACCESSORIES, aliases: [织唛, 吊牌, 织带]}
+  - {id: PROD_TEX_INTERLINING, type: product, name: 衬布, name_en: Interlining, segment: SEG_TEX_ACCESSORIES}
+  - {id: PROD_TEX_SEWING_THREAD, type: product, name: 缝纫线, name_en: Sewing Thread, segment: SEG_TEX_ACCESSORIES}
+  # --- garment and footwear manufacturing ---
+  - {id: PROD_TEX_GARMENT_OEM, type: product, name: 成衣代工, name_en: Garment OEM/ODM, segment: SEG_TEX_GARMENT_OEM, aliases: [服装ODM, 服装OEM]}
+  - {id: PROD_TEX_SPORTSWEAR_OEM, type: product, name: 运动服代工, name_en: Sportswear OEM, parent: PROD_TEX_GARMENT_OEM, segment: SEG_TEX_GARMENT_OEM, aliases: [运动服饰代工]}
+  - {id: PROD_TEX_KNITWEAR_OEM, type: product, name: 针织服装代工, name_en: Knitwear OEM, parent: PROD_TEX_GARMENT_OEM, segment: SEG_TEX_GARMENT_OEM}
+  - {id: PROD_TEX_SHOE_OEM, type: product, name: 鞋履代工, name_en: Footwear OEM, segment: SEG_TEX_FOOTWEAR_MFG, aliases: [运动鞋代工, 鞋类ODM]}
+  - {id: PROD_TEX_SHOE_MATERIAL, type: product, name: 鞋材, name_en: Footwear Materials, segment: SEG_TEX_FOOTWEAR_MFG, aliases: [鞋底, 鞋面材料]}
+  # --- brand apparel ---
+  - {id: PROD_TEX_BRAND_APPAREL, type: product, name: 品牌服饰, name_en: Branded Apparel, segment: SEG_TEX_NONSPORT_APPAREL}
+  - {id: PROD_TEX_MENSWEAR, type: product, name: 男装, name_en: Menswear, parent: PROD_TEX_BRAND_APPAREL, segment: SEG_TEX_NONSPORT_APPAREL, aliases: [商务男装]}
+  - {id: PROD_TEX_WOMENSWEAR, type: product, name: 女装, name_en: Womenswear, parent: PROD_TEX_BRAND_APPAREL, segment: SEG_TEX_NONSPORT_APPAREL}
+  - {id: PROD_TEX_KIDSWEAR, type: product, name: 童装, name_en: Kidswear, parent: PROD_TEX_BRAND_APPAREL, segment: SEG_TEX_NONSPORT_APPAREL, aliases: [儿童服饰]}
+  - {id: PROD_TEX_CASUALWEAR, type: product, name: 休闲服, name_en: Casual Wear, parent: PROD_TEX_BRAND_APPAREL, segment: SEG_TEX_NONSPORT_APPAREL, aliases: [大众休闲服饰]}
+  - {id: PROD_TEX_UNDERWEAR, type: product, name: 内衣, name_en: Underwear, parent: PROD_TEX_BRAND_APPAREL, segment: SEG_TEX_NONSPORT_APPAREL, aliases: [贴身衣物, 家居服]}
+  - {id: PROD_TEX_DOWN_APPAREL, type: product, name: 羽绒服, name_en: Down Apparel, parent: PROD_TEX_BRAND_APPAREL, segment: SEG_TEX_NONSPORT_APPAREL}
+  - {id: PROD_TEX_WORKWEAR, type: product, name: 职业装, name_en: Workwear and Uniforms, parent: PROD_TEX_BRAND_APPAREL, segment: SEG_TEX_NONSPORT_APPAREL, aliases: [团体服装, 制服]}
+  - {id: PROD_TEX_SPORTS_APPAREL, type: product, name: 运动服饰, name_en: Sports Apparel, segment: SEG_TEX_SPORTSWEAR, aliases: [运动服]}
+  - {id: PROD_TEX_SPORTS_SHOES, type: product, name: 运动鞋, name_en: Sports Shoes, segment: SEG_TEX_SPORTSWEAR}
+  - {id: PROD_TEX_OUTDOOR_APPAREL, type: product, name: 户外服饰, name_en: Outdoor Apparel, parent: PROD_TEX_SPORTS_APPAREL, segment: SEG_TEX_SPORTSWEAR, aliases: [冲锋衣]}
+  - {id: PROD_TEX_LEATHER_SHOES, type: product, name: 皮鞋, name_en: Leather Shoes, segment: SEG_TEX_FOOTWEAR_HATS, aliases: [女鞋, 时尚鞋履]}
+  - {id: PROD_TEX_BAGS, type: product, name: 箱包, name_en: Bags and Luggage, segment: SEG_TEX_FOOTWEAR_HATS, aliases: [皮具, 旅行箱]}
+  - {id: PROD_TEX_HATS_SOCKS, type: product, name: 袜帽, name_en: Hats and Hosiery, segment: SEG_TEX_FOOTWEAR_HATS, aliases: [袜子, 帽子]}
+  # --- home textiles ---
+  - {id: PROD_TEX_BEDDING, type: product, name: 床品套件, name_en: Bedding Sets, segment: SEG_TEX_HOME_TEXTILE, aliases: [四件套, 床上用品]}
+  - {id: PROD_TEX_DUVET, type: product, name: 被芯枕芯, name_en: Duvets and Pillows, segment: SEG_TEX_HOME_TEXTILE, aliases: [被芯, 枕芯]}
+  - {id: PROD_TEX_TOWEL, type: product, name: 毛巾浴巾, name_en: Towels, segment: SEG_TEX_HOME_TEXTILE, aliases: [毛巾]}
+  - {id: PROD_TEX_CURTAIN, type: product, name: 窗帘布艺, name_en: Curtains and Upholstery Fabric, segment: SEG_TEX_HOME_TEXTILE, aliases: [窗帘]}
+  # --- jewellery and watches ---
+  - {id: PROD_TEX_GOLD_JEWELRY, type: product, name: 黄金饰品, name_en: Gold Jewellery, segment: SEG_TEX_JEWELRY_WATCH, aliases: [黄金首饰, 足金饰品, 古法金]}
+  - {id: PROD_TEX_DIAMOND_JEWELRY, type: product, name: 钻石镶嵌饰品, name_en: Diamond Jewellery, segment: SEG_TEX_JEWELRY_WATCH, aliases: [钻石首饰, 镶嵌类]}
+  - {id: PROD_TEX_LAB_DIAMOND, type: product, name: 培育钻石饰品, name_en: Lab-Grown Diamond Jewellery, parent: PROD_TEX_DIAMOND_JEWELRY, segment: SEG_TEX_JEWELRY_WATCH, aliases: [人造钻石首饰]}
+  - {id: PROD_TEX_PLATINUM_JEWELRY, type: product, name: 铂金K金饰品, name_en: Platinum and K-Gold Jewellery, segment: SEG_TEX_JEWELRY_WATCH, aliases: [K金, 铂金首饰]}
+  - {id: PROD_TEX_JADE_PEARL, type: product, name: 珠宝玉石, name_en: Jade and Pearls, segment: SEG_TEX_JEWELRY_WATCH, aliases: [玉石, 珍珠, 翡翠]}
+  - {id: PROD_TEX_WATCH, type: product, name: 手表, name_en: Watches, segment: SEG_TEX_JEWELRY_WATCH, aliases: [钟表, 机械表]}
+  - {id: PROD_TEX_LUXURY_GOODS, type: product, name: 奢侈品, name_en: Luxury Goods, segment: SEG_TEX_LUXURY}
+  - {id: PROD_TEX_FASHION_ACCESSORY, type: product, name: 时尚配饰, name_en: Fashion Accessories, segment: SEG_TEX_OTHER_ADORNMENT, aliases: [饰品配件, 发饰]}
+
+edges:
+  # segment tree
+  - [SEG_TEX_COTTON_SPINNING, part_of, SEG_TEX_TEXTILE_MFG]
+  - [SEG_TEX_DYEING, part_of, SEG_TEX_TEXTILE_MFG]
+  - [SEG_TEX_ACCESSORIES, part_of, SEG_TEX_TEXTILE_MFG]
+  - [SEG_TEX_OTHER_TEXTILE, part_of, SEG_TEX_TEXTILE_MFG]
+  - [SEG_TEX_GARMENT_OEM, part_of, SEG_TEX_TEXTILE_MFG]
+  - [SEG_TEX_FOOTWEAR_MFG, part_of, SEG_TEX_TEXTILE_MFG]
+  - [SEG_TEX_FOOTWEAR_HATS, part_of, SEG_TEX_APPAREL_HOME]
+  - [SEG_TEX_HOME_TEXTILE, part_of, SEG_TEX_APPAREL_HOME]
+  - [SEG_TEX_SPORTSWEAR, part_of, SEG_TEX_APPAREL_HOME]
+  - [SEG_TEX_NONSPORT_APPAREL, part_of, SEG_TEX_APPAREL_HOME]
+  - [SEG_TEX_JEWELRY_WATCH, part_of, SEG_TEX_ADORNMENTS]
+  - [SEG_TEX_LUXURY, part_of, SEG_TEX_ADORNMENTS]
+  - [SEG_TEX_OTHER_ADORNMENT, part_of, SEG_TEX_ADORNMENTS]
+  # serves
+  - [SEG_TEX_TEXTILE_MFG, serves, MKT_APPAREL]
+  - [SEG_TEX_OTHER_TEXTILE, serves, MKT_HEALTHCARE]
+  - [SEG_TEX_OTHER_TEXTILE, serves, MKT_EV]
+  - [SEG_TEX_GARMENT_OEM, serves, MKT_APPAREL]
+  - [SEG_TEX_FOOTWEAR_MFG, serves, MKT_APPAREL]
+  - [SEG_TEX_APPAREL_HOME, serves, MKT_APPAREL]
+  - [SEG_TEX_APPAREL_HOME, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_TEX_HOME_TEXTILE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_TEX_ADORNMENTS, serves, MKT_RETAIL_CONSUMER]
+  # spinning chain
+  - [PROD_TEX_COTTON_YARN, uses_material, MAT_COTTON]
+  - [PROD_TEX_BLENDED_YARN, uses_material, MAT_COTTON]
+  - [PROD_TEX_BLENDED_YARN, uses_material, MAT_POLYESTER]
+  - [PROD_CHEM_VSF, uses_material, MAT_PULP]
+  - [PROD_CHEM_VSF, upstream_of, PROD_TEX_BLENDED_YARN]
+  - [PROD_CHEM_SPANDEX_YARN, upstream_of, PROD_TEX_KNIT_FABRIC]
+  - [PROD_TEX_COTTON_YARN, upstream_of, PROD_TEX_FABRIC]
+  - [PROD_TEX_BLENDED_YARN, upstream_of, PROD_TEX_FABRIC]
+  - [PROD_TEX_WOOL_YARN, upstream_of, PROD_TEX_FABRIC]
+  - [PROD_TEX_LINEN, upstream_of, PROD_TEX_FABRIC]
+  - [PROD_TEX_COTTON_YARN, upstream_of, PROD_TEX_YARN_DYEING]
+  - [PROD_TEX_YARN_DYEING, upstream_of, PROD_TEX_WOVEN_FABRIC]
+  - [PROD_TEX_FABRIC, upstream_of, PROD_TEX_DYED_FABRIC]
+  - [PROD_TEX_FUNCTIONAL_FABRIC, uses_material, MAT_POLYESTER]
+  - [PROD_TEX_NONWOVEN, uses_material, MAT_PLASTICS]
+  - [PROD_TEX_NONWOVEN, uses_material, MAT_POLYESTER]
+  - [PROD_TEX_INDUSTRIAL_TEXTILE, uses_material, MAT_POLYESTER]
+  - [PROD_TEX_INDUSTRIAL_TEXTILE, used_in, MKT_EV]
+  - [PROD_TEX_SEWING_THREAD, uses_material, MAT_POLYESTER]
+  # into garments
+  - [PROD_TEX_DYED_FABRIC, upstream_of, PROD_TEX_GARMENT_OEM]
+  - [PROD_TEX_KNIT_FABRIC, upstream_of, PROD_TEX_GARMENT_OEM]
+  - [PROD_TEX_FUNCTIONAL_FABRIC, upstream_of, PROD_TEX_SPORTSWEAR_OEM]
+  - [PROD_TEX_ZIPPER, component_of, PROD_TEX_GARMENT_OEM]
+  - [PROD_TEX_BUTTON, component_of, PROD_TEX_GARMENT_OEM]
+  - [PROD_TEX_LABEL_TRIM, component_of, PROD_TEX_GARMENT_OEM]
+  - [PROD_TEX_INTERLINING, component_of, PROD_TEX_GARMENT_OEM]
+  - [PROD_TEX_SEWING_THREAD, component_of, PROD_TEX_GARMENT_OEM]
+  - [PROD_TEX_ZIPPER, uses_material, MAT_COPPER]
+  - [PROD_TEX_GARMENT_OEM, upstream_of, PROD_TEX_BRAND_APPAREL]
+  - [PROD_TEX_SPORTSWEAR_OEM, upstream_of, PROD_TEX_SPORTS_APPAREL]
+  - [PROD_TEX_SHOE_MATERIAL, component_of, PROD_TEX_SHOE_OEM]
+  - [PROD_TEX_SHOE_MATERIAL, uses_material, MAT_SYNTHETIC_RUBBER]
+  - [PROD_TEX_SHOE_OEM, upstream_of, PROD_TEX_SPORTS_SHOES]
+  - [PROD_TEX_SHOE_OEM, upstream_of, PROD_TEX_LEATHER_SHOES]
+  - [PROD_TEX_CASHMERE, upstream_of, PROD_TEX_BRAND_APPAREL]
+  - [PROD_TEX_SILK, upstream_of, PROD_TEX_BRAND_APPAREL]
+  - [PROD_TEX_DOWN_APPAREL, substitute_for, PROD_TEX_OUTDOOR_APPAREL]
+  # end use
+  - [PROD_TEX_BRAND_APPAREL, used_in, MKT_APPAREL]
+  - [PROD_TEX_SPORTS_APPAREL, used_in, MKT_APPAREL]
+  - [PROD_TEX_SPORTS_SHOES, used_in, MKT_APPAREL]
+  - [PROD_TEX_LEATHER_SHOES, used_in, MKT_APPAREL]
+  - [PROD_TEX_BAGS, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TEX_HATS_SOCKS, used_in, MKT_APPAREL]
+  # home textiles
+  - [PROD_TEX_DYED_FABRIC, upstream_of, PROD_TEX_BEDDING]
+  - [PROD_TEX_DYED_FABRIC, upstream_of, PROD_TEX_CURTAIN]
+  - [PROD_TEX_COTTON_YARN, upstream_of, PROD_TEX_TOWEL]
+  - [PROD_TEX_DUVET, uses_material, MAT_POLYESTER]
+  - [PROD_TEX_BEDDING, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TEX_TOWEL, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TEX_CURTAIN, used_in, MKT_REAL_ESTATE]
+  # jewellery
+  - [PROD_TEX_GOLD_JEWELRY, uses_material, MAT_GOLD]
+  - [PROD_TEX_PLATINUM_JEWELRY, uses_material, MAT_GOLD]
+  - [PROD_TEX_DIAMOND_JEWELRY, uses_material, MAT_GOLD]
+  - [PROD_TEX_LAB_DIAMOND, substitute_for, PROD_TEX_DIAMOND_JEWELRY]
+  - [PROD_TEX_GOLD_JEWELRY, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TEX_DIAMOND_JEWELRY, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TEX_JADE_PEARL, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TEX_WATCH, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TEX_LUXURY_GOODS, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_TEX_FASHION_ACCESSORY, used_in, MKT_APPAREL]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_TEX_NONWOVEN, used_in, PROD_BEAU_BABY_DIAPER]
+  - [PROD_TEX_NONWOVEN, used_in, PROD_BEAU_SANITARY_PAD]
+  - [PROD_TEX_SHOE_MATERIAL, uses_material, MAT_LEATHER]
+  - [PROD_TEX_LEATHER_SHOES, uses_material, MAT_LEATHER]
+
+sw_l3_map:
+  "350102": [SEG_TEX_COTTON_SPINNING]
+  "350104": [SEG_TEX_DYEING]
+  "350105": [SEG_TEX_ACCESSORIES]
+  "350106": [SEG_TEX_OTHER_TEXTILE, SEG_TEX_GARMENT_OEM]
+  "350107": [SEG_TEX_FOOTWEAR_MFG]
+  "350205": [SEG_TEX_FOOTWEAR_HATS]
+  "350206": [SEG_TEX_HOME_TEXTILE]
+  "350208": [SEG_TEX_SPORTSWEAR]
+  "350209": [SEG_TEX_NONSPORT_APPAREL, SEG_TEX_GARMENT_OEM]
+  "350301": [SEG_TEX_JEWELRY_WATCH]
+  "350302": [SEG_TEX_LUXURY]
+  "350303": [SEG_TEX_OTHER_ADORNMENT]

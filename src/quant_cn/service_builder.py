@@ -18,6 +18,8 @@ from quant_cn.core.docs.registry_reader import RegistryReader
 from quant_cn.core.docs.repo_files import RepoFiles
 from quant_cn.data_loading.akshare_client import AkshareClient
 from quant_cn.data_loading.baostock_client import BaostockClient
+from quant_cn.data_loading.cninfo_client import CninfoClient
+from quant_cn.data_loading.eastmoney_report_client import EastmoneyReportClient
 from quant_cn.data_loading.fetcher_factory import FetcherFactory
 from quant_cn.data_loading.tushare_client import TushareClient
 from quant_cn.factor.factor_evaluator import FactorEvaluator
@@ -111,7 +113,12 @@ class ServiceBuilder:
             clock,
             calendar,
             codec,
-            extra_clients={"akshare": AkshareClient(clock), "baostock": BaostockClient(clock)},
+            extra_clients={
+                "akshare": AkshareClient(clock),
+                "baostock": BaostockClient(clock),
+                "cninfo": CninfoClient(clock),
+                "eastmoney": EastmoneyReportClient(clock),
+            },
             query=LakeQuery(catalog),
         )
         executor = self.build_runner(run_log, runner, show_progress)

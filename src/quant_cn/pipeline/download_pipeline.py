@@ -134,6 +134,8 @@ class DownloadPipeline:
         TC-DP-005  unknown dataset raises ConfigError; end before start raises ValueError
         TC-DP-006  start after the configured one on an overwrite range dataset raises ConfigError
         TC-DP-007  extend_days pushes a dataset's end past the run end (future calendar)
+        TC-DP-008  without --start, a dataset whose configured start is after the run end is
+                   skipped, not an error
     """
 
     def __init__(
@@ -183,6 +185,8 @@ class DownloadPipeline:
         """
         names = self._list_datasets(datasets)
         stop = self._codec.validate(end or self._config.download.end or self._clock.get_today())
+        # a dataset whose own start lies after the run end has nothing to fetch yet: skip it
+        names = [n for n in names if start or self._config.get_start(n) <= stop]
         ranges = {n: self._parse_range(n, start, stop) for n in names}
         if dry_run:
             return self._build_dry_run(ranges)

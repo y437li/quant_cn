@@ -1,0 +1,249 @@
+# Shenwan L1 760000 环保 — product taxonomy prior (plan 12 phase 1, D-097).
+# Format: README.md beside this file. All edges are priors (general industry knowledge).
+# Potable water supply is modelled in 410000_utilities.yaml (SEG_UTIL_WATER); 760102 maps to it as well.
+sector: {sw_l1: "760000", name: 环保, name_en: Environmental Protection}
+
+nodes:
+  # ======================= segments =======================
+  - {id: SEG_ENV_GOVERNANCE, type: segment, name: 环境治理, name_en: Environmental Remediation and Services}
+  - {id: SEG_ENV_AIR, type: segment, name: 大气治理, name_en: Air Pollution Control}
+  - {id: SEG_ENV_WATER, type: segment, name: 水务及水治理, name_en: Water and Wastewater Treatment, aliases: [水处理]}
+  - {id: SEG_ENV_SOLID_WASTE, type: segment, name: 固废治理, name_en: Solid Waste Management}
+  - {id: SEG_ENV_INCINERATION, type: segment, name: 垃圾焚烧, name_en: Waste-to-Energy, aliases: [垃圾发电]}
+  - {id: SEG_ENV_HAZARDOUS, type: segment, name: 危废处置, name_en: Hazardous Waste Disposal}
+  - {id: SEG_ENV_SANITATION, type: segment, name: 环卫, name_en: Sanitation Services}
+  - {id: SEG_ENV_RECYCLING, type: segment, name: 再生资源, name_en: Resource Recycling, aliases: [循环经济]}
+  - {id: SEG_ENV_INTEGRATED, type: segment, name: 综合环境治理, name_en: Integrated Environmental Remediation}
+  - {id: SEG_ENV_EQUIP, type: segment, name: 环保设备, name_en: Environmental Equipment}
+  - {id: SEG_ENV_MONITORING, type: segment, name: 环境监测, name_en: Environmental Monitoring}
+
+  # ======================= air =======================
+  - {id: PROD_ENV_FGD, type: product, name: 烟气脱硫装置, name_en: Flue Gas Desulfurization System, segment: SEG_ENV_AIR, aliases: [脱硫, FGD]}
+  - {id: PROD_ENV_SCR, type: product, name: 烟气脱硝装置, name_en: Flue Gas Denitrification System, segment: SEG_ENV_AIR, aliases: [脱硝, SNCR]}
+  - {id: PROD_ENV_DENOX_CATALYST, type: product, name: 脱硝催化剂, name_en: SCR DeNOx Catalyst, segment: SEG_ENV_AIR, aliases: [蜂窝式催化剂, 平板式催化剂, SCR催化剂]}
+  - {id: PROD_ENV_DUST_COLLECTOR, type: product, name: 除尘设备, name_en: Dust Collector, segment: SEG_ENV_AIR, aliases: [除尘器]}
+  - {id: PROD_ENV_ESP, type: product, name: 电除尘器, name_en: Electrostatic Precipitator, parent: PROD_ENV_DUST_COLLECTOR, segment: SEG_ENV_AIR, aliases: [静电除尘器]}
+  - {id: PROD_ENV_BAGHOUSE, type: product, name: 袋式除尘器, name_en: Baghouse Filter, parent: PROD_ENV_DUST_COLLECTOR, segment: SEG_ENV_AIR, aliases: [布袋除尘器]}
+  - {id: PROD_ENV_FILTER_BAG, type: product, name: 除尘滤袋, name_en: Filter Bag, segment: SEG_ENV_AIR, aliases: [滤料]}
+  - {id: PROD_ENV_VOCS, type: product, name: VOCs治理设备, name_en: VOC Abatement Equipment, segment: SEG_ENV_AIR, aliases: [RTO, 有机废气治理]}
+  - {id: PROD_ENV_ULTRA_LOW_EMISSION, type: product, kind: service, name: 超低排放改造, name_en: Ultra-Low Emission Retrofit, segment: SEG_ENV_AIR, aliases: [非电超低排放]}
+  - {id: PROD_ENV_AIR_OPERATION, type: product, kind: service, name: 脱硫脱硝运营服务, name_en: Desulfurization and DeNOx Operation, segment: SEG_ENV_AIR, aliases: [烟气治理特许经营]}
+  - {id: PROD_ENV_CARBON_CAPTURE, type: product, name: 碳捕集装置, name_en: Carbon Capture Unit, segment: SEG_ENV_AIR, aliases: [CO2捕集装置]}
+
+  # ======================= water =======================
+  - {id: PROD_ENV_MUNICIPAL_WASTEWATER, type: product, kind: service, name: 市政污水处理, name_en: Municipal Wastewater Treatment, segment: SEG_ENV_WATER, aliases: [污水处理厂运营, 城镇污水处理]}
+  - {id: PROD_ENV_INDUSTRIAL_WASTEWATER, type: product, kind: service, name: 工业废水处理, name_en: Industrial Wastewater Treatment, segment: SEG_ENV_WATER, aliases: [工业污水处理, 零排放]}
+  - {id: PROD_ENV_RURAL_WASTEWATER, type: product, kind: service, name: 农村污水治理, name_en: Rural Wastewater Treatment, segment: SEG_ENV_WATER}
+  - {id: PROD_ENV_WATER_ENVIRONMENT, type: product, kind: service, name: 水环境综合治理, name_en: Water Body Remediation, segment: SEG_ENV_WATER, aliases: [黑臭水体治理, 流域治理]}
+  - {id: PROD_ENV_SLUDGE, type: product, kind: service, name: 污泥处理处置, name_en: Sludge Treatment and Disposal, segment: SEG_ENV_WATER, aliases: [污泥干化, 污泥焚烧]}
+  - {id: PROD_ENV_RECLAIMED_WATER, type: product, kind: service, name: 再生水利用, name_en: Reclaimed Water, segment: SEG_ENV_WATER, aliases: [中水回用, 再生水]}
+  - {id: PROD_ENV_DESALINATION, type: product, kind: service, name: 海水淡化, name_en: Seawater Desalination, segment: SEG_ENV_WATER}
+  - {id: PROD_ENV_PIPE_NETWORK_OM, type: product, kind: service, name: 排水管网运维, name_en: Drainage Network O&M, segment: SEG_ENV_WATER, aliases: [管网运维, 海绵城市]}
+  - {id: PROD_ENV_WATER_EPC, type: product, kind: service, name: 水处理工程EPC, name_en: Water Treatment EPC, segment: SEG_ENV_WATER, aliases: [水务工程]}
+  - {id: PROD_ENV_MEMBRANE, type: product, name: 水处理膜, name_en: Water Treatment Membrane, segment: SEG_ENV_EQUIP, aliases: [膜组件]}
+  - {id: PROD_ENV_MBR, type: product, name: MBR膜, name_en: Membrane Bioreactor Module, parent: PROD_ENV_MEMBRANE, segment: SEG_ENV_EQUIP, aliases: [膜生物反应器]}
+  - {id: PROD_ENV_UF_MEMBRANE, type: product, name: 超滤膜, name_en: Ultrafiltration Membrane, parent: PROD_ENV_MEMBRANE, segment: SEG_ENV_EQUIP, aliases: [UF膜]}
+  - {id: PROD_ENV_RO_MEMBRANE, type: product, import_dependence: medium, name: 反渗透膜, name_en: Reverse Osmosis Membrane, parent: PROD_ENV_MEMBRANE, segment: SEG_ENV_EQUIP, aliases: [RO膜, 纳滤膜]}
+  - {id: PROD_ENV_WATER_EQUIP, type: product, name: 水处理设备, name_en: Water Treatment Equipment, segment: SEG_ENV_EQUIP, aliases: [污水处理设备, 一体化污水处理设备]}
+
+  # ======================= solid waste: incineration =======================
+  - {id: PROD_ENV_WTE, type: product, kind: service, name: 生活垃圾焚烧发电, name_en: Municipal Waste-to-Energy, segment: SEG_ENV_INCINERATION, aliases: [垃圾焚烧发电, 垃圾发电项目]}
+  - {id: PROD_ENV_INCINERATOR, type: product, name: 垃圾焚烧炉, name_en: Waste Incinerator, segment: SEG_ENV_INCINERATION, aliases: [炉排炉, 机械炉排]}
+  - {id: PROD_ENV_WTE_FLUE_GAS, type: product, name: 焚烧烟气净化系统, name_en: Incineration Flue Gas Cleaning, segment: SEG_ENV_INCINERATION}
+  - {id: PROD_ENV_LEACHATE, type: product, kind: service, name: 渗滤液处理, name_en: Landfill Leachate Treatment, segment: SEG_ENV_INCINERATION, aliases: [垃圾渗滤液]}
+  - {id: PROD_ENV_FLY_ASH, type: product, kind: service, name: 飞灰处置, name_en: Fly Ash Disposal, segment: SEG_ENV_INCINERATION, aliases: [飞灰资源化]}
+  - {id: PROD_ENV_WTE_HEAT, type: product, kind: service, name: 垃圾焚烧供热, name_en: Waste-to-Energy Heat Supply, segment: SEG_ENV_INCINERATION, aliases: [焚烧厂供汽]}
+
+  # ======================= solid waste: other =======================
+  - {id: PROD_ENV_LANDFILL, type: product, kind: service, name: 卫生填埋, name_en: Sanitary Landfill, segment: SEG_ENV_SOLID_WASTE, aliases: [垃圾填埋]}
+  - {id: PROD_ENV_KITCHEN_WASTE, type: product, kind: service, name: 餐厨垃圾处理, name_en: Food Waste Treatment, segment: SEG_ENV_SOLID_WASTE, aliases: [厨余垃圾处理]}
+  - {id: PROD_ENV_INDUSTRIAL_SOLID, type: product, kind: service, name: 一般工业固废处置, name_en: Industrial Solid Waste Treatment, segment: SEG_ENV_SOLID_WASTE, aliases: [工业固废资源化]}
+  - {id: PROD_ENV_CONSTRUCTION_WASTE, type: product, kind: service, name: 建筑垃圾资源化, name_en: Construction Waste Recycling, segment: SEG_ENV_SOLID_WASTE}
+  - {id: PROD_ENV_HAZARDOUS_WASTE, type: product, kind: service, name: 危险废物处置, name_en: Hazardous Waste Treatment, segment: SEG_ENV_HAZARDOUS, aliases: [危废处置服务, 危废焚烧]}
+  - {id: PROD_ENV_MEDICAL_WASTE, type: product, kind: service, name: 医疗废物处置, name_en: Medical Waste Disposal, segment: SEG_ENV_HAZARDOUS, aliases: [医废处置]}
+  - {id: PROD_ENV_HAZ_RESOURCE, type: product, kind: service, name: 危废资源化利用, name_en: Hazardous Waste Resource Recovery, segment: SEG_ENV_HAZARDOUS, aliases: [含金属危废资源化]}
+
+  # ======================= sanitation =======================
+  - {id: PROD_ENV_SANITATION_SERVICE, type: product, kind: service, name: 环卫服务, name_en: Urban Sanitation Services, segment: SEG_ENV_SANITATION, aliases: [城乡环卫一体化, 道路保洁]}
+  - {id: PROD_ENV_WASTE_COLLECTION, type: product, kind: service, name: 垃圾收运, name_en: Waste Collection and Transfer, segment: SEG_ENV_SANITATION, aliases: [垃圾中转]}
+  - {id: PROD_ENV_SANITATION_VEHICLE, type: product, name: 环卫装备, name_en: Sanitation Vehicles and Equipment, segment: SEG_ENV_SANITATION, aliases: [环卫车, 新能源环卫车], parent: PROD_AUTO_SPECIAL_VEHICLE}
+
+  # ======================= recycling =======================
+  - {id: PROD_ENV_BATTERY_RECYCLING, type: product, kind: service, name: 废旧动力电池回收, name_en: Spent EV Battery Recycling, segment: SEG_ENV_RECYCLING, aliases: [电池回收, 湿法回收, 废旧锂电池回收, 动力电池回收]}
+  - {id: PROD_ENV_BATTERY_SECOND_LIFE, type: product, kind: service, name: 退役电池梯次利用, name_en: Battery Second-Life Use, segment: SEG_ENV_RECYCLING, aliases: [梯次利用]}
+  - {id: PROD_ENV_BLACK_MASS, type: product, name: 电池黑粉, name_en: Battery Black Mass, segment: SEG_ENV_RECYCLING, aliases: [黑粉]}
+  - {id: PROD_ENV_E_WASTE, type: product, kind: service, name: 废弃电器电子产品拆解, name_en: E-Waste Dismantling, segment: SEG_ENV_RECYCLING, aliases: [废家电拆解]}
+  - {id: PROD_ENV_ELV_DISMANTLING, type: product, kind: service, name: 报废汽车拆解, name_en: End-of-Life Vehicle Dismantling, segment: SEG_ENV_RECYCLING}
+  - {id: PROD_ENV_WASTE_OIL, type: product, name: 废矿物油再生, name_en: Re-Refined Base Oil, segment: SEG_ENV_RECYCLING, aliases: [再生基础油]}
+  - {id: PROD_ENV_SCRAP_METAL, type: product, name: 废旧金属回收, name_en: Scrap Metal Recovery, segment: SEG_ENV_RECYCLING}
+  - {id: PROD_ENV_PV_RECYCLING, type: product, kind: service, name: 退役光伏组件回收, name_en: PV Module Recycling, segment: SEG_ENV_RECYCLING}
+  - {id: PROD_ENV_BIOGAS, type: product, name: 生物天然气, name_en: Biomethane, segment: SEG_ENV_RECYCLING, aliases: [沼气]}
+
+  # ======================= integrated remediation =======================
+  - {id: PROD_ENV_SOIL_REMEDIATION, type: product, kind: service, name: 土壤修复, name_en: Soil Remediation, segment: SEG_ENV_INTEGRATED, aliases: [污染场地修复]}
+  - {id: PROD_ENV_ECO_RESTORATION, type: product, kind: service, name: 生态修复, name_en: Ecological Restoration, segment: SEG_ENV_INTEGRATED, aliases: [矿山生态修复, 生态修复工程, 水环境治理工程, 矿山修复]}
+  - {id: PROD_ENV_CONSULTING, type: product, kind: service, name: 环境咨询服务, name_en: Environmental Consulting, segment: SEG_ENV_INTEGRATED, aliases: [环评, 碳核查]}
+
+  # ======================= monitoring =======================
+  - {id: PROD_ENV_MONITOR_EQUIP, type: product, name: 环境监测仪器, name_en: Environmental Monitoring Instruments, segment: SEG_ENV_MONITORING, aliases: [环境监测设备, 在线监测设备, 烟气监测]}
+  - {id: PROD_ENV_CEMS, type: product, name: 烟气在线监测系统, name_en: Continuous Emission Monitoring System, parent: PROD_ENV_MONITOR_EQUIP, segment: SEG_ENV_MONITORING, aliases: [CEMS]}
+  - {id: PROD_ENV_WATER_QUALITY_MONITOR, type: product, name: 水质自动监测系统, name_en: Water Quality Monitoring System, parent: PROD_ENV_MONITOR_EQUIP, segment: SEG_ENV_MONITORING, aliases: [水质监测站]}
+  - {id: PROD_ENV_AIR_QUALITY_MONITOR, type: product, name: 空气质量监测系统, name_en: Ambient Air Quality Monitoring, parent: PROD_ENV_MONITOR_EQUIP, segment: SEG_ENV_MONITORING, aliases: [空气微站, 大气监测]}
+  - {id: PROD_ENV_CARBON_MONITOR, type: product, name: 碳排放监测系统, name_en: Carbon Emission Monitoring, parent: PROD_ENV_MONITOR_EQUIP, segment: SEG_ENV_MONITORING, aliases: [CO2 CEMS]}
+  - {id: PROD_ENV_MONITOR_OM, type: product, kind: service, name: 环境监测运维服务, name_en: Monitoring Operation Services, segment: SEG_ENV_MONITORING, aliases: [第三方运维, 环境检测服务]}
+  - {id: PROD_ENV_SMART_ENV_PLATFORM, type: product, name: 智慧环保平台, name_en: Smart Environmental Platform, segment: SEG_ENV_MONITORING, aliases: [环境大数据]}
+
+edges:
+  # ---------- segment tree & markets ----------
+  - [SEG_ENV_AIR, part_of, SEG_ENV_GOVERNANCE]
+  - [SEG_ENV_WATER, part_of, SEG_ENV_GOVERNANCE]
+  - [SEG_ENV_SOLID_WASTE, part_of, SEG_ENV_GOVERNANCE]
+  - [SEG_ENV_INTEGRATED, part_of, SEG_ENV_GOVERNANCE]
+  - [SEG_ENV_INCINERATION, part_of, SEG_ENV_SOLID_WASTE]
+  - [SEG_ENV_HAZARDOUS, part_of, SEG_ENV_SOLID_WASTE]
+  - [SEG_ENV_SANITATION, part_of, SEG_ENV_SOLID_WASTE]
+  - [SEG_ENV_RECYCLING, part_of, SEG_ENV_SOLID_WASTE]
+  - [SEG_ENV_MONITORING, part_of, SEG_ENV_EQUIP]
+  - [SEG_ENV_GOVERNANCE, serves, MKT_ENVIRONMENTAL]
+  - [SEG_ENV_GOVERNANCE, serves, MKT_GOVERNMENT]
+  - [SEG_ENV_EQUIP, serves, MKT_ENVIRONMENTAL]
+  - [SEG_ENV_AIR, serves, MKT_THERMAL_POWER]
+  - [SEG_ENV_AIR, serves, MKT_STEEL_INDUSTRY]
+  - [SEG_ENV_WATER, serves, MKT_GOVERNMENT]
+  - [SEG_ENV_WATER, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_ENV_HAZARDOUS, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_ENV_HAZARDOUS, serves, MKT_HEALTHCARE]
+  - [SEG_ENV_RECYCLING, serves, MKT_EV]
+  - [SEG_ENV_MONITORING, serves, MKT_GOVERNMENT]
+  - [SEG_ENV_SANITATION, serves, MKT_GOVERNMENT]
+
+  # ---------- air ----------
+  - [PROD_ENV_DENOX_CATALYST, component_of, PROD_ENV_SCR]
+  - [PROD_ENV_DENOX_CATALYST, uses_material, MAT_TITANIUM_DIOXIDE]
+  - [PROD_ENV_DENOX_CATALYST, uses_material, MAT_TUNGSTEN]
+  - [PROD_ENV_FILTER_BAG, component_of, PROD_ENV_BAGHOUSE]
+  - [PROD_ENV_BAGHOUSE, substitute_for, PROD_ENV_ESP]
+  - [PROD_ENV_FGD, used_in, MKT_THERMAL_POWER]
+  - [PROD_ENV_FGD, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_ENV_SCR, used_in, MKT_THERMAL_POWER]
+  - [PROD_ENV_SCR, used_in, PROD_UTIL_COAL_POWER]
+  - [PROD_ENV_FGD, used_in, PROD_UTIL_COAL_POWER]
+  - [PROD_ENV_ESP, used_in, PROD_UTIL_COAL_POWER]
+  - [PROD_ENV_DUST_COLLECTOR, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_ENV_DUST_COLLECTOR, used_in, MKT_CONSTRUCTION]
+  - [PROD_ENV_VOCS, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_ENV_VOCS, used_in, MKT_SEMI_FAB]
+  - [PROD_ENV_ULTRA_LOW_EMISSION, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_ENV_AIR_OPERATION, used_in, MKT_THERMAL_POWER]
+  - [PROD_ENV_CARBON_CAPTURE, used_in, MKT_THERMAL_POWER]
+  - [PROD_ENV_CARBON_CAPTURE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [TECH_CCUS, enables, PROD_ENV_CARBON_CAPTURE]
+
+  # ---------- water ----------
+  - [PROD_ENV_MEMBRANE, used_in, PROD_ENV_MUNICIPAL_WASTEWATER]
+  - [PROD_ENV_MBR, used_in, PROD_ENV_MUNICIPAL_WASTEWATER]
+  - [PROD_ENV_UF_MEMBRANE, used_in, PROD_UTIL_TAP_WATER]
+  - [PROD_ENV_RO_MEMBRANE, used_in, PROD_ENV_DESALINATION]
+  - [PROD_ENV_RO_MEMBRANE, used_in, PROD_ENV_INDUSTRIAL_WASTEWATER]
+  - [PROD_ENV_RO_MEMBRANE, used_in, MKT_SEMI_FAB]
+  - [PROD_ENV_MEMBRANE, uses_material, MAT_ENGINEERING_PLASTICS]
+  - [PROD_ENV_WATER_EQUIP, used_in, PROD_ENV_INDUSTRIAL_WASTEWATER]
+  - [PROD_ENV_WATER_EQUIP, used_in, PROD_ENV_RURAL_WASTEWATER]
+  - [PROD_CHEM_WATER_TREATMENT, used_in, PROD_ENV_MUNICIPAL_WASTEWATER]
+  - [PROD_CHEM_WATER_TREATMENT, used_in, PROD_UTIL_TAP_WATER]
+  - [PROD_ENV_WATER_EPC, upstream_of, PROD_ENV_MUNICIPAL_WASTEWATER]
+  - [PROD_ENV_MUNICIPAL_WASTEWATER, upstream_of, PROD_ENV_SLUDGE]
+  - [PROD_ENV_MUNICIPAL_WASTEWATER, upstream_of, PROD_ENV_RECLAIMED_WATER]
+  - [PROD_ENV_MUNICIPAL_WASTEWATER, uses_material, MAT_ELECTRICITY]
+  - [PROD_ENV_MUNICIPAL_WASTEWATER, used_in, MKT_GOVERNMENT]
+  - [PROD_ENV_INDUSTRIAL_WASTEWATER, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_ENV_INDUSTRIAL_WASTEWATER, used_in, MKT_SEMI_FAB]
+  - [PROD_ENV_RECLAIMED_WATER, substitute_for, PROD_UTIL_TAP_WATER]
+  - [PROD_ENV_DESALINATION, substitute_for, PROD_UTIL_RAW_WATER]
+  - [PROD_ENV_PIPE_NETWORK_OM, used_in, MKT_GOVERNMENT]
+  - [PROD_ENV_WATER_ENVIRONMENT, used_in, MKT_GOVERNMENT]
+  - [PROD_ENV_SLUDGE, upstream_of, PROD_ENV_WTE]
+
+  # ---------- solid waste & incineration ----------
+  - [PROD_ENV_WASTE_COLLECTION, upstream_of, PROD_ENV_WTE]
+  - [PROD_ENV_WASTE_COLLECTION, upstream_of, PROD_ENV_LANDFILL]
+  - [PROD_ENV_WASTE_COLLECTION, upstream_of, PROD_ENV_KITCHEN_WASTE]
+  - [PROD_ENV_SANITATION_SERVICE, upstream_of, PROD_ENV_WASTE_COLLECTION]
+  - [PROD_ENV_SANITATION_VEHICLE, used_in, PROD_ENV_SANITATION_SERVICE]
+  - [PROD_ENV_SANITATION_VEHICLE, used_in, PROD_ENV_WASTE_COLLECTION]
+  - [PROD_PWR_EV_BATTERY, component_of, PROD_ENV_SANITATION_VEHICLE]
+  - [PROD_ENV_INCINERATOR, used_in, PROD_ENV_WTE]
+  - [PROD_ENV_INCINERATOR, used_in, PROD_ENV_HAZARDOUS_WASTE]
+  - [PROD_ENV_WTE_FLUE_GAS, used_in, PROD_ENV_WTE]
+  - [PROD_ENV_SCR, component_of, PROD_ENV_WTE_FLUE_GAS]
+  - [PROD_ENV_BAGHOUSE, component_of, PROD_ENV_WTE_FLUE_GAS]
+  - [PROD_PWR_STEAM_TURBINE, used_in, PROD_ENV_WTE]
+  - [PROD_PWR_TURBO_GENERATOR, used_in, PROD_ENV_WTE]
+  - [PROD_ENV_WTE, upstream_of, PROD_ENV_LEACHATE]
+  - [PROD_ENV_WTE, upstream_of, PROD_ENV_FLY_ASH]
+  - [PROD_ENV_WTE, upstream_of, PROD_ENV_WTE_HEAT]
+  - [PROD_ENV_WTE, upstream_of, PROD_UTIL_POWER_SALES]
+  - [PROD_ENV_LANDFILL, upstream_of, PROD_ENV_LEACHATE]
+  - [PROD_ENV_WTE, substitute_for, PROD_ENV_LANDFILL]
+  - [PROD_ENV_WTE, used_in, MKT_GOVERNMENT]
+  - [PROD_ENV_WTE_HEAT, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_ENV_WTE_HEAT, substitute_for, PROD_UTIL_INDUSTRIAL_STEAM]
+  - [PROD_ENV_KITCHEN_WASTE, upstream_of, PROD_ENV_BIOGAS]
+  - [PROD_ENV_BIOGAS, substitute_for, PROD_UTIL_CITY_GAS]
+  - [PROD_ENV_FLY_ASH, used_in, MKT_CONSTRUCTION]
+  - [PROD_ENV_INDUSTRIAL_SOLID, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_ENV_INDUSTRIAL_SOLID, used_in, MKT_MINING]
+  - [PROD_ENV_CONSTRUCTION_WASTE, used_in, MKT_CONSTRUCTION]
+  - [PROD_ENV_HAZARDOUS_WASTE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_ENV_HAZ_RESOURCE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_ENV_MEDICAL_WASTE, used_in, MKT_HEALTHCARE]
+
+  # ---------- recycling ----------
+  - [PROD_PWR_EV_BATTERY, upstream_of, PROD_ENV_BATTERY_SECOND_LIFE]
+  - [PROD_PWR_EV_BATTERY, upstream_of, PROD_ENV_BATTERY_RECYCLING]
+  - [PROD_ENV_BATTERY_SECOND_LIFE, upstream_of, PROD_ENV_BATTERY_RECYCLING]
+  - [PROD_ENV_BATTERY_RECYCLING, upstream_of, PROD_ENV_BLACK_MASS]
+  - [PROD_ENV_BLACK_MASS, upstream_of, PROD_PWR_NCM_PRECURSOR]
+  - [PROD_ENV_BATTERY_SECOND_LIFE, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_ENV_BATTERY_SECOND_LIFE, substitute_for, PROD_PWR_STORAGE_CELL]
+  - [PROD_ENV_BATTERY_RECYCLING, uses_material, MAT_SULFURIC_ACID]
+  - [PROD_CHEM_RECYCLED_PLASTIC, used_in, MKT_APPAREL]
+  - [PROD_ENV_E_WASTE, upstream_of, PROD_ENV_SCRAP_METAL]
+  - [PROD_ENV_E_WASTE, upstream_of, PROD_CHEM_RECYCLED_PLASTIC]
+  - [PROD_ENV_ELV_DISMANTLING, upstream_of, PROD_ENV_SCRAP_METAL]
+  - [PROD_ENV_ELV_DISMANTLING, upstream_of, PROD_ENV_BATTERY_RECYCLING]
+  - [PROD_ENV_SCRAP_METAL, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_ENV_WASTE_OIL, used_in, MKT_ICE_VEHICLE]
+  - [PROD_PWR_SOLAR_MODULE, upstream_of, PROD_ENV_PV_RECYCLING]
+  - [PROD_ENV_PV_RECYCLING, upstream_of, PROD_ENV_SCRAP_METAL]
+
+  # ---------- integrated & monitoring ----------
+  - [PROD_ENV_SOIL_REMEDIATION, used_in, MKT_REAL_ESTATE]
+  - [PROD_ENV_SOIL_REMEDIATION, used_in, MKT_GOVERNMENT]
+  - [PROD_ENV_ECO_RESTORATION, used_in, MKT_MINING]
+  - [PROD_ENV_CONSULTING, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_ENV_CEMS, used_in, MKT_THERMAL_POWER]
+  - [PROD_ENV_CEMS, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_ENV_CEMS, used_in, PROD_ENV_WTE]
+  - [PROD_ENV_WATER_QUALITY_MONITOR, used_in, MKT_GOVERNMENT]
+  - [PROD_ENV_WATER_QUALITY_MONITOR, used_in, PROD_ENV_MUNICIPAL_WASTEWATER]
+  - [PROD_ENV_AIR_QUALITY_MONITOR, used_in, MKT_GOVERNMENT]
+  - [PROD_ENV_CARBON_MONITOR, used_in, MKT_THERMAL_POWER]
+  - [PROD_ENV_CARBON_MONITOR, used_in, PROD_UTIL_CARBON_CREDIT]
+  - [PROD_ENV_MONITOR_EQUIP, upstream_of, PROD_ENV_MONITOR_OM]
+  - [PROD_ENV_MONITOR_OM, used_in, MKT_GOVERNMENT]
+  - [PROD_ENV_SMART_ENV_PLATFORM, used_in, MKT_GOVERNMENT]
+  - [TECH_IOT, enables, PROD_ENV_SMART_ENV_PLATFORM]
+  - [TECH_IOT, enables, PROD_ENV_AIR_QUALITY_MONITOR]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_ENV_BLACK_MASS, upstream_of, MAT_LITHIUM_CARBONATE]
+  - [PROD_ENV_BLACK_MASS, upstream_of, MAT_NICKEL]
+  - [PROD_ENV_BLACK_MASS, upstream_of, MAT_COBALT]
+  - [PROD_ENV_FGD, uses_material, MAT_LIMESTONE]
+
+sw_l3_map:
+  "760101": [SEG_ENV_AIR]
+  "760102": [SEG_ENV_WATER, SEG_UTIL_WATER]
+  "760103": [SEG_ENV_SOLID_WASTE, SEG_ENV_INCINERATION, SEG_ENV_HAZARDOUS, SEG_ENV_RECYCLING, SEG_ENV_SANITATION]
+  "760104": [SEG_ENV_INTEGRATED, SEG_ENV_WATER, SEG_ENV_SOLID_WASTE]
+  "760201": [SEG_ENV_EQUIP, SEG_ENV_MONITORING, SEG_ENV_AIR]

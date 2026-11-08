@@ -1,0 +1,97 @@
+# Shenwan 490000 非银金融 — product taxonomy prior (plan 12 phase 1, D-097). Format: README.md.
+# Financial-IT vendors live in SW 710000 计算机, not here.
+sector: {sw_l1: "490000", name: 非银金融, name_en: Non-Bank Financials}
+
+nodes:
+  - {id: SEG_FIN_SECURITIES, type: segment, name: 证券, name_en: Securities, aliases: [证券Ⅱ, 证券Ⅲ, 券商业务]}
+  - {id: SEG_FIN_INSURANCE, type: segment, name: 保险, name_en: Insurance, aliases: [保险Ⅱ, 保险Ⅲ]}
+  - {id: SEG_FIN_DIVERSIFIED, type: segment, name: 多元金融, name_en: Diversified Financials}
+  - {id: SEG_FIN_HOLDING, type: segment, name: 金融控股, name_en: Financial Holding}
+  - {id: SEG_FIN_FUTURES, type: segment, name: 期货, name_en: Futures}
+  - {id: SEG_FIN_TRUST, type: segment, name: 信托, name_en: Trusts}
+  - {id: SEG_FIN_LEASING, type: segment, name: 租赁, name_en: Leasing, aliases: [融资租赁]}
+  - {id: SEG_FIN_INFO_SERVICE, type: segment, name: 金融信息服务, name_en: Financial Information Services}
+  - {id: SEG_FIN_ASSET_MGMT, type: segment, name: 资产管理, name_en: Asset Management}
+  - {id: SEG_FIN_OTHER, type: segment, name: 其他多元金融, name_en: Other Diversified Financials}
+
+  # securities
+  - {id: PROD_FIN_BROKERAGE, type: product, kind: service, name: 证券经纪, name_en: Securities Brokerage, segment: SEG_FIN_SECURITIES, aliases: [经纪业务, 代理买卖证券]}
+  - {id: PROD_FIN_INVESTMENT_BANKING, type: product, kind: service, name: 投资银行, name_en: Investment Banking, segment: SEG_FIN_SECURITIES, aliases: [投行业务, 证券承销与保荐, IPO承销]}
+  - {id: PROD_FIN_SEC_ASSET_MGMT, type: product, kind: service, name: 券商资管, name_en: Broker Asset Management, segment: SEG_FIN_SECURITIES, aliases: [资管业务]}
+  - {id: PROD_FIN_PROPRIETARY, type: product, kind: service, name: 自营投资, name_en: Proprietary Trading, segment: SEG_FIN_SECURITIES, aliases: [自营业务, 证券投资]}
+  - {id: PROD_FIN_MARGIN_FINANCING, type: product, kind: service, name: 融资融券, name_en: Margin Financing, segment: SEG_FIN_SECURITIES, aliases: [两融, 股票质押]}
+  - {id: PROD_FIN_FUND_MGMT, type: product, kind: service, name: 公募基金管理, name_en: Mutual Fund Management, segment: SEG_FIN_ASSET_MGMT, aliases: [公募基金]}
+  - {id: PROD_FIN_PRIVATE_EQUITY, type: product, kind: service, name: 私募股权投资, name_en: Private Equity and VC, segment: SEG_FIN_ASSET_MGMT, aliases: [创投, PE]}
+  # insurance
+  - {id: PROD_FIN_LIFE_INSURANCE, type: product, kind: service, name: 人寿保险, name_en: Life Insurance, segment: SEG_FIN_INSURANCE, aliases: [寿险]}
+  - {id: PROD_FIN_HEALTH_INSURANCE, type: product, kind: service, name: 健康保险, name_en: Health Insurance, segment: SEG_FIN_INSURANCE, aliases: [健康险, 重疾险]}
+  - {id: PROD_FIN_PC_INSURANCE, type: product, kind: service, name: 财产保险, name_en: Property and Casualty Insurance, segment: SEG_FIN_INSURANCE, aliases: [财险, 产险]}
+  - {id: PROD_FIN_AUTO_INSURANCE, type: product, kind: service, name: 车险, name_en: Motor Insurance, parent: PROD_FIN_PC_INSURANCE, segment: SEG_FIN_INSURANCE, aliases: [机动车辆保险]}
+  - {id: PROD_FIN_REINSURANCE, type: product, kind: service, name: 再保险, name_en: Reinsurance, segment: SEG_FIN_INSURANCE}
+  - {id: PROD_FIN_INSURANCE_BROKER, type: product, kind: service, name: 保险中介, name_en: Insurance Intermediary, segment: SEG_FIN_OTHER, aliases: [保险经纪, 保险代理]}
+  # diversified
+  - {id: PROD_FIN_FUTURES_BROKERAGE, type: product, kind: service, name: 期货经纪, name_en: Futures Brokerage, segment: SEG_FIN_FUTURES}
+  - {id: PROD_FIN_RISK_MGMT_SUB, type: product, kind: service, name: 风险管理业务, name_en: Futures Risk Management, segment: SEG_FIN_FUTURES, aliases: [基差贸易, 场外衍生品]}
+  - {id: PROD_FIN_TRUST_PLAN, type: product, kind: service, name: 信托计划, name_en: Trust Products, segment: SEG_FIN_TRUST, aliases: [集合信托, 家族信托]}
+  - {id: PROD_FIN_FINANCE_LEASE, type: product, kind: service, name: 融资租赁服务, name_en: Finance Leasing, segment: SEG_FIN_LEASING, aliases: [售后回租]}
+  - {id: PROD_FIN_OPERATING_LEASE, type: product, kind: service, name: 经营租赁, name_en: Operating Leasing, segment: SEG_FIN_LEASING, aliases: [飞机租赁]}
+  - {id: PROD_FIN_FIN_INFO, type: product, kind: service, name: 金融信息与投资者服务, name_en: Financial Information and Investor Services, segment: SEG_FIN_INFO_SERVICE, aliases: [互联网券商, 基金代销, 证券资讯]}
+  - {id: PROD_FIN_AMC, type: product, kind: service, name: 不良资产处置, name_en: Distressed Asset Management, segment: SEG_FIN_ASSET_MGMT, aliases: [AMC]}
+  - {id: PROD_FIN_MICROLENDING, type: product, kind: service, name: 小额贷款与担保, name_en: Microlending and Guarantees, segment: SEG_FIN_OTHER, aliases: [小贷, 融资担保, 典当]}
+
+edges:
+  - [SEG_FIN_HOLDING, part_of, SEG_FIN_DIVERSIFIED]
+  - [SEG_FIN_FUTURES, part_of, SEG_FIN_DIVERSIFIED]
+  - [SEG_FIN_TRUST, part_of, SEG_FIN_DIVERSIFIED]
+  - [SEG_FIN_LEASING, part_of, SEG_FIN_DIVERSIFIED]
+  - [SEG_FIN_INFO_SERVICE, part_of, SEG_FIN_DIVERSIFIED]
+  - [SEG_FIN_ASSET_MGMT, part_of, SEG_FIN_DIVERSIFIED]
+  - [SEG_FIN_OTHER, part_of, SEG_FIN_DIVERSIFIED]
+  - [SEG_FIN_SECURITIES, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_FIN_SECURITIES, serves, MKT_FINANCE]
+  - [SEG_FIN_SECURITIES, serves, MKT_ENTERPRISE_IT]
+  - [SEG_FIN_INSURANCE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_FIN_INSURANCE, serves, MKT_HEALTHCARE]
+  - [SEG_FIN_DIVERSIFIED, serves, MKT_FINANCE]
+  - [SEG_FIN_HOLDING, serves, MKT_FINANCE]
+  - [SEG_FIN_FUTURES, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_FIN_TRUST, serves, MKT_REAL_ESTATE]
+  - [SEG_FIN_LEASING, serves, MKT_CONSTRUCTION]
+  - [SEG_FIN_LEASING, serves, MKT_AEROSPACE]
+  - [SEG_FIN_INFO_SERVICE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_FIN_ASSET_MGMT, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_FIN_OTHER, serves, MKT_RETAIL_CONSUMER]
+  - [PROD_FIN_BROKERAGE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_FIN_MARGIN_FINANCING, used_in, PROD_FIN_BROKERAGE]
+  - [PROD_FIN_INVESTMENT_BANKING, used_in, MKT_FINANCE]
+  - [PROD_FIN_PROPRIETARY, used_in, MKT_FINANCE]
+  - [PROD_FIN_FUND_MGMT, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_FIN_FIN_INFO, used_in, PROD_FIN_FUND_MGMT]
+  - [PROD_FIN_PRIVATE_EQUITY, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_FIN_LIFE_INSURANCE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_FIN_HEALTH_INSURANCE, used_in, MKT_HEALTHCARE]
+  - [PROD_FIN_AUTO_INSURANCE, used_in, MKT_ICE_VEHICLE]
+  - [PROD_FIN_AUTO_INSURANCE, used_in, MKT_EV]
+  - [PROD_FIN_REINSURANCE, used_in, PROD_FIN_PC_INSURANCE]
+  - [PROD_FIN_REINSURANCE, used_in, PROD_FIN_LIFE_INSURANCE]
+  - [PROD_FIN_INSURANCE_BROKER, used_in, PROD_FIN_LIFE_INSURANCE]
+  - [PROD_FIN_FUTURES_BROKERAGE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_FIN_RISK_MGMT_SUB, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_FIN_TRUST_PLAN, used_in, MKT_REAL_ESTATE]
+  - [PROD_FIN_TRUST_PLAN, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_FIN_FINANCE_LEASE, used_in, MKT_CONSTRUCTION]
+  - [PROD_FIN_FINANCE_LEASE, used_in, MKT_SOLAR]
+  - [PROD_FIN_OPERATING_LEASE, used_in, MKT_AEROSPACE]
+  - [PROD_FIN_AMC, used_in, MKT_FINANCE]
+  - [PROD_FIN_MICROLENDING, used_in, MKT_RETAIL_CONSUMER]
+
+sw_l3_map:
+  "490101": [SEG_FIN_SECURITIES]
+  "490201": [SEG_FIN_INSURANCE]
+  "490302": [SEG_FIN_HOLDING]
+  "490303": [SEG_FIN_FUTURES]
+  "490304": [SEG_FIN_TRUST]
+  "490305": [SEG_FIN_LEASING]
+  "490306": [SEG_FIN_INFO_SERVICE]
+  "490307": [SEG_FIN_ASSET_MGMT]
+  "490308": [SEG_FIN_OTHER]

@@ -1,0 +1,1046 @@
+# Shenwan L1 630000 电力设备 — product taxonomy prior (plan 12 phase 1, D-097).
+# Format: README.md beside this file. All edges are priors (general industry knowledge).
+sector: {sw_l1: "630000", name: 电力设备, name_en: Power Equipment}
+
+nodes:
+  # ======================= segments =======================
+  - {id: SEG_PWR_MOTOR, type: segment, name: 电机, name_en: Electric Motors}
+  - {id: SEG_PWR_POWER_GEN_EQUIP, type: segment, name: 发电设备, name_en: Power Generation Equipment, aliases: [综合电力设备]}
+  - {id: SEG_PWR_THERMAL_EQUIP, type: segment, name: 火电设备, name_en: Thermal Power Equipment, aliases: [燃煤电站设备]}
+  - {id: SEG_PWR_HYDRO_EQUIP, type: segment, name: 水电设备, name_en: Hydropower Equipment}
+  - {id: SEG_PWR_NUCLEAR_EQUIP, type: segment, name: 核电设备, name_en: Nuclear Power Equipment}
+  - {id: SEG_PWR_OTHER_POWER, type: segment, name: 其他电源设备, name_en: Other Power Supply Equipment}
+  - {id: SEG_PWR_DC_POWER, type: segment, name: 数据中心电源, name_en: Data Center Power, aliases: [AIDC电源, 数据中心供配电]}
+  - {id: SEG_PWR_ENERGY_STORAGE, type: segment, name: 储能系统, name_en: Energy Storage Systems, aliases: [储能集成]}
+  - {id: SEG_PWR_HYDROGEN, type: segment, name: 氢能与燃料电池, name_en: Hydrogen and Fuel Cells}
+  - {id: SEG_PWR_CHARGING, type: segment, name: 充换电设备, name_en: EV Charging and Swapping Equipment}
+  - {id: SEG_PWR_SOLAR, type: segment, name: 光伏设备, name_en: Solar PV Equipment, aliases: [光伏产业链]}
+  - {id: SEG_PWR_SOLAR_SILICON, type: segment, name: 硅料硅片, name_en: Polysilicon and Wafers}
+  - {id: SEG_PWR_SOLAR_CELL_MODULE, type: segment, name: 光伏电池组件, name_en: Solar Cells and Modules}
+  - {id: SEG_PWR_INVERTER, type: segment, name: 逆变器, name_en: Inverters}
+  - {id: SEG_PWR_SOLAR_AUX, type: segment, name: 光伏辅材, name_en: Solar Auxiliary Materials}
+  - {id: SEG_PWR_SOLAR_EQUIP, type: segment, name: 光伏加工设备, name_en: Solar Manufacturing Equipment}
+  - {id: SEG_PWR_WIND, type: segment, name: 风电设备, name_en: Wind Power Equipment}
+  - {id: SEG_PWR_WIND_TURBINE, type: segment, name: 风电整机, name_en: Wind Turbines}
+  - {id: SEG_PWR_WIND_PARTS, type: segment, name: 风电零部件, name_en: Wind Turbine Components}
+  - {id: SEG_PWR_BATTERY, type: segment, name: 电池, name_en: Batteries}
+  - {id: SEG_PWR_LI_BATTERY, type: segment, name: 锂电池, name_en: Lithium-Ion Batteries, aliases: [锂离子电池]}
+  - {id: SEG_PWR_BATTERY_CHEM, type: segment, name: 电池化学品, name_en: Battery Materials, aliases: [锂电材料, 锂电化学品]}
+  - {id: SEG_PWR_CATHODE, type: segment, name: 正极材料产业, name_en: Cathode Materials}
+  - {id: SEG_PWR_ANODE, type: segment, name: 负极材料产业, name_en: Anode Materials}
+  - {id: SEG_PWR_SEPARATOR, type: segment, name: 隔膜产业, name_en: Battery Separators}
+  - {id: SEG_PWR_ELECTROLYTE, type: segment, name: 电解液产业, name_en: Electrolytes}
+  - {id: SEG_PWR_COLLECTOR, type: segment, name: 集流体, name_en: Current Collectors, aliases: [锂电箔材]}
+  - {id: SEG_PWR_BATTERY_AUX, type: segment, name: 电池辅材与结构件, name_en: Battery Auxiliary Materials and Structural Parts}
+  - {id: SEG_PWR_LI_EQUIP, type: segment, name: 锂电专用设备, name_en: Lithium Battery Equipment, aliases: [锂电设备]}
+  - {id: SEG_PWR_FUEL_CELL, type: segment, name: 燃料电池, name_en: Fuel Cells}
+  - {id: SEG_PWR_OTHER_BATTERY, type: segment, name: 蓄电池及其他电池, name_en: Lead-Acid and Other Batteries}
+  - {id: SEG_PWR_SODIUM, type: segment, name: 钠电产业链, name_en: Sodium-Ion Battery Chain, aliases: [钠电]}
+  - {id: SEG_PWR_GRID, type: segment, name: 电网设备, name_en: Grid Equipment}
+  - {id: SEG_PWR_TRANSMISSION, type: segment, name: 输变电设备, name_en: Transmission and Substation Equipment}
+  - {id: SEG_PWR_UHV, type: segment, name: 特高压设备, name_en: UHV Equipment}
+  - {id: SEG_PWR_DISTRIBUTION, type: segment, name: 配电设备, name_en: Distribution Equipment}
+  - {id: SEG_PWR_GRID_AUTOMATION, type: segment, name: 电网自动化设备, name_en: Grid Automation, aliases: [电力二次设备, 电力信息化]}
+  - {id: SEG_PWR_METER, type: segment, name: 电工仪器仪表, name_en: Electrical Meters and Instruments}
+  - {id: SEG_PWR_CABLE, type: segment, name: 线缆部件及其他, name_en: Cables and Components, aliases: [电线电缆]}
+
+  # ======================= motors =======================
+  - {id: PROD_PWR_MOTOR, type: product, name: 电动机, name_en: Electric Motor, segment: SEG_PWR_MOTOR, aliases: [电机产品]}
+  - {id: PROD_PWR_INDUSTRIAL_MOTOR, type: product, name: 工业电机, name_en: Industrial Motor, parent: PROD_PWR_MOTOR, segment: SEG_PWR_MOTOR, aliases: [中小型电机]}
+  - {id: PROD_PWR_HV_MOTOR, type: product, name: 高压电机, name_en: High-Voltage Motor, parent: PROD_PWR_INDUSTRIAL_MOTOR, segment: SEG_PWR_MOTOR}
+  - {id: PROD_PWR_HIGH_EFF_MOTOR, type: product, name: 高效节能电机, name_en: High-Efficiency Motor, parent: PROD_PWR_INDUSTRIAL_MOTOR, segment: SEG_PWR_MOTOR, aliases: [IE3电机, IE4电机]}
+  - {id: PROD_PWR_EXPLOSION_PROOF_MOTOR, type: product, name: 防爆电机, name_en: Explosion-Proof Motor, parent: PROD_PWR_INDUSTRIAL_MOTOR, segment: SEG_PWR_MOTOR}
+  - {id: PROD_PWR_PM_MOTOR, type: product, name: 永磁同步电机, name_en: Permanent Magnet Synchronous Motor, parent: PROD_PWR_MOTOR, segment: SEG_PWR_MOTOR, aliases: [永磁电机]}
+  - {id: PROD_PWR_EV_DRIVE_MOTOR, type: product, name: 新能源汽车驱动电机, name_en: EV Traction Motor, parent: PROD_PWR_MOTOR, segment: SEG_PWR_MOTOR, aliases: [驱动电机, 电驱电机]}
+  - {id: PROD_PWR_MICRO_MOTOR, type: product, name: 微特电机, name_en: Micro and Special Motor, parent: PROD_PWR_MOTOR, segment: SEG_PWR_MOTOR, aliases: [微电机]}
+  - {id: PROD_PWR_BLDC_MOTOR, type: product, name: 无刷直流电机, name_en: Brushless DC Motor, parent: PROD_PWR_MICRO_MOTOR, segment: SEG_PWR_MOTOR, aliases: [BLDC]}
+  - {id: PROD_PWR_CORELESS_MOTOR, type: product, name: 空心杯电机, name_en: Coreless Motor, parent: PROD_PWR_MICRO_MOTOR, segment: SEG_PWR_MOTOR}
+  - {id: PROD_PWR_STEPPER_MOTOR, type: product, name: 步进电机, name_en: Stepper Motor, parent: PROD_PWR_MICRO_MOTOR, segment: SEG_PWR_MOTOR}
+  - {id: PROD_PWR_FRAMELESS_TORQUE_MOTOR, type: product, name: 无框力矩电机, name_en: Frameless Torque Motor, parent: PROD_PWR_MOTOR, segment: SEG_PWR_MOTOR, aliases: [机器人无框力矩电机]}
+  - {id: PROD_PWR_MOTOR_CORE, type: product, name: 电机铁芯, name_en: Motor Lamination Core, segment: SEG_PWR_MOTOR, aliases: [定转子铁芯, 定子铁芯]}
+
+  # ======================= power generation equipment =======================
+  - {id: PROD_PWR_UTILITY_BOILER, type: product, name: 电站锅炉, name_en: Utility Boiler, segment: SEG_PWR_THERMAL_EQUIP, aliases: [燃煤锅炉]}
+  - {id: PROD_PWR_STEAM_TURBINE, type: product, name: 汽轮机, name_en: Steam Turbine, segment: SEG_PWR_THERMAL_EQUIP}
+  - {id: PROD_PWR_TURBO_GENERATOR, type: product, name: 汽轮发电机, name_en: Turbo Generator, segment: SEG_PWR_THERMAL_EQUIP}
+  - {id: PROD_PWR_GAS_TURBINE, type: product, import_dependence: high, name: 重型燃气轮机, name_en: Heavy-Duty Gas Turbine, segment: SEG_PWR_THERMAL_EQUIP, aliases: [燃机, 燃气轮机]}
+  - {id: PROD_PWR_HRSG, type: product, name: 余热锅炉, name_en: Heat Recovery Steam Generator, segment: SEG_PWR_THERMAL_EQUIP, aliases: [HRSG]}
+  - {id: PROD_PWR_INDUSTRIAL_BOILER, type: product, name: 工业锅炉, name_en: Industrial Boiler, segment: SEG_PWR_THERMAL_EQUIP}
+  - {id: PROD_PWR_BIOMASS_BOILER, type: product, name: 生物质锅炉, name_en: Biomass Boiler, segment: SEG_PWR_THERMAL_EQUIP}
+  - {id: PROD_PWR_POWER_AUX_EQUIP, type: product, name: 电站辅机, name_en: Power Plant Auxiliary Equipment, segment: SEG_PWR_THERMAL_EQUIP, aliases: [磨煤机, 电站风机, 空冷系统]}
+  - {id: PROD_PWR_HYDRO_TURBINE_GEN, type: product, name: 水轮发电机组, name_en: Hydro Turbine Generator Unit, segment: SEG_PWR_HYDRO_EQUIP, aliases: [水轮机]}
+  - {id: PROD_PWR_PUMPED_STORAGE_UNIT, type: product, name: 抽水蓄能机组, name_en: Pumped-Storage Unit, segment: SEG_PWR_HYDRO_EQUIP, aliases: [抽蓄机组]}
+  - {id: PROD_PWR_REACTOR_VESSEL, type: product, name: 核反应堆压力容器, name_en: Reactor Pressure Vessel, segment: SEG_PWR_NUCLEAR_EQUIP, aliases: [核岛主设备]}
+  - {id: PROD_PWR_STEAM_GENERATOR, type: product, name: 核电蒸汽发生器, name_en: Nuclear Steam Generator, segment: SEG_PWR_NUCLEAR_EQUIP}
+  - {id: PROD_PWR_REACTOR_COOLANT_PUMP, type: product, import_dependence: medium, name: 核主泵, name_en: Reactor Coolant Pump, segment: SEG_PWR_NUCLEAR_EQUIP, aliases: [核电主泵]}
+  - {id: PROD_PWR_NUCLEAR_CONVENTIONAL_ISLAND, type: product, name: 核电常规岛设备, name_en: Nuclear Conventional Island Equipment, segment: SEG_PWR_NUCLEAR_EQUIP, aliases: [常规岛]}
+  - {id: PROD_PWR_NUCLEAR_CONTROL_ROD_DRIVE, type: product, name: 控制棒驱动机构, name_en: Control Rod Drive Mechanism, segment: SEG_PWR_NUCLEAR_EQUIP, aliases: [CRDM]}
+  - {id: PROD_PWR_NUCLEAR_DCS, type: product, name: 核电仪控系统, name_en: Nuclear I&C System, segment: SEG_PWR_NUCLEAR_EQUIP, aliases: [核级DCS]}
+  - {id: PROD_PWR_SMR, type: product, name: 小型模块化反应堆, name_en: Small Modular Reactor, segment: SEG_PWR_NUCLEAR_EQUIP, aliases: [SMR, 小堆]}
+  - {id: PROD_PWR_FUSION_EQUIP, type: product, import_dependence: medium, name: 可控核聚变装置部件, name_en: Fusion Device Components, segment: SEG_PWR_NUCLEAR_EQUIP, aliases: [核聚变, 托卡马克部件, 高温超导磁体]}
+  - {id: PROD_PWR_EXCITATION_SYSTEM, type: product, name: 励磁系统, name_en: Excitation System, segment: SEG_PWR_POWER_GEN_EQUIP}
+
+  # ======================= data-center power =======================
+  - {id: PROD_PWR_UPS, type: product, name: 不间断电源, name_en: UPS, segment: SEG_PWR_DC_POWER, aliases: [UPS]}
+  - {id: PROD_PWR_MODULAR_UPS, type: product, name: 模块化UPS, name_en: Modular UPS, parent: PROD_PWR_UPS, segment: SEG_PWR_DC_POWER}
+  - {id: PROD_PWR_HVDC_POWER, type: product, name: 高压直流供电系统, name_en: HVDC Data Center Power, segment: SEG_PWR_DC_POWER, aliases: [HVDC电源, 240V直流电源, 800V直流供电]}
+  - {id: PROD_PWR_PANAMA_POWER, type: product, name: 巴拿马电源, name_en: Panama Power Module, parent: PROD_PWR_HVDC_POWER, segment: SEG_PWR_DC_POWER, aliases: [一体化电力模块]}
+  - {id: PROD_PWR_SST, type: product, name: 固态变压器, name_en: Solid-State Transformer, segment: SEG_PWR_DC_POWER, aliases: [SST, 电力电子变压器]}
+  - {id: PROD_PWR_SERVER_PSU, type: product, import_dependence: medium, name: 服务器电源, name_en: Server Power Supply Unit, segment: SEG_PWR_DC_POWER, aliases: [服务器PSU, AI服务器电源]}
+  - {id: PROD_PWR_BBU, type: product, name: 备用电池单元, name_en: Battery Backup Unit, segment: SEG_PWR_DC_POWER, aliases: [BBU备电]}
+  - {id: PROD_PWR_DC_DISTRIBUTION, type: product, name: 数据中心配电柜, name_en: Data Center Power Distribution, segment: SEG_PWR_DC_POWER, aliases: [列头柜, 精密配电柜]}
+  - {id: PROD_PWR_RACK_PDU, type: product, name: 机柜PDU, name_en: Rack PDU, segment: SEG_PWR_DC_POWER, aliases: [电源分配单元]}
+  - {id: PROD_PWR_DIESEL_GENSET, type: product, name: 柴油发电机组, name_en: Diesel Generator Set, segment: SEG_PWR_DC_POWER, aliases: [柴发, 备用发电机组]}
+  - {id: PROD_PWR_GAS_GENSET, type: product, name: 燃气发电机组, name_en: Gas Generator Set, segment: SEG_PWR_OTHER_POWER, aliases: [燃气内燃机发电机组]}
+  - {id: PROD_PWR_TELECOM_POWER, type: product, name: 通信电源, name_en: Telecom Power Supply, segment: SEG_PWR_OTHER_POWER, aliases: [基站电源]}
+  - {id: PROD_PWR_SPECIAL_POWER, type: product, name: 特种电源, name_en: Special Power Supply, segment: SEG_PWR_OTHER_POWER, aliases: [工业电源, 激光电源]}
+  - {id: PROD_PWR_HYDROGEN_POWER_SUPPLY, type: product, name: 制氢电源, name_en: Electrolyzer Power Supply, parent: PROD_PWR_SPECIAL_POWER, segment: SEG_PWR_HYDROGEN}
+
+  # ======================= hydrogen / fuel cell =======================
+  - {id: PROD_PWR_ELECTROLYZER, type: product, name: 电解槽, name_en: Water Electrolyzer, segment: SEG_PWR_HYDROGEN, aliases: [电解水制氢设备]}
+  - {id: PROD_PWR_ALK_ELECTROLYZER, type: product, name: 碱性电解槽, name_en: Alkaline Electrolyzer, parent: PROD_PWR_ELECTROLYZER, segment: SEG_PWR_HYDROGEN, aliases: [ALK电解槽]}
+  - {id: PROD_PWR_PEM_ELECTROLYZER, type: product, import_dependence: medium, name: PEM电解槽, name_en: PEM Electrolyzer, parent: PROD_PWR_ELECTROLYZER, segment: SEG_PWR_HYDROGEN}
+  - {id: PROD_PWR_SOEC, type: product, name: 固体氧化物电解槽, name_en: Solid Oxide Electrolyzer, parent: PROD_PWR_ELECTROLYZER, segment: SEG_PWR_HYDROGEN, aliases: [SOEC]}
+  - {id: PROD_PWR_FUEL_CELL_SYSTEM, type: product, name: 燃料电池系统, name_en: Fuel Cell System, segment: SEG_PWR_FUEL_CELL, aliases: [氢燃料电池发动机]}
+  - {id: PROD_PWR_FUEL_CELL_STACK, type: product, name: 燃料电池电堆, name_en: Fuel Cell Stack, segment: SEG_PWR_FUEL_CELL, aliases: [电堆]}
+  - {id: PROD_PWR_MEA, type: product, name: 膜电极, name_en: Membrane Electrode Assembly, segment: SEG_PWR_FUEL_CELL, aliases: [MEA]}
+  - {id: PROD_PWR_PEM, type: product, import_dependence: high, name: 质子交换膜, name_en: Proton Exchange Membrane, segment: SEG_PWR_FUEL_CELL}
+  - {id: PROD_PWR_FC_CATALYST, type: product, import_dependence: medium, name: 燃料电池催化剂, name_en: Fuel Cell Catalyst, segment: SEG_PWR_FUEL_CELL, aliases: [铂碳催化剂]}
+  - {id: PROD_PWR_GDL, type: product, import_dependence: high, name: 气体扩散层, name_en: Gas Diffusion Layer, segment: SEG_PWR_FUEL_CELL, aliases: [碳纸, GDL]}
+  - {id: PROD_PWR_BIPOLAR_PLATE, type: product, name: 双极板, name_en: Bipolar Plate, segment: SEG_PWR_FUEL_CELL, aliases: [金属双极板, 石墨双极板]}
+  - {id: PROD_PWR_FC_AIR_COMPRESSOR, type: product, name: 燃料电池空压机, name_en: Fuel Cell Air Compressor, segment: SEG_PWR_FUEL_CELL}
+  - {id: PROD_PWR_SOFC, type: product, name: 固体氧化物燃料电池, name_en: Solid Oxide Fuel Cell, segment: SEG_PWR_FUEL_CELL, aliases: [SOFC]}
+
+  # ======================= energy storage =======================
+  - {id: PROD_PWR_ESS, type: product, name: 储能系统集成, name_en: Energy Storage System Integration, segment: SEG_PWR_ENERGY_STORAGE, aliases: [ESS, 储能系统产品]}
+  - {id: PROD_PWR_UTILITY_ESS, type: product, name: 大型储能系统, name_en: Utility-Scale ESS, parent: PROD_PWR_ESS, segment: SEG_PWR_ENERGY_STORAGE, aliases: [大储, 电网侧储能, 发电侧储能]}
+  - {id: PROD_PWR_CI_ESS, type: product, name: 工商业储能系统, name_en: Commercial and Industrial ESS, parent: PROD_PWR_ESS, segment: SEG_PWR_ENERGY_STORAGE, aliases: [工商储]}
+  - {id: PROD_PWR_HOME_ESS, type: product, name: 户用储能系统, name_en: Residential ESS, parent: PROD_PWR_ESS, segment: SEG_PWR_ENERGY_STORAGE, aliases: [户储]}
+  - {id: PROD_PWR_PORTABLE_POWER, type: product, name: 便携式储能, name_en: Portable Power Station, parent: PROD_PWR_ESS, segment: SEG_PWR_ENERGY_STORAGE, aliases: [户外电源, 户外便携电源]}
+  - {id: PROD_PWR_PCS, type: product, name: 储能变流器, name_en: Power Conversion System, segment: SEG_PWR_ENERGY_STORAGE, aliases: [PCS]}
+  - {id: PROD_PWR_ESS_EMS, type: product, name: 储能能量管理系统, name_en: Energy Management System for ESS, segment: SEG_PWR_ENERGY_STORAGE, aliases: [储能EMS]}
+  - {id: PROD_PWR_ESS_CABINET, type: product, name: 储能电池柜, name_en: Energy Storage Battery Cabinet, segment: SEG_PWR_ENERGY_STORAGE, aliases: [储能柜, 储能电池舱, 储能集装箱]}
+  - {id: PROD_PWR_ESS_THERMAL, type: product, name: 储能温控系统, name_en: ESS Thermal Management, segment: SEG_PWR_ENERGY_STORAGE, aliases: [储能液冷机组]}
+  - {id: PROD_PWR_ESS_FIRE, type: product, name: 储能消防系统, name_en: ESS Fire Suppression, segment: SEG_PWR_ENERGY_STORAGE}
+  - {id: PROD_PWR_FLOW_BATTERY, type: product, name: 液流电池, name_en: Flow Battery, segment: SEG_PWR_ENERGY_STORAGE, aliases: [全钒液流电池]}
+  - {id: PROD_PWR_CAES, type: product, name: 压缩空气储能系统, name_en: Compressed Air Energy Storage, segment: SEG_PWR_ENERGY_STORAGE, aliases: [压缩空气储能]}
+  - {id: PROD_PWR_FLYWHEEL, type: product, name: 飞轮储能, name_en: Flywheel Energy Storage, segment: SEG_PWR_ENERGY_STORAGE}
+
+  # ======================= charging =======================
+  - {id: PROD_PWR_DC_CHARGER, type: product, name: 直流充电桩, name_en: DC Fast Charger, segment: SEG_PWR_CHARGING, aliases: [快充桩, 超充桩]}
+  - {id: PROD_PWR_AC_CHARGER, type: product, name: 交流充电桩, name_en: AC Charger, segment: SEG_PWR_CHARGING, aliases: [慢充桩, 家用充电桩]}
+  - {id: PROD_PWR_CHARGING_MODULE, type: product, name: 充电模块, name_en: Charging Power Module, segment: SEG_PWR_CHARGING}
+  - {id: PROD_PWR_SWAP_STATION, type: product, name: 换电站, name_en: Battery Swap Station, segment: SEG_PWR_CHARGING, aliases: [换电设备]}
+
+  # ======================= solar: silicon & wafer =======================
+  - {id: PROD_PWR_GRANULAR_SILICON, type: product, name: 颗粒硅, name_en: Granular Polysilicon, segment: SEG_PWR_SOLAR_SILICON, aliases: [FBR颗粒硅]}
+  - {id: PROD_PWR_MONO_INGOT, type: product, name: 单晶硅棒, name_en: Monocrystalline Ingot, segment: SEG_PWR_SOLAR_SILICON, aliases: [拉棒]}
+  - {id: PROD_PWR_SOLAR_WAFER, type: product, name: 光伏硅片, name_en: Solar Wafer, segment: SEG_PWR_SOLAR_SILICON, aliases: [单晶硅片]}
+  - {id: PROD_PWR_N_WAFER, type: product, name: N型硅片, name_en: N-Type Wafer, parent: PROD_PWR_SOLAR_WAFER, segment: SEG_PWR_SOLAR_SILICON}
+  - {id: PROD_PWR_P_WAFER, type: product, name: P型硅片, name_en: P-Type Wafer, parent: PROD_PWR_SOLAR_WAFER, segment: SEG_PWR_SOLAR_SILICON}
+  - {id: PROD_PWR_QUARTZ_CRUCIBLE, type: product, name: 石英坩埚, name_en: Quartz Crucible, segment: SEG_PWR_SOLAR_AUX}
+  - {id: PROD_PWR_THERMAL_FIELD, type: product, name: 光伏热场材料, name_en: Thermal Field Components, segment: SEG_PWR_SOLAR_AUX, aliases: [碳碳热场, 碳碳复合材料热场]}
+
+  # ======================= solar: cells & modules =======================
+  - {id: PROD_PWR_SOLAR_CELL, type: product, name: 光伏电池片, name_en: Solar Cell, segment: SEG_PWR_SOLAR_CELL_MODULE, aliases: [太阳能电池片]}
+  - {id: PROD_PWR_PERC_CELL, type: product, name: PERC电池片, name_en: PERC Cell, parent: PROD_PWR_SOLAR_CELL, segment: SEG_PWR_SOLAR_CELL_MODULE}
+  - {id: PROD_PWR_TOPCON_CELL, type: product, name: TOPCon电池片, name_en: TOPCon Cell, parent: PROD_PWR_SOLAR_CELL, segment: SEG_PWR_SOLAR_CELL_MODULE}
+  - {id: PROD_PWR_HJT_CELL, type: product, name: 异质结电池片, name_en: HJT Cell, parent: PROD_PWR_SOLAR_CELL, segment: SEG_PWR_SOLAR_CELL_MODULE, aliases: [HJT电池片]}
+  - {id: PROD_PWR_BC_CELL, type: product, name: BC电池片, name_en: Back-Contact Cell, parent: PROD_PWR_SOLAR_CELL, segment: SEG_PWR_SOLAR_CELL_MODULE, aliases: [HPBC电池片, TBC电池片, ABC电池片]}
+  - {id: PROD_PWR_PEROVSKITE_CELL, type: product, name: 钙钛矿电池, name_en: Perovskite Solar Cell, parent: PROD_PWR_SOLAR_CELL, segment: SEG_PWR_SOLAR_CELL_MODULE, aliases: [钙钛矿叠层电池]}
+  - {id: PROD_PWR_SOLAR_MODULE, type: product, name: 光伏组件, name_en: Solar Module, segment: SEG_PWR_SOLAR_CELL_MODULE, aliases: [太阳能组件]}
+  - {id: PROD_PWR_BC_MODULE, type: product, name: BC组件, name_en: Back-Contact Module, parent: PROD_PWR_SOLAR_MODULE, segment: SEG_PWR_SOLAR_CELL_MODULE}
+  - {id: PROD_PWR_PEROVSKITE_MODULE, type: product, name: 钙钛矿组件, name_en: Perovskite Module, parent: PROD_PWR_SOLAR_MODULE, segment: SEG_PWR_SOLAR_CELL_MODULE}
+  - {id: PROD_PWR_BIPV, type: product, name: 光伏建筑一体化, name_en: Building-Integrated PV, parent: PROD_PWR_SOLAR_MODULE, segment: SEG_PWR_SOLAR_CELL_MODULE, aliases: [BIPV]}
+
+  # ======================= solar: inverters & BOS =======================
+  - {id: PROD_PWR_SOLAR_INVERTER, type: product, name: 光伏逆变器, name_en: Solar Inverter, segment: SEG_PWR_INVERTER}
+  - {id: PROD_PWR_STRING_INVERTER, type: product, name: 组串式逆变器, name_en: String Inverter, parent: PROD_PWR_SOLAR_INVERTER, segment: SEG_PWR_INVERTER}
+  - {id: PROD_PWR_CENTRAL_INVERTER, type: product, name: 集中式逆变器, name_en: Central Inverter, parent: PROD_PWR_SOLAR_INVERTER, segment: SEG_PWR_INVERTER}
+  - {id: PROD_PWR_MICRO_INVERTER, type: product, name: 微型逆变器, name_en: Microinverter, parent: PROD_PWR_SOLAR_INVERTER, segment: SEG_PWR_INVERTER, aliases: [微逆]}
+  - {id: PROD_PWR_HYBRID_INVERTER, type: product, name: 储能逆变器, name_en: Hybrid Storage Inverter, parent: PROD_PWR_SOLAR_INVERTER, segment: SEG_PWR_INVERTER, aliases: [混合逆变器, 光储一体机]}
+  - {id: PROD_PWR_OPTIMIZER, type: product, name: 功率优化器, name_en: Power Optimizer, segment: SEG_PWR_INVERTER, aliases: [优化器]}
+  - {id: PROD_PWR_RSD, type: product, name: 快速关断器, name_en: Rapid Shutdown Device, segment: SEG_PWR_INVERTER, aliases: [RSD, 关断器]}
+  - {id: PROD_PWR_WIND_CONVERTER, type: product, name: 风电变流器, name_en: Wind Power Converter, segment: SEG_PWR_INVERTER}
+  - {id: PROD_PWR_SOLAR_MOUNT, type: product, name: 光伏支架, name_en: PV Mounting Structure, segment: SEG_PWR_SOLAR_AUX}
+  - {id: PROD_PWR_FIXED_MOUNT, type: product, name: 固定式光伏支架, name_en: Fixed-Tilt Mount, parent: PROD_PWR_SOLAR_MOUNT, segment: SEG_PWR_SOLAR_AUX}
+  - {id: PROD_PWR_TRACKER, type: product, name: 光伏跟踪支架, name_en: Solar Tracker, parent: PROD_PWR_SOLAR_MOUNT, segment: SEG_PWR_SOLAR_AUX, aliases: [跟踪支架]}
+
+  # ======================= solar: auxiliary materials =======================
+  - {id: PROD_PWR_SOLAR_GLASS, type: product, name: 光伏玻璃, name_en: Solar Glass, segment: SEG_PWR_SOLAR_AUX, aliases: [光伏压延玻璃, 光伏面板玻璃]}
+  - {id: PROD_PWR_ENCAP_FILM, type: product, name: 光伏胶膜, name_en: PV Encapsulant Film, segment: SEG_PWR_SOLAR_AUX, aliases: [封装胶膜]}
+  - {id: PROD_PWR_EVA_FILM, type: product, name: EVA胶膜, name_en: EVA Encapsulant Film, parent: PROD_PWR_ENCAP_FILM, segment: SEG_PWR_SOLAR_AUX}
+  - {id: PROD_PWR_POE_FILM, type: product, import_dependence: medium, name: POE胶膜, name_en: POE Encapsulant Film, parent: PROD_PWR_ENCAP_FILM, segment: SEG_PWR_SOLAR_AUX, aliases: [EPE胶膜]}
+  - {id: PROD_PWR_BACKSHEET, type: product, name: 光伏背板, name_en: PV Backsheet, segment: SEG_PWR_SOLAR_AUX}
+  - {id: PROD_PWR_SILVER_PASTE, type: product, name: 光伏银浆, name_en: PV Silver Paste, segment: SEG_PWR_SOLAR_AUX, aliases: [正银浆料, 导电银浆]}
+  - {id: PROD_PWR_LT_SILVER_PASTE, type: product, import_dependence: medium, name: 低温银浆, name_en: Low-Temperature Silver Paste, parent: PROD_PWR_SILVER_PASTE, segment: SEG_PWR_SOLAR_AUX, aliases: [银包铜浆料]}
+  - {id: PROD_PWR_JUNCTION_BOX, type: product, name: 光伏接线盒, name_en: PV Junction Box, segment: SEG_PWR_SOLAR_AUX}
+  - {id: PROD_PWR_RIBBON, type: product, name: 光伏焊带, name_en: PV Ribbon, segment: SEG_PWR_SOLAR_AUX, aliases: [涂锡焊带]}
+  - {id: PROD_PWR_PV_SEALANT, type: product, name: 光伏密封胶, name_en: PV Sealant, segment: SEG_PWR_SOLAR_AUX, aliases: [组件灌封胶]}
+  - {id: PROD_PWR_TARGET_ITO, type: product, import_dependence: medium, name: 光伏靶材, name_en: PV Sputtering Target, segment: SEG_PWR_SOLAR_AUX}
+
+  # ======================= solar: manufacturing equipment =======================
+  - {id: PROD_PWR_SOLAR_EQUIP, type: product, name: 光伏生产设备, name_en: Solar Manufacturing Equipment, segment: SEG_PWR_SOLAR_EQUIP}
+  - {id: PROD_PWR_POLY_REACTOR, type: product, name: 多晶硅还原炉, name_en: Polysilicon CVD Reactor, parent: PROD_PWR_SOLAR_EQUIP, segment: SEG_PWR_SOLAR_EQUIP, aliases: [还原炉]}
+  - {id: PROD_PWR_CRYSTAL_PULLER, type: product, name: 单晶炉, name_en: Crystal Puller, parent: PROD_PWR_SOLAR_EQUIP, segment: SEG_PWR_SOLAR_EQUIP, aliases: [光伏单晶炉, 单晶硅生长炉]}
+  - {id: PROD_PWR_WIRE_SAW, type: product, name: 光伏切片机, name_en: Wafer Slicing Machine, parent: PROD_PWR_SOLAR_EQUIP, segment: SEG_PWR_SOLAR_EQUIP, aliases: [金刚线切片机, 切片机]}
+  - {id: PROD_PWR_CELL_PECVD, type: product, name: 光伏PECVD设备, name_en: PV PECVD Equipment, parent: PROD_PWR_SOLAR_EQUIP, segment: SEG_PWR_SOLAR_EQUIP}
+  - {id: PROD_PWR_DIFFUSION_FURNACE, type: product, name: 光伏扩散炉, name_en: Diffusion Furnace, parent: PROD_PWR_SOLAR_EQUIP, segment: SEG_PWR_SOLAR_EQUIP, aliases: [硼扩散炉]}
+  - {id: PROD_PWR_HJT_PVD, type: product, name: 异质结镀膜设备, name_en: HJT PVD/CVD Equipment, parent: PROD_PWR_SOLAR_EQUIP, segment: SEG_PWR_SOLAR_EQUIP, aliases: [HJT整线设备]}
+  - {id: PROD_PWR_SOLAR_LASER, type: product, name: 光伏激光设备, name_en: PV Laser Equipment, parent: PROD_PWR_SOLAR_EQUIP, segment: SEG_PWR_SOLAR_EQUIP, aliases: [激光SE设备, BC激光开膜]}
+  - {id: PROD_PWR_SCREEN_PRINTER, type: product, name: 光伏丝网印刷设备, name_en: PV Screen Printer, parent: PROD_PWR_SOLAR_EQUIP, segment: SEG_PWR_SOLAR_EQUIP, aliases: [丝网印刷设备, 丝印设备]}
+  - {id: PROD_PWR_STRINGER, type: product, name: 光伏串焊机, name_en: Cell Stringer, parent: PROD_PWR_SOLAR_EQUIP, segment: SEG_PWR_SOLAR_EQUIP, aliases: [串焊机]}
+  - {id: PROD_PWR_LAMINATOR, type: product, name: 光伏层压机, name_en: Module Laminator, parent: PROD_PWR_SOLAR_EQUIP, segment: SEG_PWR_SOLAR_EQUIP, aliases: [层压机]}
+  - {id: PROD_PWR_PEROVSKITE_EQUIP, type: product, name: 钙钛矿设备, name_en: Perovskite Production Equipment, parent: PROD_PWR_SOLAR_EQUIP, segment: SEG_PWR_SOLAR_EQUIP, aliases: [钙钛矿涂布设备, 钙钛矿蒸镀设备, 钙钛矿电池设备]}
+
+  # ======================= wind =======================
+  - {id: PROD_PWR_WIND_TURBINE, type: product, name: 风电机组, name_en: Wind Turbine Generator System, segment: SEG_PWR_WIND_TURBINE, aliases: [风力发电机组, 风机]}
+  - {id: PROD_PWR_ONSHORE_TURBINE, type: product, name: 陆上风电机组, name_en: Onshore Wind Turbine, parent: PROD_PWR_WIND_TURBINE, segment: SEG_PWR_WIND_TURBINE, aliases: [陆风机组]}
+  - {id: PROD_PWR_OFFSHORE_TURBINE, type: product, name: 海上风电机组, name_en: Offshore Wind Turbine, parent: PROD_PWR_WIND_TURBINE, segment: SEG_PWR_WIND_TURBINE, aliases: [海风机组]}
+  - {id: PROD_PWR_BLADE_CORE, type: product, name: 叶片芯材, name_en: Blade Core Material, segment: SEG_PWR_WIND_PARTS, aliases: [巴沙木, PET泡沫芯材]}
+  - {id: PROD_PWR_WIND_TOWER, type: product, name: 风电塔筒, name_en: Wind Tower, segment: SEG_PWR_WIND_PARTS, aliases: [塔架]}
+  - {id: PROD_PWR_MONOPILE, type: product, name: 海上风电桩基, name_en: Offshore Monopile and Jacket, segment: SEG_PWR_WIND_PARTS, aliases: [单桩, 导管架]}
+  - {id: PROD_PWR_FLOATING_FOUNDATION, type: product, name: 漂浮式风电基础, name_en: Floating Wind Foundation, segment: SEG_PWR_WIND_PARTS}
+  - {id: PROD_PWR_MAIN_BEARING, type: product, import_dependence: medium, name: 风电主轴轴承, name_en: Wind Main Shaft Bearing, segment: SEG_PWR_WIND_PARTS}
+  - {id: PROD_PWR_PITCH_YAW_BEARING, type: product, name: 风电变桨偏航轴承, name_en: Pitch and Yaw Bearing, segment: SEG_PWR_WIND_PARTS}
+  - {id: PROD_PWR_GEARBOX, type: product, name: 风电齿轮箱, name_en: Wind Gearbox, segment: SEG_PWR_WIND_PARTS, parent: PROD_MACH_GEARBOX, aliases: [风电主齿轮箱]}
+  - {id: PROD_PWR_WIND_CASTING, type: product, name: 风电铸件, name_en: Wind Castings, segment: SEG_PWR_WIND_PARTS, aliases: [底座], parent: PROD_MACH_CASTING}
+  - {id: PROD_PWR_WIND_MAIN_SHAFT, type: product, name: 风电主轴, name_en: Wind Main Shaft, segment: SEG_PWR_WIND_PARTS, aliases: [风电锻件]}
+  - {id: PROD_PWR_WIND_FLANGE, type: product, name: 风电法兰, name_en: Wind Tower Flange, segment: SEG_PWR_WIND_PARTS}
+  - {id: PROD_PWR_WIND_GENERATOR, type: product, name: 风力发电机, name_en: Wind Generator, segment: SEG_PWR_WIND_PARTS, aliases: [双馈发电机, 永磁直驱发电机]}
+  - {id: PROD_PWR_PITCH_SYSTEM, type: product, name: 变桨系统, name_en: Pitch Control System, segment: SEG_PWR_WIND_PARTS}
+
+  # ======================= lithium battery: cathode =======================
+  - {id: PROD_PWR_CATHODE, type: product, name: 正极材料, name_en: Cathode Material, segment: SEG_PWR_CATHODE}
+  - {id: PROD_PWR_LFP, type: product, name: 磷酸铁锂, name_en: Lithium Iron Phosphate, parent: PROD_PWR_CATHODE, segment: SEG_PWR_CATHODE, aliases: [LFP, 磷酸铁锂正极]}
+  - {id: PROD_PWR_LMFP, type: product, name: 磷酸锰铁锂, name_en: Lithium Manganese Iron Phosphate, parent: PROD_PWR_CATHODE, segment: SEG_PWR_CATHODE, aliases: [LMFP]}
+  - {id: PROD_PWR_NCM, type: product, name: 三元正极材料, name_en: NCM Cathode, parent: PROD_PWR_CATHODE, segment: SEG_PWR_CATHODE, aliases: [三元材料, NCM, 镍钴锰酸锂]}
+  - {id: PROD_PWR_HIGH_NI_NCM, type: product, name: 高镍三元正极, name_en: High-Nickel NCM, parent: PROD_PWR_NCM, segment: SEG_PWR_CATHODE, aliases: [NCM811, 高镍三元]}
+  - {id: PROD_PWR_NCA, type: product, name: 镍钴铝酸锂, name_en: NCA Cathode, parent: PROD_PWR_CATHODE, segment: SEG_PWR_CATHODE, aliases: [NCA]}
+  - {id: PROD_PWR_LCO, type: product, name: 钴酸锂, name_en: Lithium Cobalt Oxide, parent: PROD_PWR_CATHODE, segment: SEG_PWR_CATHODE, aliases: [LCO]}
+  - {id: PROD_PWR_LMO, type: product, name: 锰酸锂, name_en: Lithium Manganese Oxide, parent: PROD_PWR_CATHODE, segment: SEG_PWR_CATHODE, aliases: [LMO]}
+  - {id: PROD_PWR_LI_RICH_MN, type: product, name: 富锂锰基正极, name_en: Lithium-Rich Manganese Cathode, parent: PROD_PWR_CATHODE, segment: SEG_PWR_CATHODE}
+  - {id: PROD_PWR_NCM_PRECURSOR, type: product, name: 三元前驱体, name_en: NCM Precursor, segment: SEG_PWR_CATHODE}
+  - {id: PROD_PWR_IRON_PHOSPHATE, type: product, name: 磷酸铁, name_en: Iron Phosphate, segment: SEG_PWR_CATHODE, aliases: [电池级磷酸铁]}
+  - {id: PROD_PWR_MN_PRECURSOR, type: product, name: 电池级四氧化三锰, name_en: Battery-Grade Manganese Oxide, segment: SEG_PWR_CATHODE}
+
+  # ======================= lithium battery: anode =======================
+  - {id: PROD_PWR_ANODE, type: product, name: 负极材料, name_en: Anode Material, segment: SEG_PWR_ANODE}
+  - {id: PROD_PWR_ARTIFICIAL_GRAPHITE, type: product, name: 人造石墨负极, name_en: Artificial Graphite Anode, parent: PROD_PWR_ANODE, segment: SEG_PWR_ANODE, aliases: [人造石墨]}
+  - {id: PROD_PWR_NATURAL_GRAPHITE, type: product, name: 天然石墨负极, name_en: Natural Graphite Anode, parent: PROD_PWR_ANODE, segment: SEG_PWR_ANODE}
+  - {id: PROD_PWR_SILICON_ANODE, type: product, name: 硅基负极, name_en: Silicon-Based Anode, parent: PROD_PWR_ANODE, segment: SEG_PWR_ANODE, aliases: [硅碳负极, 硅氧负极]}
+  - {id: PROD_PWR_LITHIUM_METAL_ANODE, type: product, name: 金属锂负极, name_en: Lithium Metal Anode, parent: PROD_PWR_ANODE, segment: SEG_PWR_ANODE, aliases: [锂金属负极]}
+  - {id: PROD_PWR_GRAPHITIZATION, type: product, kind: service, name: 负极石墨化加工, name_en: Anode Graphitization Service, segment: SEG_PWR_ANODE, aliases: [石墨化]}
+  - {id: PROD_PWR_POROUS_CARBON, type: product, name: 多孔碳, name_en: Porous Carbon for Si-C Anode, segment: SEG_PWR_ANODE}
+
+  # ======================= lithium battery: separator =======================
+  - {id: PROD_PWR_SEPARATOR, type: product, name: 锂电隔膜, name_en: Battery Separator, segment: SEG_PWR_SEPARATOR, aliases: [隔膜, 锂电池隔膜]}
+  - {id: PROD_PWR_WET_SEPARATOR, type: product, name: 湿法隔膜, name_en: Wet-Process Separator, parent: PROD_PWR_SEPARATOR, segment: SEG_PWR_SEPARATOR}
+  - {id: PROD_PWR_DRY_SEPARATOR, type: product, name: 干法隔膜, name_en: Dry-Process Separator, parent: PROD_PWR_SEPARATOR, segment: SEG_PWR_SEPARATOR}
+  - {id: PROD_PWR_COATED_SEPARATOR, type: product, name: 涂覆隔膜, name_en: Coated Separator, parent: PROD_PWR_SEPARATOR, segment: SEG_PWR_SEPARATOR, aliases: [隔膜涂覆加工]}
+  - {id: PROD_PWR_SEPARATOR_COATING, type: product, name: 隔膜涂覆材料, name_en: Separator Coating Material, segment: SEG_PWR_SEPARATOR, aliases: [勃姆石, 陶瓷涂覆粉体]}
+
+  # ======================= lithium battery: electrolyte =======================
+  - {id: PROD_PWR_ELECTROLYTE, type: product, name: 锂电池电解液, name_en: Li-Ion Electrolyte, segment: SEG_PWR_ELECTROLYTE, aliases: [电解液]}
+  - {id: PROD_PWR_LIPF6, type: product, name: 六氟磷酸锂, name_en: Lithium Hexafluorophosphate, segment: SEG_PWR_ELECTROLYTE, aliases: [LiPF6, 六氟]}
+  - {id: PROD_PWR_LIFSI, type: product, name: 双氟磺酰亚胺锂, name_en: LiFSI, segment: SEG_PWR_ELECTROLYTE, aliases: [LiFSI, 新型锂盐]}
+  - {id: PROD_PWR_ELECTROLYTE_SOLVENT, type: product, name: 电解液溶剂, name_en: Electrolyte Solvent, segment: SEG_PWR_ELECTROLYTE, aliases: [碳酸酯溶剂, 锂电溶剂, EC, EMC溶剂, DEC]}
+  - {id: PROD_PWR_ELECTROLYTE_ADDITIVE, type: product, name: 电解液添加剂, name_en: Electrolyte Additive, segment: SEG_PWR_ELECTROLYTE, aliases: [FEC, VC添加剂, DTD]}
+  - {id: PROD_PWR_SOLID_ELECTROLYTE, type: product, name: 固态电解质, name_en: Solid Electrolyte, segment: SEG_PWR_ELECTROLYTE}
+  - {id: PROD_PWR_SULFIDE_ELECTROLYTE, type: product, name: 硫化物固态电解质, name_en: Sulfide Solid Electrolyte, parent: PROD_PWR_SOLID_ELECTROLYTE, segment: SEG_PWR_ELECTROLYTE}
+  - {id: PROD_PWR_OXIDE_ELECTROLYTE, type: product, name: 氧化物固态电解质, name_en: Oxide Solid Electrolyte, parent: PROD_PWR_SOLID_ELECTROLYTE, segment: SEG_PWR_ELECTROLYTE, aliases: [LLZO]}
+
+  # ======================= lithium battery: current collectors =======================
+  - {id: PROD_PWR_LI_COPPER_FOIL, type: product, name: 锂电铜箔, name_en: Lithium Battery Copper Foil, segment: SEG_PWR_COLLECTOR, aliases: [锂电池铜箔]}
+  - {id: PROD_PWR_BATTERY_AL_FOIL, type: product, name: 电池铝箔, name_en: Battery Aluminum Foil, segment: SEG_PWR_COLLECTOR, aliases: [锂电铝箔]}
+  - {id: PROD_PWR_COMPOSITE_CU_FOIL, type: product, name: 复合铜箔, name_en: Composite Copper Foil, segment: SEG_PWR_COLLECTOR, aliases: [PET铜箔]}
+  - {id: PROD_PWR_COMPOSITE_AL_FOIL, type: product, name: 复合铝箔, name_en: Composite Aluminum Foil, segment: SEG_PWR_COLLECTOR, aliases: [PET铝箔]}
+
+  # ======================= lithium battery: auxiliary & structural =======================
+  - {id: PROD_PWR_STRUCTURAL_PARTS, type: product, name: 电池结构件, name_en: Battery Structural Parts, segment: SEG_PWR_BATTERY_AUX}
+  - {id: PROD_PWR_CELL_CASE, type: product, name: 电池壳体, name_en: Cell Can, parent: PROD_PWR_STRUCTURAL_PARTS, segment: SEG_PWR_BATTERY_AUX, aliases: [铝壳, 钢壳]}
+  - {id: PROD_PWR_CELL_COVER, type: product, name: 电池顶盖, name_en: Cell Top Cover, parent: PROD_PWR_STRUCTURAL_PARTS, segment: SEG_PWR_BATTERY_AUX, aliases: [盖板]}
+  - {id: PROD_PWR_AL_PLASTIC_FILM, type: product, import_dependence: medium, name: 铝塑膜, name_en: Aluminum-Plastic Pouch Film, segment: SEG_PWR_BATTERY_AUX}
+  - {id: PROD_PWR_CONDUCTIVE_AGENT, type: product, name: 导电剂, name_en: Conductive Additive, segment: SEG_PWR_BATTERY_AUX, aliases: [导电炭黑浆料]}
+  - {id: PROD_PWR_CNT_PASTE, type: product, name: 碳纳米管导电浆料, name_en: CNT Conductive Paste, parent: PROD_PWR_CONDUCTIVE_AGENT, segment: SEG_PWR_BATTERY_AUX}
+  - {id: PROD_PWR_BINDER, type: product, name: 锂电粘结剂, name_en: Battery Binder, segment: SEG_PWR_BATTERY_AUX, aliases: [SBR粘结剂, PAA粘结剂]}
+  - {id: PROD_PWR_TAB, type: product, name: 极耳, name_en: Battery Tab, segment: SEG_PWR_BATTERY_AUX}
+  - {id: PROD_PWR_CCS, type: product, name: 集成母排, name_en: Cell Contact System, segment: SEG_PWR_BATTERY_AUX, aliases: [CCS, 电池连接系统]}
+  - {id: PROD_PWR_SAFETY_VALVE, type: product, name: 电池防爆阀, name_en: Cell Safety Vent, segment: SEG_PWR_BATTERY_AUX}
+
+  # ======================= lithium battery: cells, packs =======================
+  - {id: PROD_PWR_LI_CELL, type: product, name: 锂离子电芯, name_en: Lithium-Ion Cell, segment: SEG_PWR_LI_BATTERY, aliases: [锂电芯]}
+  - {id: PROD_PWR_EV_BATTERY, type: product, name: 动力电池, name_en: EV Traction Battery, parent: PROD_PWR_LI_CELL, segment: SEG_PWR_LI_BATTERY, aliases: [动力锂电池]}
+  - {id: PROD_PWR_LFP_EV_BATTERY, type: product, name: 磷酸铁锂动力电池, name_en: LFP Traction Battery, parent: PROD_PWR_EV_BATTERY, segment: SEG_PWR_LI_BATTERY, aliases: [刀片电池]}
+  - {id: PROD_PWR_NCM_EV_BATTERY, type: product, name: 三元动力电池, name_en: NCM Traction Battery, parent: PROD_PWR_EV_BATTERY, segment: SEG_PWR_LI_BATTERY}
+  - {id: PROD_PWR_LARGE_CYLINDRICAL, type: product, name: 大圆柱电池, name_en: Large Cylindrical Cell, parent: PROD_PWR_EV_BATTERY, segment: SEG_PWR_LI_BATTERY, aliases: [4680电池, 46系列大圆柱]}
+  - {id: PROD_PWR_STORAGE_CELL, type: product, name: 储能电芯, name_en: Energy Storage Cell, parent: PROD_PWR_LI_CELL, segment: SEG_PWR_LI_BATTERY, aliases: [储能电池, 储能锂电池]}
+  - {id: PROD_PWR_CONSUMER_BATTERY, type: product, name: 消费锂电池, name_en: Consumer Li-Ion Battery, parent: PROD_PWR_LI_CELL, segment: SEG_PWR_LI_BATTERY, aliases: [3C电池, 消费电池, 软包消费电池, 消费类锂电池]}
+  - {id: PROD_PWR_SMALL_POWER_BATTERY, type: product, name: 小动力电池, name_en: Light-Mobility and Tool Battery, parent: PROD_PWR_LI_CELL, segment: SEG_PWR_LI_BATTERY, aliases: [两轮车锂电池, 电动工具电池, 小圆柱电池]}
+  - {id: PROD_PWR_SOLID_STATE_CELL, type: product, name: 固态电池电芯, name_en: Solid-State Cell, parent: PROD_PWR_LI_CELL, segment: SEG_PWR_LI_BATTERY, aliases: [全固态电池, 半固态电池电芯]}
+  - {id: PROD_PWR_BATTERY_MODULE, type: product, name: 电池模组, name_en: Battery Module, segment: SEG_PWR_LI_BATTERY}
+  - {id: PROD_PWR_BATTERY_PACK, type: product, name: 电池包, name_en: Battery Pack, segment: SEG_PWR_LI_BATTERY, aliases: [PACK, 电池系统]}
+  - {id: PROD_PWR_BMS, type: product, name: 电池管理系统, name_en: Battery Management System, segment: SEG_PWR_LI_BATTERY, aliases: [BMS, 汽车电池管理系统]}
+
+  # ======================= sodium-ion =======================
+  - {id: PROD_PWR_SODIUM_CELL, type: product, name: 钠离子电芯, name_en: Sodium-Ion Cell, segment: SEG_PWR_SODIUM, aliases: [钠电池]}
+  - {id: PROD_PWR_NA_LAYERED_OXIDE, type: product, name: 层状氧化物正极, name_en: Layered Oxide Cathode (Na), segment: SEG_PWR_SODIUM}
+  - {id: PROD_PWR_NA_POLYANION, type: product, name: 聚阴离子正极, name_en: Polyanionic Cathode (Na), segment: SEG_PWR_SODIUM, aliases: [NFPP, 磷酸焦磷酸铁钠]}
+  - {id: PROD_PWR_PRUSSIAN, type: product, name: 普鲁士蓝类正极, name_en: Prussian Blue Analogue Cathode, segment: SEG_PWR_SODIUM, aliases: [普鲁士白]}
+  - {id: PROD_PWR_HARD_CARBON, type: product, name: 硬碳负极, name_en: Hard Carbon Anode, segment: SEG_PWR_SODIUM, aliases: [硬碳]}
+  - {id: PROD_PWR_NAPF6, type: product, name: 六氟磷酸钠, name_en: Sodium Hexafluorophosphate, segment: SEG_PWR_SODIUM, aliases: [NaPF6]}
+  - {id: PROD_PWR_NA_ELECTROLYTE, type: product, name: 钠电电解液, name_en: Sodium-Ion Electrolyte, segment: SEG_PWR_SODIUM}
+
+  # ======================= lead-acid and other batteries =======================
+  - {id: PROD_PWR_LEAD_ACID, type: product, name: 铅酸蓄电池, name_en: Lead-Acid Battery, segment: SEG_PWR_OTHER_BATTERY, aliases: [铅蓄电池]}
+  - {id: PROD_PWR_LEAD_ACID_MOTIVE, type: product, name: 动力型铅酸电池, name_en: Motive Lead-Acid Battery, parent: PROD_PWR_LEAD_ACID, segment: SEG_PWR_OTHER_BATTERY, aliases: [电动自行车电池]}
+  - {id: PROD_PWR_LEAD_ACID_SLI, type: product, name: 起动型铅酸电池, name_en: SLI Lead-Acid Battery, parent: PROD_PWR_LEAD_ACID, segment: SEG_PWR_OTHER_BATTERY, aliases: [汽车启停电池, 汽车蓄电池]}
+  - {id: PROD_PWR_LEAD_ACID_STANDBY, type: product, name: 备用型铅酸电池, name_en: Standby Lead-Acid Battery, parent: PROD_PWR_LEAD_ACID, segment: SEG_PWR_OTHER_BATTERY, aliases: [通信备用电池, UPS蓄电池]}
+  - {id: PROD_PWR_LEAD_CARBON, type: product, name: 铅炭电池, name_en: Lead-Carbon Battery, segment: SEG_PWR_OTHER_BATTERY}
+  - {id: PROD_PWR_PRIMARY_LITHIUM, type: product, name: 锂原电池, name_en: Primary Lithium Battery, segment: SEG_PWR_OTHER_BATTERY, aliases: [锂亚电池, 锂锰电池]}
+  - {id: PROD_PWR_NIMH, type: product, name: 镍氢电池, name_en: NiMH Battery, segment: SEG_PWR_OTHER_BATTERY}
+  - {id: PROD_PWR_ALKALINE, type: product, name: 碱性电池, name_en: Alkaline Battery, segment: SEG_PWR_OTHER_BATTERY, aliases: [碱锰电池, 干电池]}
+
+  # ======================= lithium battery equipment =======================
+  - {id: PROD_PWR_LI_EQUIP, type: product, name: 锂电生产设备, name_en: Lithium Battery Production Equipment, segment: SEG_PWR_LI_EQUIP}
+  - {id: PROD_PWR_LI_MIXER, type: product, name: 锂电制浆设备, name_en: Slurry Mixing Equipment, parent: PROD_PWR_LI_EQUIP, segment: SEG_PWR_LI_EQUIP, aliases: [搅拌机]}
+  - {id: PROD_PWR_LI_COATER, type: product, name: 锂电涂布机, name_en: Electrode Coater, parent: PROD_PWR_LI_EQUIP, segment: SEG_PWR_LI_EQUIP, aliases: [涂布机]}
+  - {id: PROD_PWR_LI_CALENDER, type: product, name: 锂电辊压机, name_en: Electrode Calender, parent: PROD_PWR_LI_EQUIP, segment: SEG_PWR_LI_EQUIP, aliases: [辊压分切一体机]}
+  - {id: PROD_PWR_LI_DIE_CUTTER, type: product, name: 锂电模切分切机, name_en: Die-Cutting and Slitting Machine, parent: PROD_PWR_LI_EQUIP, segment: SEG_PWR_LI_EQUIP}
+  - {id: PROD_PWR_LI_WINDER, type: product, name: 锂电卷绕机, name_en: Winding Machine, parent: PROD_PWR_LI_EQUIP, segment: SEG_PWR_LI_EQUIP, aliases: [卷绕机]}
+  - {id: PROD_PWR_LI_STACKER, type: product, name: 锂电叠片机, name_en: Stacking Machine, parent: PROD_PWR_LI_EQUIP, segment: SEG_PWR_LI_EQUIP, aliases: [叠片机]}
+  - {id: PROD_PWR_LI_LASER_WELDER, type: product, name: 锂电激光焊接设备, name_en: Battery Laser Welding Equipment, parent: PROD_PWR_LI_EQUIP, segment: SEG_PWR_LI_EQUIP}
+  - {id: PROD_PWR_LI_FORMATION, type: product, name: 化成分容设备, name_en: Formation and Grading Equipment, parent: PROD_PWR_LI_EQUIP, segment: SEG_PWR_LI_EQUIP, aliases: [化成分容]}
+  - {id: PROD_PWR_LI_INSPECTION, type: product, name: 锂电检测设备, name_en: Battery Inspection Equipment, parent: PROD_PWR_LI_EQUIP, segment: SEG_PWR_LI_EQUIP, aliases: [X射线检测设备]}
+  - {id: PROD_PWR_LI_PACK_LINE, type: product, name: 模组PACK产线, name_en: Module and Pack Assembly Line, parent: PROD_PWR_LI_EQUIP, segment: SEG_PWR_LI_EQUIP, aliases: [电池模组PACK线, PACK线, 模组产线]}
+  - {id: PROD_PWR_DRY_ELECTRODE_EQUIP, type: product, name: 干法电极设备, name_en: Dry Electrode Equipment, parent: PROD_PWR_LI_EQUIP, segment: SEG_PWR_LI_EQUIP}
+  - {id: PROD_PWR_ISOSTATIC_PRESS, type: product, name: 等静压设备, name_en: Isostatic Press, parent: PROD_PWR_LI_EQUIP, segment: SEG_PWR_LI_EQUIP}
+  - {id: PROD_PWR_CATHODE_KILN, type: product, name: 正负极材料窑炉, name_en: Cathode and Anode Sintering Kiln, parent: PROD_PWR_LI_EQUIP, segment: SEG_PWR_LI_EQUIP, aliases: [辊道窑, 石墨化炉, 锂电材料烧结设备, 正极烧结炉]}
+
+  # ======================= grid: UHV / transmission =======================
+  - {id: PROD_PWR_CONVERTER_VALVE, type: product, name: 换流阀, name_en: HVDC Converter Valve, segment: SEG_PWR_UHV, aliases: [直流换流阀]}
+  - {id: PROD_PWR_VSC_VALVE, type: product, import_dependence: medium, name: 柔性直流换流阀, name_en: VSC-HVDC Converter Valve, parent: PROD_PWR_CONVERTER_VALVE, segment: SEG_PWR_UHV, aliases: [柔直换流阀]}
+  - {id: PROD_PWR_CONVERTER_TRANSFORMER, type: product, name: 换流变压器, name_en: Converter Transformer, segment: SEG_PWR_UHV, aliases: [换流变]}
+  - {id: PROD_PWR_DC_CONTROL_PROTECTION, type: product, name: 直流控制保护系统, name_en: HVDC Control and Protection, segment: SEG_PWR_UHV, aliases: [直流控保]}
+  - {id: PROD_PWR_HV_THYRISTOR, type: product, name: 高压晶闸管, name_en: High-Voltage Thyristor, segment: SEG_PWR_UHV}
+  - {id: PROD_PWR_DC_BREAKER, type: product, name: 直流断路器, name_en: HVDC Circuit Breaker, segment: SEG_PWR_UHV}
+  - {id: PROD_PWR_TRANSFORMER, type: product, name: 变压器, name_en: Transformer, segment: SEG_PWR_TRANSMISSION}
+  - {id: PROD_PWR_POWER_TRANSFORMER, type: product, name: 电力变压器, name_en: Power Transformer, parent: PROD_PWR_TRANSFORMER, segment: SEG_PWR_TRANSMISSION, aliases: [主变, 油浸式变压器]}
+  - {id: PROD_PWR_UHV_TRANSFORMER, type: product, name: 特高压交流变压器, name_en: UHV AC Transformer, parent: PROD_PWR_POWER_TRANSFORMER, segment: SEG_PWR_UHV, aliases: [1000kV变压器]}
+  - {id: PROD_PWR_DIST_TRANSFORMER, type: product, name: 配电变压器, name_en: Distribution Transformer, parent: PROD_PWR_TRANSFORMER, segment: SEG_PWR_DISTRIBUTION, aliases: [配变]}
+  - {id: PROD_PWR_DRY_TRANSFORMER, type: product, name: 干式变压器, name_en: Dry-Type Transformer, parent: PROD_PWR_TRANSFORMER, segment: SEG_PWR_DISTRIBUTION}
+  - {id: PROD_PWR_AMORPHOUS_TRANSFORMER, type: product, name: 非晶合金变压器, name_en: Amorphous Alloy Transformer, parent: PROD_PWR_DIST_TRANSFORMER, segment: SEG_PWR_DISTRIBUTION}
+  - {id: PROD_PWR_BOX_SUBSTATION, type: product, name: 箱式变电站, name_en: Compact Box-Type Substation, segment: SEG_PWR_DISTRIBUTION, aliases: [箱变, 预装式变电站]}
+  - {id: PROD_PWR_RENEWABLE_BOX_SUB, type: product, name: 新能源箱变, name_en: Renewable-Energy Box Substation, parent: PROD_PWR_BOX_SUBSTATION, segment: SEG_PWR_DISTRIBUTION, aliases: [光伏箱变, 风电箱变]}
+  - {id: PROD_PWR_TRACTION_TRANSFORMER, type: product, name: 牵引变压器, name_en: Traction Transformer, parent: PROD_PWR_TRANSFORMER, segment: SEG_PWR_TRANSMISSION}
+  - {id: PROD_PWR_GIS, type: product, name: 气体绝缘金属封闭开关设备, name_en: Gas-Insulated Switchgear, segment: SEG_PWR_TRANSMISSION, aliases: [GIS组合电器, 组合电器]}
+  - {id: PROD_PWR_GIL, type: product, name: 气体绝缘输电线路, name_en: Gas-Insulated Line, segment: SEG_PWR_TRANSMISSION, aliases: [GIL]}
+  - {id: PROD_PWR_HV_BREAKER, type: product, name: 高压断路器, name_en: High-Voltage Circuit Breaker, segment: SEG_PWR_TRANSMISSION, aliases: [SF6断路器]}
+  - {id: PROD_PWR_DISCONNECTOR, type: product, name: 隔离开关, name_en: Disconnector, segment: SEG_PWR_TRANSMISSION}
+  - {id: PROD_PWR_INSTRUMENT_TRANSFORMER, type: product, name: 互感器, name_en: Instrument Transformer, segment: SEG_PWR_TRANSMISSION, aliases: [电流互感器, 电压互感器]}
+  - {id: PROD_PWR_ARRESTER, type: product, name: 避雷器, name_en: Surge Arrester, segment: SEG_PWR_TRANSMISSION, aliases: [氧化锌避雷器]}
+  - {id: PROD_PWR_REACTOR, type: product, name: 电抗器, name_en: Reactor, segment: SEG_PWR_TRANSMISSION, aliases: [平波电抗器, 并联电抗器]}
+  - {id: PROD_PWR_CAPACITOR, type: product, name: 电力电容器, name_en: Power Capacitor, segment: SEG_PWR_TRANSMISSION}
+  - {id: PROD_PWR_SVG, type: product, name: 静止无功发生器, name_en: Static Var Generator, segment: SEG_PWR_TRANSMISSION, aliases: [SVG, 无功补偿装置, STATCOM]}
+  - {id: PROD_PWR_INSULATOR, type: product, name: 绝缘子, name_en: Insulator, segment: SEG_PWR_TRANSMISSION}
+  - {id: PROD_PWR_COMPOSITE_INSULATOR, type: product, name: 复合绝缘子, name_en: Composite Insulator, parent: PROD_PWR_INSULATOR, segment: SEG_PWR_TRANSMISSION}
+  - {id: PROD_PWR_GLASS_INSULATOR, type: product, name: 玻璃绝缘子, name_en: Glass Insulator, parent: PROD_PWR_INSULATOR, segment: SEG_PWR_TRANSMISSION}
+  - {id: PROD_PWR_PORCELAIN_INSULATOR, type: product, name: 瓷绝缘子, name_en: Porcelain Insulator, parent: PROD_PWR_INSULATOR, segment: SEG_PWR_TRANSMISSION}
+  - {id: PROD_PWR_BUSHING, type: product, import_dependence: medium, name: 高压套管, name_en: High-Voltage Bushing, segment: SEG_PWR_TRANSMISSION, aliases: [变压器套管]}
+  - {id: PROD_PWR_OLTC, type: product, import_dependence: medium, name: 有载分接开关, name_en: On-Load Tap Changer, segment: SEG_PWR_TRANSMISSION, aliases: [OLTC]}
+  - {id: PROD_PWR_FITTINGS, type: product, name: 电力金具, name_en: Power Line Fittings, segment: SEG_PWR_TRANSMISSION}
+  - {id: PROD_PWR_TRANSMISSION_TOWER, type: product, name: 输电铁塔, name_en: Transmission Tower, segment: SEG_PWR_TRANSMISSION, aliases: [角钢塔, 钢管塔]}
+  - {id: PROD_PWR_SUBSTATION_STEEL, type: product, name: 变电站构支架, name_en: Substation Steel Structure, segment: SEG_PWR_TRANSMISSION}
+
+  # ======================= grid: distribution =======================
+  - {id: PROD_PWR_MV_SWITCHGEAR, type: product, name: 中压开关柜, name_en: Medium-Voltage Switchgear, segment: SEG_PWR_DISTRIBUTION, aliases: [高压开关柜, KYN柜]}
+  - {id: PROD_PWR_RMU, type: product, name: 环网柜, name_en: Ring Main Unit, segment: SEG_PWR_DISTRIBUTION, aliases: [RMU]}
+  - {id: PROD_PWR_LV_SWITCHGEAR, type: product, name: 低压成套开关柜, name_en: Low-Voltage Switchgear Assembly, segment: SEG_PWR_DISTRIBUTION, aliases: [低压开关柜]}
+  - {id: PROD_PWR_VCB, type: product, name: 真空断路器, name_en: Vacuum Circuit Breaker, segment: SEG_PWR_DISTRIBUTION}
+  - {id: PROD_PWR_VACUUM_INTERRUPTER, type: product, name: 真空灭弧室, name_en: Vacuum Interrupter, segment: SEG_PWR_DISTRIBUTION}
+  - {id: PROD_PWR_POLE_SWITCH, type: product, name: 柱上开关, name_en: Pole-Mounted Switch, segment: SEG_PWR_DISTRIBUTION, aliases: [一二次融合开关]}
+  - {id: PROD_PWR_LV_APPARATUS, type: product, name: 低压电器, name_en: Low-Voltage Electrical Apparatus, segment: SEG_PWR_DISTRIBUTION}
+  - {id: PROD_PWR_LV_BREAKER, type: product, name: 低压断路器, name_en: Low-Voltage Circuit Breaker, parent: PROD_PWR_LV_APPARATUS, segment: SEG_PWR_DISTRIBUTION, aliases: [塑壳断路器, 框架断路器, 微型断路器, MCCB, ACB]}
+  - {id: PROD_PWR_CONTACTOR, type: product, name: 交流接触器, name_en: Contactor, parent: PROD_PWR_LV_APPARATUS, segment: SEG_PWR_DISTRIBUTION}
+  - {id: PROD_PWR_DC_FUSE, type: product, name: 电力熔断器, name_en: Power Fuse, parent: PROD_PWR_LV_APPARATUS, segment: SEG_PWR_DISTRIBUTION, aliases: [熔断器]}
+  - {id: PROD_PWR_HV_DC_RELAY, type: product, name: 高压直流继电器, name_en: High-Voltage DC Relay, segment: SEG_PWR_DISTRIBUTION, aliases: [新能源汽车高压直流继电器]}
+  - {id: PROD_PWR_BUSWAY, type: product, name: 母线槽, name_en: Busway, segment: SEG_PWR_DISTRIBUTION, aliases: [密集型母线, 智能母线]}
+
+  # ======================= grid: automation / secondary =======================
+  - {id: PROD_PWR_RELAY_PROTECTION, type: product, name: 继电保护装置, name_en: Protective Relay, segment: SEG_PWR_GRID_AUTOMATION, aliases: [继保]}
+  - {id: PROD_PWR_SUBSTATION_AUTOMATION, type: product, name: 变电站自动化系统, name_en: Substation Automation System, segment: SEG_PWR_GRID_AUTOMATION, aliases: [智能变电站二次系统]}
+  - {id: PROD_PWR_DISPATCH_AUTOMATION, type: product, name: 电网调度自动化系统, name_en: Grid Dispatch Automation, segment: SEG_PWR_GRID_AUTOMATION, aliases: [调度系统, 新一代调度]}
+  - {id: PROD_PWR_DA_TERMINAL, type: product, name: 配电自动化终端, name_en: Distribution Automation Terminal, segment: SEG_PWR_GRID_AUTOMATION, aliases: [DTU, FTU, TTU]}
+  - {id: PROD_PWR_LINE_MONITORING, type: product, name: 输电线路在线监测, name_en: Transmission Line Online Monitoring, segment: SEG_PWR_GRID_AUTOMATION}
+  - {id: PROD_PWR_GRID_INSPECTION_ROBOT, type: product, name: 电力巡检机器人, name_en: Power Inspection Robot, segment: SEG_PWR_GRID_AUTOMATION, aliases: [变电站巡检机器人]}
+  - {id: PROD_PWR_VPP_PLATFORM, type: product, name: 虚拟电厂平台, name_en: Virtual Power Plant Platform, segment: SEG_PWR_GRID_AUTOMATION, aliases: [VPP平台, 负荷聚合系统]}
+  - {id: PROD_PWR_TRADING_SOFTWARE, type: product, name: 电力交易辅助系统, name_en: Power Trading Software, segment: SEG_PWR_GRID_AUTOMATION, aliases: [功率预测系统]}
+  - {id: PROD_PWR_MICROGRID_CONTROL, type: product, name: 微电网控制系统, name_en: Microgrid Controller, segment: SEG_PWR_GRID_AUTOMATION}
+  - {id: PROD_PWR_POWER_CARRIER_CHIP, type: product, name: 电力载波通信模块, name_en: Power-Line Carrier Module, segment: SEG_PWR_GRID_AUTOMATION, aliases: [HPLC模块]}
+
+  # ======================= meters & instruments =======================
+  - {id: PROD_PWR_SMART_METER, type: product, name: 智能电表, name_en: Smart Electricity Meter, segment: SEG_PWR_METER, aliases: [智能电能表]}
+  - {id: PROD_PWR_COLLECTION_TERMINAL, type: product, name: 用电信息采集终端, name_en: Meter Data Concentrator, segment: SEG_PWR_METER, aliases: [集中器, 采集器, 融合终端]}
+  - {id: PROD_PWR_POWER_TEST_INSTRUMENT, type: product, name: 电力测试仪器, name_en: Power Test Instruments, segment: SEG_PWR_METER, aliases: [电测仪器, 电能表检定装置]}
+  - {id: PROD_PWR_POWER_QUALITY_METER, type: product, name: 电能质量监测装置, name_en: Power Quality Analyzer, segment: SEG_PWR_METER}
+
+  # ======================= cables =======================
+  - {id: PROD_PWR_POWER_CABLE, type: product, name: 电力电缆, name_en: Power Cable, segment: SEG_PWR_CABLE}
+  - {id: PROD_PWR_HV_CABLE, type: product, name: 高压超高压电缆, name_en: HV and EHV Cable, parent: PROD_PWR_POWER_CABLE, segment: SEG_PWR_CABLE, aliases: [高压电缆, 超高压电缆]}
+  - {id: PROD_PWR_MV_LV_CABLE, type: product, name: 中低压电力电缆, name_en: MV and LV Power Cable, parent: PROD_PWR_POWER_CABLE, segment: SEG_PWR_CABLE}
+  - {id: PROD_PWR_SUBMARINE_CABLE, type: product, name: 海底电缆, name_en: Submarine Cable, parent: PROD_PWR_POWER_CABLE, segment: SEG_PWR_CABLE, aliases: [海缆]}
+  - {id: PROD_PWR_HVDC_CABLE, type: product, name: 直流电缆, name_en: HVDC Cable, parent: PROD_PWR_POWER_CABLE, segment: SEG_PWR_CABLE, aliases: [柔直电缆]}
+  - {id: PROD_PWR_OVERHEAD_CONDUCTOR, type: product, name: 架空导线, name_en: Overhead Conductor, segment: SEG_PWR_CABLE, aliases: [钢芯铝绞线, 特高压导线]}
+  - {id: PROD_PWR_OPGW, type: product, name: 光纤复合架空地线, name_en: OPGW, segment: SEG_PWR_CABLE, aliases: [OPGW, 电力特种光缆]}
+  - {id: PROD_PWR_SPECIAL_CABLE, type: product, name: 新能源特种电缆, name_en: Renewable-Energy Special Cable, segment: SEG_PWR_CABLE, aliases: [光伏电缆, 风电电缆]}
+  - {id: PROD_PWR_CABLE_ACCESSORY, type: product, name: 电缆附件, name_en: Cable Accessories, segment: SEG_PWR_CABLE, aliases: [电缆终端, 电缆中间接头]}
+  - {id: PROD_PWR_MAGNET_WIRE, type: product, name: 电磁线, name_en: Magnet Wire, segment: SEG_PWR_CABLE, aliases: [漆包线, 扁线]}
+  - {id: PROD_PWR_COPPER_BUSBAR, type: product, name: 铜母排, name_en: Copper Busbar, segment: SEG_PWR_CABLE, aliases: [铜排, 导电铜排]}
+  - {id: PROD_PWR_HV_CABLE_COMPOUND, type: product, import_dependence: high, name: 电缆绝缘料, name_en: Cable Insulation Compound, segment: SEG_PWR_CABLE, aliases: [交联聚乙烯电缆料, XLPE料]}
+
+edges:
+  # ---------- segment tree ----------
+  - [SEG_PWR_THERMAL_EQUIP, part_of, SEG_PWR_POWER_GEN_EQUIP]
+  - [SEG_PWR_HYDRO_EQUIP, part_of, SEG_PWR_POWER_GEN_EQUIP]
+  - [SEG_PWR_NUCLEAR_EQUIP, part_of, SEG_PWR_POWER_GEN_EQUIP]
+  - [SEG_PWR_DC_POWER, part_of, SEG_PWR_OTHER_POWER]
+  - [SEG_PWR_ENERGY_STORAGE, part_of, SEG_PWR_OTHER_POWER]
+  - [SEG_PWR_HYDROGEN, part_of, SEG_PWR_OTHER_POWER]
+  - [SEG_PWR_CHARGING, part_of, SEG_PWR_OTHER_POWER]
+  - [SEG_PWR_SOLAR_SILICON, part_of, SEG_PWR_SOLAR]
+  - [SEG_PWR_SOLAR_CELL_MODULE, part_of, SEG_PWR_SOLAR]
+  - [SEG_PWR_INVERTER, part_of, SEG_PWR_SOLAR]
+  - [SEG_PWR_SOLAR_AUX, part_of, SEG_PWR_SOLAR]
+  - [SEG_PWR_SOLAR_EQUIP, part_of, SEG_PWR_SOLAR]
+  - [SEG_PWR_WIND_TURBINE, part_of, SEG_PWR_WIND]
+  - [SEG_PWR_WIND_PARTS, part_of, SEG_PWR_WIND]
+  - [SEG_PWR_LI_BATTERY, part_of, SEG_PWR_BATTERY]
+  - [SEG_PWR_BATTERY_CHEM, part_of, SEG_PWR_BATTERY]
+  - [SEG_PWR_CATHODE, part_of, SEG_PWR_BATTERY_CHEM]
+  - [SEG_PWR_ANODE, part_of, SEG_PWR_BATTERY_CHEM]
+  - [SEG_PWR_SEPARATOR, part_of, SEG_PWR_BATTERY_CHEM]
+  - [SEG_PWR_ELECTROLYTE, part_of, SEG_PWR_BATTERY_CHEM]
+  - [SEG_PWR_COLLECTOR, part_of, SEG_PWR_BATTERY_CHEM]
+  - [SEG_PWR_BATTERY_AUX, part_of, SEG_PWR_BATTERY_CHEM]
+  - [SEG_PWR_LI_EQUIP, part_of, SEG_PWR_BATTERY]
+  - [SEG_PWR_FUEL_CELL, part_of, SEG_PWR_BATTERY]
+  - [SEG_PWR_FUEL_CELL, part_of, SEG_PWR_HYDROGEN]
+  - [SEG_PWR_OTHER_BATTERY, part_of, SEG_PWR_BATTERY]
+  - [SEG_PWR_SODIUM, part_of, SEG_PWR_BATTERY]
+  - [SEG_PWR_TRANSMISSION, part_of, SEG_PWR_GRID]
+  - [SEG_PWR_UHV, part_of, SEG_PWR_TRANSMISSION]
+  - [SEG_PWR_DISTRIBUTION, part_of, SEG_PWR_GRID]
+  - [SEG_PWR_GRID_AUTOMATION, part_of, SEG_PWR_GRID]
+  - [SEG_PWR_METER, part_of, SEG_PWR_GRID]
+  - [SEG_PWR_CABLE, part_of, SEG_PWR_GRID]
+
+  # ---------- segments -> end markets ----------
+  - [SEG_PWR_MOTOR, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_PWR_MOTOR, serves, MKT_HOME_APPLIANCE]
+  - [SEG_PWR_MOTOR, serves, MKT_EV]
+  - [SEG_PWR_MOTOR, serves, MKT_ROBOTICS]
+  - [SEG_PWR_THERMAL_EQUIP, serves, MKT_THERMAL_POWER]
+  - [SEG_PWR_HYDRO_EQUIP, serves, MKT_HYDRO_POWER]
+  - [SEG_PWR_NUCLEAR_EQUIP, serves, MKT_NUCLEAR_POWER]
+  - [SEG_PWR_DC_POWER, serves, MKT_DATA_CENTER]
+  - [SEG_PWR_DC_POWER, serves, MKT_AI_DATA_CENTER]
+  - [SEG_PWR_OTHER_POWER, serves, MKT_TELECOM_NETWORK]
+  - [SEG_PWR_ENERGY_STORAGE, serves, MKT_ENERGY_STORAGE]
+  - [SEG_PWR_HYDROGEN, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_PWR_HYDROGEN, serves, MKT_COMMERCIAL_VEHICLE]
+  - [SEG_PWR_CHARGING, serves, MKT_EV]
+  - [SEG_PWR_SOLAR, serves, MKT_SOLAR]
+  - [SEG_PWR_WIND, serves, MKT_WIND]
+  - [SEG_PWR_LI_BATTERY, serves, MKT_EV]
+  - [SEG_PWR_LI_BATTERY, serves, MKT_ENERGY_STORAGE]
+  - [SEG_PWR_LI_BATTERY, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_PWR_SODIUM, serves, MKT_ENERGY_STORAGE]
+  - [SEG_PWR_OTHER_BATTERY, serves, MKT_ICE_VEHICLE]
+  - [SEG_PWR_OTHER_BATTERY, serves, MKT_TELECOM_NETWORK]
+  - [SEG_PWR_GRID, serves, MKT_POWER_GRID]
+  - [SEG_PWR_DISTRIBUTION, serves, MKT_CONSTRUCTION]
+  - [SEG_PWR_DISTRIBUTION, serves, MKT_DATA_CENTER]
+  - [SEG_PWR_CABLE, serves, MKT_CONSTRUCTION]
+  - [SEG_PWR_CABLE, serves, MKT_WIND]
+  - [SEG_PWR_METER, serves, MKT_POWER_GRID]
+
+  # ---------- motors ----------
+  - [PROD_PWR_MOTOR_CORE, component_of, PROD_PWR_MOTOR]
+  - [PROD_PWR_MAGNET_WIRE, component_of, PROD_PWR_MOTOR]
+  - [PROD_PWR_MOTOR, uses_material, MAT_ELECTRICAL_STEEL]
+  - [PROD_PWR_MOTOR, uses_material, MAT_COPPER]
+  - [PROD_PWR_PM_MOTOR, uses_material, MAT_RARE_EARTH]
+  - [PROD_PWR_EV_DRIVE_MOTOR, used_in, MKT_EV]
+  - [PROD_PWR_INDUSTRIAL_MOTOR, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_PWR_HV_MOTOR, used_in, MKT_MINING]
+  - [PROD_PWR_EXPLOSION_PROOF_MOTOR, used_in, MKT_OIL_GAS]
+  - [PROD_PWR_EXPLOSION_PROOF_MOTOR, used_in, MKT_MINING]
+  - [PROD_PWR_BLDC_MOTOR, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_PWR_CORELESS_MOTOR, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_PWR_STEPPER_MOTOR, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_PWR_MICRO_MOTOR, used_in, MKT_ROBOTICS]
+
+  # ---------- power generation equipment ----------
+  - [PROD_PWR_UTILITY_BOILER, used_in, MKT_THERMAL_POWER]
+  - [PROD_PWR_STEAM_TURBINE, used_in, MKT_THERMAL_POWER]
+  - [PROD_PWR_STEAM_TURBINE, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_PWR_TURBO_GENERATOR, used_in, MKT_THERMAL_POWER]
+  - [PROD_PWR_GAS_TURBINE, used_in, MKT_THERMAL_POWER]
+  - [PROD_PWR_HRSG, used_in, MKT_THERMAL_POWER]
+  - [PROD_PWR_POWER_AUX_EQUIP, used_in, MKT_THERMAL_POWER]
+  - [PROD_PWR_INDUSTRIAL_BOILER, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_PWR_EXCITATION_SYSTEM, component_of, PROD_PWR_TURBO_GENERATOR]
+  - [PROD_PWR_EXCITATION_SYSTEM, component_of, PROD_PWR_HYDRO_TURBINE_GEN]
+  - [PROD_PWR_HYDRO_TURBINE_GEN, used_in, MKT_HYDRO_POWER]
+  - [PROD_PWR_PUMPED_STORAGE_UNIT, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_PWR_PUMPED_STORAGE_UNIT, used_in, MKT_HYDRO_POWER]
+  - [PROD_PWR_REACTOR_VESSEL, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_PWR_STEAM_GENERATOR, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_PWR_REACTOR_COOLANT_PUMP, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_PWR_NUCLEAR_CONVENTIONAL_ISLAND, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_PWR_NUCLEAR_CONTROL_ROD_DRIVE, component_of, PROD_PWR_REACTOR_VESSEL]
+  - [PROD_PWR_NUCLEAR_DCS, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_PWR_SMR, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_PWR_STEAM_TURBINE, component_of, PROD_PWR_NUCLEAR_CONVENTIONAL_ISLAND]
+  - [PROD_PWR_REACTOR_VESSEL, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_PWR_STEAM_GENERATOR, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_PWR_TURBO_GENERATOR, uses_material, MAT_ELECTRICAL_STEEL]
+  - [PROD_PWR_TURBO_GENERATOR, uses_material, MAT_COPPER]
+  - [PROD_PWR_GAS_TURBINE, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_PWR_FUSION_EQUIP, used_in, MKT_NUCLEAR_POWER]
+
+  # ---------- data-center power ----------
+  - [PROD_PWR_UPS, used_in, MKT_DATA_CENTER]
+  - [PROD_PWR_UPS, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_PWR_HVDC_POWER, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_PWR_HVDC_POWER, used_in, MKT_DATA_CENTER]
+  - [PROD_PWR_HVDC_POWER, substitute_for, PROD_PWR_UPS]
+  - [PROD_PWR_SST, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_PWR_SST, substitute_for, PROD_PWR_PANAMA_POWER]
+  - [PROD_PWR_SERVER_PSU, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_PWR_SERVER_PSU, used_in, MKT_DATA_CENTER]
+  - [PROD_PWR_BBU, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_PWR_DC_DISTRIBUTION, used_in, MKT_DATA_CENTER]
+  - [PROD_PWR_RACK_PDU, used_in, MKT_DATA_CENTER]
+  - [PROD_PWR_DIESEL_GENSET, used_in, MKT_DATA_CENTER]
+  - [PROD_PWR_DIESEL_GENSET, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_PWR_GAS_GENSET, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_PWR_TELECOM_POWER, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_PWR_DRY_TRANSFORMER, used_in, MKT_DATA_CENTER]
+  - [PROD_PWR_BUSWAY, used_in, MKT_DATA_CENTER]
+  - [PROD_PWR_LV_SWITCHGEAR, used_in, MKT_DATA_CENTER]
+  - [PROD_PWR_LEAD_ACID_STANDBY, used_in, MKT_DATA_CENTER]
+  - [PROD_PWR_LEAD_ACID_STANDBY, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_PWR_LEAD_ACID_STANDBY, component_of, PROD_PWR_UPS]
+  - [PROD_PWR_CONSUMER_BATTERY, component_of, PROD_PWR_BBU]
+  - [PROD_PWR_DRY_TRANSFORMER, component_of, PROD_PWR_PANAMA_POWER]
+  - [TECH_SIC_GAN, enables, PROD_PWR_SST]
+  - [TECH_SIC_GAN, enables, PROD_PWR_SERVER_PSU]
+  - [TECH_LIQUID_COOLING, enables, PROD_PWR_ESS_THERMAL]
+
+  # ---------- hydrogen & fuel cells ----------
+  - [PROD_PWR_HYDROGEN_POWER_SUPPLY, component_of, PROD_PWR_ELECTROLYZER]
+  - [PROD_PWR_ELECTROLYZER, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_PWR_ELECTROLYZER, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_PWR_ALK_ELECTROLYZER, uses_material, MAT_NICKEL]
+  - [PROD_PWR_PEM_ELECTROLYZER, substitute_for, PROD_PWR_ALK_ELECTROLYZER]
+  - [PROD_PWR_PEM, component_of, PROD_PWR_PEM_ELECTROLYZER]
+  - [PROD_PWR_FC_CATALYST, upstream_of, PROD_PWR_MEA]
+  - [PROD_PWR_PEM, upstream_of, PROD_PWR_MEA]
+  - [PROD_PWR_GDL, upstream_of, PROD_PWR_MEA]
+  - [PROD_PWR_MEA, component_of, PROD_PWR_FUEL_CELL_STACK]
+  - [PROD_PWR_BIPOLAR_PLATE, component_of, PROD_PWR_FUEL_CELL_STACK]
+  - [PROD_PWR_FUEL_CELL_STACK, component_of, PROD_PWR_FUEL_CELL_SYSTEM]
+  - [PROD_PWR_FC_AIR_COMPRESSOR, component_of, PROD_PWR_FUEL_CELL_SYSTEM]
+  - [PROD_PWR_FUEL_CELL_SYSTEM, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_PWR_FUEL_CELL_SYSTEM, uses_material, MAT_HYDROGEN]
+  - [PROD_MACH_HYDROGEN_REFUELING_EQUIP, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_PWR_SOFC, used_in, MKT_DATA_CENTER]
+  - [PROD_PWR_SOFC, uses_material, MAT_NATURAL_GAS]
+  - [PROD_PWR_ELECTROLYZER, uses_material, MAT_ELECTRICITY]
+  - [PROD_PWR_ELECTROLYZER, uses_material, MAT_WATER]
+
+  # ---------- energy storage ----------
+  - [PROD_PWR_STORAGE_CELL, upstream_of, PROD_PWR_ESS_CABINET]
+  - [PROD_PWR_BMS, component_of, PROD_PWR_ESS_CABINET]
+  - [PROD_PWR_ESS_THERMAL, component_of, PROD_PWR_ESS_CABINET]
+  - [PROD_PWR_ESS_FIRE, component_of, PROD_PWR_ESS_CABINET]
+  - [PROD_PWR_ESS_CABINET, component_of, PROD_PWR_ESS]
+  - [PROD_PWR_PCS, component_of, PROD_PWR_ESS]
+  - [PROD_PWR_ESS_EMS, component_of, PROD_PWR_ESS]
+  - [PROD_PWR_RENEWABLE_BOX_SUB, component_of, PROD_PWR_UTILITY_ESS]
+  - [PROD_PWR_ESS, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_PWR_UTILITY_ESS, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_UTILITY_ESS, used_in, MKT_SOLAR]
+  - [PROD_PWR_UTILITY_ESS, used_in, MKT_WIND]
+  - [PROD_PWR_UTILITY_ESS, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_PWR_HOME_ESS, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PWR_PCS, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_NFM_VANADIUM_ELECTROLYTE, upstream_of, PROD_PWR_FLOW_BATTERY]
+  - [PROD_PWR_FLOW_BATTERY, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_PWR_FLOW_BATTERY, substitute_for, PROD_PWR_STORAGE_CELL]
+  - [PROD_PWR_CAES, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_PWR_CAES, substitute_for, PROD_PWR_PUMPED_STORAGE_UNIT]
+  - [PROD_PWR_FLYWHEEL, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_LEAD_CARBON, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_PWR_LEAD_CARBON, substitute_for, PROD_PWR_STORAGE_CELL]
+
+  # ---------- charging ----------
+  - [PROD_PWR_CHARGING_MODULE, component_of, PROD_PWR_DC_CHARGER]
+  - [PROD_PWR_DC_CHARGER, used_in, MKT_EV]
+  - [PROD_PWR_AC_CHARGER, used_in, MKT_EV]
+  - [PROD_PWR_SWAP_STATION, used_in, MKT_EV]
+  - [PROD_PWR_SWAP_STATION, substitute_for, PROD_PWR_DC_CHARGER]
+  - [TECH_SIC_GAN, enables, PROD_PWR_CHARGING_MODULE]
+
+  # ---------- solar chain ----------
+  - [MAT_SILICON_METAL, upstream_of, PROD_PWR_GRANULAR_SILICON]
+  - [MAT_POLYSILICON, upstream_of, PROD_PWR_MONO_INGOT]
+  - [PROD_PWR_GRANULAR_SILICON, upstream_of, PROD_PWR_MONO_INGOT]
+  - [PROD_PWR_MONO_INGOT, upstream_of, PROD_PWR_SOLAR_WAFER]
+  - [PROD_PWR_SOLAR_WAFER, upstream_of, PROD_PWR_SOLAR_CELL]
+  - [PROD_PWR_N_WAFER, upstream_of, PROD_PWR_TOPCON_CELL]
+  - [PROD_PWR_N_WAFER, upstream_of, PROD_PWR_HJT_CELL]
+  - [PROD_PWR_N_WAFER, upstream_of, PROD_PWR_BC_CELL]
+  - [PROD_PWR_P_WAFER, upstream_of, PROD_PWR_PERC_CELL]
+  - [PROD_PWR_SOLAR_CELL, upstream_of, PROD_PWR_SOLAR_MODULE]
+  - [PROD_PWR_BC_CELL, upstream_of, PROD_PWR_BC_MODULE]
+  - [PROD_PWR_PEROVSKITE_CELL, upstream_of, PROD_PWR_PEROVSKITE_MODULE]
+  - [PROD_PWR_SOLAR_MODULE, used_in, MKT_SOLAR]
+  - [PROD_PWR_BIPV, used_in, MKT_CONSTRUCTION]
+  - [PROD_PWR_TOPCON_CELL, substitute_for, PROD_PWR_PERC_CELL]
+  - [PROD_PWR_HJT_CELL, substitute_for, PROD_PWR_TOPCON_CELL]
+  - [PROD_PWR_BC_CELL, substitute_for, PROD_PWR_TOPCON_CELL]
+  - [TECH_TOPCON, enables, PROD_PWR_TOPCON_CELL]
+  - [TECH_HJT, enables, PROD_PWR_HJT_CELL]
+  - [TECH_BC_CELL, enables, PROD_PWR_BC_CELL]
+  - [TECH_BC_CELL, enables, PROD_PWR_BC_MODULE]
+  - [TECH_PEROVSKITE, enables, PROD_PWR_PEROVSKITE_CELL]
+  - [TECH_PEROVSKITE, enables, PROD_PWR_PEROVSKITE_MODULE]
+  - [TECH_PEROVSKITE, enables, PROD_PWR_PEROVSKITE_EQUIP]
+  - [TECH_TOPCON, enables, PROD_PWR_CELL_PECVD]
+  - [TECH_HJT, enables, PROD_PWR_HJT_PVD]
+  - [TECH_HJT, enables, PROD_PWR_LT_SILVER_PASTE]
+  - [TECH_HJT, enables, PROD_PWR_TARGET_ITO]
+  - [TECH_BC_CELL, enables, PROD_PWR_SOLAR_LASER]
+  # wafer consumables
+  - [PROD_PWR_QUARTZ_CRUCIBLE, used_in, PROD_PWR_MONO_INGOT]
+  - [PROD_PWR_QUARTZ_CRUCIBLE, uses_material, MAT_QUARTZ]
+  - [PROD_PWR_THERMAL_FIELD, used_in, PROD_PWR_MONO_INGOT]
+  - [PROD_PWR_THERMAL_FIELD, uses_material, MAT_CARBON_FIBER]
+  - [PROD_MACH_DIAMOND_WIRE, used_in, PROD_PWR_SOLAR_WAFER]
+  - [PROD_MACH_DIAMOND_WIRE, uses_material, MAT_TUNGSTEN]
+  # module bill of materials
+  - [PROD_PWR_SOLAR_GLASS, component_of, PROD_PWR_SOLAR_MODULE]
+  - [PROD_PWR_ENCAP_FILM, component_of, PROD_PWR_SOLAR_MODULE]
+  - [PROD_PWR_BACKSHEET, component_of, PROD_PWR_SOLAR_MODULE]
+  - [PROD_NFM_PV_ALU_FRAME, component_of, PROD_PWR_SOLAR_MODULE]
+  - [PROD_PWR_JUNCTION_BOX, component_of, PROD_PWR_SOLAR_MODULE]
+  - [PROD_PWR_RIBBON, component_of, PROD_PWR_SOLAR_MODULE]
+  - [PROD_PWR_PV_SEALANT, component_of, PROD_PWR_SOLAR_MODULE]
+  - [PROD_PWR_SILVER_PASTE, component_of, PROD_PWR_SOLAR_CELL]
+  - [PROD_PWR_TARGET_ITO, used_in, PROD_PWR_HJT_CELL]
+  - [PROD_PWR_POE_FILM, substitute_for, PROD_PWR_EVA_FILM]
+  - [PROD_PWR_SOLAR_GLASS, substitute_for, PROD_PWR_BACKSHEET]
+  - [PROD_PWR_SOLAR_GLASS, uses_material, MAT_SODA_ASH]
+  - [PROD_PWR_SOLAR_GLASS, uses_material, MAT_NATURAL_GAS]
+  - [PROD_NFM_PV_ALU_FRAME, uses_material, MAT_ALUMINUM]
+  - [PROD_PWR_SILVER_PASTE, uses_material, MAT_SILVER]
+  - [PROD_PWR_LT_SILVER_PASTE, uses_material, MAT_COPPER]
+  - [PROD_PWR_RIBBON, uses_material, MAT_COPPER]
+  - [PROD_PWR_RIBBON, uses_material, MAT_TIN]
+  - [PROD_PWR_JUNCTION_BOX, uses_material, MAT_ENGINEERING_PLASTICS]
+  - [PROD_PWR_SOLAR_MOUNT, uses_material, MAT_STEEL]
+  - [PROD_PWR_SOLAR_MOUNT, used_in, MKT_SOLAR]
+  - [PROD_PWR_TRACKER, used_in, MKT_SOLAR]
+  # inverters
+  - [PROD_PWR_SOLAR_INVERTER, used_in, MKT_SOLAR]
+  - [PROD_PWR_HYBRID_INVERTER, used_in, PROD_PWR_HOME_ESS]
+  - [PROD_PWR_HYBRID_INVERTER, used_in, PROD_PWR_CI_ESS]
+  - [PROD_PWR_MICRO_INVERTER, substitute_for, PROD_PWR_STRING_INVERTER]
+  - [PROD_PWR_STRING_INVERTER, substitute_for, PROD_PWR_CENTRAL_INVERTER]
+  - [PROD_PWR_OPTIMIZER, used_in, MKT_SOLAR]
+  - [PROD_PWR_RSD, used_in, MKT_SOLAR]
+  - [PROD_PWR_WIND_CONVERTER, component_of, PROD_PWR_WIND_TURBINE]
+  - [TECH_SIC_GAN, enables, PROD_PWR_MICRO_INVERTER]
+  - [TECH_SIC_GAN, enables, PROD_PWR_STRING_INVERTER]
+  # solar equipment
+  - [PROD_PWR_POLY_REACTOR, used_in, MKT_SOLAR]
+  - [PROD_PWR_CRYSTAL_PULLER, used_in, PROD_PWR_MONO_INGOT]
+  - [PROD_PWR_WIRE_SAW, used_in, PROD_PWR_SOLAR_WAFER]
+  - [PROD_PWR_CELL_PECVD, used_in, PROD_PWR_TOPCON_CELL]
+  - [PROD_PWR_DIFFUSION_FURNACE, used_in, PROD_PWR_SOLAR_CELL]
+  - [PROD_PWR_HJT_PVD, used_in, PROD_PWR_HJT_CELL]
+  - [PROD_PWR_SOLAR_LASER, used_in, PROD_PWR_SOLAR_CELL]
+  - [PROD_PWR_SCREEN_PRINTER, used_in, PROD_PWR_SOLAR_CELL]
+  - [PROD_PWR_STRINGER, used_in, PROD_PWR_SOLAR_MODULE]
+  - [PROD_PWR_LAMINATOR, used_in, PROD_PWR_SOLAR_MODULE]
+  - [PROD_PWR_PEROVSKITE_EQUIP, used_in, PROD_PWR_PEROVSKITE_MODULE]
+
+  # ---------- wind chain ----------
+  - [PROD_BM_WIND_BLADE, component_of, PROD_PWR_WIND_TURBINE]
+  - [PROD_PWR_BLADE_CORE, component_of, PROD_BM_WIND_BLADE]
+  - [PROD_PWR_MAIN_BEARING, component_of, PROD_PWR_WIND_TURBINE]
+  - [PROD_PWR_PITCH_YAW_BEARING, component_of, PROD_PWR_WIND_TURBINE]
+  - [PROD_PWR_GEARBOX, component_of, PROD_PWR_WIND_TURBINE]
+  - [PROD_PWR_WIND_CASTING, component_of, PROD_PWR_WIND_TURBINE]
+  - [PROD_PWR_WIND_MAIN_SHAFT, component_of, PROD_PWR_WIND_TURBINE]
+  - [PROD_PWR_WIND_GENERATOR, component_of, PROD_PWR_WIND_TURBINE]
+  - [PROD_PWR_PITCH_SYSTEM, component_of, PROD_PWR_WIND_TURBINE]
+  - [PROD_PWR_WIND_FLANGE, component_of, PROD_PWR_WIND_TOWER]
+  - [PROD_PWR_WIND_TURBINE, used_in, MKT_WIND]
+  - [PROD_PWR_WIND_TOWER, used_in, MKT_WIND]
+  - [PROD_PWR_MONOPILE, used_in, PROD_PWR_OFFSHORE_TURBINE]
+  - [PROD_PWR_FLOATING_FOUNDATION, used_in, PROD_PWR_OFFSHORE_TURBINE]
+  - [PROD_PWR_FLOATING_FOUNDATION, substitute_for, PROD_PWR_MONOPILE]
+  - [PROD_PWR_SUBMARINE_CABLE, used_in, PROD_PWR_OFFSHORE_TURBINE]
+  - [PROD_PWR_SUBMARINE_CABLE, used_in, MKT_WIND]
+  - [PROD_BM_WIND_BLADE, uses_material, MAT_GLASS_FIBER]
+  - [PROD_PWR_WIND_TOWER, uses_material, MAT_STEEL]
+  - [PROD_PWR_MONOPILE, uses_material, MAT_STEEL]
+  - [PROD_PWR_MAIN_BEARING, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_PWR_PITCH_YAW_BEARING, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_PWR_GEARBOX, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_PWR_WIND_MAIN_SHAFT, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_PWR_WIND_FLANGE, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_PWR_WIND_GENERATOR, uses_material, MAT_RARE_EARTH]
+  - [PROD_PWR_WIND_GENERATOR, uses_material, MAT_COPPER]
+  - [PROD_PWR_SPECIAL_CABLE, used_in, MKT_WIND]
+  - [PROD_PWR_SPECIAL_CABLE, used_in, MKT_SOLAR]
+
+  # ---------- lithium battery: cathode ----------
+  - [MAT_NICKEL, upstream_of, PROD_PWR_NCM_PRECURSOR]
+  - [MAT_COBALT, upstream_of, PROD_PWR_NCM_PRECURSOR]
+  - [MAT_PHOSPHATE_ROCK, upstream_of, PROD_PWR_IRON_PHOSPHATE]
+  - [MAT_SULFURIC_ACID, upstream_of, PROD_PWR_NCM_PRECURSOR]
+  - [PROD_PWR_MN_PRECURSOR, upstream_of, PROD_PWR_LMFP]
+  - [PROD_PWR_MN_PRECURSOR, upstream_of, PROD_PWR_LMO]
+  - [PROD_PWR_NCM_PRECURSOR, upstream_of, PROD_PWR_NCM]
+  - [PROD_PWR_NCM_PRECURSOR, upstream_of, PROD_PWR_NCA]
+  - [MAT_LITHIUM_CARBONATE, upstream_of, PROD_PWR_LFP]
+  - [MAT_LITHIUM_CARBONATE, upstream_of, PROD_PWR_LMFP]
+  - [MAT_LITHIUM_CARBONATE, upstream_of, PROD_PWR_NCM]
+  - [MAT_LITHIUM_CARBONATE, upstream_of, PROD_PWR_LCO]
+  - [MAT_LITHIUM_CARBONATE, upstream_of, PROD_PWR_LMO]
+  - [MAT_LITHIUM_HYDROXIDE, upstream_of, PROD_PWR_HIGH_NI_NCM]
+  - [MAT_LITHIUM_HYDROXIDE, upstream_of, PROD_PWR_NCA]
+  - [MAT_COBALT, upstream_of, PROD_PWR_LCO]
+  - [PROD_PWR_NCM_PRECURSOR, uses_material, MAT_NICKEL]
+  - [PROD_PWR_NCM_PRECURSOR, uses_material, MAT_COBALT]
+  - [PROD_PWR_NCM, uses_material, MAT_LITHIUM_CARBONATE]
+  - [PROD_PWR_HIGH_NI_NCM, uses_material, MAT_LITHIUM_HYDROXIDE]
+  - [PROD_PWR_LCO, uses_material, MAT_COBALT]
+  - [PROD_PWR_LFP, substitute_for, PROD_PWR_NCM]
+  - [PROD_PWR_LFP, upstream_of, PROD_PWR_LFP_EV_BATTERY]
+  - [PROD_PWR_LFP, upstream_of, PROD_PWR_STORAGE_CELL]
+  - [PROD_PWR_NCM, upstream_of, PROD_PWR_NCM_EV_BATTERY]
+  - [PROD_PWR_NCM, upstream_of, PROD_PWR_SMALL_POWER_BATTERY]
+  - [PROD_PWR_HIGH_NI_NCM, upstream_of, PROD_PWR_LARGE_CYLINDRICAL]
+  - [PROD_PWR_NCA, upstream_of, PROD_PWR_LARGE_CYLINDRICAL]
+  - [PROD_PWR_LCO, upstream_of, PROD_PWR_CONSUMER_BATTERY]
+  - [PROD_PWR_LMO, upstream_of, PROD_PWR_SMALL_POWER_BATTERY]
+  - [PROD_PWR_LI_RICH_MN, upstream_of, PROD_PWR_SOLID_STATE_CELL]
+  - [PROD_PWR_CATHODE, upstream_of, PROD_PWR_LI_CELL]
+  - [PROD_PWR_CATHODE_KILN, used_in, PROD_PWR_CATHODE]
+
+  # ---------- lithium battery: anode ----------
+  - [MAT_GRAPHITE, upstream_of, PROD_PWR_ARTIFICIAL_GRAPHITE]
+  - [MAT_GRAPHITE, upstream_of, PROD_PWR_NATURAL_GRAPHITE]
+  - [PROD_PWR_ARTIFICIAL_GRAPHITE, uses_material, MAT_GRAPHITE]
+  - [PROD_PWR_NATURAL_GRAPHITE, uses_material, MAT_GRAPHITE]
+  - [PROD_PWR_GRAPHITIZATION, upstream_of, PROD_PWR_ARTIFICIAL_GRAPHITE]
+  - [PROD_PWR_GRAPHITIZATION, uses_material, MAT_ELECTRICITY]
+  - [PROD_PWR_POROUS_CARBON, upstream_of, PROD_PWR_SILICON_ANODE]
+  - [MAT_SILICON_METAL, upstream_of, PROD_PWR_SILICON_ANODE]
+  - [PROD_PWR_NATURAL_GRAPHITE, substitute_for, PROD_PWR_ARTIFICIAL_GRAPHITE]
+  - [PROD_PWR_ANODE, upstream_of, PROD_PWR_LI_CELL]
+  - [PROD_PWR_SILICON_ANODE, upstream_of, PROD_PWR_LARGE_CYLINDRICAL]
+  - [PROD_PWR_SILICON_ANODE, upstream_of, PROD_PWR_CONSUMER_BATTERY]
+  - [PROD_PWR_SILICON_ANODE, upstream_of, PROD_PWR_SOLID_STATE_CELL]
+  - [PROD_PWR_LITHIUM_METAL_ANODE, upstream_of, PROD_PWR_SOLID_STATE_CELL]
+  - [PROD_PWR_LITHIUM_METAL_ANODE, uses_material, MAT_LITHIUM_CARBONATE]
+
+  # ---------- lithium battery: separator ----------
+  - [PROD_PWR_WET_SEPARATOR, upstream_of, PROD_PWR_COATED_SEPARATOR]
+  - [PROD_PWR_SEPARATOR_COATING, upstream_of, PROD_PWR_COATED_SEPARATOR]
+  - [PROD_PWR_SEPARATOR, upstream_of, PROD_PWR_LI_CELL]
+  - [PROD_PWR_SEPARATOR, upstream_of, PROD_PWR_SODIUM_CELL]
+  - [PROD_PWR_SEPARATOR, uses_material, MAT_PLASTICS]
+  - [PROD_PWR_DRY_SEPARATOR, used_in, PROD_PWR_STORAGE_CELL]
+  - [PROD_PWR_DRY_SEPARATOR, substitute_for, PROD_PWR_WET_SEPARATOR]
+  - [PROD_PWR_WET_SEPARATOR, used_in, PROD_PWR_EV_BATTERY]
+  - [PROD_PWR_SOLID_ELECTROLYTE, substitute_for, PROD_PWR_SEPARATOR]
+
+  # ---------- lithium battery: electrolyte ----------
+  - [MAT_FLUORITE, upstream_of, PROD_PWR_LIPF6]
+  - [MAT_LITHIUM_CARBONATE, upstream_of, PROD_PWR_LIPF6]
+  - [MAT_FLUORITE, upstream_of, PROD_PWR_LIFSI]
+  - [PROD_PWR_ELECTROLYTE, upstream_of, PROD_PWR_LI_CELL]
+  - [PROD_NFM_LITHIUM_SULFIDE, upstream_of, PROD_PWR_SULFIDE_ELECTROLYTE]
+  - [MAT_LITHIUM_HYDROXIDE, upstream_of, PROD_NFM_LITHIUM_SULFIDE]
+  - [PROD_PWR_SOLID_ELECTROLYTE, upstream_of, PROD_PWR_SOLID_STATE_CELL]
+  - [PROD_PWR_SOLID_ELECTROLYTE, substitute_for, PROD_PWR_ELECTROLYTE]
+  - [PROD_PWR_OXIDE_ELECTROLYTE, uses_material, MAT_RARE_EARTH]
+  - [TECH_SOLID_STATE_BATTERY, enables, PROD_PWR_SOLID_ELECTROLYTE]
+  - [TECH_SOLID_STATE_BATTERY, enables, PROD_PWR_SOLID_STATE_CELL]
+  - [TECH_SOLID_STATE_BATTERY, enables, PROD_PWR_LITHIUM_METAL_ANODE]
+  - [TECH_SOLID_STATE_BATTERY, enables, PROD_PWR_DRY_ELECTRODE_EQUIP]
+  - [TECH_SOLID_STATE_BATTERY, enables, PROD_PWR_ISOSTATIC_PRESS]
+
+  # ---------- lithium battery: current collectors & aux ----------
+  - [MAT_COPPER, upstream_of, PROD_PWR_LI_COPPER_FOIL]
+  - [MAT_ALUMINUM, upstream_of, PROD_PWR_BATTERY_AL_FOIL]
+  - [PROD_PWR_LI_COPPER_FOIL, uses_material, MAT_COPPER]
+  - [PROD_PWR_BATTERY_AL_FOIL, uses_material, MAT_ALUMINUM]
+  - [PROD_PWR_LI_COPPER_FOIL, upstream_of, PROD_PWR_LI_CELL]
+  - [PROD_PWR_BATTERY_AL_FOIL, upstream_of, PROD_PWR_LI_CELL]
+  - [PROD_PWR_BATTERY_AL_FOIL, upstream_of, PROD_PWR_SODIUM_CELL]
+  - [PROD_PWR_COMPOSITE_CU_FOIL, substitute_for, PROD_PWR_LI_COPPER_FOIL]
+  - [PROD_PWR_COMPOSITE_AL_FOIL, substitute_for, PROD_PWR_BATTERY_AL_FOIL]
+  - [PROD_PWR_COMPOSITE_CU_FOIL, uses_material, MAT_PX_PTA]
+  - [PROD_PWR_CELL_CASE, component_of, PROD_PWR_LI_CELL]
+  - [PROD_PWR_CELL_COVER, component_of, PROD_PWR_LI_CELL]
+  - [PROD_PWR_SAFETY_VALVE, component_of, PROD_PWR_CELL_COVER]
+  - [PROD_PWR_TAB, component_of, PROD_PWR_LI_CELL]
+  - [PROD_PWR_AL_PLASTIC_FILM, component_of, PROD_PWR_CONSUMER_BATTERY]
+  - [PROD_PWR_AL_PLASTIC_FILM, substitute_for, PROD_PWR_CELL_CASE]
+  - [PROD_PWR_CELL_CASE, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_BATTERY_TRAY, component_of, PROD_PWR_BATTERY_PACK]
+  - [PROD_PWR_CCS, component_of, PROD_PWR_BATTERY_MODULE]
+  - [PROD_PWR_CCS, uses_material, MAT_COPPER]
+  - [PROD_PWR_CONDUCTIVE_AGENT, upstream_of, PROD_PWR_LI_CELL]
+  - [PROD_PWR_BINDER, upstream_of, PROD_PWR_LI_CELL]
+  - [PROD_PWR_CONDUCTIVE_AGENT, uses_material, MAT_CARBON_BLACK]
+
+  # ---------- lithium battery: cells -> modules -> packs ----------
+  - [PROD_PWR_LI_CELL, upstream_of, PROD_PWR_BATTERY_MODULE]
+  - [PROD_PWR_BATTERY_MODULE, upstream_of, PROD_PWR_BATTERY_PACK]
+  - [PROD_PWR_EV_BATTERY, upstream_of, PROD_PWR_BATTERY_PACK]
+  - [PROD_PWR_BMS, component_of, PROD_PWR_BATTERY_PACK]
+  - [PROD_PWR_BATTERY_PACK, used_in, MKT_EV]
+  - [PROD_PWR_EV_BATTERY, used_in, MKT_EV]
+  - [PROD_PWR_NCM_EV_BATTERY, used_in, MKT_EV]
+  - [PROD_PWR_LFP_EV_BATTERY, used_in, MKT_EV]
+  - [PROD_PWR_LFP_EV_BATTERY, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_PWR_LFP_EV_BATTERY, substitute_for, PROD_PWR_NCM_EV_BATTERY]
+  - [PROD_PWR_LARGE_CYLINDRICAL, used_in, MKT_EV]
+  - [PROD_PWR_STORAGE_CELL, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_PWR_CONSUMER_BATTERY, used_in, MKT_SMARTPHONE]
+  - [PROD_PWR_CONSUMER_BATTERY, used_in, MKT_PC]
+  - [PROD_PWR_CONSUMER_BATTERY, used_in, MKT_WEARABLES_XR]
+  - [PROD_PWR_SMALL_POWER_BATTERY, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PWR_SMALL_POWER_BATTERY, used_in, MKT_LOW_ALTITUDE]
+  - [PROD_PWR_SOLID_STATE_CELL, used_in, MKT_EV]
+  - [PROD_PWR_SOLID_STATE_CELL, used_in, MKT_LOW_ALTITUDE]
+  - [PROD_PWR_SOLID_STATE_CELL, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_PWR_SOLID_STATE_CELL, substitute_for, PROD_PWR_NCM_EV_BATTERY]
+  - [PROD_PWR_BATTERY_PACK, used_in, PROD_PWR_SWAP_STATION]
+
+  # ---------- sodium-ion ----------
+  - [PROD_PWR_NA_LAYERED_OXIDE, upstream_of, PROD_PWR_SODIUM_CELL]
+  - [PROD_PWR_NA_POLYANION, upstream_of, PROD_PWR_SODIUM_CELL]
+  - [PROD_PWR_PRUSSIAN, upstream_of, PROD_PWR_SODIUM_CELL]
+  - [PROD_PWR_HARD_CARBON, upstream_of, PROD_PWR_SODIUM_CELL]
+  - [PROD_PWR_NAPF6, upstream_of, PROD_PWR_NA_ELECTROLYTE]
+  - [PROD_PWR_NA_ELECTROLYTE, upstream_of, PROD_PWR_SODIUM_CELL]
+  - [PROD_PWR_NA_LAYERED_OXIDE, uses_material, MAT_SODA_ASH]
+  - [PROD_PWR_NA_POLYANION, uses_material, MAT_SODA_ASH]
+  - [PROD_PWR_SODIUM_CELL, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_PWR_SODIUM_CELL, used_in, MKT_EV]
+  - [PROD_PWR_SODIUM_CELL, substitute_for, PROD_PWR_STORAGE_CELL]
+  - [PROD_PWR_SODIUM_CELL, substitute_for, PROD_PWR_LEAD_ACID_SLI]
+  - [PROD_PWR_SODIUM_CELL, substitute_for, PROD_PWR_LEAD_ACID_MOTIVE]
+  - [PROD_PWR_NAPF6, substitute_for, PROD_PWR_LIPF6]
+  - [TECH_SODIUM_ION, enables, PROD_PWR_SODIUM_CELL]
+  - [TECH_SODIUM_ION, enables, PROD_PWR_NA_LAYERED_OXIDE]
+  - [TECH_SODIUM_ION, enables, PROD_PWR_NA_POLYANION]
+  - [TECH_SODIUM_ION, enables, PROD_PWR_PRUSSIAN]
+  - [TECH_SODIUM_ION, enables, PROD_PWR_HARD_CARBON]
+
+  # ---------- lead-acid & other batteries ----------
+  - [PROD_PWR_LEAD_ACID, uses_material, MAT_LEAD]
+  - [PROD_PWR_LEAD_ACID, uses_material, MAT_SULFURIC_ACID]
+  - [PROD_PWR_LEAD_CARBON, uses_material, MAT_LEAD]
+  - [PROD_PWR_LEAD_ACID_SLI, used_in, MKT_ICE_VEHICLE]
+  - [PROD_PWR_LEAD_ACID_MOTIVE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PWR_SMALL_POWER_BATTERY, substitute_for, PROD_PWR_LEAD_ACID_MOTIVE]
+  - [PROD_PWR_PRIMARY_LITHIUM, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_PRIMARY_LITHIUM, used_in, MKT_DEFENSE]
+  - [PROD_PWR_NIMH, used_in, MKT_EV]
+  - [PROD_PWR_NIMH, uses_material, MAT_NICKEL]
+  - [PROD_PWR_NIMH, uses_material, MAT_RARE_EARTH]
+  - [PROD_PWR_ALKALINE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PWR_ALKALINE, uses_material, MAT_ZINC]
+
+  # ---------- lithium battery equipment ----------
+  - [PROD_PWR_LI_EQUIP, used_in, PROD_PWR_LI_CELL]
+  - [PROD_PWR_LI_MIXER, used_in, PROD_PWR_LI_CELL]
+  - [PROD_PWR_LI_COATER, used_in, PROD_PWR_LI_CELL]
+  - [PROD_PWR_LI_CALENDER, used_in, PROD_PWR_LI_CELL]
+  - [PROD_PWR_LI_DIE_CUTTER, used_in, PROD_PWR_LI_CELL]
+  - [PROD_PWR_LI_WINDER, used_in, PROD_PWR_LI_CELL]
+  - [PROD_PWR_LI_STACKER, used_in, PROD_PWR_LI_CELL]
+  - [PROD_PWR_LI_STACKER, substitute_for, PROD_PWR_LI_WINDER]
+  - [PROD_PWR_LI_LASER_WELDER, used_in, PROD_PWR_LI_CELL]
+  - [PROD_PWR_LI_FORMATION, used_in, PROD_PWR_LI_CELL]
+  - [PROD_PWR_LI_INSPECTION, used_in, PROD_PWR_LI_CELL]
+  - [PROD_PWR_LI_PACK_LINE, used_in, PROD_PWR_BATTERY_PACK]
+  - [PROD_PWR_DRY_ELECTRODE_EQUIP, used_in, PROD_PWR_SOLID_STATE_CELL]
+  - [PROD_PWR_ISOSTATIC_PRESS, used_in, PROD_PWR_SOLID_STATE_CELL]
+  - [PROD_PWR_CATHODE_KILN, used_in, PROD_PWR_GRAPHITIZATION]
+
+  # ---------- grid: UHV & transmission ----------
+  - [TECH_UHV, enables, PROD_PWR_CONVERTER_VALVE]
+  - [TECH_UHV, enables, PROD_PWR_CONVERTER_TRANSFORMER]
+  - [TECH_UHV, enables, PROD_PWR_DC_CONTROL_PROTECTION]
+  - [TECH_UHV, enables, PROD_PWR_UHV_TRANSFORMER]
+  - [TECH_UHV, enables, PROD_PWR_GIS]
+  - [TECH_UHV, enables, PROD_PWR_HVDC_CABLE]
+  - [PROD_PWR_HV_THYRISTOR, component_of, PROD_PWR_CONVERTER_VALVE]
+  - [PROD_PWR_CAPACITOR, component_of, PROD_PWR_VSC_VALVE]
+  - [PROD_PWR_CONVERTER_VALVE, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_VSC_VALVE, used_in, MKT_WIND]
+  - [PROD_PWR_CONVERTER_TRANSFORMER, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_DC_CONTROL_PROTECTION, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_DC_BREAKER, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_UHV_TRANSFORMER, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_POWER_TRANSFORMER, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_TRANSFORMER, uses_material, MAT_ELECTRICAL_STEEL]
+  - [PROD_PWR_TRANSFORMER, uses_material, MAT_COPPER]
+  - [PROD_PWR_CONVERTER_TRANSFORMER, uses_material, MAT_ELECTRICAL_STEEL]
+  - [PROD_PWR_CONVERTER_TRANSFORMER, uses_material, MAT_COPPER]
+  - [PROD_PWR_BUSHING, component_of, PROD_PWR_POWER_TRANSFORMER]
+  - [PROD_PWR_BUSHING, component_of, PROD_PWR_CONVERTER_TRANSFORMER]
+  - [PROD_PWR_OLTC, component_of, PROD_PWR_POWER_TRANSFORMER]
+  - [PROD_PWR_MAGNET_WIRE, component_of, PROD_PWR_TRANSFORMER]
+  - [PROD_PWR_TRACTION_TRANSFORMER, used_in, MKT_RAIL]
+  - [PROD_PWR_HV_BREAKER, component_of, PROD_PWR_GIS]
+  - [PROD_PWR_DISCONNECTOR, component_of, PROD_PWR_GIS]
+  - [PROD_PWR_INSTRUMENT_TRANSFORMER, component_of, PROD_PWR_GIS]
+  - [PROD_PWR_ARRESTER, component_of, PROD_PWR_GIS]
+  - [PROD_PWR_GIS, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_GIL, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_GIS, uses_material, MAT_ALUMINUM]
+  - [PROD_PWR_HV_BREAKER, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_REACTOR, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_SVG, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_SVG, used_in, MKT_WIND]
+  - [PROD_PWR_SVG, used_in, MKT_SOLAR]
+  - [PROD_PWR_CAPACITOR, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_INSULATOR, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_COMPOSITE_INSULATOR, substitute_for, PROD_PWR_PORCELAIN_INSULATOR]
+  - [PROD_PWR_GLASS_INSULATOR, substitute_for, PROD_PWR_PORCELAIN_INSULATOR]
+  - [PROD_PWR_GLASS_INSULATOR, uses_material, MAT_FLAT_GLASS]
+  - [PROD_PWR_COMPOSITE_INSULATOR, uses_material, MAT_GLASS_FIBER]
+  - [PROD_PWR_FITTINGS, used_in, PROD_PWR_OVERHEAD_CONDUCTOR]
+  - [PROD_PWR_TRANSMISSION_TOWER, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_TRANSMISSION_TOWER, uses_material, MAT_STEEL]
+  - [PROD_PWR_TRANSMISSION_TOWER, uses_material, MAT_ZINC]
+  - [PROD_PWR_SUBSTATION_STEEL, used_in, MKT_POWER_GRID]
+
+  # ---------- grid: distribution ----------
+  - [PROD_PWR_DIST_TRANSFORMER, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_DRY_TRANSFORMER, used_in, MKT_CONSTRUCTION]
+  - [PROD_PWR_AMORPHOUS_TRANSFORMER, substitute_for, PROD_PWR_DIST_TRANSFORMER]
+  - [PROD_PWR_DIST_TRANSFORMER, component_of, PROD_PWR_BOX_SUBSTATION]
+  - [PROD_PWR_MV_SWITCHGEAR, component_of, PROD_PWR_BOX_SUBSTATION]
+  - [PROD_PWR_LV_SWITCHGEAR, component_of, PROD_PWR_BOX_SUBSTATION]
+  - [PROD_PWR_BOX_SUBSTATION, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_RENEWABLE_BOX_SUB, used_in, MKT_SOLAR]
+  - [PROD_PWR_RENEWABLE_BOX_SUB, used_in, MKT_WIND]
+  - [PROD_PWR_VACUUM_INTERRUPTER, component_of, PROD_PWR_VCB]
+  - [PROD_PWR_VCB, component_of, PROD_PWR_MV_SWITCHGEAR]
+  - [PROD_PWR_VCB, component_of, PROD_PWR_RMU]
+  - [PROD_PWR_RMU, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_POLE_SWITCH, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_LV_BREAKER, component_of, PROD_PWR_LV_SWITCHGEAR]
+  - [PROD_PWR_CONTACTOR, component_of, PROD_PWR_LV_SWITCHGEAR]
+  - [PROD_PWR_LV_APPARATUS, used_in, MKT_CONSTRUCTION]
+  - [PROD_PWR_LV_APPARATUS, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_PWR_LV_APPARATUS, uses_material, MAT_COPPER]
+  - [PROD_PWR_LV_APPARATUS, uses_material, MAT_SILVER]
+  - [PROD_PWR_DC_FUSE, used_in, PROD_PWR_BATTERY_PACK]
+  - [PROD_PWR_HV_DC_RELAY, component_of, PROD_PWR_BATTERY_PACK]
+  - [PROD_PWR_HV_DC_RELAY, used_in, PROD_PWR_ESS_CABINET]
+  - [PROD_PWR_HV_DC_RELAY, used_in, PROD_PWR_DC_CHARGER]
+  - [PROD_PWR_BUSWAY, uses_material, MAT_COPPER]
+  - [PROD_PWR_BUSWAY, used_in, MKT_CONSTRUCTION]
+
+  # ---------- grid: automation, meters ----------
+  - [PROD_PWR_RELAY_PROTECTION, component_of, PROD_PWR_SUBSTATION_AUTOMATION]
+  - [PROD_PWR_SUBSTATION_AUTOMATION, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_RELAY_PROTECTION, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_DISPATCH_AUTOMATION, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_DA_TERMINAL, component_of, PROD_PWR_RMU]
+  - [PROD_PWR_DA_TERMINAL, component_of, PROD_PWR_POLE_SWITCH]
+  - [PROD_PWR_LINE_MONITORING, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_GRID_INSPECTION_ROBOT, used_in, MKT_POWER_GRID]
+  - [PROD_COMP_POWER_IT, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_VPP_PLATFORM, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_VPP_PLATFORM, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_PWR_TRADING_SOFTWARE, used_in, MKT_SOLAR]
+  - [PROD_PWR_TRADING_SOFTWARE, used_in, MKT_WIND]
+  - [PROD_PWR_MICROGRID_CONTROL, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_PWR_POWER_CARRIER_CHIP, component_of, PROD_PWR_SMART_METER]
+  - [PROD_PWR_POWER_CARRIER_CHIP, component_of, PROD_PWR_COLLECTION_TERMINAL]
+  - [PROD_PWR_SMART_METER, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_COLLECTION_TERMINAL, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_POWER_TEST_INSTRUMENT, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_POWER_QUALITY_METER, used_in, MKT_POWER_GRID]
+  - [TECH_IOT, enables, PROD_PWR_SMART_METER]
+  - [TECH_IOT, enables, PROD_PWR_LINE_MONITORING]
+  - [TECH_IOT, enables, PROD_PWR_VPP_PLATFORM]
+  - [TECH_AI_LARGE_MODEL, enables, PROD_PWR_TRADING_SOFTWARE]
+
+  # ---------- cables ----------
+  - [PROD_PWR_POWER_CABLE, uses_material, MAT_COPPER]
+  - [PROD_PWR_POWER_CABLE, uses_material, MAT_ALUMINUM]
+  - [PROD_PWR_HV_CABLE_COMPOUND, upstream_of, PROD_PWR_HV_CABLE]
+  - [PROD_PWR_HV_CABLE_COMPOUND, upstream_of, PROD_PWR_SUBMARINE_CABLE]
+  - [PROD_PWR_HV_CABLE_COMPOUND, uses_material, MAT_PLASTICS]
+  - [PROD_PWR_CABLE_ACCESSORY, component_of, PROD_PWR_HV_CABLE]
+  - [PROD_PWR_HV_CABLE, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_MV_LV_CABLE, used_in, MKT_CONSTRUCTION]
+  - [PROD_PWR_MV_LV_CABLE, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_HVDC_CABLE, used_in, MKT_WIND]
+  - [PROD_PWR_OVERHEAD_CONDUCTOR, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_OVERHEAD_CONDUCTOR, uses_material, MAT_ALUMINUM]
+  - [PROD_PWR_OVERHEAD_CONDUCTOR, uses_material, MAT_STEEL]
+  - [PROD_PWR_OPGW, used_in, MKT_POWER_GRID]
+  - [PROD_PWR_MAGNET_WIRE, used_in, PROD_PWR_EV_DRIVE_MOTOR]
+  - [PROD_PWR_COPPER_BUSBAR, component_of, PROD_PWR_MV_SWITCHGEAR]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_PWR_SERVER_PSU, component_of, PROD_COMP_AI_SERVER]
+  - [PROD_PWR_HVDC_POWER, used_in, PROD_COMP_RACK_SCALE_AI]
+  - [PROD_PWR_UPS, used_in, PROD_COMP_IDC_SERVICE]
+  - [PROD_PWR_SOLAR_GLASS, uses_material, MAT_SILICA_SAND]
+  - [PROD_PWR_BATTERY_PACK, component_of, PROD_AUTO_BEV_PASSENGER]
+  - [PROD_PWR_BATTERY_PACK, component_of, PROD_AUTO_PHEV_PASSENGER]
+  - [PROD_PWR_FUEL_CELL_SYSTEM, component_of, PROD_AUTO_FCV_COMMERCIAL]
+  - [PROD_PWR_GRANULAR_SILICON, substitute_for, MAT_POLYSILICON]
+  - [PROD_PWR_WIND_TURBINE, used_in, PROD_UTIL_ONSHORE_WIND]
+  - [PROD_PWR_WIND_TURBINE, used_in, PROD_UTIL_OFFSHORE_WIND]
+  - [PROD_PWR_MAGNET_WIRE, component_of, PROD_PWR_EV_DRIVE_MOTOR]
+
+sw_l3_map:
+  "630101": [SEG_PWR_MOTOR]
+  "630301": [SEG_PWR_POWER_GEN_EQUIP, SEG_PWR_NUCLEAR_EQUIP, SEG_PWR_HYDRO_EQUIP]
+  "630304": [SEG_PWR_THERMAL_EQUIP]
+  "630306": [SEG_PWR_OTHER_POWER, SEG_PWR_DC_POWER, SEG_PWR_ENERGY_STORAGE, SEG_PWR_HYDROGEN, SEG_PWR_NUCLEAR_EQUIP]
+  "630501": [SEG_PWR_SOLAR_SILICON]
+  "630502": [SEG_PWR_SOLAR_CELL_MODULE]
+  "630503": [SEG_PWR_INVERTER, SEG_PWR_ENERGY_STORAGE]
+  "630504": [SEG_PWR_SOLAR_AUX]
+  "630505": [SEG_PWR_SOLAR_EQUIP]
+  "630601": [SEG_PWR_WIND_TURBINE]
+  "630602": [SEG_PWR_WIND_PARTS]
+  "630701": [SEG_PWR_LI_BATTERY, SEG_PWR_ENERGY_STORAGE, SEG_PWR_SODIUM]
+  "630702": [SEG_PWR_BATTERY_CHEM, SEG_PWR_CATHODE, SEG_PWR_ANODE, SEG_PWR_SEPARATOR, SEG_PWR_ELECTROLYTE, SEG_PWR_COLLECTOR, SEG_PWR_BATTERY_AUX]
+  "630703": [SEG_PWR_LI_EQUIP]
+  "630704": [SEG_PWR_FUEL_CELL, SEG_PWR_HYDROGEN]
+  "630705": [SEG_PWR_OTHER_BATTERY, SEG_PWR_SODIUM]
+  "630801": [SEG_PWR_TRANSMISSION, SEG_PWR_UHV]
+  "630802": [SEG_PWR_DISTRIBUTION, SEG_PWR_CHARGING]
+  "630803": [SEG_PWR_GRID_AUTOMATION]
+  "630804": [SEG_PWR_METER]
+  "630805": [SEG_PWR_CABLE]

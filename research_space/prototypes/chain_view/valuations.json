@@ -1,0 +1,2253 @@
+{
+ "002130": [
+  {
+   "info_code": "AP202602101819851833",
+   "title": "产能业绩稳步释放，铜连接龙头市场地位稳固",
+   "org": "山西证券",
+   "date": "2026-02-10",
+   "pages": 5,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 29.8,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2025E",
+      "applied_to": "整体",
+      "quote": "2月9日收盘价对应PE为29.8/18.3/13.4倍，维持“买入-A”评级",
+      "page": 2
+     },
+     {
+      "method": "PE",
+      "multiple": 18.3,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "2月9日收盘价对应PE为29.8/18.3/13.4倍，维持“买入-A”评级",
+      "page": 2
+     },
+     {
+      "method": "PE",
+      "multiple": 13.4,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2027E",
+      "applied_to": "整体",
+      "quote": "2月9日收盘价对应PE为29.8/18.3/13.4倍，维持“买入-A”评级",
+      "page": 2
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2025E",
+      "revenue_bn": 90.37,
+      "net_profit_bn": 11.56,
+      "eps": 0.92,
+      "pe": 29.8
+     },
+     {
+      "year": "2026E",
+      "revenue_bn": 121.5,
+      "net_profit_bn": 18.8,
+      "eps": 1.49,
+      "pe": 18.3
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 158.96,
+      "net_profit_bn": 25.65,
+      "eps": 2.04,
+      "pe": 13.4
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "高速铜缆",
+      "metric": "全球市场规模",
+      "year": "2025E",
+      "value": "19",
+      "unit": "亿元",
+      "quote": "2025年全球高速铜缆市场规模达19亿元，有望以26.9%的CAGR至2029年达到49亿元",
+      "page": 1
+     },
+     {
+      "segment": "高速铜缆",
+      "metric": "毛利率",
+      "year": "2025E",
+      "value": "45.6",
+      "unit": "%",
+      "quote": "高速铜缆毛利率为45.6%，毛利贡献3.4亿元，占2025前三季度毛利的18.2%",
+      "page": 1
+     },
+     {
+      "segment": "热缩材料",
+      "metric": "全球市占率",
+      "year": null,
+      "value": "20.6",
+      "unit": "%",
+      "quote": "公司位于全球及国内热缩材料龙头，全球市占率约20.6%",
+      "page": 2
+     },
+     {
+      "segment": "DC充电枪",
+      "metric": "国内市场规模",
+      "year": "2025E",
+      "value": "17",
+      "unit": "亿元",
+      "quote": "国内DC充电枪市场预计从2025年17亿元增长至2029年41亿元",
+      "page": 2
+     }
+    ],
+    "logic": "报告未给出目标价，采用相对估值：以2月9日收盘价27.32元对应2025-2027年PE 29.8/18.3/13.4倍，维持买入-A。核心驱动为高速铜缆量价齐升（英伟达NVL72/Rubin平台带动，448G升级提价）及热缩材料、充电枪、电缆附件等非通信基本盘稳固，盈利预测2025-2027年归母净利润11.6/18.8/25.7亿元。"
+   },
+   "dropped": 0,
+   "tokens": 5021
+  }
+ ],
+ "300308": [
+  {
+   "info_code": "AP202611051831462835",
+   "title": "公司事件点评报告：光模块需求保持强劲，多路径方案综合布局",
+   "org": "华鑫证券",
+   "date": "2026-11-05",
+   "pages": 5,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 17,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "当前股价对应PE 分别为17、8、6 倍",
+      "page": 2
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 1065.25,
+      "net_profit_bn": 365.71,
+      "eps": 31.05,
+      "pe": 17
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 2110.58,
+      "net_profit_bn": 758.31,
+      "eps": 64.38,
+      "pe": 8
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 3021.93,
+      "net_profit_bn": 1084.22,
+      "eps": 92.05,
+      "pe": 6
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "1.6T光模块",
+      "metric": "出货量",
+      "year": "2027E",
+      "value": "高位运行",
+      "unit": null,
+      "quote": "预计需求与订单增速具备较强弹性，出货规模将维持高位运行",
+      "page": 1
+     },
+     {
+      "segment": "800G光模块",
+      "metric": "出货量",
+      "year": "2027E",
+      "value": "保持可观出货体量",
+      "unit": null,
+      "quote": "800G 产品依托更大的存量基数，增速虽较 1.6T 有所收敛，但仍将保持可观的出货体量",
+      "page": 1
+     },
+     {
+      "segment": "整体",
+      "metric": "毛利率",
+      "year": "2026E",
+      "value": "46.5",
+      "unit": "%",
+      "quote": "毛利率 42.0% 46.5% 48.2% 47.6%",
+      "page": 3
+     }
+    ],
+    "logic": "报告以盈利预测对应的PE估值给出买入评级，当前股价对应2026-2028年PE分别为17、8、6倍。核心驱动为AI算力推动800G/1.6T高速光模块放量，1.6T集中导入、800G维持高位出货，叠加硅光占比提升带动毛利率上行。"
+   },
+   "dropped": 0,
+   "tokens": 4597
+  },
+  {
+   "info_code": "AP202611031831376000",
+   "title": "千亿营收加速兑现，全球光模块龙头地位稳固",
+   "org": "金元证券",
+   "date": "2026-11-03",
+   "pages": 5,
+   "valuation": {
+    "rating": "增持",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 17.32,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "市盈率(P/E) 52.39 17.32 8.47 5.50",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 1019.503,
+      "net_profit_bn": 326.6528,
+      "eps": 27.73,
+      "pe": 17.32
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 2039.0061,
+      "net_profit_bn": 667.8888,
+      "eps": 56.7,
+      "pe": 8.47
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 3074.1775,
+      "net_profit_bn": 1027.4997,
+      "eps": 87.23,
+      "pe": 5.5
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "整体",
+      "metric": "毛利率",
+      "year": "2026E",
+      "value": "46.51",
+      "unit": "%",
+      "quote": "销售毛利率 42.04% 46.51% 47.49% 48.31%",
+      "page": 1
+     }
+    ],
+    "logic": "报告未给出目标价与明确估值倍数推导，仅以当前股价对应2026E PE 17.32倍说明估值处于较低位置，首次覆盖给予增持。核心驱动为800G、1.6T等高端光模块出货占比提升带动毛利率上行，以及千亿营收目标加速兑现。"
+   },
+   "dropped": 0,
+   "tokens": 4488
+  },
+  {
+   "info_code": "AP202611021831309603",
+   "title": "3Q26 earnings：Solid fundamentals amid supply chain tightness",
+   "org": "招银国际",
+   "date": "2026-11-02",
+   "pages": 4,
+   "valuation": {
+    "rating": "买入",
+    "target_price": {
+     "value": 1400,
+     "currency": "CNY",
+     "quote": "maintain BUY with unchanged TP at RMB1400 (26x 2027E P/E)",
+     "page": 1
+    },
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 26,
+      "multiple_kind": "target",
+      "base_year": "2027E",
+      "applied_to": "整体",
+      "quote": "maintain BUY with unchanged TP at RMB1400 (26x 2027E P/E)",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 1065.99,
+      "net_profit_bn": 360.07,
+      "eps": 32.41,
+      "pe": 17.1
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 1753.73,
+      "net_profit_bn": 598.09,
+      "eps": 53.83,
+      "pe": 10.3
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 2347.07,
+      "net_profit_bn": 820.86,
+      "eps": 73.88,
+      "pe": 7.5
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "整体",
+      "metric": "毛利率",
+      "year": "2026E",
+      "value": "46.6",
+      "unit": "%",
+      "quote": "GPM expanded to 46.6%, continuing to accelerate from 46.1%/46.4% in 1Q/2Q26",
+      "page": 1
+     },
+     {
+      "segment": "整体",
+      "metric": "毛利率",
+      "year": "2027E",
+      "value": "47.7",
+      "unit": "%",
+      "quote": "Gross margin (%) 33.8 42.0 46.6 47.7 47.9",
+      "page": 1
+     },
+     {
+      "segment": "整体",
+      "metric": "毛利率",
+      "year": "2028E",
+      "value": "47.9",
+      "unit": "%",
+      "quote": "Gross margin (%) 33.8 42.0 46.6 47.7 47.9",
+      "page": 1
+     },
+     {
+      "segment": "2.4T/NPO/XPO",
+      "metric": "量产时间",
+      "year": "2027E",
+      "value": "2H27",
+      "unit": "时间",
+      "quote": "Mgmt. expects 2.4T/NPO/XPO to enter initial volume production in 2H27",
+      "page": 1
+     },
+     {
+      "segment": "光互连",
+      "metric": "占全球AI资本开支比例",
+      "year": null,
+      "value": "5",
+      "unit": "%",
+      "quote": "Optical interconnects currently account for only c.5% of global AI capex",
+      "page": 1
+     }
+    ],
+    "logic": "采用2027E P/E 26倍目标估值，维持买入评级与1400元目标价。核心驱动为800G/1.6T高速光模块出货强劲、产品结构优化与经营杠杆推动毛利率提升，海外大客户订单能见度延伸至2027年并获2028年需求指引，2.4T/NPO/XPO预计2H27起量。"
+   },
+   "dropped": 0,
+   "tokens": 5519
+  }
+ ],
+ "300750": [
+  {
+   "info_code": "AP202610091830238065",
+   "title": "首次覆盖：盈利下行担忧被放大，技术领先+规模优势铸就高性价比",
+   "org": "爱建证券",
+   "date": "2026-10-09",
+   "pages": 23,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 13.5,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "当前市值对应PE 分别为13.5/10.9/9.3",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 603.266,
+      "net_profit_bn": 98.393,
+      "eps": 21.26,
+      "pe": 13.5
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 738.407,
+      "net_profit_bn": 121.943,
+      "eps": 26.35,
+      "pe": 10.9
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 875.029,
+      "net_profit_bn": 142.4,
+      "eps": 30.77,
+      "pe": 9.3
+     }
+    ],
+    "comparables": [
+     {
+      "name": "亿纬锂能",
+      "code": "300014.SZ",
+      "multiple": 15.2,
+      "metric": "PE",
+      "base_year": "2026E",
+      "ts_code": "300014.SZ"
+     },
+     {
+      "name": "国轩高科",
+      "code": "002074.SZ",
+      "multiple": 27.5,
+      "metric": "PE",
+      "base_year": "2026E",
+      "ts_code": "002074.SZ"
+     },
+     {
+      "name": "欣旺达",
+      "code": "300207.SZ",
+      "multiple": 19.1,
+      "metric": "PE",
+      "base_year": "2026E",
+      "ts_code": "300207.SZ"
+     }
+    ],
+    "assumptions": [
+     {
+      "segment": "动力电池系统",
+      "metric": "收入增速",
+      "year": "2026E",
+      "value": "34.00%",
+      "unit": "%",
+      "quote": "假设2026-2028 年公司动力电池系统收入增速分别为34.00%/16.00%/13.00%",
+      "page": 2
+     },
+     {
+      "segment": "动力电池系统",
+      "metric": "毛利率",
+      "year": "2026E",
+      "value": "23.25%",
+      "unit": "%",
+      "quote": "毛利率分别为23.25%/23.20%/22.50%",
+      "page": 2
+     },
+     {
+      "segment": "储能电池系统",
+      "metric": "收入增速",
+      "year": "2026E",
+      "value": "95.00%",
+      "unit": "%",
+      "quote": "假设2026-2028 年公司储能电池系统收入增长率分别为95.00%/50.00%/36.00%",
+      "page": 2
+     },
+     {
+      "segment": "储能电池系统",
+      "metric": "毛利率",
+      "year": "2026E",
+      "value": "24.00%",
+      "unit": "%",
+      "quote": "毛利率分别为24.00%/23.90%/23.80%",
+      "page": 2
+     },
+     {
+      "segment": "整体",
+      "metric": "总收入增速",
+      "year": "2026E",
+      "value": "42.38%",
+      "unit": "%",
+      "quote": "总收入增长率分别为42.38%/22.40%/18.50%",
+      "page": 2
+     },
+     {
+      "segment": "整体",
+      "metric": "毛利率",
+      "year": "2026E",
+      "value": "24.56%",
+      "unit": "%",
+      "quote": "毛利率分别为24.56%/24.30%/23.68%",
+      "page": 2
+     }
+    ],
+    "logic": "采用可比公司PE相对估值法，选取亿纬锂能、国轩高科、欣旺达为可比公司，2026E可比公司平均PE 20.6倍高于宁德时代13.5倍，故给予买入评级。核心驱动为动力电池单车带电量提升与海外出口、储能受益AIDC配储高增，关键假设为动力电池收入增速34%、储能收入增速95%。"
+   },
+   "dropped": 1,
+   "tokens": 13637
+  },
+  {
+   "info_code": "AP202610241830879510",
+   "title": "出货量快速增长，盈利能力表现承压",
+   "org": "国信证券",
+   "date": "2026-10-24",
+   "pages": 5,
+   "valuation": {
+    "rating": "优于大市",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 11.7,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "EPS 为18.84/ 21.76/25.58 元，动态PE 为11.7/10.1/8.6 倍",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 6173.92,
+      "net_profit_bn": 871.69,
+      "eps": 18.84,
+      "pe": 11.7
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 7411.19,
+      "net_profit_bn": 1006.85,
+      "eps": 21.76,
+      "pe": 10.1
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 8523.06,
+      "net_profit_bn": 1183.67,
+      "eps": 25.58,
+      "pe": 8.6
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "动储电池",
+      "metric": "出货量",
+      "year": "2026E",
+      "value": "694",
+      "unit": "GWh",
+      "quote": "我们估计公司2026 年前三季度动储电池出货量约为694GWh",
+      "page": 1
+     },
+     {
+      "segment": "动储电池",
+      "metric": "单季度出货量",
+      "year": "2026E",
+      "value": "260",
+      "unit": "GWh",
+      "quote": "估计第三季度动储出货量合计约为260GWh，同比增长约为57%",
+      "page": 1
+     },
+     {
+      "segment": "储能电池",
+      "metric": "出货占比",
+      "year": "2026E",
+      "value": "25",
+      "unit": "%",
+      "quote": "其中储能电池出货占比约为25%",
+      "page": 1
+     }
+    ],
+    "logic": "报告未给出目标价，仅以当前股价对应2026E PE 11.7倍作为估值参考，维持“优于大市”评级。核心驱动为动储电池出货量快速增长（前三季度约694GWh）与海外份额提升，但消费税、出口退税等政策调整使单位盈利承压，故下调盈利预测。"
+   },
+   "dropped": 0,
+   "tokens": 5101
+  },
+  {
+   "info_code": "AP202610241830877403",
+   "title": "3季度出货维持高增，单位盈利承压；下调盈利预测",
+   "org": "交银国际证券",
+   "date": "2026-10-24",
+   "pages": 7,
+   "valuation": {
+    "rating": "买入",
+    "target_price": {
+     "value": 454.69,
+     "currency": "CNY",
+     "quote": "下调目标价至454.69 元人民币（原512元），对应2027年22.3倍目标PE",
+     "page": 1
+    },
+    "methods": [
+     {
+      "method": "DCF",
+      "multiple": null,
+      "multiple_kind": "target",
+      "base_year": null,
+      "applied_to": "整体",
+      "quote": "基于DCF 估值，下调目标价至454.69 元人民币（原512元），对应2027年22.3倍目标PE",
+      "page": 1
+     },
+     {
+      "method": "PE",
+      "multiple": 22.3,
+      "multiple_kind": "target",
+      "base_year": "2027E",
+      "applied_to": "整体",
+      "quote": "对应2027年22.3倍目标PE",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 6138.15,
+      "net_profit_bn": 841.35,
+      "eps": 18.18,
+      "pe": 13.1
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 7309.12,
+      "net_profit_bn": 944.1,
+      "eps": 20.4,
+      "pe": 11.6
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 8491.02,
+      "net_profit_bn": 1061.99,
+      "eps": 22.95,
+      "pe": 10.4
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "整体",
+      "metric": "毛利率",
+      "year": "2026E",
+      "value": "22.0",
+      "unit": "%",
+      "quote": "下调毛利率预测至22.0%/20.9%/20.9%",
+      "page": 1
+     },
+     {
+      "segment": "整体",
+      "metric": "毛利率",
+      "year": "2027E",
+      "value": "20.9",
+      "unit": "%",
+      "quote": "下调毛利率预测至22.0%/20.9%/20.9%",
+      "page": 1
+     },
+     {
+      "segment": "整体",
+      "metric": "毛利率",
+      "year": "2028E",
+      "value": "20.9",
+      "unit": "%",
+      "quote": "下调毛利率预测至22.0%/20.9%/20.9%",
+      "page": 1
+     }
+    ],
+    "logic": "采用DCF估值，下调目标价至454.69元，对应2027年22.3倍目标PE。核心驱动为动力电池出货增长韧性及储能、海外需求增量，但下调毛利率预测至22.0%/20.9%/20.9%以反映消费税、出口退税调整和产品结构变化对利润率的影响。"
+   },
+   "dropped": 0,
+   "tokens": 6323
+  }
+ ],
+ "600276": [
+  {
+   "info_code": "AP202610131830398215",
+   "title": "多元模式出海，慢病管线价值凸显",
+   "org": "国金证券",
+   "date": "2026-10-13",
+   "pages": 38,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 36.01,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "P/E 46.21 51.27 36.01 29.99 24.95",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 352.02,
+      "net_profit_bn": 86.66,
+      "eps": 1.306,
+      "pe": 36.01
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 403.56,
+      "net_profit_bn": 104.05,
+      "eps": 1.568,
+      "pe": 29.99
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 470.53,
+      "net_profit_bn": 125.05,
+      "eps": 1.884,
+      "pe": 24.95
+     }
+    ],
+    "comparables": [
+     {
+      "name": "百济神州",
+      "code": "688235.SH",
+      "multiple": 68,
+      "metric": "PE",
+      "base_year": "2026E",
+      "ts_code": "688235.SH"
+     },
+     {
+      "name": "信达生物",
+      "code": "1801.HK",
+      "multiple": 59,
+      "metric": "PE",
+      "base_year": "2026E",
+      "ts_code": "1801.HK"
+     },
+     {
+      "name": "翰森制药",
+      "code": "3692.HK",
+      "multiple": 29,
+      "metric": "PE",
+      "base_year": "2026E",
+      "ts_code": "3692.HK"
+     }
+    ],
+    "assumptions": [],
+    "logic": "报告未给出目标价，仅维持“买入”评级，估值参考为现价对应2026E PE 36倍，低于可比公司2026E平均37倍PE。核心逻辑是创新药收入高速增长、出海模式多元化（License out、NewCo、MNC联盟、自主全球开发）打开第二增长曲线，盈利预测维持2026-2028年归母净利润87/104/125亿元。"
+   },
+   "dropped": 0,
+   "tokens": 5886
+  },
+  {
+   "info_code": "AP202611041831414339",
+   "title": "创新药收入实现快速增长，国际化业务稳步推进",
+   "org": "中银证券",
+   "date": "2026-11-04",
+   "pages": 4,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 36.7,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "股价对应PE 为36.7/32.0/27.4x",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 338.07,
+      "net_profit_bn": 89.08,
+      "eps": 1.34,
+      "pe": 36.7
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 380.09,
+      "net_profit_bn": 102.39,
+      "eps": 1.54,
+      "pe": 32.0
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 434.88,
+      "net_profit_bn": 119.41,
+      "eps": 1.8,
+      "pe": 27.4
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "创新药",
+      "metric": "收入增速",
+      "year": "2026E",
+      "value": "与年初目标仍存在一定差距",
+      "unit": null,
+      "quote": "公司预计全年创新药销售收入增速与年初目标仍存在一定差距",
+      "page": 1
+     }
+    ],
+    "logic": "报告未给出目标价，仅以当前股价对应2026E PE 36.7倍作为估值参考，维持买入评级。核心驱动为创新药收入占比提升（前三季度创新药收入138.71亿元，占药品销售64.59%）、非肿瘤产品快速增长及对外许可收入贡献提升；关键假设为创新药持续放量与国际化布局推进，但院内准入进度及成熟产品竞争加剧使全年创新药增速低于年初目标。"
+   },
+   "dropped": 0,
+   "tokens": 6443
+  },
+  {
+   "info_code": "AP202611031831359841",
+   "title": "肿瘤创新药回暖，BD收入稳定",
+   "org": "中邮证券",
+   "date": "2026-11-03",
+   "pages": 5,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 38,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "对应PE 为38/33/28 倍",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 340.02,
+      "net_profit_bn": 84.72,
+      "eps": 1.28,
+      "pe": 37.97
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 379.21,
+      "net_profit_bn": 97.75,
+      "eps": 1.47,
+      "pe": 32.9
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 419.52,
+      "net_profit_bn": 114.83,
+      "eps": 1.73,
+      "pe": 28.01
+     }
+    ],
+    "comparables": [],
+    "assumptions": [],
+    "logic": "报告未给出目标价，采用PE相对估值法，以2026-2028年归母净利润预测对应PE 38/33/28倍，结合公司创新型制药企业定位与差异化创新产品矩阵，维持“买入”评级。核心驱动为肿瘤创新药增速回暖、BD收入稳定贡献及降糖减重管线进展。"
+   },
+   "dropped": 0,
+   "tokens": 4211
+  }
+ ],
+ "688126": [
+  {
+   "info_code": "AP202609021828907961",
+   "title": "二季度收入创季度新高，300mm硅片价格企稳回暖",
+   "org": "国信证券",
+   "date": "2026-09-02",
+   "pages": 6,
+   "valuation": {
+    "rating": "优于大市",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PS",
+      "multiple": 15.7,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "对应2026 年8 月26 日股价的PS 分别为15.7/12.5/11.3x",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 51.17,
+      "net_profit_bn": 1.01,
+      "eps": 0.03,
+      "pe": 792.1
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 64.27,
+      "net_profit_bn": 1.8,
+      "eps": 0.05,
+      "pe": 444.6
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 70.87,
+      "net_profit_bn": 2.86,
+      "eps": 0.09,
+      "pe": 280.1
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "300mm半导体硅片",
+      "metric": "产能",
+      "year": "2026E",
+      "value": "120",
+      "unit": "万片/月",
+      "quote": "预计到2026 年底，公司300mm 半导体硅片产能将达到120 万片/月",
+      "page": 1
+     },
+     {
+      "segment": "300mm SOI硅片",
+      "metric": "产能",
+      "year": null,
+      "value": "30",
+      "unit": "万片/年",
+      "quote": "子公司新傲芯翼已建成产能约30 万片/年的300mm SOI 硅片试验线",
+      "page": 1
+     }
+    ],
+    "logic": "公司盈利尚薄，报告以PS估值，对应2026年8月26日股价2026-2028年PS为15.7/12.5/11.3x，维持“优于大市”。核心驱动为300mm硅片价格企稳回暖及产能扩张至120万片/月，关键假设是需求复苏与产能释放。"
+   },
+   "dropped": 0,
+   "tokens": 5080
+  },
+  {
+   "info_code": "AP202609011828877354",
+   "title": "硅片景气度触底，看好2026下半年价格改善",
+   "org": "中银证券",
+   "date": "2026-09-01",
+   "pages": 5,
+   "valuation": {
+    "rating": "增持",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PS",
+      "multiple": 15.2,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "对应公司2026-2028 年市销率分别为15.2 倍、11.8 倍、10.4 倍",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 53.22,
+      "net_profit_bn": -7.91,
+      "eps": -0.24,
+      "pe": -102.4
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 68.76,
+      "net_profit_bn": -4.1,
+      "eps": -0.12,
+      "pe": -197.5
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 78.06,
+      "net_profit_bn": -2.47,
+      "eps": -0.07,
+      "pe": -328.6
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "300mm 硅片",
+      "metric": "产能",
+      "year": "2026E",
+      "value": "120",
+      "unit": "万片/月",
+      "quote": "至2026 年底产能将进一步扩增至120 万片/月",
+      "page": 1
+     },
+     {
+      "segment": "300mm 硅片",
+      "metric": "产能",
+      "year": "2026E",
+      "value": "100",
+      "unit": "万片/月",
+      "quote": "上海、太原两地产能合计达100 万片/月",
+      "page": 1
+     },
+     {
+      "segment": "200mm 及以下硅片",
+      "metric": "产能",
+      "year": "2026E",
+      "value": "50",
+      "unit": "万片/月",
+      "quote": "抛光片、外延片合计产能超过50 万片/月",
+      "page": 1
+     },
+     {
+      "segment": "SOI 硅片",
+      "metric": "产能",
+      "year": "2026E",
+      "value": "6.5",
+      "unit": "万片/月",
+      "quote": "SOI 硅片产能超过6.5 万片/月",
+      "page": 1
+     }
+    ],
+    "logic": "公司2026-2028年归母净利润仍为亏损，无法用PE估值，因此采用市销率（PS）估值：当前市值对应2026-2028年PS分别为15.2倍、11.8倍、10.4倍。核心逻辑是硅片价格处于阶段性低位，看好2026下半年价格修复及300mm大硅片产能扩张带来的收入增长，维持增持评级。"
+   },
+   "dropped": 0,
+   "tokens": 6202
+  },
+  {
+   "info_code": "AP202606091823400168",
+   "title": "12吋SOI、压电晶体异质晶圆平台化布局",
+   "org": "中邮证券",
+   "date": "2026-06-09",
+   "pages": 5,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 47.07,
+      "net_profit_bn": -13.35,
+      "eps": -0.4,
+      "pe": -65.44
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 56.15,
+      "net_profit_bn": -9.19,
+      "eps": -0.28,
+      "pe": -95.07
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 67.56,
+      "net_profit_bn": -4.4,
+      "eps": -0.13,
+      "pe": -198.4
+     }
+    ],
+    "comparables": [],
+    "assumptions": [],
+    "logic": "报告未给出目标价与明确估值倍数，仅以盈利预测表列示PE/PB/EV_EBITDA等估值比率，并维持“买入”评级。核心驱动为300mm半导体硅片销量大增带动收入增长，以及12吋SOI、压电晶体异质晶圆的平台化布局；关键假设为2026-2028年收入47/56/68亿元、归母净利润-13/-9/-4亿元，仍处战略性扩产投入与亏损收窄阶段。"
+   },
+   "dropped": 0,
+   "tokens": 4165
+  }
+ ],
+ "688234": [
+  {
+   "info_code": "AP202608311828810153",
+   "title": "8英寸放量全球领先，“AI+新能源”多元生态",
+   "org": "中航证券",
+   "date": "2026-08-31",
+   "pages": 4,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 21.13,
+      "net_profit_bn": 0.84,
+      "eps": 0.17,
+      "pe": 637.9
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 27.84,
+      "net_profit_bn": 1.98,
+      "eps": 0.41,
+      "pe": 269.6
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 34.35,
+      "net_profit_bn": 3.52,
+      "eps": 0.73,
+      "pe": 151.58
+     }
+    ],
+    "comparables": [],
+    "assumptions": [],
+    "logic": "报告首次覆盖给予买入评级，但未给出目标价，也未明确披露估值倍数或估值方法；仅列出2026-2028年盈利预测（EPS 0.17/0.41/0.73元）及对应PE 637.90/269.60/151.58倍。核心逻辑为8英寸碳化硅放量成为收入主力，叠加新能源汽车应用深化与AI数据中心新增长引擎。"
+   },
+   "dropped": 0,
+   "tokens": 4655
+  },
+  {
+   "info_code": "AP202608211828244724",
+   "title": "拐点已至",
+   "org": "中邮证券",
+   "date": "2026-08-21",
+   "pages": 5,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 20.5,
+      "net_profit_bn": 0.6758,
+      "eps": 0.14,
+      "pe": 807.72
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 27.27,
+      "net_profit_bn": 2.468,
+      "eps": 0.51,
+      "pe": 221.16
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 33.54,
+      "net_profit_bn": 4.0839,
+      "eps": 0.84,
+      "pe": 133.65
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "8英寸导电型碳化硅衬底",
+      "metric": "全球市占率",
+      "year": "2025",
+      "value": "51.3",
+      "unit": "%",
+      "quote": "2025 年公司全球8 英寸导电型碳化硅衬底市占率51.3%，位列全球第一",
+      "page": 1
+     },
+     {
+      "segment": "8英寸产品",
+      "metric": "营收占比",
+      "year": "2026H1",
+      "value": "超50",
+      "unit": "%",
+      "quote": "8 英寸产品从技术领先迈入规模化应用阶段，营收占比已超50%",
+      "page": 1
+     }
+    ],
+    "logic": "报告未给出目标价与明确估值倍数，仅以盈利预测表列示当前股价对应的PE/PB/EV_EBITDA，并维持“买入”评级。核心驱动为碳化硅衬底行业供需收紧、公司满产运行，8英寸产品放量（营收占比超50%）与12英寸技术卡位推动产品结构升级，带动2026-2028年收入与归母净利润快速增长。"
+   },
+   "dropped": 0,
+   "tokens": 4430
+  },
+  {
+   "info_code": "AP202607301827476640",
+   "title": "8英寸SiC衬底驱动盈利修复，新应用打开长期空间",
+   "org": "东吴证券国际经纪",
+   "date": "2026-07-30",
+   "pages": 14,
+   "valuation": {
+    "rating": "买入",
+    "target_price": {
+     "value": 158.22,
+     "currency": "CNY",
+     "quote": "A 股目标价158.22 元/股，H 股目标价109.75 港元/股",
+     "page": 10
+    },
+    "methods": [
+     {
+      "method": "PS",
+      "multiple": 26,
+      "multiple_kind": "target",
+      "base_year": "2027E",
+      "applied_to": "整体",
+      "quote": "我们以2027E 收入为估值基础，并给予公司26 倍2027E EV/Sales",
+      "page": 10
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 20.78,
+      "net_profit_bn": 0.77,
+      "eps": 0.16,
+      "pe": 838.16
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 26.82,
+      "net_profit_bn": 3.54,
+      "eps": 0.73,
+      "pe": 183.43
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 31.44,
+      "net_profit_bn": 5.36,
+      "eps": 1.11,
+      "pe": 121.16
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "整体",
+      "metric": "毛利率",
+      "year": "2026E",
+      "value": "27",
+      "unit": "%",
+      "quote": "我们预测公司2026-2028 年毛利率分别为约27%/32%/34%",
+      "page": 10
+     },
+     {
+      "segment": "8英寸衬底",
+      "metric": "收入占比",
+      "year": "2026E",
+      "value": "接近45",
+      "unit": "%",
+      "quote": "2026Q1 不考虑12 英寸产品的情况下，公司8 英寸收入占比已接近45%",
+      "page": 4
+     },
+     {
+      "segment": "临港基地",
+      "metric": "产能",
+      "year": "2026E",
+      "value": "96",
+      "unit": "万片/年",
+      "quote": "临港基地2026 年底前规划产能为96 万片/年",
+      "page": 6
+     }
+    ],
+    "logic": "公司处于盈利修复早期，净利润易受汇兑、减值及折旧扰动，故采用EV/Sales估值，以2027E收入为基准给予26倍2027E EV/Sales，得出A股目标价158.22元。核心驱动为8英寸SiC衬底放量（供不应求、英飞凌订单翻倍、芯联集成份额80%-90%）、结构性涨价及临港产能释放，带动毛利率由2025年13%修复至2026-2028年27%/32%/34%。"
+   },
+   "dropped": 0,
+   "tokens": 9106
+  }
+ ],
+ "000876": [
+  {
+   "info_code": "AP202611031831361835",
+   "title": "公司信息更新报告：猪价下行与资产减值拖累业绩，行业产能去化孕育周期转机",
+   "org": "开源证券",
+   "date": "2026-11-03",
+   "pages": 4,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 13.8,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2027E",
+      "applied_to": "整体",
+      "quote": "当前股价对应2027-2028 年PE 为13.8/7.4 倍",
+      "page": 1
+     },
+     {
+      "method": "PE",
+      "multiple": 7.4,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2028E",
+      "applied_to": "整体",
+      "quote": "当前股价对应2027-2028 年PE 为13.8/7.4 倍",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 1086.68,
+      "net_profit_bn": -29.69,
+      "eps": -0.6,
+      "pe": -11.3
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 1235.17,
+      "net_profit_bn": 24.41,
+      "eps": 0.49,
+      "pe": 13.8
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 1352.91,
+      "net_profit_bn": 45.5,
+      "eps": 0.92,
+      "pe": 7.4
+     }
+    ],
+    "comparables": [],
+    "assumptions": [],
+    "logic": "报告未给出目标价，仅以当前股价对应2027-2028年PE 13.8/7.4倍作为估值参考，维持“买入”评级。核心逻辑是猪价下行与资产减值拖累当期业绩，但公司养殖成本逐步下降、饲料业务贡献稳定盈利，行业产能去化加速孕育周期修复，因此下调2026-2028年盈利预测后仍看好周期转机。"
+   },
+   "dropped": 0,
+   "tokens": 5351
+  },
+  {
+   "info_code": "AP202609041829026198",
+   "title": "公司信息更新报告：饲料业务表现亮眼海外增长提速，猪养殖业务承压",
+   "org": "开源证券",
+   "date": "2026-09-04",
+   "pages": 4,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 14.3,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2027E",
+      "applied_to": "整体",
+      "quote": "当前股价对应2027-2028 年PE 为14.3/8.0 倍",
+      "page": 1
+     },
+     {
+      "method": "PE",
+      "multiple": 8.0,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2028E",
+      "applied_to": "整体",
+      "quote": "当前股价对应2027-2028 年PE 为14.3/8.0 倍",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 1098.04,
+      "net_profit_bn": -16.09,
+      "eps": -0.32,
+      "pe": -23.7
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 1233.46,
+      "net_profit_bn": 26.66,
+      "eps": 0.54,
+      "pe": 14.3
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 1340.1,
+      "net_profit_bn": 47.73,
+      "eps": 0.96,
+      "pe": 8.0
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "饲料",
+      "metric": "销量",
+      "year": "2026H1",
+      "value": "1625",
+      "unit": "万吨",
+      "quote": "2026H1 饲料总销量1625 万吨，其中外销量1316 万吨",
+      "page": 1
+     },
+     {
+      "segment": "饲料",
+      "metric": "毛利率",
+      "year": "2026H1",
+      "value": "5.23",
+      "unit": "%",
+      "quote": "毛利率5.23%，同比-0.15pct",
+      "page": 1
+     },
+     {
+      "segment": "海外业务",
+      "metric": "收入",
+      "year": "2026H1",
+      "value": "128.11",
+      "unit": "亿元",
+      "quote": "2026H1 公司国外地区收入128.11 亿元，同比+18.61%",
+      "page": 1
+     },
+     {
+      "segment": "生猪养殖",
+      "metric": "商品猪销售均价",
+      "year": "2026H1",
+      "value": "10.19",
+      "unit": "元/公斤",
+      "quote": "2026H1 商品猪销售均价10.19 元/公斤，同比-30.61%",
+      "page": 1
+     }
+    ],
+    "logic": "报告未给出目标价，仅以当前股价对应2027-2028年PE 14.3/8.0倍作为估值参考，维持买入评级。核心逻辑是饲料业务销量与利润双创新高、海外收入增速领先，叠加养殖成本逐步下降，但猪价下行拖累猪产业收入，故下调2026-2027年盈利预测。"
+   },
+   "dropped": 0,
+   "tokens": 5654
+  },
+  {
+   "info_code": "AP202605081822085348",
+   "title": "养殖成本下降，饲料业务盈利高增",
+   "org": "中邮证券",
+   "date": "2026-05-08",
+   "pages": 5,
+   "valuation": {
+    "rating": "增持",
+    "target_price": null,
+    "methods": [],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 1190.05,
+      "net_profit_bn": -5.34,
+      "eps": -0.12,
+      "pe": -74.26
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 1366.69,
+      "net_profit_bn": 35.49,
+      "eps": 0.79,
+      "pe": 11.17
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 1454.63,
+      "net_profit_bn": 31.35,
+      "eps": 0.7,
+      "pe": 12.64
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "饲料",
+      "metric": "销量",
+      "year": "2025A",
+      "value": "2974",
+      "unit": "万吨",
+      "quote": "2025 年及26 年Q1 公司饲料销量分别为2974 万吨、773 万吨",
+      "page": 1
+     },
+     {
+      "segment": "饲料",
+      "metric": "销量",
+      "year": "2026Q1",
+      "value": "773",
+      "unit": "万吨",
+      "quote": "2025 年及26 年Q1 公司饲料销量分别为2974 万吨、773 万吨",
+      "page": 1
+     },
+     {
+      "segment": "养殖",
+      "metric": "肥猪完全成本",
+      "year": "2025A",
+      "value": "12.84",
+      "unit": "元/公斤",
+      "quote": "25 年全年完全成本12.84 元/公斤，同比降1.69 元",
+      "page": 1
+     },
+     {
+      "segment": "养殖",
+      "metric": "肥猪完全成本",
+      "year": "2026Q1",
+      "value": "12.22",
+      "unit": "元/公斤",
+      "quote": "26 年Q1 进一步下降至12.22 元/公斤",
+      "page": 1
+     },
+     {
+      "segment": "养殖",
+      "metric": "出栏量",
+      "year": "2025A",
+      "value": "1754.53",
+      "unit": "万头",
+      "quote": "25 年全年出栏生猪1754.53 万头",
+      "page": 1
+     }
+    ],
+    "logic": "报告未给出目标价与明确估值倍数，仅基于盈利预测给出2026-2028年EPS分别为-0.12元、0.79元和0.70元，并维持“增持”评级。核心驱动为饲料销量高增与降本增效带动饲料盈利增长，同时养殖完全成本下降，但猪价下行拖累养殖业务亏损。"
+   },
+   "dropped": 0,
+   "tokens": 4338
+  }
+ ],
+ "000895": [
+  {
+   "info_code": "AP202611011831293968",
+   "title": "公司信息更新报告：低猪价背景坚持稳利扩量，新兴渠道表现亮眼",
+   "org": "开源证券",
+   "date": "2026-11-01",
+   "pages": 4,
+   "valuation": {
+    "rating": "增持",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 17.1,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "当前股价对应PE 为17.1、16.5、15.9 倍",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 589.02,
+      "net_profit_bn": 49.57,
+      "eps": 1.43,
+      "pe": 17.1
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 608.87,
+      "net_profit_bn": 51.32,
+      "eps": 1.48,
+      "pe": 16.5
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 634.81,
+      "net_profit_bn": 53.23,
+      "eps": 1.54,
+      "pe": 15.9
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "肉制品",
+      "metric": "销量",
+      "year": "2026E",
+      "value": "约39",
+      "unit": "万吨",
+      "quote": "其中销量/单价分别约为39万吨、17 元/公斤",
+      "page": 1
+     },
+     {
+      "segment": "肉制品",
+      "metric": "单价",
+      "year": "2026E",
+      "value": "17",
+      "unit": "元/公斤",
+      "quote": "其中销量/单价分别约为39万吨、17 元/公斤",
+      "page": 1
+     },
+     {
+      "segment": "肉制品",
+      "metric": "吨利",
+      "year": "2026E",
+      "value": "超4600",
+      "unit": "元",
+      "quote": "吨利超4600 元，同比-11%，主因加大市场费用投入",
+      "page": 1
+     },
+     {
+      "segment": "屠宰",
+      "metric": "生鲜猪肉销量",
+      "year": "2026E",
+      "value": "约39",
+      "unit": "万吨",
+      "quote": "分别约为39 万吨、14 元/公斤，同比分别-2%/-18%",
+      "page": 1
+     },
+     {
+      "segment": "屠宰",
+      "metric": "生鲜猪肉单价",
+      "year": "2026E",
+      "value": "14",
+      "unit": "元/公斤",
+      "quote": "分别约为39 万吨、14 元/公斤，同比分别-2%/-18%",
+      "page": 1
+     }
+    ],
+    "logic": "报告未给出目标价，采用当前股价对应PE（2026-2028年17.1/16.5/15.9倍）作为估值参考，维持增持评级。核心驱动为肉制品专业化改革与新兴渠道放量、屠宰业务稳利扩量，关键假设是全年肉制品吨利维持高位、禽产业增利而养猪业务受低猪价拖累增亏。"
+   },
+   "dropped": 0,
+   "tokens": 5580
+  },
+  {
+   "info_code": "AP202610291831147026",
+   "title": "2026年三季报点评：Q3归母净利同比承压，猪肉价格下降拖累阶段性经营表现",
+   "org": "国信证券",
+   "date": "2026-10-29",
+   "pages": 6,
+   "valuation": {
+    "rating": "优于大市",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 16.1,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "对应PE 分别为16.1/15.5/15.4 X，维持“优于大市”",
+      "page": 3
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 598.8,
+      "net_profit_bn": 51.4,
+      "eps": 1.48,
+      "pe": 16.1
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 644.16,
+      "net_profit_bn": 53.64,
+      "eps": 1.55,
+      "pe": 15.5
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 687.48,
+      "net_profit_bn": 53.8,
+      "eps": 1.55,
+      "pe": 15.4
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "整体",
+      "metric": "毛利率",
+      "year": "2026E",
+      "value": "19",
+      "unit": "%",
+      "quote": "毛利率 18% 18% 19% 18% 17%",
+      "page": 4
+     }
+    ],
+    "logic": "采用PE相对估值，以2026E归母净利51.40亿元对应PE 16.1倍，维持“优于大市”。核心驱动为屠宰龙头地位与肉制品新渠道放量，关键假设是猪价下滑致冻品减值增加、拖累产品销价，故下调盈利预测。"
+   },
+   "dropped": 0,
+   "tokens": 5414
+  },
+  {
+   "info_code": "AP202605061821995914",
+   "title": "公司信息更新报告：一季度业绩表现良好，肉类销量高增验证改革成效",
+   "org": "开源证券",
+   "date": "2026-05-06",
+   "pages": 4,
+   "valuation": {
+    "rating": "增持",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 18.0,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "当前股价对应PE 为18.0、17.4、16.8 倍",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 617.5,
+      "net_profit_bn": 53.35,
+      "eps": 1.54,
+      "pe": 18.0
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 640.04,
+      "net_profit_bn": 55.25,
+      "eps": 1.59,
+      "pe": 17.4
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 663.74,
+      "net_profit_bn": 57.09,
+      "eps": 1.65,
+      "pe": 16.8
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "肉制品",
+      "metric": "销量",
+      "year": "2026Q1",
+      "value": "35.8",
+      "unit": "万吨",
+      "quote": "其中销量/单价分别约为35.8万吨、17.9 元/公斤，同比分别+15.1%、-0.6%",
+      "page": 1
+     },
+     {
+      "segment": "肉制品",
+      "metric": "吨利",
+      "year": "2026Q1",
+      "value": "4921",
+      "unit": "元/吨",
+      "quote": "吨利约4921 元，同比+3.7%",
+      "page": 1
+     },
+     {
+      "segment": "屠宰",
+      "metric": "屠宰量",
+      "year": "2026Q1",
+      "value": "382",
+      "unit": "万头",
+      "quote": "屠宰量382 万头，同增33.8%，头均利润31.2 元/头，同比降25.4%",
+      "page": 1
+     }
+    ],
+    "logic": "报告未给出目标价，采用当前股价对应2026E PE 18.0倍作为估值参考，维持增持评级。核心驱动为肉制品专业化改革带动销量高增（新兴渠道高增）与屠宰稳利扩量，关键假设为全年肉制品吨利稳中有降仍处高位、屠宰量继续快速增长而头均利润稳中略降。"
+   },
+   "dropped": 0,
+   "tokens": 5514
+  }
+ ],
+ "002714": [
+  {
+   "info_code": "AP202602251820031517",
+   "title": "深度报告：一体化龙头 竞争优势显著",
+   "org": "东莞证券",
+   "date": "2026-02-25",
+   "pages": 19,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 17,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2025E",
+      "applied_to": "整体",
+      "quote": "预计公司2025—2026年EPS分别为2.67元和3.66元，对应PE分别为17倍和12倍",
+      "page": 1
+     },
+     {
+      "method": "PE",
+      "multiple": 12,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "预计公司2025—2026年EPS分别为2.67元和3.66元，对应PE分别为17倍和12倍",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2025E",
+      "revenue_bn": 1633.75,
+      "net_profit_bn": 153.12,
+      "eps": 2.67,
+      "pe": 17
+     },
+     {
+      "year": "2026E",
+      "revenue_bn": 1892.82,
+      "net_profit_bn": 209.96,
+      "eps": 3.66,
+      "pe": 12
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 2156.92,
+      "net_profit_bn": 225.94,
+      "eps": 3.94,
+      "pe": 11
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "生猪养殖",
+      "metric": "完全成本",
+      "year": "2025",
+      "value": "11.3",
+      "unit": "元/kg",
+      "quote": "2025年逐月下降，10月已降至11.3元/kg，较1月下降1.8元/kg",
+      "page": 1
+     },
+     {
+      "segment": "生猪养殖",
+      "metric": "完全成本",
+      "year": "2024",
+      "value": "14.0",
+      "unit": "元/kg",
+      "quote": "2024年全年约为14.0元/kg，较2022年全年的15.7元/kg明显下降",
+      "page": 1
+     },
+     {
+      "segment": "屠宰肉食",
+      "metric": "屠宰产能",
+      "year": "2024",
+      "value": "2900",
+      "unit": "万头",
+      "quote": "截至2024年末，公司已投产10家屠宰厂，年屠宰产能达到2900万头",
+      "page": 1
+     },
+     {
+      "segment": "屠宰肉食",
+      "metric": "屠宰量",
+      "year": "2025",
+      "value": "2866",
+      "unit": "万头",
+      "quote": "2025年，公司屠宰生猪达到2866万头",
+      "page": 1
+     }
+    ],
+    "logic": "采用PE相对估值法，基于2025—2026年EPS 2.67元和3.66元，对应现价PE分别为17倍和12倍，维持“买入”评级。核心驱动为生猪养殖一体化龙头的成本优势（完全成本降至11.3元/kg）与屠宰肉食业务快速扩张，叠加行业短期周期回升及中长期规模化集中度提升空间。"
+   },
+   "dropped": 0,
+   "tokens": 4450
+  },
+  {
+   "info_code": "AP202602061819805735",
+   "title": "公司深度报告：以成本优势构筑护城河，驱动产能与业务双扩张",
+   "org": "华鑫证券",
+   "date": "2026-02-06",
+   "pages": 20,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 16.5,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2025E",
+      "applied_to": "整体",
+      "quote": "当前股价对应PE分别为16.5、13.6、7.8倍",
+      "page": 2
+     },
+     {
+      "method": "PE",
+      "multiple": 13.6,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "当前股价对应PE分别为16.5、13.6、7.8倍",
+      "page": 2
+     },
+     {
+      "method": "PE",
+      "multiple": 7.8,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2027E",
+      "applied_to": "整体",
+      "quote": "当前股价对应PE分别为16.5、13.6、7.8倍",
+      "page": 2
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2025E",
+      "revenue_bn": 1344.18,
+      "net_profit_bn": 155.1,
+      "eps": 2.84,
+      "pe": 16.5
+     },
+     {
+      "year": "2026E",
+      "revenue_bn": 1329.89,
+      "net_profit_bn": 187.52,
+      "eps": 3.43,
+      "pe": 13.6
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 1617.67,
+      "net_profit_bn": 326.64,
+      "eps": 5.98,
+      "pe": 7.8
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "生猪养殖",
+      "metric": "出栏量",
+      "year": "2026E",
+      "value": "8200",
+      "unit": "万头",
+      "quote": "出栏量（万头）8,200",
+      "page": 16
+     },
+     {
+      "segment": "生猪养殖",
+      "metric": "猪价",
+      "year": "2026E",
+      "value": "12.50",
+      "unit": "元/公斤",
+      "quote": "中性情景下的价格设定在12.5和13.5元/公斤",
+      "page": 16
+     },
+     {
+      "segment": "生猪养殖",
+      "metric": "成本",
+      "year": "2026E",
+      "value": "10.80",
+      "unit": "元/公斤",
+      "quote": "成本（元/公斤）10.80",
+      "page": 16
+     },
+     {
+      "segment": "生猪养殖",
+      "metric": "成本",
+      "year": "2027E",
+      "value": "10.50",
+      "unit": "元/公斤",
+      "quote": "预计降至10.5元/公斤",
+      "page": 16
+     },
+     {
+      "segment": "仔猪",
+      "metric": "出栏量",
+      "year": "2026E",
+      "value": "1200",
+      "unit": "万头",
+      "quote": "仔猪量（万头）1,200",
+      "page": 16
+     },
+     {
+      "segment": "仔猪",
+      "metric": "价格",
+      "year": "2026E",
+      "value": "230-320",
+      "unit": "元/头",
+      "quote": "对于仔猪价格，我们假设其在230-320元/头之间波动",
+      "page": 16
+     }
+    ],
+    "logic": "报告未给出目标价，采用PE估值并以当前股价对应2025-2027年PE 16.5/13.6/7.8倍，给予买入评级。核心驱动为生猪及仔猪价格情景假设、养殖成本降至10.5元/公斤及出栏量稳步增长。"
+   },
+   "dropped": 0,
+   "tokens": 6518
+  },
+  {
+   "info_code": "AP202610311831278754",
+   "title": "公司信息更新报告：养殖屠宰双轮驱动，成本优势应对周期低谷",
+   "org": "开源证券",
+   "date": "2026-10-31",
+   "pages": 4,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 10.3,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2027E",
+      "applied_to": "整体",
+      "quote": "当前股价对应2027-2028 年PE 为10.3/7.0 倍",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 1041.64,
+      "net_profit_bn": -87.51,
+      "eps": -1.52,
+      "pe": -26.7
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 1362.71,
+      "net_profit_bn": 227.42,
+      "eps": 3.94,
+      "pe": 10.3
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 1470.1,
+      "net_profit_bn": 331.98,
+      "eps": 5.75,
+      "pe": 7.0
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "生猪养殖",
+      "metric": "完全成本",
+      "year": "2026E",
+      "value": "略低于11.5",
+      "unit": "元/公斤",
+      "quote": "公司2026 年9 月的生猪养殖完全成本略低于11.5 元/kg",
+      "page": 1
+     }
+    ],
+    "logic": "报告未给出目标价，采用PE相对估值，以当前股价对应2027-2028年PE 10.3/7.0倍判断估值，维持买入。核心驱动为生猪养殖与屠宰双轮驱动、成本控制行业领先（9月完全成本略低于11.5元/kg），关键假设是猪价预期下调导致2026年亏损、2027-2028年盈利修复。"
+   },
+   "dropped": 0,
+   "tokens": 5296
+  }
+ ],
+ "300498": [
+  {
+   "info_code": "AP202610301831253108",
+   "title": "Q3肉鸡业务环比回暖，生猪业务仍承压",
+   "org": "山西证券",
+   "date": "2026-10-30",
+   "pages": 4,
+   "valuation": {
+    "rating": "买入-B",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PB",
+      "multiple": 2.9,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2026E",
+      "applied_to": "整体",
+      "quote": "当前股价对应2026 年PB 为2.9 倍，维持“买入-B”评级",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 978.48,
+      "net_profit_bn": -42.62,
+      "eps": -0.64,
+      "pe": -24.7
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 1163.39,
+      "net_profit_bn": 65.04,
+      "eps": 0.98,
+      "pe": 16.2
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 1241.98,
+      "net_profit_bn": 110.23,
+      "eps": 1.66,
+      "pe": 9.5
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "肉鸡",
+      "metric": "出栏完全成本",
+      "year": "2026E",
+      "value": "5.8-5.9",
+      "unit": "元/斤",
+      "quote": "8 月出栏完全成本为5.8-5.9 元/斤",
+      "page": 1
+     },
+     {
+      "segment": "肉猪",
+      "metric": "养殖综合成本",
+      "year": "2026E",
+      "value": "6 以下",
+      "unit": "元/斤",
+      "quote": "8 月肉猪养殖综合成本降至6 元/斤以下",
+      "page": 1
+     }
+    ],
+    "logic": "报告未给出目标价，仅以当前股价对应2026年PB 2.9倍作为估值参照并维持买入-B评级。核心驱动为肉鸡业务Q3环比回暖、生猪业务受猪价低迷承压，关键假设为毛鸡出栏完全成本5.8-5.9元/斤、肉猪综合成本降至6元/斤以下。"
+   },
+   "dropped": 0,
+   "tokens": 4208
+  },
+  {
+   "info_code": "AP202610271831019978",
+   "title": "温氏股份季报点评：黄鸡业务量利齐升，养猪成本持续优化",
+   "org": "太平洋",
+   "date": "2026-10-27",
+   "pages": 4,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 10.2,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2027E",
+      "applied_to": "整体",
+      "quote": "对应27 年的PE 为10.2倍，维持“买入”评级",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 957.51,
+      "net_profit_bn": -8.76,
+      "eps": -0.13,
+      "pe": -120.27
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 1096.44,
+      "net_profit_bn": 103.32,
+      "eps": 1.55,
+      "pe": 10.2
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 1134.45,
+      "net_profit_bn": 131.25,
+      "eps": 1.97,
+      "pe": 8.03
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "黄鸡业务",
+      "metric": "毛鸡销售均价",
+      "year": "2026E",
+      "value": "11.61",
+      "unit": "元/公斤",
+      "quote": "公司毛鸡销售均价为11.61 元/公斤，同比上涨7.1%",
+      "page": 1
+     },
+     {
+      "segment": "黄鸡业务",
+      "metric": "毛鸡出栏完全成本",
+      "year": "2026E",
+      "value": "5.8-5.9",
+      "unit": "元/斤",
+      "quote": "8 月份毛鸡出栏完全成本为5.8-5.9 元/斤",
+      "page": 1
+     },
+     {
+      "segment": "生猪养殖业务",
+      "metric": "肉猪销售均价",
+      "year": "2026E",
+      "value": "10.5",
+      "unit": "元/公斤",
+      "quote": "公司肉猪销售均价为10.5 元/公斤，同比下降29.67%",
+      "page": 1
+     },
+     {
+      "segment": "生猪养殖业务",
+      "metric": "养殖成本",
+      "year": "2026E",
+      "value": "12.1",
+      "unit": "元/公斤",
+      "quote": "上半年公司养殖成本为12.1 元/公斤，同比下降",
+      "page": 1
+     }
+    ],
+    "logic": "采用PE相对估值，以2027年归母净利润103.32亿元、EPS 1.55元对应10.2倍PE维持买入评级。核心驱动为黄鸡业务量利齐升与生猪养殖成本持续优化，关键假设为猪鸡价格及成本走势。"
+   },
+   "dropped": 0,
+   "tokens": 4015
+  },
+  {
+   "info_code": "AP202610261830912565",
+   "title": "公司信息更新报告：猪业深亏鸡业量价齐升，行业产能去化加速下布局周期修复",
+   "org": "开源证券",
+   "date": "2026-10-26",
+   "pages": 4,
+   "valuation": {
+    "rating": "买入",
+    "target_price": null,
+    "methods": [
+     {
+      "method": "PE",
+      "multiple": 11.8,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2027E",
+      "applied_to": "整体",
+      "quote": "当前股价对应2027-2028 年PE 为11.8/7.3 倍",
+      "page": 1
+     },
+     {
+      "method": "PE",
+      "multiple": 7.3,
+      "multiple_kind": "implied_at_price",
+      "base_year": "2028E",
+      "applied_to": "整体",
+      "quote": "当前股价对应2027-2028 年PE 为11.8/7.3 倍",
+      "page": 1
+     }
+    ],
+    "forecasts": [
+     {
+      "year": "2026E",
+      "revenue_bn": 949.44,
+      "net_profit_bn": -38.35,
+      "eps": -0.58,
+      "pe": -27.5
+     },
+     {
+      "year": "2027E",
+      "revenue_bn": 1138.51,
+      "net_profit_bn": 89.31,
+      "eps": 1.34,
+      "pe": 11.8
+     },
+     {
+      "year": "2028E",
+      "revenue_bn": 1236.74,
+      "net_profit_bn": 144.99,
+      "eps": 2.18,
+      "pe": 7.3
+     }
+    ],
+    "comparables": [],
+    "assumptions": [
+     {
+      "segment": "生猪养殖",
+      "metric": "出栏量",
+      "year": "2026Q1-Q3",
+      "value": "2651.17",
+      "unit": "万头",
+      "quote": "2026Q1-Q3 公司实现生猪出栏2651.17 万头，同比-4.18%",
+      "page": 1
+     },
+     {
+      "segment": "生猪养殖",
+      "metric": "毛猪销售均价",
+      "year": "2026Q1-Q3",
+      "value": "10.59",
+      "unit": "元/公斤",
+      "quote": "毛猪销售均价10.59 元/公斤，同比-27.32%",
+      "page": 1
+     },
+     {
+      "segment": "生猪养殖",
+      "metric": "肉猪养殖综合成本",
+      "year": "2026年8月",
+      "value": "6以下",
+      "unit": "元/斤",
+      "quote": "2026 年8 月，公司肉猪养殖综合成本降至6 元/斤以下",
+      "page": 1
+     },
+     {
+      "segment": "肉鸡养殖",
+      "metric": "销量",
+      "year": "2026Q1-Q3",
+      "value": "9.96",
+      "unit": "亿只",
+      "quote": "2026Q1-Q3 公司实现肉鸡销量9.96 亿只，同比+5.04%",
+      "page": 1
+     },
+     {
+      "segment": "肉鸡养殖",
+      "metric": "毛鸡销售均价",
+      "year": "2026Q1-Q3",
+      "value": "12.11",
+      "unit": "元/公斤",
+      "quote": "毛鸡销售均价12.11 元/公斤，同比+7.87%",
+      "page": 1
+     },
+     {
+      "segment": "肉鸡养殖",
+      "metric": "毛鸡出栏完全成本",
+      "year": "2026年8月",
+      "value": "5.8-5.9",
+      "unit": "元/斤",
+      "quote": "2026 年8 月毛鸡出栏完全成本为5.8-5.9 元/斤",
+      "page": 1
+     }
+    ],
+    "logic": "报告未给出目标价，采用PE相对估值，以当前股价对应2027/2028年PE 11.8/7.3倍衡量估值，维持买入评级。核心驱动为生猪养殖成本稳步下降、肉鸡出栏稳健增长，叠加行业产能去化加速下布局周期修复；关键假设为2027-2028年归母净利润回升至89.31/144.99亿元。"
+   },
+   "dropped": 0,
+   "tokens": 5881
+  }
+ ]
+}

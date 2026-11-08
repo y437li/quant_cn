@@ -1,0 +1,412 @@
+# Computer (SW 710000) product taxonomy prior (plan 12 phase 1, D-097). Format: README.md.
+sector: {sw_l1: "710000", name: 计算机, name_en: Computer}
+
+nodes:
+  # ---------------- segments ----------------
+  - {id: SEG_COMP_HARDWARE, type: segment, name: 计算机设备, name_en: Computer Hardware}
+  - {id: SEG_COMP_SECURITY, type: segment, name: 安防设备, name_en: Security and Surveillance Equipment}
+  - {id: SEG_COMP_OTHER_HARDWARE, type: segment, name: 其他计算机设备, name_en: Other Computer Equipment}
+  - {id: SEG_COMP_SERVER, type: segment, name: 服务器, name_en: Servers}
+  - {id: SEG_COMP_STORAGE, type: segment, name: 存储设备, name_en: Storage Systems}
+  - {id: SEG_COMP_TERMINAL, type: segment, name: 计算机终端与外设, name_en: Computer Terminals and Peripherals}
+  - {id: SEG_COMP_DC_INFRA, type: segment, name: 数据中心基础设施, name_en: Data Center Infrastructure}
+  - {id: SEG_COMP_FINANCIAL_EQUIPMENT, type: segment, name: 金融与商用机具, name_en: Financial and Commercial Terminals}
+  - {id: SEG_COMP_IT_SERVICES, type: segment, name: IT服务, name_en: IT Services}
+  - {id: SEG_COMP_IDC_COMPUTING, type: segment, name: IDC与算力服务, name_en: IDC and Computing Services}
+  - {id: SEG_COMP_CLOUD, type: segment, name: 云服务, name_en: Cloud Services}
+  - {id: SEG_COMP_INTEGRATION, type: segment, name: 系统集成与IT外包, name_en: System Integration and IT Outsourcing}
+  - {id: SEG_COMP_DATA_SERVICES, type: segment, name: 数据服务, name_en: Data Services}
+  - {id: SEG_COMP_DIGITAL_GOV, type: segment, name: 数字政府与智慧城市, name_en: Digital Government and Smart City}
+  - {id: SEG_COMP_SOFTWARE, type: segment, name: 软件开发, name_en: Software Development}
+  - {id: SEG_COMP_VERTICAL_SOFTWARE, type: segment, name: 垂直应用软件, name_en: Vertical Application Software}
+  - {id: SEG_COMP_FINTECH, type: segment, name: 金融IT, name_en: Financial IT}
+  - {id: SEG_COMP_HEALTHCARE_IT, type: segment, name: 医疗IT, name_en: Healthcare IT}
+  - {id: SEG_COMP_INDUSTRIAL_SOFTWARE, type: segment, name: 工业软件行业, name_en: Industrial Software Industry}
+  - {id: SEG_COMP_AUTO_SOFTWARE, type: segment, name: 汽车软件, name_en: Automotive Software}
+  - {id: SEG_COMP_INDUSTRY_IT, type: segment, name: 行业信息化, name_en: Industry IT Solutions}
+  - {id: SEG_COMP_GENERAL_SOFTWARE, type: segment, name: 横向通用软件, name_en: Horizontal General Software}
+  - {id: SEG_COMP_BASIC_SOFTWARE, type: segment, name: 基础软件, name_en: Basic Software}
+  - {id: SEG_COMP_ENTERPRISE_SOFTWARE, type: segment, name: 企业管理与办公软件, name_en: Enterprise and Office Software}
+  - {id: SEG_COMP_CYBERSECURITY, type: segment, name: 网络安全, name_en: Cybersecurity}
+  - {id: SEG_COMP_AI_SOFTWARE, type: segment, name: 人工智能软件, name_en: AI Software}
+
+  # ---------------- security equipment ----------------
+  - {id: PROD_COMP_SECURITY_CAMERA, type: product, name: 网络摄像机, name_en: IP Camera, segment: SEG_COMP_SECURITY, aliases: [IPC, 监控摄像机, 安防摄像机]}
+  - {id: PROD_COMP_NVR, type: product, name: 视频存储设备, name_en: Video Recorder, segment: SEG_COMP_SECURITY, aliases: [NVR, 硬盘录像机]}
+  - {id: PROD_COMP_VIDEO_PLATFORM, type: product, name: 视频管理与智能分析平台, name_en: Video Management and Analytics Platform, segment: SEG_COMP_SECURITY, aliases: [视频云, 智能视频分析]}
+  - {id: PROD_COMP_ACCESS_CONTROL, type: product, name: 门禁与楼宇对讲, name_en: Access Control and Intercom, segment: SEG_COMP_SECURITY, aliases: [门禁, 可视对讲]}
+  - {id: PROD_COMP_MACHINE_VISION, type: product, name: 机器视觉产品, name_en: Machine Vision Products, segment: SEG_COMP_SECURITY, import_dependence: medium, aliases: [智能读码器]}
+  - {id: PROD_COMP_HOME_CAMERA, type: product, name: 智能家居摄像机, name_en: Smart Home Camera, segment: SEG_COMP_SECURITY, aliases: [家用摄像头, 消费级摄像机]}
+
+  # ---------------- servers / storage / terminals ----------------
+  - {id: PROD_COMP_SERVER, type: product, name: 服务器产品, name_en: Server, segment: SEG_COMP_SERVER}
+  - {id: PROD_COMP_AI_SERVER, type: product, name: AI服务器, name_en: AI Server, parent: PROD_COMP_SERVER, segment: SEG_COMP_SERVER, aliases: [GPU服务器, 训练服务器, 推理服务器, 智算服务器]}
+  - {id: PROD_COMP_RACK_SCALE_AI, type: product, name: 整机柜AI服务器, name_en: Rack-Scale AI System, parent: PROD_COMP_AI_SERVER, segment: SEG_COMP_SERVER, import_dependence: medium, aliases: [超节点, 机柜级服务器, NVL72, GB200机柜]}
+  - {id: PROD_COMP_AI_WORKSTATION, type: product, name: 大模型一体机, name_en: LLM Appliance, parent: PROD_COMP_AI_SERVER, segment: SEG_COMP_SERVER, aliases: [训推一体机, AI一体机]}
+  - {id: PROD_COMP_GENERAL_SERVER, type: product, name: 通用服务器, name_en: General-Purpose Server, parent: PROD_COMP_SERVER, segment: SEG_COMP_SERVER, aliases: [通用计算服务器, x86服务器, 信创服务器]}
+  - {id: PROD_COMP_EDGE_SERVER, type: product, name: 边缘服务器, name_en: Edge Server, parent: PROD_COMP_SERVER, segment: SEG_COMP_SERVER, aliases: [边缘计算服务器]}
+  - {id: PROD_COMP_AI_ACCELERATOR_CARD, type: product, name: AI加速卡, name_en: AI Accelerator Card, segment: SEG_COMP_SERVER, import_dependence: high, aliases: [GPU模组, OAM模组, 算力卡, 加速卡]}
+  - {id: PROD_COMP_MOTHERBOARD, type: product, name: 服务器主板, name_en: Server Motherboard, segment: SEG_COMP_SERVER, aliases: [主板]}
+  - {id: PROD_COMP_SERVER_ODM, type: product, name: 服务器ODM, name_en: Server ODM, kind: service, segment: SEG_COMP_SERVER, aliases: [服务器代工, 云服务器ODM, L10/L11整机柜代工]}
+  - {id: PROD_COMP_STORAGE_ARRAY, type: product, name: 存储系统, name_en: Storage System, segment: SEG_COMP_STORAGE, aliases: [存储阵列, 全闪存储, 分布式存储, 企业级存储]}
+  - {id: PROD_COMP_PC_DEVICE, type: product, name: 电脑整机, name_en: PC Device, segment: SEG_COMP_TERMINAL, aliases: [台式机, 笔记本]}
+  - {id: PROD_COMP_XINCHUANG_PC, type: product, name: 信创PC, name_en: Domestic IT-Innovation PC, parent: PROD_COMP_PC_DEVICE, segment: SEG_COMP_TERMINAL, aliases: [国产化PC, 信创终端]}
+  - {id: PROD_COMP_PRINTER, type: product, name: 打印机, name_en: Printer, segment: SEG_COMP_TERMINAL, aliases: [激光打印机, 信创打印机]}
+  - {id: PROD_COMP_PRINTER_CONSUMABLES, type: product, name: 打印耗材, name_en: Printer Consumables, segment: SEG_COMP_TERMINAL, aliases: [硒鼓, 墨盒, 碳粉, 通用耗材]}
+  - {id: PROD_COMP_PRINTER_CHIP, type: product, name: 耗材芯片, name_en: Consumable Chip, segment: SEG_COMP_TERMINAL, aliases: [打印耗材芯片]}
+  - {id: PROD_COMP_INDUSTRIAL_PC, type: product, name: 工控机, name_en: Industrial PC, segment: SEG_COMP_TERMINAL, aliases: [工业计算机, 工业平板]}
+  - {id: PROD_COMP_AI_LEARNING_DEVICE, type: product, name: AI学习机, name_en: AI Learning Device, segment: SEG_COMP_TERMINAL, aliases: [学习机, 词典笔, 智慧黑板]}
+  - {id: PROD_COMP_POS, type: product, name: POS支付终端, name_en: POS Terminal, segment: SEG_COMP_FINANCIAL_EQUIPMENT, aliases: [POS机, 智能POS, 收单终端]}
+  - {id: PROD_COMP_ATM, type: product, name: 金融自助设备, name_en: Financial Self-Service Equipment, segment: SEG_COMP_FINANCIAL_EQUIPMENT, aliases: [ATM, 自助柜员机, 现金处理设备]}
+  - {id: PROD_COMP_BARCODE, type: product, name: 条码识读设备, name_en: Barcode Scanner, segment: SEG_COMP_FINANCIAL_EQUIPMENT, aliases: [扫码枪, 条码扫描器, 扫码模组]}
+
+  # ---------------- data-center infrastructure ----------------
+  - {id: PROD_COMP_LIQUID_COOLING, type: product, name: 液冷系统, name_en: Liquid Cooling System, segment: SEG_COMP_DC_INFRA, aliases: [液冷解决方案, 服务器液冷]}
+  - {id: PROD_COMP_COLD_PLATE, type: product, name: 液冷冷板, name_en: Cold Plate, parent: PROD_COMP_LIQUID_COOLING, segment: SEG_COMP_DC_INFRA, aliases: [冷板]}
+  - {id: PROD_COMP_UQD, type: product, name: 液冷快接头, name_en: Universal Quick Disconnect, parent: PROD_COMP_LIQUID_COOLING, segment: SEG_COMP_DC_INFRA, import_dependence: medium, aliases: [快接头, UQD, 快速接头]}
+  - {id: PROD_COMP_MANIFOLD, type: product, name: 液冷分歧管, name_en: Liquid Cooling Manifold, parent: PROD_COMP_LIQUID_COOLING, segment: SEG_COMP_DC_INFRA, aliases: [Manifold, 分水器]}
+  - {id: PROD_COMP_IMMERSION_TANK, type: product, name: 浸没式液冷机柜, name_en: Immersion Cooling Tank, parent: PROD_COMP_LIQUID_COOLING, segment: SEG_COMP_DC_INFRA, aliases: [浸没式液冷箱]}
+  - {id: PROD_COMP_SERVER_RACK, type: product, name: 服务器机柜, name_en: Server Rack, segment: SEG_COMP_DC_INFRA, aliases: [机柜, 微模块]}
+  - {id: PROD_COMP_PREFAB_DC, type: product, name: 预制模块化数据中心, name_en: Prefabricated Modular Data Center, segment: SEG_COMP_DC_INFRA, aliases: [集装箱数据中心, 预制化数据中心]}
+
+  # ---------------- IT services ----------------
+  - {id: PROD_COMP_IDC_SERVICE, type: product, name: IDC服务, name_en: IDC Service, kind: service, segment: SEG_COMP_IDC_COMPUTING, aliases: [数据中心服务, 机柜租赁, 托管服务]}
+  - {id: PROD_COMP_WHOLESALE_IDC, type: product, name: 批发型IDC, name_en: Wholesale IDC, kind: service, parent: PROD_COMP_IDC_SERVICE, segment: SEG_COMP_IDC_COMPUTING, aliases: [定制IDC, 批发数据中心]}
+  - {id: PROD_COMP_RETAIL_IDC, type: product, name: 零售型IDC, name_en: Retail IDC, kind: service, parent: PROD_COMP_IDC_SERVICE, segment: SEG_COMP_IDC_COMPUTING, aliases: [零售机柜]}
+  - {id: PROD_COMP_AI_COMPUTING_SERVICE, type: product, name: 智算服务, name_en: AI Computing Service, kind: service, segment: SEG_COMP_IDC_COMPUTING, aliases: [算力租赁, GPU云, AI算力服务, 算力服务]}
+  - {id: PROD_COMP_CDN, type: product, name: CDN与边缘计算服务, name_en: CDN and Edge Computing, kind: service, segment: SEG_COMP_IDC_COMPUTING, aliases: [CDN, 内容分发, 边缘云]}
+  - {id: PROD_COMP_PUBLIC_CLOUD, type: product, name: 公有云服务, name_en: Public Cloud, kind: service, segment: SEG_COMP_CLOUD, aliases: [公有云, IaaS, 云主机]}
+  - {id: PROD_COMP_PRIVATE_CLOUD, type: product, name: 私有云, name_en: Private Cloud, kind: service, segment: SEG_COMP_CLOUD, aliases: [专属云, 政务云, 行业云]}
+  - {id: PROD_COMP_HCI, type: product, name: 超融合, name_en: Hyper-Converged Infrastructure, segment: SEG_COMP_CLOUD, aliases: [超融合一体机, HCI]}
+  - {id: PROD_COMP_SYSTEM_INTEGRATION, type: product, name: 系统集成, name_en: System Integration, kind: service, segment: SEG_COMP_INTEGRATION, aliases: [IT系统集成, 信创集成]}
+  - {id: PROD_COMP_IT_OUTSOURCING, type: product, name: IT外包服务, name_en: IT Outsourcing, kind: service, segment: SEG_COMP_INTEGRATION, aliases: [软件外包, ITO]}
+  - {id: PROD_COMP_IT_OPS, type: product, name: IT运维服务, name_en: IT Operations Service, kind: service, segment: SEG_COMP_INTEGRATION, aliases: [运维服务, ITSM]}
+  - {id: PROD_COMP_IT_DISTRIBUTION, type: product, name: IT产品分销, name_en: IT Distribution, kind: service, segment: SEG_COMP_INTEGRATION, aliases: [IT分销, 增值分销]}
+  - {id: PROD_COMP_DATA_ANNOTATION, type: product, name: 数据标注, name_en: Data Annotation, kind: service, segment: SEG_COMP_DATA_SERVICES, aliases: [AI数据服务, 训练数据]}
+  - {id: PROD_COMP_DATA_ELEMENT, type: product, name: 数据要素运营, name_en: Data Asset Operation, kind: service, segment: SEG_COMP_DATA_SERVICES, aliases: [数据资产, 数据交易, 公共数据授权运营]}
+  - {id: PROD_COMP_BIG_DATA_PLATFORM, type: product, name: 大数据平台, name_en: Big Data Platform, segment: SEG_COMP_DATA_SERVICES, aliases: [数据中台, 数据治理]}
+  - {id: PROD_COMP_SMART_CITY, type: product, name: 智慧城市解决方案, name_en: Smart City Solution, kind: service, segment: SEG_COMP_DIGITAL_GOV, aliases: [城市大脑, 智慧城市项目]}
+  - {id: PROD_COMP_E_GOV, type: product, name: 数字政府, name_en: E-Government, kind: service, segment: SEG_COMP_DIGITAL_GOV, aliases: [政务信息化, 一网通办]}
+  - {id: PROD_COMP_PUBLIC_SECURITY_IT, type: product, name: 公安信息化, name_en: Public Security IT, segment: SEG_COMP_DIGITAL_GOV, aliases: [警务信息化, 智慧公安]}
+  - {id: PROD_COMP_DIGITAL_FORENSICS, type: product, name: 电子数据取证, name_en: Digital Forensics, segment: SEG_COMP_DIGITAL_GOV, aliases: [取证设备, 数字取证]}
+
+  # ---------------- vertical software ----------------
+  - {id: PROD_COMP_BANK_IT, type: product, name: 银行IT解决方案, name_en: Banking IT, segment: SEG_COMP_FINTECH, aliases: [银行核心系统, 信贷系统]}
+  - {id: PROD_COMP_SECURITIES_IT, type: product, name: 证券IT, name_en: Securities IT, segment: SEG_COMP_FINTECH, aliases: [交易系统, 资管系统, 证券核心系统]}
+  - {id: PROD_COMP_INSURANCE_IT, type: product, name: 保险IT, name_en: Insurance IT, segment: SEG_COMP_FINTECH, aliases: [保险核心系统]}
+  - {id: PROD_COMP_FIN_INFO, type: product, name: 金融信息服务, name_en: Financial Information Service, kind: service, segment: SEG_COMP_FINTECH, aliases: [行情软件, 金融终端, 金融数据]}
+  - {id: PROD_COMP_PAYMENT, type: product, name: 第三方支付, name_en: Third-Party Payment, kind: service, segment: SEG_COMP_FINTECH, aliases: [收单服务, 支付服务]}
+  - {id: PROD_COMP_HIS, type: product, name: 医院信息系统, name_en: Hospital Information System, segment: SEG_COMP_HEALTHCARE_IT, aliases: [HIS, 智慧医院]}
+  - {id: PROD_COMP_EMR, type: product, name: 电子病历, name_en: Electronic Medical Record, segment: SEG_COMP_HEALTHCARE_IT, aliases: [EMR]}
+  - {id: PROD_COMP_MEDICAL_INSURANCE_IT, type: product, name: 医保信息化, name_en: Medical Insurance IT, segment: SEG_COMP_HEALTHCARE_IT, aliases: [医保系统, DRG/DIP]}
+  - {id: PROD_COMP_REGIONAL_HEALTH, type: product, name: 区域卫生信息化, name_en: Regional Health IT, segment: SEG_COMP_HEALTHCARE_IT, aliases: [公卫系统]}
+  - {id: PROD_COMP_EDA, type: product, name: EDA软件, name_en: EDA Software, segment: SEG_COMP_INDUSTRIAL_SOFTWARE, import_dependence: high, aliases: [EDA工具, 电子设计自动化]}
+  - {id: PROD_COMP_CAD_CAE, type: product, name: 研发设计软件, name_en: CAD/CAE Software, segment: SEG_COMP_INDUSTRIAL_SOFTWARE, import_dependence: high, aliases: [CAD软件, CAE软件, 仿真软件]}
+  - {id: PROD_COMP_MES_SOFTWARE, type: product, name: 生产制造软件, name_en: Manufacturing Execution Software, segment: SEG_COMP_INDUSTRIAL_SOFTWARE, import_dependence: medium, aliases: [MES系统, SCADA, 生产管控]}
+  - {id: PROD_COMP_PLM, type: product, name: PLM软件, name_en: PLM Software, segment: SEG_COMP_INDUSTRIAL_SOFTWARE, import_dependence: high, aliases: [产品生命周期管理, PLM]}
+  - {id: PROD_COMP_INDUSTRIAL_INTERNET, type: product, name: 工业互联网平台, name_en: Industrial Internet Platform, segment: SEG_COMP_INDUSTRIAL_SOFTWARE, aliases: [工业互联网]}
+  - {id: PROD_COMP_BIM, type: product, name: 建筑信息化软件, name_en: Construction Software, segment: SEG_COMP_INDUSTRIAL_SOFTWARE, aliases: [BIM, 工程造价软件, 数字建造]}
+  - {id: PROD_COMP_GIS, type: product, name: GIS软件, name_en: GIS Software, segment: SEG_COMP_INDUSTRIAL_SOFTWARE, aliases: [地理信息系统, GIS]}
+  - {id: PROD_COMP_COCKPIT_SOFTWARE, type: product, name: 智能座舱软件, name_en: Smart Cockpit Software, segment: SEG_COMP_AUTO_SOFTWARE, aliases: [座舱OS, 车载操作系统]}
+  - {id: PROD_COMP_ADAS_SOFTWARE, type: product, name: 智能驾驶软件, name_en: Autonomous Driving Software, segment: SEG_COMP_AUTO_SOFTWARE, aliases: [智驾算法, 自动驾驶软件, 智驾解决方案, 智能驾驶算法软件, 端到端算法]}
+  - {id: PROD_COMP_HD_MAP, type: product, name: 导航与高精地图, name_en: Navigation and HD Map, segment: SEG_COMP_AUTO_SOFTWARE, aliases: [高精地图, 导航电子地图, 高精度地图]}
+  - {id: PROD_COMP_V2X, type: product, name: 车路协同, name_en: Vehicle-Road Cooperation, segment: SEG_COMP_AUTO_SOFTWARE, aliases: [车路云一体化, V2X路侧系统]}
+  - {id: PROD_COMP_POWER_IT, type: product, name: 电力信息化, name_en: Power Utility IT, segment: SEG_COMP_INDUSTRY_IT, aliases: [电网信息化, 用电信息采集系统, 电力营销系统, 电力信息化系统]}
+  - {id: PROD_COMP_TAX_IT, type: product, name: 财税信息化, name_en: Tax IT, segment: SEG_COMP_INDUSTRY_IT, aliases: [税务信息化, 电子发票, 税控]}
+  - {id: PROD_COMP_EDU_IT, type: product, name: 教育信息化, name_en: Education IT, segment: SEG_COMP_INDUSTRY_IT, aliases: [智慧教育, 智慧校园, 校园信息化]}
+  - {id: PROD_COMP_TRANSPORT_IT, type: product, name: 智慧交通, name_en: Intelligent Transportation, segment: SEG_COMP_INDUSTRY_IT, aliases: [交通信息化, ETC系统, 智慧高速]}
+  - {id: PROD_COMP_RAIL_IT, type: product, name: 轨交信息化, name_en: Rail Transit IT, segment: SEG_COMP_INDUSTRY_IT, aliases: [轨道交通信号, 智慧地铁]}
+
+  # ---------------- general software ----------------
+  - {id: PROD_COMP_OS, type: product, name: 操作系统, name_en: Operating System, segment: SEG_COMP_BASIC_SOFTWARE, import_dependence: high, aliases: [国产操作系统]}
+  - {id: PROD_COMP_SERVER_OS, type: product, name: 服务器操作系统, name_en: Server OS, parent: PROD_COMP_OS, segment: SEG_COMP_BASIC_SOFTWARE, import_dependence: medium, aliases: [服务器OS]}
+  - {id: PROD_COMP_DESKTOP_OS, type: product, name: 桌面操作系统, name_en: Desktop OS, parent: PROD_COMP_OS, segment: SEG_COMP_BASIC_SOFTWARE, import_dependence: high, aliases: [桌面OS]}
+  - {id: PROD_COMP_EMBEDDED_OS, type: product, name: 物联网与嵌入式操作系统, name_en: Embedded and IoT OS, parent: PROD_COMP_OS, segment: SEG_COMP_BASIC_SOFTWARE, aliases: [嵌入式OS, OpenHarmony发行版, RTOS]}
+  - {id: PROD_COMP_DATABASE, type: product, name: 数据库, name_en: Database, segment: SEG_COMP_BASIC_SOFTWARE, import_dependence: high, aliases: [国产数据库, DBMS, 关系型数据库]}
+  - {id: PROD_COMP_DISTRIBUTED_DB, type: product, name: 分布式数据库, name_en: Distributed Database, parent: PROD_COMP_DATABASE, segment: SEG_COMP_BASIC_SOFTWARE}
+  - {id: PROD_COMP_MIDDLEWARE, type: product, name: 中间件, name_en: Middleware, segment: SEG_COMP_BASIC_SOFTWARE, import_dependence: medium, aliases: [应用服务器中间件, 消息中间件]}
+  - {id: PROD_COMP_CLOUD_PLATFORM, type: product, name: 云平台软件, name_en: Cloud Platform Software, segment: SEG_COMP_BASIC_SOFTWARE, import_dependence: medium, aliases: [云操作系统, 虚拟化软件, 云管平台]}
+  - {id: PROD_COMP_ERP, type: product, name: ERP软件, name_en: ERP, segment: SEG_COMP_ENTERPRISE_SOFTWARE, import_dependence: medium, aliases: [ERP, 企业资源计划]}
+  - {id: PROD_COMP_FINANCE_SOFTWARE, type: product, name: 财务软件, name_en: Finance Software, segment: SEG_COMP_ENTERPRISE_SOFTWARE, aliases: [财务云, 会计软件]}
+  - {id: PROD_COMP_HCM, type: product, name: 人力资源软件, name_en: HCM Software, kind: service, segment: SEG_COMP_ENTERPRISE_SOFTWARE, aliases: [HCM, HR SaaS]}
+  - {id: PROD_COMP_CRM, type: product, name: CRM软件, name_en: CRM Software, kind: service, segment: SEG_COMP_ENTERPRISE_SOFTWARE, aliases: [客户关系管理]}
+  - {id: PROD_COMP_OFFICE_SUITE, type: product, name: 办公软件, name_en: Office Suite, segment: SEG_COMP_ENTERPRISE_SOFTWARE, aliases: [WPS, 文档处理软件]}
+  - {id: PROD_COMP_OA, type: product, name: 协同办公, name_en: Collaboration Software, segment: SEG_COMP_ENTERPRISE_SOFTWARE, aliases: [OA, 协同管理软件]}
+  - {id: PROD_COMP_PDF_SOFTWARE, type: product, name: PDF与文档软件, name_en: PDF Software, segment: SEG_COMP_ENTERPRISE_SOFTWARE, aliases: [PDF编辑器, PDF SDK]}
+  - {id: PROD_COMP_CREATIVE_SOFTWARE, type: product, name: 数字创意软件, name_en: Creative Software, segment: SEG_COMP_ENTERPRISE_SOFTWARE, aliases: [视频剪辑软件, 创意软件]}
+  - {id: PROD_COMP_CYBERSECURITY, type: product, name: 网络安全产品, name_en: Cybersecurity Products, segment: SEG_COMP_CYBERSECURITY, aliases: [信息安全产品]}
+  - {id: PROD_COMP_FIREWALL, type: product, name: 防火墙, name_en: Firewall, parent: PROD_COMP_CYBERSECURITY, segment: SEG_COMP_CYBERSECURITY, aliases: [下一代防火墙, NGFW, UTM]}
+  - {id: PROD_COMP_DATA_SECURITY, type: product, name: 数据安全, name_en: Data Security, parent: PROD_COMP_CYBERSECURITY, segment: SEG_COMP_CYBERSECURITY, aliases: [数据防泄漏, 数据库审计]}
+  - {id: PROD_COMP_ENDPOINT_SECURITY, type: product, name: 终端安全, name_en: Endpoint Security, parent: PROD_COMP_CYBERSECURITY, segment: SEG_COMP_CYBERSECURITY, aliases: [EDR, 杀毒软件]}
+  - {id: PROD_COMP_CLOUD_SECURITY, type: product, name: 云安全, name_en: Cloud Security, parent: PROD_COMP_CYBERSECURITY, segment: SEG_COMP_CYBERSECURITY}
+  - {id: PROD_COMP_SITUATION_AWARENESS, type: product, name: 安全态势感知, name_en: Security Situational Awareness, parent: PROD_COMP_CYBERSECURITY, segment: SEG_COMP_CYBERSECURITY, aliases: [态势感知, SOC平台, 安全运营平台]}
+  - {id: PROD_COMP_IDENTITY_SECURITY, type: product, name: 身份安全, name_en: Identity Security, parent: PROD_COMP_CYBERSECURITY, segment: SEG_COMP_CYBERSECURITY, aliases: [零信任, 身份认证, IAM]}
+  - {id: PROD_COMP_CRYPTOGRAPHY, type: product, name: 商用密码, name_en: Commercial Cryptography, parent: PROD_COMP_CYBERSECURITY, segment: SEG_COMP_CYBERSECURITY, aliases: [密码产品, 密码机, 国密]}
+  - {id: PROD_COMP_INDUSTRIAL_SECURITY, type: product, name: 工控安全, name_en: Industrial Control Security, parent: PROD_COMP_CYBERSECURITY, segment: SEG_COMP_CYBERSECURITY}
+  - {id: PROD_COMP_SECURITY_SERVICE, type: product, name: 安全服务, name_en: Security Services, kind: service, segment: SEG_COMP_CYBERSECURITY, aliases: [渗透测试, 等保测评, 安全运维]}
+  - {id: PROD_COMP_LLM, type: product, name: 大模型产品, name_en: Large Model Product, segment: SEG_COMP_AI_SOFTWARE, aliases: [通用大模型, 行业大模型, MaaS]}
+  - {id: PROD_COMP_AI_AGENT, type: product, name: AI智能体, name_en: AI Agent, segment: SEG_COMP_AI_SOFTWARE, aliases: [智能体平台, AI Agent]}
+  - {id: PROD_COMP_SPEECH_AI, type: product, name: 智能语音, name_en: Speech AI, segment: SEG_COMP_AI_SOFTWARE, aliases: [语音识别, 语音合成, ASR, TTS]}
+  - {id: PROD_COMP_CV_AI, type: product, name: 计算机视觉算法, name_en: Computer Vision AI, segment: SEG_COMP_AI_SOFTWARE, aliases: [视觉AI, 图像识别]}
+  - {id: PROD_COMP_AI_PLATFORM, type: product, name: AI开发平台, name_en: AI Development Platform, segment: SEG_COMP_AI_SOFTWARE, aliases: [MLOps, AI中台, 训推平台]}
+  - {id: PROD_COMP_AIGC_APP, type: product, name: AIGC应用, name_en: AIGC Applications, kind: service, segment: SEG_COMP_AI_SOFTWARE, aliases: [AI办公, AI教育应用]}
+
+edges:
+  - [SEG_COMP_SECURITY, part_of, SEG_COMP_HARDWARE]
+  - [SEG_COMP_OTHER_HARDWARE, part_of, SEG_COMP_HARDWARE]
+  - [SEG_COMP_SERVER, part_of, SEG_COMP_OTHER_HARDWARE]
+  - [SEG_COMP_STORAGE, part_of, SEG_COMP_OTHER_HARDWARE]
+  - [SEG_COMP_TERMINAL, part_of, SEG_COMP_OTHER_HARDWARE]
+  - [SEG_COMP_DC_INFRA, part_of, SEG_COMP_OTHER_HARDWARE]
+  - [SEG_COMP_FINANCIAL_EQUIPMENT, part_of, SEG_COMP_OTHER_HARDWARE]
+  - [SEG_COMP_IDC_COMPUTING, part_of, SEG_COMP_IT_SERVICES]
+  - [SEG_COMP_CLOUD, part_of, SEG_COMP_IT_SERVICES]
+  - [SEG_COMP_INTEGRATION, part_of, SEG_COMP_IT_SERVICES]
+  - [SEG_COMP_DATA_SERVICES, part_of, SEG_COMP_IT_SERVICES]
+  - [SEG_COMP_DIGITAL_GOV, part_of, SEG_COMP_IT_SERVICES]
+  - [SEG_COMP_VERTICAL_SOFTWARE, part_of, SEG_COMP_SOFTWARE]
+  - [SEG_COMP_FINTECH, part_of, SEG_COMP_VERTICAL_SOFTWARE]
+  - [SEG_COMP_HEALTHCARE_IT, part_of, SEG_COMP_VERTICAL_SOFTWARE]
+  - [SEG_COMP_INDUSTRIAL_SOFTWARE, part_of, SEG_COMP_VERTICAL_SOFTWARE]
+  - [SEG_COMP_AUTO_SOFTWARE, part_of, SEG_COMP_VERTICAL_SOFTWARE]
+  - [SEG_COMP_INDUSTRY_IT, part_of, SEG_COMP_VERTICAL_SOFTWARE]
+  - [SEG_COMP_GENERAL_SOFTWARE, part_of, SEG_COMP_SOFTWARE]
+  - [SEG_COMP_BASIC_SOFTWARE, part_of, SEG_COMP_GENERAL_SOFTWARE]
+  - [SEG_COMP_ENTERPRISE_SOFTWARE, part_of, SEG_COMP_GENERAL_SOFTWARE]
+  - [SEG_COMP_CYBERSECURITY, part_of, SEG_COMP_GENERAL_SOFTWARE]
+  - [SEG_COMP_AI_SOFTWARE, part_of, SEG_COMP_GENERAL_SOFTWARE]
+  - [SEG_COMP_SECURITY, serves, MKT_GOVERNMENT]
+  - [SEG_COMP_SECURITY, serves, MKT_REAL_ESTATE]
+  - [SEG_COMP_SECURITY, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_COMP_SECURITY, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_COMP_OTHER_HARDWARE, serves, MKT_DATA_CENTER]
+  - [SEG_COMP_SERVER, serves, MKT_AI_DATA_CENTER]
+  - [SEG_COMP_SERVER, serves, MKT_DATA_CENTER]
+  - [SEG_COMP_SERVER, serves, MKT_ENTERPRISE_IT]
+  - [SEG_COMP_STORAGE, serves, MKT_DATA_CENTER]
+  - [SEG_COMP_STORAGE, serves, MKT_FINANCE]
+  - [SEG_COMP_TERMINAL, serves, MKT_GOVERNMENT]
+  - [SEG_COMP_TERMINAL, serves, MKT_PC]
+  - [SEG_COMP_TERMINAL, serves, MKT_ENTERPRISE_IT]
+  - [SEG_COMP_DC_INFRA, serves, MKT_AI_DATA_CENTER]
+  - [SEG_COMP_DC_INFRA, serves, MKT_DATA_CENTER]
+  - [SEG_COMP_FINANCIAL_EQUIPMENT, serves, MKT_FINANCE]
+  - [SEG_COMP_FINANCIAL_EQUIPMENT, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_COMP_IT_SERVICES, serves, MKT_ENTERPRISE_IT]
+  - [SEG_COMP_IT_SERVICES, serves, MKT_GOVERNMENT]
+  - [SEG_COMP_IDC_COMPUTING, serves, MKT_AI_DATA_CENTER]
+  - [SEG_COMP_IDC_COMPUTING, serves, MKT_DATA_CENTER]
+  - [SEG_COMP_CLOUD, serves, MKT_ENTERPRISE_IT]
+  - [SEG_COMP_CLOUD, serves, MKT_GOVERNMENT]
+  - [SEG_COMP_INTEGRATION, serves, MKT_GOVERNMENT]
+  - [SEG_COMP_INTEGRATION, serves, MKT_FINANCE]
+  - [SEG_COMP_INTEGRATION, serves, MKT_ENTERPRISE_IT]
+  - [SEG_COMP_DATA_SERVICES, serves, MKT_GOVERNMENT]
+  - [SEG_COMP_DATA_SERVICES, serves, MKT_ENTERPRISE_IT]
+  - [SEG_COMP_DIGITAL_GOV, serves, MKT_GOVERNMENT]
+  - [SEG_COMP_FINTECH, serves, MKT_FINANCE]
+  - [SEG_COMP_HEALTHCARE_IT, serves, MKT_HEALTHCARE]
+  - [SEG_COMP_INDUSTRIAL_SOFTWARE, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_COMP_INDUSTRIAL_SOFTWARE, serves, MKT_AEROSPACE]
+  - [SEG_COMP_INDUSTRIAL_SOFTWARE, serves, MKT_CONSTRUCTION]
+  - [SEG_COMP_AUTO_SOFTWARE, serves, MKT_EV]
+  - [SEG_COMP_INDUSTRY_IT, serves, MKT_GOVERNMENT]
+  - [SEG_COMP_INDUSTRY_IT, serves, MKT_POWER_GRID]
+  - [SEG_COMP_INDUSTRY_IT, serves, MKT_RAIL]
+  - [SEG_COMP_GENERAL_SOFTWARE, serves, MKT_ENTERPRISE_IT]
+  - [SEG_COMP_BASIC_SOFTWARE, serves, MKT_ENTERPRISE_IT]
+  - [SEG_COMP_BASIC_SOFTWARE, serves, MKT_GOVERNMENT]
+  - [SEG_COMP_BASIC_SOFTWARE, serves, MKT_FINANCE]
+  - [SEG_COMP_ENTERPRISE_SOFTWARE, serves, MKT_ENTERPRISE_IT]
+  - [SEG_COMP_CYBERSECURITY, serves, MKT_GOVERNMENT]
+  - [SEG_COMP_CYBERSECURITY, serves, MKT_FINANCE]
+  - [SEG_COMP_CYBERSECURITY, serves, MKT_ENTERPRISE_IT]
+  - [SEG_COMP_CYBERSECURITY, serves, MKT_POWER_GRID]
+  - [SEG_COMP_AI_SOFTWARE, serves, MKT_ENTERPRISE_IT]
+  - [SEG_COMP_AI_SOFTWARE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_COMP_AI_SOFTWARE, serves, MKT_GOVERNMENT]
+  # --- security equipment ---
+  - [PROD_COMP_SECURITY_CAMERA, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_SECURITY_CAMERA, used_in, MKT_REAL_ESTATE]
+  - [PROD_COMP_NVR, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_VIDEO_PLATFORM, used_in, PROD_COMP_SMART_CITY]
+  - [PROD_COMP_ACCESS_CONTROL, used_in, MKT_REAL_ESTATE]
+  - [PROD_COMP_MACHINE_VISION, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_MACH_MOBILE_ROBOT, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_COMP_HOME_CAMERA, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_COMP_CV_AI, used_in, PROD_COMP_VIDEO_PLATFORM]
+  # --- servers & DC ---
+  - [PROD_COMP_AI_ACCELERATOR_CARD, component_of, PROD_COMP_AI_SERVER]
+  - [PROD_COMP_MOTHERBOARD, component_of, PROD_COMP_GENERAL_SERVER]
+  - [PROD_COMP_MOTHERBOARD, component_of, PROD_COMP_AI_SERVER]
+  - [PROD_COMP_SERVER_ODM, upstream_of, PROD_COMP_AI_SERVER]
+  - [PROD_COMP_SERVER_ODM, upstream_of, PROD_COMP_GENERAL_SERVER]
+  - [PROD_COMP_AI_SERVER, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMP_AI_SERVER, used_in, PROD_COMP_AI_COMPUTING_SERVICE]
+  - [PROD_COMP_GENERAL_SERVER, used_in, MKT_DATA_CENTER]
+  - [PROD_COMP_GENERAL_SERVER, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_EDGE_SERVER, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_COMP_EDGE_SERVER, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_COMP_AI_WORKSTATION, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_AI_WORKSTATION, used_in, MKT_GOVERNMENT]
+  - [TECH_AI_LARGE_MODEL, enables, PROD_COMP_AI_WORKSTATION]
+  - [PROD_COMP_STORAGE_ARRAY, used_in, MKT_DATA_CENTER]
+  - [PROD_COMP_STORAGE_ARRAY, used_in, MKT_FINANCE]
+  - [PROD_COMP_COLD_PLATE, component_of, PROD_COMP_RACK_SCALE_AI]
+  - [PROD_COMP_UQD, component_of, PROD_COMP_RACK_SCALE_AI]
+  - [PROD_COMP_MANIFOLD, component_of, PROD_COMP_RACK_SCALE_AI]
+  - [PROD_COMP_COLD_PLATE, uses_material, MAT_COPPER]
+  - [PROD_COMP_UQD, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_COMP_MANIFOLD, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_COMP_LIQUID_COOLING, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMP_IMMERSION_TANK, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMP_IMMERSION_TANK, substitute_for, PROD_COMP_COLD_PLATE]
+  - [PROD_COMP_LIQUID_COOLING, substitute_for, PROD_MACH_DATA_CENTER_COOLING]
+  - [TECH_LIQUID_COOLING, enables, PROD_COMP_LIQUID_COOLING]
+  - [TECH_LIQUID_COOLING, enables, PROD_COMP_COLD_PLATE]
+  - [TECH_LIQUID_COOLING, enables, PROD_COMP_UQD]
+  - [TECH_LIQUID_COOLING, enables, PROD_COMP_MANIFOLD]
+  - [TECH_LIQUID_COOLING, enables, PROD_COMP_IMMERSION_TANK]
+  - [PROD_COMP_SERVER_RACK, used_in, MKT_DATA_CENTER]
+  - [PROD_COMP_PREFAB_DC, used_in, MKT_DATA_CENTER]
+  # --- terminals ---
+  - [PROD_COMP_PC_DEVICE, used_in, MKT_PC]
+  - [PROD_COMP_XINCHUANG_PC, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_XINCHUANG_PC, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_PRINTER_CHIP, component_of, PROD_COMP_PRINTER_CONSUMABLES]
+  - [PROD_COMP_PRINTER_CONSUMABLES, used_in, PROD_COMP_PRINTER]
+  - [PROD_COMP_PRINTER, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_INDUSTRIAL_PC, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_COMP_AI_LEARNING_DEVICE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_COMP_POS, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_COMP_POS, used_in, MKT_FINANCE]
+  - [PROD_COMP_ATM, used_in, MKT_FINANCE]
+  - [PROD_COMP_BARCODE, used_in, MKT_LOGISTICS]
+  - [PROD_COMP_BARCODE, used_in, MKT_RETAIL_CONSUMER]
+  # --- IT services ---
+  - [PROD_COMP_IDC_SERVICE, uses_material, MAT_ELECTRICITY]
+  - [PROD_COMP_IDC_SERVICE, upstream_of, PROD_COMP_AI_COMPUTING_SERVICE]
+  - [PROD_COMP_IDC_SERVICE, upstream_of, PROD_COMP_PUBLIC_CLOUD]
+  - [PROD_COMP_IDC_SERVICE, used_in, MKT_DATA_CENTER]
+  - [PROD_COMP_WHOLESALE_IDC, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMP_AI_COMPUTING_SERVICE, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMP_AI_COMPUTING_SERVICE, upstream_of, PROD_COMP_LLM]
+  - [PROD_COMP_CDN, used_in, MKT_MEDIA_ENTERTAINMENT]
+  - [TECH_CLOUD_COMPUTING, enables, PROD_COMP_PUBLIC_CLOUD]
+  - [TECH_CLOUD_COMPUTING, enables, PROD_COMP_PRIVATE_CLOUD]
+  - [TECH_CLOUD_COMPUTING, enables, PROD_COMP_CLOUD_PLATFORM]
+  - [TECH_CLOUD_COMPUTING, enables, PROD_COMP_HCI]
+  - [PROD_COMP_PUBLIC_CLOUD, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_PRIVATE_CLOUD, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_CLOUD_PLATFORM, used_in, PROD_COMP_PRIVATE_CLOUD]
+  - [PROD_COMP_HCI, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_SYSTEM_INTEGRATION, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_SYSTEM_INTEGRATION, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_SYSTEM_INTEGRATION, used_in, MKT_FINANCE]
+  - [PROD_COMP_IT_OUTSOURCING, used_in, MKT_FINANCE]
+  - [PROD_COMP_IT_OUTSOURCING, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_IT_OPS, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_IT_DISTRIBUTION, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_DATA_ANNOTATION, upstream_of, PROD_COMP_LLM]
+  - [PROD_COMP_DATA_ELEMENT, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_BIG_DATA_PLATFORM, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_BIG_DATA_PLATFORM, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_SMART_CITY, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_E_GOV, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_PUBLIC_SECURITY_IT, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_DIGITAL_FORENSICS, used_in, MKT_GOVERNMENT]
+  # --- vertical software ---
+  - [PROD_COMP_BANK_IT, used_in, MKT_FINANCE]
+  - [PROD_COMP_SECURITIES_IT, used_in, MKT_FINANCE]
+  - [PROD_COMP_INSURANCE_IT, used_in, MKT_FINANCE]
+  - [PROD_COMP_FIN_INFO, used_in, MKT_FINANCE]
+  - [PROD_COMP_FIN_INFO, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_COMP_PAYMENT, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_COMP_HIS, used_in, MKT_HEALTHCARE]
+  - [PROD_COMP_EMR, used_in, MKT_HEALTHCARE]
+  - [PROD_COMP_REGIONAL_HEALTH, used_in, MKT_HEALTHCARE]
+  - [PROD_COMP_MEDICAL_INSURANCE_IT, used_in, MKT_HEALTHCARE]
+  - [PROD_COMP_MEDICAL_INSURANCE_IT, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_EDA, used_in, PROD_ELEC_ASIC_SERVICE]
+  - [PROD_COMP_EDA, used_in, PROD_ELEC_FOUNDRY]
+  - [PROD_COMP_EDA, used_in, PROD_ELEC_DISPLAY_PANEL]
+  - [TECH_INDUSTRIAL_SOFTWARE, enables, PROD_COMP_EDA]
+  - [TECH_INDUSTRIAL_SOFTWARE, enables, PROD_COMP_CAD_CAE]
+  - [TECH_INDUSTRIAL_SOFTWARE, enables, PROD_COMP_MES_SOFTWARE]
+  - [TECH_INDUSTRIAL_SOFTWARE, enables, PROD_COMP_PLM]
+  - [TECH_INDUSTRIAL_SOFTWARE, enables, PROD_COMP_INDUSTRIAL_INTERNET]
+  - [TECH_IOT, enables, PROD_COMP_INDUSTRIAL_INTERNET]
+  - [PROD_COMP_CAD_CAE, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_COMP_CAD_CAE, used_in, MKT_AEROSPACE]
+  - [PROD_COMP_MES_SOFTWARE, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_COMP_PLM, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_COMP_INDUSTRIAL_INTERNET, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_COMP_BIM, used_in, MKT_CONSTRUCTION]
+  - [PROD_COMP_GIS, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_COCKPIT_SOFTWARE, used_in, MKT_EV]
+  - [PROD_COMP_ADAS_SOFTWARE, used_in, MKT_EV]
+  - [PROD_COMP_HD_MAP, used_in, MKT_EV]
+  - [PROD_COMP_V2X, used_in, MKT_EV]
+  - [PROD_COMP_V2X, used_in, MKT_GOVERNMENT]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_COMP_HD_MAP]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_COMP_V2X]
+  - [PROD_COMP_TAX_IT, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_TRANSPORT_IT, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_RAIL_IT, used_in, MKT_RAIL]
+  # --- general software ---
+  - [PROD_COMP_OS, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_SERVER_OS, used_in, PROD_COMP_GENERAL_SERVER]
+  - [PROD_COMP_DESKTOP_OS, used_in, PROD_COMP_XINCHUANG_PC]
+  - [PROD_COMP_EMBEDDED_OS, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_COMP_EMBEDDED_OS, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_COMP_DATABASE, used_in, MKT_FINANCE]
+  - [PROD_COMP_DATABASE, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_DATABASE, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_DISTRIBUTED_DB, used_in, PROD_COMP_BANK_IT]
+  - [PROD_COMP_MIDDLEWARE, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_ERP, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_FINANCE_SOFTWARE, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_HCM, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_CRM, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_OFFICE_SUITE, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_OFFICE_SUITE, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_OA, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_PDF_SOFTWARE, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_CREATIVE_SOFTWARE, used_in, MKT_MEDIA_ENTERTAINMENT]
+  - [PROD_COMP_CYBERSECURITY, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_CYBERSECURITY, used_in, MKT_FINANCE]
+  - [PROD_COMP_FIREWALL, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_DATA_SECURITY, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_CLOUD_SECURITY, used_in, PROD_COMP_PUBLIC_CLOUD]
+  - [PROD_COMP_SITUATION_AWARENESS, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_IDENTITY_SECURITY, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_CRYPTOGRAPHY, used_in, MKT_FINANCE]
+  - [PROD_COMP_CRYPTOGRAPHY, used_in, MKT_GOVERNMENT]
+  - [PROD_COMP_INDUSTRIAL_SECURITY, used_in, MKT_POWER_GRID]
+  - [PROD_COMP_INDUSTRIAL_SECURITY, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_COMP_SECURITY_SERVICE, used_in, MKT_GOVERNMENT]
+  - [TECH_AI_LARGE_MODEL, enables, PROD_COMP_LLM]
+  - [TECH_AI_LARGE_MODEL, enables, PROD_COMP_AI_AGENT]
+  - [TECH_AI_LARGE_MODEL, enables, PROD_COMP_AIGC_APP]
+  - [PROD_COMP_LLM, upstream_of, PROD_COMP_AI_AGENT]
+  - [PROD_COMP_LLM, upstream_of, PROD_COMP_AIGC_APP]
+  - [PROD_COMP_LLM, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_AI_AGENT, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_SPEECH_AI, used_in, PROD_COMP_AI_LEARNING_DEVICE]
+  - [PROD_COMP_SPEECH_AI, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_AI_PLATFORM, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMP_AIGC_APP, used_in, MKT_RETAIL_CONSUMER]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_COMP_PUBLIC_CLOUD, used_in, PROD_MEDIA_MOBILE_GAME]
+  - [PROD_COMP_PUBLIC_CLOUD, used_in, PROD_MEDIA_AI_APP]
+  - [PROD_COMP_SECURITIES_IT, used_in, PROD_FIN_BROKERAGE]
+  - [PROD_COMP_INSURANCE_IT, used_in, PROD_FIN_LIFE_INSURANCE]
+  - [PROD_COMP_BANK_IT, used_in, PROD_BANK_DEPOSIT]
+  - [PROD_COMP_POS, used_in, PROD_BANK_PAYMENT_SETTLEMENT]
+
+sw_l3_map:
+  "710102": [SEG_COMP_SECURITY]
+  "710103": [SEG_COMP_OTHER_HARDWARE, SEG_COMP_SERVER, SEG_COMP_STORAGE, SEG_COMP_TERMINAL, SEG_COMP_DC_INFRA, SEG_COMP_FINANCIAL_EQUIPMENT]
+  "710301": [SEG_COMP_IT_SERVICES, SEG_COMP_IDC_COMPUTING, SEG_COMP_CLOUD, SEG_COMP_INTEGRATION, SEG_COMP_DATA_SERVICES, SEG_COMP_DIGITAL_GOV]
+  "710401": [SEG_COMP_VERTICAL_SOFTWARE, SEG_COMP_FINTECH, SEG_COMP_HEALTHCARE_IT, SEG_COMP_INDUSTRIAL_SOFTWARE, SEG_COMP_AUTO_SOFTWARE, SEG_COMP_INDUSTRY_IT]
+  "710402": [SEG_COMP_GENERAL_SOFTWARE, SEG_COMP_BASIC_SOFTWARE, SEG_COMP_ENTERPRISE_SOFTWARE, SEG_COMP_CYBERSECURITY, SEG_COMP_AI_SOFTWARE]

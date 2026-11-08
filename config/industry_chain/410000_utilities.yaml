@@ -1,0 +1,224 @@
+# Shenwan L1 410000 公用事业 — product taxonomy prior (plan 12 phase 1, D-097).
+# Format: README.md beside this file. All edges are priors (general industry knowledge).
+# Water supply lives here (SEG_UTIL_WATER) although Shenwan files water companies under 760102 (环保);
+# 760000_environmental.yaml maps 760102 to it.
+sector: {sw_l1: "410000", name: 公用事业, name_en: Utilities}
+
+nodes:
+  # ======================= segments =======================
+  - {id: SEG_UTIL_POWER, type: segment, name: 电力, name_en: Electric Power, aliases: [发电运营]}
+  - {id: SEG_UTIL_THERMAL, type: segment, name: 火力发电运营, name_en: Thermal Power Generation, aliases: [火电]}
+  - {id: SEG_UTIL_HYDRO, type: segment, name: 水力发电运营, name_en: Hydropower Generation}
+  - {id: SEG_UTIL_NUCLEAR, type: segment, name: 核力发电, name_en: Nuclear Power Generation}
+  - {id: SEG_UTIL_WIND, type: segment, name: 风力发电运营, name_en: Wind Power Generation, aliases: [风电运营商]}
+  - {id: SEG_UTIL_SOLAR, type: segment, name: 光伏发电运营, name_en: Solar Power Generation, aliases: [光伏电站运营商]}
+  - {id: SEG_UTIL_OTHER_GEN, type: segment, name: 其他能源发电, name_en: Other Generation, aliases: [生物质发电运营]}
+  - {id: SEG_UTIL_POWER_SERVICES, type: segment, name: 电能综合服务, name_en: Integrated Power Services, aliases: [售电, 配售电]}
+  - {id: SEG_UTIL_HEAT, type: segment, name: 热力服务, name_en: Heat Supply, aliases: [供热]}
+  - {id: SEG_UTIL_GAS, type: segment, name: 燃气, name_en: Gas Utilities, aliases: [城市燃气]}
+  - {id: SEG_UTIL_WATER, type: segment, name: 水务供应, name_en: Water Supply, aliases: [供水]}
+
+  # ======================= thermal =======================
+  - {id: PROD_UTIL_COAL_POWER, type: product, kind: service, name: 燃煤发电, name_en: Coal-Fired Power Generation, segment: SEG_UTIL_THERMAL, aliases: [煤电]}
+  - {id: PROD_UTIL_GAS_POWER, type: product, kind: service, name: 燃气发电, name_en: Gas-Fired Power Generation, segment: SEG_UTIL_THERMAL, aliases: [气电, 燃机电厂]}
+  - {id: PROD_UTIL_CHP, type: product, kind: service, name: 热电联产, name_en: Combined Heat and Power, segment: SEG_UTIL_THERMAL, aliases: [热电厂]}
+  - {id: PROD_UTIL_COAL_POWER_INTEGRATED, type: product, kind: service, name: 煤电一体化, name_en: Integrated Coal-Power Operation, parent: PROD_UTIL_COAL_POWER, segment: SEG_UTIL_THERMAL, aliases: [坑口电厂]}
+
+  # ======================= hydro =======================
+  - {id: PROD_UTIL_LARGE_HYDRO, type: product, kind: service, name: 大型水电, name_en: Large Hydropower, segment: SEG_UTIL_HYDRO, aliases: [流域水电]}
+  - {id: PROD_UTIL_SMALL_HYDRO, type: product, kind: service, name: 小水电, name_en: Small Hydropower, segment: SEG_UTIL_HYDRO}
+  - {id: PROD_UTIL_PUMPED_STORAGE, type: product, kind: service, name: 抽水蓄能电站运营, name_en: Pumped-Storage Plant Operation, segment: SEG_UTIL_HYDRO, aliases: [抽水蓄能电站]}
+
+  # ======================= nuclear =======================
+  - {id: PROD_UTIL_NUCLEAR_GEN, type: product, kind: service, name: 核能发电, name_en: Nuclear Power Generation Service, segment: SEG_UTIL_NUCLEAR, aliases: [核电运营]}
+  - {id: PROD_UTIL_NUCLEAR_FUEL, type: product, name: 核燃料组件, name_en: Nuclear Fuel Assembly, segment: SEG_UTIL_NUCLEAR, aliases: [核燃料]}
+  - {id: PROD_UTIL_NUCLEAR_TECH_SERVICE, type: product, kind: service, name: 核电技术服务, name_en: Nuclear Technical Services, segment: SEG_UTIL_NUCLEAR, aliases: [核电运维, 核电大修]}
+
+  # ======================= wind & solar =======================
+  - {id: PROD_UTIL_ONSHORE_WIND, type: product, kind: service, name: 陆上风电运营, name_en: Onshore Wind Farm Operation, segment: SEG_UTIL_WIND, aliases: [陆上风电场]}
+  - {id: PROD_UTIL_OFFSHORE_WIND, type: product, kind: service, name: 海上风电运营, name_en: Offshore Wind Farm Operation, segment: SEG_UTIL_WIND, aliases: [海上风电场]}
+  - {id: PROD_UTIL_UTILITY_SOLAR, type: product, kind: service, name: 集中式光伏电站运营, name_en: Utility-Scale Solar Operation, segment: SEG_UTIL_SOLAR, aliases: [集中式光伏]}
+  - {id: PROD_UTIL_DIST_SOLAR, type: product, kind: service, name: 分布式光伏电站运营, name_en: Distributed Solar Operation, segment: SEG_UTIL_SOLAR, aliases: [分布式光伏, 户用光伏]}
+  - {id: PROD_UTIL_RENEWABLE_EPC, type: product, kind: service, name: 新能源电站EPC, name_en: Renewable Plant EPC, segment: SEG_UTIL_SOLAR, aliases: [光伏电站EPC, 风电场EPC]}
+  - {id: PROD_UTIL_PLANT_OM, type: product, kind: service, name: 电站运维服务, name_en: Power Plant O&M, segment: SEG_UTIL_POWER, aliases: [电站运维, 新能源运维]}
+  - {id: PROD_UTIL_PLANT_TRANSFER, type: product, kind: service, name: 电站开发转让, name_en: Power Plant Development and Sale, segment: SEG_UTIL_SOLAR, aliases: [电站转让]}
+
+  # ======================= other generation =======================
+  - {id: PROD_UTIL_BIOMASS_POWER, type: product, kind: service, name: 生物质发电, name_en: Biomass Power Generation, segment: SEG_UTIL_OTHER_GEN, aliases: [农林生物质发电]}
+  - {id: PROD_UTIL_GEOTHERMAL, type: product, kind: service, name: 地热能利用, name_en: Geothermal Energy, segment: SEG_UTIL_OTHER_GEN, aliases: [地热发电, 地热供暖]}
+  - {id: PROD_UTIL_SOLAR_THERMAL_POWER, type: product, kind: service, name: 光热发电, name_en: Concentrated Solar Power, segment: SEG_UTIL_OTHER_GEN, aliases: [CSP, 太阳能热发电]}
+
+  # ======================= power services =======================
+  - {id: PROD_UTIL_POWER_SALES, type: product, kind: service, name: 售电服务, name_en: Electricity Retail, segment: SEG_UTIL_POWER_SERVICES, aliases: [售电, 电力零售]}
+  - {id: PROD_UTIL_LOCAL_GRID, type: product, kind: service, name: 地方电网供电, name_en: Local Grid Supply, segment: SEG_UTIL_POWER_SERVICES, aliases: [增量配电网, 地方供电]}
+  - {id: PROD_UTIL_INTEGRATED_ENERGY, type: product, kind: service, name: 综合能源服务, name_en: Integrated Energy Services, segment: SEG_UTIL_POWER_SERVICES, aliases: [合同能源管理, 源网荷储一体化]}
+  - {id: PROD_UTIL_VPP_OPERATION, type: product, kind: service, name: 虚拟电厂运营, name_en: Virtual Power Plant Operation, segment: SEG_UTIL_POWER_SERVICES, aliases: [负荷聚合商]}
+  - {id: PROD_UTIL_STORAGE_OPERATION, type: product, kind: service, name: 独立储能电站运营, name_en: Standalone Storage Plant Operation, segment: SEG_UTIL_POWER_SERVICES, aliases: [共享储能, 储能电站运营]}
+  - {id: PROD_UTIL_ANCILLARY, type: product, kind: service, name: 电力辅助服务, name_en: Grid Ancillary Services, segment: SEG_UTIL_POWER_SERVICES, aliases: [调峰调频, 容量补偿]}
+  - {id: PROD_UTIL_CHARGING_OPERATION, type: product, kind: service, name: 充电运营服务, name_en: EV Charging Operation, segment: SEG_UTIL_POWER_SERVICES, aliases: [充电运营, 充电网络]}
+  - {id: PROD_UTIL_GREEN_CERT, type: product, kind: service, name: 绿色电力证书, name_en: Green Electricity Certificate, segment: SEG_UTIL_POWER_SERVICES, aliases: [绿证, 绿电交易]}
+  - {id: PROD_UTIL_CARBON_CREDIT, type: product, kind: service, name: 碳排放权与核证减排量, name_en: Carbon Allowances and CCER, segment: SEG_UTIL_POWER_SERVICES, aliases: [CCER, 碳配额, 碳资产]}
+
+  # ======================= heat =======================
+  - {id: PROD_UTIL_DISTRICT_HEATING, type: product, kind: service, name: 集中供暖, name_en: District Heating, segment: SEG_UTIL_HEAT, aliases: [城市供热, 居民供暖]}
+  - {id: PROD_UTIL_INDUSTRIAL_STEAM, type: product, kind: service, name: 工业供汽, name_en: Industrial Steam Supply, segment: SEG_UTIL_HEAT, aliases: [工业蒸汽]}
+  - {id: PROD_UTIL_HEAT_NETWORK, type: product, kind: service, name: 热网建设运营, name_en: Heat Network Operation, segment: SEG_UTIL_HEAT, aliases: [热力管网]}
+  - {id: PROD_UTIL_NUCLEAR_HEATING, type: product, kind: service, name: 核能供热, name_en: Nuclear District Heating, segment: SEG_UTIL_HEAT}
+
+  # ======================= gas =======================
+  - {id: PROD_UTIL_CITY_GAS, type: product, kind: service, name: 城市燃气分销, name_en: City Gas Distribution, segment: SEG_UTIL_GAS, aliases: [管道燃气, 城燃]}
+  - {id: PROD_UTIL_RESIDENTIAL_GAS, type: product, kind: service, name: 居民用气, name_en: Residential Gas Sales, parent: PROD_UTIL_CITY_GAS, segment: SEG_UTIL_GAS}
+  - {id: PROD_UTIL_CI_GAS, type: product, kind: service, name: 工商业用气, name_en: Commercial and Industrial Gas Sales, parent: PROD_UTIL_CITY_GAS, segment: SEG_UTIL_GAS}
+  - {id: PROD_UTIL_GAS_CONNECTION, type: product, kind: service, name: 燃气接驳, name_en: Gas Connection Service, segment: SEG_UTIL_GAS, aliases: [接驳费, 燃气安装]}
+  - {id: PROD_UTIL_GAS_PIPELINE, type: product, kind: service, name: 天然气长输管道运营, name_en: Gas Transmission Pipeline, segment: SEG_UTIL_GAS, aliases: [省级管网, 长输管线]}
+  - {id: PROD_UTIL_LNG_TERMINAL, type: product, kind: service, name: LNG接收站, name_en: LNG Receiving Terminal, segment: SEG_UTIL_GAS, aliases: [液化天然气接收站, LNG接收站服务]}
+  - {id: PROD_UTIL_LNG_TRADING, type: product, kind: service, name: LNG贸易, name_en: LNG Trading, segment: SEG_UTIL_GAS, aliases: [国际LNG贸易, 天然气批发]}
+  - {id: PROD_UTIL_GAS_STATION, type: product, kind: service, name: 车用加气站, name_en: CNG/LNG Refueling Station, segment: SEG_UTIL_GAS, aliases: [CNG加气站]}
+  - {id: PROD_UTIL_LPG, type: product, kind: service, name: 液化石油气分销, name_en: LPG Distribution, segment: SEG_UTIL_GAS}
+  - {id: PROD_UTIL_GAS_VALUE_ADDED, type: product, kind: service, name: 燃气增值服务, name_en: Gas Value-Added Services, segment: SEG_UTIL_GAS, aliases: [燃气具销售, 燃气保险]}
+  - {id: PROD_UTIL_HYDROGEN_SUPPLY, type: product, kind: service, name: 氢气供应, name_en: Hydrogen Supply, segment: SEG_UTIL_GAS, aliases: [掺氢输送]}
+
+  # ======================= water supply =======================
+  - {id: PROD_UTIL_RAW_WATER, type: product, kind: service, name: 原水供应, name_en: Raw Water Supply, segment: SEG_UTIL_WATER, aliases: [原水]}
+  - {id: PROD_UTIL_TAP_WATER, type: product, kind: service, name: 自来水供应, name_en: Potable Water Supply, segment: SEG_UTIL_WATER, aliases: [自来水, 城市供水]}
+  - {id: PROD_UTIL_WATER_CONNECTION, type: product, kind: service, name: 供水管网工程, name_en: Water Connection and Network Works, segment: SEG_UTIL_WATER, aliases: [给水工程, 二次供水]}
+
+edges:
+  # ---------- segment tree & markets ----------
+  - [SEG_UTIL_THERMAL, part_of, SEG_UTIL_POWER]
+  - [SEG_UTIL_HYDRO, part_of, SEG_UTIL_POWER]
+  - [SEG_UTIL_NUCLEAR, part_of, SEG_UTIL_POWER]
+  - [SEG_UTIL_WIND, part_of, SEG_UTIL_POWER]
+  - [SEG_UTIL_SOLAR, part_of, SEG_UTIL_POWER]
+  - [SEG_UTIL_OTHER_GEN, part_of, SEG_UTIL_POWER]
+  - [SEG_UTIL_POWER_SERVICES, part_of, SEG_UTIL_POWER]
+  - [SEG_UTIL_POWER, serves, MKT_POWER_GRID]
+  - [SEG_UTIL_POWER_SERVICES, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_UTIL_POWER_SERVICES, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_UTIL_POWER_SERVICES, serves, MKT_AI_DATA_CENTER]
+  - [SEG_UTIL_POWER_SERVICES, serves, MKT_EV]
+  - [SEG_UTIL_HEAT, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_UTIL_HEAT, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_UTIL_GAS, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_UTIL_GAS, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_UTIL_GAS, serves, MKT_COMMERCIAL_VEHICLE]
+  - [SEG_UTIL_WATER, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_UTIL_WATER, serves, MKT_GOVERNMENT]
+  - [SEG_UTIL_SOLAR, serves, MKT_SOLAR]
+  - [SEG_UTIL_WIND, serves, MKT_WIND]
+
+  # ---------- generation: fuels & equipment ----------
+  - [PROD_UTIL_COAL_POWER, uses_material, MAT_THERMAL_COAL]
+  - [PROD_UTIL_COAL_POWER, uses_material, MAT_WATER]
+  - [PROD_UTIL_CHP, uses_material, MAT_THERMAL_COAL]
+  - [PROD_UTIL_CHP, uses_material, MAT_NATURAL_GAS]
+  - [PROD_UTIL_GAS_POWER, uses_material, MAT_NATURAL_GAS]
+  - [PROD_UTIL_BIOMASS_POWER, uses_material, MAT_TIMBER]
+  - [PROD_UTIL_NUCLEAR_GEN, uses_material, MAT_WATER]
+  - [PROD_UTIL_NUCLEAR_FUEL, upstream_of, PROD_UTIL_NUCLEAR_GEN]
+  - [PROD_PWR_UTILITY_BOILER, used_in, PROD_UTIL_COAL_POWER]
+  - [PROD_PWR_STEAM_TURBINE, used_in, PROD_UTIL_COAL_POWER]
+  - [PROD_PWR_TURBO_GENERATOR, used_in, PROD_UTIL_COAL_POWER]
+  - [PROD_PWR_GAS_TURBINE, used_in, PROD_UTIL_GAS_POWER]
+  - [PROD_PWR_HRSG, used_in, PROD_UTIL_GAS_POWER]
+  - [PROD_PWR_BIOMASS_BOILER, used_in, PROD_UTIL_BIOMASS_POWER]
+  - [PROD_PWR_HYDRO_TURBINE_GEN, used_in, PROD_UTIL_LARGE_HYDRO]
+  - [PROD_PWR_PUMPED_STORAGE_UNIT, used_in, PROD_UTIL_PUMPED_STORAGE]
+  - [PROD_PWR_REACTOR_VESSEL, used_in, PROD_UTIL_NUCLEAR_GEN]
+  - [PROD_PWR_ONSHORE_TURBINE, used_in, PROD_UTIL_ONSHORE_WIND]
+  - [PROD_PWR_OFFSHORE_TURBINE, used_in, PROD_UTIL_OFFSHORE_WIND]
+  - [PROD_PWR_SUBMARINE_CABLE, used_in, PROD_UTIL_OFFSHORE_WIND]
+  - [PROD_PWR_SOLAR_MODULE, used_in, PROD_UTIL_UTILITY_SOLAR]
+  - [PROD_PWR_SOLAR_MODULE, used_in, PROD_UTIL_DIST_SOLAR]
+  - [PROD_PWR_CENTRAL_INVERTER, used_in, PROD_UTIL_UTILITY_SOLAR]
+  - [PROD_PWR_STRING_INVERTER, used_in, PROD_UTIL_DIST_SOLAR]
+  - [PROD_PWR_TRACKER, used_in, PROD_UTIL_UTILITY_SOLAR]
+  - [PROD_PWR_UTILITY_ESS, used_in, PROD_UTIL_STORAGE_OPERATION]
+  - [PROD_PWR_VPP_PLATFORM, used_in, PROD_UTIL_VPP_OPERATION]
+  - [PROD_PWR_DC_CHARGER, used_in, PROD_UTIL_CHARGING_OPERATION]
+  - [PROD_PWR_ELECTROLYZER, used_in, PROD_UTIL_HYDROGEN_SUPPLY]
+  - [PROD_UTIL_RENEWABLE_EPC, upstream_of, PROD_UTIL_UTILITY_SOLAR]
+  - [PROD_UTIL_RENEWABLE_EPC, upstream_of, PROD_UTIL_ONSHORE_WIND]
+  - [PROD_UTIL_PLANT_OM, used_in, MKT_SOLAR]
+  - [PROD_UTIL_PLANT_OM, used_in, MKT_WIND]
+  - [PROD_UTIL_PLANT_TRANSFER, used_in, MKT_SOLAR]
+  - [PROD_UTIL_NUCLEAR_TECH_SERVICE, used_in, PROD_UTIL_NUCLEAR_GEN]
+
+  # ---------- electricity to sales channels ----------
+  - [PROD_UTIL_COAL_POWER, upstream_of, PROD_UTIL_POWER_SALES]
+  - [PROD_UTIL_GAS_POWER, upstream_of, PROD_UTIL_POWER_SALES]
+  - [PROD_UTIL_LARGE_HYDRO, upstream_of, PROD_UTIL_POWER_SALES]
+  - [PROD_UTIL_NUCLEAR_GEN, upstream_of, PROD_UTIL_POWER_SALES]
+  - [PROD_UTIL_ONSHORE_WIND, upstream_of, PROD_UTIL_POWER_SALES]
+  - [PROD_UTIL_UTILITY_SOLAR, upstream_of, PROD_UTIL_POWER_SALES]
+  - [PROD_UTIL_SMALL_HYDRO, upstream_of, PROD_UTIL_LOCAL_GRID]
+  - [PROD_UTIL_DIST_SOLAR, upstream_of, PROD_UTIL_LOCAL_GRID]
+  - [PROD_UTIL_ONSHORE_WIND, upstream_of, PROD_UTIL_GREEN_CERT]
+  - [PROD_UTIL_UTILITY_SOLAR, upstream_of, PROD_UTIL_GREEN_CERT]
+  - [PROD_UTIL_POWER_SALES, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_UTIL_POWER_SALES, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_UTIL_LOCAL_GRID, used_in, MKT_POWER_GRID]
+  - [PROD_UTIL_GREEN_CERT, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_UTIL_GREEN_CERT, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_UTIL_CARBON_CREDIT, used_in, MKT_THERMAL_POWER]
+  - [PROD_UTIL_CARBON_CREDIT, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_UTIL_PUMPED_STORAGE, upstream_of, PROD_UTIL_ANCILLARY]
+  - [PROD_UTIL_STORAGE_OPERATION, upstream_of, PROD_UTIL_ANCILLARY]
+  - [PROD_UTIL_GAS_POWER, upstream_of, PROD_UTIL_ANCILLARY]
+  - [PROD_UTIL_ANCILLARY, used_in, MKT_POWER_GRID]
+  - [PROD_UTIL_VPP_OPERATION, used_in, MKT_POWER_GRID]
+  - [PROD_UTIL_STORAGE_OPERATION, substitute_for, PROD_UTIL_PUMPED_STORAGE]
+  - [PROD_UTIL_INTEGRATED_ENERGY, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_UTIL_CHARGING_OPERATION, used_in, MKT_EV]
+  - [TECH_CCUS, enables, PROD_UTIL_CARBON_CREDIT]
+
+  # ---------- heat ----------
+  - [PROD_UTIL_CHP, upstream_of, PROD_UTIL_DISTRICT_HEATING]
+  - [PROD_UTIL_CHP, upstream_of, PROD_UTIL_INDUSTRIAL_STEAM]
+  - [PROD_UTIL_HEAT_NETWORK, used_in, PROD_UTIL_DISTRICT_HEATING]
+  - [PROD_UTIL_NUCLEAR_HEATING, substitute_for, PROD_UTIL_CHP]
+  - [PROD_UTIL_GEOTHERMAL, substitute_for, PROD_UTIL_DISTRICT_HEATING]
+  - [PROD_UTIL_INDUSTRIAL_STEAM, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_UTIL_DISTRICT_HEATING, used_in, MKT_RETAIL_CONSUMER]
+
+  # ---------- gas ----------
+  - [PROD_UTIL_LNG_TRADING, upstream_of, PROD_UTIL_LNG_TERMINAL]
+  - [PROD_UTIL_LNG_TERMINAL, upstream_of, PROD_UTIL_GAS_PIPELINE]
+  - [PROD_UTIL_GAS_PIPELINE, upstream_of, PROD_UTIL_CITY_GAS]
+  - [PROD_UTIL_GAS_PIPELINE, upstream_of, PROD_UTIL_GAS_POWER]
+  - [PROD_UTIL_CITY_GAS, upstream_of, PROD_UTIL_GAS_STATION]
+  - [PROD_UTIL_CITY_GAS, uses_material, MAT_NATURAL_GAS]
+  - [PROD_UTIL_LNG_TRADING, uses_material, MAT_NATURAL_GAS]
+  - [PROD_UTIL_GAS_PIPELINE, uses_material, MAT_NATURAL_GAS]
+  - [PROD_UTIL_GAS_CONNECTION, used_in, MKT_REAL_ESTATE]
+  - [PROD_UTIL_RESIDENTIAL_GAS, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_UTIL_CI_GAS, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_UTIL_CI_GAS, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_UTIL_GAS_STATION, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_UTIL_GAS_VALUE_ADDED, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_UTIL_HYDROGEN_SUPPLY, uses_material, MAT_HYDROGEN]
+  - [PROD_UTIL_HYDROGEN_SUPPLY, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_UTIL_LPG, substitute_for, PROD_UTIL_CITY_GAS]
+
+  # ---------- water ----------
+  - [PROD_UTIL_RAW_WATER, upstream_of, PROD_UTIL_TAP_WATER]
+  - [PROD_UTIL_TAP_WATER, uses_material, MAT_WATER]
+  - [PROD_UTIL_RAW_WATER, uses_material, MAT_WATER]
+  - [PROD_UTIL_TAP_WATER, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_UTIL_TAP_WATER, used_in, MKT_SEMI_FAB]
+  - [PROD_UTIL_WATER_CONNECTION, used_in, MKT_REAL_ESTATE]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_UTIL_NUCLEAR_FUEL, uses_material, MAT_URANIUM]
+  - [PROD_UTIL_LPG, uses_material, MAT_LPG]
+  - [PROD_UTIL_LNG_TERMINAL, upstream_of, PROD_UTIL_CITY_GAS]
+
+sw_l3_map:
+  "410101": [SEG_UTIL_THERMAL]
+  "410102": [SEG_UTIL_HYDRO]
+  "410104": [SEG_UTIL_HEAT]
+  "410106": [SEG_UTIL_SOLAR]
+  "410107": [SEG_UTIL_WIND]
+  "410108": [SEG_UTIL_NUCLEAR]
+  "410109": [SEG_UTIL_OTHER_GEN]
+  "410110": [SEG_UTIL_POWER_SERVICES]
+  "410301": [SEG_UTIL_GAS]

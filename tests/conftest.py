@@ -29,7 +29,7 @@ def repo(tmp_path: Path) -> Path:
     """A throwaway repo root holding copies of the committed config files."""
     root = tmp_path / "repo"
     (root / "config").mkdir(parents=True)
-    for name in ("base.yaml", "datasets.yaml"):
+    for name in ("base.yaml", "datasets.yaml", "documents.yaml"):
         shutil.copy(REPO / "config" / name, root / "config" / name)
     return root
 

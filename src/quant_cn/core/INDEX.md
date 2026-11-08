@@ -14,13 +14,15 @@ L1: base classes, exceptions, Config, Schema, DateCodec, TickerNormalizer, loggi
 | `base_api_client.py` | Extension point for data vendors | `BaseApiClient` |
 | `base_fetch_log.py` | Extension point for resumable-download bookkeeping | `BaseFetchLog` |
 | `base_fetcher.py` | Template for downloading a dataset key by key: skip done, fetch, write, log | `BaseFetcher` |
+| `base_llm_client.py` | extension point for LLM vendors used by extraction (D-098) | `LlmReply`, `BaseLlmClient` |
 | `base_run_log.py` | Extension point for run monitoring events (D-022) | `BaseRunLog` |
 | `base_step.py` | Extension point for pipeline steps run by a runner | `BaseStep` |
 | `base_store.py` | Extension point for where fetched data is written | `BaseStore` |
 | `clock.py` | Injectable time source so sleeps and "today" are controllable in tests (SRC_DESIGN §2.1) | `Clock` |
-| `config.py` | Typed configuration: `config/*.yaml` merged with machine overrides and environment (D-021) | `LakeConfig`, `TushareConfig`, `DownloadConfig`, `FactorSpec`, `CampaignConfig`, `UniverseConfig`, `FuturesCategory`, `TickerAlias`, `Config` |
+| `config.py` | Typed configuration: `config/*.yaml` merged with machine overrides and environment (D-021) | `LakeConfig`, `TushareConfig`, `DownloadConfig`, `FactorSpec`, `CampaignConfig`, `UniverseConfig`, `FuturesCategory`, `TickerAlias`, `LlmConfig`, `Config` |
 | `dataset_spec.py` | Typed view of one `config/datasets.yaml` entry: endpoint, sweep, keys, curated layout | `ValuesFromDataset`, `SweepSpec`, `CuratedSpec`, `DatasetSpec` |
 | `date_codec.py` | The only place that converts between `YYYYMMDD` strings and dates (D-005) | `DateCodec` |
+| `document_source.py` | which documents are downloaded and where they land, as data (config/documents.yaml, D-101) | `DocumentRule`, `DocumentSource` |
 | `exceptions.py` | Project exception hierarchy; every raised error is a `QuantCnError` (CODING_STANDARD §2.5) | `QuantCnError`, `ConfigError`, `SchemaError`, `DataSourceError`, `PermissionDeniedError`, `LakeError` |
 | `frames.py` | Shared panel schemas that cross package boundaries (SRC_DESIGN §3); long format, YYYYMMDD dates | `PRICE_PANEL`, `FUNDAMENTALS_PIT`, `VIX_PANEL`, `GEX_PANEL`, `FUTURES_POSITIONING`, `MARGIN_VINTAGES`, `MARGIN_LADDER`, `UNIVERSE_PANEL`, `FACTOR_PANEL`, `IC_SERIES`, `IC_TEST`, `TRIAL_LOG`, `FORWARD_RETURN`, `QUANTILE_RETURNS`, `EXPOSURE_PANEL` |
 | `schema.py` | DataFrame contract: columns, dtypes and primary key, enforced at lake boundaries | `Schema` |

@@ -123,6 +123,8 @@ Four zones. Data only flows downward; each zone can be rebuilt from the one abov
 │   ├── fetch_log.parquet                 #   durable copy of fetch_log (endpoint, key, n_rows, fetched_at, file); DuckDB loads it
 │   └── manifest/<dataset>.json           #   schema version, row counts per partition, last compaction, min/max key
 │
+├── documents/                            # ZONE 1b original PDFs (D-101): <source>/<doc_type>/<YYYY>/<MM>/<code>_<id>.pdf
+│
 └── external/                             # ZONE 0  files we did not download here (read-only)
     └── legacy_parquet/                   #   old repo exports (klines_daily, daily_basic, ...) if reused, plus a README of provenance
 ```
@@ -134,6 +136,7 @@ Four zones. Data only flows downward; each zone can be rebuilt from the one abov
 | `raw/` | `ParquetWriter` via fetchers | append-only; a key is fetched once, file existence + `fetch_log` = done | Tushare (costly) | the sweep key (`trade_date`, `period`, `ann_date`, `month`, `list_status`, `ts_code`) |
 | `curated/` | `Compactor`, `Curator` steps | replaced per partition, never edited in place | `raw/` | `year=YYYY` of the primary date (`trade_date`, `end_date`, `ann_date`) |
 | `curated/derived/` | `PitAligner`, price builders | replaced per partition | `curated/` | `year=YYYY` |
+| `documents/` | `DocumentDownloader` (D-101) | write-once; manifest in `meta/document_manifest/` | vendor sites (costly; backed up with `raw/`) | `<source>/<doc_type>/<YYYY>/<MM>/` |
 | `meta/` | `LakeCatalog`, `FetchLog` | rebuildable | `raw/` + `curated/` listing | — |
 | `external/` | human | read-only | n/a | as delivered |
 

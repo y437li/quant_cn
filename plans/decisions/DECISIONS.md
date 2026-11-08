@@ -746,3 +746,256 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Alternatives: force a fit (rejected: meaningless numbers); drop decay (rejected: the horizon profile is useful for holding-period choice in plan 06).
 - Consequences: FACTOR_REPORT gains `peak_horizon` and `accumulation_ratio`; FactorChart plots IC by horizon.
 - Links: FACTOR_TESTING_DESIGN §2, plans/execution/04_factors.md ph5
+
+### D-096 CNINFO is the document source for the industry-chain graph
+- Status: accepted with plan 12's approval (2026-11-07).
+- Context: probed 2026-11-07. This Tushare token is denied `research_report` and `anns_d`, but can read `irm_qa_sz`. CNINFO `hisAnnouncement/query` works without a key and covers the whole market by category and date. PDFs download from `static.cninfo.com.cn`.
+- Decision: CNINFO supplies metadata and PDFs for 2023-11-01 onwards: annual, semiannual, Q1/Q3, prospectuses, and announcements filtered by title. Tushare supplies the `irm_qa_sh` / `irm_qa_sz` Q&A. Metadata is kept for every category. PDFs are kept only for the selected types.
+- Alternatives: buy Tushare `research_report` (deferred: open question in plan 12); scrape broker sites (rejected).
+- Links: plan 12 ph2
+
+### D-097 Opus taxonomy is a prior; company edges need document evidence
+- Status: proposed with plan 12 (2026-11-07).
+- Decision: Opus writes the whole-market product taxonomy and the product-to-product chain edges in `config/industry_chain/*.yaml`, tagged `source: prior`. No company→product, supplier, customer or competitor edge exists without an evidence row: document, page, quote that passes a string check, and confidence. Queries label prior edges.
+- Amendment (2026-11-07, user: foreign companies must appear in the chain): `config/industry_chain/_global_companies.yaml` adds the key non-A-share players per segment (NVIDIA, Broadcom, TSMC, Samsung, SK hynix, ASML, Google, Microsoft, Amazon, Meta, Apple, Tesla, BMW, VW, Bosch, Infineon, ST, Pfizer, MSD, ...). Each carries Chinese and English names, country and listing, and role edges (`produces`, `operates`) to taxonomy products. These role edges are priors and are labelled as such. Edges between an A-share company and a foreign company (`sells_to` / `buys_from`) still need document evidence. A-share companies also link to region nodes (境内, 境外, 北美, 欧洲, …) with revenue share from the 分地区 table.
+- Alternatives: let the LLM assert company edges from general knowledge (rejected: unverifiable).
+- Links: plan 12 ph1, ph5
+
+### D-098 DeepSeek extracts and validates; Opus reviews samples and merges taxonomy proposals
+- Status: proposed with plan 12 (2026-11-07).
+- Decision: `DeepSeekClient` (`DEEPSEEK_API_KEY` from `.env` only) runs both the extractor and the validator, with separate prompts. Default model `deepseek-flash` (user, 2026-11-07); the phase-4 pilot runs flash and `deepseek-v4-pro` on the same 50 companies, and pro is used only where flash misses the 85% precision bar (customer/supplier edges, the 0.70–0.90 band). The old key was revoked by the user on 2026-11-07. Every response is cached by prompt hash so rebuilds are free and deterministic. Opus reviews the pilot and validation samples and merges node proposals into the taxonomy.
+- Links: plan 12 ph4, ph5
+
+### D-099 Package `industry_graph` at layer 4; LLM base in `core`, vendor clients in `data_loading`
+- Status: accepted with plan 12's approval (2026-11-07); package created for phase 3.
+- Decision: the graph lives inside quant_cn, not a separate repo as the source note suggested, to reuse the lake, `stock_basic`, Shenwan classification and the loader. `industry_graph` sits at layer 4, independent of `statistic` and `calculation`. `BaseLlmClient` sits in `core`. `CninfoClient`, `DocumentDownloader` and `DeepSeekClient` sit in `data_loading`. `ExtractionStep` sits in `pipeline`. Graph tables go in DuckDB schema `graph`.
+- Links: CODING_STANDARD §2.1, plan 12
+
+### D-100 Eastmoney research reports as the broker-report source
+- Status: accepted by user instruction (2026-11-07: "研报没有是吧" → take the free source).
+- Context: Tushare `research_report` is denied (D-096). The Eastmoney list API `reportapi.eastmoney.com/report/list` returns stock (`qType=0`) and industry (`qType=1`) reports, about 1.1–1.9k per month each and back past 2023-11. The PDFs at `pdf.dfcfw.com/pdf/H3_<infoCode>_1.pdf` download without login.
+- Decision: datasets `em_industry_reports` and `em_stock_reports` (source `eastmoney`, one key per month, `refetch_recent: 1`), with PDFs fetched by `DocumentDownloader`. Industry reports come first because they carry the chain structure (plan 12 ph4).
+- Alternatives: AkShare `stock_research_report_em` (per stock, so 5k calls a pass; rejected for sweeps); buy the Tushare permission (still open).
+- Links: D-096, plan 12 ph2
+
+### D-101 Document storage layout
+- Status: accepted (2026-11-07, user: "数据存储需要organize好").
+- Decision: one place per kind of data, each rebuildable from the zone above it:
+  - Metadata lists (what each site returned): `raw/<dataset>/<key>.parquet` → `curated/documents/<dataset>/year=YYYY/` (`cninfo_announcements`, `em_industry_reports`, `em_stock_reports`, `irm_qa_sh`, `irm_qa_sz`).
+  - Original files: new zone `documents/`. Write-once: a file is never edited, only added. Path `documents/<source>/<doc_type>/<YYYY>/<MM>/<name>.pdf`, where source is `cninfo` or `eastmoney`. The doc type comes from `config/documents.yaml`, and year/month from the publication date. Names: `<sec_code>_<ann_id>.pdf` (CNINFO), `<stock_code>_<info_code>.pdf` (stock reports), `<em_industry_code>_<info_code>.pdf` (industry reports).
+  - Download manifest: `meta/document_manifest/part-<run>.parquet`, append-only, one row per attempt (doc_id, source, doc_type, code, title, publish_date, url, local_path relative to the lake root, bytes, sha256, status, message, downloaded_at). DuckDB view `meta.documents` keeps the latest row per doc_id.
+  - Later phases: page text in `derived/doc_pages/`, graph tables in `derived/graph/` plus DuckDB schema `graph`.
+  - `documents/` is expensive to rebuild (vendor downloads), so it joins `raw/` in `make lake-backup`.
+- Links: FOLDER_STRUCTURE §2, D-096, D-100, plan 12
+
+### D-102 Read only the chain sections; weighted customer, supplier and product edges form one network
+- Status: accepted (user, 2026-11-07: "只需要读跟行业相应的章节…顾客以及供应商、占的百分比，最后应该能连成一张网").
+- Decision:
+  - **Sections only.** `SectionDetector` cuts each report down to the industry-chain sections, and only those go to DeepSeek. The sections are: 主营业务/主要产品及用途、所处行业情况、主营业务构成 (by product, industry, region)、主要销售客户 (top-5 with sales and % of revenue)、主要供应商 (top-5 with purchases and % of purchases)、主要原材料及采购、产能及在建产能、核心技术. Prospectuses also contribute 业务与技术 and 主要客户/供应商 (they usually name them). IR records and Q&A are used whole, since they are short. Everything else (governance, financial statements, notes) is skipped.
+  - **Standard formats, rules before LLM.** Annual reports follow the CSRC content-and-format standard (2021 revision) and prospectuses their own standard. `SectionDetector` therefore locates sections by heading text (管理层讨论与分析, 所处行业情况, 主要业务, 营业收入构成, 主要销售客户和主要供应商情况, 业务与技术, 同行业可比公司), not by section number, which differs across SSE, SZSE and BSE. The 营业收入构成 and 前五名客户/供应商 tables are parsed deterministically. Semiannual reports usually omit top-5 customers, and quarterly reports carry little chain information. Banks, insurers and brokers use a different layout and are skipped for customer and supplier edges.
+  - **Structured first.** Revenue share by product and by industry comes from Tushare `fina_mainbz_vip` (datasets `fina_mainbz_p`, `fina_mainbz_i`; probed 2026-11-07, whole market per period) without the LLM. The LLM maps each `bz_item` to taxonomy products and extracts what only text has: customers, suppliers, raw materials, capacity.
+  - **Weighted edges.** Every company edge carries `period`, `share_pct`, `amount` (CNY, when given), `basis` (`revenue` | `purchases` | `capacity`) and evidence. Edge types: `produces` (company → product, share of revenue), `sells_to` (company → customer company, share of sales), `buys_from` (company → supplier company, share of purchases), `buys_material` (company → material/product).
+  - **Anonymous counterparties** ("客户一", "第一名") become placeholder nodes per (company, period, rank) carrying their share. `EntityResolver` names them only when another document (prospectus, inquiry reply, IR record, or the counterparty's own report) states the link. A sells_to edge from A matched by a buys_from edge from B is one relation with two evidence rows.
+  - **One network.** Company–company edges plus company–product edges plus the product chain (D-097) form a single graph, so a query can walk customer → supplier → supplier's products → upstream materials, with shares as weights.
+  - **Products and services.** Taxonomy product nodes carry `kind: product | service`, so service lines such as IDC operation, cloud, CRO/CDMO, testing, logistics, EPC and financial services are first-class nodes. Revenue vectors, chains and peers span both (user, 2026-11-07: "按照产品、服务来").
+  - **Foreign and unlisted counterparties.** Reports name overseas customers in prose rather than in the top-5 table. Examples from the 6-report prototype: 沪硅产业 lists TSMC, UMC, ST and Vishay; 宁德时代 has VW, BMW, Stellantis, Volvo and DMG nominations; 天岳先进 won a Bosch supplier award. The entity master therefore holds non-A-share companies, with country and listing (e.g. TSMC 2330.TW). Named links without a share are kept as `sells_to` with `share_pct` null, `basis: named` and a qualifier (nomination / volume supply / partner). Mere mentions (industry statistics about Google, staff who once worked at Pfizer) must not become edges; the extractor is prompted to tell a counterparty from a mention, and the pilot measures this. Overseas revenue share comes from the 分地区 table.
+  - **Dependence runs both ways.** Demand dependence: A-share → foreign customer (`sells_to`) plus overseas and North America revenue share. Supply dependence: A-share ← foreign supplier (`buys_from`); e.g. 中际旭创 says key raw materials are partly imported and its supplier A holds 35.76% of purchases. Supply-side evidence comes from the risk section (可能面对的风险 / 重大风险提示: import dependence, export controls), from prospectuses and inquiry replies (import share, named foreign suppliers), and from a prior node attribute `import_dependence: high | medium | low` on taxonomy products (e.g. lithography, EDA, high-end optical chips: high). Document evidence overrides the prior. Queries propagate a shock both ways: a demand shock goes down `sells_to`; a supply cut goes from the product down `upstream_of` / `buys_from`.
+  - **Inferred matches are separate.** An anonymous "客户A 24%" may be matched to a named company (e.g. via region share plus IR or broker text) only as an `inferred` candidate with its reasoning, never as a fact.
+  - **Amount matching (prototype 2026-11-07).** An `inferred` sells_to edge from A's customer row to B's supplier row requires all three of:
+    - amounts within 0.5% with no VAT scaling, since both tables are normally ex-VAT; VAT multipliers produced false pairs such as 中际旭创 客户E ↔ 牧原 供应商四;
+    - a chain path from A's products to B's products;
+    - uniqueness across the whole market.
+    The prototype found 温氏 客户#1 22.29亿 ↔ 双汇 供应商#2 22.31亿 (0.1%, live hogs → slaughter).
+  - **Anonymous-counterparty profile (prototype 2026-11-07, user: "客户都是下游的哪个部分呢…可以推断一下").** Each unnamed top-5 row gets an inferred profile, labelled as inference:
+    - **Business line:** the lines whose revenue is at least the customer amount.
+    - **Downstream stage:** the direct chain successors of that line's products, ranked by end market last, then relation type (input/component before used_in before upstream_of), then name overlap.
+    - **Region:** "确定境外" when the customer share exceeds total domestic revenue share. Arithmetic, e.g. 中际旭创: domestic 9.42% < 客户A 24.06%. "确定境内" in the mirror case. Otherwise "大概率" at ≥80% or ≤20% overseas.
+    - **Name hints:** company-named Tonghuashun concept boards (特斯拉概念, 中芯国际概念, …), weak signals only.
+    - Rules alone mis-rank where one product feeds several applications (宁德时代 → 环卫装备 ahead of passenger EVs). Phase 4 adds demand weights per downstream application and a DeepSeek read of the company's own 主要应用领域 text.
+  - **Broker reports name customers.** E.g. 东吴国际 on 天岳先进: "英飞凌订单翻倍、芯联集成份额80%-90%" names counterparties the annual report keeps anonymous. Broker-report mentions are a source for naming anonymous rows, recorded as `inferred` with the report as evidence.
+  - **US reference.** ASC 280 makes US filers disclose ≥10% customers, usually by name. Compustat Customer Segment, FactSet Revere and Bloomberg SPLC build supply chains from that plus text mining, with source and confidence per link, which is the model followed here. US 10-K full-text search, e.g. for a Chinese supplier's name, is a later source for naming anonymous A-share counterparties; it is out of plan 12 scope.
+  - **Peers.** `GraphQuery.peers` combines four signals and reports the reason for each pair. The main signal is cosine similarity of revenue-weighted product vectors, built from `fina_mainbz_p` mapped to taxonomy products. The second is explicit `competitor_of` edges extracted from 同行业可比公司 (prospectuses) and 主要竞争对手 / 行业地位 (annual reports), which are added to the section list. The third is shared customers or suppliers. The last is the same Shenwan L3 code (baseline only). Peers are found at chain-stage level: an optical-chip maker and an optical-module maker are upstream and downstream, not peers.
+- Links: D-097, plan 12 ph3–ph6
+
+### D-103 Free structured labels before paid LLM labelling
+- Status: accepted (user, 2026-11-07: "还有什么我可以打标的，不需要再重新花钱打标" → "概念板块和公司简介都加上").
+- Decision: before any DeepSeek call, the graph is seeded from structured sources the token already has, all probed 2026-11-07:
+  - `fina_mainbz_p` / `fina_mainbz_i`: revenue by product and by industry.
+  - `stock_company`: main business and business-scope text.
+  - Shenwan membership, already in the lake.
+  - Tonghuashun indices and members: `ths_index`, plus `ths_member` for concept, industry and theme types.
+  - Eastmoney boards and members: `dc_index`, `dc_member`, a daily snapshot from 2026-11-06.
+
+  Company → product labels come from deterministic matching of `bz_item`, `main_business` and `business_scope` against taxonomy names and aliases. Concept boards are a weak signal, used for recall (which paragraphs to send to the LLM) and as theme tags, never as relation evidence. DeepSeek sees only unmatched items and keyword-selected paragraphs.
+- Consequences: datasets 66 → 71; LLM volume drops by roughly an order of magnitude versus whole-section extraction.
+- Links: D-097, D-098, D-102, plan 12 ph4
+
+### D-104 One CompanyCard schema per company, every field with evidence
+- Status: accepted (user, 2026-11-07: "每个公司应该有自己独立的数据schema").
+- Decision: every company has a record of the same schema, keyed by (ts_code, period), with a history of versions. The record holds: identity, profile, revenue_mix (→ product/service nodes, mapping method), capacity, customers and suppliers (rank, name or anonymous, amount, share, resolved / inferred / unknown counterparty), materials (share of cost, import dependence), peers (score and reasons), chain_position (upstream, downstream, revenue-weighted end-market exposure), dependence (overseas and North America share, key imports, export-control risk), valuation (plan 13) and evidence[]. Every field points to its evidence row (document, page, quote, source type, confidence, extraction method).
+  - Storage: tables in schema `graph`, plus a generated `derived/graph/company_card/<ts_code>.json` per company that the view's dossier reads.
+  - It is one uniform schema, not a database per company, so cross-company queries stay SQL.
+- Vertical integration (user, 2026-11-07: "没有他自己的屠宰业务吗？"): revenue_mix keeps the elimination rows of the main-business breakdown (e.g. 牧原 "减：养殖与屠宰、肉食之间销售抵消" −458 亿, about equal to its 452 亿 slaughter revenue). The record stores the internal supply as an edge between the company's own products (live hogs → slaughter, amount), together with external revenue and an integration ratio (internal sales / downstream segment revenue). Segment shares are stated as a share of consolidated revenue and may sum to more than 100%.
+- Freshness by field (user, 2026-11-07: "只有2025 annual report吗？现在应该有季报了"): every field takes its latest available source.
+  - Top-5 customers and suppliers, competition and risks: the latest annual report (FY2025, filed Mar–Apr 2026; next in Apr 2027).
+  - Business description, revenue mix by product and region, capacity: the latest semiannual or annual report (2026 H1) and `fina_mainbz` (through 2026-06-30).
+  - Latest revenue and profit and the SSE 主要经营数据: Q3 2026.
+  - Operating KPIs: monthly briefs.
+  - The record keeps each field's period, so a reader sees how fresh it is. CNINFO is swept and downloaded in this order: Mar–Apr 2026 (FY2025 annual, 2026 Q1), Aug 2026 (H1), Oct 2026 (Q3), then the rest.
+- Links: D-097, D-102, D-103, plan 12 ph6, plan 13
+
+### D-105 Broker-report valuation extraction is plan 13
+- Status: accepted as scope (user, 2026-11-07: "后续还需要加research paper是怎么做定价估值的"); plan 13 to draft after plan 12 phase 4.
+- Decision: extract from Eastmoney stock reports (D-100), together with `report_rc`: valuation method (PE, PB, PS, EV/EBITDA, DCF, SOTP, PEG), multiple and target year, target price, WACC and terminal growth, comparable-company set (a further peer signal for D-102), segment-level volume, price and margin assumptions linked to taxonomy products, and dispersion across brokers. Results land in CompanyCard.valuation. Same rules as plan 12: section-first, rules before LLM, evidence on every field.
+- Links: D-100, D-102, D-104, plan 12
+
+### D-108 LLM operation: reasoning off, priced per call, every run on a cost ledger
+- Status: accepted by execution (2026-11-07; user: "每次跑deepseek看一下cost是多少").
+- Context: with reasoning on, `deepseek-flash` spent ~13k reasoning tokens on one report and truncated the JSON at max_tokens 6k (empty content, finish_reason "length"). The API accepts `thinking: {"type": "disabled"}`.
+- Decision:
+  - Extraction runs with reasoning off (`llm.thinking: false`) and `max_tokens` 8000; a truncated reply raises a clear error.
+  - Prices live in `config/base.yaml` `llm.prices` (peak CNY per 1M tokens: flash 0.04 / 2 / 8 for cache-hit input / miss input / output; v4-pro 0.30 / 9 / 27; source api-docs.deepseek.com, 2026-11-07). Off-peak is half (Beijing time, outside 9–12 and 14–18 on weekdays).
+  - `DeepSeekClient` computes the cost of every call. Each run appends a line (time, label, model, calls, tokens, cost) to `lake/meta/llm_usage.jsonl` and prints the run's cost.
+- Results: phase-4a pilot, 10 annual reports, ¥0.157; plan-13 pilot, 28 broker reports, ¥0.200. Full-market estimate, one annual report per company: ≈ ¥86 off-peak.
+- Links: D-098, plan 12 ph4, plan 13
+
+### D-109 Broker valuation: implied multiple vs target multiple
+- Status: accepted by execution (2026-11-07), plan 13 pilot.
+- Context: in 28 reports on 10 companies, A-share brokers mostly state "当前股价对应 PE x 倍" (the multiple implied by today's price) and give no target price. Only HK and foreign brokers (招银国际, 交银国际, 东吴国际) gave target prices, with DCF or EV/EBITDA. Loss-makers are valued on PS (沪硅产业), hog farmers mostly on PE of the next year (10–14x), with cost-per-kg and volume assumptions.
+- Decision: CompanyCard.valuation records `multiple_kind: implied_at_price | target` for every multiple, with its base year and the price date. Only `target` multiples and explicit target prices count as a broker's valuation view; implied multiples are kept as context. Industry induction reports both separately.
+- Amendment (user, 2026-11-08: "光伏都在亏损，怎么还是p/e估值？"): when the nearest forecast year is a loss, a broker's PE is quoted on a later recovery year (e.g. 2027E/2028E). That is a recovery bet, not a normal multiple. Industry and product statistics therefore:
+  - report implied PE per base year;
+  - give the share of reports with a near-term loss and the share with no multiple at all;
+  - add PB.
+  The synthesis prompt must name the base year and call it a recovery bet. The 140 loss-heavy groups are re-synthesized with forecasts in the digests.
+- Links: D-105, plan 13
+
+### D-106 Sector-specific KPIs by Shenwan industry
+- Status: accepted (user, 2026-11-07: "要加，按申万行业定义专属指标").
+- Decision: `config/sector_kpis.yaml` defines, per Shenwan L1 sector and optional L2/L3 groups, the KPIs a company of that industry discloses. Each KPI has an id, name, unit, frequency, definition, sources and extraction keywords; format in the header of `config/sector_kpis.yaml`. Examples: hog farming (sales volume, full cost, average price, sows), banks (NIM, NPL ratio, provision coverage, CET1), batteries (GWh shipped, capacity, utilisation), baijiu (volume, price per tonne, distributors). CompanyCard gets a `sector_kpis` block of rows (ts_code, kpi_id, period, value, unit, evidence). Rules come first where the disclosure is formatted: monthly sales briefs (e.g. 生猪销售简报), regulatory-indicator tables, production and sales tables. The LLM handles the rest. Amendment (user, 2026-11-07: "但这些应该是研究报里读出来的"): the KPI set is read from broker industry reports; Opus's list is only a candidate seed (`origin: prior`).
+  - Free step: per Shenwan industry, count metric phrases followed by numbers in industry-report text.
+  - Small paid step: DeepSeek flash reads ~15 deep-dive industry reports per sector and extracts the tracked KPIs (name, unit, frequency, data source such as company announcements, an industry association or NBS, and the latest value).
+  - Company side (user, 2026-11-07: "应该是broker report和报告一起决定吧"): the same counts over company filings, i.e. the annual-report 产销量 / 主要经营数据 sections and monthly operating briefs, give the share of peer companies disclosing each KPI.
+  - Final set by both sides: tracked and disclosed → `core` (value from filings; broker figures as check and forecast); tracked only → `broker` (value from broker estimates or an external source such as an association or NBS, labelled estimated); disclosed only → `disclosed` (secondary field); neither → dropped.
+  - Each KPI records `report_citations` and `disclosure_share`, with an example of each. Broker-versus-filing values for the same KPI feed plan 13's assumption checks.
+- Links: D-103, D-104, plan 12 ph4, ph6
+
+### D-107 Taxonomy merge: one owner per concept, decided by where the makers sit in Shenwan
+- Status: accepted by execution (2026-11-07), as part of plan 12 phase 1.
+- Context: the 31 sector files written in parallel had 445 name/alias clashes and lacked cross-sector links.
+- Decision: a concept defined in two files is kept once, in the file of the Shenwan L1 sector where its main listed makers are classified, checked against `index_member_all`. The deleted id is recorded in `config/industry_chain/_merged_ids.yaml` (old → surviving), and every stored id is translated through it.
+  - Electronic chemicals and semiconductor equipment → electronics. Exceptions: electronic resin, spherical silica and PI film stay in chemicals.
+  - Battery chemicals and PV / lithium-battery equipment → power equipment.
+  - Superalloys → nonferrous.
+  - Satellites and BeiDou → defense.
+  - Humanoid-robot parts → machinery.
+
+  Ambiguous aliases were made specific (e.g. TPU芯片 / TPU弹性体). The format gains `upstream_of` → material, `substitute_for` product ↔ material and the relation `operates` (service → asset). 245 bridge edges were added; sector-crossing edges went from 269 to 607. A high-speed copper sub-chain (user request) has 5 sub-segments: conductor and insulation → Twinax → DAC/ACC/AEC with Retimer/Redriver chips → switch, AI server and rack. The merge script, decisions and log are under `quant_cn_lake/meta/runs/merge/` and re-run from the pre-merge backup.
+- Result: 610 segments, 3,297 products and services, 78 materials, 36 technologies, 47 end markets, 7,697 edges; checker OK with 0 errors.
+- Links: D-097, plan 12 ph1
+
+### D-110 Download concurrency per source in config; one download per site at a time
+- Status: accepted (user, 2026-11-07: "好，做成配置参数").
+- Context: raising the Eastmoney industry-report download to 8 workers at 0.12 s spacing (~8–11 req/s, alongside the stock-report download) got HTTP 567 (Eastmoney's throttle) on ~250 requests in 4 minutes, and throughput fell. Fetching is network-bound, so threads per process suffice; the limit is the site, not CPU.
+- Decision: `config/documents.yaml` sets `workers` and `min_interval_s` per source; the defaults of 4 and 0.25 s (~4 req/s) are the verified safe rate. `DocumentDownloader.run` builds its RequestPacer from the source; the CLI `--workers` only overrides. Only one download per site runs at a time, because the pacer limits a single process. Failed downloads stay in the manifest as `failed` and are retried on the next run.
+- Follow-up (same day): the 567s continued after the fast run stopped. pdf.dfcfw.com blocked our IP for single requests, while the list API still answered. Per-worker retries kept hitting the block. Sources now also set `throttle_codes` (default 429, 567) and `cooldown_s` (default 900 s). On a throttle reply `RequestPacer.record_throttle` pauses every worker. Eastmoney is set to 3 workers at 0.3 s. A resume script probes every 10 minutes and restarts the Eastmoney downloads once the block lifts.
+- Links: D-101, plan 12 ph2
+
+### D-111 CNINFO: a query reaches ~3,000 rows; sweep by category and keyword, split above the cap
+- Status: accepted by execution (2026-11-07).
+- Context: CNINFO answers every page after ~101 with the same rows, so one query yields at most ~3,000 rows. The FY2025 annual-report listing for April returned 3,000 of 8,913 rows; the gap showed as only 3,200 annual reports for ~5,400 companies. On peak days a single day is far above the cap. 2026-04-29 had 26,066 announcements: 9,088 in SZSE main board alone and 12,834 in 日常经营 alone. Whole-day sweeps of every announcement therefore silently lose data on the days that matter.
+- Decision:
+  - `CninfoClient` checks `totalAnnouncement`. Above `MAX_ROWS` (3,000) it splits the date range in halves down to one day, then one day by board (`szmb`, `szcy`, `shmb`, `shkcp`, `bj`, a partition of the market). Whatever is still beyond the cap is logged, never silently dropped.
+  - `cninfo_announcements` is swept by month × category: periodic reports (年报, 半年报, 一季报, 三季报), 首发 and 增发. Each stays under the cap per day.
+  - The new `cninfo_keyword_announcements` is swept by month × title keyword: 投资者关系活动记录表, 重大合同, 中标, 问询函, 重组报告书, 对外投资, 可行性研究报告. It has its own document source `cninfo_kw` (same title rules, same `documents/cninfo/` folder).
+  - The whole-day raw files fetched before this change are kept and deduplicated by the primary key.
+- Consequences: far fewer requests than whole-day sweeps; complete periodic reports; announcement types outside these lists are not collected (a deliberate scope, D-102).
+- Links: D-096, D-101, D-102, plan 12 ph2
+
+### D-112 Business model as archetypes with revenue-driver trees
+- Status: accepted (user, 2026-11-07: "可以，开始做商业模式的第一步"); design plans/architecture/BUSINESS_MODEL_DESIGN.md v0.3.
+- Decision: CompanyCard gets a `business_model` block built per revenue segment.
+  - Each segment gets one of 12 archetypes, from commodity producer and processing spread through regulated utility to financial balance sheet. The archetype fixes the revenue-driver formula, who sets the price and the profit hinge.
+  - Drivers are sector KPI ids (D-106), so filed actuals, IR figures and broker assumptions (plan 13) land on the same node.
+  - Further blocks: cost structure, pricing and pass-through, customers and channels, supply, capital intensity, cyclicality (price exposures), growth (capacity under construction) and integration.
+  - Rules come first: 营业成本构成, 分销售模式, 分地区, top-5 and fina_indicator. The LLM handles pricing and pass-through, as fields added to the existing business-section call.
+  - The SW L3 → archetype defaults are an Opus prior in `config/business_models.yaml`, spot-checked by the user.
+  - Config `config/business_models.yaml` (2026-11-07) holds 12 archetypes and 68 variants, with signals readable from filings, and maps 346 SW L3 codes (145 with a secondary archetype, 110 with a note on debatable defaults). 1,349 driver roles link to 716 of the 728 sector KPI ids, and a role may list several KPI ids. Common roles usable under any archetype are listed in the file header: revenue, margin, overseas_share, rd_ratio, customer_concentration, receivables, capex, and others.
+  - Operating-mode variants (user: "每个行业其实他们的商业模式也有不太一样"): each archetype lists variants with filing signals, such as integrated vs 公司+农户, ODM vs own brand, or direct vs distributor. Each company's segment gets archetype + variant from its own 经营模式 text and rule signals. The SW L3 map is only a default, and peers and the cycle clock compare on archetype + variant.
+  - v0.3 adds (user: "补上吧") binding point-in-time history for every label; accounting-quality flags; governance and capital allocation; competitive structure (CR5/HHI per product); driver sensitivities linked to lake price series; and a validation bar per label type.
+  - v0.2 adds four judgements (user: "扩张期，运营期，收缩期…clock…是否会继续长期存在…护城河"): company lifecycle, from capex/depreciation, 在建工程 and capacity text; cycle clock, from demand, margin and capex at industry and product level, with broker narratives as a check; durability, from demand trend, substitution, regulation, cost position and balance sheet; moat, where 核心竞争力 claims are tested against ROIC persistence, relative margins, price premium and share.
+- Links: D-097, D-102, D-103, D-104, D-106, plan 12 ph6, plan 13
+
+### D-113 Industry valuation cards and reverse-engineered parameters
+- Status: accepted (user, 2026-11-07: "research中要看行业倾向用什么估值方式，给什么multiple，参数我们是否能反推").
+- Decision: plan 13 phases 4–5.
+  - **Industry valuation cards.** Method mix comes from report extraction. Multiples per base year, PEG, upside and broker dispersion come from `report_rc`, whose target price is `max_price` / `min_price`; `tp` is total profit in 10k CNY, per DATA_CATALOG. Each card lists the KPIs the assumptions bet on, linked to sector_kpis ids.
+  - **Implied parameters.** For mature archetypes, a single-stage PB-ROE / Gordon model gives the implied required return. For growth archetypes, the required return comes from CAPM (lake yields and prices), and a two-stage model gives the implied high-growth duration and terminal growth.
+  - **Market vs broker.** Both are computed at the target price and at the market price, which shows how far broker optimism runs and where it sits (growth or required return).
+- Evidence: the prototype single-stage implied r was 4% for 计算机 and 12% for 银行, so one model does not fit both.
+- Links: D-105, D-106, D-109, D-112, plan 13
+
+### D-114 Consensus and forward multiples are a core lake dataset
+- Status: accepted (user, 2026-11-07: "还有forward pe吗？这个应该是整个架构的一部分", "research report应该可以读这些").
+- Decision: a `ConsensusStep` (pipeline, per year like UniverseStep) materialises `derived/consensus/year=YYYY`, one row per stock and session, using the FACTOR_LIBRARY §3b rules.
+  - Each broker's latest forecast within a trailing 90-day window counts once. Reports become usable the session after `report_date`.
+  - Each row holds FY1–FY3 EPS, net profit and revenue (median, mean, n_brokers, dispersion), NTM EPS (time-weighted FY1/FY2), the median target price (`max_price`/`min_price`; never `tp`) and the mean rating.
+  - The view `derived.forward_valuation` adds forward EP (primary, safe for losses), forward PE (display), forward PEG, implied upside and forward PB from forecast ROE. It also carries coverage and dispersion flags.
+  - Sources: `report_rc` first; PDF-extracted forecasts (plan 13) fill brokers missing from report_rc and cross-check it.
+  - Consumers: industry valuation cards, implied parameters, CompanyCard, and plan 07's revision factors.
+- Prototype (2026-09-30): 2,242 stocks covered (1,231 with ≥ 3 brokers). Forward PE 中际旭创 16.5, 宁德时代 11.8, 恒瑞医药 30.8. Industry medians range from 军工 46 to 银行 6. 天岳先进's dispersion of 1.16 shows why the flag is needed.
+- Links: FACTOR_LIBRARY §3b, D-105, D-109, D-113, plan 13 ph6, plan 07
+
+
+### D-115 Revenue lines map to taxonomy nodes by rules with Shenwan context
+- Status: accepted (user, 2026-11-08: "做产品分类，提高产品映射率").
+- Decision: `ProductTaxonomy` loads config/industry_chain (names and aliases always strings, merged ids, `sw_l3_map`). `ProductMatcher` maps each 主营构成 line, without the LLM, as follows.
+  - Generic lines (其他, 投资收益, 抵销, ...) map to nothing and leave the denominator. Sub-lines of a reported parent line ("利息净收入：利息支出：...") are dropped.
+  - Names are normalized: parentheses and suffixes (收入/业务/产品/类) are removed, and the leaf of "A：B" is tried before the top level.
+  - Each label is scored: exact 1.0; contains 0.6–0.9 (a line inside a label only with 3+ characters and half the label); bigram overlap only inside the company's Shenwan context. In-context labels get +0.2, and the threshold is 0.55.
+  - A compound line is split when two or more parts match.
+  - Last resort: a company whose Shenwan codes map to one root segment gets that segment, marked `how: sector` (low confidence).
+- Result (FY2025, 5,639 companies): non-generic lines mapped rose from 27% to 78.5% (54% without the sector fallback). Companies with ≥ 50% of revenue mapped rose from 1,805 to 4,477.
+- Known limits: rules still mis-map some compound lines. An LLM pass over the unmatched and sector-only lines is the next step, after a cost estimate.
+- Links: D-097, D-102, D-107, plan 12 ph1/ph4
+
+### D-116 Web app: React front end, read-only Go API, logic stays in Python
+- Status: accepted (user, 2026-11-08: "前后端我们定了吗？可以用go来做后端，前端用react", then "现在本地demo"). Local only for now.
+- Decision:
+  - The front end is React + TypeScript (Vite, Cytoscape.js).
+  - The back end is a read-only Go API (go-duckdb over `derived/graph/*.parquet`) with one OpenAPI contract.
+  - All extraction, matching, statistics and business rules stay in Python: `GraphExportStep` writes the tables and Go only serves them.
+  - One local binary embeds the built front end.
+- Alternatives:
+  - Python FastAPI back end (rejected by the user's preference for Go; it would also mix serving into the analysis package).
+  - Business logic in Go (rejected: duplicates tested Python classes, CLAUDE.md "never duplicate").
+  - Keep the single-file artifact (rejected: 56 MB of JSON, no server-side search, hard to maintain).
+- Consequences: a standards addendum for Go and TS before any code; caches kept off the exFAT volume; `make check` gains `app-check`.
+- Links: plan 15, D-099, D-104, D-115
+
+### D-117 Income statement keeps the expense lines
+- Status: accepted (user, 2026-11-08: "细节表里也显示一下净利润吧，还有其他相关的expense").
+- Decision: `income_vip` also stores `total_revenue, sell_exp, admin_exp, fin_exp, biz_tax_surchg, assets_impair_loss, credit_impa_loss, n_income, minority_gain, non_oper_income, non_oper_exp`. The dataset is re-downloaded from 2016 with `--force`, so every period carries the new columns. Primary key and `known_on` are unchanged.
+- Consequence: the company financial table (chain view and app) shows FY2023–FY2025 revenue, gross profit, the four expense lines with ratios, impairments, operating profit and net profit attributable. The ratios are computed in Python.
+- Links: D-092, D-104, plan 15
+
+### D-118 Pricing power and the posterior archetype check are measured, not assumed
+- Status: accepted (user, 2026-11-08: "我们有判断他们是price taker还是price maker吗？定价权", "商业模式有后验结果了吗？", then "ok" to the design and to the DeepSeek 经营模式 reading at about ¥35–45).
+- Decision:
+  - Pricing power per company (and per segment) comes from six measured signals: GM level, GM stability, cost pass-through against a futures input-cost index, output-price exposure, market share, and margin through the cycle. One text signal adds quarterly notes plus a DeepSeek reading of the annual 经营模式 text.
+  - The rule is 3 of 6 signals with no contrary signal. Output: maker / middle / taker / insufficient, with reasons and evidence (BUSINESS_MODEL_DESIGN §4.5).
+  - Each archetype gets expected signatures; every company is checked against them, and mismatches go to a review queue (§4b.7).
+  - New config `config/material_prices.yaml` maps material nodes to futures contracts for the input-cost index.
+- Alternatives:
+  - The archetype default pricing mode alone (rejected: it is a prior, the question is the posterior).
+  - LLM judgement alone (rejected: not testable).
+- Cost: rules ¥0. The DeepSeek 经营模式 reading (variant, 定价方式, 成本传导, price actions) of FY2025 annual reports is about ¥35–45 off-peak and runs only after a cost confirmation.
+- Links: D-104, D-106, D-112, BUSINESS_MODEL_DESIGN §4.5, §4b.7, plan 12 ph6
+
+### D-119 Tushare `research_report` replaces the Eastmoney list for new days; coverage comes from `report_rc`
+- Status: proposed (2026-11-08; user opened the `research_report` permission, awaiting the call).
+- Context: D-096/D-100 chose the Eastmoney list API because `research_report` was denied. Probe on 2026-08-25: `research_report` 208 rows (165 stock, 43 industry), PDFs at `pdf.dfcfw.com` (same source); Eastmoney list 164 stock reports. Neither carries 华泰/中金/招商 PDFs. `report_rc` that day: 584 distinct stock reports (code, org, title) from ~90 brokers; only 76 (code, org) pairs overlap with `research_report`.
+- Decision: from approval on, fetch report lists and PDF links from `research_report` (official API, `ts_code` and `ind_name` included); keep existing `em_*` files and documents unchanged. Analyst coverage and consensus are measured from `report_rc` (forecast rows of every report, PDF or not), never from PDF lists.
+- Alternatives: keep the Eastmoney scraper (rejected if approved: duplicate source, scraping fragility and site terms); fetch both (rejected: duplicate rows of the same reports).
+- Consequences: a `research_report` dataset (trade_date sweep) in plan 11 ph11; `em_stock_reports` / `em_industry_reports` stop at the switch date (`end:` in config); `DocumentDownloader` reads URLs from the new dataset; plan 13 notes that PDF text covers about a quarter of reports.
+- Links: D-096, D-100, plan 11 ph11, plan 12 ph2, plan 13

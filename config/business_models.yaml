@@ -1,0 +1,985 @@
+# config/business_models.yaml — business-model archetypes and the Shenwan L3 → archetype default map (D-112)
+#
+# What: the 12 archetypes of plans/architecture/BUSINESS_MODEL_DESIGN.md §1 (revenue formula, driver roles,
+# pricing, pass-through, profit hinge, cycle signals, moats, valuation methods, operating-mode variants) and a
+# default archetype for every Shenwan 2021 L3 industry (sw_tree.csv, 346 codes).
+# Status: Opus prior written from general knowledge of A-share companies, to be spot-checked by the user
+# (BUSINESS_MODEL_DESIGN §4b.6). The L3 map is only a default: each company's segment gets archetype + variant
+# from its own 经营模式 text and rule signals (D-112), which override it.
+#
+# Format
+# archetypes:
+#   A1:                                  # ids A1..A12
+#     name / name_en / revenue_formula
+#     drivers: [{role, description}]     # archetype-specific driver roles
+#     pricing: market|spread|negotiated|bid|brand|regulated|contract
+#     pass_through: full|lagged|partial|none
+#     profit_hinge, cycle_signals [demand|margin|capex|commodity_price|inventory],
+#     moat_types [cost|switching|intangible|network|efficient_scale], valuation_methods [PE, PB, ...]
+#     variants: [{id, name, description, signals: [...]}]   # id snake_case, unique in the whole file
+# sw_l3:
+#   "110702":                            # L3 code (string), one entry per row of sw_tree.csv
+#     archetype: A1                      # primary archetype
+#     secondary: [A2]                    # optional, other archetypes common in the L3
+#     drivers: {role: kpi_id | [kpi_id, ...]}   # ids from config/sector_kpis.yaml (L1 or group kpis that apply)
+#     common_variants: [variant_id, ...] # optional, variant ids seen in the L3
+#     note: "..."                        # optional, where the default is debatable
+#
+# A driver role must be a role of the primary or a secondary archetype, or one of the common roles that apply
+# to every archetype: revenue, margin, overseas_share, rd_ratio, customer_concentration, receivables, capex,
+# revenue_per_staff, contract_liabilities, market_share, inventory, capacity_growth, marketing_ratio.
+# A role with no matching KPI is omitted; empty `drivers: {}` means no sector KPI fits yet.
+
+archetypes:
+  A1:
+    name: 大宗商品生产
+    name_en: Commodity producer
+    revenue_formula: "volume × market_price"
+    drivers:
+      - {role: volume, description: "产量/销量 (头, 吨, 盎司, 桶)"}
+      - {role: price, description: "实现售价, tracks a quoted market price"}
+      - {role: unit_cost, description: "单位完全成本/现金成本 (完全成本, 吨煤成本, AISC)"}
+      - {role: unit_margin, description: "单位毛利 (吨煤毛利, 吨毛利)"}
+      - {role: capacity, description: "产能/存栏/核定产能/配额"}
+      - {role: utilisation, description: "产能利用率"}
+      - {role: reserves, description: "资源储量/可采储量"}
+      - {role: self_sufficiency, description: "资源自给率"}
+      - {role: mix, description: "长协 vs 现货, 产品结构"}
+      - {role: efficiency, description: "生产效率 (PSY, 品位)"}
+    pricing: market
+    pass_through: none
+    profit_hinge: "unit cost position on the industry cost curve versus the market price (完全成本 vs 价格)"
+    cycle_signals: [commodity_price, capex, inventory, margin]
+    moat_types: [cost, efficient_scale]
+    valuation_methods: [PE, PB, EV_EBITDA, NAV, EV_per_capacity]
+    variants:
+      - id: integrated_farming
+        name: 自繁自养一体化
+        description: Own breeding, own farms and often own feed mills and slaughter; asset heavy, full control of cost.
+        signals: ["经营模式 text mentions 自繁自养 or 全产业链一体化", "fixed assets / revenue > 1", "生产性生物资产 large on the balance sheet", "no 代养费 line in 营业成本构成"]
+      - id: contract_farming
+        name: 公司+农户 委托养殖
+        description: Company supplies piglets/chicks, feed and vet services; contract farmers raise them for a fee; asset light.
+        signals: ["经营模式 text mentions 公司+农户 or 合作农户 or 委托养殖", "代养费 / 委托养殖费 in 营业成本构成", "fixed assets / revenue < 0.6"]
+      - id: feed_plus_farming
+        name: 饲料+养殖
+        description: Feed business funds and supplies an attached farming business; earnings mix spread (A2) and commodity (A1).
+        signals: ["fina_mainbz has both 饲料 and 养殖 segments, each > 20% of revenue", "internal feed supply in elimination rows"]
+      - id: breeding_stock_supplier
+        name: 种源/苗种供应
+        description: Sells breeding stock or young animals/seedlings (种猪, 祖代/父母代, 鸡苗, 苗种) rather than finished product.
+        signals: ["main products are 种猪, 鸡苗, 父母代 or 苗种 in fina_mainbz", "monthly brief reports 鸡苗/仔猪 volume as the headline"]
+      - id: own_resource_mining
+        name: 自有资源开采
+        description: Mines its own deposits; profit = market price − mining cost; value tied to reserves.
+        signals: ["资源储量 and 采矿权 disclosed", "unit mining cost disclosed", "无形资产 holds 采矿权"]
+      - id: mine_to_metal_integrated
+        name: 采选冶一体化
+        description: Own mines feed own smelters; earns both the resource rent and part of the processing spread.
+        signals: ["fina_mainbz splits 矿产 and 冶炼 products", "资源自给率 disclosed", "外购原料 share < 50%"]
+      - id: quota_allocated_resource
+        name: 配额/指标制资源
+        description: Output capped by state quotas (稀土, 钨, 制冷剂 etc.); quota holders enjoy restricted supply.
+        signals: ["text mentions 开采指标 / 冶炼分离指标 / 生产配额", "quota volume disclosed"]
+  A2:
+    name: 加工价差
+    name_en: Processing spread
+    revenue_formula: "volume × (output_price − input_price)"
+    drivers:
+      - {role: volume, description: "加工量/销量"}
+      - {role: price, description: "产品售价"}
+      - {role: input_price, description: "主要原料采购价"}
+      - {role: input_cost_share, description: "原材料占营业成本比例"}
+      - {role: spread, description: "价差/加工费 (炼油毛利, TC/RC, 吨钢毛利)"}
+      - {role: unit_margin, description: "单位毛利/净利 (吨利)"}
+      - {role: utilisation, description: "开工率/产能利用率"}
+      - {role: capacity, description: "设计产能"}
+      - {role: mix, description: "高端品种占比, 副产品"}
+      - {role: self_sufficiency, description: "上游原料自给率"}
+    pricing: spread
+    pass_through: partial
+    profit_hinge: "spread between output and input markets times utilisation; scale and process cost decide who earns in the trough"
+    cycle_signals: [margin, commodity_price, capex, inventory]
+    moat_types: [cost, efficient_scale]
+    valuation_methods: [PB, PE, EV_EBITDA, EV_per_capacity]
+    variants:
+      - id: standalone_converter
+        name: 外购原料加工
+        description: Buys all inputs on the market and sells into another market; earns the pure spread.
+        signals: ["主要原材料 all 外购", "毛利率 tracks a published spread index", "no upstream segment in fina_mainbz"]
+      - id: upstream_integrated_converter
+        name: 上游一体化
+        description: Owns part of its feedstock (自有煤矿, 自有浆, 自有氧化铝, 自有磷矿); cushions the spread.
+        signals: ["原料自给率 disclosed", "upstream product appears as internal supply in elimination rows", "采矿权 or upstream capacity disclosed"]
+      - id: toll_processing_fee
+        name: 加工费模式
+        description: Price = input cost passed through + a negotiated processing fee (来料加工, 正极加工费, 钢结构吨加工费).
+        signals: ["经营模式 text mentions 加工费 or 成本加成 or 原材料价格+加工费", "毛利率 falls when input prices rise but 毛利额 per ton stable"]
+      - id: physical_trading
+        name: 大宗贸易
+        description: Buys and sells physical commodities with inventory and hedging; thin margin, large revenue.
+        signals: ["毛利率 < 5%", "fina_mainbz names 贸易 or 供应链 revenue", "large 衍生金融工具 / 套期保值 notes"]
+  A3:
+    name: B2B零部件/材料供应
+    name_en: B2B component / material supplier
+    revenue_formula: "shipments × ASP × mix"
+    drivers:
+      - {role: volume, description: "出货量/销量"}
+      - {role: price, description: "ASP/单价, often with annual price-downs"}
+      - {role: input_price, description: "主要原材料价格 (铜, 树脂, 钢材)"}
+      - {role: mix, description: "产品/下游结构 (汽车, 服务器, 新能源占比)"}
+      - {role: utilisation, description: "产能利用率/稼动率"}
+      - {role: capacity, description: "产能"}
+      - {role: design_wins, description: "定点/认证/客户验证进展"}
+      - {role: orders, description: "新增定点/新签订单"}
+      - {role: content_per_unit, description: "单车/单机配套价值量"}
+    pricing: negotiated
+    pass_through: lagged
+    profit_hinge: "design wins and mix upgrades against customer concentration and annual price-downs"
+    cycle_signals: [demand, inventory, capex, margin]
+    moat_types: [switching, cost, intangible]
+    valuation_methods: [PE, PEG, EV_EBITDA]
+    variants:
+      - id: odm_oem_maker
+        name: ODM/OEM 代工
+        description: Makes to the customer's specification under the customer's brand.
+        signals: ["经营模式 text mentions ODM or OEM or 代工", "自有品牌 revenue share < 30%", "top-5 customers > 50%"]
+      - id: own_brand_supplier
+        name: 自有品牌标准品
+        description: Sells its own catalogue products to many B2B buyers, often via distributors.
+        signals: ["经销 share > 40% in 分销售模式", "top-5 customers < 30%", "text mentions 自有品牌 or 标准品"]
+      - id: single_key_customer
+        name: 单一大客户
+        description: One customer (Apple, Tesla, SGCC, a car OEM) dominates; revenue rides that customer's cycle.
+        signals: ["largest customer > 30% of revenue in top-5 table", "text names 大客户 or a specific customer program"]
+      - id: diversified_customers
+        name: 客户分散
+        description: Broad customer base; no single customer above 10%.
+        signals: ["top-5 customers < 25%", "largest customer < 10%"]
+      - id: design_in_program
+        name: 项目定点
+        description: Wins multi-year supply programs per platform (定点), revenue follows the program's ramp.
+        signals: ["text mentions 定点 or 项目定点 or 生命周期总金额", "new program awards announced"]
+  A4:
+    name: 设备/工程项目
+    name_en: Equipment / project contractor
+    revenue_formula: "new_orders → backlog → revenue recognised (deliveries)"
+    drivers:
+      - {role: orders, description: "新签订单/新签合同额/中标金额"}
+      - {role: backlog, description: "在手订单/手持订单"}
+      - {role: deliveries, description: "交付/发出商品/竣工 (revenue recognition)"}
+      - {role: volume, description: "设备销量/施工面积"}
+      - {role: price, description: "招标/新造船价格水平"}
+      - {role: cash_conversion, description: "经营现金流 vs 利润"}
+      - {role: leverage, description: "净负债率 (presale developers, PPP)"}
+      - {role: funding_cost, description: "融资成本"}
+      - {role: mix, description: "运营收入占比/业务结构"}
+    pricing: bid
+    pass_through: partial
+    profit_hinge: "order intake and backlog cover versus margin per project and cash collection"
+    cycle_signals: [demand, capex, margin]
+    moat_types: [intangible, switching, efficient_scale]
+    valuation_methods: [PE, PB, EV_backlog]
+    variants:
+      - id: equipment_vendor
+        name: 设备销售
+        description: Sells standardised or configured machines; revenue on delivery/acceptance.
+        signals: ["发出商品 and 合同负债 large", "收入确认 on 验收 or 交付", "设备销售 dominant in fina_mainbz"]
+      - id: epc_contractor
+        name: 工程总承包
+        description: Builds projects under EPC/总承包, revenue over time by progress.
+        signals: ["合同资产 large", "收入确认 按履约进度", "text mentions EPC or 总承包 or 施工"]
+      - id: ppp_investment_build
+        name: 投资建设 PPP/BOT
+        description: Invests in and builds projects recovered over a concession; balance-sheet heavy.
+        signals: ["长期应收款 or 特许经营权 rising", "text mentions PPP or BOT or 投资类项目", "net debt rising with backlog"]
+      - id: presale_developer
+        name: 预售开发
+        description: Sells homes before completion; contracted sales become revenue on delivery; land bank is inventory.
+        signals: ["合同负债 from 预售", "存货 mostly 开发成本", "text mentions 签约销售 and 土地储备"]
+      - id: defense_state_plan
+        name: 军品计划订货
+        description: Supplies state defense programs; price via 审价, orders via annual plans and related-party framework.
+        signals: ["日常关联交易预计 large", "text mentions 军品 or 审价 or 暂定价", "实际控制人 is a defense group"]
+      - id: equipment_plus_service
+        name: 设备+服务
+        description: Installed base drives recurring service, spares and upgrades.
+        signals: ["服务/备件 revenue share > 20%", "text mentions 运维 or 后市场"]
+  A5:
+    name: 消费品牌
+    name_en: Consumer brand
+    revenue_formula: "volume × price_per_unit, by channel"
+    drivers:
+      - {role: volume, description: "销量 (吨, 千升, 台, 件)"}
+      - {role: price, description: "吨价/单价/均价"}
+      - {role: mix, description: "高端产品占比"}
+      - {role: channel, description: "渠道结构 (线上, 直营, 外销)"}
+      - {role: dealers, description: "经销商数量"}
+      - {role: stores, description: "门店数量"}
+      - {role: store_changes, description: "净增门店"}
+      - {role: same_store_growth, description: "同店增长/零售流水"}
+      - {role: capacity, description: "产能"}
+      - {role: input_price, description: "主要原料价格 (原奶, 黄金, 浆)"}
+      - {role: input_cost_share, description: "原材料成本占比"}
+      - {role: unit_margin, description: "吨利/单车净利"}
+      - {role: products, description: "品种/品牌数量 (审定品种)"}
+      - {role: efficiency, description: "生产/经营效率"}
+    pricing: brand
+    pass_through: lagged
+    profit_hinge: "price per unit and channel mix versus marketing spend; pricing power shows as stable 吨价 growth"
+    cycle_signals: [demand, inventory, margin]
+    moat_types: [intangible, cost, network]
+    valuation_methods: [PE, DCF, PEG]
+    variants:
+      - id: direct_retail_led
+        name: 直营主导
+        description: Sells mostly through own stores or direct sales.
+        signals: ["直营/直销 share > 50% in 分销售模式", "使用权资产 and store count large"]
+      - id: distributor_led
+        name: 经销主导
+        description: Sells mostly to distributors who hold channel inventory.
+        signals: ["经销 share > 50% in 分销售模式", "经销商数量 disclosed", "合同负债 from distributor prepayments"]
+      - id: online_led
+        name: 线上主导
+        description: E-commerce and live-stream channels dominate.
+        signals: ["线上 share > 50%", "销售费用 dominated by 平台推广费"]
+      - id: franchise_led
+        name: 加盟主导
+        description: Franchised stores sell the brand; company earns wholesale and franchise fees.
+        signals: ["加盟店 > 70% of store count", "加盟管理费 revenue line"]
+      - id: brand_plus_export_oem
+        name: 自有品牌+外销代工
+        description: Own brand at home plus OEM/ODM exports for foreign brands.
+        signals: ["外销 share > 30% with OEM/ODM text", "自有品牌 share disclosed below 70%"]
+  A6:
+    name: 零售/分销
+    name_en: Retail / distribution
+    revenue_formula: "stores × sales_per_store (or GMV × take_rate)"
+    drivers:
+      - {role: stores, description: "门店数量"}
+      - {role: store_changes, description: "新开/关闭门店"}
+      - {role: same_store_growth, description: "同店/可比店增长"}
+      - {role: gmv, description: "销售总额/GMV"}
+      - {role: sales_density, description: "坪效"}
+      - {role: members, description: "会员数量"}
+      - {role: volume, description: "业务量/销量"}
+      - {role: take_rate, description: "佣金率/扣点"}
+      - {role: channel, description: "线上/平台占比"}
+      - {role: customers, description: "覆盖客户/医疗机构/合作品牌数"}
+      - {role: mix, description: "品类结构"}
+      - {role: price, description: "客单价"}
+    pricing: market
+    pass_through: full
+    profit_hinge: "same-store growth and gross margin against rent and labour; inventory turns decide cash"
+    cycle_signals: [demand, inventory, margin]
+    moat_types: [cost, network, efficient_scale]
+    valuation_methods: [PE, PS, EV_EBITDA]
+    variants:
+      - id: self_operated_retail
+        name: 自营零售
+        description: Buys inventory and sells it; gross revenue, inventory risk.
+        signals: ["存货 / revenue > 10%", "收入按总额法", "自营 share disclosed"]
+      - id: concession_leasing
+        name: 联营/租赁
+        description: Department-store or mall model earning commission (扣点) and rent; net revenue.
+        signals: ["text mentions 联营 or 扣点", "租赁收入 large", "收入按净额法"]
+      - id: platform_marketplace
+        name: 平台撮合
+        description: Marketplace or service provider taking a fee on GMV.
+        signals: ["GMV disclosed", "佣金/服务费 revenue", "low 存货"]
+      - id: wholesale_distribution
+        name: 批发分销
+        description: Distributes goods (药品, 汽车, 大宗) to B2B customers with thin margins and long receivables.
+        signals: ["应收账款 days > 90", "毛利率 < 10%", "text mentions 分销 or 配送"]
+      - id: franchise_chain
+        name: 加盟连锁
+        description: Store network mostly franchised; earns supply margin and fees.
+        signals: ["加盟店 share > 50%", "加盟费 revenue line"]
+  A7:
+    name: 公用事业/基础设施
+    name_en: Regulated utility / infrastructure
+    revenue_formula: "capacity × utilisation_hours × regulated_tariff"
+    drivers:
+      - {role: capacity, description: "装机/管网/路段/泊位/处理能力"}
+      - {role: volume, description: "上网电量/售气量/吞吐量/车流量"}
+      - {role: utilisation, description: "利用小时/能力因子/弃风弃光"}
+      - {role: tariff, description: "上网电价/水价/装卸费率"}
+      - {role: unit_cost, description: "燃料单价 (入炉标煤单价)"}
+      - {role: unit_margin, description: "毛差 (gas)"}
+      - {role: efficiency, description: "供电煤耗/吨垃圾上网电量"}
+      - {role: users, description: "用户数"}
+      - {role: connections, description: "新增接驳用户"}
+      - {role: network, description: "管网长度"}
+      - {role: mix, description: "市场化交易占比, 国际旅客占比"}
+      - {role: resource, description: "来水量/蓄水"}
+      - {role: capacity_payment, description: "容量电费"}
+    pricing: regulated
+    pass_through: lagged
+    profit_hinge: "allowed tariff and utilisation against fuel cost and financing; growth comes only from new capacity"
+    cycle_signals: [commodity_price, capex, demand]
+    moat_types: [efficient_scale, intangible]
+    valuation_methods: [PE, PB, DCF, DDM, EV_EBITDA]
+    variants:
+      - id: regulated_tariff_asset
+        name: 核定电价/政府定价
+        description: Price fixed by a regulator (benchmark or cost-plus).
+        signals: ["text mentions 核定 or 政府定价 or 标杆电价", "tariff disclosed and changes only on policy dates"]
+      - id: market_traded_output
+        name: 市场化交易
+        description: A large share of output sold at market-traded prices.
+        signals: ["市场化交易电量占比 > 50%", "text mentions 现货市场 or 中长期交易"]
+      - id: concession_operator
+        name: 特许经营
+        description: Operates a concession (收费公路, 水务, 垃圾焚烧, 管道燃气) for a fixed term.
+        signals: ["特许经营权 in 无形资产", "收费期限 or 特许经营期 disclosed"]
+      - id: subsidy_dependent_renewable
+        name: 补贴依赖型新能源
+        description: Renewable projects whose returns depend on unpaid national subsidies.
+        signals: ["可再生能源补贴应收款 large", "text mentions 国补 or 补贴目录"]
+      - id: city_gas_distribution
+        name: 城燃配售+接驳
+        description: Buys gas at city gate, sells at regulated retail tariffs plus connection fees.
+        signals: ["接驳费 revenue line", "毛差 disclosed", "text mentions 顺价"]
+  A8:
+    name: 流量/单位服务
+    name_en: Traffic / unit service
+    revenue_formula: "units_served × yield"
+    drivers:
+      - {role: capacity, description: "运力/客房/银幕/点位/实验室"}
+      - {role: volume, description: "客运量/件量/入住/人次"}
+      - {role: utilisation, description: "客座率/出租率/刊挂率/翻台率"}
+      - {role: yield, description: "客公里收益/单票收入/RevPAR/客单价"}
+      - {role: unit_cost, description: "单位成本 (扣油座公里成本, 单票成本)"}
+      - {role: network, description: "网点/门店/机构数量"}
+      - {role: stores, description: "门店数量 (restaurants, clinics)"}
+      - {role: price, description: "平均价格 (ADR, 客单价)"}
+    pricing: market
+    pass_through: partial
+    profit_hinge: "load factor and yield against a largely fixed unit cost (operating leverage)"
+    cycle_signals: [demand, capex, margin]
+    moat_types: [network, cost, efficient_scale]
+    valuation_methods: [PE, EV_EBITDA, PB]
+    variants:
+      - id: asset_heavy_operator
+        name: 重资产自营
+        description: Owns or leases the fleet/property and operates it.
+        signals: ["fixed assets + right-of-use assets / revenue > 1", "直营 share high"]
+      - id: asset_light_franchise
+        name: 轻资产加盟/管理输出
+        description: Brand and system rented to franchisees or managed for owners.
+        signals: ["加盟/管理 hotels or outlets > 50%", "特许经营费 or 加盟费 revenue line"]
+      - id: direct_operated_network
+        name: 直营网络
+        description: Runs the whole network itself (直营快递, 自营门店) with full cost control.
+        signals: ["text mentions 直营", "人工/外包成本 large share of 营业成本"]
+      - id: spot_rate_exposed
+        name: 即期运价敞口
+        description: Revenue reprices with spot market rates (shipping, freight forwarding).
+        signals: ["text mentions 即期 or 现货运价 vs 长约", "revenue moves with SCFI/BDI"]
+  A9:
+    name: 软件/平台/订阅
+    name_en: Software / platform / subscription
+    revenue_formula: "users_or_contracts × ARPU (recurring) + projects"
+    drivers:
+      - {role: users, description: "用户/客户/在管面积/订户数"}
+      - {role: paying_users, description: "付费用户/会员"}
+      - {role: arpu, description: "ARPU/ARPPU"}
+      - {role: gross_billings, description: "流水"}
+      - {role: recurring_share, description: "订阅/经常性收入占比"}
+      - {role: pipeline, description: "储备产品/版号/合约面积"}
+      - {role: customer_mix, description: "政府/金融/第三方客户占比"}
+      - {role: retention, description: "续费率/退费率/收缴率"}
+      - {role: staff, description: "员工/研发人员数"}
+      - {role: capacity, description: "机柜/IT负载/学习中心"}
+      - {role: utilisation, description: "上架率"}
+    pricing: contract
+    pass_through: none
+    profit_hinge: "recurring share and retention against R&D and sales headcount; project work dilutes margins"
+    cycle_signals: [demand, margin]
+    moat_types: [switching, network, intangible]
+    valuation_methods: [PE, PS, DCF, EV_users]
+    variants:
+      - id: product_licence
+        name: 软件许可
+        description: Sells perpetual licences plus maintenance.
+        signals: ["软件产品 revenue line", "增值税即征即退 large", "毛利率 > 70%"]
+      - id: saas_subscription
+        name: SaaS/订阅
+        description: Recurring subscription or cloud service.
+        signals: ["text mentions 订阅 or SaaS or 云服务", "合同负债 growing faster than revenue", "ARR disclosed"]
+      - id: project_delivery
+        name: 定制开发/系统集成
+        description: Custom projects and integration with hardware pass-through; revenue by acceptance.
+        signals: ["系统集成 or 技术服务 lines dominant", "hardware share of 营业成本 > 30%", "Q4 revenue share > 40%"]
+      - id: ad_supported
+        name: 广告变现
+        description: Free users monetised through advertising.
+        signals: ["广告 revenue > 50%", "MAU disclosed without paying users"]
+      - id: paid_membership_content
+        name: 付费会员/内容
+        description: Users pay for content or membership.
+        signals: ["会员 revenue line", "付费会员数 disclosed"]
+      - id: in_app_purchase
+        name: 道具付费
+        description: Free-to-play games monetised by in-game purchases; revenue follows 流水 with deferral.
+        signals: ["游戏流水 disclosed", "递延收入/合同负债 from 道具", "渠道分成 in 营业成本"]
+      - id: headcount_outsourcing
+        name: 人力外包/人月计价
+        description: Billing by person-month (IT outsourcing, property services staff).
+        signals: ["职工薪酬 > 50% of 营业成本", "text mentions 人月 or 驻场"]
+      - id: capacity_lease
+        name: 容量租赁 (IDC/物业)
+        description: Leases racks, power or managed area on multi-year contracts.
+        signals: ["机柜数 or IT负载 or 在管面积 disclosed", "fixed assets / revenue > 1.5 (IDC)"]
+  A10:
+    name: 医药产品组合
+    name_en: Pharma / biotech portfolio
+    revenue_formula: "Σ product_sales (+ licensing / milestones)"
+    drivers:
+      - {role: product_sales, description: "主要产品/创新药收入"}
+      - {role: approvals, description: "获批注册证/一致性评价/批签发"}
+      - {role: pipeline, description: "在研项目/临床阶段项目"}
+      - {role: vbp_exposure, description: "集采中标品种/中标情况"}
+      - {role: licensing, description: "对外授权首付款/里程碑"}
+      - {role: volume, description: "销量/采浆量"}
+      - {role: price, description: "吨浆收入/单价"}
+      - {role: capacity, description: "浆站/产能"}
+      - {role: installed_base, description: "装机量 (instrument + reagent)"}
+      - {role: mix, description: "品种数/独家品种"}
+      - {role: channel, description: "市场苗 vs 政采苗, 医院 vs OTC"}
+    pricing: negotiated
+    pass_through: none
+    profit_hinge: "pipeline success and exclusivity against VBP price cuts; sales-expense ratio shows channel cost"
+    cycle_signals: [demand, margin]
+    moat_types: [intangible, switching]
+    valuation_methods: [PE, DCF, rNPV, SOTP, PS]
+    variants:
+      - id: innovative_pipeline
+        name: 创新药/创新器械
+        description: Revenue increasingly from patented innovative products; heavy R&D.
+        signals: ["研发投入占比 > 15%", "创新药收入 disclosed", "临床项目 count disclosed"]
+      - id: generic_vbp
+        name: 仿制药/集采
+        description: Generic portfolio sold mostly through volume-based procurement.
+        signals: ["集采中标品种 disclosed", "一致性评价 counts", "销售费用率 falling"]
+      - id: otc_consumer_brand
+        name: OTC/品牌中药
+        description: Branded OTC or TCM sold to consumers through pharmacies; behaves like A5.
+        signals: ["零售/OTC channel > 40%", "销售费用率 > 30%", "text mentions 品牌 or 独家品种"]
+      - id: licence_out_partnering
+        name: 授权合作
+        description: Earns upfronts and milestones from out-licensing.
+        signals: ["对外授权首付款 or 里程碑 in revenue", "BD announcements"]
+      - id: instrument_plus_reagent
+        name: 仪器+试剂闭环
+        description: Places instruments, earns recurring reagent/consumable revenue.
+        signals: ["装机量 disclosed", "试剂 revenue > 60%", "仪器投放 in 固定资产"]
+      - id: plasma_supply_constrained
+        name: 浆源约束
+        description: Output limited by licensed plasma stations; price set by scarcity.
+        signals: ["采浆量 and 浆站数 disclosed", "text mentions 单采血浆站"]
+  A11:
+    name: 合同制造/服务
+    name_en: Contract service (CXO, EMS/ODM, foundry)
+    revenue_formula: "capacity × utilisation × price_per_unit"
+    drivers:
+      - {role: capacity, description: "月产能/产线/员工"}
+      - {role: utilisation, description: "产能利用率/稼动率"}
+      - {role: volume, description: "晶圆出货/产量"}
+      - {role: price, description: "单价/ASP"}
+      - {role: mix, description: "12英寸/先进封装/高端产品占比"}
+      - {role: orders, description: "新签订单"}
+      - {role: backlog, description: "在手订单"}
+      - {role: customers, description: "活跃客户数"}
+      - {role: staff, description: "研发技术人员/外包人员"}
+      - {role: pipeline, description: "在研分子/项目"}
+    pricing: negotiated
+    pass_through: partial
+    profit_hinge: "utilisation of fixed capacity and customer mix; capex timing versus demand"
+    cycle_signals: [demand, capex, inventory]
+    moat_types: [switching, cost, efficient_scale]
+    valuation_methods: [PE, EV_EBITDA, PB]
+    variants:
+      - id: dedicated_capacity
+        name: 专线/专属产能
+        description: Capacity built for one customer or program, often customer-funded tooling.
+        signals: ["largest customer > 40%", "text mentions 专线 or 客户专属 or 客户提供设备"]
+      - id: shared_capacity
+        name: 共享产能
+        description: General capacity sold to many customers (foundry, multi-client CDMO).
+        signals: ["top-5 customers < 40%", "产能利用率 disclosed as a fab/plant average"]
+      - id: fte_service
+        name: FTE按人头计费
+        description: Billed per scientist or worker (CRO FTE, HR outsourcing).
+        signals: ["text mentions FTE or 人头", "职工薪酬 > 50% of 营业成本"]
+      - id: fee_for_service
+        name: FFS按项目计费
+        description: Billed per project or milestone delivered.
+        signals: ["text mentions FFS or 里程碑", "在手订单 by project disclosed"]
+      - id: cost_plus_pass_through
+        name: 料件代采成本加成
+        description: Assembly where components are bought and passed through; very low margin.
+        signals: ["直接材料 > 70% of 营业成本", "毛利率 < 12%"]
+  A12:
+    name: 金融资产负债表
+    name_en: Financial balance sheet
+    revenue_formula: "interest_earning_assets × NIM + fees − credit_cost"
+    drivers:
+      - {role: assets, description: "贷款/投资资产/两融/租赁资产"}
+      - {role: funding, description: "存款"}
+      - {role: nim, description: "净息差/净利差"}
+      - {role: asset_yield, description: "生息资产收益率"}
+      - {role: funding_cost, description: "负债成本/活期占比"}
+      - {role: fees, description: "手续费/承销/非息收入占比"}
+      - {role: cost_income, description: "成本收入比"}
+      - {role: asset_quality, description: "不良率/关注/逾期/生成率"}
+      - {role: provision, description: "拨备覆盖率/拨贷比/核销"}
+      - {role: credit_cost, description: "信用成本"}
+      - {role: capital, description: "资本充足率/净资本/偿付能力"}
+      - {role: liquidity, description: "LCR/NSFR/存贷比"}
+      - {role: leverage, description: "杠杆率/杠杆倍数"}
+      - {role: aum, description: "资管/零售AUM/信托规模"}
+      - {role: customers, description: "客户数"}
+      - {role: premiums, description: "保费"}
+      - {role: nbv, description: "新业务价值"}
+      - {role: embedded_value, description: "内含价值"}
+      - {role: combined_ratio, description: "综合成本率/赔付率/费用率"}
+      - {role: investment_yield, description: "投资收益率"}
+      - {role: retention, description: "继续率"}
+      - {role: distribution, description: "代理人/渠道"}
+      - {role: mix, description: "零售贷款占比/业务结构"}
+    pricing: market
+    pass_through: lagged
+    profit_hinge: "NIM (or spread / NBV margin) against credit cost and capital consumption"
+    cycle_signals: [demand, margin]
+    moat_types: [cost, intangible, efficient_scale, network]
+    valuation_methods: [PB, PE, P_EV, DDM]
+    variants:
+      - id: corporate_lending_bank
+        name: 对公为主银行
+        description: Loan book dominated by corporate and government-linked lending.
+        signals: ["零售贷款占比 < 35%", "对公存款 > 60%"]
+      - id: retail_wealth_bank
+        name: 零售/财富银行
+        description: Retail loans and wealth management drive returns and fees.
+        signals: ["零售贷款占比 > 45%", "零售AUM disclosed", "手续费 share > 15%"]
+      - id: brokerage_fee_led
+        name: 轻资本券商
+        description: Earnings led by brokerage, underwriting and asset management fees.
+        signals: ["经纪+投行+资管 > 60% of revenue", "杠杆倍数 < 3.5"]
+      - id: capital_intermediary
+        name: 重资本券商
+        description: Earnings led by proprietary trading and margin lending.
+        signals: ["自营+利息净收入 > 50% of revenue", "金融投资资产 / 净资产 > 2"]
+      - id: life_insurer
+        name: 寿险为主
+        description: Long-duration life and health policies; value from NBV and investment spread.
+        signals: ["寿险保费 > 60%", "NBV and EV disclosed"]
+      - id: pc_insurer
+        name: 财险为主
+        description: Short-duration P&C; value from underwriting (combined ratio) plus float.
+        signals: ["财险保费 > 60%", "综合成本率 disclosed"]
+      - id: fee_asset_manager
+        name: 管理费型
+        description: Earns fees on assets managed for others (trust, AMC, futures brokers).
+        signals: ["管理费/手续费 > 60% of revenue", "AUM disclosed"]
+      - id: leasing_lender
+        name: 融资租赁
+        description: Spread lending through leases.
+        signals: ["租赁资产余额 disclosed", "利息支出 large"]
+
+# Expected signatures per archetype (D-118, BUSINESS_MODEL_DESIGN §4b.7): priors the measured company data is
+# checked against. gm = FY gross-margin range; gm_vol = quarterly GM volatility vs the market (low / mid / high);
+# pricing = pricing-power labels that fit; turnover = asset-turnover range; output_beta = GM follows the selling
+# price (positive) or not (any). A12 (balance sheets) has no gross margin: not checked.
+signatures:
+  A1:  {gm: [0.05, 0.50], gm_vol: high, pricing: [taker, middle], turnover: [0.2, 1.5], output_beta: positive}
+  A2:  {gm: [0.03, 0.30], gm_vol: high, pricing: [taker, middle], turnover: [0.4, 2.5], output_beta: any}
+  A3:  {gm: [0.10, 0.40], gm_vol: mid,  pricing: [middle, taker], turnover: [0.4, 1.5], output_beta: any}
+  A4:  {gm: [0.10, 0.45], gm_vol: mid,  pricing: [middle, maker], turnover: [0.2, 1.0], output_beta: any}
+  A5:  {gm: [0.35, 0.95], gm_vol: low,  pricing: [maker, middle], turnover: [0.3, 1.5], output_beta: any}
+  A6:  {gm: [0.05, 0.35], gm_vol: low,  pricing: [middle, taker], turnover: [0.8, 4.0], output_beta: any}
+  A7:  {gm: [0.10, 0.60], gm_vol: low,  pricing: [middle],        turnover: [0.05, 0.5], output_beta: any}
+  A8:  {gm: [0.05, 0.50], gm_vol: mid,  pricing: [middle, taker], turnover: [0.2, 1.5], output_beta: any}
+  A9:  {gm: [0.30, 0.95], gm_vol: low,  pricing: [maker, middle], turnover: [0.2, 1.0], output_beta: any}
+  A10: {gm: [0.30, 0.95], gm_vol: low,  pricing: [maker, middle], turnover: [0.2, 1.0], output_beta: any}
+  A11: {gm: [0.10, 0.45], gm_vol: mid,  pricing: [middle, taker], turnover: [0.3, 1.5], output_beta: any}
+
+sw_l3:
+  # 110000 农林牧渔
+  "110101": {archetype: A5, secondary: [A10], drivers: {volume: seed_sales_volume, products: approved_varieties, capacity: seed_production_area, revenue: [corn_seed_revenue, rice_seed_revenue], rd_ratio: seed_rd_ratio}, common_variants: [distributor_led], note: "Seeds behave like a variety portfolio (A10) sold through dealers under brand; A5 chosen for the channel logic"}  # 种子
+  "110102": {archetype: A1, drivers: {}, common_variants: [own_resource_mining], note: "Land-lease farm operators (北大荒) earn rent, not crop price"}  # 粮食种植
+  "110103": {archetype: A1, drivers: {}}  # 其他种植业
+  "110104": {archetype: A1, drivers: {volume: mushroom_output, price: mushroom_avg_price, unit_cost: mushroom_unit_cost, capacity: mushroom_daily_capacity}}  # 食用菌
+  "110201": {archetype: A1, drivers: {volume: fishing_catch_volume, capacity: fishing_vessels}}  # 海洋捕捞
+  "110202": {archetype: A1, drivers: {volume: aquaculture_sales_volume}, common_variants: [breeding_stock_supplier]}  # 水产养殖
+  "110301": {archetype: A1, drivers: {}}  # 林业Ⅲ
+  "110402": {archetype: A2, secondary: [A1], drivers: {volume: [feed_sales_volume, livestock_feed_sales_volume], margin: feed_gross_margin, unit_margin: feed_profit_per_ton, capacity: feed_capacity}, common_variants: [standalone_converter, feed_plus_farming]}  # 畜禽饲料
+  "110403": {archetype: A2, drivers: {volume: [feed_sales_volume, aqua_feed_sales_volume], margin: feed_gross_margin, unit_margin: feed_profit_per_ton, capacity: feed_capacity}, common_variants: [standalone_converter]}  # 水产饲料
+  "110404": {archetype: A5, secondary: [A11], drivers: {volume: pet_sales_volume, revenue: pet_own_brand_revenue, overseas_share: pet_overseas_revenue_share, channel: pet_online_revenue_share, marketing_ratio: pet_sales_expense_ratio}, common_variants: [online_led, brand_plus_export_oem, odm_oem_maker]}  # 宠物食品
+  "110501": {archetype: A2, drivers: {volume: [agri_processing_volume, agri_product_sales_volume], capacity: agri_processing_capacity, input_cost_share: agri_raw_material_cost_share}, common_variants: [standalone_converter]}  # 果蔬加工
+  "110502": {archetype: A2, secondary: [A5], drivers: {volume: [agri_processing_volume, agri_product_sales_volume], capacity: agri_processing_capacity, input_cost_share: agri_raw_material_cost_share}, common_variants: [standalone_converter, distributor_led]}  # 粮油加工
+  "110504": {archetype: A2, drivers: {volume: [agri_processing_volume, agri_product_sales_volume], capacity: agri_processing_capacity, input_cost_share: agri_raw_material_cost_share}, common_variants: [standalone_converter], note: "Catch-all (sugar, rubber, cotton processing); some are price-takers (A1)"}  # 其他农产品加工
+  "110702": {archetype: A1, drivers: {volume: [hog_sales_volume, piglet_sales_volume], price: hog_avg_price, unit_cost: hog_full_cost, capacity: sow_inventory, efficiency: hog_psy, revenue: hog_sales_revenue}, common_variants: [integrated_farming, contract_farming, feed_plus_farming]}  # 生猪养殖
+  "110703": {archetype: A1, drivers: {volume: [chicken_meat_sales_volume, chick_sales_volume], price: [chicken_meat_avg_price, chick_avg_price], capacity: [broiler_slaughter_capacity, parent_stock_inventory], revenue: chicken_sales_revenue}, common_variants: [integrated_farming, contract_farming, breeding_stock_supplier]}  # 肉鸡养殖
+  "110704": {archetype: A1, drivers: {}, common_variants: [integrated_farming, contract_farming]}  # 其他养殖
+  "110801": {archetype: A10, secondary: [A5], drivers: {product_sales: [swine_vaccine_revenue, poultry_vaccine_revenue, pet_vaccine_drug_revenue], channel: market_vaccine_share, approvals: vet_new_drug_certificates, margin: vet_gross_margin}, common_variants: [innovative_pipeline], note: "Government-procured vaccines (政采苗) are bid-priced; market vaccines are negotiated"}  # 动物保健Ⅲ
+  "110901": {archetype: A1, drivers: {}, note: "Agricultural conglomerates; segment archetypes override"}  # 农业综合Ⅲ
+  # 220000 基础化工
+  "220201": {archetype: A1, secondary: [A2], drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization, capacity_growth: chem_capacity_under_construction}, common_variants: [own_resource_mining, standalone_converter], note: "Natural soda ash (天然碱) is A1; ammonia-soda plants earn a spread (A2)"}  # 纯碱
+  "220202": {archetype: A2, drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization, capacity_growth: chem_capacity_under_construction}, common_variants: [standalone_converter, upstream_integrated_converter]}  # 氯碱
+  "220203": {archetype: A1, secondary: [A3], drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization, capacity_growth: chem_capacity_under_construction}, common_variants: [own_resource_mining, standalone_converter]}  # 无机盐
+  "220204": {archetype: A2, drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization, capacity_growth: chem_capacity_under_construction}, common_variants: [standalone_converter]}  # 其他化学原料
+  "220205": {archetype: A2, drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization, capacity_growth: chem_capacity_under_construction}, common_variants: [upstream_integrated_converter, standalone_converter]}  # 煤化工
+  "220206": {archetype: A2, secondary: [A1], drivers: {volume: [tio2_output, chem_product_sales_volume], price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: [chem_design_capacity, tio2_chloride_capacity], overseas_share: tio2_overseas_share, self_sufficiency: titanium_concentrate_output}, common_variants: [upstream_integrated_converter, standalone_converter]}  # 钛白粉
+  "220305": {archetype: A3, secondary: [A5], drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization}, common_variants: [own_brand_supplier, diversified_customers, distributor_led], note: "Decorative paint brands are A5; industrial/packaging inks are A3"}  # 涂料油墨
+  "220307": {archetype: A3, secondary: [A4], drivers: {volume: explosive_output, capacity: explosive_licensed_capacity, mix: electronic_detonator_output, revenue: blasting_service_revenue}, common_variants: [diversified_customers, epc_contractor], note: "Licensed regional oligopoly (efficient scale) with blasting services (A4); closer to A7 than a typical A3"}  # 民爆制品
+  "220308": {archetype: A2, drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization}, common_variants: [standalone_converter]}  # 纺织化学制品
+  "220309": {archetype: A3, secondary: [A2], drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization, capacity_growth: chem_capacity_under_construction}, common_variants: [own_brand_supplier, diversified_customers, standalone_converter], note: "Catch-all of 83 specialty chemicals; split between spread products and qualified specialty materials"}  # 其他化学制品
+  "220311": {archetype: A2, secondary: [A1], drivers: {volume: [refrigerant_sales_volume, chem_product_sales_volume], price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: [refrigerant_quota, fluoropolymer_capacity]}, common_variants: [quota_allocated_resource, upstream_integrated_converter], note: "HFC quotas since 2024 make refrigerants quota-constrained (A1 quota variant)"}  # 氟化工
+  "220313": {archetype: A2, drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization, capacity_growth: chem_capacity_under_construction}, common_variants: [upstream_integrated_converter, standalone_converter]}  # 聚氨酯
+  "220315": {archetype: A1, secondary: [A3], drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization, capacity_growth: chem_capacity_under_construction}, common_variants: [standalone_converter, own_brand_supplier], note: "Vitamins, methionine, sweeteners trade like commodities in an oligopoly; specialty additives are A3"}  # 食品及饲料添加剂
+  "220316": {archetype: A2, drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: [organosilicon_monomer_capacity, chem_design_capacity], utilisation: chem_capacity_utilization}, common_variants: [upstream_integrated_converter, standalone_converter]}  # 有机硅
+  "220317": {archetype: A3, drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization}, common_variants: [diversified_customers, own_brand_supplier]}  # 胶黏剂及胶带
+  "220401": {archetype: A2, drivers: {volume: [fiber_sales_volume, fiber_output], price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: fiber_capacity, utilisation: chem_capacity_utilization, inventory: fiber_inventory_days}, common_variants: [upstream_integrated_converter, standalone_converter]}  # 涤纶
+  "220403": {archetype: A2, drivers: {volume: [fiber_sales_volume, fiber_output], price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: fiber_capacity, inventory: fiber_inventory_days}, common_variants: [standalone_converter]}  # 粘胶
+  "220404": {archetype: A2, secondary: [A3], drivers: {volume: [fiber_sales_volume, fiber_output], price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: fiber_capacity, inventory: fiber_inventory_days}, common_variants: [standalone_converter, design_in_program], note: "Carbon fibre and aramid are qualified materials (A3), not spread products"}  # 其他化学纤维
+  "220405": {archetype: A2, drivers: {volume: [fiber_sales_volume, fiber_output], price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: fiber_capacity, inventory: fiber_inventory_days}, common_variants: [standalone_converter]}  # 氨纶
+  "220406": {archetype: A2, drivers: {volume: [fiber_sales_volume, fiber_output], price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: fiber_capacity, inventory: fiber_inventory_days}, common_variants: [standalone_converter, upstream_integrated_converter]}  # 锦纶
+  "220501": {archetype: A3, drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization}, common_variants: [odm_oem_maker, diversified_customers]}  # 其他塑料制品
+  "220503": {archetype: A2, secondary: [A3], drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization}, common_variants: [toll_processing_fee, design_in_program], note: "Modified plastics price as resin + processing fee but are qualified into auto/appliance programs (A3)"}  # 改性塑料
+  "220504": {archetype: A2, drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization, capacity_growth: chem_capacity_under_construction}, common_variants: [standalone_converter, upstream_integrated_converter]}  # 合成树脂
+  "220505": {archetype: A3, drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization, capacity_growth: chem_capacity_under_construction}, common_variants: [single_key_customer, diversified_customers]}  # 膜材料
+  "220602": {archetype: A3, drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity}, common_variants: [diversified_customers, design_in_program]}  # 其他橡胶制品
+  "220603": {archetype: A2, drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization}, common_variants: [standalone_converter]}  # 炭黑
+  "220604": {archetype: A2, secondary: [A3], drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity}, common_variants: [standalone_converter]}  # 橡胶助剂
+  "220801": {archetype: A2, drivers: {volume: [fertilizer_sales_volume, chem_product_sales_volume], price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity, utilisation: chem_capacity_utilization}, common_variants: [upstream_integrated_converter, standalone_converter]}  # 氮肥
+  "220802": {archetype: A1, secondary: [A2], drivers: {volume: [phosphate_rock_output, fertilizer_sales_volume], price: chem_product_avg_price, capacity: [phosphate_rock_capacity, chem_design_capacity], reserves: phosphate_reserve, capacity_growth: chem_capacity_under_construction}, common_variants: [own_resource_mining, upstream_integrated_converter]}  # 磷肥及磷化工
+  "220803": {archetype: A2, secondary: [A3], drivers: {volume: [pesticide_tech_output, pesticide_formulation_sales], price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity, overseas_share: pesticide_export_share}, common_variants: [standalone_converter, own_brand_supplier], note: "Technical-grade (原药) makers ride a price cycle; formulation brands with registrations are A3/A5"}  # 农药
+  "220804": {archetype: A1, drivers: {volume: potash_output, price: chem_product_avg_price, capacity: chem_design_capacity}, common_variants: [own_resource_mining]}  # 钾肥
+  "220805": {archetype: A2, secondary: [A5], drivers: {volume: [fertilizer_sales_volume, chem_product_sales_volume], price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity}, common_variants: [standalone_converter, distributor_led], note: "Branded compound fertiliser sold via dealers; spread on urea/phosphate/potash inputs dominates"}  # 复合肥
+  "220901": {archetype: A3, secondary: [A1], drivers: {volume: chem_product_sales_volume, price: chem_product_avg_price, input_price: chem_raw_material_price, capacity: chem_design_capacity}, common_variants: [diversified_customers, own_resource_mining]}  # 非金属材料Ⅲ
+  # 230000 钢铁
+  "230301": {archetype: A1, drivers: {volume: iron_concentrate_output, unit_cost: iron_concentrate_unit_cost, reserves: iron_ore_reserve, efficiency: iron_concentrate_grade}, common_variants: [own_resource_mining]}  # 铁矿石
+  "230302": {archetype: A1, secondary: [A2], drivers: {}, common_variants: [standalone_converter], note: "Graphite electrodes, ferroalloys and coke-like inputs; spread logic (A2) for many"}  # 冶钢辅料
+  "230401": {archetype: A2, drivers: {volume: [steel_sales_volume, steel_output], price: steel_avg_price, input_price: iron_ore_purchase_price, unit_margin: steel_gross_profit_per_ton, capacity: steel_capacity, mix: steel_high_end_share}, common_variants: [standalone_converter]}  # 长材
+  "230402": {archetype: A2, drivers: {volume: [steel_sales_volume, steel_output], price: steel_avg_price, input_price: iron_ore_purchase_price, unit_margin: steel_gross_profit_per_ton, capacity: steel_capacity, mix: steel_high_end_share}, common_variants: [standalone_converter, upstream_integrated_converter]}  # 板材
+  "230403": {archetype: A2, secondary: [A3], drivers: {volume: [steel_sales_volume, steel_output], price: steel_avg_price, input_price: iron_ore_purchase_price, unit_margin: steel_gross_profit_per_ton, capacity: steel_capacity, mix: steel_high_end_share}, common_variants: [toll_processing_fee, standalone_converter]}  # 钢铁管材
+  "230501": {archetype: A2, secondary: [A3], drivers: {volume: [steel_sales_volume, steel_output], price: steel_avg_price, input_price: iron_ore_purchase_price, unit_margin: steel_gross_profit_per_ton, capacity: steel_capacity, mix: steel_high_end_share}, common_variants: [standalone_converter, design_in_program], note: "Special steel is partly qualified material (A3); L3 currently has 0 listed companies"}  # 特钢Ⅲ
+  # 240000 有色金属
+  "240201": {archetype: A3, drivers: {volume: [new_material_sales_volume, new_material_output], capacity: new_material_capacity, mix: new_material_ev_revenue_share}, common_variants: [toll_processing_fee, diversified_customers]}  # 其他金属新材料
+  "240202": {archetype: A3, secondary: [A2], drivers: {volume: [new_material_sales_volume, new_material_output], capacity: new_material_capacity, mix: new_material_ev_revenue_share}, common_variants: [toll_processing_fee, design_in_program], note: "NdFeB magnets price as rare-earth cost + processing fee"}  # 磁性材料
+  "240301": {archetype: A2, secondary: [A1], drivers: {volume: smelted_metal_output, capacity: aluminum_capacity, self_sufficiency: alumina_self_sufficiency}, common_variants: [upstream_integrated_converter, standalone_converter, toll_processing_fee], note: "Covers smelters (aluminium − alumina − power), bauxite/alumina miners (A1) and fabricators (processing fee)"}  # 铝
+  "240302": {archetype: A1, secondary: [A2], drivers: {volume: [mined_metal_output, smelted_metal_output], unit_cost: base_metal_unit_cost, reserves: base_metal_reserve, spread: smelting_tc_rc}, common_variants: [own_resource_mining, mine_to_metal_integrated, toll_processing_fee], note: "Many 铜 names are smelters or copper fabricators (A2 TC/RC or processing fee), not miners"}  # 铜
+  "240303": {archetype: A1, secondary: [A2], drivers: {volume: [mined_metal_output, smelted_metal_output], unit_cost: base_metal_unit_cost, reserves: base_metal_reserve, spread: smelting_tc_rc}, common_variants: [own_resource_mining, mine_to_metal_integrated]}  # 铅锌
+  "240401": {archetype: A1, drivers: {volume: [mined_gold_output, refined_gold_output], unit_cost: [gold_unit_cost, gold_aisc], reserves: gold_reserve}, common_variants: [own_resource_mining, mine_to_metal_integrated]}  # 黄金
+  "240402": {archetype: A1, drivers: {volume: silver_output}, common_variants: [own_resource_mining, mine_to_metal_integrated]}  # 白银
+  "240501": {archetype: A1, secondary: [A2], drivers: {volume: [minor_metal_sales_volume, minor_metal_output], capacity: rare_earth_quota, unit_cost: minor_metal_unit_cost, reserves: minor_metal_reserve}, common_variants: [quota_allocated_resource, standalone_converter]}  # 稀土
+  "240502": {archetype: A1, drivers: {volume: [minor_metal_sales_volume, minor_metal_output], unit_cost: minor_metal_unit_cost, reserves: minor_metal_reserve}, common_variants: [quota_allocated_resource, mine_to_metal_integrated]}  # 钨
+  "240504": {archetype: A1, secondary: [A2], drivers: {volume: [minor_metal_sales_volume, minor_metal_output], unit_cost: minor_metal_unit_cost, reserves: minor_metal_reserve}, common_variants: [own_resource_mining, standalone_converter]}  # 其他小金属
+  "240505": {archetype: A1, drivers: {volume: [minor_metal_sales_volume, minor_metal_output], unit_cost: minor_metal_unit_cost, reserves: minor_metal_reserve}, common_variants: [own_resource_mining]}  # 钼
+  "240601": {archetype: A2, secondary: [A1], drivers: {volume: cobalt_nickel_output}, common_variants: [mine_to_metal_integrated, standalone_converter], note: "Cobalt refiners earn a spread on DRC feed; integrated players add mining rent"}  # 钴
+  "240602": {archetype: A1, secondary: [A2], drivers: {volume: cobalt_nickel_output}, common_variants: [mine_to_metal_integrated]}  # 镍
+  "240603": {archetype: A1, secondary: [A2], drivers: {volume: [lithium_salt_sales_volume, lithium_salt_output], capacity: lithium_salt_capacity, reserves: lithium_resource, self_sufficiency: lithium_self_sufficiency}, common_variants: [own_resource_mining, mine_to_metal_integrated, standalone_converter], note: "Converters without mines are A2 (salt price − spodumene price)"}  # 锂
+  # 270000 电子
+  "270102": {archetype: A3, secondary: [A11], drivers: {capacity: wafer_capacity, utilisation: wafer_utilization, volume: wafer_shipments, capex: semi_capex, customer_concentration: elec_top5_customer_share, rd_ratio: elec_rd_ratio, inventory: elec_inventory}, common_variants: [own_brand_supplier, diversified_customers], note: "Power-device IDMs; foundry-only peers are A11"}  # 分立器件
+  "270103": {archetype: A3, drivers: {volume: [semi_material_sales_volume, semi_material_output], capacity: semi_material_capacity, design_wins: semi_material_customer_validation, customer_concentration: elec_top5_customer_share, rd_ratio: elec_rd_ratio}, common_variants: [design_in_program, diversified_customers]}  # 半导体材料
+  "270104": {archetype: A3, secondary: [A9], drivers: {volume: chip_shipments, margin: chip_gross_margin, mix: chip_auto_industrial_share, design_wins: chip_new_products, rd_ratio: elec_rd_ratio, customer_concentration: elec_top5_customer_share, inventory: elec_inventory}, common_variants: [own_brand_supplier, single_key_customer, diversified_customers], note: "Fabless design houses; IP licensors (芯原) are closer to A9"}  # 数字芯片设计
+  "270105": {archetype: A3, drivers: {volume: chip_shipments, margin: chip_gross_margin, mix: chip_auto_industrial_share, design_wins: chip_new_products, rd_ratio: elec_rd_ratio, inventory: elec_inventory}, common_variants: [own_brand_supplier, diversified_customers]}  # 模拟芯片设计
+  "270106": {archetype: A11, drivers: {capacity: wafer_capacity, utilisation: wafer_utilization, volume: wafer_shipments, mix: wafer_12inch_share, capex: semi_capex, customer_concentration: elec_top5_customer_share}, common_variants: [shared_capacity, dedicated_capacity]}  # 集成电路制造
+  "270107": {archetype: A11, drivers: {capacity: wafer_capacity, utilisation: wafer_utilization, mix: advanced_packaging_share, capex: semi_capex, customer_concentration: elec_top5_customer_share}, common_variants: [shared_capacity]}  # 集成电路封测
+  "270108": {archetype: A4, drivers: {orders: semi_equip_new_orders, backlog: semi_equip_backlog, contract_liabilities: semi_equip_contract_liabilities, deliveries: [semi_equip_goods_shipped, semi_equip_units_shipped], rd_ratio: elec_rd_ratio}, common_variants: [equipment_vendor, equipment_plus_service]}  # 半导体设备
+  "270202": {archetype: A3, drivers: {volume: [pcb_sales_volume, pcb_output], utilisation: pcb_utilization, mix: [pcb_server_revenue_share, pcb_auto_revenue_share], customer_concentration: elec_top5_customer_share, overseas_share: elec_overseas_revenue_share}, common_variants: [diversified_customers, single_key_customer, odm_oem_maker]}  # 印制电路板
+  "270203": {archetype: A3, drivers: {volume: [passive_sales_volume, passive_output], utilisation: passive_utilization, margin: passive_gross_margin, inventory: elec_inventory}, common_variants: [own_brand_supplier, diversified_customers]}  # 被动元件
+  "270301": {archetype: A1, secondary: [A3], drivers: {volume: [panel_shipment_area, panel_shipments], capacity: panel_capacity, utilisation: panel_utilization, mix: oled_shipments}, common_variants: [shared_capacity], note: "Display panels are price-takers on quoted panel prices (A1-like); module/touch makers in the L3 are A3"}  # 面板
+  "270302": {archetype: A3, secondary: [A1], drivers: {capacity: led_chip_capacity, utilisation: panel_utilization, customer_concentration: elec_top5_customer_share}, common_variants: [own_brand_supplier, odm_oem_maker]}  # LED
+  "270303": {archetype: A3, drivers: {volume: ce_product_shipments, customer_concentration: ce_largest_customer_share, capex: ce_capex, margin: ce_gross_margin}, common_variants: [single_key_customer, design_in_program]}  # 光学元件
+  "270401": {archetype: A3, secondary: [A11], drivers: {volume: ce_product_shipments, customer_concentration: ce_largest_customer_share, capex: ce_capex, margin: ce_gross_margin}, common_variants: [odm_oem_maker, diversified_customers]}  # 其他电子Ⅲ
+  "270503": {archetype: A5, secondary: [A11], drivers: {volume: ce_product_shipments, margin: ce_gross_margin, overseas_share: elec_overseas_revenue_share}, common_variants: [online_led, distributor_led]}  # 品牌消费电子
+  "270504": {archetype: A11, secondary: [A3], drivers: {volume: ce_product_shipments, customer_concentration: ce_largest_customer_share, capex: ce_capex, margin: ce_gross_margin, overseas_share: elec_overseas_revenue_share}, common_variants: [dedicated_capacity, cost_plus_pass_through, single_key_customer], note: "Assemblers (A11) mixed with component makers (A3) in one L3 of 91 companies"}  # 消费电子零部件及组装
+  "270601": {archetype: A3, secondary: [A2], drivers: {volume: [semi_material_sales_volume, semi_material_output], capacity: semi_material_capacity, design_wins: semi_material_customer_validation, customer_concentration: elec_top5_customer_share}, common_variants: [design_in_program, diversified_customers]}  # 电子化学品Ⅲ
+  # 280000 汽车
+  "280202": {archetype: A3, drivers: {orders: part_new_award_lifetime_value, volume: part_sales_volume, content_per_unit: part_single_vehicle_value, mix: part_nev_revenue_share, customer_concentration: part_top5_customer_share, overseas_share: part_overseas_revenue_share}, common_variants: [design_in_program, single_key_customer, diversified_customers]}  # 车身附件及饰件
+  "280203": {archetype: A3, drivers: {orders: part_new_award_lifetime_value, volume: part_sales_volume, content_per_unit: part_single_vehicle_value, mix: part_nev_revenue_share, customer_concentration: part_top5_customer_share, overseas_share: part_overseas_revenue_share}, common_variants: [design_in_program, single_key_customer, diversified_customers]}  # 底盘与发动机系统
+  "280204": {archetype: A3, secondary: [A2, A5], drivers: {volume: [tire_sales_volume, tire_output], price: tire_avg_price, capacity: tire_capacity, overseas_share: tire_overseas_capacity_share}, common_variants: [own_brand_supplier, distributor_led], note: "Replacement tyres are a brand/dealer business with lagged rubber pass-through"}  # 轮胎轮毂
+  "280205": {archetype: A3, drivers: {orders: part_new_award_lifetime_value, volume: part_sales_volume, content_per_unit: part_single_vehicle_value, mix: part_nev_revenue_share, customer_concentration: part_top5_customer_share, overseas_share: part_overseas_revenue_share}, common_variants: [design_in_program, diversified_customers]}  # 其他汽车零部件
+  "280206": {archetype: A3, drivers: {orders: part_new_award_lifetime_value, volume: part_sales_volume, content_per_unit: part_single_vehicle_value, mix: part_nev_revenue_share, customer_concentration: part_top5_customer_share, overseas_share: part_overseas_revenue_share}, common_variants: [design_in_program, single_key_customer]}  # 汽车电子电气系统
+  "280302": {archetype: A6, drivers: {stores: dealer_store_count, volume: dealer_new_car_sales, margin: dealer_new_car_gross_margin, revenue: dealer_aftersales_revenue}, common_variants: [self_operated_retail]}  # 汽车经销商
+  "280303": {archetype: A6, secondary: [A8], drivers: {stores: dealer_store_count, volume: dealer_new_car_sales, revenue: dealer_aftersales_revenue}, common_variants: [self_operated_retail, platform_marketplace]}  # 汽车综合服务
+  "280401": {archetype: A5, drivers: {volume: atv_sales_volume, channel: motorcycle_export_share}, common_variants: [distributor_led, brand_plus_export_oem], note: "E-bikes, ATVs and special vehicles; e-bike brands are dealer-led A5"}  # 其他运输设备
+  "280402": {archetype: A5, drivers: {volume: motorcycle_sales_volume, mix: large_displacement_share, channel: motorcycle_export_share}, common_variants: [distributor_led, brand_plus_export_oem]}  # 摩托车
+  "280501": {archetype: A5, drivers: {volume: [vehicle_sales_volume, nev_sales_volume], price: vehicle_asp, unit_margin: vehicle_net_profit_per_unit, capacity: vehicle_capacity, channel: vehicle_export_volume, inventory: vehicle_dealer_inventory}, common_variants: [direct_retail_led, distributor_led]}  # 电动乘用车
+  "280502": {archetype: A5, drivers: {volume: [vehicle_sales_volume, nev_sales_volume], price: vehicle_asp, unit_margin: vehicle_net_profit_per_unit, capacity: vehicle_capacity, channel: vehicle_export_volume, inventory: vehicle_dealer_inventory}, common_variants: [distributor_led]}  # 综合乘用车
+  "280601": {archetype: A4, secondary: [A5], drivers: {volume: [vehicle_sales_volume, vehicle_production_volume], capacity_growth: vehicle_capacity, inventory: vehicle_dealer_inventory}, common_variants: [equipment_vendor, distributor_led], note: "Heavy trucks are a cyclical capital good sold through dealers; A4 for the freight/infra capex cycle, could be A5"}  # 商用载货车
+  "280602": {archetype: A4, secondary: [A5], drivers: {volume: [vehicle_sales_volume, vehicle_production_volume], inventory: vehicle_dealer_inventory}, common_variants: [equipment_vendor], note: "Buses are sold via public-transport tenders and exports"}  # 商用载客车
+  # 330000 家用电器
+  "330102": {archetype: A5, drivers: {volume: [appliance_sales_volume, appliance_output], market_share: appliance_market_share, channel: [appliance_online_share, appliance_export_revenue], mix: appliance_obm_share, contract_liabilities: appliance_contract_liabilities, inventory: appliance_inventory_volume, revenue: appliance_domestic_revenue}, common_variants: [distributor_led, brand_plus_export_oem]}  # 空调
+  "330106": {archetype: A5, drivers: {volume: [appliance_sales_volume, appliance_output], market_share: appliance_market_share, channel: [appliance_online_share, appliance_export_revenue], mix: appliance_obm_share, contract_liabilities: appliance_contract_liabilities, inventory: appliance_inventory_volume, revenue: appliance_domestic_revenue}, common_variants: [distributor_led, brand_plus_export_oem]}  # 冰洗
+  "330201": {archetype: A5, secondary: [A11], drivers: {volume: [appliance_sales_volume, appliance_output], market_share: appliance_market_share, channel: [appliance_online_share, appliance_export_revenue], mix: appliance_obm_share, inventory: appliance_inventory_volume}, common_variants: [brand_plus_export_oem, distributor_led]}  # 彩电
+  "330202": {archetype: A5, secondary: [A11], drivers: {volume: [appliance_sales_volume, appliance_output], channel: [appliance_online_share, appliance_export_revenue], mix: appliance_obm_share}, common_variants: [online_led, brand_plus_export_oem]}  # 其他黑色家电
+  "330301": {archetype: A5, secondary: [A11], drivers: {volume: [appliance_sales_volume, appliance_output], channel: [appliance_online_share, appliance_export_revenue], mix: appliance_obm_share, market_share: appliance_market_share}, common_variants: [online_led, brand_plus_export_oem, odm_oem_maker], note: "Many kitchen small-appliance names are export ODMs (A11/A3) rather than brands"}  # 厨房小家电
+  "330302": {archetype: A5, drivers: {volume: [appliance_sales_volume, appliance_output], channel: [appliance_online_share, appliance_export_revenue], mix: appliance_obm_share, market_share: appliance_market_share}, common_variants: [online_led, brand_plus_export_oem]}  # 清洁小家电
+  "330303": {archetype: A5, drivers: {volume: [appliance_sales_volume, appliance_output], channel: [appliance_online_share, appliance_export_revenue], mix: appliance_obm_share}, common_variants: [online_led]}  # 个护小家电
+  "330401": {archetype: A5, drivers: {volume: [appliance_sales_volume, appliance_output], channel: [appliance_online_share, appliance_export_revenue], market_share: appliance_market_share, contract_liabilities: appliance_contract_liabilities}, common_variants: [distributor_led, online_led]}  # 厨房电器
+  "330402": {archetype: A5, drivers: {volume: [appliance_sales_volume, appliance_output], channel: [appliance_online_share, appliance_export_revenue], market_share: appliance_market_share}, common_variants: [distributor_led, online_led]}  # 卫浴电器
+  "330501": {archetype: A5, secondary: [A11], drivers: {channel: [appliance_export_revenue, appliance_domestic_revenue]}, common_variants: [distributor_led, brand_plus_export_oem, odm_oem_maker], note: "Lighting has brands (欧普) and many export OEMs"}  # 照明设备Ⅲ
+  "330601": {archetype: A3, drivers: {volume: component_sales_volume, capacity: component_capacity, customer_concentration: component_top5_customer_share, mix: component_auto_revenue_share, overseas_share: appliance_export_revenue}, common_variants: [single_key_customer, diversified_customers, design_in_program]}  # 家电零部件Ⅲ
+  "330701": {archetype: A5, drivers: {channel: [appliance_export_revenue, appliance_domestic_revenue]}, common_variants: [distributor_led]}  # 其他家电Ⅲ
+  # 340000 食品饮料
+  "340401": {archetype: A5, secondary: [A2], drivers: {volume: [packaged_meat_sales_volume, fresh_meat_sales_volume, hog_slaughter_volume_meat], unit_margin: packaged_meat_profit_per_ton}, common_variants: [distributor_led, standalone_converter], note: "Fresh-pork slaughter is a spread business (A2); packaged meat is the brand"}  # 肉制品
+  "340404": {archetype: A5, drivers: {}, note: "0 listed companies at present"}  # 其他食品
+  "340406": {archetype: A5, drivers: {volume: snack_main_product_sales, dealers: snack_dealer_count, channel: [snack_online_share, snack_bulk_channel_share]}, common_variants: [distributor_led]}  # 预加工食品
+  "340407": {archetype: A5, drivers: {volume: snack_main_product_sales, dealers: snack_dealer_count, channel: snack_online_share}, common_variants: [online_led, distributor_led, brand_plus_export_oem]}  # 保健品
+  "340501": {archetype: A5, drivers: {volume: baijiu_sales_volume, price: baijiu_ton_price, mix: baijiu_high_end_revenue, channel: [baijiu_direct_sales_revenue, baijiu_province_out_share], dealers: baijiu_dealer_count, contract_liabilities: baijiu_contract_liabilities, capacity: baijiu_base_liquor_capacity}, common_variants: [distributor_led, direct_retail_led]}  # 白酒Ⅲ
+  "340601": {archetype: A5, drivers: {volume: beer_sales_volume, price: beer_ton_price, mix: beer_premium_volume_share, capacity: [beer_capacity, beer_breweries]}, common_variants: [distributor_led]}  # 啤酒
+  "340602": {archetype: A5, drivers: {volume: snack_main_product_sales, dealers: snack_dealer_count, channel: snack_online_share}, common_variants: [distributor_led]}  # 其他酒类
+  "340701": {archetype: A5, drivers: {volume: snack_main_product_sales, dealers: snack_dealer_count, channel: [snack_online_share, snack_bulk_channel_share]}, common_variants: [distributor_led]}  # 软饮料
+  "340702": {archetype: A5, drivers: {revenue: [dairy_liquid_milk_revenue, dairy_powder_revenue], input_price: dairy_raw_milk_price, capacity: [dairy_herd_size, dairy_raw_milk_output]}, common_variants: [distributor_led]}  # 乳品
+  "340801": {archetype: A5, drivers: {volume: snack_main_product_sales, dealers: snack_dealer_count, stores: snack_store_count, channel: [snack_online_share, snack_bulk_channel_share]}, common_variants: [online_led, distributor_led, franchise_led], note: "Includes snack chains (量贩零食) that behave like A6"}  # 零食
+  "340802": {archetype: A5, drivers: {volume: snack_main_product_sales, dealers: snack_dealer_count, stores: snack_store_count, channel: snack_online_share}, common_variants: [distributor_led, direct_retail_led]}  # 烘焙食品
+  "340803": {archetype: A5, secondary: [A6], drivers: {stores: snack_store_count, volume: snack_main_product_sales, channel: snack_online_share}, common_variants: [franchise_led, franchise_chain]}  # 熟食
+  "340901": {archetype: A5, secondary: [A2], drivers: {volume: condiment_sales_volume, price: condiment_ton_price, dealers: condiment_dealer_count, capacity: condiment_capacity, input_cost_share: condiment_raw_material_share}, common_variants: [distributor_led, standalone_converter], note: "Fermentation names (MSG, yeast, amino acids) are spread businesses (A2)"}  # 调味发酵品Ⅲ
+  # 350000 纺织服饰
+  "350102": {archetype: A2, drivers: {volume: textile_output, capacity: textile_capacity, overseas_share: textile_export_share, customer_concentration: textile_top5_customer_share}, common_variants: [standalone_converter]}  # 棉纺
+  "350104": {archetype: A11, drivers: {volume: textile_output, capacity: textile_capacity}, common_variants: [shared_capacity, cost_plus_pass_through]}  # 印染
+  "350105": {archetype: A3, drivers: {volume: textile_output, capacity: textile_capacity, customer_concentration: textile_top5_customer_share, overseas_share: textile_export_share}, common_variants: [own_brand_supplier, diversified_customers]}  # 辅料
+  "350106": {archetype: A3, secondary: [A11], drivers: {volume: textile_output, capacity: textile_capacity, customer_concentration: textile_top5_customer_share, overseas_share: textile_export_share}, common_variants: [odm_oem_maker, diversified_customers]}  # 其他纺织
+  "350107": {archetype: A11, drivers: {volume: textile_output, capacity: textile_capacity, customer_concentration: textile_top5_customer_share, overseas_share: textile_overseas_capacity_share}, common_variants: [dedicated_capacity, single_key_customer]}  # 纺织鞋类制造
+  "350205": {archetype: A5, drivers: {stores: apparel_store_count, store_changes: apparel_net_new_stores, same_store_growth: [apparel_same_store_growth, apparel_retail_flow_growth], channel: [apparel_online_revenue_share, apparel_direct_revenue_share], inventory: apparel_inventory_days}, common_variants: [franchise_led, online_led, direct_retail_led]}  # 鞋帽及其他
+  "350206": {archetype: A5, drivers: {stores: apparel_store_count, store_changes: apparel_net_new_stores, same_store_growth: apparel_same_store_growth, channel: [apparel_online_revenue_share, apparel_direct_revenue_share], inventory: apparel_inventory_days}, common_variants: [franchise_led, online_led]}  # 家纺
+  "350208": {archetype: A5, drivers: {stores: apparel_store_count, store_changes: apparel_net_new_stores, same_store_growth: [apparel_same_store_growth, apparel_retail_flow_growth], channel: [apparel_online_revenue_share, apparel_direct_revenue_share], inventory: apparel_inventory_days}, common_variants: [franchise_led, direct_retail_led]}  # 运动服装
+  "350209": {archetype: A5, secondary: [A11], drivers: {stores: apparel_store_count, store_changes: apparel_net_new_stores, same_store_growth: apparel_same_store_growth, channel: [apparel_online_revenue_share, apparel_direct_revenue_share], inventory: apparel_inventory_days}, common_variants: [direct_retail_led, franchise_led, online_led, odm_oem_maker], note: "Includes apparel export OEMs that are A11"}  # 非运动服装
+  "350301": {archetype: A5, secondary: [A2, A6], drivers: {stores: jewelry_store_count, volume: jewelry_gold_sales_weight, revenue: [jewelry_gold_revenue, jewelry_franchise_fee], same_store_growth: jewelry_same_store_growth}, common_variants: [franchise_led, toll_processing_fee], note: "Gold jewellery prices as gold price + 工费 (A2-like); wholesale/franchise brands are A5"}  # 钟表珠宝
+  "350302": {archetype: A5, drivers: {}, note: "0 listed companies at present"}  # 多品类奢侈品
+  "350303": {archetype: A5, drivers: {}, common_variants: [brand_plus_export_oem]}  # 其他饰品
+  # 360000 轻工制造
+  "360102": {archetype: A2, drivers: {volume: [paper_sales_volume, paper_output], price: paper_ton_price, unit_margin: paper_ton_profit, capacity: paper_capacity, self_sufficiency: pulp_capacity}, common_variants: [upstream_integrated_converter, standalone_converter]}  # 大宗用纸
+  "360103": {archetype: A2, secondary: [A3], drivers: {volume: [paper_sales_volume, paper_output], price: paper_ton_price, unit_margin: paper_ton_profit, capacity: paper_capacity, self_sufficiency: pulp_capacity}, common_variants: [standalone_converter, diversified_customers]}  # 特种纸
+  "360202": {archetype: A3, drivers: {volume: packaging_output, capacity: packaging_capacity, utilisation: packaging_utilization, customer_concentration: packaging_top5_customer_share}, common_variants: [diversified_customers]}  # 印刷
+  "360203": {archetype: A3, secondary: [A2], drivers: {volume: packaging_output, capacity: packaging_capacity, utilisation: packaging_utilization, customer_concentration: packaging_top5_customer_share}, common_variants: [single_key_customer, toll_processing_fee], note: "Metal cans price on tinplate/aluminium pass-through for concentrated beverage customers"}  # 金属包装
+  "360204": {archetype: A3, drivers: {volume: packaging_output, capacity: packaging_capacity, utilisation: packaging_utilization, customer_concentration: packaging_top5_customer_share}, common_variants: [diversified_customers, single_key_customer]}  # 塑料包装
+  "360205": {archetype: A3, drivers: {volume: packaging_output, capacity: packaging_capacity, utilisation: packaging_utilization, customer_concentration: packaging_top5_customer_share}, common_variants: [single_key_customer, diversified_customers]}  # 纸包装
+  "360206": {archetype: A3, drivers: {volume: packaging_output, capacity: packaging_capacity, utilisation: packaging_utilization, customer_concentration: packaging_top5_customer_share}, common_variants: [diversified_customers]}  # 综合包装
+  "360306": {archetype: A5, drivers: {volume: home_output, dealers: home_dealer_count, stores: home_store_count, channel: [home_bulk_channel_share, home_export_share]}, common_variants: [distributor_led], note: "Bulk sales to developers (工程渠道) make part of the business B2B (A3/A4)"}  # 瓷砖地板
+  "360307": {archetype: A5, secondary: [A11], drivers: {stores: home_store_count, dealers: home_dealer_count, volume: home_output, channel: home_export_share}, common_variants: [franchise_led, brand_plus_export_oem, odm_oem_maker]}  # 成品家居
+  "360308": {archetype: A5, drivers: {stores: home_store_count, dealers: home_dealer_count, channel: home_bulk_channel_share}, common_variants: [franchise_led, distributor_led]}  # 定制家居
+  "360309": {archetype: A5, secondary: [A11], drivers: {stores: home_store_count, dealers: home_dealer_count, channel: home_export_share}, common_variants: [distributor_led, odm_oem_maker]}  # 卫浴制品
+  "360311": {archetype: A5, secondary: [A11], drivers: {channel: home_export_share, volume: home_output}, common_variants: [odm_oem_maker, brand_plus_export_oem], note: "Many are export OEMs (A11) for overseas retailers"}  # 其他家居用品
+  "360501": {archetype: A5, secondary: [A6], drivers: {stores: stationery_store_count, revenue: stationery_office_supply_revenue}, common_variants: [distributor_led, franchise_led]}  # 文化用品
+  "360502": {archetype: A11, secondary: [A5], drivers: {customer_concentration: leisure_top5_customer_share, overseas_share: toy_export_share}, common_variants: [odm_oem_maker, dedicated_capacity, brand_plus_export_oem], note: "Toy, sporting-goods and outdoor exporters; mostly OEM"}  # 娱乐用品
+  # 370000 医药生物
+  "370101": {archetype: A3, secondary: [A11, A1], drivers: {volume: [api_sales_volume, api_output], capacity: api_capacity, overseas_share: api_export_share, design_wins: api_certifications, rd_ratio: pharma_rd_ratio}, common_variants: [own_brand_supplier, fee_for_service, standalone_converter], note: "Bulk APIs (vitamins, heparin, antibiotics) ride a commodity price cycle (A1); specialty APIs/CDMO are A3/A11"}  # 原料药
+  "370102": {archetype: A10, drivers: {approvals: [drug_approvals, drug_consistency_evaluations], vbp_exposure: drug_vbp_winning_products, pipeline: drug_pipeline_projects, product_sales: innovative_drug_revenue, licensing: drug_license_out_value, rd_ratio: pharma_rd_ratio, marketing_ratio: pharma_sales_expense_ratio}, common_variants: [innovative_pipeline, generic_vbp, licence_out_partnering]}  # 化学制剂
+  "370201": {archetype: A10, secondary: [A5], drivers: {mix: tcm_exclusive_products, approvals: drug_approvals, vbp_exposure: drug_vbp_winning_products, pipeline: drug_pipeline_projects, rd_ratio: pharma_rd_ratio, marketing_ratio: pharma_sales_expense_ratio}, common_variants: [otc_consumer_brand, generic_vbp], note: "Consumer TCM brands (片仔癀, 同仁堂, 云南白药) are really A5"}  # 中药Ⅲ
+  "370302": {archetype: A10, drivers: {volume: plasma_collection, capacity: plasma_stations, price: plasma_ton_revenue, approvals: plasma_product_lot_releases, mix: plasma_product_varieties, rd_ratio: pharma_rd_ratio}, common_variants: [plasma_supply_constrained], note: "Supply-constrained by licensed plasma stations; economics closer to A7 efficient scale"}  # 血液制品
+  "370303": {archetype: A10, drivers: {volume: vaccine_sales_volume, approvals: vaccine_lot_releases, pipeline: bio_clinical_projects, receivables: vaccine_receivables_turnover, rd_ratio: pharma_rd_ratio, marketing_ratio: pharma_sales_expense_ratio}, common_variants: [innovative_pipeline, licence_out_partnering]}  # 疫苗
+  "370304": {archetype: A10, drivers: {pipeline: bio_clinical_projects, volume: vaccine_sales_volume, rd_ratio: pharma_rd_ratio, marketing_ratio: pharma_sales_expense_ratio}, common_variants: [innovative_pipeline, licence_out_partnering]}  # 其他生物制品
+  "370402": {archetype: A6, drivers: {customers: distribution_hospital_coverage, stores: pharmacy_store_count}, common_variants: [wholesale_distribution, self_operated_retail]}  # 医药流通
+  "370403": {archetype: A6, drivers: {stores: pharmacy_store_count, store_changes: pharmacy_new_stores, sales_density: pharmacy_sales_per_sqm, mix: pharmacy_medicare_store_share}, common_variants: [self_operated_retail, franchise_chain]}  # 线下药店
+  "370404": {archetype: A6, drivers: {}, common_variants: [platform_marketplace], note: "0 listed companies at present"}  # 互联网药店
+  "370502": {archetype: A10, secondary: [A4], drivers: {approvals: [device_class3_registrations, device_fda_ce_approvals], installed_base: device_installed_base, vbp_exposure: device_vbp_winning, overseas_share: device_overseas_share, rd_ratio: pharma_rd_ratio}, common_variants: [innovative_pipeline, equipment_vendor, equipment_plus_service], note: "Capital equipment sold through hospital tenders behaves like A4"}  # 医疗设备
+  "370503": {archetype: A10, secondary: [A3], drivers: {approvals: [device_class3_registrations, device_fda_ce_approvals], vbp_exposure: device_vbp_winning, overseas_share: device_overseas_share, rd_ratio: pharma_rd_ratio}, common_variants: [generic_vbp, innovative_pipeline, odm_oem_maker], note: "Low-value consumables (gloves, syringes) are commodity-like OEM exporters"}  # 医疗耗材
+  "370504": {archetype: A10, drivers: {installed_base: device_installed_base, approvals: device_class3_registrations, vbp_exposure: device_vbp_winning, overseas_share: device_overseas_share, rd_ratio: pharma_rd_ratio}, common_variants: [instrument_plus_reagent, generic_vbp]}  # 体外诊断
+  "370602": {archetype: A8, drivers: {volume: diagnostic_test_volume, network: hospital_count}, common_variants: [asset_heavy_operator]}  # 诊断服务
+  "370603": {archetype: A11, drivers: {backlog: cxo_backlog, orders: cxo_new_orders, customers: cxo_active_customers, staff: cxo_staff, pipeline: cxo_molecules_pipeline, overseas_share: cxo_overseas_share}, common_variants: [fte_service, fee_for_service, shared_capacity]}  # 医疗研发外包
+  "370604": {archetype: A8, drivers: {volume: [hospital_outpatient_visits, hospital_surgeries], capacity: hospital_beds, network: hospital_count, yield: hospital_revenue_per_visit}, common_variants: [asset_heavy_operator, direct_operated_network]}  # 医院
+  "370605": {archetype: A8, drivers: {volume: hospital_outpatient_visits, network: hospital_count, yield: hospital_revenue_per_visit}, common_variants: [asset_heavy_operator]}  # 其他医疗服务
+  # 410000 公用事业
+  "410101": {archetype: A7, secondary: [A2], drivers: {volume: [power_on_grid, power_generation], tariff: power_tariff, capacity: power_installed_capacity, utilisation: power_utilization_hours, unit_cost: thermal_coal_unit_price, efficiency: thermal_coal_consumption_rate, capacity_payment: thermal_capacity_payment, mix: power_market_trade_share, capacity_growth: power_capacity_additions, input_cost_share: thermal_fuel_cost_share}, common_variants: [regulated_tariff_asset, market_traded_output], note: "Coal is passed through only partly (煤电联动), so thermal earns a tariff − coal spread (A2-like)"}  # 火力发电
+  "410102": {archetype: A7, drivers: {volume: [power_on_grid, power_generation], tariff: power_tariff, capacity: power_installed_capacity, utilisation: power_utilization_hours, resource: [hydro_inflow, hydro_reservoir_level], capacity_growth: power_capacity_additions, mix: power_market_trade_share}, common_variants: [regulated_tariff_asset]}  # 水力发电
+  "410104": {archetype: A7, drivers: {volume: heat_supply_volume, unit_cost: thermal_coal_unit_price, efficiency: thermal_coal_consumption_rate, capacity: power_installed_capacity, tariff: power_tariff}, common_variants: [concession_operator, regulated_tariff_asset]}  # 热力服务
+  "410106": {archetype: A7, drivers: {volume: [power_on_grid, power_generation], tariff: power_tariff, capacity: power_installed_capacity, utilisation: [power_utilization_hours, solar_curtailment_rate], receivables: renewable_subsidy_receivable, capacity_growth: [power_capacity_additions, renewable_pipeline], mix: power_market_trade_share}, common_variants: [subsidy_dependent_renewable, market_traded_output]}  # 光伏发电
+  "410107": {archetype: A7, drivers: {volume: [power_on_grid, power_generation], tariff: power_tariff, capacity: power_installed_capacity, utilisation: [power_utilization_hours, wind_curtailment_rate], receivables: renewable_subsidy_receivable, capacity_growth: [power_capacity_additions, renewable_pipeline], mix: power_market_trade_share}, common_variants: [subsidy_dependent_renewable, market_traded_output]}  # 风力发电
+  "410108": {archetype: A7, drivers: {volume: [power_on_grid, power_generation], tariff: power_tariff, capacity: [power_installed_capacity, nuclear_units_in_operation], utilisation: [nuclear_capacity_factor, power_utilization_hours], capacity_growth: nuclear_units_under_construction, mix: power_market_trade_share}, common_variants: [regulated_tariff_asset, market_traded_output]}  # 核力发电
+  "410109": {archetype: A7, drivers: {volume: power_on_grid, tariff: power_tariff, capacity: power_installed_capacity, receivables: renewable_subsidy_receivable}, common_variants: [subsidy_dependent_renewable]}  # 其他能源发电
+  "410110": {archetype: A7, secondary: [A4], drivers: {volume: power_on_grid, capacity: power_installed_capacity, capacity_growth: renewable_pipeline, receivables: renewable_subsidy_receivable}, common_variants: [market_traded_output, epc_contractor], note: "Mix of power retail, energy services and EPC; the archetype often comes from segments"}  # 电能综合服务
+  "410301": {archetype: A7, secondary: [A2], drivers: {volume: gas_sales_volume, unit_margin: gas_dollar_margin, users: gas_customers, connections: gas_new_connections, network: gas_pipeline_length}, common_variants: [city_gas_distribution, concession_operator, physical_trading]}  # 燃气Ⅲ
+  # 420000 交通运输
+  "420802": {archetype: A6, secondary: [A2], drivers: {volume: logistics_business_volume, margin: logistics_gross_margin, receivables: logistics_receivables}, common_variants: [physical_trading, wholesale_distribution], note: "Bulk-commodity supply-chain traders (象屿, 建发, 物产中大) earn a thin trading spread"}  # 原材料供应链服务
+  "420803": {archetype: A6, drivers: {volume: logistics_business_volume, margin: logistics_gross_margin, receivables: logistics_receivables}, common_variants: [wholesale_distribution, platform_marketplace]}  # 中间产品及消费品供应链服务
+  "420804": {archetype: A8, drivers: {volume: express_parcel_volume, revenue: express_revenue, yield: express_revenue_per_parcel, unit_cost: express_cost_per_parcel, market_share: express_market_share}, common_variants: [asset_light_franchise, direct_operated_network]}  # 快递
+  "420805": {archetype: A8, secondary: [A6], drivers: {volume: logistics_business_volume, margin: logistics_gross_margin, receivables: logistics_receivables}, common_variants: [spot_rate_exposed, platform_marketplace]}  # 跨境物流
+  "420806": {archetype: A8, drivers: {capacity: logistics_warehouse_area, volume: logistics_business_volume, margin: logistics_gross_margin}, common_variants: [asset_heavy_operator]}  # 仓储物流
+  "420807": {archetype: A8, drivers: {volume: logistics_business_volume, margin: logistics_gross_margin, receivables: logistics_receivables}, common_variants: [asset_heavy_operator, asset_light_franchise]}  # 公路货运
+  "420901": {archetype: A7, drivers: {revenue: toll_revenue, volume: toll_daily_traffic, capacity: toll_road_length}, common_variants: [concession_operator, regulated_tariff_asset]}  # 高速公路
+  "420902": {archetype: A8, secondary: [A7], drivers: {volume: logistics_business_volume}, common_variants: [asset_heavy_operator, concession_operator], note: "Public transport fares are regulated and subsidised (A7-like); taxis and metro operators mixed"}  # 公交
+  "420903": {archetype: A7, drivers: {volume: [rail_freight_volume, rail_passengers]}, common_variants: [regulated_tariff_asset, concession_operator]}  # 铁路运输
+  "421001": {archetype: A8, drivers: {capacity: [airline_ask, airline_fleet_size], volume: [airline_rpk, airline_passengers, airline_cargo_volume], utilisation: airline_load_factor, yield: airline_yield, unit_cost: airline_casks_ex_fuel}, common_variants: [asset_heavy_operator]}  # 航空运输
+  "421002": {archetype: A7, drivers: {volume: [airport_passenger_throughput, airport_aircraft_movements, airport_cargo_throughput], mix: airport_intl_passenger_share, revenue: airport_non_aero_revenue}, common_variants: [regulated_tariff_asset, concession_operator], note: "Aero charges are regulated; non-aero (duty-free concession) drives profit"}  # 机场
+  "421101": {archetype: A8, secondary: [A1], drivers: {capacity: shipping_fleet_capacity, volume: [shipping_container_volume, shipping_cargo_volume], yield: [shipping_tce, shipping_revenue_per_teu]}, common_variants: [spot_rate_exposed, asset_heavy_operator], note: "Freight rates are a market price; shipping behaves like a price-taker (A1) in the cycle"}  # 航运
+  "421102": {archetype: A7, drivers: {volume: [port_cargo_throughput, port_container_throughput], capacity: port_berths, tariff: port_handling_fee_rate}, common_variants: [concession_operator, regulated_tariff_asset]}  # 港口
+  # 430000 房地产
+  "430101": {archetype: A4, drivers: {orders: [re_contracted_sales_amount, re_contracted_sales_area], deliveries: re_completed_area, volume: re_new_starts_area, inventory: re_total_land_bank, capex: [re_land_cost, re_land_acquisition_area], leverage: re_net_gearing, funding_cost: re_financing_cost}, common_variants: [presale_developer], note: "Presales → delivery is the A4 backlog logic; land bank and leverage make it balance-sheet driven"}  # 住宅开发
+  "430102": {archetype: A4, secondary: [A8], drivers: {orders: re_contracted_sales_amount, utilisation: rental_occupancy, revenue: [rental_income, mall_sales], capacity: rental_leasable_area, leverage: re_net_gearing}, common_variants: [presale_developer, asset_heavy_operator], note: "Mall/office rental is A8 (area × occupancy × rent); most names still develop for sale"}  # 商业地产
+  "430103": {archetype: A4, secondary: [A8], drivers: {orders: re_contracted_sales_amount, utilisation: rental_occupancy, revenue: rental_income, capacity: rental_leasable_area, leverage: re_net_gearing}, common_variants: [presale_developer, asset_heavy_operator]}  # 产业地产
+  "430301": {archetype: A9, drivers: {users: [pm_gfa_under_management, pm_projects], pipeline: pm_contracted_gfa, receivables: pm_collection_rate, customer_mix: pm_third_party_share}, common_variants: [headcount_outsourcing, capacity_lease], note: "Recurring fee per managed area; could equally be read as A8"}  # 物业管理
+  "430302": {archetype: A6, drivers: {revenue: rental_income}, common_variants: [platform_marketplace, franchise_chain]}  # 房产租赁经纪
+  "430303": {archetype: A6, drivers: {revenue: rental_income}, common_variants: [platform_marketplace]}  # 房地产综合服务
+  # 450000 商贸零售
+  "450201": {archetype: A6, secondary: [A2], drivers: {}, common_variants: [physical_trading, wholesale_distribution]}  # 贸易Ⅲ
+  "450301": {archetype: A6, drivers: {stores: retail_store_count, store_changes: retail_store_changes, same_store_growth: retail_same_store_growth, sales_density: retail_sales_per_sqm, members: retail_members, channel: retail_online_share, gmv: retail_gmv}, common_variants: [concession_leasing, self_operated_retail]}  # 百货
+  "450302": {archetype: A6, drivers: {stores: retail_store_count, store_changes: retail_store_changes, same_store_growth: retail_same_store_growth, sales_density: retail_sales_per_sqm, members: retail_members, channel: retail_online_share, gmv: retail_gmv}, common_variants: [self_operated_retail]}  # 超市
+  "450303": {archetype: A6, drivers: {stores: retail_store_count, store_changes: retail_store_changes, same_store_growth: retail_same_store_growth, sales_density: retail_sales_per_sqm, members: retail_members, channel: retail_online_share, gmv: retail_gmv}, common_variants: [concession_leasing, self_operated_retail]}  # 多业态零售
+  "450304": {archetype: A8, secondary: [A6], drivers: {stores: retail_store_count, gmv: retail_gmv, sales_density: retail_sales_per_sqm, members: retail_members}, common_variants: [concession_leasing, asset_heavy_operator], note: "Mall operators earn rent (area × occupancy × rent); A6 if retail sales dominate"}  # 商业物业经营
+  "450401": {archetype: A6, drivers: {stores: chain_store_count, same_store_growth: chain_same_store_growth}, common_variants: [self_operated_retail, franchise_chain]}  # 专业连锁Ⅲ
+  "450601": {archetype: A6, secondary: [A9], drivers: {gmv: ecom_gmv, channel: ecom_amazon_share, mix: ecom_active_skus, customers: ecom_brand_partners, marketing_ratio: ecom_marketing_expense_ratio}, common_variants: [platform_marketplace, self_operated_retail]}  # 综合电商
+  "450602": {archetype: A6, secondary: [A5], drivers: {gmv: ecom_gmv, channel: ecom_amazon_share, mix: ecom_active_skus, marketing_ratio: ecom_marketing_expense_ratio}, common_variants: [self_operated_retail, online_led], note: "Cross-border sellers with own brands on Amazon are A5 online-led"}  # 跨境电商
+  "450603": {archetype: A6, secondary: [A9], drivers: {gmv: ecom_gmv, customers: ecom_brand_partners, marketing_ratio: ecom_marketing_expense_ratio}, common_variants: [platform_marketplace, self_operated_retail]}  # 电商服务
+  "450701": {archetype: A6, drivers: {stores: duty_free_store_count, gmv: duty_free_hainan_sales, members: duty_free_members}, common_variants: [self_operated_retail], note: "Duty-free licences are an efficient-scale moat"}  # 旅游零售Ⅲ
+  # 460000 社会服务
+  "460601": {archetype: A8, drivers: {}, common_variants: [asset_heavy_operator]}  # 体育Ⅲ
+  "460701": {archetype: A9, secondary: [A6], drivers: {}, common_variants: [platform_marketplace], note: "0 listed companies at present"}  # 本地生活服务Ⅲ
+  "460801": {archetype: A11, drivers: {staff: hr_outsourced_staff}, common_variants: [fte_service]}  # 人力资源服务
+  "460802": {archetype: A8, drivers: {volume: testing_reports, capacity: testing_labs, revenue_per_staff: testing_revenue_per_staff}, common_variants: [asset_heavy_operator, direct_operated_network]}  # 检测服务
+  "460803": {archetype: A8, drivers: {capacity: exhibition_area}, common_variants: [asset_heavy_operator]}  # 会展服务
+  "460804": {archetype: A11, drivers: {revenue_per_staff: testing_revenue_per_staff}, common_variants: [fee_for_service, fte_service]}  # 其他专业服务
+  "460901": {archetype: A8, drivers: {yield: hotel_revpar, price: hotel_adr, utilisation: hotel_occupancy, capacity: [hotel_open_count, hotel_rooms], capacity_growth: hotel_pipeline}, common_variants: [asset_light_franchise, asset_heavy_operator]}  # 酒店
+  "460902": {archetype: A8, secondary: [A6], drivers: {stores: restaurant_store_count, utilisation: restaurant_table_turnover, price: restaurant_avg_ticket, same_store_growth: restaurant_same_store_growth}, common_variants: [direct_operated_network, franchise_chain]}  # 餐饮
+  "461001": {archetype: A8, drivers: {}, note: "0 listed companies at present"}  # 博彩
+  "461002": {archetype: A8, drivers: {volume: scenic_visitors, revenue: scenic_ticket_revenue, yield: scenic_spend_per_visitor}, common_variants: [asset_heavy_operator]}  # 人工景区
+  "461003": {archetype: A8, secondary: [A7], drivers: {volume: [scenic_visitors, scenic_cableway_passengers], revenue: scenic_ticket_revenue, yield: scenic_spend_per_visitor}, common_variants: [concession_operator, asset_heavy_operator], note: "Ticket prices of natural sites are government-set (A7-like)"}  # 自然景区
+  "461004": {archetype: A8, secondary: [A6], drivers: {volume: scenic_visitors, yield: scenic_spend_per_visitor}, common_variants: [asset_heavy_operator, platform_marketplace]}  # 旅游综合
+  "461101": {archetype: A9, drivers: {users: edu_enrollment, capacity: edu_learning_centers, contract_liabilities: edu_contract_liabilities}, common_variants: [capacity_lease], note: "Degree schools charge regulated tuition per enrolled student (users × fee)"}  # 学历教育
+  "461102": {archetype: A9, drivers: {users: edu_enrollment, capacity: edu_learning_centers, contract_liabilities: edu_contract_liabilities, retention: edu_pass_rate}, common_variants: [paid_membership_content]}  # 培训教育
+  "461103": {archetype: A9, drivers: {users: edu_enrollment, capacity: edu_learning_centers, contract_liabilities: edu_contract_liabilities}, common_variants: [project_delivery, saas_subscription]}  # 教育运营及其他
+  # 480000 银行
+  "480201": {archetype: A12, drivers: {assets: bank_total_loans, funding: bank_total_deposits, nim: [bank_nim, bank_net_interest_spread], asset_yield: bank_asset_yield, funding_cost: [bank_liability_cost, bank_demand_deposit_share], fees: bank_non_interest_income_share, cost_income: bank_cost_income_ratio, asset_quality: [bank_npl_ratio, bank_special_mention_ratio, bank_overdue_ratio, bank_npl_formation_rate, bank_overdue90_to_npl], provision: [bank_provision_coverage, bank_loan_provision_ratio, bank_writeoffs], capital: [bank_cet1_ratio, bank_tier1_ratio, bank_car, bank_rwa], leverage: bank_leverage_ratio, liquidity: [bank_lcr, bank_nsfr, bank_loan_to_deposit], aum: [bank_retail_aum, bank_wealth_mgmt_balance], customers: [bank_retail_customers, bank_private_banking_customers], mix: bank_retail_loan_share}, common_variants: [corporate_lending_bank, retail_wealth_bank]}  # 国有大型银行Ⅲ
+  "480301": {archetype: A12, drivers: {assets: bank_total_loans, funding: bank_total_deposits, nim: [bank_nim, bank_net_interest_spread], asset_yield: bank_asset_yield, funding_cost: [bank_liability_cost, bank_demand_deposit_share], fees: bank_non_interest_income_share, cost_income: bank_cost_income_ratio, asset_quality: [bank_npl_ratio, bank_special_mention_ratio, bank_overdue_ratio, bank_npl_formation_rate, bank_overdue90_to_npl, bank_credit_card_npl], provision: [bank_provision_coverage, bank_loan_provision_ratio, bank_writeoffs], capital: [bank_cet1_ratio, bank_tier1_ratio, bank_car, bank_rwa], leverage: bank_leverage_ratio, liquidity: [bank_lcr, bank_nsfr, bank_loan_to_deposit], aum: [bank_retail_aum, bank_wealth_mgmt_balance], customers: [bank_retail_customers, bank_private_banking_customers], mix: bank_retail_loan_share}, common_variants: [retail_wealth_bank, corporate_lending_bank]}  # 股份制银行Ⅲ
+  "480401": {archetype: A12, drivers: {assets: bank_total_loans, funding: bank_total_deposits, nim: [bank_nim, bank_net_interest_spread], asset_yield: bank_asset_yield, funding_cost: [bank_liability_cost, bank_demand_deposit_share], fees: bank_non_interest_income_share, cost_income: bank_cost_income_ratio, asset_quality: [bank_npl_ratio, bank_special_mention_ratio, bank_overdue_ratio, bank_npl_formation_rate, bank_overdue90_to_npl], provision: [bank_provision_coverage, bank_loan_provision_ratio, bank_writeoffs], capital: [bank_cet1_ratio, bank_tier1_ratio, bank_car, bank_rwa], leverage: bank_leverage_ratio, liquidity: [bank_lcr, bank_nsfr, bank_loan_to_deposit], aum: [bank_retail_aum, bank_wealth_mgmt_balance], customers: bank_retail_customers, mix: bank_retail_loan_share}, common_variants: [corporate_lending_bank, retail_wealth_bank]}  # 城商行Ⅲ
+  "480501": {archetype: A12, drivers: {assets: bank_total_loans, funding: bank_total_deposits, nim: [bank_nim, bank_net_interest_spread], asset_yield: bank_asset_yield, funding_cost: [bank_liability_cost, bank_demand_deposit_share], fees: bank_non_interest_income_share, cost_income: bank_cost_income_ratio, asset_quality: [bank_npl_ratio, bank_special_mention_ratio, bank_overdue_ratio, bank_npl_formation_rate, bank_overdue90_to_npl], provision: [bank_provision_coverage, bank_loan_provision_ratio, bank_writeoffs], capital: [bank_cet1_ratio, bank_tier1_ratio, bank_car, bank_rwa], leverage: bank_leverage_ratio, liquidity: [bank_lcr, bank_nsfr, bank_loan_to_deposit], aum: bank_retail_aum, customers: bank_retail_customers, mix: bank_retail_loan_share}, common_variants: [corporate_lending_bank, retail_wealth_bank]}  # 农商行Ⅲ
+  "480601": {archetype: A12, drivers: {assets: bank_total_loans, funding: bank_total_deposits, nim: bank_nim, asset_yield: bank_asset_yield, funding_cost: bank_liability_cost, fees: bank_non_interest_income_share, cost_income: bank_cost_income_ratio, asset_quality: bank_npl_ratio, provision: bank_provision_coverage, capital: bank_cet1_ratio, liquidity: bank_lcr}, common_variants: [corporate_lending_bank], note: "0 listed companies at present"}  # 其他银行Ⅲ
+  # 490000 非银金融
+  "490101": {archetype: A12, drivers: {revenue: broker_monthly_revenue, market_share: broker_brokerage_market_share, fees: [broker_equity_underwriting, broker_bond_underwriting, broker_ipo_count], aum: broker_aum, assets: [broker_margin_balance, broker_proprietary_assets], customers: broker_brokerage_accounts, capital: [broker_net_capital, broker_risk_coverage, broker_capital_leverage], liquidity: [broker_lcr, broker_nsfr], leverage: [broker_leverage_multiple, broker_equity_prop_to_net_capital, broker_nonequity_prop_to_net_capital]}, common_variants: [brokerage_fee_led, capital_intermediary], note: "Earnings are a market-turnover beta more than a NIM business"}  # 证券Ⅲ
+  "490201": {archetype: A12, drivers: {premiums: [ins_first_year_premium, ins_life_premium_monthly, ins_pc_premium_monthly], nbv: ins_nbv, margin: ins_nbv_margin, embedded_value: ins_embedded_value, combined_ratio: [ins_combined_ratio, ins_loss_ratio, ins_expense_ratio], investment_yield: [ins_total_investment_yield, ins_net_investment_yield, ins_comprehensive_investment_yield], assets: ins_investment_assets, capital: [ins_core_solvency, ins_comprehensive_solvency], distribution: [ins_agents, ins_bancassurance_nbv_share], retention: ins_persistency_13m}, common_variants: [life_insurer, pc_insurer]}  # 保险Ⅲ
+  "490302": {archetype: A12, drivers: {aum: [trust_aum, amc_aum], assets: leasing_assets}, common_variants: [fee_asset_manager, leasing_lender], note: "Financial holdings mix trust, leasing, futures and AMC; segments decide"}  # 金融控股
+  "490303": {archetype: A12, drivers: {assets: futures_client_equity}, common_variants: [fee_asset_manager, brokerage_fee_led]}  # 期货
+  "490304": {archetype: A12, drivers: {aum: trust_aum}, common_variants: [fee_asset_manager]}  # 信托
+  "490305": {archetype: A12, drivers: {assets: leasing_assets, asset_quality: leasing_npa_ratio}, common_variants: [leasing_lender]}  # 租赁
+  "490306": {archetype: A9, secondary: [A12], drivers: {}, common_variants: [saas_subscription, paid_membership_content], note: "Financial-data and trading-software vendors earn subscriptions, not balance-sheet income"}  # 金融信息服务
+  "490307": {archetype: A12, secondary: [A9], drivers: {aum: amc_aum}, common_variants: [fee_asset_manager], note: "AUM × fee rate is closer to A9 recurring than to a balance sheet"}  # 资产管理
+  "490308": {archetype: A12, drivers: {}, common_variants: [fee_asset_manager]}  # 其他多元金融
+  # 510000 综合
+  "510101": {archetype: A3, drivers: {}, note: "Conglomerates: no meaningful default, archetype must come from each revenue segment"}  # 综合Ⅲ
+  # 610000 建筑材料
+  "610101": {archetype: A1, drivers: {volume: [cement_sales_volume, aggregate_sales_volume, rmc_sales_volume], price: cement_price_per_ton, unit_cost: cement_cost_per_ton, unit_margin: cement_gross_profit_per_ton, capacity: cement_capacity}, common_variants: [own_resource_mining], note: "Regional oligopoly with coordinated output cuts (错峰); price-taker in the national cycle"}  # 水泥制造
+  "610102": {archetype: A3, secondary: [A4], drivers: {volume: rmc_sales_volume}, common_variants: [diversified_customers, epc_contractor]}  # 水泥制品
+  "610201": {archetype: A1, secondary: [A2], drivers: {volume: glass_sales_volume, capacity: [float_glass_capacity, pv_glass_capacity]}, common_variants: [standalone_converter, upstream_integrated_converter]}  # 玻璃制造
+  "610202": {archetype: A1, secondary: [A3], drivers: {volume: [fiberglass_sales_volume, electronic_cloth_sales], capacity: fiberglass_capacity}, common_variants: [diversified_customers], note: "Glass fibre is price-cyclical; electronic cloth and wind blades (中材科技) are A3"}  # 玻纤制造
+  "610301": {archetype: A3, drivers: {volume: building_material_sales_volume, capacity: building_material_capacity, receivables: building_material_receivables}, common_variants: [diversified_customers, toll_processing_fee]}  # 耐火材料
+  "610302": {archetype: A5, secondary: [A3], drivers: {volume: building_material_sales_volume, capacity: building_material_capacity, channel: building_material_retail_share, dealers: building_material_dealers, receivables: building_material_receivables}, common_variants: [distributor_led, diversified_customers], note: "Retail pipe brands (伟星新材) are A5; municipal/engineering pipe makers are A3"}  # 管材
+  "610303": {archetype: A3, secondary: [A5], drivers: {volume: building_material_sales_volume, capacity: building_material_capacity, channel: building_material_retail_share, dealers: building_material_dealers, receivables: building_material_receivables}, common_variants: [diversified_customers, distributor_led]}  # 其他建材
+  "610304": {archetype: A3, secondary: [A5], drivers: {volume: building_material_sales_volume, capacity: building_material_capacity, channel: building_material_retail_share, dealers: building_material_dealers, receivables: building_material_receivables}, common_variants: [diversified_customers, distributor_led], note: "Waterproofing moved from developer bulk sales (A3) towards retail/dealers (A5)"}  # 防水材料
+  "610305": {archetype: A5, secondary: [A3], drivers: {volume: building_material_sales_volume, capacity: building_material_capacity, channel: building_material_retail_share, dealers: building_material_dealers, receivables: building_material_receivables}, common_variants: [distributor_led]}  # 涂料
+  # 620000 建筑装饰
+  "620101": {archetype: A4, drivers: {orders: [construction_new_contracts, construction_major_project_wins], backlog: construction_backlog, volume: [housing_new_starts_area, housing_construction_area], deliveries: housing_completed_area, overseas_share: construction_overseas_new_contracts, cash_conversion: construction_operating_cash_flow}, common_variants: [epc_contractor]}  # 房屋建设Ⅲ
+  "620201": {archetype: A4, drivers: {orders: [construction_new_contracts, special_eng_new_contracts], backlog: construction_backlog, receivables: construction_receivables, cash_conversion: construction_operating_cash_flow}, common_variants: [epc_contractor]}  # 装修装饰Ⅲ
+  "620306": {archetype: A4, drivers: {orders: [construction_new_contracts, infra_new_contracts, construction_major_project_wins], backlog: construction_backlog, capex: construction_ppp_investment, overseas_share: construction_overseas_new_contracts, cash_conversion: construction_operating_cash_flow}, common_variants: [epc_contractor, ppp_investment_build]}  # 基建市政工程
+  "620307": {archetype: A4, drivers: {orders: [construction_new_contracts, infra_new_contracts], backlog: construction_backlog, capex: construction_ppp_investment, cash_conversion: construction_operating_cash_flow}, common_variants: [ppp_investment_build, epc_contractor]}  # 园林工程
+  "620401": {archetype: A4, secondary: [A2], drivers: {orders: [construction_new_contracts, special_eng_new_contracts], backlog: construction_backlog, volume: steel_structure_output, receivables: construction_receivables}, common_variants: [epc_contractor, toll_processing_fee], note: "Steel-structure fabricators (鸿路) earn a per-ton processing fee (A2)"}  # 钢结构
+  "620402": {archetype: A4, drivers: {orders: [construction_new_contracts, special_eng_new_contracts], backlog: construction_backlog, overseas_share: construction_overseas_new_contracts, receivables: construction_receivables}, common_variants: [epc_contractor]}  # 化学工程
+  "620403": {archetype: A4, drivers: {orders: [construction_new_contracts, construction_overseas_new_contracts], backlog: construction_backlog, receivables: construction_receivables}, common_variants: [epc_contractor]}  # 国际工程
+  "620404": {archetype: A4, drivers: {orders: [construction_new_contracts, special_eng_new_contracts], backlog: construction_backlog, receivables: construction_receivables}, common_variants: [epc_contractor]}  # 其他专业工程
+  "620601": {archetype: A4, secondary: [A11], drivers: {orders: construction_new_contracts, backlog: construction_backlog, revenue_per_staff: design_revenue_per_staff, receivables: construction_receivables}, common_variants: [fee_for_service, epc_contractor], note: "Design/consulting is professional services billed per project (A11-like)"}  # 工程咨询服务Ⅲ
+  # 630000 电力设备
+  "630101": {archetype: A3, secondary: [A4], drivers: {orders: grid_new_orders, backlog: grid_backlog, overseas_share: grid_overseas_share}, common_variants: [own_brand_supplier, diversified_customers]}  # 电机Ⅲ
+  "630301": {archetype: A4, drivers: {orders: grid_new_orders, backlog: grid_backlog, overseas_share: grid_overseas_share}, common_variants: [equipment_vendor, epc_contractor]}  # 综合电力设备商
+  "630304": {archetype: A4, drivers: {orders: grid_new_orders, backlog: grid_backlog}, common_variants: [equipment_vendor, epc_contractor]}  # 火电设备
+  "630306": {archetype: A3, secondary: [A4], drivers: {orders: grid_new_orders, backlog: grid_backlog, overseas_share: grid_overseas_share}, common_variants: [own_brand_supplier, diversified_customers]}  # 其他电源设备Ⅲ
+  "630501": {archetype: A1, secondary: [A2], drivers: {volume: [polysilicon_output, pv_wafer_shipments], unit_cost: polysilicon_cash_cost, capacity: pv_capacity, mix: pv_ntype_share}, common_variants: [standalone_converter, upstream_integrated_converter], note: "Polysilicon is a price-taker (A1); wafer makers earn a spread over polysilicon (A2)"}  # 硅料硅片
+  "630502": {archetype: A2, secondary: [A3], drivers: {volume: [pv_module_shipments, pv_cell_shipments], capacity: pv_capacity, mix: pv_ntype_share, overseas_share: pv_overseas_shipment_share}, common_variants: [standalone_converter, upstream_integrated_converter], note: "Cell/module makers live on the spread over wafer/cell prices; brand and bankability add A3 traits"}  # 光伏电池组件
+  "630503": {archetype: A3, secondary: [A5], drivers: {volume: [inverter_shipments, ess_system_shipments], margin: inverter_gross_margin, overseas_share: inverter_overseas_share}, common_variants: [own_brand_supplier, distributor_led]}  # 逆变器
+  "630504": {archetype: A3, secondary: [A2], drivers: {volume: pv_aux_sales_volume, capacity: pv_aux_capacity, margin: pv_aux_gross_margin, market_share: pv_aux_market_share}, common_variants: [diversified_customers, toll_processing_fee], note: "PV glass, film and frames price close to input cost + fee"}  # 光伏辅材
+  "630505": {archetype: A4, drivers: {orders: equip_new_orders, backlog: equip_backlog, contract_liabilities: equip_contract_liabilities, deliveries: equip_goods_shipped}, common_variants: [equipment_vendor]}  # 光伏加工设备
+  "630601": {archetype: A4, secondary: [A7], drivers: {deliveries: wtg_sales_capacity, backlog: wtg_backlog, market_share: wind_installed_share, mix: offshore_wind_revenue_share, overseas_share: wind_overseas_share}, common_variants: [equipment_vendor, equipment_plus_service], note: "Turbine OEMs also build and sell wind farms (A7 segment)"}  # 风电整机
+  "630602": {archetype: A3, secondary: [A2], drivers: {volume: wind_component_output, mix: offshore_wind_revenue_share, overseas_share: wind_overseas_share}, common_variants: [design_in_program, toll_processing_fee], note: "Castings, forgings and towers price as steel + processing fee"}  # 风电零部件
+  "630701": {archetype: A3, secondary: [A1], drivers: {volume: [ev_battery_sales, ess_battery_sales, battery_output], price: battery_unit_price, capacity: battery_capacity, utilisation: battery_utilization, market_share: battery_market_share, overseas_share: battery_overseas_share}, common_variants: [single_key_customer, diversified_customers, design_in_program]}  # 锂电池
+  "630702": {archetype: A2, secondary: [A3], drivers: {volume: [battery_material_shipments, separator_shipments], capacity: battery_material_capacity, utilisation: battery_material_utilization, unit_margin: battery_material_unit_profit}, common_variants: [toll_processing_fee, standalone_converter, design_in_program], note: "Cathode/precursor = metal pass-through + processing fee (A2); separators/electrolyte/anode closer to A3"}  # 电池化学品
+  "630703": {archetype: A4, drivers: {orders: equip_new_orders, backlog: equip_backlog, contract_liabilities: equip_contract_liabilities, deliveries: equip_goods_shipped}, common_variants: [equipment_vendor]}  # 锂电专用设备
+  "630704": {archetype: A3, drivers: {volume: battery_output, capacity: battery_capacity}, common_variants: [design_in_program]}  # 燃料电池
+  "630705": {archetype: A3, secondary: [A2], drivers: {volume: battery_output, capacity: battery_capacity, utilisation: battery_utilization, overseas_share: battery_overseas_share}, common_variants: [own_brand_supplier, toll_processing_fee], note: "Lead-acid batteries pass lead prices through with a lag"}  # 蓄电池及其他电池
+  "630801": {archetype: A4, drivers: {orders: [grid_new_orders, grid_sgcc_bid_wins], backlog: grid_backlog, overseas_share: grid_overseas_share, customer_concentration: grid_utility_customer_share}, common_variants: [equipment_vendor, epc_contractor]}  # 输变电设备
+  "630802": {archetype: A4, drivers: {orders: [grid_new_orders, grid_sgcc_bid_wins], backlog: grid_backlog, overseas_share: grid_overseas_share, customer_concentration: grid_utility_customer_share}, common_variants: [equipment_vendor]}  # 配电设备
+  "630803": {archetype: A4, secondary: [A9], drivers: {orders: [grid_new_orders, grid_sgcc_bid_wins], backlog: grid_backlog, customer_concentration: grid_utility_customer_share}, common_variants: [equipment_vendor, project_delivery]}  # 电网自动化设备
+  "630804": {archetype: A4, drivers: {orders: [grid_new_orders, grid_sgcc_bid_wins], backlog: grid_backlog, overseas_share: grid_overseas_share, customer_concentration: grid_utility_customer_share}, common_variants: [equipment_vendor]}  # 电工仪器仪表
+  "630805": {archetype: A2, secondary: [A4], drivers: {orders: [grid_new_orders, grid_sgcc_bid_wins], backlog: grid_backlog, customer_concentration: grid_utility_customer_share}, common_variants: [toll_processing_fee, equipment_vendor], note: "Cables price as copper/aluminium + processing margin, won through grid tenders"}  # 线缆部件及其他
+  # 640000 机械设备
+  "640101": {archetype: A4, secondary: [A3], drivers: {volume: equip_sales_units, orders: mach_new_orders, backlog: mach_backlog, margin: mach_gross_margin, contract_liabilities: mach_contract_liabilities, overseas_share: mach_overseas_revenue_share}, common_variants: [equipment_vendor, own_brand_supplier], note: "Machine tools follow orders (A4); cutting tools are consumables (A3)"}  # 机床工具
+  "640103": {archetype: A3, secondary: [A1], drivers: {volume: equip_sales_units, capacity: mach_capacity, margin: mach_gross_margin, overseas_share: mach_overseas_revenue_share}, common_variants: [diversified_customers], note: "Lab-grown diamond makers are price-cyclical (A1)"}  # 磨具磨料
+  "640105": {archetype: A3, secondary: [A4], drivers: {volume: equip_sales_units, orders: mach_new_orders, capacity: mach_capacity, margin: mach_gross_margin, overseas_share: mach_overseas_revenue_share}, common_variants: [diversified_customers, design_in_program]}  # 制冷空调设备
+  "640106": {archetype: A3, secondary: [A4], drivers: {volume: equip_sales_units, orders: mach_new_orders, backlog: mach_backlog, capacity: mach_capacity, margin: mach_gross_margin, overseas_share: mach_overseas_revenue_share}, common_variants: [own_brand_supplier, diversified_customers]}  # 其他通用设备
+  "640107": {archetype: A3, secondary: [A4], drivers: {volume: equip_sales_units, orders: mach_new_orders, margin: mach_gross_margin, overseas_share: mach_overseas_revenue_share}, common_variants: [own_brand_supplier, diversified_customers]}  # 仪器仪表
+  "640108": {archetype: A2, secondary: [A3], drivers: {volume: equip_sales_units, capacity: mach_capacity, margin: mach_gross_margin, overseas_share: mach_overseas_revenue_share}, common_variants: [toll_processing_fee, odm_oem_maker], note: "Metal products (wire, fasteners, castings) price as metal + processing fee"}  # 金属制品
+  "640203": {archetype: A4, drivers: {orders: mach_new_orders, backlog: mach_backlog, margin: mach_gross_margin, contract_liabilities: mach_contract_liabilities, overseas_share: mach_overseas_revenue_share}, common_variants: [equipment_vendor, epc_contractor]}  # 能源及重型设备
+  "640204": {archetype: A4, secondary: [A3], drivers: {orders: mach_new_orders, backlog: mach_backlog, volume: equip_sales_units, margin: mach_gross_margin}, common_variants: [equipment_vendor, equipment_plus_service]}  # 楼宇设备
+  "640206": {archetype: A4, drivers: {orders: mach_new_orders, backlog: mach_backlog, volume: equip_sales_units, margin: mach_gross_margin, overseas_share: mach_overseas_revenue_share}, common_variants: [equipment_vendor]}  # 纺织服装设备
+  "640207": {archetype: A4, secondary: [A5], drivers: {volume: equip_sales_units, margin: mach_gross_margin}, common_variants: [equipment_vendor, distributor_led], note: "Farm machinery sells through dealers with purchase subsidies; demand cycle like A4"}  # 农用机械
+  "640208": {archetype: A4, drivers: {orders: mach_new_orders, backlog: mach_backlog, volume: equip_sales_units, margin: mach_gross_margin}, common_variants: [equipment_vendor]}  # 印刷包装机械
+  "640209": {archetype: A4, secondary: [A3], drivers: {orders: mach_new_orders, backlog: mach_backlog, volume: equip_sales_units, margin: mach_gross_margin, contract_liabilities: mach_contract_liabilities}, common_variants: [equipment_vendor, equipment_plus_service], note: "Catch-all of 95 special machinery makers"}  # 其他专用设备
+  "640501": {archetype: A4, drivers: {deliveries: [rail_emu_deliveries, rail_metro_deliveries], orders: rail_new_orders, backlog: rail_backlog, overseas_share: mach_overseas_revenue_share}, common_variants: [equipment_vendor, equipment_plus_service]}  # 轨交设备Ⅲ
+  "640601": {archetype: A4, drivers: {volume: [excavator_sales, crane_sales, cm_sales_volume], market_share: cm_market_share, receivables: cm_receivables, contract_liabilities: mach_contract_liabilities, overseas_share: mach_overseas_revenue_share}, common_variants: [equipment_vendor, distributor_led]}  # 工程机械整机
+  "640602": {archetype: A3, drivers: {overseas_share: mach_overseas_revenue_share, contract_liabilities: mach_contract_liabilities}, common_variants: [design_in_program, diversified_customers], note: "Hydraulics and components follow the customers' excavator volumes (excavator_sales is the end-market signal)"}  # 工程机械器件
+  "640701": {archetype: A3, secondary: [A4], drivers: {volume: robot_sales, orders: automation_new_orders, overseas_share: mach_overseas_revenue_share}, common_variants: [own_brand_supplier, equipment_vendor]}  # 机器人
+  "640702": {archetype: A3, drivers: {market_share: servo_market_share, orders: automation_new_orders, overseas_share: mach_overseas_revenue_share}, common_variants: [own_brand_supplier, distributor_led]}  # 工控设备
+  "640703": {archetype: A3, secondary: [A4], drivers: {volume: laser_sales, orders: automation_new_orders, overseas_share: mach_overseas_revenue_share}, common_variants: [own_brand_supplier, equipment_vendor]}  # 激光设备
+  "640704": {archetype: A4, drivers: {orders: automation_new_orders, contract_liabilities: mach_contract_liabilities, overseas_share: mach_overseas_revenue_share}, common_variants: [equipment_vendor, epc_contractor]}  # 其他自动化设备
+  # 650000 国防军工
+  "650101": {archetype: A4, drivers: {orders: defense_related_party_forecast, contract_liabilities: defense_contract_liabilities, inventory: defense_inventory, receivables: defense_receivables, rd_ratio: defense_rd_ratio, capex: defense_capacity_investment}, common_variants: [defense_state_plan]}  # 航天装备Ⅲ
+  "650201": {archetype: A4, secondary: [A3], drivers: {orders: defense_related_party_forecast, contract_liabilities: defense_contract_liabilities, inventory: defense_inventory, receivables: defense_receivables, rd_ratio: defense_rd_ratio, capex: defense_capacity_investment, revenue: defense_civil_aviation_revenue}, common_variants: [defense_state_plan, design_in_program], note: "Half the L3 are material/forging/component suppliers to the primes (A3)"}  # 航空装备Ⅲ
+  "650301": {archetype: A4, drivers: {orders: defense_related_party_forecast, contract_liabilities: defense_contract_liabilities, inventory: defense_inventory, receivables: defense_receivables, rd_ratio: defense_rd_ratio}, common_variants: [defense_state_plan]}  # 地面兵装Ⅲ
+  "650401": {archetype: A4, drivers: {orders: shipbuilding_new_orders, deliveries: shipbuilding_completions, backlog: shipbuilding_orderbook, price: shipbuilding_newbuild_price, contract_liabilities: defense_contract_liabilities, receivables: defense_receivables}, common_variants: [defense_state_plan, equipment_vendor]}  # 航海装备Ⅲ
+  "650501": {archetype: A3, secondary: [A4], drivers: {orders: defense_related_party_forecast, contract_liabilities: defense_contract_liabilities, inventory: defense_inventory, receivables: defense_receivables, rd_ratio: defense_rd_ratio, mix: defense_military_revenue_share}, common_variants: [defense_state_plan, design_in_program]}  # 军工电子Ⅲ
+  # 710000 计算机
+  "710102": {archetype: A3, secondary: [A9], drivers: {overseas_share: security_overseas_share, rd_ratio: it_rd_ratio}, common_variants: [own_brand_supplier, project_delivery]}  # 安防设备
+  "710103": {archetype: A11, secondary: [A3], drivers: {volume: server_shipments, rd_ratio: it_rd_ratio}, common_variants: [cost_plus_pass_through, own_brand_supplier], note: "Servers and EMS (工业富联, 浪潮) are assembly with pass-through; other devices are A3"}  # 其他计算机设备
+  "710301": {archetype: A9, secondary: [A4, A11], drivers: {capacity: [idc_cabinets, idc_power_capacity], utilisation: idc_utilization, staff: [it_staff, it_rd_staff], rd_ratio: it_rd_ratio}, common_variants: [project_delivery, headcount_outsourcing, capacity_lease], note: "145 companies mixing system integration (A4), IT outsourcing (A11) and IDC (capacity lease)"}  # IT服务Ⅲ
+  "710401": {archetype: A9, secondary: [A4], drivers: {users: software_paid_users, recurring_share: software_subscription_share, contract_liabilities: software_contract_liabilities, revenue_per_staff: software_revenue_per_staff, customer_mix: software_gov_finance_share, rd_ratio: it_rd_ratio, staff: it_rd_staff}, common_variants: [project_delivery, product_licence, saas_subscription]}  # 垂直应用软件
+  "710402": {archetype: A9, drivers: {users: [software_paid_users, software_mau], recurring_share: software_subscription_share, contract_liabilities: software_contract_liabilities, revenue_per_staff: software_revenue_per_staff, rd_ratio: it_rd_ratio, staff: it_rd_staff}, common_variants: [product_licence, saas_subscription]}  # 横向通用软件
+  # 720000 传媒
+  "720401": {archetype: A9, drivers: {gross_billings: game_gross_billings, users: game_mau, paying_users: game_paying_users, arpu: game_arppu, pipeline: [game_pipeline, game_licenses], overseas_share: game_overseas_share, marketing_ratio: game_sales_expense_ratio}, common_variants: [in_app_purchase]}  # 游戏Ⅲ
+  "720501": {archetype: A6, secondary: [A9], drivers: {margin: marketing_gross_margin}, common_variants: [platform_marketplace], note: "Agencies earn a thin take on media billings; revenue gross, margin is the real driver"}  # 营销代理
+  "720502": {archetype: A8, drivers: {capacity: media_points, utilisation: media_occupancy}, common_variants: [asset_heavy_operator]}  # 广告媒体
+  "720601": {archetype: A9, drivers: {pipeline: film_releases, market_share: cinema_market_share}, common_variants: [paid_membership_content], note: "Hit-driven title slate; no clean archetype"}  # 影视动漫制作
+  "720602": {archetype: A8, drivers: {volume: cinema_admissions, capacity: cinema_screens, revenue: cinema_box_office, market_share: cinema_market_share}, common_variants: [asset_heavy_operator, asset_light_franchise]}  # 院线
+  "720701": {archetype: A9, drivers: {paying_users: media_paid_members, users: media_mau}, common_variants: [paid_membership_content, ad_supported]}  # 视频媒体
+  "720702": {archetype: A9, drivers: {paying_users: media_paid_members, users: media_mau}, common_variants: [paid_membership_content], note: "0 listed companies at present"}  # 音频媒体
+  "720703": {archetype: A9, drivers: {paying_users: media_paid_members, users: media_mau}, common_variants: [saas_subscription, product_licence]}  # 图片媒体
+  "720704": {archetype: A9, secondary: [A6], drivers: {users: media_mau, margin: marketing_gross_margin}, common_variants: [ad_supported]}  # 门户网站
+  "720705": {archetype: A9, drivers: {paying_users: media_paid_members, users: media_mau}, common_variants: [paid_membership_content]}  # 文字媒体
+  "720706": {archetype: A9, drivers: {users: media_mau, paying_users: media_paid_members, margin: marketing_gross_margin}, common_variants: [ad_supported, paid_membership_content]}  # 其他数字媒体
+  "720801": {archetype: A9, drivers: {}, common_variants: [ad_supported], note: "0 listed companies at present"}  # 社交Ⅲ
+  "720901": {archetype: A5, secondary: [A6], drivers: {volume: publishing_sales, revenue: publishing_textbook_revenue, market_share: publishing_retail_share}, common_variants: [direct_retail_led], note: "Textbook publishing is a quasi-regulated provincial franchise (efficient scale)"}  # 教育出版
+  "720902": {archetype: A5, secondary: [A6], drivers: {volume: publishing_sales, market_share: publishing_retail_share}, common_variants: [distributor_led, online_led]}  # 大众出版
+  "720903": {archetype: A5, drivers: {volume: publishing_sales}, note: "0 listed companies at present"}  # 其他出版
+  "721001": {archetype: A9, secondary: [A7], drivers: {users: cable_tv_subscribers}, common_variants: [paid_membership_content], note: "Cable TV tariffs are regulated and subscriber base is shrinking"}  # 电视广播Ⅲ
+  # 730000 通信
+  "730102": {archetype: A9, secondary: [A7], drivers: {users: [telco_mobile_subscribers, telco_5g_subscribers, telco_broadband_subscribers, telco_iot_connections], arpu: telco_mobile_arpu, capex: telco_capex, revenue: telco_cloud_revenue, capacity: telco_compute_capacity}, common_variants: [saas_subscription], note: "Subscribers × ARPU like A9 but capital-intensive, licensed oligopoly like A7"}  # 电信运营商
+  "730103": {archetype: A4, secondary: [A11], drivers: {}, common_variants: [epc_contractor, headcount_outsourcing]}  # 通信工程及服务
+  "730104": {archetype: A9, drivers: {}, common_variants: [saas_subscription, project_delivery]}  # 通信应用增值服务
+  "730204": {archetype: A3, secondary: [A4], drivers: {volume: optical_module_shipments, customer_concentration: telecom_equip_top5_share, overseas_share: telecom_equip_overseas_share, rd_ratio: telecom_equip_rd_ratio}, common_variants: [single_key_customer, design_in_program, equipment_vendor], note: "Optical modules (A3) sit with network-equipment vendors that sell through operator tenders (A4)"}  # 通信网络设备及器件
+  "730205": {archetype: A3, secondary: [A4, A2], drivers: {volume: fiber_cable_sales, customer_concentration: telecom_equip_top5_share, overseas_share: telecom_equip_overseas_share}, common_variants: [equipment_vendor, toll_processing_fee], note: "Fibre priced in operator tenders; power-cable segments are copper pass-through (A2)"}  # 通信线缆及配套
+  "730206": {archetype: A3, secondary: [A11], drivers: {customer_concentration: telecom_equip_top5_share, overseas_share: telecom_equip_overseas_share, rd_ratio: telecom_equip_rd_ratio}, common_variants: [own_brand_supplier, odm_oem_maker]}  # 通信终端及配件
+  "730207": {archetype: A3, secondary: [A4], drivers: {customer_concentration: telecom_equip_top5_share, overseas_share: telecom_equip_overseas_share, rd_ratio: telecom_equip_rd_ratio}, common_variants: [diversified_customers, equipment_vendor]}  # 其他通信设备
+  # 740000 煤炭
+  "740101": {archetype: A1, secondary: [A7], drivers: {volume: [coal_sales_volume, coal_commercial_output], price: coal_avg_price, unit_cost: coal_unit_cost, unit_margin: coal_gross_profit_per_ton, capacity: coal_approved_capacity, reserves: coal_reserves, mix: coal_long_term_contract_share}, common_variants: [own_resource_mining], note: "Integrated coal-power-rail groups (中国神华) add A7 segments (coal_power_generation, coal_rail_turnover)"}  # 动力煤
+  "740102": {archetype: A1, drivers: {volume: [coal_sales_volume, coal_commercial_output], price: coal_avg_price, unit_cost: coal_unit_cost, unit_margin: coal_gross_profit_per_ton, capacity: coal_approved_capacity, reserves: coal_reserves, mix: coal_long_term_contract_share}, common_variants: [own_resource_mining]}  # 焦煤
+  "740201": {archetype: A2, drivers: {volume: [coke_sales_volume, coke_output], capacity: coke_capacity, unit_margin: coke_unit_margin, mix: coke_byproduct_output}, common_variants: [standalone_converter, upstream_integrated_converter]}  # 焦炭Ⅲ
+  # 750000 石油石化
+  "750101": {archetype: A1, drivers: {volume: [oil_gas_net_production, crude_oil_production, natural_gas_production], price: realized_oil_price, unit_cost: oil_cost_per_barrel, reserves: [proved_reserves, reserve_replacement_ratio]}, common_variants: [own_resource_mining]}  # 油气开采Ⅲ
+  "750201": {archetype: A4, secondary: [A11], drivers: {orders: oilfield_new_contracts, volume: [rig_operating_days, seismic_workload], utilisation: rig_utilization}, common_variants: [equipment_plus_service, shared_capacity]}  # 油田服务
+  "750202": {archetype: A4, drivers: {orders: oilfield_new_contracts}, common_variants: [epc_contractor]}  # 油气及炼化工程
+  "750301": {archetype: A2, secondary: [A6], drivers: {volume: crude_throughput, spread: refining_margin, capacity: refining_capacity, mix: [refined_product_output, ethylene_output], stores: service_stations}, common_variants: [standalone_converter, upstream_integrated_converter], note: "Integrated majors add fuel retail (A6) and upstream (A1) segments"}  # 炼油化工
+  "750302": {archetype: A6, secondary: [A2], drivers: {stores: service_stations}, common_variants: [physical_trading, self_operated_retail]}  # 油品石化贸易
+  "750303": {archetype: A2, drivers: {}, common_variants: [standalone_converter], note: "PTA, PDH, C2 crackers; no sector KPI beyond the refining set"}  # 其他石化
+  # 760000 环保
+  "760101": {archetype: A4, drivers: {orders: env_new_orders, backlog: env_backlog, mix: env_operating_revenue_share, receivables: env_receivables}, common_variants: [epc_contractor, equipment_vendor]}  # 大气治理
+  "760102": {archetype: A7, secondary: [A4], drivers: {capacity: [water_supply_capacity, sewage_capacity], volume: [water_sales_volume, sewage_volume], tariff: water_tariff}, common_variants: [concession_operator, ppp_investment_build, epc_contractor], note: "Includes water-treatment EPC/equipment makers (A4)"}  # 水务及水治理
+  "760103": {archetype: A7, drivers: {capacity: wte_capacity, volume: [wte_waste_volume, hazwaste_volume], efficiency: wte_power_per_ton}, common_variants: [concession_operator, subsidy_dependent_renewable]}  # 固废治理
+  "760104": {archetype: A4, secondary: [A7], drivers: {orders: env_new_orders, backlog: env_backlog, mix: env_operating_revenue_share, receivables: env_receivables}, common_variants: [epc_contractor, ppp_investment_build]}  # 综合环境治理
+  "760201": {archetype: A4, secondary: [A3], drivers: {orders: env_new_orders, backlog: env_backlog, receivables: env_receivables}, common_variants: [equipment_vendor]}  # 环保设备Ⅲ
+  # 770000 美容护理
+  "770101": {archetype: A5, secondary: [A2], drivers: {volume: [personal_care_sales_volume, tissue_output], capacity: tissue_capacity, channel: personal_care_online_share}, common_variants: [distributor_led, online_led], note: "Tissue margins swing with pulp prices (A2 trait)"}  # 生活用纸
+  "770102": {archetype: A5, drivers: {volume: personal_care_sales_volume, channel: personal_care_online_share}, common_variants: [distributor_led, online_led]}  # 洗护用品
+  "770201": {archetype: A11, secondary: [A5], drivers: {rd_ratio: cosmetics_rd_ratio, channel: cosmetics_online_share}, common_variants: [odm_oem_maker, online_led], note: "Mostly cosmetics ODMs plus some own brands"}  # 化妆品制造及其他
+  "770202": {archetype: A5, drivers: {channel: cosmetics_online_share, revenue: [cosmetics_main_brand_revenue, cosmetics_gmv_platform], marketing_ratio: cosmetics_sales_expense_ratio, rd_ratio: cosmetics_rd_ratio}, common_variants: [online_led, distributor_led]}  # 品牌化妆品
+  "770301": {archetype: A10, secondary: [A5], drivers: {volume: medaesthetic_sales_units, approvals: medaesthetic_class3_certs, margin: medaesthetic_gross_margin}, common_variants: [innovative_pipeline, distributor_led]}  # 医美耗材
+  "770302": {archetype: A8, drivers: {network: medaesthetic_clinics}, common_variants: [direct_operated_network]}  # 医美服务

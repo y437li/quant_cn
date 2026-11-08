@@ -1,0 +1,341 @@
+# Petrochemicals (SW 750000) chain skeleton — plan 12 phase 1, D-097. All edges are priors (general industry knowledge).
+# Commodity nodes 原油/天然气/乙烯/丙烯/PX/PTA/甲醇/通用塑料/涤纶 live in _common.yaml as materials.
+# Polyester fibre (POY/FDY/DTY) is defined in 220000_basic_chemicals.yaml (SW 涤纶) and linked from here.
+sector: {sw_l1: "750000", name: 石油石化, name_en: Petroleum and Petrochemicals}
+
+nodes:
+  # --- segments ---
+  - {id: SEG_PETRO_UPSTREAM, type: segment, name: 油气勘探开发, name_en: Oil and Gas E&P, aliases: [油气上游, 油气开采业务]}
+  - {id: SEG_PETRO_GAS_MIDSTREAM, type: segment, name: 天然气储运与贸易, name_en: Gas Midstream and Trading, aliases: [LNG贸易, 天然气销售]}
+  - {id: SEG_PETRO_OILFIELD_SERVICES, type: segment, name: 油田服务, name_en: Oilfield Services, aliases: [油服]}
+  - {id: SEG_PETRO_ENGINEERING, type: segment, name: 油气及炼化工程, name_en: "Oil, Gas and Refinery Engineering", aliases: [石化工程, 炼化工程]}
+  - {id: SEG_PETRO_REFINING, type: segment, name: 炼油, name_en: Oil Refining, aliases: [炼厂, 成品油生产]}
+  - {id: SEG_PETRO_INTEGRATED, type: segment, name: 炼化一体化, name_en: Integrated Refining and Chemicals, aliases: [大炼化, 民营大炼化]}
+  - {id: SEG_PETRO_OLEFINS, type: segment, name: 烯烃及聚烯烃, name_en: Olefins and Polyolefins, aliases: [聚烯烃]}
+  - {id: SEG_PETRO_AROMATICS, type: segment, name: 芳烃及聚酯原料, name_en: Aromatics and Polyester Feedstock, aliases: [芳烃, PX-PTA-聚酯]}
+  - {id: SEG_PETRO_LIGHT_HYDROCARBON, type: segment, name: 轻烃化工, name_en: Light Hydrocarbon Chemicals, aliases: [PDH, 乙烷裂解, C2C3产业链]}
+  - {id: SEG_PETRO_TRADING, type: segment, name: 油品石化贸易, name_en: Oil Products and Petrochemical Trading, aliases: [油品贸易, 成品油销售]}
+  - {id: SEG_PETRO_BIOFUELS, type: segment, name: 生物燃料, name_en: Biofuels, aliases: [生物质燃料]}
+
+  # --- upstream E&P ---
+  - {id: PROD_PETRO_ONSHORE_CRUDE, type: product, name: 陆上原油, name_en: Onshore Crude Production, segment: SEG_PETRO_UPSTREAM}
+  - {id: PROD_PETRO_OFFSHORE_CRUDE, type: product, name: 海上原油, name_en: Offshore Crude Production, segment: SEG_PETRO_UPSTREAM, aliases: [海洋石油]}
+  - {id: PROD_PETRO_SHALE_OIL, type: product, name: 页岩油, name_en: Shale Oil, segment: SEG_PETRO_UPSTREAM}
+  - {id: PROD_PETRO_CONV_GAS, type: product, name: 常规天然气, name_en: Conventional Natural Gas, segment: SEG_PETRO_UPSTREAM}
+  - {id: PROD_PETRO_SHALE_GAS, type: product, name: 页岩气, name_en: Shale Gas, segment: SEG_PETRO_UPSTREAM}
+  - {id: PROD_PETRO_TIGHT_GAS, type: product, name: 致密气, name_en: Tight Gas, segment: SEG_PETRO_UPSTREAM}
+  - {id: PROD_PETRO_OVERSEAS_EQUITY_OIL, type: product, name: 海外权益油气, name_en: Overseas Equity Oil and Gas, segment: SEG_PETRO_UPSTREAM, aliases: [海外油气田权益产量]}
+
+  # --- gas midstream / trading ---
+  - {id: PROD_PETRO_LNG_IMPORT, type: product, kind: service, name: LNG进口贸易, name_en: LNG Import Trading, segment: SEG_PETRO_GAS_MIDSTREAM, import_dependence: high, aliases: [LNG长协, 液化天然气贸易]}
+  - {id: PROD_PETRO_PIPELINE_GAS_SALES, type: product, kind: service, name: 管道天然气批发, name_en: Pipeline Gas Wholesale, segment: SEG_PETRO_GAS_MIDSTREAM}
+  - {id: PROD_PETRO_LNG_TRUCK, type: product, kind: service, name: LNG槽车零售, name_en: Trucked LNG Distribution, segment: SEG_PETRO_GAS_MIDSTREAM}
+  - {id: PROD_PETRO_GAS_STORAGE, type: product, kind: service, name: 储气库服务, name_en: Gas Storage Services, segment: SEG_PETRO_GAS_MIDSTREAM}
+
+  # --- oilfield services ---
+  - {id: PROD_PETRO_SEISMIC, type: product, kind: service, name: 地球物理勘探服务, name_en: Seismic Survey Services, segment: SEG_PETRO_OILFIELD_SERVICES, aliases: [物探, 地震勘探]}
+  - {id: PROD_PETRO_DRILLING_SVC, type: product, kind: service, name: 钻井服务, name_en: Drilling Services, segment: SEG_PETRO_OILFIELD_SERVICES, aliases: [钻井工程]}
+  - {id: PROD_PETRO_OFFSHORE_DRILLING, type: product, kind: service, name: 海上钻井平台服务, name_en: Offshore Drilling Services, parent: PROD_PETRO_DRILLING_SVC, segment: SEG_PETRO_OILFIELD_SERVICES, aliases: [钻井船租赁]}
+  - {id: PROD_PETRO_LOGGING_SVC, type: product, kind: service, name: 测井录井服务, name_en: Well Logging Services, segment: SEG_PETRO_OILFIELD_SERVICES, aliases: [测井, 录井]}
+  - {id: PROD_PETRO_CEMENTING_SVC, type: product, kind: service, name: 固井服务, name_en: Cementing Services, segment: SEG_PETRO_OILFIELD_SERVICES}
+  - {id: PROD_PETRO_FRACTURING_SVC, type: product, kind: service, name: 压裂服务, name_en: Fracturing Services, segment: SEG_PETRO_OILFIELD_SERVICES, aliases: [水力压裂, 增产作业]}
+  - {id: PROD_PETRO_WORKOVER_SVC, type: product, kind: service, name: 修井及油田运维, name_en: Workover and Field O&M, segment: SEG_PETRO_OILFIELD_SERVICES, aliases: [修井作业, 油田一体化服务]}
+  - {id: PROD_PETRO_OILFIELD_ENV_SVC, type: product, kind: service, name: 油田环保服务, name_en: Oilfield Environmental Services, segment: SEG_PETRO_OILFIELD_SERVICES, aliases: [含油污泥处理, 钻井废弃物处理]}
+  - {id: PROD_PETRO_OFFSHORE_SUPPORT, type: product, kind: service, name: 海上油田支持船服务, name_en: Offshore Support Vessel Services, segment: SEG_PETRO_OILFIELD_SERVICES}
+
+  # --- oilfield equipment ---
+  - {id: PROD_PETRO_DRILL_BIT, type: product, name: 钻头钻具, name_en: Drill Bits and Tools, segment: SEG_MACH_OIL_SERVICE_EQUIP, aliases: [PDC钻头]}
+  - {id: PROD_PETRO_GAS_COMPRESSOR, type: product, name: 天然气压缩机组, name_en: Gas Compressor Units, segment: SEG_MACH_OIL_SERVICE_EQUIP}
+
+  # --- engineering ---
+  - {id: PROD_PETRO_REFINERY_EPC, type: product, kind: service, name: 炼化工程总承包, name_en: Refinery and Chemical EPC, segment: SEG_PETRO_ENGINEERING, aliases: [炼化EPC]}
+  - {id: PROD_PETRO_PIPELINE_EPC, type: product, kind: service, name: 油气管道工程, name_en: Pipeline Construction, segment: SEG_PETRO_ENGINEERING, aliases: [长输管道工程]}
+  - {id: PROD_PETRO_OFFSHORE_EPC, type: product, kind: service, name: 海洋油气工程, name_en: Offshore Oil and Gas Engineering, segment: SEG_PETRO_ENGINEERING, aliases: [海上平台建造]}
+  - {id: PROD_PETRO_LNG_TANK_EPC, type: product, kind: service, name: LNG储罐及接收站工程, name_en: LNG Tank and Terminal EPC, segment: SEG_PETRO_ENGINEERING}
+
+  # --- refining ---
+  - {id: PROD_PETRO_GASOLINE, type: product, name: 汽油, name_en: Gasoline, segment: SEG_PETRO_REFINING, aliases: [车用汽油, 92号汽油, 95号汽油]}
+  - {id: PROD_PETRO_DIESEL, type: product, name: 柴油, name_en: Diesel, segment: SEG_PETRO_REFINING, aliases: [车用柴油]}
+  - {id: PROD_PETRO_JET_FUEL, type: product, name: 航空煤油, name_en: Jet Fuel, segment: SEG_PETRO_REFINING, aliases: [航煤, 喷气燃料]}
+  - {id: PROD_PETRO_NAPHTHA, type: product, name: 石脑油, name_en: Naphtha, segment: SEG_PETRO_REFINING}
+  - {id: PROD_PETRO_LSFO, type: product, name: 低硫船用燃料油, name_en: Low-Sulfur Bunker Fuel, segment: SEG_PETRO_REFINING, aliases: [低硫船燃, 燃料油]}
+  - {id: PROD_PETRO_LPG, type: product, name: 液化石油气, name_en: LPG, segment: SEG_PETRO_REFINING}
+  - {id: PROD_PETRO_PET_COKE, type: product, name: 石油焦, name_en: Petroleum Coke, segment: SEG_PETRO_REFINING}
+  - {id: PROD_PETRO_ASPHALT, type: product, name: 石油沥青, name_en: Bitumen, segment: SEG_PETRO_REFINING, aliases: [道路沥青]}
+  - {id: PROD_PETRO_BASE_OIL, type: product, name: 润滑油基础油, name_en: Lube Base Oil, segment: SEG_PETRO_REFINING, aliases: [III类基础油]}
+  - {id: PROD_PETRO_LUBRICANT, type: product, name: 润滑油, name_en: Lubricants, segment: SEG_PETRO_REFINING, aliases: [车用润滑油, 工业润滑油]}
+  - {id: PROD_PETRO_PARAFFIN, type: product, name: 石蜡, name_en: Paraffin Wax, segment: SEG_PETRO_REFINING}
+  - {id: PROD_PETRO_SULFUR, type: product, name: 硫磺, name_en: Sulfur, segment: SEG_PETRO_REFINING, aliases: [炼厂硫磺]}
+  - {id: PROD_PETRO_TOLLING, type: product, kind: service, name: 原油来料加工, name_en: Crude Tolling, segment: SEG_PETRO_REFINING, aliases: [代加工]}
+
+  # --- olefins / polyolefins ---
+  - {id: PROD_PETRO_HDPE, type: product, name: 高密度聚乙烯, name_en: HDPE, segment: SEG_PETRO_OLEFINS, aliases: [HDPE]}
+  - {id: PROD_PETRO_LLDPE, type: product, name: 线性低密度聚乙烯, name_en: LLDPE, segment: SEG_PETRO_OLEFINS, aliases: [LLDPE]}
+  - {id: PROD_PETRO_LDPE, type: product, name: 低密度聚乙烯, name_en: LDPE, segment: SEG_PETRO_OLEFINS, aliases: [LDPE]}
+  - {id: PROD_PETRO_MPE, type: product, name: 茂金属聚乙烯, name_en: Metallocene PE, segment: SEG_PETRO_OLEFINS, import_dependence: high, aliases: [mPE, mLLDPE]}
+  - {id: PROD_PETRO_EVA, type: product, name: EVA树脂, name_en: EVA Resin, segment: SEG_PETRO_OLEFINS, import_dependence: medium, aliases: [乙烯-醋酸乙烯共聚物, 光伏级EVA]}
+  - {id: PROD_PETRO_POE, type: product, name: 聚烯烃弹性体, name_en: POE, segment: SEG_PETRO_OLEFINS, import_dependence: high, aliases: [POE, 光伏级POE]}
+  - {id: PROD_PETRO_ALPHA_OLEFIN, type: product, name: α-烯烃, name_en: Alpha Olefins, segment: SEG_PETRO_OLEFINS, import_dependence: high, aliases: [1-辛烯, 1-己烯, 高碳α-烯烃]}
+  - {id: PROD_PETRO_PP_HOMO, type: product, name: 均聚聚丙烯, name_en: PP Homopolymer, segment: SEG_PETRO_OLEFINS, aliases: [拉丝级聚丙烯, PP拉丝]}
+  - {id: PROD_PETRO_PP_COPO, type: product, name: 共聚聚丙烯, name_en: PP Copolymer, segment: SEG_PETRO_OLEFINS, aliases: [抗冲共聚聚丙烯, PP共聚]}
+  - {id: PROD_PETRO_BUTADIENE, type: product, name: 丁二烯, name_en: Butadiene, segment: SEG_PETRO_OLEFINS}
+  - {id: PROD_PETRO_C4, type: product, name: 混合碳四, name_en: Mixed C4, segment: SEG_PETRO_OLEFINS, aliases: [碳四, C4]}
+  - {id: PROD_PETRO_MTBE, type: product, name: MTBE, name_en: MTBE, segment: SEG_PETRO_OLEFINS, aliases: [甲基叔丁基醚]}
+  - {id: PROD_PETRO_EO, type: product, name: 环氧乙烷, name_en: Ethylene Oxide, segment: SEG_PETRO_OLEFINS, aliases: [EO]}
+  - {id: PROD_PETRO_MEG, type: product, name: 乙二醇, name_en: Monoethylene Glycol, segment: SEG_PETRO_OLEFINS, import_dependence: medium, aliases: [MEG, 油制乙二醇]}
+  - {id: PROD_PETRO_STYRENE, type: product, name: 苯乙烯, name_en: Styrene Monomer, segment: SEG_PETRO_OLEFINS, aliases: [SM]}
+  - {id: PROD_PETRO_ACRYLONITRILE, type: product, name: 丙烯腈, name_en: Acrylonitrile, segment: SEG_PETRO_OLEFINS, aliases: [AN]}
+  - {id: PROD_PETRO_PO, type: product, name: 环氧丙烷, name_en: Propylene Oxide, segment: SEG_PETRO_OLEFINS, aliases: [PO]}
+  - {id: PROD_PETRO_PHENOL_ACETONE, type: product, name: 苯酚丙酮, name_en: Phenol and Acetone, segment: SEG_PETRO_OLEFINS, aliases: [苯酚, 丙酮]}
+
+  # --- light hydrocarbons (PDH / ethane) ---
+  - {id: PROD_PETRO_PROPANE, type: product, name: 进口丙烷, name_en: Imported Propane, segment: SEG_PETRO_LIGHT_HYDROCARBON, import_dependence: high, aliases: [丙烷]}
+  - {id: PROD_PETRO_ETHANE, type: product, name: 进口乙烷, name_en: Imported Ethane, segment: SEG_PETRO_LIGHT_HYDROCARBON, import_dependence: high, aliases: [乙烷]}
+  - {id: PROD_PETRO_PDH, type: product, name: 丙烷脱氢制丙烯, name_en: PDH Propylene, segment: SEG_PETRO_LIGHT_HYDROCARBON, aliases: [PDH丙烯]}
+  - {id: PROD_PETRO_ETHANE_CRACKING, type: product, name: 乙烷裂解制乙烯, name_en: Ethane-Cracker Ethylene, segment: SEG_PETRO_LIGHT_HYDROCARBON}
+  - {id: PROD_PETRO_ACRYLIC_ACID, type: product, name: 丙烯酸及酯, name_en: Acrylic Acid and Esters, segment: SEG_PETRO_LIGHT_HYDROCARBON, aliases: [丙烯酸, 丙烯酸丁酯]}
+  - {id: PROD_PETRO_SAP, type: product, name: 高吸水性树脂, name_en: Superabsorbent Polymer, segment: SEG_PETRO_LIGHT_HYDROCARBON, aliases: [SAP]}
+
+  # --- aromatics / polyester feedstock ---
+  - {id: PROD_PETRO_REFORMATE, type: product, name: 重整芳烃, name_en: Reformate Aromatics, segment: SEG_PETRO_AROMATICS, aliases: [重整油]}
+  - {id: PROD_PETRO_BENZENE, type: product, name: 石油苯, name_en: Petroleum Benzene, segment: SEG_PETRO_AROMATICS, aliases: [纯苯]}
+  - {id: PROD_PETRO_TOLUENE, type: product, name: 甲苯, name_en: Toluene, segment: SEG_PETRO_AROMATICS}
+  - {id: PROD_PETRO_MIXED_XYLENE, type: product, name: 混合二甲苯, name_en: Mixed Xylenes, segment: SEG_PETRO_AROMATICS, aliases: [MX]}
+  - {id: PROD_PETRO_OX, type: product, name: 邻二甲苯, name_en: Ortho-Xylene, segment: SEG_PETRO_AROMATICS, aliases: [OX]}
+  - {id: PROD_PETRO_FIBER_PET_CHIP, type: product, name: 纤维级聚酯切片, name_en: Fiber-Grade PET Chips, segment: SEG_PETRO_AROMATICS, aliases: [聚酯切片, 涤纶切片]}
+  - {id: PROD_PETRO_BOTTLE_PET_CHIP, type: product, name: 瓶级聚酯切片, name_en: Bottle-Grade PET Chips, segment: SEG_PETRO_AROMATICS, aliases: [瓶片, 聚酯瓶片]}
+  - {id: PROD_PETRO_PTA_TOLLING, type: product, kind: service, name: PTA加工, name_en: PTA Processing, segment: SEG_PETRO_AROMATICS, aliases: [PTA加工费]}
+
+  # --- trading ---
+  - {id: PROD_PETRO_FUEL_RETAIL, type: product, kind: service, name: 成品油零售, name_en: Fuel Retail, segment: SEG_PETRO_TRADING, aliases: [加油站]}
+  - {id: PROD_PETRO_FUEL_WHOLESALE, type: product, kind: service, name: 成品油批发, name_en: Fuel Wholesale, segment: SEG_PETRO_TRADING}
+  - {id: PROD_PETRO_CRUDE_TRADING, type: product, kind: service, name: 原油贸易, name_en: Crude Oil Trading, segment: SEG_PETRO_TRADING}
+  - {id: PROD_PETRO_CHEM_TRADING, type: product, kind: service, name: 石化产品贸易, name_en: Petrochemical Trading, segment: SEG_PETRO_TRADING, aliases: [化工品分销]}
+  - {id: PROD_PETRO_STORAGE, type: product, kind: service, name: 油品化工品仓储, name_en: Oil and Chemical Storage, segment: SEG_PETRO_TRADING, aliases: [油库, 化工仓储, 液体化工码头]}
+  - {id: PROD_PETRO_HYDROGEN_STATION, type: product, kind: service, name: 加氢站运营, name_en: Hydrogen Refuelling Stations, segment: SEG_PETRO_TRADING}
+
+  # --- biofuels ---
+  - {id: PROD_PETRO_BIODIESEL, type: product, name: 生物柴油, name_en: Biodiesel, segment: SEG_PETRO_BIOFUELS, aliases: [FAME, HVO, 加氢植物油]}
+  - {id: PROD_PETRO_SAF, type: product, name: 可持续航空燃料, name_en: Sustainable Aviation Fuel, segment: SEG_PETRO_BIOFUELS, aliases: [SAF, 生物航煤]}
+  - {id: PROD_PETRO_UCO, type: product, name: 废弃油脂, name_en: Used Cooking Oil, segment: SEG_PETRO_BIOFUELS, aliases: [地沟油, UCO]}
+  - {id: PROD_PETRO_FUEL_ETHANOL, type: product, name: 燃料乙醇, name_en: Fuel Ethanol, segment: SEG_PETRO_BIOFUELS}
+
+edges:
+  # segments
+  - [SEG_PETRO_OLEFINS, part_of, SEG_PETRO_INTEGRATED]
+  - [SEG_PETRO_AROMATICS, part_of, SEG_PETRO_INTEGRATED]
+  - [SEG_PETRO_REFINING, part_of, SEG_PETRO_INTEGRATED]
+  - [SEG_PETRO_UPSTREAM, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_PETRO_UPSTREAM, serves, MKT_THERMAL_POWER]
+  - [SEG_PETRO_GAS_MIDSTREAM, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_PETRO_GAS_MIDSTREAM, serves, MKT_THERMAL_POWER]
+  - [SEG_PETRO_GAS_MIDSTREAM, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_PETRO_OILFIELD_SERVICES, serves, MKT_OIL_GAS]
+  - [SEG_PETRO_ENGINEERING, serves, MKT_OIL_GAS]
+  - [SEG_PETRO_ENGINEERING, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_PETRO_REFINING, serves, MKT_ICE_VEHICLE]
+  - [SEG_PETRO_REFINING, serves, MKT_COMMERCIAL_VEHICLE]
+  - [SEG_PETRO_REFINING, serves, MKT_AEROSPACE]
+  - [SEG_PETRO_REFINING, serves, MKT_LOGISTICS]
+  - [SEG_PETRO_REFINING, serves, MKT_CONSTRUCTION]
+  - [SEG_PETRO_INTEGRATED, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_PETRO_OLEFINS, serves, MKT_PACKAGING]
+  - [SEG_PETRO_OLEFINS, serves, MKT_HOME_APPLIANCE]
+  - [SEG_PETRO_OLEFINS, serves, MKT_SOLAR]
+  - [SEG_PETRO_AROMATICS, serves, MKT_APPAREL]
+  - [SEG_PETRO_AROMATICS, serves, MKT_PACKAGING]
+  - [SEG_PETRO_LIGHT_HYDROCARBON, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_PETRO_LIGHT_HYDROCARBON, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_PETRO_TRADING, serves, MKT_ICE_VEHICLE]
+  - [SEG_PETRO_TRADING, serves, MKT_LOGISTICS]
+  - [SEG_PETRO_BIOFUELS, serves, MKT_AEROSPACE]
+  - [SEG_PETRO_BIOFUELS, serves, MKT_SHIPBUILDING]
+  # E&P
+  - [PROD_PETRO_ONSHORE_CRUDE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_PETRO_OFFSHORE_CRUDE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_PETRO_SHALE_OIL, substitute_for, PROD_PETRO_ONSHORE_CRUDE]
+  - [PROD_PETRO_SHALE_GAS, substitute_for, PROD_PETRO_CONV_GAS]
+  - [PROD_PETRO_TIGHT_GAS, substitute_for, PROD_PETRO_CONV_GAS]
+  - [PROD_PETRO_CONV_GAS, upstream_of, PROD_PETRO_PIPELINE_GAS_SALES]
+  - [PROD_PETRO_SHALE_GAS, upstream_of, PROD_PETRO_PIPELINE_GAS_SALES]
+  - [PROD_PETRO_ONSHORE_CRUDE, upstream_of, PROD_PETRO_CRUDE_TRADING]
+  - [PROD_PETRO_OVERSEAS_EQUITY_OIL, upstream_of, PROD_PETRO_CRUDE_TRADING]
+  # gas
+  - [MAT_NATURAL_GAS, upstream_of, PROD_PETRO_LNG_IMPORT]
+  - [PROD_PETRO_LNG_IMPORT, upstream_of, PROD_UTIL_LNG_TERMINAL]
+  - [PROD_UTIL_LNG_TERMINAL, upstream_of, PROD_PETRO_LNG_TRUCK]
+  - [PROD_UTIL_LNG_TERMINAL, upstream_of, PROD_PETRO_PIPELINE_GAS_SALES]
+  - [PROD_PETRO_PIPELINE_GAS_SALES, uses_material, MAT_NATURAL_GAS]
+  - [PROD_PETRO_PIPELINE_GAS_SALES, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PETRO_PIPELINE_GAS_SALES, used_in, MKT_THERMAL_POWER]
+  - [PROD_PETRO_LNG_TRUCK, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_PETRO_GAS_STORAGE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PETRO_LNG_TANK_EPC, used_in, MKT_OIL_GAS]
+  # oilfield services / equipment
+  - [PROD_PETRO_SEISMIC, used_in, MKT_OIL_GAS]
+  - [PROD_PETRO_DRILLING_SVC, used_in, MKT_OIL_GAS]
+  - [PROD_PETRO_LOGGING_SVC, used_in, MKT_OIL_GAS]
+  - [PROD_PETRO_CEMENTING_SVC, used_in, MKT_OIL_GAS]
+  - [PROD_PETRO_CEMENTING_SVC, uses_material, MAT_CEMENT]
+  - [PROD_PETRO_FRACTURING_SVC, used_in, PROD_PETRO_SHALE_GAS]
+  - [PROD_PETRO_FRACTURING_SVC, used_in, PROD_PETRO_SHALE_OIL]
+  - [PROD_PETRO_FRACTURING_SVC, used_in, PROD_PETRO_TIGHT_GAS]
+  - [PROD_PETRO_WORKOVER_SVC, used_in, MKT_OIL_GAS]
+  - [PROD_PETRO_OILFIELD_ENV_SVC, used_in, MKT_OIL_GAS]
+  - [PROD_PETRO_OFFSHORE_SUPPORT, used_in, PROD_PETRO_OFFSHORE_CRUDE]
+  - [PROD_PETRO_OFFSHORE_DRILLING, used_in, PROD_PETRO_OFFSHORE_CRUDE]
+  - [PROD_MACH_DRILLING_RIG, used_in, PROD_PETRO_DRILLING_SVC]
+  - [PROD_PETRO_DRILL_BIT, component_of, PROD_MACH_DRILLING_RIG]
+  - [PROD_MACH_DOWNHOLE_TOOL, used_in, PROD_PETRO_DRILLING_SVC]
+  - [PROD_MACH_FRACTURING_EQUIP, used_in, PROD_PETRO_FRACTURING_SVC]
+  - [PROD_PETRO_GAS_COMPRESSOR, used_in, PROD_PETRO_PIPELINE_GAS_SALES]
+  - [PROD_MACH_DRILLING_RIG, uses_material, MAT_STEEL]
+  - [PROD_MACH_WELLHEAD_EQUIP, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_PETRO_OFFSHORE_EPC, used_in, PROD_PETRO_OFFSHORE_CRUDE]
+  - [PROD_PETRO_OFFSHORE_EPC, uses_material, MAT_STEEL]
+  - [PROD_PETRO_PIPELINE_EPC, used_in, PROD_PETRO_PIPELINE_GAS_SALES]
+  - [PROD_PETRO_REFINERY_EPC, used_in, MKT_CHEMICAL_INDUSTRY]
+  # refining
+  - [MAT_CRUDE_OIL, upstream_of, PROD_PETRO_GASOLINE]
+  - [MAT_CRUDE_OIL, upstream_of, PROD_PETRO_DIESEL]
+  - [MAT_CRUDE_OIL, upstream_of, PROD_PETRO_JET_FUEL]
+  - [MAT_CRUDE_OIL, upstream_of, PROD_PETRO_NAPHTHA]
+  - [MAT_CRUDE_OIL, upstream_of, PROD_PETRO_LSFO]
+  - [MAT_CRUDE_OIL, upstream_of, PROD_PETRO_LPG]
+  - [MAT_CRUDE_OIL, upstream_of, PROD_PETRO_PET_COKE]
+  - [MAT_CRUDE_OIL, upstream_of, PROD_PETRO_ASPHALT]
+  - [MAT_CRUDE_OIL, upstream_of, PROD_PETRO_BASE_OIL]
+  - [MAT_CRUDE_OIL, upstream_of, PROD_PETRO_PARAFFIN]
+  - [MAT_CRUDE_OIL, upstream_of, PROD_PETRO_SULFUR]
+  - [PROD_PETRO_TOLLING, uses_material, MAT_CRUDE_OIL]
+  - [PROD_PETRO_BASE_OIL, upstream_of, PROD_PETRO_LUBRICANT]
+  - [PROD_PETRO_GASOLINE, upstream_of, PROD_PETRO_FUEL_WHOLESALE]
+  - [PROD_PETRO_DIESEL, upstream_of, PROD_PETRO_FUEL_WHOLESALE]
+  - [PROD_PETRO_FUEL_WHOLESALE, upstream_of, PROD_PETRO_FUEL_RETAIL]
+  - [PROD_PETRO_GASOLINE, used_in, MKT_ICE_VEHICLE]
+  - [PROD_PETRO_DIESEL, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_PETRO_DIESEL, used_in, MKT_AGRICULTURE]
+  - [PROD_PETRO_JET_FUEL, used_in, MKT_AEROSPACE]
+  - [PROD_PETRO_LSFO, used_in, MKT_SHIPBUILDING]
+  - [PROD_PETRO_LSFO, used_in, MKT_LOGISTICS]
+  - [PROD_PETRO_LPG, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PETRO_PET_COKE, used_in, MKT_CONSTRUCTION]
+  - [PROD_PETRO_PET_COKE, used_in, MKT_EV]
+  - [PROD_PETRO_ASPHALT, used_in, MKT_CONSTRUCTION]
+  - [PROD_PETRO_LUBRICANT, used_in, MKT_ICE_VEHICLE]
+  - [PROD_PETRO_LUBRICANT, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_PETRO_PARAFFIN, used_in, MKT_PACKAGING]
+  - [PROD_PETRO_SULFUR, used_in, MKT_AGRICULTURE]
+  - [PROD_PETRO_SULFUR, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_PETRO_HYDROGEN_STATION, uses_material, MAT_HYDROGEN]
+  - [PROD_PETRO_HYDROGEN_STATION, used_in, MKT_COMMERCIAL_VEHICLE]
+  # olefins
+  - [PROD_PETRO_NAPHTHA, upstream_of, PROD_PETRO_C4]
+  - [PROD_PETRO_NAPHTHA, upstream_of, PROD_PETRO_REFORMATE]
+  - [PROD_PETRO_HDPE, uses_material, MAT_ETHYLENE]
+  - [MAT_ETHYLENE, upstream_of, PROD_PETRO_HDPE]
+  - [MAT_ETHYLENE, upstream_of, PROD_PETRO_LLDPE]
+  - [MAT_ETHYLENE, upstream_of, PROD_PETRO_LDPE]
+  - [MAT_ETHYLENE, upstream_of, PROD_PETRO_MPE]
+  - [MAT_ETHYLENE, upstream_of, PROD_PETRO_EVA]
+  - [MAT_ETHYLENE, upstream_of, PROD_PETRO_POE]
+  - [MAT_ETHYLENE, upstream_of, PROD_PETRO_ALPHA_OLEFIN]
+  - [MAT_ETHYLENE, upstream_of, PROD_PETRO_EO]
+  - [MAT_ETHYLENE, upstream_of, PROD_PETRO_STYRENE]
+  - [PROD_PETRO_ALPHA_OLEFIN, upstream_of, PROD_PETRO_POE]
+  - [PROD_PETRO_ALPHA_OLEFIN, upstream_of, PROD_PETRO_MPE]
+  - [PROD_PETRO_ALPHA_OLEFIN, upstream_of, PROD_PETRO_LLDPE]
+  - [PROD_PETRO_EO, upstream_of, PROD_PETRO_MEG]
+  - [PROD_PETRO_BENZENE, upstream_of, PROD_PETRO_STYRENE]
+  - [PROD_PETRO_BENZENE, upstream_of, PROD_PETRO_PHENOL_ACETONE]
+  - [MAT_PROPYLENE, upstream_of, PROD_PETRO_PP_HOMO]
+  - [MAT_PROPYLENE, upstream_of, PROD_PETRO_PP_COPO]
+  - [MAT_PROPYLENE, upstream_of, PROD_PETRO_ACRYLONITRILE]
+  - [MAT_PROPYLENE, upstream_of, PROD_PETRO_PO]
+  - [MAT_PROPYLENE, upstream_of, PROD_PETRO_PHENOL_ACETONE]
+  - [MAT_PROPYLENE, upstream_of, PROD_PETRO_ACRYLIC_ACID]
+  - [PROD_PETRO_C4, upstream_of, PROD_PETRO_BUTADIENE]
+  - [PROD_PETRO_C4, upstream_of, PROD_PETRO_MTBE]
+  - [PROD_PETRO_MTBE, used_in, PROD_PETRO_GASOLINE]
+  - [PROD_PETRO_HDPE, used_in, MKT_PACKAGING]
+  - [PROD_PETRO_LLDPE, used_in, MKT_PACKAGING]
+  - [PROD_PETRO_LLDPE, used_in, MKT_AGRICULTURE]
+  - [PROD_PETRO_LDPE, used_in, MKT_PACKAGING]
+  - [PROD_PETRO_MPE, used_in, MKT_PACKAGING]
+  - [PROD_PETRO_EVA, used_in, MKT_SOLAR]
+  - [PROD_PETRO_EVA, used_in, MKT_APPAREL]
+  - [PROD_PETRO_POE, used_in, MKT_SOLAR]
+  - [PROD_PETRO_POE, used_in, MKT_EV]
+  - [PROD_PETRO_POE, substitute_for, PROD_PETRO_EVA]
+  - [PROD_PETRO_PP_HOMO, used_in, MKT_PACKAGING]
+  - [PROD_PETRO_PP_COPO, used_in, MKT_ICE_VEHICLE]
+  - [PROD_PETRO_PP_COPO, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_PETRO_MEG, used_in, MKT_APPAREL]
+  # light hydrocarbons
+  - [PROD_PETRO_PROPANE, upstream_of, PROD_PETRO_PDH]
+  - [PROD_PETRO_ETHANE, upstream_of, PROD_PETRO_ETHANE_CRACKING]
+  - [PROD_PETRO_PDH, substitute_for, PROD_PETRO_NAPHTHA]
+  - [PROD_PETRO_PDH, upstream_of, PROD_PETRO_PP_HOMO]
+  - [PROD_PETRO_PDH, upstream_of, PROD_PETRO_ACRYLIC_ACID]
+  - [PROD_PETRO_ETHANE_CRACKING, upstream_of, PROD_PETRO_HDPE]
+  - [PROD_PETRO_ETHANE_CRACKING, upstream_of, PROD_PETRO_EO]
+  - [PROD_PETRO_ACRYLIC_ACID, upstream_of, PROD_PETRO_SAP]
+  - [PROD_PETRO_SAP, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_PETRO_ACRYLIC_ACID, used_in, MKT_CONSTRUCTION]
+  - [PROD_PETRO_PROPANE, substitute_for, PROD_PETRO_LPG]
+  # aromatics
+  - [PROD_PETRO_REFORMATE, upstream_of, PROD_PETRO_BENZENE]
+  - [PROD_PETRO_REFORMATE, upstream_of, PROD_PETRO_TOLUENE]
+  - [PROD_PETRO_REFORMATE, upstream_of, PROD_PETRO_MIXED_XYLENE]
+  - [PROD_PETRO_MIXED_XYLENE, upstream_of, PROD_PETRO_OX]
+  - [PROD_PETRO_TOLUENE, used_in, PROD_PETRO_GASOLINE]
+  - [PROD_PETRO_PTA_TOLLING, uses_material, MAT_PX_PTA]
+  - [MAT_PX_PTA, upstream_of, PROD_PETRO_FIBER_PET_CHIP]
+  - [MAT_PX_PTA, upstream_of, PROD_PETRO_BOTTLE_PET_CHIP]
+  - [PROD_PETRO_MEG, upstream_of, PROD_PETRO_FIBER_PET_CHIP]
+  - [PROD_PETRO_MEG, upstream_of, PROD_PETRO_BOTTLE_PET_CHIP]
+  - [PROD_PETRO_FIBER_PET_CHIP, uses_material, MAT_PX_PTA]
+  - [PROD_PETRO_FIBER_PET_CHIP, upstream_of, PROD_CHEM_PET_POY]
+  - [PROD_PETRO_FIBER_PET_CHIP, upstream_of, PROD_CHEM_PET_FDY]
+  - [PROD_PETRO_FIBER_PET_CHIP, upstream_of, PROD_CHEM_PSF]
+  - [PROD_PETRO_BOTTLE_PET_CHIP, used_in, MKT_PACKAGING]
+  - [PROD_PETRO_FIBER_PET_CHIP, used_in, MKT_APPAREL]
+  # trading / biofuels
+  - [PROD_PETRO_CRUDE_TRADING, uses_material, MAT_CRUDE_OIL]
+  - [PROD_PETRO_FUEL_RETAIL, used_in, MKT_ICE_VEHICLE]
+  - [PROD_PETRO_CHEM_TRADING, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_PETRO_STORAGE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_PETRO_UCO, upstream_of, PROD_PETRO_BIODIESEL]
+  - [PROD_PETRO_UCO, upstream_of, PROD_PETRO_SAF]
+  - [PROD_PETRO_BIODIESEL, substitute_for, PROD_PETRO_DIESEL]
+  - [PROD_PETRO_SAF, substitute_for, PROD_PETRO_JET_FUEL]
+  - [PROD_PETRO_SAF, used_in, MKT_AEROSPACE]
+  - [PROD_PETRO_BIODIESEL, used_in, MKT_LOGISTICS]
+  - [PROD_PETRO_FUEL_ETHANOL, uses_material, MAT_GRAIN]
+  - [PROD_PETRO_FUEL_ETHANOL, used_in, PROD_PETRO_GASOLINE]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_PETRO_POE, upstream_of, PROD_PWR_POE_FILM]
+  - [PROD_PETRO_EVA, upstream_of, PROD_PWR_EVA_FILM]
+  - [PROD_PETRO_LPG, upstream_of, MAT_LPG]
+  - [PROD_PETRO_PIPELINE_GAS_SALES, upstream_of, PROD_UTIL_CITY_GAS]
+  - [PROD_PETRO_JET_FUEL, upstream_of, MAT_JET_FUEL]
+  - [PROD_PETRO_LSFO, upstream_of, MAT_BUNKER_FUEL]
+  - [PROD_PETRO_ASPHALT, upstream_of, MAT_ASPHALT]
+  - [PROD_PETRO_EO, upstream_of, PROD_CHEM_POLYETHER_MONOMER]
+  - [PROD_PETRO_NAPHTHA, upstream_of, MAT_ETHYLENE]
+  - [PROD_PETRO_NAPHTHA, upstream_of, MAT_PROPYLENE]
+  - [PROD_PETRO_PDH, upstream_of, MAT_PROPYLENE]
+  - [PROD_PETRO_ETHANE_CRACKING, upstream_of, MAT_ETHYLENE]
+  - [PROD_PETRO_MIXED_XYLENE, upstream_of, MAT_PX_PTA]
+  - [PROD_PETRO_SULFUR, upstream_of, MAT_SULFURIC_ACID]
+  - [PROD_PETRO_SAP, used_in, PROD_BEAU_BABY_DIAPER]
+  - [PROD_PETRO_SAP, used_in, PROD_BEAU_SANITARY_PAD]
+  - [PROD_PETRO_EVA, upstream_of, PROD_TEX_SHOE_MATERIAL]
+
+sw_l3_map:
+  "750101": [SEG_PETRO_UPSTREAM]
+  "750201": [SEG_PETRO_OILFIELD_SERVICES, SEG_MACH_OIL_SERVICE_EQUIP]
+  "750202": [SEG_PETRO_ENGINEERING]
+  "750301": [SEG_PETRO_INTEGRATED, SEG_PETRO_REFINING, SEG_PETRO_OLEFINS, SEG_PETRO_AROMATICS]
+  "750302": [SEG_PETRO_TRADING, SEG_PETRO_GAS_MIDSTREAM]
+  "750303": [SEG_PETRO_LIGHT_HYDROCARBON, SEG_PETRO_GAS_MIDSTREAM, SEG_PETRO_BIOFUELS, SEG_PETRO_AROMATICS]

@@ -1,0 +1,167 @@
+# Shenwan 720000 传媒 — product taxonomy prior (plan 12 phase 1, D-097). Format: README.md.
+sector: {sw_l1: "720000", name: 传媒, name_en: Media}
+
+nodes:
+  # --- segments ---
+  - {id: SEG_MEDIA_GAMES, type: segment, name: 游戏, name_en: Video Games, aliases: [游戏Ⅱ, 游戏Ⅲ]}
+  - {id: SEG_MEDIA_ADVERTISING, type: segment, name: 广告营销, name_en: Advertising and Marketing}
+  - {id: SEG_MEDIA_MARKETING_AGENCY, type: segment, name: 营销代理, name_en: Marketing Agencies, aliases: [数字营销]}
+  - {id: SEG_MEDIA_AD_MEDIA, type: segment, name: 广告媒体, name_en: Advertising Media, aliases: [户外广告]}
+  - {id: SEG_MEDIA_FILM_CINEMA, type: segment, name: 影视院线, name_en: "Film, TV and Cinemas"}
+  - {id: SEG_MEDIA_FILM_PRODUCTION, type: segment, name: 影视动漫制作, name_en: "Film, TV and Animation Production"}
+  - {id: SEG_MEDIA_CINEMA, type: segment, name: 院线, name_en: Cinema Chains}
+  - {id: SEG_MEDIA_DIGITAL, type: segment, name: 数字媒体, name_en: Digital Media}
+  - {id: SEG_MEDIA_VIDEO, type: segment, name: 视频媒体, name_en: Video Media, aliases: [长视频平台]}
+  - {id: SEG_MEDIA_AUDIO, type: segment, name: 音频媒体, name_en: Audio Media}
+  - {id: SEG_MEDIA_IMAGE, type: segment, name: 图片媒体, name_en: Image Media}
+  - {id: SEG_MEDIA_PORTAL, type: segment, name: 门户网站, name_en: Internet Portals}
+  - {id: SEG_MEDIA_TEXT, type: segment, name: 文字媒体, name_en: Text Media, aliases: [网络文学平台]}
+  - {id: SEG_MEDIA_OTHER_DIGITAL, type: segment, name: 其他数字媒体, name_en: Other Digital Media}
+  - {id: SEG_MEDIA_SOCIAL, type: segment, name: 社交, name_en: Social Media, aliases: [社交Ⅱ, 社交Ⅲ]}
+  - {id: SEG_MEDIA_PUBLISHING, type: segment, name: 出版, name_en: Publishing}
+  - {id: SEG_MEDIA_EDU_PUBLISHING, type: segment, name: 教育出版, name_en: Educational Publishing}
+  - {id: SEG_MEDIA_TRADE_PUBLISHING, type: segment, name: 大众出版, name_en: Trade Publishing}
+  - {id: SEG_MEDIA_OTHER_PUBLISHING, type: segment, name: 其他出版, name_en: Other Publishing}
+  - {id: SEG_MEDIA_BROADCAST, type: segment, name: 电视广播, name_en: TV and Broadcasting, aliases: [电视广播Ⅱ, 电视广播Ⅲ, 广电]}
+
+  # --- games ---
+  - {id: PROD_MEDIA_MOBILE_GAME, type: product, kind: service, name: 移动游戏, name_en: Mobile Games, segment: SEG_MEDIA_GAMES, aliases: [手游]}
+  - {id: PROD_MEDIA_PC_GAME, type: product, kind: service, name: 客户端游戏, name_en: PC Games, segment: SEG_MEDIA_GAMES, aliases: [端游, 页游, 网页游戏]}
+  - {id: PROD_MEDIA_CONSOLE_GAME, type: product, kind: service, name: 主机游戏, name_en: Console Games, segment: SEG_MEDIA_GAMES, aliases: [单机游戏, 买断制游戏]}
+  - {id: PROD_MEDIA_MINI_GAME, type: product, kind: service, name: 小游戏, name_en: Mini Games, parent: PROD_MEDIA_MOBILE_GAME, segment: SEG_MEDIA_GAMES, aliases: [微信小游戏, 小程序游戏]}
+  - {id: PROD_MEDIA_GAME_PUBLISHING, type: product, kind: service, name: 游戏发行运营, name_en: Game Publishing and Operation, segment: SEG_MEDIA_GAMES, aliases: [游戏代理发行, 出海发行]}
+  - {id: PROD_MEDIA_GAME_IP, type: product, kind: service, name: IP授权, name_en: IP Licensing, segment: SEG_MEDIA_GAMES, aliases: [版权授权, 动漫IP授权]}
+  # --- advertising ---
+  - {id: PROD_MEDIA_DIGITAL_AD_AGENCY, type: product, kind: service, name: 互联网广告投放代理, name_en: Digital Ad Agency, segment: SEG_MEDIA_MARKETING_AGENCY, aliases: [效果营销, 广告代理]}
+  - {id: PROD_MEDIA_CONTENT_MARKETING, type: product, kind: service, name: 内容营销, name_en: Content and Influencer Marketing, segment: SEG_MEDIA_MARKETING_AGENCY, aliases: [KOL营销, 达人营销, 整合营销]}
+  - {id: PROD_MEDIA_OVERSEAS_AD, type: product, kind: service, name: 出海营销, name_en: Overseas Marketing Services, segment: SEG_MEDIA_MARKETING_AGENCY, aliases: [海外广告代理]}
+  - {id: PROD_MEDIA_ELEVATOR_AD, type: product, kind: service, name: 楼宇广告, name_en: Elevator and Building Ads, segment: SEG_MEDIA_AD_MEDIA, aliases: [梯媒, 电梯广告, 生活圈媒体]}
+  - {id: PROD_MEDIA_OUTDOOR_AD, type: product, kind: service, name: 户外广告媒体, name_en: Outdoor Ad Media, segment: SEG_MEDIA_AD_MEDIA, aliases: [交通枢纽广告, 高铁广告]}
+  # --- film, TV ---
+  - {id: PROD_MEDIA_TV_SERIES, type: product, kind: service, name: 电视剧制作, name_en: TV Series Production, segment: SEG_MEDIA_FILM_PRODUCTION, aliases: [剧集, 网剧]}
+  - {id: PROD_MEDIA_FILM, type: product, kind: service, name: 电影制作, name_en: Film Production, segment: SEG_MEDIA_FILM_PRODUCTION, aliases: [电影出品]}
+  - {id: PROD_MEDIA_FILM_DISTRIBUTION, type: product, kind: service, name: 电影发行, name_en: Film Distribution, segment: SEG_MEDIA_FILM_PRODUCTION}
+  - {id: PROD_MEDIA_ANIMATION, type: product, kind: service, name: 动画制作, name_en: Animation Production, segment: SEG_MEDIA_FILM_PRODUCTION, aliases: [动漫]}
+  - {id: PROD_MEDIA_SHORT_DRAMA, type: product, kind: service, name: 短剧, name_en: Micro-Dramas, segment: SEG_MEDIA_FILM_PRODUCTION, aliases: [微短剧]}
+  - {id: PROD_MEDIA_CINEMA_BOX_OFFICE, type: product, kind: service, name: 影院放映, name_en: Cinema Exhibition, segment: SEG_MEDIA_CINEMA, aliases: [票房, 影城]}
+  # --- digital media ---
+  - {id: PROD_MEDIA_LONG_VIDEO, type: product, kind: service, name: 长视频会员, name_en: Long-Form Video Subscription, segment: SEG_MEDIA_VIDEO, aliases: [视频会员, 流媒体]}
+  - {id: PROD_MEDIA_SHORT_VIDEO, type: product, kind: service, name: 短视频直播, name_en: Short Video and Live Streaming, segment: SEG_MEDIA_OTHER_DIGITAL, aliases: [直播打赏, MCN]}
+  - {id: PROD_MEDIA_AUDIO_CONTENT, type: product, kind: service, name: 音频内容, name_en: Audio Content, segment: SEG_MEDIA_AUDIO, aliases: [音乐版权, 有声书, 播客]}
+  - {id: PROD_MEDIA_STOCK_IMAGE, type: product, kind: service, name: 图片版权, name_en: Stock Images, segment: SEG_MEDIA_IMAGE, aliases: [视觉素材]}
+  - {id: PROD_MEDIA_PORTAL_SERVICE, type: product, kind: service, name: 互联网信息服务, name_en: Internet Information Services, segment: SEG_MEDIA_PORTAL, aliases: [新闻资讯, 门户]}
+  - {id: PROD_MEDIA_ONLINE_LITERATURE, type: product, kind: service, name: 网络文学, name_en: Online Literature, segment: SEG_MEDIA_TEXT, aliases: [网文]}
+  - {id: PROD_MEDIA_SOCIAL_PLATFORM, type: product, kind: service, name: 社交平台, name_en: Social Platform, segment: SEG_MEDIA_SOCIAL, aliases: [社区平台]}
+  - {id: PROD_MEDIA_AI_APP, type: product, kind: service, name: AI内容应用, name_en: AI Content Applications, segment: SEG_MEDIA_OTHER_DIGITAL, aliases: [AI陪伴]}
+  - {id: PROD_MEDIA_VIRTUAL_HUMAN, type: product, kind: service, name: 虚拟数字人, name_en: Virtual Humans, parent: PROD_MEDIA_AI_APP, segment: SEG_MEDIA_OTHER_DIGITAL, aliases: [数字人, 虚拟偶像]}
+  - {id: PROD_MEDIA_DATA_ASSETS, type: product, kind: service, name: 数据要素服务, name_en: Data Asset Services, segment: SEG_MEDIA_OTHER_DIGITAL, aliases: [语料数据, 版权数据]}
+  # --- publishing ---
+  - {id: PROD_MEDIA_TEXTBOOK, type: product, name: 教材教辅, name_en: Textbooks and Supplements, segment: SEG_MEDIA_EDU_PUBLISHING, aliases: [中小学教材, 教辅]}
+  - {id: PROD_MEDIA_TRADE_BOOK, type: product, name: 大众图书, name_en: Trade Books, segment: SEG_MEDIA_TRADE_PUBLISHING, aliases: [一般图书, 童书]}
+  - {id: PROD_MEDIA_PERIODICAL, type: product, name: 报刊, name_en: Newspapers and Periodicals, segment: SEG_MEDIA_TRADE_PUBLISHING, aliases: [报纸, 期刊]}
+  - {id: PROD_MEDIA_BOOK_DISTRIBUTION, type: product, kind: service, name: 图书发行, name_en: Book Distribution, segment: SEG_MEDIA_TRADE_PUBLISHING, aliases: [新华书店, 图书零售]}
+  - {id: PROD_MEDIA_DIGITAL_PUBLISHING, type: product, kind: service, name: 数字出版, name_en: Digital Publishing, segment: SEG_MEDIA_OTHER_PUBLISHING, aliases: [电子书, 在线教育内容]}
+  # --- broadcasting ---
+  - {id: PROD_MEDIA_CABLE_TV, type: product, kind: service, name: 有线电视网络, name_en: Cable TV Network, segment: SEG_MEDIA_BROADCAST, aliases: [有线电视, 广电网络]}
+  - {id: PROD_MEDIA_IPTV_OTT, type: product, kind: service, name: IPTV与OTT, name_en: IPTV and OTT, segment: SEG_MEDIA_BROADCAST, aliases: [互联网电视, IPTV]}
+  - {id: PROD_MEDIA_TV_CHANNEL, type: product, kind: service, name: 电视频道运营, name_en: TV Channel Operation, segment: SEG_MEDIA_BROADCAST, aliases: [卫视, 电视台]}
+
+edges:
+  - [SEG_MEDIA_MARKETING_AGENCY, part_of, SEG_MEDIA_ADVERTISING]
+  - [SEG_MEDIA_AD_MEDIA, part_of, SEG_MEDIA_ADVERTISING]
+  - [SEG_MEDIA_FILM_PRODUCTION, part_of, SEG_MEDIA_FILM_CINEMA]
+  - [SEG_MEDIA_CINEMA, part_of, SEG_MEDIA_FILM_CINEMA]
+  - [SEG_MEDIA_VIDEO, part_of, SEG_MEDIA_DIGITAL]
+  - [SEG_MEDIA_AUDIO, part_of, SEG_MEDIA_DIGITAL]
+  - [SEG_MEDIA_IMAGE, part_of, SEG_MEDIA_DIGITAL]
+  - [SEG_MEDIA_PORTAL, part_of, SEG_MEDIA_DIGITAL]
+  - [SEG_MEDIA_TEXT, part_of, SEG_MEDIA_DIGITAL]
+  - [SEG_MEDIA_OTHER_DIGITAL, part_of, SEG_MEDIA_DIGITAL]
+  - [SEG_MEDIA_EDU_PUBLISHING, part_of, SEG_MEDIA_PUBLISHING]
+  - [SEG_MEDIA_TRADE_PUBLISHING, part_of, SEG_MEDIA_PUBLISHING]
+  - [SEG_MEDIA_OTHER_PUBLISHING, part_of, SEG_MEDIA_PUBLISHING]
+  - [SEG_MEDIA_GAMES, serves, MKT_MEDIA_ENTERTAINMENT]
+  - [SEG_MEDIA_ADVERTISING, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_MEDIA_ADVERTISING, serves, MKT_MEDIA_ENTERTAINMENT]
+  - [SEG_MEDIA_FILM_CINEMA, serves, MKT_MEDIA_ENTERTAINMENT]
+  - [SEG_MEDIA_DIGITAL, serves, MKT_MEDIA_ENTERTAINMENT]
+  - [SEG_MEDIA_SOCIAL, serves, MKT_MEDIA_ENTERTAINMENT]
+  - [SEG_MEDIA_PUBLISHING, serves, MKT_MEDIA_ENTERTAINMENT]
+  - [SEG_MEDIA_EDU_PUBLISHING, serves, MKT_GOVERNMENT]
+  - [SEG_MEDIA_BROADCAST, serves, MKT_MEDIA_ENTERTAINMENT]
+  - [SEG_MEDIA_BROADCAST, serves, MKT_GOVERNMENT]
+  # games
+  - [PROD_MEDIA_GAME_IP, upstream_of, PROD_MEDIA_MOBILE_GAME]
+  - [PROD_MEDIA_ONLINE_LITERATURE, upstream_of, PROD_MEDIA_GAME_IP]
+  - [PROD_MEDIA_MOBILE_GAME, upstream_of, PROD_MEDIA_GAME_PUBLISHING]
+  - [PROD_MEDIA_PC_GAME, upstream_of, PROD_MEDIA_GAME_PUBLISHING]
+  - [PROD_MEDIA_GAME_PUBLISHING, used_in, MKT_MEDIA_ENTERTAINMENT]
+  - [PROD_MEDIA_MOBILE_GAME, used_in, MKT_SMARTPHONE]
+  - [PROD_MEDIA_PC_GAME, used_in, MKT_PC]
+  - [PROD_MEDIA_CONSOLE_GAME, used_in, MKT_MEDIA_ENTERTAINMENT]
+  - [PROD_MEDIA_DIGITAL_AD_AGENCY, used_in, PROD_MEDIA_GAME_PUBLISHING]
+  - [TECH_AI_LARGE_MODEL, enables, PROD_MEDIA_MOBILE_GAME]
+  # advertising
+  - [PROD_MEDIA_DIGITAL_AD_AGENCY, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_MEDIA_CONTENT_MARKETING, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_MEDIA_OVERSEAS_AD, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_MEDIA_ELEVATOR_AD, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_MEDIA_OUTDOOR_AD, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_MEDIA_ELEVATOR_AD, substitute_for, PROD_MEDIA_TV_CHANNEL]
+  - [PROD_MEDIA_SHORT_VIDEO, upstream_of, PROD_MEDIA_CONTENT_MARKETING]
+  # film and video
+  - [PROD_MEDIA_ONLINE_LITERATURE, upstream_of, PROD_MEDIA_TV_SERIES]
+  - [PROD_MEDIA_ONLINE_LITERATURE, upstream_of, PROD_MEDIA_SHORT_DRAMA]
+  - [PROD_MEDIA_FILM, upstream_of, PROD_MEDIA_FILM_DISTRIBUTION]
+  - [PROD_MEDIA_FILM_DISTRIBUTION, upstream_of, PROD_MEDIA_CINEMA_BOX_OFFICE]
+  - [PROD_MEDIA_TV_SERIES, upstream_of, PROD_MEDIA_LONG_VIDEO]
+  - [PROD_MEDIA_TV_SERIES, upstream_of, PROD_MEDIA_TV_CHANNEL]
+  - [PROD_MEDIA_ANIMATION, upstream_of, PROD_MEDIA_LONG_VIDEO]
+  - [PROD_MEDIA_SHORT_DRAMA, substitute_for, PROD_MEDIA_TV_SERIES]
+  - [PROD_MEDIA_CINEMA_BOX_OFFICE, used_in, MKT_MEDIA_ENTERTAINMENT]
+  - [PROD_MEDIA_LONG_VIDEO, used_in, MKT_MEDIA_ENTERTAINMENT]
+  - [PROD_MEDIA_SHORT_VIDEO, substitute_for, PROD_MEDIA_LONG_VIDEO]
+  # AI content
+  - [TECH_AI_LARGE_MODEL, enables, PROD_MEDIA_AI_APP]
+  - [TECH_AI_LARGE_MODEL, enables, PROD_MEDIA_VIRTUAL_HUMAN]
+  - [TECH_AI_LARGE_MODEL, enables, PROD_MEDIA_SHORT_DRAMA]
+  - [TECH_AI_LARGE_MODEL, enables, PROD_MEDIA_CONTENT_MARKETING]
+  - [PROD_MEDIA_DATA_ASSETS, upstream_of, PROD_MEDIA_AI_APP]
+  - [PROD_MEDIA_STOCK_IMAGE, upstream_of, PROD_MEDIA_DATA_ASSETS]
+  - [PROD_MEDIA_TRADE_BOOK, upstream_of, PROD_MEDIA_DATA_ASSETS]
+  - [PROD_MEDIA_AI_APP, used_in, MKT_MEDIA_ENTERTAINMENT]
+  - [PROD_MEDIA_STOCK_IMAGE, used_in, PROD_MEDIA_CONTENT_MARKETING]
+  # publishing
+  - [PROD_MEDIA_TEXTBOOK, uses_material, MAT_PULP]
+  - [PROD_MEDIA_TRADE_BOOK, uses_material, MAT_PULP]
+  - [PROD_MEDIA_PERIODICAL, uses_material, MAT_PULP]
+  - [PROD_MEDIA_TEXTBOOK, upstream_of, PROD_MEDIA_BOOK_DISTRIBUTION]
+  - [PROD_MEDIA_TRADE_BOOK, upstream_of, PROD_MEDIA_BOOK_DISTRIBUTION]
+  - [PROD_MEDIA_DIGITAL_PUBLISHING, substitute_for, PROD_MEDIA_TRADE_BOOK]
+  - [PROD_MEDIA_TEXTBOOK, used_in, MKT_GOVERNMENT]
+  - [PROD_MEDIA_AUDIO_CONTENT, used_in, MKT_MEDIA_ENTERTAINMENT]
+  - [PROD_MEDIA_TRADE_BOOK, upstream_of, PROD_MEDIA_AUDIO_CONTENT]
+  # broadcasting
+  - [PROD_MEDIA_IPTV_OTT, substitute_for, PROD_MEDIA_CABLE_TV]
+  - [PROD_MEDIA_CABLE_TV, used_in, MKT_MEDIA_ENTERTAINMENT]
+  - [PROD_MEDIA_TV_CHANNEL, used_in, MKT_MEDIA_ENTERTAINMENT]
+  - [PROD_MEDIA_SOCIAL_PLATFORM, used_in, MKT_MEDIA_ENTERTAINMENT]
+  - [PROD_MEDIA_PORTAL_SERVICE, used_in, MKT_MEDIA_ENTERTAINMENT]
+
+sw_l3_map:
+  "720401": [SEG_MEDIA_GAMES]
+  "720501": [SEG_MEDIA_MARKETING_AGENCY]
+  "720502": [SEG_MEDIA_AD_MEDIA]
+  "720601": [SEG_MEDIA_FILM_PRODUCTION]
+  "720602": [SEG_MEDIA_CINEMA]
+  "720701": [SEG_MEDIA_VIDEO]
+  "720702": [SEG_MEDIA_AUDIO]
+  "720703": [SEG_MEDIA_IMAGE]
+  "720704": [SEG_MEDIA_PORTAL]
+  "720705": [SEG_MEDIA_TEXT]
+  "720706": [SEG_MEDIA_OTHER_DIGITAL]
+  "720801": [SEG_MEDIA_SOCIAL]
+  "720901": [SEG_MEDIA_EDU_PUBLISHING]
+  "720902": [SEG_MEDIA_TRADE_PUBLISHING]
+  "720903": [SEG_MEDIA_OTHER_PUBLISHING]
+  "721001": [SEG_MEDIA_BROADCAST]

@@ -10,6 +10,7 @@ A-share quant research project on a local parquet + DuckDB lake fed by Tushare P
 | [`plans/`](plans/INDEX.md) | governance by document type: standards, architecture, plans + roadmap, decisions, reference |
 | [`config/`](config/INDEX.md) | YAML configuration loaded by `core.Config`, no code |
 | [`research_space/`](research_space/INDEX.md) | notebooks that import `quant_cn`; never imported by it |
+| [`apps/`](apps/INDEX.md) | plan 15 web app: Go read-only API (`chain_api`) and React front end (`chain_web`); no business logic |
 | [`scripts/`](scripts/INDEX.md) | dev tooling: contract linter, lint runner |
 | [`src/`](src/INDEX.md) | `src` layout root holding the `quant_cn` package |
 | [`tests/`](tests/INDEX.md) | pytest suite mirroring `src/quant_cn` |

@@ -17,6 +17,21 @@ tushare:
   rate_limit_markers: ["每分钟", "频率"]
   permission_markers: ["权限", "积分"]
 
+llm:                             # extraction model (D-098); key from env DEEPSEEK_API_KEY only
+  url: https://api.deepseek.com/chat/completions
+  model: deepseek-flash
+  timeout_s: 180
+  retries: 3
+  retry_sleep_s: 10
+  min_interval_s: 0.2
+  max_tokens: 8000
+  thinking: false                # reasoning used 13k tokens on one report and truncated JSON at 6k
+  # peak prices, CNY per 1M tokens (api-docs.deepseek.com pricing, 2026-11-07); off-peak = half
+  prices:
+    deepseek-flash: {input_hit: 0.04, input_miss: 2.0, output: 8.0}
+    deepseek-v4-pro: {input_hit: 0.30, input_miss: 9.0, output: 27.0}
+  peak_hours: [[9, 12], [14, 18]]  # Beijing time, Mon-Fri (holidays treated as peak: conservative)
+
 download:
   default_start: "20190101"      # D-015b
   long_history_start: "20100101"
@@ -79,6 +94,19 @@ download:
     - macro_release_pmi
     - macro_release_m2
     - szse_margin_targets
+    - irm_qa_sh
+    - irm_qa_sz
+    - em_industry_reports
+    - em_stock_reports
+    - cninfo_announcements
+    - cninfo_keyword_announcements
+    - fina_mainbz_p
+    - fina_mainbz_i
+    - stock_company
+    - ths_index
+    - ths_member
+    - dc_index
+    - dc_member
 
 universe:                        # plan 04 phase 3 (FACTOR_TESTING_DESIGN §11)
   start: "20100101"

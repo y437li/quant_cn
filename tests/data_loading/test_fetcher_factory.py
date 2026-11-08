@@ -121,3 +121,20 @@ def test_tc_ff_004_source(config: Config, lake: MiniLake) -> None:
     )
     built = factory.build(fred_spec)
     assert type(built) is DateWindowFetcher and built._client is fred
+
+
+# TC-FF-005
+def test_tc_ff_005_missing_key_source(config: Config, lake: MiniLake) -> None:
+    factory = FetcherFactory(
+        config,
+        FakeTushareClient(),
+        lake.writer,
+        lake.fetch_log,
+        lake.run_log,
+        lake.clock,
+        TradingCalendar(lake.query),
+        DateCodec(),
+        query=lake.query,
+    )
+    fetcher = factory.build(config.get_dataset("ths_member"))
+    assert fetcher.list_keys("20260101", "20261107") == []

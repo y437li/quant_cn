@@ -1,0 +1,545 @@
+# 国防军工 (650000) industrial-chain taxonomy prior (plan 12 phase 1, D-097). Format: README.md. All edges are source: prior.
+sector: {sw_l1: '650000', name: 国防军工, name_en: Defense}
+nodes:
+  - {id: SEG_DEF_SPACE, type: segment, name: 航天装备, name_en: Space Equipment}
+  - {id: SEG_DEF_LAUNCH_VEHICLE, type: segment, name: 运载火箭与发射, name_en: Launch Vehicles and Launch Services}
+  - {id: SEG_DEF_SATELLITE, type: segment, name: 卫星制造, name_en: Satellite Manufacturing}
+  - {id: SEG_DEF_SATELLITE_APPLICATION, type: segment, name: 卫星应用, name_en: Satellite Applications}
+  - {id: SEG_DEF_MISSILE, type: segment, name: 导弹与精确制导, name_en: Missiles and Precision Guidance}
+  - {id: SEG_DEF_AVIATION, type: segment, name: 航空装备, name_en: Aviation Equipment}
+  - {id: SEG_DEF_AIRCRAFT, type: segment, name: 飞机整机, name_en: Aircraft OEM}
+  - {id: SEG_DEF_UAV, type: segment, name: 无人机, name_en: Unmanned Aerial Vehicles}
+  - {id: SEG_DEF_AIRFRAME_PARTS, type: segment, name: 航空结构件, name_en: Airframe Structures}
+  - {id: SEG_DEF_AERO_ENGINE, type: segment, name: 航空发动机, name_en: Aero-Engines}
+  - {id: SEG_DEF_AIRBORNE_SYSTEMS, type: segment, name: 机载系统, name_en: Airborne Systems}
+  - {id: SEG_DEF_MATERIALS, type: segment, name: 军工新材料, name_en: Defense Advanced Materials}
+  - {id: SEG_DEF_GROUND, type: segment, name: 地面兵装, name_en: Ground Equipment}
+  - {id: SEG_DEF_NAVAL, type: segment, name: 航海装备, name_en: Naval and Marine Equipment}
+  - {id: SEG_DEF_SHIPBUILDING, type: segment, name: 船舶制造, name_en: Shipbuilding}
+  - {id: SEG_DEF_MIL_ELECTRONICS, type: segment, name: 军工电子, name_en: Defense Electronics}
+  - {id: SEG_DEF_RADAR, type: segment, name: 雷达与微波, name_en: Radar and Microwave}
+  - {id: SEG_DEF_MIL_IC, type: segment, name: 军用芯片, name_en: Military Integrated Circuits}
+  - {id: SEG_DEF_MIL_COMPONENTS, type: segment, name: 军用元器件, name_en: Military Electronic Components}
+  - {id: SEG_DEF_OPTOELECTRONICS, type: segment, name: 光电与红外, name_en: Electro-Optics and Infrared}
+  - {id: SEG_DEF_COMMS_NAV, type: segment, name: 军用通信导航, name_en: Military Communication and Navigation}
+  - {id: SEG_DEF_INFO_SYSTEMS, type: segment, name: 指挥信息与仿真, name_en: Command Information and Simulation}
+  - {id: PROD_DEF_LAUNCH_VEHICLE, type: product, name: 运载火箭, name_en: Launch Vehicle, segment: SEG_DEF_LAUNCH_VEHICLE, aliases: [火箭, 商业火箭]}
+  - {id: PROD_DEF_REUSABLE_LAUNCH_VEHICLE, type: product, name: 可回收运载火箭, name_en: Reusable Launch Vehicle, parent: PROD_DEF_LAUNCH_VEHICLE, segment: SEG_DEF_LAUNCH_VEHICLE, aliases: [可复用火箭]}
+  - {id: PROD_DEF_ROCKET_ENGINE, type: product, name: 火箭发动机, name_en: Rocket Engine, segment: SEG_DEF_LAUNCH_VEHICLE, aliases: [液体火箭发动机]}
+  - {id: PROD_DEF_ROCKET_STRUCTURE, type: product, name: 箭体结构件, name_en: Launch Vehicle Structure, segment: SEG_DEF_LAUNCH_VEHICLE, aliases: [贮箱, 整流罩, 箭体]}
+  - {id: PROD_DEF_LAUNCH_SERVICE, type: product, name: 发射服务, name_en: Launch Service, segment: SEG_DEF_LAUNCH_VEHICLE, aliases: [商业发射服务], kind: service}
+  - {id: PROD_DEF_SATELLITE, type: product, name: 卫星整星, name_en: Satellite, segment: SEG_DEF_SATELLITE, aliases: [卫星制造, 整星]}
+  - {id: PROD_DEF_LEO_COMM_SATELLITE, type: product, name: 低轨通信卫星, name_en: LEO Communication Satellite, parent: PROD_DEF_SATELLITE, segment: SEG_DEF_SATELLITE, aliases: [星座卫星, 低轨卫星, 卫星互联网星座, LEO卫星]}
+  - {id: PROD_DEF_REMOTE_SENSING_SATELLITE, type: product, name: 遥感卫星, name_en: Remote Sensing Satellite, parent: PROD_DEF_SATELLITE, segment: SEG_DEF_SATELLITE, aliases: [SAR卫星, 光学遥感卫星]}
+  - {id: PROD_DEF_NAV_SATELLITE, type: product, name: 导航卫星, name_en: Navigation Satellite, parent: PROD_DEF_SATELLITE, segment: SEG_DEF_SATELLITE, aliases: [北斗卫星]}
+  - {id: PROD_DEF_SATELLITE_BUS, type: product, name: 卫星平台, name_en: Satellite Bus, segment: SEG_DEF_SATELLITE}
+  - {id: PROD_DEF_SATELLITE_PAYLOAD, type: product, name: 卫星载荷, name_en: Satellite Payload, segment: SEG_DEF_SATELLITE, aliases: [有效载荷, 卫星通信载荷, 星载通信设备]}
+  - {id: PROD_DEF_SAT_PHASED_ARRAY, type: product, name: 星载相控阵天线, name_en: Satellite Phased-Array Antenna, parent: PROD_DEF_SATELLITE_PAYLOAD, segment: SEG_DEF_SATELLITE, aliases: [星载相控阵]}
+  - {id: PROD_DEF_LASER_COMM_TERMINAL, type: product, name: 星间激光通信终端, name_en: Inter-Satellite Laser Terminal, parent: PROD_DEF_SATELLITE_PAYLOAD, segment: SEG_DEF_SATELLITE, aliases: [激光通信终端, 星间链路]}
+  - {id: PROD_DEF_SOLAR_WING, type: product, name: 空间太阳翼, name_en: Space Solar Array, segment: SEG_DEF_SATELLITE, aliases: [太阳翼, 空间太阳电池]}
+  - {id: PROD_DEF_SAT_PROPULSION, type: product, name: 卫星推进系统, name_en: Satellite Propulsion, segment: SEG_DEF_SATELLITE, aliases: [电推进, 霍尔推力器]}
+  - {id: PROD_DEF_ATTITUDE_CONTROL, type: product, name: 姿轨控部件, name_en: Attitude and Orbit Control Component, segment: SEG_DEF_SATELLITE, aliases: [星敏感器, 反作用飞轮, 动量轮]}
+  - {id: PROD_DEF_SATCOM_TERMINAL, type: product, name: 卫星通信终端, name_en: Satellite Communication Terminal, segment: SEG_DEF_SATELLITE_APPLICATION, aliases: [卫星电话, 卫星终端, 动中通, 手机直连卫星终端]}
+  - {id: PROD_DEF_SATCOM_GROUND_STATION, type: product, name: 卫星地面站, name_en: Satellite Ground Station, segment: SEG_DEF_SATELLITE_APPLICATION, aliases: [信关站, 测控站, 卫星地面站设备, 地面站]}
+  - {id: PROD_DEF_BEIDOU_TERMINAL, type: product, name: 北斗导航终端, name_en: BeiDou Navigation Terminal, segment: SEG_DEF_SATELLITE_APPLICATION, aliases: [北斗终端, 北斗短报文终端]}
+  - {id: PROD_DEF_BEIDOU_CHIP_MODULE, type: product, name: 北斗芯片模组, name_en: BeiDou Chip and Module, segment: SEG_DEF_SATELLITE_APPLICATION, aliases: [北斗芯片, 导航基带芯片, 北斗导航芯片, GNSS芯片, 定位芯片]}
+  - {id: PROD_DEF_SATELLITE_OPERATION, type: product, name: 卫星运营服务, name_en: Satellite Operation Service, segment: SEG_DEF_SATELLITE_APPLICATION, aliases: [卫星运营, 在轨运营], kind: service}
+  - {id: PROD_DEF_REMOTE_SENSING_DATA, type: product, name: 遥感数据服务, name_en: Remote Sensing Data Service, segment: SEG_DEF_SATELLITE_APPLICATION, aliases: [遥感应用, 卫星数据服务], kind: service}
+  - {id: PROD_DEF_MISSILE, type: product, name: 导弹, name_en: Missile, segment: SEG_DEF_MISSILE, aliases: [导弹武器]}
+  - {id: PROD_DEF_AIR_DEFENSE_MISSILE, type: product, name: 防空导弹, name_en: Air Defense Missile, parent: PROD_DEF_MISSILE, segment: SEG_DEF_MISSILE, aliases: [地空导弹]}
+  - {id: PROD_DEF_TACTICAL_MISSILE, type: product, name: 战术导弹, name_en: Tactical Missile, parent: PROD_DEF_MISSILE, segment: SEG_DEF_MISSILE, aliases: [巡航导弹, 反舰导弹]}
+  - {id: PROD_DEF_AIR_TO_AIR_MISSILE, type: product, name: 空空导弹, name_en: Air-to-Air Missile, parent: PROD_DEF_MISSILE, segment: SEG_DEF_MISSILE}
+  - {id: PROD_DEF_PRECISION_MUNITION, type: product, name: 精确制导弹药, name_en: Precision-Guided Munition, segment: SEG_DEF_MISSILE, aliases: [制导炸弹, 制导火箭弹]}
+  - {id: PROD_DEF_SEEKER, type: product, name: 导引头, name_en: Seeker, segment: SEG_DEF_MISSILE, aliases: [红外导引头, 雷达导引头]}
+  - {id: PROD_DEF_SOLID_ROCKET_MOTOR, type: product, name: 固体火箭发动机, name_en: Solid Rocket Motor, parent: PROD_DEF_ROCKET_ENGINE, segment: SEG_DEF_MISSILE, aliases: [固体发动机]}
+  - {id: PROD_DEF_CONTROL_ACTUATOR, type: product, name: 舵机, name_en: Control Actuation System, segment: SEG_DEF_MISSILE, aliases: [电动舵机, 舵机系统]}
+  - {id: PROD_DEF_FIGHTER, type: product, name: 战斗机, name_en: Fighter Aircraft, segment: SEG_DEF_AIRCRAFT, aliases: [歼击机]}
+  - {id: PROD_DEF_TRANSPORT_AIRCRAFT, type: product, name: 军用运输机, name_en: Military Transport Aircraft, segment: SEG_DEF_AIRCRAFT, aliases: [大型运输机]}
+  - {id: PROD_DEF_SPECIAL_MISSION_AIRCRAFT, type: product, name: 特种飞机, name_en: Special Mission Aircraft, segment: SEG_DEF_AIRCRAFT, aliases: [预警机, 空中加油机]}
+  - {id: PROD_DEF_TRAINER_AIRCRAFT, type: product, name: 教练机, name_en: Trainer Aircraft, segment: SEG_DEF_AIRCRAFT}
+  - {id: PROD_DEF_HELICOPTER, type: product, name: 直升机, name_en: Helicopter, segment: SEG_DEF_AIRCRAFT, aliases: [军用直升机, 民用直升机]}
+  - {id: PROD_DEF_COMMERCIAL_AIRLINER, type: product, name: 民用客机, name_en: Commercial Airliner, segment: SEG_DEF_AIRCRAFT, aliases: [大飞机, C919, 支线客机]}
+  - {id: PROD_DEF_EVTOL_AIRCRAFT, type: product, name: eVTOL飞行器, name_en: eVTOL Aircraft, segment: SEG_DEF_AIRCRAFT, aliases: [电动垂直起降飞行器]}
+  - {id: PROD_DEF_GENERAL_AVIATION_AIRCRAFT, type: product, name: 通用飞机, name_en: General Aviation Aircraft, segment: SEG_DEF_AIRCRAFT, aliases: [通航飞机]}
+  - {id: PROD_DEF_AERO_MRO, type: product, name: 航空维修服务, name_en: Aviation MRO Service, segment: SEG_DEF_AIRCRAFT, aliases: [航空维修, MRO], kind: service}
+  - {id: PROD_DEF_MIL_UAV, type: product, name: 军用无人机, name_en: Military UAV, segment: SEG_DEF_UAV, aliases: [察打一体无人机, 侦察无人机]}
+  - {id: PROD_DEF_INDUSTRIAL_UAV, type: product, name: 工业级无人机, name_en: Industrial UAV, segment: SEG_DEF_UAV, aliases: [行业无人机, 物流无人机]}
+  - {id: PROD_DEF_TARGET_DRONE, type: product, name: 靶机, name_en: Target Drone, segment: SEG_DEF_UAV}
+  - {id: PROD_DEF_AIRFRAME_STRUCTURAL_PART, type: product, name: 航空结构件, name_en: Airframe Structural Part, segment: SEG_DEF_AIRFRAME_PARTS, aliases: [飞机结构件, 机加零件]}
+  - {id: PROD_DEF_TITANIUM_STRUCTURAL_PART, type: product, name: 钛合金结构件, name_en: Titanium Alloy Structural Part, parent: PROD_DEF_AIRFRAME_STRUCTURAL_PART, segment: SEG_DEF_AIRFRAME_PARTS, aliases: [钛合金零件]}
+  - {id: PROD_DEF_COMPOSITE_STRUCTURAL_PART, type: product, name: 复合材料结构件, name_en: Composite Structural Part, parent: PROD_DEF_AIRFRAME_STRUCTURAL_PART, segment: SEG_DEF_AIRFRAME_PARTS, aliases: [复材构件, 复合材料零部件]}
+  - {id: PROD_DEF_AIRFRAME_ASSEMBLY, type: product, name: 航空部段装配, name_en: Airframe Subassembly, segment: SEG_DEF_AIRFRAME_PARTS, aliases: [部段装配, 飞机大部件]}
+  - {id: PROD_DEF_LANDING_GEAR, type: product, name: 起落架, name_en: Landing Gear, segment: SEG_DEF_AIRFRAME_PARTS}
+  - {id: PROD_DEF_AERO_FASTENER, type: product, name: 航空紧固件, name_en: Aerospace Fastener, parent: PROD_MACH_FASTENER, segment: SEG_DEF_AIRFRAME_PARTS, aliases: [航空标准件]}
+  - {id: PROD_DEF_AERO_BEARING, type: product, name: 航空轴承, name_en: Aerospace Bearing, parent: PROD_MACH_PRECISION_BEARING, segment: SEG_DEF_AIRFRAME_PARTS, aliases: [航空发动机轴承]}
+  - {id: PROD_DEF_AERO_ENGINE, type: product, name: 航空发动机整机, name_en: Aero-Engine, segment: SEG_DEF_AERO_ENGINE, aliases: [航空发动机]}
+  - {id: PROD_DEF_TURBOFAN, type: product, name: 涡扇发动机, name_en: Turbofan Engine, parent: PROD_DEF_AERO_ENGINE, segment: SEG_DEF_AERO_ENGINE}
+  - {id: PROD_DEF_TURBOSHAFT, type: product, name: 涡轴发动机, name_en: Turboshaft Engine, parent: PROD_DEF_AERO_ENGINE, segment: SEG_DEF_AERO_ENGINE}
+  - {id: PROD_DEF_ENGINE_BLADE, type: product, name: 发动机叶片, name_en: Engine Blade, segment: SEG_DEF_AERO_ENGINE, aliases: [涡轮叶片, 压气机叶片]}
+  - {id: PROD_DEF_SINGLE_CRYSTAL_BLADE, type: product, name: 单晶叶片, name_en: Single-Crystal Turbine Blade, parent: PROD_DEF_ENGINE_BLADE, segment: SEG_DEF_AERO_ENGINE, aliases: [单晶涡轮叶片]}
+  - {id: PROD_DEF_ENGINE_DISC, type: product, name: 发动机盘件, name_en: Engine Disc, segment: SEG_DEF_AERO_ENGINE, aliases: [涡轮盘, 压气机盘]}
+  - {id: PROD_DEF_AERO_CASTING, type: product, name: 航空精密铸件, name_en: Aerospace Precision Casting, parent: PROD_MACH_CASTING, segment: SEG_DEF_AERO_ENGINE, aliases: [高温合金铸件, 精铸件]}
+  - {id: PROD_DEF_AERO_FORGING, type: product, name: 航空锻件, name_en: Aerospace Forging, parent: PROD_MACH_FORGING, segment: SEG_DEF_AERO_ENGINE, aliases: [航空环锻件, 航空模锻件]}
+  - {id: PROD_DEF_ENGINE_CASING, type: product, name: 发动机机匣, name_en: Engine Casing, segment: SEG_DEF_AERO_ENGINE, aliases: [机匣]}
+  - {id: PROD_DEF_COMBUSTOR, type: product, name: 燃烧室, name_en: Combustor, segment: SEG_DEF_AERO_ENGINE, aliases: [火焰筒]}
+  - {id: PROD_DEF_ENGINE_CONTROL, type: product, name: 发动机控制系统, name_en: Engine Control System, segment: SEG_DEF_AERO_ENGINE, aliases: [FADEC, 全权限数字电子控制]}
+  - {id: PROD_DEF_AVIONICS, type: product, name: 航空电子系统, name_en: Avionics, segment: SEG_DEF_AIRBORNE_SYSTEMS, aliases: [航电系统]}
+  - {id: PROD_DEF_FLIGHT_CONTROL, type: product, name: 飞行控制系统, name_en: Flight Control System, segment: SEG_DEF_AIRBORNE_SYSTEMS, aliases: [飞控系统]}
+  - {id: PROD_DEF_AIRCRAFT_HYDRAULIC, type: product, name: 机载液压系统, name_en: Aircraft Hydraulic System, parent: PROD_MACH_HYDRAULIC_SYSTEM, segment: SEG_DEF_AIRBORNE_SYSTEMS, aliases: [航空液压]}
+  - {id: PROD_DEF_ENVIRONMENTAL_CONTROL, type: product, name: 机载环控系统, name_en: Environmental Control System, segment: SEG_DEF_AIRBORNE_SYSTEMS, aliases: [环控系统]}
+  - {id: PROD_DEF_AIRCRAFT_POWER, type: product, name: 机载电源系统, name_en: Aircraft Electrical Power System, segment: SEG_DEF_AIRBORNE_SYSTEMS, aliases: [航空电源]}
+  - {id: PROD_DEF_ESCAPE_SYSTEM, type: product, name: 航空救生系统, name_en: Aircrew Escape System, segment: SEG_DEF_AIRBORNE_SYSTEMS, aliases: [弹射座椅]}
+  - {id: PROD_DEF_TITANIUM_ALLOY, type: product, name: 钛合金材料, name_en: Titanium Alloy, segment: SEG_DEF_MATERIALS, aliases: [钛合金棒材, 钛合金板材]}
+  - {id: PROD_DEF_CARBON_FIBER_PREPREG, type: product, name: 碳纤维预浸料, name_en: Carbon Fiber Prepreg, segment: SEG_DEF_MATERIALS, aliases: [预浸料]}
+  - {id: PROD_DEF_CF_COMPOSITE, type: product, name: 碳纤维复合材料, name_en: Carbon Fiber Composite, segment: SEG_DEF_MATERIALS, aliases: [CFRP, 碳纤维复材]}
+  - {id: PROD_DEF_SIC_FIBER, type: product, name: 碳化硅纤维, name_en: SiC Fiber, segment: SEG_DEF_MATERIALS}
+  - {id: PROD_DEF_CMC, type: product, name: 陶瓷基复合材料, name_en: Ceramic Matrix Composite, segment: SEG_DEF_MATERIALS, aliases: [CMC]}
+  - {id: PROD_DEF_STEALTH_MATERIAL, type: product, name: 隐身材料, name_en: Stealth Material, segment: SEG_DEF_MATERIALS, aliases: [吸波材料, 雷达吸波涂层]}
+  - {id: PROD_DEF_AERO_ALUMINUM, type: product, name: 航空铝合金, name_en: Aerospace Aluminum Alloy, segment: SEG_DEF_MATERIALS, aliases: [铝锂合金, 航空铝材]}
+  - {id: PROD_DEF_AM_PART, type: product, name: 增材制造零件, name_en: Additively Manufactured Part, segment: SEG_DEF_MATERIALS, aliases: [3D打印零件, 金属3D打印件]}
+  - {id: PROD_DEF_ARMORED_VEHICLE, type: product, name: 装甲车辆, name_en: Armored Vehicle, segment: SEG_DEF_GROUND, aliases: [坦克, 步兵战车]}
+  - {id: PROD_DEF_ARTILLERY, type: product, name: 火炮, name_en: Artillery, segment: SEG_DEF_GROUND, aliases: [自行火炮, 舰炮]}
+  - {id: PROD_DEF_AMMUNITION, type: product, name: 弹药, name_en: Ammunition, segment: SEG_DEF_GROUND, aliases: [炮弹, 常规弹药]}
+  - {id: PROD_DEF_SMALL_ARMS, type: product, name: 轻武器, name_en: Small Arms, segment: SEG_DEF_GROUND, aliases: [枪械]}
+  - {id: PROD_DEF_MIL_TRUCK, type: product, name: 军用越野车, name_en: Military Off-Road Vehicle, segment: SEG_DEF_GROUND, aliases: [军车, 高机动越野车]}
+  - {id: PROD_DEF_ARMOR_PROTECTION, type: product, name: 装甲防护, name_en: Armor Protection, segment: SEG_DEF_GROUND, aliases: [防弹装甲, 防弹衣]}
+  - {id: PROD_DEF_ENERGETIC_MATERIAL, type: product, name: 含能材料, name_en: Energetic Material, segment: SEG_DEF_GROUND, aliases: [火炸药, 推进剂]}
+  - {id: PROD_DEF_FUZE, type: product, name: 引信, name_en: Fuze, segment: SEG_DEF_GROUND}
+  - {id: PROD_DEF_WARSHIP, type: product, name: 水面舰艇, name_en: Surface Combatant, segment: SEG_DEF_NAVAL, aliases: [驱逐舰, 护卫舰]}
+  - {id: PROD_DEF_AIRCRAFT_CARRIER, type: product, name: 航空母舰, name_en: Aircraft Carrier, parent: PROD_DEF_WARSHIP, segment: SEG_DEF_NAVAL, aliases: [航母]}
+  - {id: PROD_DEF_AMPHIBIOUS_SHIP, type: product, name: 两栖舰船, name_en: Amphibious Ship, parent: PROD_DEF_WARSHIP, segment: SEG_DEF_NAVAL, aliases: [两栖攻击舰]}
+  - {id: PROD_DEF_SUBMARINE, type: product, name: 潜艇, name_en: Submarine, segment: SEG_DEF_NAVAL}
+  - {id: PROD_DEF_MARINE_GAS_TURBINE, type: product, name: 舰用燃气轮机, name_en: Marine Gas Turbine, parent: PROD_PWR_GAS_TURBINE, segment: SEG_DEF_NAVAL, aliases: [船用燃气轮机]}
+  - {id: PROD_DEF_MARINE_DIESEL, type: product, name: 船用柴油机, name_en: Marine Diesel Engine, segment: SEG_DEF_NAVAL, aliases: [船用低速机, 船用中速机]}
+  - {id: PROD_DEF_SONAR, type: product, name: 声呐, name_en: Sonar, segment: SEG_DEF_NAVAL, aliases: [水声探测设备]}
+  - {id: PROD_DEF_TORPEDO, type: product, name: 鱼雷, name_en: Torpedo, segment: SEG_DEF_NAVAL}
+  - {id: PROD_DEF_UUV, type: product, name: 无人潜航器, name_en: Unmanned Underwater Vehicle, segment: SEG_DEF_NAVAL, aliases: [UUV, 水下无人航行器]}
+  - {id: PROD_DEF_USV, type: product, name: 无人艇, name_en: Unmanned Surface Vessel, segment: SEG_DEF_NAVAL, aliases: [水面无人艇]}
+  - {id: PROD_DEF_SHIP_REPAIR, type: product, name: 船舶修理改装服务, name_en: Ship Repair and Conversion Service, segment: SEG_DEF_SHIPBUILDING, aliases: [修船, 船舶改装], kind: service}
+  - {id: PROD_DEF_COMMERCIAL_SHIP, type: product, name: 民用船舶, name_en: Commercial Ship, segment: SEG_DEF_SHIPBUILDING, aliases: [商船]}
+  - {id: PROD_DEF_CONTAINER_SHIP, type: product, name: 集装箱船, name_en: Container Ship, parent: PROD_DEF_COMMERCIAL_SHIP, segment: SEG_DEF_SHIPBUILDING}
+  - {id: PROD_DEF_LNG_CARRIER, type: product, name: LNG运输船, name_en: LNG Carrier, parent: PROD_DEF_COMMERCIAL_SHIP, segment: SEG_DEF_SHIPBUILDING, aliases: [大型LNG船]}
+  - {id: PROD_DEF_BULK_CARRIER, type: product, name: 散货船, name_en: Bulk Carrier, parent: PROD_DEF_COMMERCIAL_SHIP, segment: SEG_DEF_SHIPBUILDING}
+  - {id: PROD_DEF_OIL_TANKER, type: product, name: 油轮, name_en: Oil Tanker, parent: PROD_DEF_COMMERCIAL_SHIP, segment: SEG_DEF_SHIPBUILDING, aliases: [原油运输船]}
+  - {id: PROD_DEF_SHIP_PROPELLER, type: product, name: 船用螺旋桨, name_en: Marine Propeller, segment: SEG_DEF_SHIPBUILDING, aliases: [推进器]}
+  - {id: PROD_DEF_RADAR, type: product, name: 雷达, name_en: Radar, segment: SEG_DEF_RADAR, aliases: [军用雷达]}
+  - {id: PROD_DEF_PHASED_ARRAY_RADAR, type: product, name: 相控阵雷达, name_en: Phased-Array Radar, parent: PROD_DEF_RADAR, segment: SEG_DEF_RADAR, aliases: [有源相控阵雷达, AESA]}
+  - {id: PROD_DEF_TR_MODULE, type: product, name: T/R组件, name_en: T/R Module, segment: SEG_DEF_RADAR, aliases: [TR组件, 收发组件]}
+  - {id: PROD_DEF_MICROWAVE_COMPONENT, type: product, name: 微波组件, name_en: Microwave Component, segment: SEG_DEF_RADAR, aliases: [射频组件, 微波模块]}
+  - {id: PROD_DEF_EW_SYSTEM, type: product, name: 电子对抗系统, name_en: Electronic Warfare System, segment: SEG_DEF_RADAR, aliases: [电子战, 电子侦察]}
+  - {id: PROD_DEF_TR_CHIP, type: product, name: T/R芯片, name_en: T/R Chip, segment: SEG_DEF_MIL_IC, aliases: [幅相多功能芯片]}
+  - {id: PROD_DEF_GAN_PA, type: product, name: 氮化镓功率放大器, name_en: GaN Power Amplifier, segment: SEG_DEF_MIL_IC, aliases: [GaN功放]}
+  - {id: PROD_DEF_MIL_FPGA, type: product, name: 特种FPGA, name_en: Military FPGA, segment: SEG_DEF_MIL_IC, aliases: [军用FPGA]}
+  - {id: PROD_DEF_MIL_PROCESSOR, type: product, name: 特种处理器, name_en: Military Processor, segment: SEG_DEF_MIL_IC, aliases: [特种CPU, 特种DSP]}
+  - {id: PROD_DEF_MIL_ANALOG_IC, type: product, name: 特种模拟芯片, name_en: Military Analog IC, segment: SEG_DEF_MIL_IC, aliases: [军用电源管理芯片, 军用ADC]}
+  - {id: PROD_DEF_MIL_MEMORY, type: product, name: 特种存储器, name_en: Military Memory, segment: SEG_DEF_MIL_IC}
+  - {id: PROD_DEF_MIL_HYBRID_IC, type: product, name: 混合集成电路, name_en: Hybrid Integrated Circuit, segment: SEG_DEF_MIL_IC, aliases: [厚膜混合电路, SiP模块]}
+  - {id: PROD_DEF_MIL_CONNECTOR, type: product, name: 军用连接器, name_en: Military Connector, segment: SEG_DEF_MIL_COMPONENTS, aliases: [特种连接器, 航空插头], parent: PROD_ELEC_CONNECTOR}
+  - {id: PROD_DEF_MIL_MLCC, type: product, name: 军用陶瓷电容, name_en: Military MLCC, segment: SEG_DEF_MIL_COMPONENTS, aliases: [高可靠MLCC], parent: PROD_ELEC_MLCC}
+  - {id: PROD_DEF_TANTALUM_CAPACITOR, type: product, name: 钽电容, name_en: Tantalum Capacitor, segment: SEG_DEF_MIL_COMPONENTS, aliases: [钽电解电容], parent: PROD_ELEC_CAPACITOR}
+  - {id: PROD_DEF_MIL_RELAY, type: product, name: 军用继电器, name_en: Military Relay, segment: SEG_DEF_MIL_COMPONENTS, aliases: [高可靠继电器]}
+  - {id: PROD_DEF_POWER_MODULE, type: product, name: 模块电源, name_en: DC-DC Power Module, segment: SEG_DEF_MIL_COMPONENTS, aliases: [军用电源, DC-DC模块]}
+  - {id: PROD_DEF_MIL_CABLE, type: product, name: 军用线缆, name_en: Military Cable, segment: SEG_DEF_MIL_COMPONENTS, aliases: [特种电缆, 航空线缆]}
+  - {id: PROD_DEF_MIL_CRYSTAL_OSCILLATOR, type: product, name: 军用晶振, name_en: Military Crystal Oscillator, segment: SEG_DEF_MIL_COMPONENTS}
+  - {id: PROD_DEF_INFRARED_DETECTOR, type: product, name: 红外探测器, name_en: Infrared Detector, segment: SEG_DEF_OPTOELECTRONICS, aliases: [制冷红外探测器, 非制冷红外探测器, 非制冷红外, 红外热成像芯片, 红外机芯]}
+  - {id: PROD_DEF_MIL_THERMAL_IMAGER, type: product, name: 军用红外热成像系统, name_en: Military Thermal Imaging System, parent: PROD_MACH_INFRARED_THERMAL_IMAGER, segment: SEG_DEF_OPTOELECTRONICS, aliases: [红外整机]}
+  - {id: PROD_DEF_EO_POD, type: product, name: 光电吊舱, name_en: Electro-Optical Pod, segment: SEG_DEF_OPTOELECTRONICS, aliases: [光电转塔]}
+  - {id: PROD_DEF_NIGHT_VISION, type: product, name: 微光夜视, name_en: Low-Light Night Vision, segment: SEG_DEF_OPTOELECTRONICS, aliases: [夜视仪, 微光像增强器]}
+  - {id: PROD_DEF_LASER_RANGEFINDER, type: product, name: 激光测距与指示器, name_en: Laser Rangefinder and Designator, segment: SEG_DEF_OPTOELECTRONICS, aliases: [激光测距机]}
+  - {id: PROD_DEF_MIL_RADIO, type: product, name: 军用电台, name_en: Military Radio, segment: SEG_DEF_COMMS_NAV, aliases: [战术电台, 软件无线电]}
+  - {id: PROD_DEF_DATA_LINK, type: product, name: 数据链, name_en: Tactical Data Link, segment: SEG_DEF_COMMS_NAV, aliases: [战术数据链]}
+  - {id: PROD_DEF_INERTIAL_NAV, type: product, name: 惯性导航系统, name_en: Inertial Navigation System, segment: SEG_DEF_COMMS_NAV, aliases: [惯导]}
+  - {id: PROD_DEF_FIBER_OPTIC_GYRO, type: product, name: 光纤陀螺, name_en: Fiber-Optic Gyroscope, segment: SEG_DEF_COMMS_NAV}
+  - {id: PROD_DEF_LASER_GYRO, type: product, name: 激光陀螺, name_en: Ring Laser Gyroscope, segment: SEG_DEF_COMMS_NAV}
+  - {id: PROD_DEF_MEMS_INERTIAL, type: product, name: MEMS惯性器件, name_en: MEMS Inertial Sensor, segment: SEG_DEF_COMMS_NAV, aliases: [MEMS陀螺仪, MEMS IMU]}
+  - {id: PROD_DEF_C4ISR, type: product, name: 指挥控制系统, name_en: Command and Control System, segment: SEG_DEF_INFO_SYSTEMS, aliases: [指挥信息系统, C4ISR]}
+  - {id: PROD_DEF_RUGGED_COMPUTER, type: product, name: 加固计算机, name_en: Rugged Computer, segment: SEG_DEF_INFO_SYSTEMS, aliases: [军用计算机]}
+  - {id: PROD_DEF_MIL_SIMULATOR, type: product, name: 军事仿真训练系统, name_en: Military Simulation and Training System, segment: SEG_DEF_INFO_SYSTEMS, aliases: [飞行模拟器, 模拟训练设备]}
+edges:
+  - [SEG_DEF_LAUNCH_VEHICLE, part_of, SEG_DEF_SPACE]
+  - [SEG_DEF_SATELLITE, part_of, SEG_DEF_SPACE]
+  - [SEG_DEF_SATELLITE_APPLICATION, part_of, SEG_DEF_SPACE]
+  - [SEG_DEF_MISSILE, part_of, SEG_DEF_SPACE]
+  - [SEG_DEF_AIRCRAFT, part_of, SEG_DEF_AVIATION]
+  - [SEG_DEF_UAV, part_of, SEG_DEF_AVIATION]
+  - [SEG_DEF_AIRFRAME_PARTS, part_of, SEG_DEF_AVIATION]
+  - [SEG_DEF_AERO_ENGINE, part_of, SEG_DEF_AVIATION]
+  - [SEG_DEF_AIRBORNE_SYSTEMS, part_of, SEG_DEF_AVIATION]
+  - [SEG_DEF_MATERIALS, part_of, SEG_DEF_AVIATION]
+  - [SEG_DEF_SHIPBUILDING, part_of, SEG_DEF_NAVAL]
+  - [SEG_DEF_RADAR, part_of, SEG_DEF_MIL_ELECTRONICS]
+  - [SEG_DEF_MIL_IC, part_of, SEG_DEF_MIL_ELECTRONICS]
+  - [SEG_DEF_MIL_COMPONENTS, part_of, SEG_DEF_MIL_ELECTRONICS]
+  - [SEG_DEF_OPTOELECTRONICS, part_of, SEG_DEF_MIL_ELECTRONICS]
+  - [SEG_DEF_COMMS_NAV, part_of, SEG_DEF_MIL_ELECTRONICS]
+  - [SEG_DEF_INFO_SYSTEMS, part_of, SEG_DEF_MIL_ELECTRONICS]
+  - [SEG_DEF_SPACE, serves, MKT_AEROSPACE]
+  - [SEG_DEF_SPACE, serves, MKT_DEFENSE]
+  - [SEG_DEF_LAUNCH_VEHICLE, serves, MKT_AEROSPACE]
+  - [SEG_DEF_LAUNCH_VEHICLE, serves, MKT_DEFENSE]
+  - [SEG_DEF_SATELLITE, serves, MKT_AEROSPACE]
+  - [SEG_DEF_SATELLITE, serves, MKT_TELECOM_NETWORK]
+  - [SEG_DEF_SATELLITE, serves, MKT_DEFENSE]
+  - [SEG_DEF_SATELLITE_APPLICATION, serves, MKT_AEROSPACE]
+  - [SEG_DEF_SATELLITE_APPLICATION, serves, MKT_TELECOM_NETWORK]
+  - [SEG_DEF_SATELLITE_APPLICATION, serves, MKT_GOVERNMENT]
+  - [SEG_DEF_SATELLITE_APPLICATION, serves, MKT_DEFENSE]
+  - [SEG_DEF_MISSILE, serves, MKT_DEFENSE]
+  - [SEG_DEF_AVIATION, serves, MKT_DEFENSE]
+  - [SEG_DEF_AVIATION, serves, MKT_AEROSPACE]
+  - [SEG_DEF_AIRCRAFT, serves, MKT_DEFENSE]
+  - [SEG_DEF_AIRCRAFT, serves, MKT_AEROSPACE]
+  - [SEG_DEF_AIRCRAFT, serves, MKT_LOW_ALTITUDE]
+  - [SEG_DEF_UAV, serves, MKT_DEFENSE]
+  - [SEG_DEF_UAV, serves, MKT_LOW_ALTITUDE]
+  - [SEG_DEF_AIRFRAME_PARTS, serves, MKT_DEFENSE]
+  - [SEG_DEF_AIRFRAME_PARTS, serves, MKT_AEROSPACE]
+  - [SEG_DEF_AERO_ENGINE, serves, MKT_DEFENSE]
+  - [SEG_DEF_AERO_ENGINE, serves, MKT_AEROSPACE]
+  - [SEG_DEF_AIRBORNE_SYSTEMS, serves, MKT_DEFENSE]
+  - [SEG_DEF_AIRBORNE_SYSTEMS, serves, MKT_AEROSPACE]
+  - [SEG_DEF_AIRBORNE_SYSTEMS, serves, MKT_LOW_ALTITUDE]
+  - [SEG_DEF_MATERIALS, serves, MKT_DEFENSE]
+  - [SEG_DEF_MATERIALS, serves, MKT_AEROSPACE]
+  - [SEG_DEF_MATERIALS, serves, MKT_THERMAL_POWER]
+  - [SEG_DEF_MATERIALS, serves, MKT_HEALTHCARE]
+  - [SEG_DEF_GROUND, serves, MKT_DEFENSE]
+  - [SEG_DEF_NAVAL, serves, MKT_DEFENSE]
+  - [SEG_DEF_NAVAL, serves, MKT_SHIPBUILDING]
+  - [SEG_DEF_SHIPBUILDING, serves, MKT_SHIPBUILDING]
+  - [SEG_DEF_SHIPBUILDING, serves, MKT_LOGISTICS]
+  - [SEG_DEF_SHIPBUILDING, serves, MKT_OIL_GAS]
+  - [SEG_DEF_MIL_ELECTRONICS, serves, MKT_DEFENSE]
+  - [SEG_DEF_MIL_ELECTRONICS, serves, MKT_AEROSPACE]
+  - [SEG_DEF_RADAR, serves, MKT_DEFENSE]
+  - [SEG_DEF_RADAR, serves, MKT_AEROSPACE]
+  - [SEG_DEF_MIL_IC, serves, MKT_DEFENSE]
+  - [SEG_DEF_MIL_IC, serves, MKT_AEROSPACE]
+  - [SEG_DEF_MIL_COMPONENTS, serves, MKT_DEFENSE]
+  - [SEG_DEF_MIL_COMPONENTS, serves, MKT_AEROSPACE]
+  - [SEG_DEF_MIL_COMPONENTS, serves, MKT_EV]
+  - [SEG_DEF_OPTOELECTRONICS, serves, MKT_DEFENSE]
+  - [SEG_DEF_OPTOELECTRONICS, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_DEF_COMMS_NAV, serves, MKT_DEFENSE]
+  - [SEG_DEF_COMMS_NAV, serves, MKT_AEROSPACE]
+  - [SEG_DEF_INFO_SYSTEMS, serves, MKT_DEFENSE]
+  - [PROD_DEF_ROCKET_ENGINE, component_of, PROD_DEF_LAUNCH_VEHICLE]
+  - [PROD_DEF_ROCKET_STRUCTURE, component_of, PROD_DEF_LAUNCH_VEHICLE]
+  - [PROD_DEF_SOLID_ROCKET_MOTOR, component_of, PROD_DEF_MISSILE]
+  - [PROD_DEF_SOLID_ROCKET_MOTOR, component_of, PROD_DEF_LAUNCH_VEHICLE]
+  - [PROD_DEF_INERTIAL_NAV, component_of, PROD_DEF_LAUNCH_VEHICLE]
+  - [PROD_DEF_INERTIAL_NAV, component_of, PROD_DEF_MISSILE]
+  - [PROD_DEF_ROCKET_ENGINE, uses_material, MAT_NICKEL]
+  - [PROD_DEF_ROCKET_ENGINE, uses_material, MAT_TITANIUM]
+  - [PROD_NFM_SUPERALLOY, upstream_of, PROD_DEF_ROCKET_ENGINE]
+  - [PROD_DEF_ROCKET_STRUCTURE, uses_material, MAT_ALUMINUM]
+  - [PROD_DEF_ROCKET_STRUCTURE, uses_material, MAT_CARBON_FIBER]
+  - [PROD_DEF_LAUNCH_VEHICLE, upstream_of, PROD_DEF_LAUNCH_SERVICE]
+  - [PROD_DEF_LAUNCH_SERVICE, used_in, MKT_AEROSPACE]
+  - [PROD_DEF_LAUNCH_VEHICLE, used_in, MKT_AEROSPACE]
+  - [PROD_DEF_LAUNCH_VEHICLE, used_in, MKT_DEFENSE]
+  - [PROD_DEF_REUSABLE_LAUNCH_VEHICLE, substitute_for, PROD_DEF_LAUNCH_VEHICLE]
+  - [TECH_ADDITIVE_MANUFACTURING, enables, PROD_DEF_ROCKET_ENGINE]
+  - [TECH_ADDITIVE_MANUFACTURING, enables, PROD_DEF_AM_PART]
+  - [PROD_DEF_SATELLITE_BUS, component_of, PROD_DEF_SATELLITE]
+  - [PROD_DEF_SATELLITE_PAYLOAD, component_of, PROD_DEF_SATELLITE]
+  - [PROD_DEF_SOLAR_WING, component_of, PROD_DEF_SATELLITE_BUS]
+  - [PROD_DEF_SAT_PROPULSION, component_of, PROD_DEF_SATELLITE_BUS]
+  - [PROD_DEF_ATTITUDE_CONTROL, component_of, PROD_DEF_SATELLITE_BUS]
+  - [PROD_DEF_SOLAR_WING, uses_material, MAT_GALLIUM_GERMANIUM]
+  - [PROD_DEF_SAT_PHASED_ARRAY, component_of, PROD_DEF_LEO_COMM_SATELLITE]
+  - [PROD_DEF_LASER_COMM_TERMINAL, component_of, PROD_DEF_LEO_COMM_SATELLITE]
+  - [PROD_DEF_TR_MODULE, component_of, PROD_DEF_SAT_PHASED_ARRAY]
+  - [PROD_DEF_SATELLITE, upstream_of, PROD_DEF_LAUNCH_SERVICE]
+  - [PROD_DEF_LAUNCH_SERVICE, upstream_of, PROD_DEF_SATELLITE_OPERATION]
+  - [PROD_DEF_SATELLITE, upstream_of, PROD_DEF_SATELLITE_OPERATION]
+  - [PROD_DEF_LEO_COMM_SATELLITE, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_DEF_LEO_COMM_SATELLITE, used_in, MKT_AEROSPACE]
+  - [PROD_DEF_REMOTE_SENSING_SATELLITE, upstream_of, PROD_DEF_REMOTE_SENSING_DATA]
+  - [PROD_DEF_REMOTE_SENSING_DATA, used_in, MKT_GOVERNMENT]
+  - [PROD_DEF_REMOTE_SENSING_DATA, used_in, MKT_AGRICULTURE]
+  - [PROD_DEF_REMOTE_SENSING_DATA, used_in, MKT_DEFENSE]
+  - [PROD_DEF_NAV_SATELLITE, used_in, MKT_AEROSPACE]
+  - [PROD_DEF_NAV_SATELLITE, used_in, MKT_DEFENSE]
+  - [TECH_5G6G, enables, PROD_DEF_LEO_COMM_SATELLITE]
+  - [TECH_5G6G, enables, PROD_DEF_SATCOM_TERMINAL]
+  - [PROD_DEF_SATELLITE_OPERATION, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_DEF_SATCOM_TERMINAL, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_DEF_SATCOM_TERMINAL, used_in, MKT_SMARTPHONE]
+  - [PROD_DEF_SATCOM_TERMINAL, used_in, MKT_DEFENSE]
+  - [PROD_DEF_SATCOM_TERMINAL, used_in, MKT_SHIPBUILDING]
+  - [PROD_DEF_SATCOM_GROUND_STATION, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_DEF_SATCOM_GROUND_STATION, used_in, MKT_AEROSPACE]
+  - [PROD_DEF_BEIDOU_CHIP_MODULE, component_of, PROD_DEF_BEIDOU_TERMINAL]
+  - [PROD_DEF_BEIDOU_CHIP_MODULE, used_in, MKT_SMARTPHONE]
+  - [PROD_DEF_BEIDOU_CHIP_MODULE, used_in, MKT_EV]
+  - [PROD_DEF_BEIDOU_CHIP_MODULE, used_in, MKT_AGRICULTURE]
+  - [PROD_DEF_BEIDOU_TERMINAL, used_in, MKT_DEFENSE]
+  - [PROD_DEF_BEIDOU_TERMINAL, used_in, MKT_GOVERNMENT]
+  - [PROD_DEF_BEIDOU_TERMINAL, used_in, MKT_LOGISTICS]
+  - [PROD_DEF_BEIDOU_CHIP_MODULE, component_of, PROD_MACH_SURVEYING_INSTRUMENT]
+  - [PROD_DEF_SEEKER, component_of, PROD_DEF_MISSILE]
+  - [PROD_DEF_SEEKER, component_of, PROD_DEF_PRECISION_MUNITION]
+  - [PROD_DEF_CONTROL_ACTUATOR, component_of, PROD_DEF_MISSILE]
+  - [PROD_DEF_CONTROL_ACTUATOR, component_of, PROD_DEF_PRECISION_MUNITION]
+  - [PROD_DEF_INFRARED_DETECTOR, component_of, PROD_DEF_SEEKER]
+  - [PROD_DEF_TR_MODULE, component_of, PROD_DEF_SEEKER]
+  - [PROD_DEF_MIL_FPGA, component_of, PROD_DEF_SEEKER]
+  - [PROD_DEF_ENERGETIC_MATERIAL, upstream_of, PROD_DEF_SOLID_ROCKET_MOTOR]
+  - [PROD_DEF_ENERGETIC_MATERIAL, upstream_of, PROD_DEF_AMMUNITION]
+  - [PROD_DEF_FUZE, component_of, PROD_DEF_AMMUNITION]
+  - [PROD_DEF_FUZE, component_of, PROD_DEF_MISSILE]
+  - [PROD_DEF_MISSILE, used_in, MKT_DEFENSE]
+  - [PROD_DEF_PRECISION_MUNITION, used_in, MKT_DEFENSE]
+  - [PROD_DEF_AIR_TO_AIR_MISSILE, used_in, PROD_DEF_FIGHTER]
+  - [PROD_MACH_PLANETARY_ROLLER_SCREW, component_of, PROD_DEF_CONTROL_ACTUATOR]
+  - [PROD_DEF_CF_COMPOSITE, component_of, PROD_DEF_MISSILE]
+  - [PROD_DEF_AERO_ENGINE, component_of, PROD_DEF_FIGHTER]
+  - [PROD_DEF_AERO_ENGINE, component_of, PROD_DEF_TRANSPORT_AIRCRAFT]
+  - [PROD_DEF_AERO_ENGINE, component_of, PROD_DEF_TRAINER_AIRCRAFT]
+  - [PROD_DEF_AERO_ENGINE, component_of, PROD_DEF_MIL_UAV]
+  - [PROD_DEF_TURBOFAN, component_of, PROD_DEF_FIGHTER]
+  - [PROD_DEF_TURBOFAN, component_of, PROD_DEF_TRANSPORT_AIRCRAFT]
+  - [PROD_DEF_TURBOFAN, component_of, PROD_DEF_COMMERCIAL_AIRLINER]
+  - [PROD_DEF_TURBOSHAFT, component_of, PROD_DEF_HELICOPTER]
+  - [PROD_DEF_AIRFRAME_STRUCTURAL_PART, component_of, PROD_DEF_AIRFRAME_ASSEMBLY]
+  - [PROD_DEF_AIRFRAME_ASSEMBLY, component_of, PROD_DEF_FIGHTER]
+  - [PROD_DEF_AIRFRAME_ASSEMBLY, component_of, PROD_DEF_TRANSPORT_AIRCRAFT]
+  - [PROD_DEF_AIRFRAME_ASSEMBLY, component_of, PROD_DEF_COMMERCIAL_AIRLINER]
+  - [PROD_DEF_AIRFRAME_ASSEMBLY, component_of, PROD_DEF_HELICOPTER]
+  - [PROD_DEF_LANDING_GEAR, component_of, PROD_DEF_FIGHTER]
+  - [PROD_DEF_LANDING_GEAR, component_of, PROD_DEF_TRANSPORT_AIRCRAFT]
+  - [PROD_DEF_LANDING_GEAR, component_of, PROD_DEF_COMMERCIAL_AIRLINER]
+  - [PROD_DEF_AVIONICS, component_of, PROD_DEF_FIGHTER]
+  - [PROD_DEF_AVIONICS, component_of, PROD_DEF_TRANSPORT_AIRCRAFT]
+  - [PROD_DEF_AVIONICS, component_of, PROD_DEF_COMMERCIAL_AIRLINER]
+  - [PROD_DEF_AVIONICS, component_of, PROD_DEF_HELICOPTER]
+  - [PROD_DEF_FLIGHT_CONTROL, component_of, PROD_DEF_FIGHTER]
+  - [PROD_DEF_FLIGHT_CONTROL, component_of, PROD_DEF_COMMERCIAL_AIRLINER]
+  - [PROD_DEF_FLIGHT_CONTROL, component_of, PROD_DEF_MIL_UAV]
+  - [PROD_DEF_FLIGHT_CONTROL, component_of, PROD_DEF_INDUSTRIAL_UAV]
+  - [PROD_DEF_FLIGHT_CONTROL, component_of, PROD_DEF_EVTOL_AIRCRAFT]
+  - [PROD_DEF_AIRCRAFT_HYDRAULIC, component_of, PROD_DEF_FIGHTER]
+  - [PROD_DEF_AIRCRAFT_HYDRAULIC, component_of, PROD_DEF_TRANSPORT_AIRCRAFT]
+  - [PROD_DEF_AIRCRAFT_HYDRAULIC, component_of, PROD_DEF_COMMERCIAL_AIRLINER]
+  - [PROD_DEF_ENVIRONMENTAL_CONTROL, component_of, PROD_DEF_FIGHTER]
+  - [PROD_DEF_ENVIRONMENTAL_CONTROL, component_of, PROD_DEF_TRANSPORT_AIRCRAFT]
+  - [PROD_DEF_ENVIRONMENTAL_CONTROL, component_of, PROD_DEF_COMMERCIAL_AIRLINER]
+  - [PROD_DEF_AIRCRAFT_POWER, component_of, PROD_DEF_FIGHTER]
+  - [PROD_DEF_AIRCRAFT_POWER, component_of, PROD_DEF_TRANSPORT_AIRCRAFT]
+  - [PROD_DEF_ESCAPE_SYSTEM, component_of, PROD_DEF_FIGHTER]
+  - [PROD_DEF_ESCAPE_SYSTEM, component_of, PROD_DEF_TRAINER_AIRCRAFT]
+  - [PROD_DEF_PHASED_ARRAY_RADAR, component_of, PROD_DEF_FIGHTER]
+  - [PROD_DEF_PHASED_ARRAY_RADAR, component_of, PROD_DEF_SPECIAL_MISSION_AIRCRAFT]
+  - [PROD_DEF_PHASED_ARRAY_RADAR, component_of, PROD_DEF_WARSHIP]
+  - [PROD_DEF_EO_POD, component_of, PROD_DEF_MIL_UAV]
+  - [PROD_DEF_EO_POD, component_of, PROD_DEF_HELICOPTER]
+  - [PROD_DEF_EO_POD, component_of, PROD_DEF_FIGHTER]
+  - [PROD_DEF_FIGHTER, used_in, MKT_DEFENSE]
+  - [PROD_DEF_TRANSPORT_AIRCRAFT, used_in, MKT_DEFENSE]
+  - [PROD_DEF_SPECIAL_MISSION_AIRCRAFT, used_in, MKT_DEFENSE]
+  - [PROD_DEF_TRAINER_AIRCRAFT, used_in, MKT_DEFENSE]
+  - [PROD_DEF_HELICOPTER, used_in, MKT_DEFENSE]
+  - [PROD_DEF_HELICOPTER, used_in, MKT_LOW_ALTITUDE]
+  - [PROD_DEF_COMMERCIAL_AIRLINER, used_in, MKT_AEROSPACE]
+  - [PROD_DEF_EVTOL_AIRCRAFT, used_in, MKT_LOW_ALTITUDE]
+  - [PROD_DEF_GENERAL_AVIATION_AIRCRAFT, used_in, MKT_LOW_ALTITUDE]
+  - [PROD_DEF_AERO_MRO, used_in, MKT_AEROSPACE]
+  - [PROD_DEF_AERO_MRO, used_in, MKT_DEFENSE]
+  - [PROD_DEF_AERO_ENGINE, upstream_of, PROD_DEF_AERO_MRO]
+  - [PROD_DEF_MIL_UAV, used_in, MKT_DEFENSE]
+  - [PROD_DEF_INDUSTRIAL_UAV, used_in, MKT_LOW_ALTITUDE]
+  - [PROD_DEF_INDUSTRIAL_UAV, used_in, MKT_LOGISTICS]
+  - [PROD_DEF_INDUSTRIAL_UAV, used_in, MKT_POWER_GRID]
+  - [PROD_DEF_TARGET_DRONE, used_in, MKT_DEFENSE]
+  - [PROD_DEF_MIL_UAV, uses_material, MAT_CARBON_FIBER]
+  - [PROD_DEF_INDUSTRIAL_UAV, uses_material, MAT_CARBON_FIBER]
+  - [PROD_DEF_DATA_LINK, component_of, PROD_DEF_MIL_UAV]
+  - [PROD_DEF_TITANIUM_ALLOY, upstream_of, PROD_DEF_TITANIUM_STRUCTURAL_PART]
+  - [PROD_DEF_TITANIUM_ALLOY, upstream_of, PROD_DEF_AERO_FORGING]
+  - [PROD_DEF_TITANIUM_ALLOY, upstream_of, PROD_DEF_AERO_FASTENER]
+  - [PROD_DEF_CF_COMPOSITE, upstream_of, PROD_DEF_COMPOSITE_STRUCTURAL_PART]
+  - [PROD_DEF_AERO_ALUMINUM, upstream_of, PROD_DEF_AIRFRAME_STRUCTURAL_PART]
+  - [PROD_DEF_TITANIUM_STRUCTURAL_PART, uses_material, MAT_TITANIUM]
+  - [PROD_DEF_COMPOSITE_STRUCTURAL_PART, uses_material, MAT_CARBON_FIBER]
+  - [PROD_DEF_COMPOSITE_STRUCTURAL_PART, uses_material, MAT_EPOXY_RESIN]
+  - [PROD_DEF_AIRFRAME_STRUCTURAL_PART, used_in, MKT_DEFENSE]
+  - [PROD_DEF_AIRFRAME_STRUCTURAL_PART, used_in, MKT_AEROSPACE]
+  - [PROD_MACH_FIVE_AXIS_MC, used_in, PROD_DEF_AIRFRAME_STRUCTURAL_PART]
+  - [PROD_MACH_FIVE_AXIS_MC, used_in, PROD_DEF_ENGINE_BLADE]
+  - [PROD_DEF_LANDING_GEAR, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_DEF_LANDING_GEAR, uses_material, MAT_TITANIUM]
+  - [PROD_DEF_AERO_FORGING, component_of, PROD_DEF_LANDING_GEAR]
+  - [PROD_DEF_AERO_FASTENER, component_of, PROD_DEF_AIRFRAME_ASSEMBLY]
+  - [PROD_DEF_AERO_FASTENER, uses_material, MAT_TITANIUM]
+  - [PROD_DEF_AERO_FASTENER, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_DEF_AERO_BEARING, component_of, PROD_DEF_AERO_ENGINE]
+  - [PROD_DEF_AERO_BEARING, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_DEF_ENGINE_BLADE, component_of, PROD_DEF_AERO_ENGINE]
+  - [PROD_DEF_ENGINE_DISC, component_of, PROD_DEF_AERO_ENGINE]
+  - [PROD_DEF_ENGINE_CASING, component_of, PROD_DEF_AERO_ENGINE]
+  - [PROD_DEF_COMBUSTOR, component_of, PROD_DEF_AERO_ENGINE]
+  - [PROD_DEF_ENGINE_CONTROL, component_of, PROD_DEF_AERO_ENGINE]
+  - [PROD_DEF_AERO_CASTING, upstream_of, PROD_DEF_SINGLE_CRYSTAL_BLADE]
+  - [PROD_DEF_AERO_CASTING, upstream_of, PROD_DEF_ENGINE_CASING]
+  - [PROD_DEF_AERO_FORGING, upstream_of, PROD_DEF_ENGINE_DISC]
+  - [PROD_DEF_AERO_FORGING, upstream_of, PROD_DEF_ENGINE_CASING]
+  - [PROD_NFM_SUPERALLOY, upstream_of, PROD_DEF_AERO_CASTING]
+  - [PROD_NFM_SUPERALLOY, upstream_of, PROD_DEF_AERO_FORGING]
+  - [PROD_NFM_SUPERALLOY, upstream_of, PROD_DEF_COMBUSTOR]
+  - [PROD_NFM_CAST_SUPERALLOY, upstream_of, PROD_DEF_AERO_CASTING]
+  - [PROD_NFM_PM_SUPERALLOY, upstream_of, PROD_DEF_ENGINE_DISC]
+  - [PROD_DEF_CMC, component_of, PROD_DEF_ENGINE_BLADE]
+  - [PROD_DEF_CMC, component_of, PROD_DEF_COMBUSTOR]
+  - [PROD_DEF_SIC_FIBER, upstream_of, PROD_DEF_CMC]
+  - [PROD_NFM_SUPERALLOY, uses_material, MAT_MOLYBDENUM]
+  - [PROD_NFM_SUPERALLOY, uses_material, MAT_TUNGSTEN]
+  - [PROD_DEF_TITANIUM_ALLOY, uses_material, MAT_TITANIUM]
+  - [PROD_DEF_TITANIUM_ALLOY, uses_material, MAT_ALUMINUM]
+  - [PROD_DEF_AERO_ENGINE, used_in, MKT_DEFENSE]
+  - [PROD_DEF_AERO_ENGINE, used_in, MKT_AEROSPACE]
+  - [PROD_NFM_SUPERALLOY, used_in, PROD_PWR_GAS_TURBINE]
+  - [PROD_DEF_TITANIUM_ALLOY, used_in, MKT_HEALTHCARE]
+  - [PROD_DEF_TITANIUM_ALLOY, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_DEF_TITANIUM_ALLOY, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_DEF_MARINE_GAS_TURBINE, component_of, PROD_DEF_WARSHIP]
+  - [PROD_DEF_ENGINE_BLADE, component_of, PROD_DEF_MARINE_GAS_TURBINE]
+  - [PROD_DEF_CARBON_FIBER_PREPREG, uses_material, MAT_CARBON_FIBER]
+  - [PROD_DEF_CARBON_FIBER_PREPREG, uses_material, MAT_EPOXY_RESIN]
+  - [PROD_DEF_CARBON_FIBER_PREPREG, upstream_of, PROD_DEF_CF_COMPOSITE]
+  - [PROD_DEF_CF_COMPOSITE, used_in, MKT_AEROSPACE]
+  - [PROD_DEF_CF_COMPOSITE, used_in, MKT_WIND]
+  - [PROD_DEF_CF_COMPOSITE, used_in, MKT_LOW_ALTITUDE]
+  - [PROD_DEF_CF_COMPOSITE, used_in, MKT_DEFENSE]
+  - [PROD_DEF_STEALTH_MATERIAL, used_in, PROD_DEF_FIGHTER]
+  - [PROD_DEF_STEALTH_MATERIAL, used_in, PROD_DEF_WARSHIP]
+  - [PROD_DEF_STEALTH_MATERIAL, used_in, PROD_DEF_MISSILE]
+  - [PROD_DEF_AERO_ALUMINUM, uses_material, MAT_ALUMINUM]
+  - [PROD_DEF_AM_PART, uses_material, MAT_TITANIUM]
+  - [PROD_DEF_AM_PART, uses_material, MAT_NICKEL]
+  - [PROD_MACH_ADDITIVE_MFG_EQUIP, upstream_of, PROD_DEF_AM_PART]
+  - [PROD_DEF_AM_PART, used_in, MKT_AEROSPACE]
+  - [PROD_DEF_AM_PART, used_in, MKT_DEFENSE]
+  - [PROD_DEF_TITANIUM_ALLOY, upstream_of, PROD_MACH_PRESSURE_VESSEL]
+  - [PROD_DEF_ARMORED_VEHICLE, used_in, MKT_DEFENSE]
+  - [PROD_DEF_ARTILLERY, used_in, MKT_DEFENSE]
+  - [PROD_DEF_AMMUNITION, used_in, MKT_DEFENSE]
+  - [PROD_DEF_SMALL_ARMS, used_in, MKT_DEFENSE]
+  - [PROD_DEF_MIL_TRUCK, used_in, MKT_DEFENSE]
+  - [PROD_DEF_ARMOR_PROTECTION, component_of, PROD_DEF_ARMORED_VEHICLE]
+  - [PROD_DEF_ARMOR_PROTECTION, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_DEF_ARMOR_PROTECTION, uses_material, MAT_TITANIUM]
+  - [PROD_DEF_ARMORED_VEHICLE, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_DEF_ARTILLERY, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_DEF_AMMUNITION, uses_material, MAT_COPPER]
+  - [PROD_DEF_AMMUNITION, uses_material, MAT_TUNGSTEN]
+  - [PROD_DEF_AMMUNITION, uses_material, MAT_STEEL]
+  - [PROD_DEF_ENERGETIC_MATERIAL, used_in, MKT_MINING]
+  - [PROD_DEF_MIL_THERMAL_IMAGER, component_of, PROD_DEF_ARMORED_VEHICLE]
+  - [PROD_DEF_NIGHT_VISION, used_in, MKT_DEFENSE]
+  - [PROD_DEF_SONAR, component_of, PROD_DEF_SUBMARINE]
+  - [PROD_DEF_SONAR, component_of, PROD_DEF_WARSHIP]
+  - [PROD_DEF_SONAR, component_of, PROD_DEF_UUV]
+  - [PROD_DEF_TORPEDO, used_in, PROD_DEF_SUBMARINE]
+  - [PROD_DEF_MARINE_DIESEL, component_of, PROD_DEF_COMMERCIAL_SHIP]
+  - [PROD_DEF_MARINE_DIESEL, component_of, PROD_DEF_AMPHIBIOUS_SHIP]
+  - [PROD_DEF_SHIP_PROPELLER, component_of, PROD_DEF_COMMERCIAL_SHIP]
+  - [PROD_DEF_SHIP_PROPELLER, component_of, PROD_DEF_WARSHIP]
+  - [PROD_DEF_WARSHIP, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_DEF_SUBMARINE, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_DEF_SUBMARINE, uses_material, MAT_TITANIUM]
+  - [PROD_DEF_COMMERCIAL_SHIP, uses_material, MAT_STEEL]
+  - [PROD_DEF_LNG_CARRIER, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_DEF_WARSHIP, used_in, MKT_DEFENSE]
+  - [PROD_DEF_SUBMARINE, used_in, MKT_DEFENSE]
+  - [PROD_DEF_UUV, used_in, MKT_DEFENSE]
+  - [PROD_DEF_UUV, used_in, MKT_OIL_GAS]
+  - [PROD_DEF_USV, used_in, MKT_DEFENSE]
+  - [PROD_DEF_COMMERCIAL_SHIP, used_in, MKT_LOGISTICS]
+  - [PROD_DEF_COMMERCIAL_SHIP, used_in, MKT_SHIPBUILDING]
+  - [PROD_DEF_LNG_CARRIER, used_in, MKT_OIL_GAS]
+  - [PROD_DEF_OIL_TANKER, used_in, MKT_OIL_GAS]
+  - [PROD_DEF_SHIP_REPAIR, used_in, MKT_SHIPBUILDING]
+  - [PROD_DEF_SHIP_REPAIR, used_in, MKT_LOGISTICS]
+  - [PROD_DEF_MARINE_DIESEL, used_in, MKT_SHIPBUILDING]
+  - [PROD_MACH_LNG_EQUIPMENT, component_of, PROD_DEF_LNG_CARRIER]
+  - [PROD_MACH_CRYOGENIC_VALVE, component_of, PROD_DEF_LNG_CARRIER]
+  - [PROD_DEF_TR_CHIP, component_of, PROD_DEF_TR_MODULE]
+  - [PROD_DEF_GAN_PA, component_of, PROD_DEF_TR_MODULE]
+  - [PROD_DEF_TR_MODULE, component_of, PROD_DEF_PHASED_ARRAY_RADAR]
+  - [PROD_DEF_MICROWAVE_COMPONENT, component_of, PROD_DEF_RADAR]
+  - [PROD_DEF_MICROWAVE_COMPONENT, component_of, PROD_DEF_EW_SYSTEM]
+  - [TECH_SIC_GAN, enables, PROD_DEF_GAN_PA]
+  - [TECH_SIC_GAN, enables, PROD_DEF_TR_CHIP]
+  - [PROD_DEF_GAN_PA, uses_material, MAT_GALLIUM_GERMANIUM]
+  - [PROD_DEF_RADAR, used_in, MKT_DEFENSE]
+  - [PROD_DEF_RADAR, used_in, MKT_AEROSPACE]
+  - [PROD_DEF_PHASED_ARRAY_RADAR, used_in, MKT_DEFENSE]
+  - [PROD_DEF_EW_SYSTEM, component_of, PROD_DEF_SPECIAL_MISSION_AIRCRAFT]
+  - [PROD_DEF_EW_SYSTEM, used_in, MKT_DEFENSE]
+  - [PROD_DEF_MIL_FPGA, component_of, PROD_DEF_RADAR]
+  - [PROD_DEF_MIL_FPGA, component_of, PROD_DEF_MIL_RADIO]
+  - [PROD_DEF_MIL_PROCESSOR, component_of, PROD_DEF_RUGGED_COMPUTER]
+  - [PROD_DEF_MIL_PROCESSOR, component_of, PROD_DEF_AVIONICS]
+  - [PROD_DEF_MIL_ANALOG_IC, component_of, PROD_DEF_RADAR]
+  - [PROD_DEF_MIL_ANALOG_IC, component_of, PROD_DEF_AVIONICS]
+  - [PROD_DEF_MIL_MEMORY, component_of, PROD_DEF_RUGGED_COMPUTER]
+  - [PROD_DEF_MIL_HYBRID_IC, component_of, PROD_DEF_AVIONICS]
+  - [PROD_DEF_MIL_HYBRID_IC, component_of, PROD_DEF_MISSILE]
+  - [PROD_DEF_MIL_CONNECTOR, component_of, PROD_DEF_AVIONICS]
+  - [PROD_DEF_MIL_CONNECTOR, component_of, PROD_DEF_RADAR]
+  - [PROD_DEF_MIL_CONNECTOR, component_of, PROD_DEF_MISSILE]
+  - [PROD_DEF_MIL_CONNECTOR, component_of, PROD_DEF_SATELLITE]
+  - [PROD_DEF_MIL_CONNECTOR, uses_material, MAT_COPPER]
+  - [PROD_DEF_MIL_CONNECTOR, uses_material, MAT_GOLD]
+  - [PROD_DEF_MIL_MLCC, component_of, PROD_DEF_AVIONICS]
+  - [PROD_DEF_MIL_MLCC, component_of, PROD_DEF_RADAR]
+  - [PROD_DEF_TANTALUM_CAPACITOR, component_of, PROD_DEF_AVIONICS]
+  - [PROD_DEF_TANTALUM_CAPACITOR, component_of, PROD_DEF_RADAR]
+  - [PROD_DEF_MIL_RELAY, component_of, PROD_DEF_AIRCRAFT_POWER]
+  - [PROD_DEF_POWER_MODULE, component_of, PROD_DEF_RADAR]
+  - [PROD_DEF_POWER_MODULE, component_of, PROD_DEF_AVIONICS]
+  - [PROD_DEF_MIL_CABLE, component_of, PROD_DEF_FIGHTER]
+  - [PROD_DEF_MIL_CABLE, component_of, PROD_DEF_SATELLITE]
+  - [PROD_DEF_MIL_CABLE, uses_material, MAT_COPPER]
+  - [PROD_DEF_MIL_CRYSTAL_OSCILLATOR, component_of, PROD_DEF_MIL_RADIO]
+  - [PROD_DEF_MIL_CRYSTAL_OSCILLATOR, component_of, PROD_DEF_RADAR]
+  - [PROD_DEF_MIL_CONNECTOR, used_in, MKT_EV]
+  - [PROD_DEF_MIL_MLCC, used_in, MKT_AEROSPACE]
+  - [PROD_DEF_INFRARED_DETECTOR, component_of, PROD_DEF_MIL_THERMAL_IMAGER]
+  - [PROD_DEF_INFRARED_DETECTOR, component_of, PROD_MACH_INFRARED_THERMAL_IMAGER]
+  - [PROD_DEF_INFRARED_DETECTOR, component_of, PROD_DEF_EO_POD]
+  - [PROD_DEF_INFRARED_DETECTOR, uses_material, MAT_GALLIUM_GERMANIUM]
+  - [PROD_DEF_INFRARED_DETECTOR, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_DEF_LASER_RANGEFINDER, component_of, PROD_DEF_EO_POD]
+  - [PROD_DEF_EO_POD, used_in, MKT_DEFENSE]
+  - [PROD_DEF_EO_POD, used_in, MKT_LOW_ALTITUDE]
+  - [PROD_DEF_FIBER_OPTIC_GYRO, component_of, PROD_DEF_INERTIAL_NAV]
+  - [PROD_DEF_LASER_GYRO, component_of, PROD_DEF_INERTIAL_NAV]
+  - [PROD_DEF_MEMS_INERTIAL, component_of, PROD_DEF_INERTIAL_NAV]
+  - [PROD_DEF_MEMS_INERTIAL, component_of, PROD_DEF_PRECISION_MUNITION]
+  - [PROD_DEF_INERTIAL_NAV, component_of, PROD_DEF_FIGHTER]
+  - [PROD_DEF_INERTIAL_NAV, component_of, PROD_DEF_WARSHIP]
+  - [PROD_DEF_INERTIAL_NAV, component_of, PROD_DEF_SUBMARINE]
+  - [PROD_DEF_FIBER_OPTIC_GYRO, substitute_for, PROD_DEF_LASER_GYRO]
+  - [PROD_DEF_MIL_RADIO, used_in, MKT_DEFENSE]
+  - [PROD_DEF_DATA_LINK, used_in, MKT_DEFENSE]
+  - [PROD_DEF_MEMS_INERTIAL, used_in, MKT_EV]
+  - [PROD_DEF_MEMS_INERTIAL, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_DEF_C4ISR, used_in, MKT_DEFENSE]
+  - [PROD_DEF_RUGGED_COMPUTER, component_of, PROD_DEF_C4ISR]
+  - [PROD_DEF_MIL_RADIO, component_of, PROD_DEF_C4ISR]
+  - [PROD_DEF_MIL_SIMULATOR, used_in, MKT_DEFENSE]
+  - [PROD_DEF_MIL_SIMULATOR, used_in, MKT_AEROSPACE]
+  - [TECH_AI_LARGE_MODEL, enables, PROD_DEF_C4ISR]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_DEF_BEIDOU_CHIP_MODULE, component_of, PROD_ELEC_PHONE_DEVICE]
+  - [PROD_DEF_BEIDOU_CHIP_MODULE, component_of, PROD_AUTO_GNSS_IMU]
+  - [PROD_DEF_INFRARED_DETECTOR, component_of, PROD_AUTO_ADAS_SOLUTION]
+  - [PROD_DEF_SATCOM_TERMINAL, used_in, PROD_COMM_SATCOM_SERVICE]
+sw_l3_map:
+  "650101": [SEG_DEF_SPACE, SEG_DEF_LAUNCH_VEHICLE, SEG_DEF_SATELLITE, SEG_DEF_SATELLITE_APPLICATION, SEG_DEF_MISSILE]
+  "650201": [SEG_DEF_AVIATION, SEG_DEF_AIRCRAFT, SEG_DEF_UAV, SEG_DEF_AIRFRAME_PARTS, SEG_DEF_AERO_ENGINE, SEG_DEF_AIRBORNE_SYSTEMS, SEG_DEF_MATERIALS]
+  "650301": [SEG_DEF_GROUND, SEG_DEF_MISSILE]
+  "650401": [SEG_DEF_NAVAL, SEG_DEF_SHIPBUILDING]
+  "650501": [SEG_DEF_MIL_ELECTRONICS, SEG_DEF_RADAR, SEG_DEF_MIL_IC, SEG_DEF_MIL_COMPONENTS, SEG_DEF_OPTOELECTRONICS, SEG_DEF_COMMS_NAV, SEG_DEF_INFO_SYSTEMS]

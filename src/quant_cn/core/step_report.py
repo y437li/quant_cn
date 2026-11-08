@@ -43,6 +43,7 @@ class StepReport:
         pipeline.UniverseStep          -- injected type or call
         pipeline.EvaluationStep        -- injected type or call
         pipeline.FeatureStep           -- injected type or call
+        data_loading.DocumentDownloader  -- returned per source run
 
     Test cases:
         TC-BF-001  fetch run counts fetched/skipped/empty correctly

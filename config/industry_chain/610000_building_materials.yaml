@@ -1,0 +1,316 @@
+# 建筑材料 (SW 610000) product taxonomy — plan 12 phase 1, D-097. All edges are priors (source: prior).
+# MAT_CEMENT, MAT_FLAT_GLASS and MAT_GLASS_FIBER are _common materials; here are the products companies report.
+# PV glass, lithium-battery separators and auto glass belong to other sectors.
+
+sector: {sw_l1: "610000", name: 建筑材料, name_en: Building Materials}
+
+nodes:
+  # ---------------- segments ----------------
+  - {id: SEG_BM_CEMENT, type: segment, name: 水泥制造, name_en: Cement Manufacturing}
+  - {id: SEG_BM_AGGREGATES, type: segment, name: 砂石骨料, name_en: Aggregates, parent: SEG_BM_CEMENT}
+  - {id: SEG_BM_CEMENT_PRODUCTS, type: segment, name: 水泥制品, name_en: Cement and Concrete Products, aliases: [混凝土制品]}
+  - {id: SEG_BM_GLASS, type: segment, name: 玻璃制造, name_en: Glass Manufacturing}
+  - {id: SEG_BM_GLASS_FIBER, type: segment, name: 玻纤制造, name_en: Glass Fiber Manufacturing, aliases: [玻纤及复合材料]}
+  - {id: SEG_BM_DECORATIVE, type: segment, name: 装修建材, name_en: Decoration Building Materials, aliases: [消费建材]}
+  - {id: SEG_BM_REFRACTORY, type: segment, name: 耐火材料, name_en: Refractories, parent: SEG_BM_DECORATIVE}
+  - {id: SEG_BM_PIPES, type: segment, name: 塑料管材管件, name_en: Plastic Pipes and Fittings, parent: SEG_BM_DECORATIVE}
+  - {id: SEG_BM_WATERPROOF, type: segment, name: 防水材料, name_en: Waterproofing Materials, parent: SEG_BM_DECORATIVE}
+  - {id: SEG_BM_COATINGS, type: segment, name: 建筑涂料与辅材, name_en: Architectural Coatings and Auxiliaries, parent: SEG_BM_DECORATIVE}
+  - {id: SEG_BM_GYPSUM_BOARD, type: segment, name: 石膏板与轻质建材, name_en: Gypsum Board and Light Building Materials, parent: SEG_BM_DECORATIVE}
+  - {id: SEG_BM_CERAMICS, type: segment, name: 建筑陶瓷, name_en: Building Ceramics, parent: SEG_BM_DECORATIVE}
+  - {id: SEG_BM_INSULATION, type: segment, name: 保温隔热材料, name_en: Thermal Insulation Materials, parent: SEG_BM_DECORATIVE}
+  - {id: SEG_BM_ADMIXTURE, type: segment, name: 混凝土外加剂, name_en: Concrete Admixtures, parent: SEG_BM_DECORATIVE}
+
+  # ---------------- cement ----------------
+  - {id: PROD_BM_LIMESTONE, type: product, name: 水泥用石灰石, name_en: Cement-Grade Limestone, segment: SEG_BM_CEMENT, aliases: [石灰石矿]}
+  - {id: PROD_BM_CLINKER, type: product, name: 水泥熟料, name_en: Cement Clinker, segment: SEG_BM_CEMENT, aliases: [熟料]}
+  - {id: PROD_BM_OPC, type: product, name: 通用硅酸盐水泥, name_en: Ordinary Portland Cement, segment: SEG_BM_CEMENT, aliases: [普通硅酸盐水泥, 散装水泥, 袋装水泥]}
+  - {id: PROD_BM_SPECIAL_CEMENT, type: product, name: 特种水泥, name_en: Specialty Cement, segment: SEG_BM_CEMENT, aliases: [油井水泥, 低热水泥, 白水泥]}
+  - {id: PROD_BM_SLAG_POWDER, type: product, name: 矿渣微粉, name_en: Ground Granulated Slag, segment: SEG_BM_CEMENT, aliases: [矿粉, 粉煤灰]}
+  - {id: PROD_BM_AGGREGATE, type: product, name: 骨料, name_en: Aggregate, segment: SEG_BM_AGGREGATES, aliases: [碎石, 建筑石料]}
+  - {id: PROD_BM_MANUFACTURED_SAND, type: product, name: 机制砂, name_en: Manufactured Sand, parent: PROD_BM_AGGREGATE, segment: SEG_BM_AGGREGATES}
+  - {id: PROD_BM_KILN_CO_PROCESSING, type: product, kind: service, name: 水泥窑协同处置, name_en: Cement Kiln Co-Processing, segment: SEG_BM_CEMENT, aliases: [协同处置固废危废]}
+
+  # ---------------- cement products ----------------
+  - {id: PROD_BM_RMC, type: product, name: 商品混凝土, name_en: Ready-Mixed Concrete, segment: SEG_BM_CEMENT_PRODUCTS, aliases: [预拌混凝土, 商混]}
+  - {id: PROD_BM_DRY_MORTAR, type: product, name: 预拌干混砂浆, name_en: Dry-Mix Mortar, segment: SEG_BM_CEMENT_PRODUCTS, aliases: [干混砂浆, 特种砂浆]}
+  - {id: PROD_BM_PRECAST_COMPONENT, type: product, name: 预制混凝土构件, name_en: Precast Concrete Component, segment: SEG_BM_CEMENT_PRODUCTS, aliases: [PC构件, 装配式构件]}
+  - {id: PROD_BM_CONCRETE_PILE, type: product, name: 预应力混凝土管桩, name_en: Prestressed Concrete Pile, segment: SEG_BM_CEMENT_PRODUCTS, aliases: [管桩, PHC管桩]}
+  - {id: PROD_BM_CONCRETE_PIPE, type: product, name: 混凝土输水管, name_en: Concrete Pressure Pipe, segment: SEG_BM_CEMENT_PRODUCTS, aliases: [PCCP, 钢筒混凝土管]}
+  - {id: PROD_BM_RAIL_SLAB, type: product, name: 轨道板与轨枕, name_en: Track Slab and Sleeper, segment: SEG_BM_CEMENT_PRODUCTS, aliases: [轨枕, 无砟轨道板]}
+  - {id: PROD_BM_SHIELD_SEGMENT, type: product, name: 盾构管片, name_en: Tunnel Lining Segment, segment: SEG_BM_CEMENT_PRODUCTS}
+  - {id: PROD_BM_AERATED_BLOCK, type: product, name: 蒸压加气混凝土砌块, name_en: Autoclaved Aerated Concrete Block, segment: SEG_BM_CEMENT_PRODUCTS, aliases: [加气砌块, ALC板]}
+
+  # ---------------- glass ----------------
+  - {id: PROD_BM_FLOAT_GLASS, type: product, name: 浮法玻璃原片, name_en: Float Glass Substrate, segment: SEG_BM_GLASS, aliases: [玻璃原片, 建筑玻璃原片]}
+  - {id: PROD_BM_PROCESSED_GLASS, type: product, name: 建筑深加工玻璃, name_en: Processed Architectural Glass, segment: SEG_BM_GLASS, aliases: [深加工玻璃]}
+  - {id: PROD_BM_LOW_E_GLASS, type: product, name: Low-E镀膜玻璃, name_en: Low-E Coated Glass, parent: PROD_BM_PROCESSED_GLASS, segment: SEG_BM_GLASS, aliases: [节能玻璃, 镀膜玻璃]}
+  - {id: PROD_BM_INSULATING_GLASS, type: product, name: 中空玻璃, name_en: Insulating Glass Unit, parent: PROD_BM_PROCESSED_GLASS, segment: SEG_BM_GLASS}
+  - {id: PROD_BM_TEMPERED_GLASS, type: product, name: 钢化玻璃, name_en: Tempered Glass, parent: PROD_BM_PROCESSED_GLASS, segment: SEG_BM_GLASS}
+  - {id: PROD_BM_ELECTRONIC_GLASS, type: product, name: 超薄电子玻璃, name_en: Ultra-Thin Electronic Glass, segment: SEG_BM_GLASS, aliases: [电子玻璃, 高铝盖板玻璃], import_dependence: medium}
+  - {id: PROD_BM_PHARMA_GLASS, type: product, name: 药用中硼硅玻璃, name_en: Pharmaceutical Borosilicate Glass, segment: SEG_BM_GLASS, aliases: [中硼硅玻璃管]}
+
+  # ---------------- glass fibre ----------------
+  - {id: PROD_BM_GF_ROVING, type: product, name: 玻纤粗纱, name_en: Glass Fiber Roving, segment: SEG_BM_GLASS_FIBER, aliases: [无碱玻纤粗纱, 直接纱, 合股纱]}
+  - {id: PROD_BM_WIND_ROVING, type: product, name: 风电纱, name_en: Wind Blade Roving, parent: PROD_BM_GF_ROVING, segment: SEG_BM_GLASS_FIBER, aliases: [风电用玻纤]}
+  - {id: PROD_BM_THERMOPLASTIC_CHOPPED, type: product, name: 热塑短切纱, name_en: Thermoplastic Chopped Strand, parent: PROD_BM_GF_ROVING, segment: SEG_BM_GLASS_FIBER, aliases: [短切纱]}
+  - {id: PROD_BM_GF_FABRIC, type: product, name: 玻纤织物与毡, name_en: Glass Fiber Fabric and Mat, segment: SEG_BM_GLASS_FIBER, aliases: [玻纤制品, 短切毡, 方格布, 多轴向织物]}
+  - {id: PROD_BM_E_YARN, type: product, name: 电子级玻璃纤维纱, name_en: Electronic-Grade Glass Fiber Yarn, segment: SEG_BM_GLASS_FIBER, aliases: [电子级玻纤纱]}
+  - {id: PROD_BM_E_CLOTH, type: product, name: 电子级玻璃纤维布, name_en: Electronic-Grade Glass Fiber Cloth, segment: SEG_BM_GLASS_FIBER, aliases: [电子级玻纤布, 超薄电子布]}
+  - {id: PROD_BM_LOW_DK_CLOTH, type: product, name: 低介电玻纤布, name_en: Low-Dk Glass Cloth, parent: PROD_BM_E_CLOTH, segment: SEG_BM_GLASS_FIBER, aliases: [Low-Dk电子布, 低介电电子布, 二代布], import_dependence: medium}
+  - {id: PROD_BM_LOW_CTE_CLOTH, type: product, name: 低膨胀玻纤布, name_en: Low-CTE Glass Cloth, parent: PROD_BM_E_CLOTH, segment: SEG_BM_GLASS_FIBER, aliases: [Low-CTE电子布, 低膨胀电子布, T-glass], import_dependence: high}
+  - {id: PROD_BM_WIND_BLADE, type: product, name: 复合材料风电叶片, name_en: Composite Wind Turbine Blade, segment: SEG_BM_GLASS_FIBER, aliases: [风电叶片]}
+  - {id: PROD_BM_COMPOSITE_CYLINDER, type: product, name: 复合材料气瓶, name_en: Composite Gas Cylinder, segment: SEG_BM_GLASS_FIBER, aliases: [CNG气瓶, 车载储氢气瓶]}
+  - {id: PROD_BM_GLASS_WOOL, type: product, name: 玻璃棉, name_en: Glass Wool, segment: SEG_BM_INSULATION, aliases: [微纤维玻璃棉, 玻璃棉毡]}
+
+  # ---------------- refractories ----------------
+  - {id: PROD_BM_REFRACTORY_RAW, type: product, name: 耐火原料, name_en: Refractory Raw Materials, segment: SEG_BM_REFRACTORY, aliases: [镁砂, 高铝矾土, 电熔刚玉]}
+  - {id: PROD_BM_SHAPED_REFRACTORY, type: product, name: 定形耐火制品, name_en: Shaped Refractories, segment: SEG_BM_REFRACTORY, aliases: [耐火砖, 镁碳砖]}
+  - {id: PROD_BM_UNSHAPED_REFRACTORY, type: product, name: 不定形耐火材料, name_en: Monolithic Refractories, segment: SEG_BM_REFRACTORY, aliases: [耐火浇注料]}
+  - {id: PROD_BM_FUNCTIONAL_REFRACTORY, type: product, name: 功能耐火材料, name_en: Functional Refractories, segment: SEG_BM_REFRACTORY, aliases: [滑板, 水口, 连铸功能耐材]}
+  - {id: PROD_BM_REFRACTORY_SERVICE, type: product, kind: service, name: 耐材整体承包, name_en: Refractory Total Contracting, segment: SEG_BM_REFRACTORY, aliases: [耐材总包服务]}
+  - {id: PROD_BM_CERAMIC_FIBER, type: product, name: 陶瓷纤维, name_en: Ceramic Fiber, segment: SEG_BM_INSULATION, aliases: [陶瓷纤维毯, 硅酸铝纤维]}
+
+  # ---------------- pipes ----------------
+  - {id: PROD_BM_PVC_PIPE, type: product, name: PVC管材, name_en: PVC Pipe, segment: SEG_BM_PIPES, aliases: [PVC-U管, 排水管]}
+  - {id: PROD_BM_PPR_PIPE, type: product, name: PPR管材, name_en: PPR Pipe, segment: SEG_BM_PIPES, aliases: [家装给水管, 冷热水管]}
+  - {id: PROD_BM_PE_PIPE, type: product, name: PE管材, name_en: PE Pipe, segment: SEG_BM_PIPES, aliases: [市政给水管, 燃气管]}
+
+  # ---------------- waterproofing ----------------
+  - {id: PROD_BM_SBS_MEMBRANE, type: product, name: 改性沥青防水卷材, name_en: Modified Bitumen Membrane, segment: SEG_BM_WATERPROOF, aliases: [SBS防水卷材, 沥青卷材]}
+  - {id: PROD_BM_POLYMER_MEMBRANE, type: product, name: 高分子防水卷材, name_en: Polymer Waterproof Membrane, segment: SEG_BM_WATERPROOF, aliases: [TPO卷材, PVC防水卷材]}
+  - {id: PROD_BM_WATERPROOF_COATING, type: product, name: 防水涂料, name_en: Waterproof Coating, segment: SEG_BM_WATERPROOF, aliases: [聚氨酯防水涂料, JS防水涂料]}
+  - {id: PROD_BM_WATERPROOF_ENGINEERING, type: product, kind: service, name: 防水工程施工, name_en: Waterproofing Installation, segment: SEG_BM_WATERPROOF, aliases: [防水施工]}
+
+  # ---------------- coatings & auxiliaries ----------------
+  - {id: PROD_BM_INTERIOR_PAINT, type: product, name: 内墙涂料, name_en: Interior Wall Paint, segment: SEG_BM_COATINGS}
+  - {id: PROD_BM_EXTERIOR_PAINT, type: product, name: 外墙涂料, name_en: Exterior Wall Coating, segment: SEG_BM_COATINGS, aliases: [真石漆, 质感涂料]}
+  - {id: PROD_BM_WOOD_COATING, type: product, name: 木器涂料, name_en: Wood Coating, segment: SEG_BM_COATINGS, aliases: [木器漆, 家具漆]}
+  - {id: PROD_BM_PUTTY, type: product, name: 腻子, name_en: Wall Putty, segment: SEG_BM_COATINGS, aliases: [基层材料]}
+  - {id: PROD_BM_TILE_ADHESIVE, type: product, name: 瓷砖胶, name_en: Tile Adhesive, segment: SEG_BM_COATINGS, aliases: [美缝剂, 填缝剂]}
+  - {id: PROD_BM_THERMAL_INSULATION_BOARD, type: product, name: 建筑保温板, name_en: Building Insulation Board, segment: SEG_BM_INSULATION, aliases: [保温装饰一体板, XPS挤塑板]}
+  - {id: PROD_BM_ROCK_WOOL, type: product, name: 岩棉, name_en: Rock Wool, segment: SEG_BM_INSULATION, aliases: [岩棉板]}
+
+  # ---------------- gypsum board & light materials ----------------
+  - {id: PROD_BM_DESULF_GYPSUM, type: product, name: 脱硫石膏, name_en: FGD Gypsum, segment: SEG_BM_GYPSUM_BOARD, parent: PROD_CHEM_GYPSUM}
+  - {id: PROD_BM_GYPSUM_BOARD, type: product, name: 纸面石膏板, name_en: Gypsum Board, segment: SEG_BM_GYPSUM_BOARD, aliases: [石膏板]}
+  - {id: PROD_BM_LIGHT_STEEL_KEEL, type: product, name: 轻钢龙骨, name_en: Light Steel Keel, segment: SEG_BM_GYPSUM_BOARD, aliases: [龙骨]}
+  - {id: PROD_BM_MINERAL_WOOL_BOARD, type: product, name: 矿棉吸声板, name_en: Mineral Wool Ceiling Board, segment: SEG_BM_GYPSUM_BOARD, aliases: [矿棉板]}
+
+  # ---------------- ceramics ----------------
+  - {id: PROD_BM_SINTERED_SLAB, type: product, name: 岩板, name_en: Sintered Stone Slab, parent: PROD_LIGHT_CERAMIC_TILE, segment: SEG_BM_CERAMICS, aliases: [大板]}
+
+  # ---------------- admixtures ----------------
+  - {id: PROD_BM_ADMIXTURE, type: product, name: 混凝土外加剂产品, name_en: Concrete Admixture, segment: SEG_BM_ADMIXTURE, aliases: [外加剂, 混凝土外加剂]}
+  - {id: PROD_BM_PCE, type: product, name: 聚羧酸减水剂, name_en: Polycarboxylate Superplasticizer, parent: PROD_BM_ADMIXTURE, segment: SEG_BM_ADMIXTURE, aliases: [减水剂, PCE]}
+  - {id: PROD_BM_FUNCTIONAL_ADMIXTURE, type: product, name: 功能性外加剂, name_en: Functional Admixture, parent: PROD_BM_ADMIXTURE, segment: SEG_BM_ADMIXTURE, aliases: [膨胀剂, 速凝剂, 抗裂剂]}
+
+edges:
+  - [SEG_BM_AGGREGATES, part_of, SEG_BM_CEMENT]
+  - [SEG_BM_REFRACTORY, part_of, SEG_BM_DECORATIVE]
+  - [SEG_BM_PIPES, part_of, SEG_BM_DECORATIVE]
+  - [SEG_BM_WATERPROOF, part_of, SEG_BM_DECORATIVE]
+  - [SEG_BM_COATINGS, part_of, SEG_BM_DECORATIVE]
+  - [SEG_BM_GYPSUM_BOARD, part_of, SEG_BM_DECORATIVE]
+  - [SEG_BM_CERAMICS, part_of, SEG_BM_DECORATIVE]
+  - [SEG_BM_INSULATION, part_of, SEG_BM_DECORATIVE]
+  - [SEG_BM_ADMIXTURE, part_of, SEG_BM_DECORATIVE]
+  - [SEG_BM_CEMENT, serves, MKT_CONSTRUCTION]
+  - [SEG_BM_CEMENT, serves, MKT_REAL_ESTATE]
+  - [SEG_BM_CEMENT_PRODUCTS, serves, MKT_CONSTRUCTION]
+  - [SEG_BM_CEMENT_PRODUCTS, serves, MKT_REAL_ESTATE]
+  - [SEG_BM_GLASS, serves, MKT_REAL_ESTATE]
+  - [SEG_BM_GLASS, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_BM_GLASS_FIBER, serves, MKT_WIND]
+  - [SEG_BM_GLASS_FIBER, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_BM_GLASS_FIBER, serves, MKT_AI_DATA_CENTER]
+  - [SEG_BM_GLASS_FIBER, serves, MKT_CONSTRUCTION]
+  - [SEG_BM_GLASS_FIBER, serves, MKT_EV]
+  - [SEG_BM_DECORATIVE, serves, MKT_REAL_ESTATE]
+  - [SEG_BM_DECORATIVE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_BM_REFRACTORY, serves, MKT_STEEL_INDUSTRY]
+  - [SEG_BM_PIPES, serves, MKT_CONSTRUCTION]
+  - [SEG_BM_WATERPROOF, serves, MKT_CONSTRUCTION]
+  - [SEG_BM_ADMIXTURE, serves, MKT_CONSTRUCTION]
+
+  # cement
+  - [PROD_BM_LIMESTONE, upstream_of, PROD_BM_CLINKER]
+  - [PROD_BM_CLINKER, upstream_of, PROD_BM_OPC]
+  - [PROD_BM_CLINKER, upstream_of, PROD_BM_SPECIAL_CEMENT]
+  - [PROD_BM_SLAG_POWDER, upstream_of, PROD_BM_OPC]
+  - [PROD_BM_DESULF_GYPSUM, upstream_of, PROD_BM_OPC]
+  - [PROD_BM_CLINKER, uses_material, MAT_THERMAL_COAL]
+  - [PROD_BM_CLINKER, uses_material, MAT_ELECTRICITY]
+  - [MAT_CEMENT, upstream_of, PROD_BM_CONCRETE_PILE]
+  - [PROD_BM_OPC, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_OPC, used_in, MKT_REAL_ESTATE]
+  - [PROD_BM_SPECIAL_CEMENT, used_in, MKT_OIL_GAS]
+  - [PROD_BM_SPECIAL_CEMENT, used_in, MKT_HYDRO_POWER]
+  - [PROD_BM_AGGREGATE, upstream_of, PROD_BM_RMC]
+  - [PROD_BM_MANUFACTURED_SAND, upstream_of, PROD_BM_DRY_MORTAR]
+  - [PROD_BM_AGGREGATE, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_KILN_CO_PROCESSING, used_in, MKT_ENVIRONMENTAL]
+  - [TECH_CCUS, enables, PROD_BM_CLINKER]
+
+  # cement products
+  - [PROD_BM_OPC, upstream_of, PROD_BM_RMC]
+  - [PROD_BM_OPC, upstream_of, PROD_BM_DRY_MORTAR]
+  - [PROD_BM_RMC, upstream_of, PROD_BM_PRECAST_COMPONENT]
+  - [PROD_BM_OPC, upstream_of, PROD_BM_CONCRETE_PILE]
+  - [PROD_BM_OPC, upstream_of, PROD_BM_CONCRETE_PIPE]
+  - [PROD_BM_OPC, upstream_of, PROD_BM_RAIL_SLAB]
+  - [PROD_BM_OPC, upstream_of, PROD_BM_SHIELD_SEGMENT]
+  - [PROD_BM_OPC, upstream_of, PROD_BM_AERATED_BLOCK]
+  - [PROD_BM_PCE, upstream_of, PROD_BM_RMC]
+  - [PROD_BM_FUNCTIONAL_ADMIXTURE, upstream_of, PROD_BM_RMC]
+  - [PROD_STL_PC_STRAND, upstream_of, PROD_BM_CONCRETE_PILE]
+  - [PROD_STL_REBAR, upstream_of, PROD_BM_PRECAST_COMPONENT]
+  - [PROD_BM_CONCRETE_PILE, uses_material, MAT_STEEL]
+  - [PROD_BM_RMC, uses_material, MAT_CEMENT]
+  - [PROD_BM_RMC, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_RMC, used_in, MKT_REAL_ESTATE]
+  - [PROD_BM_DRY_MORTAR, used_in, MKT_REAL_ESTATE]
+  - [PROD_BM_PRECAST_COMPONENT, used_in, MKT_REAL_ESTATE]
+  - [PROD_BM_CONCRETE_PILE, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_CONCRETE_PILE, used_in, MKT_SOLAR]
+  - [PROD_BM_CONCRETE_PIPE, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_RAIL_SLAB, used_in, MKT_RAIL]
+  - [PROD_BM_SHIELD_SEGMENT, used_in, MKT_RAIL]
+  - [PROD_BM_AERATED_BLOCK, used_in, MKT_REAL_ESTATE]
+
+  # glass
+  - [PROD_BM_FLOAT_GLASS, uses_material, MAT_SODA_ASH]
+  - [PROD_BM_FLOAT_GLASS, uses_material, MAT_QUARTZ]
+  - [PROD_BM_FLOAT_GLASS, uses_material, MAT_NATURAL_GAS]
+  - [MAT_FLAT_GLASS, upstream_of, PROD_BM_PROCESSED_GLASS]
+  - [PROD_BM_FLOAT_GLASS, upstream_of, PROD_BM_PROCESSED_GLASS]
+  - [PROD_BM_FLOAT_GLASS, upstream_of, PROD_BM_LOW_E_GLASS]
+  - [PROD_BM_FLOAT_GLASS, upstream_of, PROD_BM_TEMPERED_GLASS]
+  - [PROD_BM_LOW_E_GLASS, upstream_of, PROD_BM_INSULATING_GLASS]
+  - [PROD_BM_TEMPERED_GLASS, upstream_of, PROD_BM_INSULATING_GLASS]
+  - [PROD_BM_FLOAT_GLASS, used_in, MKT_REAL_ESTATE]
+  - [PROD_BM_PROCESSED_GLASS, used_in, MKT_REAL_ESTATE]
+  - [PROD_BM_LOW_E_GLASS, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_TEMPERED_GLASS, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_BM_ELECTRONIC_GLASS, uses_material, MAT_QUARTZ]
+  - [PROD_BM_ELECTRONIC_GLASS, used_in, MKT_SMARTPHONE]
+  - [PROD_BM_ELECTRONIC_GLASS, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_BM_PHARMA_GLASS, used_in, MKT_HEALTHCARE]
+
+  # glass fibre
+  - [MAT_GLASS_FIBER, upstream_of, PROD_BM_GF_FABRIC]
+  - [PROD_BM_GF_ROVING, uses_material, MAT_ELECTRICITY]
+  - [PROD_BM_GF_ROVING, uses_material, MAT_NATURAL_GAS]
+  - [MAT_GLASS_FIBER, upstream_of, PROD_BM_E_CLOTH]
+  - [PROD_BM_GF_ROVING, upstream_of, PROD_BM_GF_FABRIC]
+  - [PROD_BM_WIND_ROVING, upstream_of, PROD_BM_GF_FABRIC]
+  - [PROD_BM_GF_FABRIC, upstream_of, PROD_BM_WIND_BLADE]
+  - [PROD_BM_GF_ROVING, upstream_of, PROD_BM_COMPOSITE_CYLINDER]
+  - [PROD_BM_E_YARN, upstream_of, PROD_BM_E_CLOTH]
+  - [PROD_BM_WIND_BLADE, uses_material, MAT_EPOXY_RESIN]
+  - [PROD_BM_WIND_BLADE, uses_material, MAT_CARBON_FIBER]
+  - [PROD_BM_COMPOSITE_CYLINDER, uses_material, MAT_CARBON_FIBER]
+  - [PROD_BM_WIND_ROVING, used_in, MKT_WIND]
+  - [PROD_BM_WIND_BLADE, used_in, MKT_WIND]
+  - [PROD_BM_THERMOPLASTIC_CHOPPED, used_in, MKT_EV]
+  - [PROD_BM_THERMOPLASTIC_CHOPPED, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_BM_GF_ROVING, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_GF_FABRIC, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_GF_FABRIC, used_in, MKT_RAIL]
+  - [PROD_BM_E_CLOTH, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_BM_E_CLOTH, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_BM_LOW_DK_CLOTH, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_BM_LOW_CTE_CLOTH, used_in, MKT_AI_DATA_CENTER]
+  - [TECH_ADVANCED_PACKAGING, enables, PROD_BM_LOW_CTE_CLOTH]
+  - [PROD_BM_COMPOSITE_CYLINDER, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_BM_GLASS_WOOL, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_GLASS_WOOL, used_in, MKT_ENVIRONMENTAL]
+
+  # refractories & insulation
+  - [PROD_BM_REFRACTORY_RAW, upstream_of, PROD_BM_SHAPED_REFRACTORY]
+  - [PROD_BM_REFRACTORY_RAW, upstream_of, PROD_BM_UNSHAPED_REFRACTORY]
+  - [PROD_BM_REFRACTORY_RAW, upstream_of, PROD_BM_FUNCTIONAL_REFRACTORY]
+  - [PROD_BM_SHAPED_REFRACTORY, upstream_of, PROD_BM_REFRACTORY_SERVICE]
+  - [PROD_BM_UNSHAPED_REFRACTORY, upstream_of, PROD_BM_REFRACTORY_SERVICE]
+  - [PROD_BM_SHAPED_REFRACTORY, uses_material, MAT_GRAPHITE]
+  - [PROD_BM_SHAPED_REFRACTORY, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_BM_UNSHAPED_REFRACTORY, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_BM_FUNCTIONAL_REFRACTORY, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_BM_REFRACTORY_SERVICE, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_BM_SHAPED_REFRACTORY, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_BM_CERAMIC_FIBER, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_BM_CERAMIC_FIBER, used_in, MKT_EV]
+  - [PROD_BM_ROCK_WOOL, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_THERMAL_INSULATION_BOARD, used_in, MKT_REAL_ESTATE]
+  - [PROD_BM_ROCK_WOOL, substitute_for, PROD_BM_THERMAL_INSULATION_BOARD]
+
+  # pipes
+  - [PROD_BM_PVC_PIPE, uses_material, MAT_PLASTICS]
+  - [PROD_BM_PPR_PIPE, uses_material, MAT_PLASTICS]
+  - [PROD_BM_PE_PIPE, uses_material, MAT_PLASTICS]
+  - [PROD_BM_PVC_PIPE, used_in, MKT_REAL_ESTATE]
+  - [PROD_BM_PVC_PIPE, used_in, MKT_AGRICULTURE]
+  - [PROD_BM_PPR_PIPE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BM_PE_PIPE, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_PE_PIPE, substitute_for, PROD_STL_DUCTILE_IRON_PIPE]
+
+  # waterproofing
+  - [PROD_BM_SBS_MEMBRANE, uses_material, MAT_SYNTHETIC_RUBBER]
+  - [PROD_BM_SBS_MEMBRANE, uses_material, MAT_POLYESTER]
+  - [PROD_BM_POLYMER_MEMBRANE, uses_material, MAT_PLASTICS]
+  - [PROD_BM_SBS_MEMBRANE, upstream_of, PROD_BM_WATERPROOF_ENGINEERING]
+  - [PROD_BM_POLYMER_MEMBRANE, upstream_of, PROD_BM_WATERPROOF_ENGINEERING]
+  - [PROD_BM_WATERPROOF_COATING, upstream_of, PROD_BM_WATERPROOF_ENGINEERING]
+  - [PROD_BM_POLYMER_MEMBRANE, substitute_for, PROD_BM_SBS_MEMBRANE]
+  - [PROD_BM_SBS_MEMBRANE, used_in, MKT_REAL_ESTATE]
+  - [PROD_BM_SBS_MEMBRANE, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_POLYMER_MEMBRANE, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_WATERPROOF_COATING, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BM_WATERPROOF_ENGINEERING, used_in, MKT_CONSTRUCTION]
+
+  # coatings
+  - [PROD_BM_INTERIOR_PAINT, uses_material, MAT_TITANIUM_DIOXIDE]
+  - [PROD_BM_EXTERIOR_PAINT, uses_material, MAT_TITANIUM_DIOXIDE]
+  - [PROD_BM_WOOD_COATING, uses_material, MAT_EPOXY_RESIN]
+  - [PROD_BM_TILE_ADHESIVE, uses_material, MAT_CEMENT]
+  - [PROD_BM_PUTTY, uses_material, MAT_CEMENT]
+  - [PROD_BM_INTERIOR_PAINT, used_in, MKT_REAL_ESTATE]
+  - [PROD_BM_INTERIOR_PAINT, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BM_EXTERIOR_PAINT, used_in, MKT_REAL_ESTATE]
+  - [PROD_BM_TILE_ADHESIVE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BM_PUTTY, used_in, MKT_REAL_ESTATE]
+
+  # gypsum & light materials
+  - [PROD_BM_DESULF_GYPSUM, upstream_of, PROD_BM_GYPSUM_BOARD]
+  - [PROD_BM_GYPSUM_BOARD, uses_material, MAT_PULP]
+  - [PROD_STL_GALVANIZED, upstream_of, PROD_BM_LIGHT_STEEL_KEEL]
+  - [PROD_BM_GYPSUM_BOARD, used_in, MKT_REAL_ESTATE]
+  - [PROD_BM_GYPSUM_BOARD, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_LIGHT_STEEL_KEEL, used_in, MKT_REAL_ESTATE]
+  - [PROD_BM_MINERAL_WOOL_BOARD, used_in, MKT_CONSTRUCTION]
+
+  # ceramics
+  - [PROD_LIGHT_CERAMIC_TILE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BM_SINTERED_SLAB, used_in, MKT_RETAIL_CONSUMER]
+
+  # admixtures
+  - [PROD_BM_PCE, uses_material, MAT_ETHYLENE]
+  - [PROD_BM_PCE, used_in, MKT_CONSTRUCTION]
+  - [PROD_BM_FUNCTIONAL_ADMIXTURE, used_in, MKT_CONSTRUCTION]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_BM_E_CLOTH, upstream_of, PROD_ELEC_CCL]
+  - [PROD_BM_FLOAT_GLASS, uses_material, MAT_SILICA_SAND]
+  - [PROD_BM_SBS_MEMBRANE, uses_material, MAT_ASPHALT]
+  - [PROD_BM_PHARMA_GLASS, upstream_of, PROD_PHAR_PHARMA_GLASS]
+  - [PROD_BM_ELECTRONIC_GLASS, upstream_of, PROD_ELEC_UTG]
+
+sw_l3_map:
+  "610101": [SEG_BM_CEMENT, SEG_BM_AGGREGATES]
+  "610102": [SEG_BM_CEMENT_PRODUCTS]
+  "610201": [SEG_BM_GLASS]
+  "610202": [SEG_BM_GLASS_FIBER]
+  "610301": [SEG_BM_REFRACTORY, SEG_BM_INSULATION]
+  "610302": [SEG_BM_PIPES]
+  "610303": [SEG_BM_DECORATIVE, SEG_BM_GYPSUM_BOARD, SEG_BM_CERAMICS, SEG_BM_INSULATION, SEG_BM_ADMIXTURE, SEG_BM_CEMENT_PRODUCTS]
+  "610304": [SEG_BM_WATERPROOF]
+  "610305": [SEG_BM_COATINGS]

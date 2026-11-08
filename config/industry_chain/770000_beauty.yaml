@@ -1,0 +1,183 @@
+# 美容护理 (SW 770000) — product taxonomy prior (plan 12 phase 1, D-097). All edges are priors.
+# Format: README.md beside this file.
+sector: {sw_l1: "770000", name: 美容护理, name_en: Beauty and Personal Care}
+
+nodes:
+  # ================= segments =================
+  - {id: SEG_BEAU_PERSONAL_CARE, type: segment, name: 个护用品, name_en: Personal Care Products}
+  - {id: SEG_BEAU_TISSUE, type: segment, name: 生活用纸, name_en: Household Tissue, parent: SEG_BEAU_PERSONAL_CARE}
+  - {id: SEG_BEAU_HYGIENE, type: segment, name: 卫生护理用品, name_en: Absorbent Hygiene Products, parent: SEG_BEAU_PERSONAL_CARE}
+  - {id: SEG_BEAU_WASH_CARE, type: segment, name: 洗护用品, name_en: Washing and Oral Care, parent: SEG_BEAU_PERSONAL_CARE}
+  - {id: SEG_BEAU_COSMETICS, type: segment, name: 化妆品, name_en: Cosmetics}
+  - {id: SEG_BEAU_COSMETIC_INGREDIENTS, type: segment, name: 化妆品原料, name_en: Cosmetic Ingredients, parent: SEG_BEAU_COSMETICS}
+  - {id: SEG_BEAU_COSMETICS_MFG, type: segment, name: 化妆品制造及其他, name_en: Cosmetics Contract Manufacturing and Others, parent: SEG_BEAU_COSMETICS}
+  - {id: SEG_BEAU_BRAND_COSMETICS, type: segment, name: 品牌化妆品, name_en: Branded Cosmetics, parent: SEG_BEAU_COSMETICS}
+  - {id: SEG_BEAU_MED_AESTHETICS, type: segment, name: 医疗美容, name_en: Medical Aesthetics}
+  - {id: SEG_BEAU_AESTHETIC_PRODUCTS, type: segment, name: 医美耗材, name_en: Aesthetic Injectables and Devices, parent: SEG_BEAU_MED_AESTHETICS}
+  - {id: SEG_BEAU_AESTHETIC_SERVICES, type: segment, name: 医美服务, name_en: Medical Aesthetic Services, parent: SEG_BEAU_MED_AESTHETICS}
+
+  # ================= tissue =================
+  - {id: PROD_BEAU_TISSUE_PAPER, type: product, name: 生活用纸产品, name_en: Household Tissue Products, segment: SEG_BEAU_TISSUE, aliases: [纸巾, 生活用纸]}
+  - {id: PROD_BEAU_TISSUE_PARENT_ROLL, type: product, name: 生活用纸原纸, name_en: Tissue Parent Rolls, segment: SEG_BEAU_TISSUE, aliases: [原纸, 大轴纸]}
+  - {id: PROD_BEAU_TOILET_ROLL, type: product, name: 卫生纸, name_en: Toilet Rolls, parent: PROD_BEAU_TISSUE_PAPER, segment: SEG_BEAU_TISSUE, aliases: [卷纸, 卷筒纸]}
+  - {id: PROD_BEAU_FACIAL_TISSUE, type: product, name: 面巾纸, name_en: Facial Tissue, parent: PROD_BEAU_TISSUE_PAPER, segment: SEG_BEAU_TISSUE, aliases: [抽纸, 手帕纸]}
+  - {id: PROD_BEAU_KITCHEN_TOWEL, type: product, name: 厨房用纸, name_en: Kitchen Towels, parent: PROD_BEAU_TISSUE_PAPER, segment: SEG_BEAU_TISSUE, aliases: [擦手纸]}
+  - {id: PROD_BEAU_WET_WIPES, type: product, name: 湿巾, name_en: Wet Wipes, segment: SEG_BEAU_TISSUE, aliases: [湿厕纸, 卸妆湿巾]}
+  - {id: PROD_BEAU_COTTON_TISSUE, type: product, name: 棉柔巾, name_en: Cotton Soft Towels, segment: SEG_BEAU_TISSUE, aliases: [洗脸巾, 全棉柔巾]}
+
+  # ================= hygiene =================
+  - {id: PROD_BEAU_SANITARY_PAD, type: product, name: 卫生巾, name_en: Sanitary Napkins, segment: SEG_BEAU_HYGIENE, aliases: [女性卫生用品, 护垫, 安睡裤]}
+  - {id: PROD_BEAU_BABY_DIAPER, type: product, name: 婴儿纸尿裤, name_en: Baby Diapers, segment: SEG_BEAU_HYGIENE, aliases: [纸尿裤, 拉拉裤]}
+  - {id: PROD_BEAU_ADULT_INCONTINENCE, type: product, name: 成人失禁用品, name_en: Adult Incontinence Products, segment: SEG_BEAU_HYGIENE, aliases: [成人纸尿裤, 护理垫]}
+  - {id: PROD_BEAU_PET_PAD, type: product, name: 宠物卫生用品, name_en: Pet Hygiene Pads, segment: SEG_BEAU_HYGIENE, aliases: [宠物尿垫]}
+
+  # ================= wash and oral care =================
+  - {id: PROD_BEAU_ORAL_CARE, type: product, name: 口腔护理用品, name_en: Oral Care, segment: SEG_BEAU_WASH_CARE, aliases: [牙膏, 牙刷, 漱口水]}
+  - {id: PROD_BEAU_HAIR_CARE, type: product, name: 洗发护发用品, name_en: Hair Care, segment: SEG_BEAU_WASH_CARE, aliases: [洗发水, 护发素, 染发剂]}
+  - {id: PROD_BEAU_BODY_WASH, type: product, name: 沐浴清洁用品, name_en: Body Wash and Soap, segment: SEG_BEAU_WASH_CARE, aliases: [沐浴露, 香皂, 洗手液]}
+  - {id: PROD_BEAU_LAUNDRY_CARE, type: product, name: 家居清洁用品, name_en: Laundry and Home Cleaning, segment: SEG_BEAU_WASH_CARE, aliases: [洗衣液, 洗衣凝珠, 洗洁精]}
+
+  # ================= cosmetic ingredients =================
+  - {id: PROD_BEAU_HYALURONIC_ACID, type: product, name: 透明质酸原料, name_en: Hyaluronic Acid (Raw Material), segment: SEG_BEAU_COSMETIC_INGREDIENTS, aliases: [透明质酸, 玻尿酸原料, 透明质酸钠]}
+  - {id: PROD_BEAU_HA_PHARMA_GRADE, type: product, name: 医药级透明质酸, name_en: Pharmaceutical-Grade HA, parent: PROD_BEAU_HYALURONIC_ACID, segment: SEG_BEAU_COSMETIC_INGREDIENTS, aliases: [注射级透明质酸, 滴眼液级透明质酸]}
+  - {id: PROD_BEAU_HA_COSMETIC_GRADE, type: product, name: 化妆品级透明质酸, name_en: Cosmetic-Grade HA, parent: PROD_BEAU_HYALURONIC_ACID, segment: SEG_BEAU_COSMETIC_INGREDIENTS}
+  - {id: PROD_BEAU_HA_FOOD_GRADE, type: product, name: 食品级透明质酸, name_en: Food-Grade HA, parent: PROD_BEAU_HYALURONIC_ACID, segment: SEG_BEAU_COSMETIC_INGREDIENTS}
+  - {id: PROD_BEAU_RECOMBINANT_COLLAGEN, type: product, name: 重组胶原蛋白, name_en: Recombinant Collagen, segment: SEG_BEAU_COSMETIC_INGREDIENTS, aliases: [重组人源化胶原蛋白, 重组III型人源化胶原蛋白, 类人胶原蛋白]}
+  - {id: PROD_BEAU_ACTIVE_INGREDIENT, type: product, name: 化妆品功效原料, name_en: Cosmetic Active Ingredients, segment: SEG_BEAU_COSMETIC_INGREDIENTS, aliases: [功效原料, 活性原料]}
+  - {id: PROD_BEAU_ECTOINE, type: product, name: 依克多因, name_en: Ectoine, parent: PROD_BEAU_ACTIVE_INGREDIENT, segment: SEG_BEAU_COSMETIC_INGREDIENTS, aliases: [Ectoine]}
+  - {id: PROD_BEAU_ERGOTHIONEINE, type: product, name: 麦角硫因, name_en: Ergothioneine, parent: PROD_BEAU_ACTIVE_INGREDIENT, segment: SEG_BEAU_COSMETIC_INGREDIENTS}
+  - {id: PROD_BEAU_BOTANICAL_ACTIVE, type: product, name: 化妆品植物提取物, name_en: Cosmetic Botanical Extracts, parent: PROD_BEAU_ACTIVE_INGREDIENT, segment: SEG_BEAU_COSMETIC_INGREDIENTS, aliases: [马齿苋提取物, 青刺果油]}
+  - {id: PROD_BEAU_UV_FILTER, type: product, name: 化妆品防晒剂, name_en: Cosmetic UV Filters, segment: SEG_BEAU_COSMETIC_INGREDIENTS, import_dependence: high, aliases: [紫外线吸收剂, 防晒剂原料]}
+
+  # ================= cosmetics manufacturing =================
+  - {id: PROD_BEAU_COSMETICS_OEM, type: product, name: 化妆品代工, name_en: Cosmetics OEM/ODM, segment: SEG_BEAU_COSMETICS_MFG, kind: service, aliases: [化妆品ODM, 化妆品OEM, 美妆代工]}
+  - {id: PROD_BEAU_COSMETIC_PACKAGING, type: product, name: 化妆品包材, name_en: Cosmetic Packaging, segment: SEG_BEAU_COSMETICS_MFG, aliases: [美妆包材, 真空瓶, 泵头]}
+
+  # ================= branded cosmetics =================
+  - {id: PROD_BEAU_SKINCARE, type: product, name: 护肤品, name_en: Skincare, segment: SEG_BEAU_BRAND_COSMETICS, aliases: [护肤, 精华, 面霜]}
+  - {id: PROD_BEAU_DERMA_SKINCARE, type: product, name: 功效护肤品, name_en: Functional and Dermocosmetic Skincare, parent: PROD_BEAU_SKINCARE, segment: SEG_BEAU_BRAND_COSMETICS, aliases: [敏感肌护肤, 皮肤学级护肤, 功效性护肤品]}
+  - {id: PROD_BEAU_FACE_MASK, type: product, name: 面膜, name_en: Face Masks, parent: PROD_BEAU_SKINCARE, segment: SEG_BEAU_BRAND_COSMETICS, aliases: [贴片面膜, 医用敷料面膜]}
+  - {id: PROD_BEAU_SUNSCREEN, type: product, name: 防晒产品, name_en: Sunscreen, parent: PROD_BEAU_SKINCARE, segment: SEG_BEAU_BRAND_COSMETICS, aliases: [防晒霜]}
+  - {id: PROD_BEAU_MEDICAL_DRESSING_COSM, type: product, name: 械字号敷料, name_en: Medical-Device Skin Dressings, parent: PROD_BEAU_SKINCARE, segment: SEG_BEAU_BRAND_COSMETICS, aliases: [医用冷敷贴, 胶原敷料, 医用修复敷料]}
+  - {id: PROD_BEAU_MAKEUP, type: product, name: 彩妆, name_en: Color Cosmetics, segment: SEG_BEAU_BRAND_COSMETICS, aliases: [化妆品彩妆]}
+  - {id: PROD_BEAU_BASE_MAKEUP, type: product, name: 底妆, name_en: Base Makeup, parent: PROD_BEAU_MAKEUP, segment: SEG_BEAU_BRAND_COSMETICS, aliases: [粉底液, 气垫, 散粉]}
+  - {id: PROD_BEAU_LIP_EYE_MAKEUP, type: product, name: 唇妆与眼妆, name_en: Lip and Eye Makeup, parent: PROD_BEAU_MAKEUP, segment: SEG_BEAU_BRAND_COSMETICS, aliases: [口红, 唇釉, 眼影]}
+  - {id: PROD_BEAU_FRAGRANCE, type: product, name: 香水香氛, name_en: Fragrances, segment: SEG_BEAU_BRAND_COSMETICS, aliases: [香水]}
+
+  # ================= medical aesthetics =================
+  - {id: PROD_BEAU_AESTHETIC_INJECTABLE, type: product, name: 医美注射产品, name_en: Aesthetic Injectables, segment: SEG_BEAU_AESTHETIC_PRODUCTS, aliases: [医美针剂, 三类医疗器械注射填充]}
+  - {id: PROD_BEAU_HA_FILLER, type: product, name: 透明质酸填充剂, name_en: Hyaluronic Acid Dermal Fillers, parent: PROD_BEAU_AESTHETIC_INJECTABLE, segment: SEG_BEAU_AESTHETIC_PRODUCTS, aliases: [玻尿酸填充剂, 玻尿酸针剂, 交联透明质酸钠凝胶]}
+  - {id: PROD_BEAU_SKIN_BOOSTER, type: product, name: 水光针, name_en: Skin Boosters, parent: PROD_BEAU_AESTHETIC_INJECTABLE, segment: SEG_BEAU_AESTHETIC_PRODUCTS, aliases: [非交联透明质酸注射, 嗨体]}
+  - {id: PROD_BEAU_REGENERATIVE_FILLER, type: product, name: 再生类填充剂, name_en: Bio-Stimulatory Fillers, parent: PROD_BEAU_AESTHETIC_INJECTABLE, segment: SEG_BEAU_AESTHETIC_PRODUCTS, import_dependence: medium, aliases: [童颜针, 少女针, 聚左旋乳酸, PLLA, PCL填充剂]}
+  - {id: PROD_BEAU_COLLAGEN_FILLER, type: product, name: 胶原蛋白填充剂, name_en: Collagen Fillers, parent: PROD_BEAU_AESTHETIC_INJECTABLE, segment: SEG_BEAU_AESTHETIC_PRODUCTS, aliases: [胶原蛋白植入剂, 重组胶原蛋白注射]}
+  - {id: PROD_BEAU_BOTULINUM, type: product, name: 肉毒毒素, name_en: Botulinum Toxin, parent: PROD_BEAU_AESTHETIC_INJECTABLE, segment: SEG_BEAU_AESTHETIC_PRODUCTS, import_dependence: medium, aliases: [肉毒素, A型肉毒毒素, 保妥适, 衡力]}
+  - {id: PROD_BEAU_THREAD_LIFT, type: product, name: 埋植线, name_en: Thread Lifts, segment: SEG_BEAU_AESTHETIC_PRODUCTS, aliases: [PPDO线, 埋线提升]}
+  - {id: PROD_BEAU_ENERGY_DEVICE, type: product, name: 医美光电设备, name_en: Aesthetic Energy-Based Devices, segment: SEG_BEAU_AESTHETIC_PRODUCTS, import_dependence: medium, aliases: [射频美容设备, 热玛吉, 超声炮, 医美激光, 光子嫩肤]}
+  - {id: PROD_BEAU_AESTHETIC_SERVICE, type: product, name: 医美服务, name_en: Medical Aesthetic Services, segment: SEG_BEAU_AESTHETIC_SERVICES, kind: service, aliases: [医美机构, 医疗美容服务, 轻医美, 整形外科]}
+  - {id: PROD_BEAU_HAIR_TRANSPLANT, type: product, name: 植发服务, name_en: Hair Transplant Services, segment: SEG_BEAU_AESTHETIC_SERVICES, kind: service, aliases: [毛发种植, 植发]}
+
+edges:
+  - [SEG_BEAU_TISSUE, part_of, SEG_BEAU_PERSONAL_CARE]
+  - [SEG_BEAU_HYGIENE, part_of, SEG_BEAU_PERSONAL_CARE]
+  - [SEG_BEAU_WASH_CARE, part_of, SEG_BEAU_PERSONAL_CARE]
+  - [SEG_BEAU_COSMETIC_INGREDIENTS, part_of, SEG_BEAU_COSMETICS]
+  - [SEG_BEAU_COSMETICS_MFG, part_of, SEG_BEAU_COSMETICS]
+  - [SEG_BEAU_BRAND_COSMETICS, part_of, SEG_BEAU_COSMETICS]
+  - [SEG_BEAU_AESTHETIC_PRODUCTS, part_of, SEG_BEAU_MED_AESTHETICS]
+  - [SEG_BEAU_AESTHETIC_SERVICES, part_of, SEG_BEAU_MED_AESTHETICS]
+  - [SEG_BEAU_PERSONAL_CARE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_BEAU_TISSUE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_BEAU_HYGIENE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_BEAU_WASH_CARE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_BEAU_COSMETICS, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_BEAU_COSMETIC_INGREDIENTS, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_BEAU_COSMETIC_INGREDIENTS, serves, MKT_HEALTHCARE]
+  - [SEG_BEAU_COSMETIC_INGREDIENTS, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_BEAU_COSMETICS_MFG, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_BEAU_BRAND_COSMETICS, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_BEAU_MED_AESTHETICS, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_BEAU_AESTHETIC_PRODUCTS, serves, MKT_HEALTHCARE]
+  - [SEG_BEAU_AESTHETIC_SERVICES, serves, MKT_RETAIL_CONSUMER]
+  # tissue
+  - [PROD_BEAU_TISSUE_PARENT_ROLL, upstream_of, PROD_BEAU_TISSUE_PAPER]
+  - [PROD_BEAU_TISSUE_PARENT_ROLL, uses_material, MAT_PULP]
+  - [PROD_BEAU_WET_WIPES, uses_material, MAT_POLYESTER]
+  - [PROD_BEAU_COTTON_TISSUE, uses_material, MAT_COTTON]
+  - [PROD_BEAU_COTTON_TISSUE, substitute_for, PROD_BEAU_FACIAL_TISSUE]
+  - [PROD_BEAU_TISSUE_PAPER, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BEAU_WET_WIPES, used_in, MKT_RETAIL_CONSUMER]
+  # hygiene
+  - [PROD_BEAU_SANITARY_PAD, uses_material, MAT_PULP]
+  - [PROD_BEAU_SANITARY_PAD, uses_material, MAT_PLASTICS]
+  - [PROD_BEAU_BABY_DIAPER, uses_material, MAT_PULP]
+  - [PROD_BEAU_BABY_DIAPER, uses_material, MAT_PLASTICS]
+  - [PROD_BEAU_ADULT_INCONTINENCE, uses_material, MAT_PULP]
+  - [PROD_BEAU_ADULT_INCONTINENCE, uses_material, MAT_PLASTICS]
+  - [PROD_BEAU_PET_PAD, uses_material, MAT_PULP]
+  - [PROD_BEAU_SANITARY_PAD, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BEAU_BABY_DIAPER, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BEAU_ADULT_INCONTINENCE, used_in, MKT_HEALTHCARE]
+  - [PROD_BEAU_PET_PAD, used_in, MKT_RETAIL_CONSUMER]
+  # wash care
+  - [PROD_BEAU_ORAL_CARE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BEAU_HAIR_CARE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BEAU_BODY_WASH, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BEAU_LAUNDRY_CARE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BEAU_ORAL_CARE, uses_material, MAT_PLASTICS]
+  # ingredients
+  - [TECH_BIOTECH, enables, PROD_BEAU_HYALURONIC_ACID]
+  - [TECH_BIOTECH, enables, PROD_BEAU_RECOMBINANT_COLLAGEN]
+  - [TECH_BIOTECH, enables, PROD_BEAU_ECTOINE]
+  - [TECH_BIOTECH, enables, PROD_BEAU_ERGOTHIONEINE]
+  - [PROD_BEAU_HYALURONIC_ACID, uses_material, MAT_GRAIN]
+  - [PROD_BEAU_HYALURONIC_ACID, uses_material, MAT_SUGAR]
+  - [PROD_BEAU_HA_COSMETIC_GRADE, upstream_of, PROD_BEAU_SKINCARE]
+  - [PROD_BEAU_HA_PHARMA_GRADE, upstream_of, PROD_BEAU_HA_FILLER]
+  - [PROD_BEAU_HA_PHARMA_GRADE, upstream_of, PROD_BEAU_SKIN_BOOSTER]
+  - [PROD_BEAU_HA_PHARMA_GRADE, upstream_of, PROD_PHAR_SODIUM_HYALURONATE_INJ]
+  - [PROD_BEAU_HA_PHARMA_GRADE, upstream_of, PROD_PHAR_OVD]
+  - [PROD_BEAU_HA_PHARMA_GRADE, upstream_of, PROD_PHAR_OPHTHALMIC_DRUG]
+  - [PROD_BEAU_HA_FOOD_GRADE, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_BEAU_RECOMBINANT_COLLAGEN, upstream_of, PROD_BEAU_DERMA_SKINCARE]
+  - [PROD_BEAU_RECOMBINANT_COLLAGEN, upstream_of, PROD_BEAU_MEDICAL_DRESSING_COSM]
+  - [PROD_BEAU_RECOMBINANT_COLLAGEN, upstream_of, PROD_BEAU_COLLAGEN_FILLER]
+  - [PROD_BEAU_ACTIVE_INGREDIENT, upstream_of, PROD_BEAU_SKINCARE]
+  - [PROD_BEAU_ECTOINE, upstream_of, PROD_BEAU_DERMA_SKINCARE]
+  - [PROD_BEAU_BOTANICAL_ACTIVE, upstream_of, PROD_BEAU_DERMA_SKINCARE]
+  - [PROD_BEAU_UV_FILTER, upstream_of, PROD_BEAU_SUNSCREEN]
+  - [PROD_PHAR_PLANT_EXTRACT, upstream_of, PROD_BEAU_BOTANICAL_ACTIVE]
+  # manufacturing
+  - [PROD_BEAU_COSMETICS_OEM, used_in, PROD_BEAU_SKINCARE]
+  - [PROD_BEAU_COSMETICS_OEM, used_in, PROD_BEAU_MAKEUP]
+  - [PROD_BEAU_COSMETIC_PACKAGING, component_of, PROD_BEAU_SKINCARE]
+  - [PROD_BEAU_COSMETIC_PACKAGING, component_of, PROD_BEAU_MAKEUP]
+  - [PROD_BEAU_COSMETIC_PACKAGING, uses_material, MAT_PLASTICS]
+  - [PROD_BEAU_COSMETIC_PACKAGING, used_in, MKT_PACKAGING]
+  # brands
+  - [PROD_BEAU_SKINCARE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BEAU_MAKEUP, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BEAU_FRAGRANCE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BEAU_MEDICAL_DRESSING_COSM, used_in, PROD_BEAU_AESTHETIC_SERVICE]
+  - [PROD_BEAU_FACE_MASK, uses_material, MAT_PULP]
+  # aesthetics
+  - [TECH_BIOTECH, enables, PROD_BEAU_BOTULINUM]
+  - [PROD_BEAU_HA_FILLER, used_in, PROD_BEAU_AESTHETIC_SERVICE]
+  - [PROD_BEAU_SKIN_BOOSTER, used_in, PROD_BEAU_AESTHETIC_SERVICE]
+  - [PROD_BEAU_REGENERATIVE_FILLER, used_in, PROD_BEAU_AESTHETIC_SERVICE]
+  - [PROD_BEAU_COLLAGEN_FILLER, used_in, PROD_BEAU_AESTHETIC_SERVICE]
+  - [PROD_BEAU_BOTULINUM, used_in, PROD_BEAU_AESTHETIC_SERVICE]
+  - [PROD_BEAU_THREAD_LIFT, used_in, PROD_BEAU_AESTHETIC_SERVICE]
+  - [PROD_BEAU_ENERGY_DEVICE, used_in, PROD_BEAU_AESTHETIC_SERVICE]
+  - [PROD_BEAU_REGENERATIVE_FILLER, substitute_for, PROD_BEAU_HA_FILLER]
+  - [PROD_BEAU_COLLAGEN_FILLER, substitute_for, PROD_BEAU_HA_FILLER]
+  - [PROD_HA_BEAUTY_DEVICE, substitute_for, PROD_BEAU_ENERGY_DEVICE]
+  - [PROD_BEAU_AESTHETIC_SERVICE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_BEAU_HAIR_TRANSPLANT, used_in, MKT_RETAIL_CONSUMER]
+
+sw_l3_map:
+  "770101": [SEG_BEAU_TISSUE]
+  "770102": [SEG_BEAU_WASH_CARE, SEG_BEAU_HYGIENE]
+  "770201": [SEG_BEAU_COSMETICS_MFG, SEG_BEAU_COSMETIC_INGREDIENTS]
+  "770202": [SEG_BEAU_BRAND_COSMETICS]
+  "770301": [SEG_BEAU_AESTHETIC_PRODUCTS, SEG_BEAU_COSMETIC_INGREDIENTS]
+  "770302": [SEG_BEAU_AESTHETIC_SERVICES]

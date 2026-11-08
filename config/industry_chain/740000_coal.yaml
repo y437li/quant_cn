@@ -1,0 +1,127 @@
+# Coal (SW 740000) chain skeleton — plan 12 phase 1, D-097. All edges are priors (general industry knowledge).
+# Commodity nodes 动力煤/焦煤/焦炭/甲醇 live in _common.yaml as materials; products here are grades and by-products.
+sector: {sw_l1: "740000", name: 煤炭, name_en: Coal}
+
+nodes:
+  # --- segments ---
+  - {id: SEG_COAL_MINING, type: segment, name: 煤炭开采, name_en: Coal Mining, aliases: [煤矿开采]}
+  - {id: SEG_COAL_THERMAL_MINING, type: segment, name: 动力煤开采, name_en: Thermal Coal Mining, parent: SEG_COAL_MINING}
+  - {id: SEG_COAL_COKING_MINING, type: segment, name: 炼焦煤开采, name_en: Coking Coal Mining, parent: SEG_COAL_MINING}
+  - {id: SEG_COAL_WASHING, type: segment, name: 煤炭洗选, name_en: Coal Washing and Preparation, aliases: [洗煤, 选煤]}
+  - {id: SEG_COAL_COKING, type: segment, name: 焦化, name_en: Coking, aliases: [焦化行业, 独立焦化]}
+  - {id: SEG_COAL_BYPRODUCTS, type: segment, name: 焦化副产品深加工, name_en: Coking By-Product Processing, aliases: [煤焦油深加工]}
+  - {id: SEG_COAL_CBM, type: segment, name: 煤层气开发, name_en: Coalbed Methane}
+  - {id: SEG_COAL_LOGISTICS, type: segment, name: 煤炭运销, name_en: Coal Logistics and Trading, aliases: [煤炭贸易, 煤炭物流]}
+
+  # --- thermal coal grades ---
+  - {id: PROD_COAL_STEAM_COAL, type: product, name: 动力煤商品煤, name_en: Steam Coal, segment: SEG_COAL_THERMAL_MINING, aliases: [电煤, 发热量5500大卡动力煤, 5500K动力煤]}
+  - {id: PROD_COAL_LONG_FLAME, type: product, name: 长焰煤, name_en: Long-Flame Coal, parent: PROD_COAL_STEAM_COAL, segment: SEG_COAL_THERMAL_MINING}
+  - {id: PROD_COAL_NON_CAKING, type: product, name: 不粘煤, name_en: Non-Caking Coal, parent: PROD_COAL_STEAM_COAL, segment: SEG_COAL_THERMAL_MINING}
+  - {id: PROD_COAL_LIGNITE, type: product, name: 褐煤, name_en: Lignite, parent: PROD_COAL_STEAM_COAL, segment: SEG_COAL_THERMAL_MINING}
+  - {id: PROD_COAL_ANTHRACITE, type: product, name: 无烟煤, name_en: Anthracite, segment: SEG_COAL_THERMAL_MINING, aliases: [白煤, 化工用无烟块煤]}
+  - {id: PROD_COAL_PCI, type: product, name: 喷吹煤, name_en: PCI Coal, segment: SEG_COAL_COKING_MINING, aliases: [高炉喷吹煤, 喷煤]}
+
+  # --- coking coal grades ---
+  - {id: PROD_COAL_PRIME_COKING, type: product, name: 主焦煤, name_en: Prime Coking Coal, segment: SEG_COAL_COKING_MINING, aliases: [强粘结焦煤]}
+  - {id: PROD_COAL_FAT_COAL, type: product, name: 肥煤, name_en: Fat Coal, segment: SEG_COAL_COKING_MINING}
+  - {id: PROD_COAL_ONE_THIRD_COKING, type: product, name: 1/3焦煤, name_en: 1/3 Coking Coal, segment: SEG_COAL_COKING_MINING}
+  - {id: PROD_COAL_GAS_COAL, type: product, name: 气煤, name_en: Gas Coal, segment: SEG_COAL_COKING_MINING}
+  - {id: PROD_COAL_LEAN_COAL, type: product, name: 瘦煤, name_en: Lean Coal, segment: SEG_COAL_COKING_MINING, aliases: [贫瘦煤]}
+  - {id: PROD_COAL_CLEAN_COKING, type: product, name: 炼焦精煤, name_en: Washed Coking Coal, segment: SEG_COAL_WASHING, aliases: [精煤, 洗精煤]}
+  - {id: PROD_COAL_MIDDLINGS, type: product, name: 洗中煤, name_en: Middlings, segment: SEG_COAL_WASHING, aliases: [中煤, 煤泥]}
+
+  # --- coke and coking by-products ---
+  - {id: PROD_COAL_MET_COKE, type: product, name: 冶金焦, name_en: Metallurgical Coke, segment: SEG_COAL_COKING, aliases: [准一级冶金焦, 高炉焦]}
+  - {id: PROD_COAL_FOUNDRY_COKE, type: product, name: 铸造焦, name_en: Foundry Coke, segment: SEG_COAL_COKING}
+  - {id: PROD_COAL_SEMI_COKE, type: product, name: 兰炭, name_en: Semi-Coke, segment: SEG_COAL_COKING, aliases: [半焦]}
+  - {id: PROD_COAL_COKE_OVEN_GAS, type: product, name: 焦炉煤气, name_en: Coke Oven Gas, segment: SEG_COAL_COKING}
+  - {id: PROD_COAL_TAR, type: product, name: 煤焦油, name_en: Coal Tar, segment: SEG_COAL_COKING}
+  - {id: PROD_COAL_CRUDE_BENZENE, type: product, name: 粗苯, name_en: Crude Benzol, segment: SEG_COAL_COKING, aliases: [焦化粗苯]}
+  - {id: PROD_COAL_PURE_BENZENE, type: product, name: 焦化苯, name_en: Coking Benzene, segment: SEG_COAL_BYPRODUCTS, aliases: [加氢苯]}
+  - {id: PROD_COAL_TAR_PITCH, type: product, name: 煤沥青, name_en: Coal Tar Pitch, segment: SEG_COAL_BYPRODUCTS, aliases: [改质沥青, 中温沥青]}
+  - {id: PROD_COAL_NEEDLE_COKE, type: product, name: 煤系针状焦, name_en: Coal-Based Needle Coke, segment: SEG_COAL_BYPRODUCTS}
+  - {id: PROD_COAL_CB_OIL, type: product, name: 炭黑油, name_en: Carbon Black Feedstock Oil, segment: SEG_COAL_BYPRODUCTS, aliases: [蒽油]}
+  - {id: PROD_COAL_INDUSTRIAL_NAPHTHALENE, type: product, name: 工业萘, name_en: Industrial Naphthalene, segment: SEG_COAL_BYPRODUCTS}
+  - {id: PROD_COAL_COG_LNG, type: product, name: 焦炉煤气制LNG, name_en: COG-to-LNG, segment: SEG_COAL_BYPRODUCTS}
+  - {id: PROD_COAL_COG_METHANOL, type: product, name: 焦炉煤气制甲醇, name_en: COG-to-Methanol, segment: SEG_COAL_BYPRODUCTS}
+  - {id: PROD_COAL_CBM_GAS, type: product, name: 煤层气, name_en: Coalbed Methane Gas, segment: SEG_COAL_CBM, aliases: [煤矿瓦斯, CBM]}
+  - {id: PROD_COAL_RAIL_TRANSPORT, type: product, name: 煤炭铁路运输, name_en: Coal Rail Transport, segment: SEG_COAL_LOGISTICS, kind: service}
+  - {id: PROD_COAL_PORT_TRADE, type: product, name: 港口煤炭贸易, name_en: Port Coal Trading, segment: SEG_COAL_LOGISTICS, kind: service, aliases: [北方港下水煤]}
+
+edges:
+  # segments
+  - [SEG_COAL_THERMAL_MINING, part_of, SEG_COAL_MINING]
+  - [SEG_COAL_COKING_MINING, part_of, SEG_COAL_MINING]
+  - [SEG_COAL_WASHING, part_of, SEG_COAL_MINING]
+  - [SEG_COAL_CBM, part_of, SEG_COAL_MINING]
+  - [SEG_COAL_BYPRODUCTS, part_of, SEG_COAL_COKING]
+  - [SEG_COAL_THERMAL_MINING, serves, MKT_THERMAL_POWER]
+  - [SEG_COAL_THERMAL_MINING, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_COAL_THERMAL_MINING, serves, MKT_CONSTRUCTION]
+  - [SEG_COAL_COKING_MINING, serves, MKT_STEEL_INDUSTRY]
+  - [SEG_COAL_WASHING, serves, MKT_STEEL_INDUSTRY]
+  - [SEG_COAL_COKING, serves, MKT_STEEL_INDUSTRY]
+  - [SEG_COAL_BYPRODUCTS, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_COAL_CBM, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_COAL_LOGISTICS, serves, MKT_THERMAL_POWER]
+  - [SEG_COAL_LOGISTICS, serves, MKT_LOGISTICS]
+  # thermal coal
+  - [MAT_THERMAL_COAL, upstream_of, PROD_COAL_STEAM_COAL]
+  - [PROD_COAL_STEAM_COAL, used_in, MKT_THERMAL_POWER]
+  - [PROD_COAL_STEAM_COAL, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_COAL_STEAM_COAL, used_in, MKT_CONSTRUCTION]
+  - [PROD_COAL_ANTHRACITE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_COAL_ANTHRACITE, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_COAL_PCI, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_COAL_STEAM_COAL, upstream_of, PROD_COAL_RAIL_TRANSPORT]
+  - [PROD_COAL_RAIL_TRANSPORT, upstream_of, PROD_COAL_PORT_TRADE]
+  - [PROD_COAL_PORT_TRADE, used_in, MKT_THERMAL_POWER]
+  # coking coal → coke
+  - [MAT_COKING_COAL, upstream_of, PROD_COAL_PRIME_COKING]
+  - [PROD_COAL_PRIME_COKING, upstream_of, PROD_COAL_CLEAN_COKING]
+  - [PROD_COAL_FAT_COAL, upstream_of, PROD_COAL_CLEAN_COKING]
+  - [PROD_COAL_ONE_THIRD_COKING, upstream_of, PROD_COAL_CLEAN_COKING]
+  - [PROD_COAL_GAS_COAL, upstream_of, PROD_COAL_CLEAN_COKING]
+  - [PROD_COAL_LEAN_COAL, upstream_of, PROD_COAL_CLEAN_COKING]
+  - [PROD_COAL_CLEAN_COKING, upstream_of, PROD_COAL_MET_COKE]
+  - [PROD_COAL_CLEAN_COKING, upstream_of, PROD_COAL_FOUNDRY_COKE]
+  - [PROD_COAL_MIDDLINGS, used_in, MKT_THERMAL_POWER]
+  - [PROD_COAL_MET_COKE, uses_material, MAT_COKING_COAL]
+  - [PROD_COAL_MET_COKE, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_COAL_FOUNDRY_COKE, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_COAL_SEMI_COKE, uses_material, MAT_THERMAL_COAL]
+  - [PROD_COAL_SEMI_COKE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_COAL_SEMI_COKE, used_in, MKT_STEEL_INDUSTRY]
+  # by-products
+  - [PROD_COAL_CLEAN_COKING, upstream_of, PROD_COAL_COKE_OVEN_GAS]
+  - [PROD_COAL_CLEAN_COKING, upstream_of, PROD_COAL_TAR]
+  - [PROD_COAL_CLEAN_COKING, upstream_of, PROD_COAL_CRUDE_BENZENE]
+  - [PROD_COAL_CRUDE_BENZENE, upstream_of, PROD_COAL_PURE_BENZENE]
+  - [PROD_COAL_TAR, upstream_of, PROD_COAL_TAR_PITCH]
+  - [PROD_COAL_TAR, upstream_of, PROD_COAL_CB_OIL]
+  - [PROD_COAL_TAR, upstream_of, PROD_COAL_INDUSTRIAL_NAPHTHALENE]
+  - [PROD_COAL_TAR_PITCH, upstream_of, PROD_COAL_NEEDLE_COKE]
+  - [PROD_COAL_COKE_OVEN_GAS, upstream_of, PROD_COAL_COG_LNG]
+  - [PROD_COAL_COKE_OVEN_GAS, upstream_of, PROD_COAL_COG_METHANOL]
+  - [PROD_COAL_TAR_PITCH, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_COAL_NEEDLE_COKE, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_COAL_NEEDLE_COKE, used_in, MKT_EV]
+  - [PROD_COAL_PURE_BENZENE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_COAL_INDUSTRIAL_NAPHTHALENE, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_COAL_COG_LNG, substitute_for, PROD_COAL_CBM_GAS]
+  - [PROD_COAL_COG_METHANOL, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_COAL_CBM_GAS, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_COAL_CBM_GAS, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_COAL_COG_LNG, used_in, MKT_LOGISTICS]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_COAL_STEAM_COAL, used_in, PROD_UTIL_COAL_POWER]
+  - [PROD_COAL_NEEDLE_COKE, upstream_of, PROD_STL_GRAPHITE_ELECTRODE]
+  - [PROD_COAL_NEEDLE_COKE, upstream_of, PROD_PWR_ARTIFICIAL_GRAPHITE]
+  - [PROD_COAL_MET_COKE, used_in, PROD_STL_HOT_METAL]
+  - [PROD_COAL_MET_COKE, upstream_of, MAT_COKE]
+  - [PROD_COAL_NEEDLE_COKE, upstream_of, MAT_GRAPHITE]
+
+sw_l3_map:
+  "740101": [SEG_COAL_THERMAL_MINING]
+  "740102": [SEG_COAL_COKING_MINING, SEG_COAL_WASHING]
+  "740201": [SEG_COAL_COKING, SEG_COAL_BYPRODUCTS]

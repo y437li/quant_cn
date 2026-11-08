@@ -1,0 +1,473 @@
+# Telecom (SW 730000) product taxonomy prior (plan 12 phase 1, D-097). Format: README.md.
+sector: {sw_l1: "730000", name: 通信, name_en: Telecommunications}
+
+nodes:
+  # ---------------- segments ----------------
+  - {id: SEG_COMM_SERVICES, type: segment, name: 通信服务, name_en: Telecom Services}
+  - {id: SEG_COMM_OPERATOR, type: segment, name: 电信运营商, name_en: Telecom Operators}
+  - {id: SEG_COMM_ENGINEERING, type: segment, name: 通信工程及服务, name_en: Telecom Engineering and Services}
+  - {id: SEG_COMM_VAS, type: segment, name: 通信应用增值服务, name_en: Telecom Value-Added Services}
+  - {id: SEG_COMM_EQUIPMENT, type: segment, name: 通信设备, name_en: Telecom Equipment}
+  - {id: SEG_COMM_NETWORK_EQUIPMENT, type: segment, name: 通信网络设备及器件, name_en: Network Equipment and Components}
+  - {id: SEG_COMM_WIRELESS, type: segment, name: 无线网络设备, name_en: Wireless Network Equipment}
+  - {id: SEG_COMM_RF_DEVICE, type: segment, name: 基站射频器件, name_en: Base Station RF Components}
+  - {id: SEG_COMM_TRANSPORT_ACCESS, type: segment, name: 光传输与接入设备, name_en: Optical Transport and Access}
+  - {id: SEG_COMM_DATACOM, type: segment, name: 数通设备, name_en: Datacom Equipment}
+  - {id: SEG_COMM_OPTICAL_MODULE, type: segment, name: 光模块, name_en: Optical Modules}
+  - {id: SEG_COMM_OPTICAL_CHIP, type: segment, name: 光通信芯片, name_en: Optical Communication Chips}
+  - {id: SEG_COMM_OPTICAL_DEVICE, type: segment, name: 光器件, name_en: Optical Components}
+  - {id: SEG_COMM_CABLE, type: segment, name: 通信线缆及配套, name_en: Telecom Cables and Accessories}
+  - {id: SEG_COMM_FIBER_CABLE, type: segment, name: 光纤光缆, name_en: Optical Fiber and Cable}
+  - {id: SEG_COMM_COPPER_INTERCONNECT, type: segment, name: 高速铜连接, name_en: High-Speed Copper Interconnect}
+  - {id: SEG_COMM_TERMINAL, type: segment, name: 通信终端及配件, name_en: Communication Terminals}
+  - {id: SEG_COMM_IOT_MODULE, type: segment, name: 物联网模组, name_en: IoT Modules}
+  - {id: SEG_COMM_OTHER, type: segment, name: 其他通信设备, name_en: Other Telecom Equipment}
+  - {id: SEG_COMM_SATELLITE, type: segment, name: 卫星通信与导航, name_en: Satellite Communication and Navigation}
+  - {id: SEG_COMM_TEST, type: segment, name: 通信测试与网络可视化, name_en: Telecom Test and Network Visibility}
+  - {id: TECH_COMM_SILICON_PHOTONICS, type: technology, name: 硅光技术, name_en: Silicon Photonics, aliases: [硅基光电子]}
+  - {id: TECH_COMM_COHERENT, type: technology, name: 相干光通信, name_en: Coherent Optical Communication}
+
+  # ---------------- operators / engineering / VAS ----------------
+  - {id: PROD_COMM_MOBILE_SERVICE, type: product, name: 移动通信服务, name_en: Mobile Service, kind: service, segment: SEG_COMM_OPERATOR, aliases: [移动业务, 5G套餐]}
+  - {id: PROD_COMM_BROADBAND, type: product, name: 固定宽带服务, name_en: Fixed Broadband, kind: service, segment: SEG_COMM_OPERATOR, aliases: [家庭宽带, 千兆宽带, FTTH]}
+  - {id: PROD_COMM_ENTERPRISE_LINE, type: product, name: 政企专线, name_en: Enterprise Leased Line, kind: service, segment: SEG_COMM_OPERATOR, aliases: [专线业务, 企业专线, IP专线]}
+  - {id: PROD_COMM_5G_PRIVATE_NETWORK, type: product, name: 5G专网, name_en: 5G Private Network, kind: service, segment: SEG_COMM_OPERATOR, aliases: [5G行业专网]}
+  - {id: PROD_COMM_OPERATOR_CLOUD, type: product, name: 运营商云, name_en: Operator Cloud, kind: service, parent: PROD_COMP_PUBLIC_CLOUD, segment: SEG_COMM_OPERATOR, aliases: [天翼云, 移动云, 联通云]}
+  - {id: PROD_COMM_TOWER_LEASING, type: product, name: 通信铁塔租赁, name_en: Tower Leasing, kind: service, segment: SEG_COMM_OPERATOR, aliases: [站址租赁]}
+  - {id: PROD_COMM_NETWORK_DESIGN, type: product, name: 通信网络规划设计, name_en: Network Planning and Design, kind: service, segment: SEG_COMM_ENGINEERING, aliases: [网络规划, 勘察设计]}
+  - {id: PROD_COMM_NETWORK_CONSTRUCTION, type: product, name: 通信工程施工, name_en: Network Construction, kind: service, segment: SEG_COMM_ENGINEERING, aliases: [通信工程, 网络建设]}
+  - {id: PROD_COMM_NETWORK_OPTIMIZATION, type: product, name: 网络优化与维护, name_en: Network Optimization and Maintenance, kind: service, segment: SEG_COMM_ENGINEERING, aliases: [网优, 代维, 网络运维]}
+  - {id: PROD_COMM_DC_ENGINEERING, type: product, name: 数据中心工程, name_en: Data Center Engineering, kind: service, segment: SEG_COMM_ENGINEERING, aliases: [数据中心建设, 机房工程, 算力中心建设]}
+  - {id: PROD_COMM_CPAAS, type: product, name: 云通信服务, name_en: CPaaS, kind: service, segment: SEG_COMM_VAS, aliases: [CPaaS, 企业短信, 云通讯]}
+  - {id: PROD_COMM_5G_MESSAGE, type: product, name: 5G消息, name_en: 5G Messaging, kind: service, parent: PROD_COMM_CPAAS, segment: SEG_COMM_VAS, aliases: [RCS]}
+  - {id: PROD_COMM_IOT_CONNECTIVITY, type: product, name: 物联网连接管理, name_en: IoT Connectivity Management, kind: service, segment: SEG_COMM_VAS, aliases: [物联网卡, CMP平台]}
+  - {id: PROD_COMM_CALL_CENTER, type: product, name: 云呼叫中心, name_en: Cloud Contact Center, kind: service, segment: SEG_COMM_VAS, aliases: [云客服, 联络中心]}
+
+  # ---------------- wireless / RF ----------------
+  - {id: PROD_COMM_BASE_STATION, type: product, name: 无线基站, name_en: Base Station, segment: SEG_COMM_WIRELESS, import_dependence: low, aliases: [基站, RAN设备]}
+  - {id: PROD_COMM_5G_BASE_STATION, type: product, name: 5G基站, name_en: 5G Base Station, parent: PROD_COMM_BASE_STATION, segment: SEG_COMM_WIRELESS, aliases: [5G宏站, gNB]}
+  - {id: PROD_COMM_SMALL_CELL, type: product, name: 小基站, name_en: Small Cell, parent: PROD_COMM_BASE_STATION, segment: SEG_COMM_WIRELESS, aliases: [微站, 皮站, 室内分布]}
+  - {id: PROD_COMM_AAU, type: product, name: 有源天线单元, name_en: Active Antenna Unit, segment: SEG_COMM_WIRELESS, aliases: [AAU, Massive MIMO]}
+  - {id: PROD_COMM_BBU, type: product, name: 基带处理单元, name_en: Baseband Unit, segment: SEG_COMM_WIRELESS, aliases: [BBU基带单元]}
+  - {id: PROD_COMM_CORE_NETWORK, type: product, name: 核心网设备, name_en: Core Network Equipment, segment: SEG_COMM_WIRELESS, aliases: [5GC, 核心网]}
+  - {id: PROD_COMM_BS_ANTENNA, type: product, name: 基站天线, name_en: Base Station Antenna, segment: SEG_COMM_RF_DEVICE, aliases: [宏站天线]}
+  - {id: PROD_COMM_BS_FILTER, type: product, name: 基站滤波器, name_en: Base Station Filter, segment: SEG_COMM_RF_DEVICE, aliases: [腔体滤波器, 介质滤波器, 陶瓷介质滤波器]}
+  - {id: PROD_COMM_PASSIVE_RF, type: product, name: 无源射频器件, name_en: Passive RF Components, segment: SEG_COMM_RF_DEVICE, aliases: [合路器, 功分器]}
+
+  # ---------------- transport / access / datacom ----------------
+  - {id: PROD_COMM_OTN, type: product, name: 光传输设备, name_en: Optical Transport Equipment, segment: SEG_COMM_TRANSPORT_ACCESS, aliases: [OTN, WDM设备, 波分设备]}
+  - {id: PROD_COMM_OLT, type: product, name: 光接入设备, name_en: Optical Line Terminal, segment: SEG_COMM_TRANSPORT_ACCESS, aliases: [OLT, PON设备, 10G PON]}
+  - {id: PROD_COMM_MICROWAVE, type: product, name: 微波传输设备, name_en: Microwave Transmission, segment: SEG_COMM_TRANSPORT_ACCESS, aliases: [微波回传]}
+  - {id: PROD_COMM_SWITCH, type: product, name: 交换机, name_en: Ethernet Switch, segment: SEG_COMM_DATACOM, aliases: [以太网交换机]}
+  - {id: PROD_COMM_DC_SWITCH, type: product, name: 数据中心交换机, name_en: Data Center Switch, parent: PROD_COMM_SWITCH, segment: SEG_COMM_DATACOM, aliases: [DC交换机, 400G交换机, 800G交换机]}
+  - {id: PROD_COMM_AI_SWITCH, type: product, name: AI集群交换机, name_en: AI Cluster Switch, parent: PROD_COMM_DC_SWITCH, segment: SEG_COMM_DATACOM, import_dependence: medium, aliases: [智算交换机, Scale-out交换机, AI网络交换机]}
+  - {id: PROD_COMM_SCALE_UP_SWITCH, type: product, name: 超节点交换机, name_en: Scale-up Switch, parent: PROD_COMM_DC_SWITCH, segment: SEG_COMM_DATACOM, import_dependence: high, aliases: [Scale-up交换机, NVLink交换机]}
+  - {id: PROD_COMM_CAMPUS_SWITCH, type: product, name: 园区交换机, name_en: Campus Switch, parent: PROD_COMM_SWITCH, segment: SEG_COMM_DATACOM, aliases: [企业交换机, 接入交换机]}
+  - {id: PROD_COMM_INDUSTRIAL_SWITCH, type: product, name: 工业交换机, name_en: Industrial Switch, parent: PROD_COMM_SWITCH, segment: SEG_COMM_DATACOM, aliases: [工业以太网交换机]}
+  - {id: PROD_COMM_WHITEBOX_SWITCH, type: product, name: 白盒交换机, name_en: White-Box Switch, parent: PROD_COMM_SWITCH, segment: SEG_COMM_DATACOM, aliases: [交换机ODM]}
+  - {id: PROD_COMM_ROUTER, type: product, name: 路由器, name_en: Router, segment: SEG_COMM_DATACOM, aliases: [核心路由器, 运营商路由器]}
+  - {id: PROD_COMM_WLAN_AP, type: product, name: 企业无线AP, name_en: Enterprise WLAN AP, segment: SEG_COMM_DATACOM, aliases: [WLAN, 无线接入点]}
+  - {id: PROD_COMM_OCS, type: product, name: 光交换机, name_en: Optical Circuit Switch, segment: SEG_COMM_DATACOM, import_dependence: medium, aliases: [OCS, 全光交换机]}
+  - {id: PROD_COMM_NIC, type: product, name: 网卡, name_en: Network Interface Card, segment: SEG_COMM_DATACOM, import_dependence: high, aliases: [智能网卡, RDMA网卡, SmartNIC]}
+
+  # ---------------- optical modules ----------------
+  - {id: PROD_COMM_OPTICAL_MODULE, type: product, name: 光模块产品, name_en: Optical Transceiver, segment: SEG_COMM_OPTICAL_MODULE, aliases: [光收发模块]}
+  - {id: PROD_COMM_DATACOM_MODULE, type: product, name: 数通光模块, name_en: Datacom Optical Module, parent: PROD_COMM_OPTICAL_MODULE, segment: SEG_COMM_OPTICAL_MODULE, aliases: [数据中心光模块]}
+  - {id: PROD_COMM_100G_MODULE, type: product, name: 100G光模块, name_en: 100G Optical Module, parent: PROD_COMM_DATACOM_MODULE, segment: SEG_COMM_OPTICAL_MODULE}
+  - {id: PROD_COMM_200G_MODULE, type: product, name: 200G光模块, name_en: 200G Optical Module, parent: PROD_COMM_DATACOM_MODULE, segment: SEG_COMM_OPTICAL_MODULE}
+  - {id: PROD_COMM_400G_MODULE, type: product, name: 400G光模块, name_en: 400G Optical Module, parent: PROD_COMM_DATACOM_MODULE, segment: SEG_COMM_OPTICAL_MODULE}
+  - {id: PROD_COMM_800G_MODULE, type: product, name: 800G光模块, name_en: 800G Optical Module, parent: PROD_COMM_DATACOM_MODULE, segment: SEG_COMM_OPTICAL_MODULE}
+  - {id: PROD_COMM_1600G_MODULE, type: product, name: 1.6T光模块, name_en: 1.6T Optical Module, parent: PROD_COMM_DATACOM_MODULE, segment: SEG_COMM_OPTICAL_MODULE, aliases: [1600G光模块]}
+  - {id: PROD_COMM_3200G_MODULE, type: product, name: 3.2T光模块, name_en: 3.2T Optical Module, parent: PROD_COMM_DATACOM_MODULE, segment: SEG_COMM_OPTICAL_MODULE, aliases: [3200G光模块]}
+  - {id: PROD_COMM_TELECOM_MODULE, type: product, name: 电信光模块, name_en: Telecom Optical Module, parent: PROD_COMM_OPTICAL_MODULE, segment: SEG_COMM_OPTICAL_MODULE, aliases: [电信侧光模块]}
+  - {id: PROD_COMM_FRONTHAUL_MODULE, type: product, name: 5G前传光模块, name_en: 5G Fronthaul Module, parent: PROD_COMM_TELECOM_MODULE, segment: SEG_COMM_OPTICAL_MODULE, aliases: [前传光模块, 25G前传]}
+  - {id: PROD_COMM_COHERENT_MODULE, type: product, name: 相干光模块, name_en: Coherent Optical Module, parent: PROD_COMM_TELECOM_MODULE, segment: SEG_COMM_OPTICAL_MODULE, import_dependence: medium, aliases: [400ZR, 800ZR, DCI光模块]}
+  - {id: PROD_COMM_PON_MODULE, type: product, name: PON光模块, name_en: PON Optical Module, parent: PROD_COMM_TELECOM_MODULE, segment: SEG_COMM_OPTICAL_MODULE, aliases: [接入网光模块, 10G PON模块]}
+  - {id: PROD_COMM_LPO_MODULE, type: product, name: LPO光模块, name_en: Linear Pluggable Optics, parent: PROD_COMM_OPTICAL_MODULE, segment: SEG_COMM_OPTICAL_MODULE, aliases: [线性直驱光模块, LRO光模块]}
+  - {id: PROD_COMM_SIPH_MODULE, type: product, name: 硅光模块, name_en: Silicon Photonics Module, parent: PROD_COMM_OPTICAL_MODULE, segment: SEG_COMM_OPTICAL_MODULE, aliases: [硅光光模块]}
+  - {id: PROD_COMM_AOC, type: product, name: 有源光缆, name_en: Active Optical Cable, segment: SEG_COMM_OPTICAL_MODULE, aliases: [AOC]}
+  - {id: PROD_COMM_CPO_ENGINE, type: product, name: CPO光引擎, name_en: CPO Optical Engine, segment: SEG_COMM_OPTICAL_MODULE, aliases: [光引擎]}
+  - {id: PROD_COMM_ELS, type: product, name: 外置光源模块, name_en: External Laser Source, segment: SEG_COMM_OPTICAL_MODULE, aliases: [ELS]}
+
+  # ---------------- optical chips ----------------
+  - {id: PROD_COMM_OPTICAL_CHIP, type: product, name: 光芯片, name_en: Optical Chip, segment: SEG_COMM_OPTICAL_CHIP, import_dependence: high, aliases: [激光器芯片]}
+  - {id: PROD_COMM_EML_CHIP, type: product, name: EML激光器芯片, name_en: EML Laser Chip, parent: PROD_COMM_OPTICAL_CHIP, segment: SEG_COMM_OPTICAL_CHIP, import_dependence: high, aliases: [EML, 电吸收调制激光器]}
+  - {id: PROD_COMM_DFB_CHIP, type: product, name: DFB激光器芯片, name_en: DFB Laser Chip, parent: PROD_COMM_OPTICAL_CHIP, segment: SEG_COMM_OPTICAL_CHIP, import_dependence: medium, aliases: [DFB]}
+  - {id: PROD_COMM_VCSEL_CHIP, type: product, name: VCSEL芯片, name_en: VCSEL Chip, parent: PROD_COMM_OPTICAL_CHIP, segment: SEG_COMM_OPTICAL_CHIP, import_dependence: high, aliases: [VCSEL, 垂直腔面发射激光器]}
+  - {id: PROD_COMM_CW_LASER, type: product, name: CW光源芯片, name_en: CW Laser Chip, parent: PROD_COMM_OPTICAL_CHIP, segment: SEG_COMM_OPTICAL_CHIP, import_dependence: high, aliases: [CW激光器, 大功率CW光源, 硅光光源]}
+  - {id: PROD_COMM_PD_CHIP, type: product, name: 探测器芯片, name_en: Photodetector Chip, parent: PROD_COMM_OPTICAL_CHIP, segment: SEG_COMM_OPTICAL_CHIP, import_dependence: medium, aliases: [PD芯片, APD, PIN, 光电探测器]}
+  - {id: PROD_COMM_SIPH_CHIP, type: product, name: 硅光芯片, name_en: Silicon Photonics Chip, parent: PROD_COMM_OPTICAL_CHIP, segment: SEG_COMM_OPTICAL_CHIP, import_dependence: high, aliases: [硅光调制器, 硅光集成芯片, Silicon Photonics PIC]}
+  - {id: PROD_COMM_TFLN_MODULATOR, type: product, name: 薄膜铌酸锂调制器, name_en: Thin-Film Lithium Niobate Modulator, parent: PROD_COMM_OPTICAL_CHIP, segment: SEG_COMM_OPTICAL_CHIP, import_dependence: medium, aliases: [TFLN, 铌酸锂调制器]}
+  - {id: PROD_COMM_PLC_CHIP, type: product, name: PLC/AWG芯片, name_en: PLC/AWG Chip, parent: PROD_COMM_OPTICAL_CHIP, segment: SEG_COMM_OPTICAL_CHIP, aliases: [PLC芯片, AWG芯片, 光分路器芯片]}
+  - {id: PROD_COMM_OPTICAL_DSP, type: product, name: 光通信DSP芯片, name_en: Optical DSP, segment: SEG_COMM_OPTICAL_CHIP, import_dependence: high, aliases: [光模块DSP, PAM4 DSP]}
+  - {id: PROD_COMM_DRIVER_TIA, type: product, name: 光通信电芯片, name_en: Optical Driver/TIA/CDR, segment: SEG_COMM_OPTICAL_CHIP, import_dependence: high, aliases: [Driver芯片, TIA, 跨阻放大器, CDR]}
+  - {id: PROD_COMM_LASER_EPI, type: product, name: 光芯片外延片, name_en: Laser Epitaxial Wafer, segment: SEG_COMM_OPTICAL_CHIP, import_dependence: medium, aliases: [InP外延片, 激光器外延片]}
+
+  # ---------------- optical devices ----------------
+  - {id: PROD_COMM_OPTICAL_DEVICE, type: product, name: 光器件产品, name_en: Optical Device, segment: SEG_COMM_OPTICAL_DEVICE, aliases: [光无源器件, 光有源器件]}
+  - {id: PROD_COMM_TOSA_ROSA, type: product, name: 光收发组件, name_en: TOSA/ROSA, parent: PROD_COMM_OPTICAL_DEVICE, segment: SEG_COMM_OPTICAL_DEVICE, aliases: [TOSA, ROSA, BOSA, OSA]}
+  - {id: PROD_COMM_TO_CAN, type: product, name: TO-CAN同轴器件, name_en: TO-CAN, parent: PROD_COMM_OPTICAL_DEVICE, segment: SEG_COMM_OPTICAL_DEVICE, aliases: [TO-CAN, TO封装]}
+  - {id: PROD_COMM_OPTICAL_ISOLATOR, type: product, name: 光隔离器, name_en: Optical Isolator, parent: PROD_COMM_OPTICAL_DEVICE, segment: SEG_COMM_OPTICAL_DEVICE, aliases: [法拉第旋光片]}
+  - {id: PROD_COMM_FAU, type: product, name: 光纤阵列, name_en: Fiber Array Unit, parent: PROD_COMM_OPTICAL_DEVICE, segment: SEG_COMM_OPTICAL_DEVICE, aliases: [FA, FAU]}
+  - {id: PROD_COMM_MPO, type: product, name: MPO连接器, name_en: MPO Connector, parent: PROD_COMM_OPTICAL_DEVICE, segment: SEG_COMM_OPTICAL_DEVICE, aliases: [MPO跳线, MPO/MTP, 多芯连接器]}
+  - {id: PROD_COMM_FIBER_CONNECTOR, type: product, name: 光纤连接器, name_en: Fiber Optic Connector, parent: PROD_COMM_OPTICAL_DEVICE, segment: SEG_COMM_OPTICAL_DEVICE, aliases: [光纤跳线, 光纤活动连接器]}
+  - {id: PROD_COMM_WDM_DEVICE, type: product, name: 波分复用器件, name_en: WDM Component, parent: PROD_COMM_OPTICAL_DEVICE, segment: SEG_COMM_OPTICAL_DEVICE, aliases: [WDM器件, CWDM, LAN-WDM, 合分波器]}
+  - {id: PROD_COMM_PLC_SPLITTER, type: product, name: 光分路器, name_en: PLC Splitter, parent: PROD_COMM_OPTICAL_DEVICE, segment: SEG_COMM_OPTICAL_DEVICE, aliases: [PLC分路器]}
+  - {id: PROD_COMM_OPTICAL_AMPLIFIER, type: product, name: 光放大器, name_en: Optical Amplifier, parent: PROD_COMM_OPTICAL_DEVICE, segment: SEG_COMM_OPTICAL_DEVICE, aliases: [EDFA, 拉曼放大器]}
+  - {id: PROD_COMM_MICRO_OPTICS, type: product, name: 微光学元件, name_en: Micro-Optics, parent: PROD_COMM_OPTICAL_DEVICE, segment: SEG_COMM_OPTICAL_DEVICE, aliases: [透镜阵列, 微透镜, 准直器]}
+  - {id: PROD_COMM_TFF, type: product, name: 薄膜滤光片, name_en: Thin-Film Filter, parent: PROD_COMM_OPTICAL_DEVICE, segment: SEG_COMM_OPTICAL_DEVICE, aliases: [TFF]}
+  - {id: PROD_COMM_FIBER_SHUFFLE, type: product, name: 光纤柔性板, name_en: Fiber Shuffle, parent: PROD_COMM_OPTICAL_DEVICE, segment: SEG_COMM_OPTICAL_DEVICE, aliases: [Shuffle Box, 光纤背板]}
+  - {id: PROD_COMM_TEC, type: product, name: 半导体热电制冷器, name_en: Thermoelectric Cooler, segment: SEG_COMM_OPTICAL_DEVICE, aliases: [TEC, 热电制冷器件]}
+
+  # ---------------- fiber / cable / copper ----------------
+  - {id: PROD_COMM_FIBER_PREFORM, type: product, name: 光纤预制棒, name_en: Fiber Preform, segment: SEG_COMM_FIBER_CABLE, aliases: [光棒, 预制棒]}
+  - {id: PROD_COMM_OPTICAL_FIBER, type: product, name: 光纤, name_en: Optical Fiber, segment: SEG_COMM_FIBER_CABLE, aliases: [单模光纤, G.652D]}
+  - {id: PROD_COMM_SPECIALTY_FIBER, type: product, name: 特种光纤, name_en: Specialty Fiber, parent: PROD_COMM_OPTICAL_FIBER, segment: SEG_COMM_FIBER_CABLE, aliases: [G.654E, 多芯光纤, 抗弯光纤, 保偏光纤]}
+  - {id: PROD_COMM_HOLLOW_CORE_FIBER, type: product, name: 空芯光纤, name_en: Hollow-Core Fiber, parent: PROD_COMM_OPTICAL_FIBER, segment: SEG_COMM_FIBER_CABLE, aliases: [空芯反谐振光纤]}
+  - {id: PROD_COMM_OPTICAL_CABLE, type: product, name: 光缆, name_en: Optical Cable, segment: SEG_COMM_FIBER_CABLE, aliases: [通信光缆, 带状光缆]}
+  - {id: PROD_COMM_SUBMARINE_CABLE, type: product, name: 海底光缆, name_en: Submarine Optical Cable, segment: SEG_COMM_FIBER_CABLE, aliases: [海洋光缆]}
+  - {id: PROD_COMM_SUBMARINE_NETWORK, type: product, name: 海洋通信系统工程, name_en: Submarine Network System, kind: service, segment: SEG_COMM_FIBER_CABLE, aliases: [海缆系统集成, 海底光缆通信系统]}
+  - {id: PROD_COMM_COAX_CABLE, type: product, name: 射频同轴电缆, name_en: RF Coaxial Cable, segment: SEG_COMM_CABLE, aliases: [同轴电缆, 漏缆, 馈线]}
+  - {id: PROD_COMM_DATA_CABLE, type: product, name: 数据电缆, name_en: Data Cable, segment: SEG_COMM_CABLE, aliases: [网线, 对绞线, Cat6]}
+  - {id: PROD_COMM_ODN, type: product, name: 光配线网络产品, name_en: ODN Products, segment: SEG_COMM_FIBER_CABLE, aliases: [ODN, 光纤配线架, 光交箱]}
+  - {id: PROD_COMM_DC_CABLING, type: product, name: 数据中心布线, name_en: Data Center Structured Cabling, segment: SEG_COMM_FIBER_CABLE, aliases: [综合布线, 预端接光缆]}
+  - {id: PROD_COMM_HIGH_SPEED_COPPER, type: product, name: 高速铜缆, name_en: High-Speed Copper Cable, segment: SEG_COMM_CU_CABLE_ASSEMBLY, aliases: [高速铜连接, 铜互连, 224G, 112G, NVLink铜缆]}
+  - {id: PROD_COMM_DAC, type: product, name: 无源直连铜缆, name_en: Direct Attach Copper, parent: PROD_COMM_HIGH_SPEED_COPPER, segment: SEG_COMM_CU_CABLE_ASSEMBLY, aliases: [DAC, 无源铜缆]}
+  - {id: PROD_COMM_AEC, type: product, name: 有源电缆, name_en: Active Electrical Cable, parent: PROD_COMM_HIGH_SPEED_COPPER, segment: SEG_COMM_CU_CABLE_ASSEMBLY, aliases: [AEC, Retimer有源电缆, DSP有源电缆]}
+  - {id: PROD_COMM_COPPER_BACKPLANE, type: product, name: 柜内铜缆背板, name_en: In-Rack Copper Backplane, parent: PROD_COMM_HIGH_SPEED_COPPER, segment: SEG_COMM_CU_BACKPLANE, aliases: [Cable Cartridge, 铜缆背板, 柜内铜连接]}
+  - {id: PROD_COMM_HIGH_SPEED_WIRE, type: product, name: 高速线材, name_en: High-Speed Bulk Cable, segment: SEG_COMM_CU_BULK_CABLE, import_dependence: medium, aliases: [高速裸线, 高速散线, Twinax, 高速通信线]}
+
+  # ---------------- terminals / IoT ----------------
+  - {id: PROD_COMM_IOT_MODULE, type: product, name: 物联网模组产品, name_en: IoT Module, segment: SEG_COMM_IOT_MODULE, aliases: [无线通信模组]}
+  - {id: PROD_COMM_CELLULAR_MODULE, type: product, name: 蜂窝通信模组, name_en: Cellular Module, parent: PROD_COMM_IOT_MODULE, segment: SEG_COMM_IOT_MODULE, aliases: [4G模组, 5G模组, Cat.1模组, LTE模组]}
+  - {id: PROD_COMM_AUTO_MODULE, type: product, name: 车载通信模组, name_en: Automotive Module, parent: PROD_COMM_IOT_MODULE, segment: SEG_COMM_IOT_MODULE, aliases: [车规模组, 5G车载模组, C-V2X模组]}
+  - {id: PROD_COMM_SMART_MODULE, type: product, name: 智能模组, name_en: Smart Module, parent: PROD_COMM_IOT_MODULE, segment: SEG_COMM_IOT_MODULE, aliases: [AI模组, 算力模组, 安卓智能模组]}
+  - {id: PROD_COMM_NON_CELLULAR_MODULE, type: product, name: 非蜂窝模组, name_en: Non-Cellular Module, parent: PROD_COMM_IOT_MODULE, segment: SEG_COMM_IOT_MODULE, aliases: [Wi-Fi模组, 蓝牙模组, LoRa模组]}
+  - {id: PROD_COMM_ONT, type: product, name: 光网络终端, name_en: Optical Network Terminal, segment: SEG_COMM_TERMINAL, aliases: [ONT, 光猫, 家庭网关]}
+  - {id: PROD_COMM_CPE, type: product, name: 无线CPE, name_en: Wireless CPE, segment: SEG_COMM_TERMINAL, aliases: [5G CPE, 4G CPE]}
+  - {id: PROD_COMM_HOME_ROUTER, type: product, name: 家用路由器, name_en: Home Router, segment: SEG_COMM_TERMINAL, aliases: [Wi-Fi路由器, 无线路由器]}
+  - {id: PROD_COMM_UC_TERMINAL, type: product, name: 统一通信终端, name_en: Unified Communications Terminal, segment: SEG_COMM_TERMINAL, aliases: [视频会议终端, IP话机]}
+  - {id: PROD_COMM_PROFESSIONAL_RADIO, type: product, name: 专网通信设备, name_en: Professional Mobile Radio, segment: SEG_COMM_TERMINAL, aliases: [对讲机, 专网对讲, PDT, TETRA]}
+
+  # ---------------- satellite / GNSS / test ----------------
+  - {id: PROD_COMM_PHASED_ARRAY, type: product, name: 相控阵天线, name_en: Phased Array Antenna, segment: SEG_COMM_SATELLITE, aliases: [相控阵]}
+  - {id: PROD_COMM_SATCOM_SERVICE, type: product, name: 卫星通信运营服务, name_en: Satellite Communication Service, kind: service, segment: SEG_COMM_SATELLITE, aliases: [卫星宽带]}
+  - {id: PROD_COMM_GNSS_MODULE, type: product, name: 北斗定位模组, name_en: GNSS Module, segment: SEG_COMM_SATELLITE, aliases: [GNSS模组, 高精度定位板卡]}
+  - {id: PROD_COMM_GNSS_RECEIVER, type: product, name: 高精度GNSS接收机, name_en: High-Precision GNSS Receiver, segment: SEG_COMM_SATELLITE, aliases: [RTK接收机, 测量型接收机]}
+  - {id: PROD_COMM_POSITIONING_SERVICE, type: product, name: 高精度定位服务, name_en: High-Precision Positioning Service, kind: service, segment: SEG_COMM_SATELLITE, aliases: [北斗地基增强, CORS, 位置服务]}
+  - {id: PROD_COMM_TEST_INSTRUMENT, type: product, name: 通信测试仪表, name_en: Telecom Test Instrument, segment: SEG_COMM_TEST, import_dependence: high, aliases: [网络测试仪, 无线测试仪]}
+  - {id: PROD_COMM_OPTICAL_TEST, type: product, name: 光通信测试仪器, name_en: Optical Test Instrument, parent: PROD_COMM_TEST_INSTRUMENT, segment: SEG_COMM_TEST, import_dependence: high, aliases: [误码仪]}
+  - {id: PROD_COMM_NETWORK_VISIBILITY, type: product, name: 网络可视化, name_en: Network Visibility, segment: SEG_COMM_TEST, aliases: [DPI, 网络流量分析, 信令监测]}
+  # --- added by merge 2026-11-07 ---
+  - {id: SEG_COMM_CU_BULK_CABLE, type: segment, name: 高速线材, name_en: High-Speed Bulk Cable Segment, parent: SEG_COMM_COPPER_INTERCONNECT, aliases: [高速线材及导体]}
+  - {id: SEG_COMM_CU_CABLE_ASSEMBLY, type: segment, name: 铜缆组件, name_en: Copper Cable Assemblies, parent: SEG_COMM_COPPER_INTERCONNECT, aliases: [高速铜缆组件]}
+  - {id: SEG_COMM_CU_BACKPLANE, type: segment, name: 柜内铜缆与背板, name_en: In-Rack Copper and Backplane, parent: SEG_COMM_COPPER_INTERCONNECT}
+  - {id: SEG_COMM_CU_HS_CONNECTOR, type: segment, name: 高速连接器组件, name_en: High-Speed Connectors for Copper Links, parent: SEG_COMM_COPPER_INTERCONNECT}
+  - {id: SEG_COMM_CU_ACTIVE_CHIP, type: segment, name: 铜缆有源芯片, name_en: Active Copper Cable Chips, parent: SEG_COMM_COPPER_INTERCONNECT}
+  - {id: PROD_COMM_SILVER_PLATED_CONDUCTOR, type: product, name: 镀银铜导体, name_en: Silver-Plated Copper Conductor, segment: SEG_COMM_CU_BULK_CABLE, aliases: [镀银铜线, 镀银铜导线]}
+  - {id: PROD_COMM_FOAM_INSULATION, type: product, name: 发泡氟塑料绝缘料, name_en: Foamed FEP/PTFE Insulation, segment: SEG_COMM_CU_BULK_CABLE, import_dependence: medium, aliases: [FEP发泡绝缘料, PTFE发泡绝缘料, 物理发泡绝缘料]}
+  - {id: PROD_COMM_SHIELD_TAPE, type: product, name: 屏蔽铝箔聚酯复合膜, name_en: Aluminium-Polyester Shielding Tape, segment: SEG_COMM_CU_BULK_CABLE, aliases: [屏蔽铝箔, 铝箔麦拉, 铝塑复合屏蔽带]}
+  - {id: PROD_COMM_ACC, type: product, name: 有源铜缆, name_en: Active Copper Cable, parent: PROD_COMM_HIGH_SPEED_COPPER, segment: SEG_COMM_CU_CABLE_ASSEMBLY, aliases: [ACC, Redriver有源铜缆]}
+  - {id: PROD_COMM_HS_IO_CONNECTOR, type: product, name: 高速I/O连接器, name_en: High-Speed I/O Connector, parent: PROD_ELEC_IO_CONNECTOR, segment: SEG_COMM_CU_HS_CONNECTOR, import_dependence: medium, aliases: [QSFP-DD连接器, OSFP连接器, QSFP连接器, OSFP笼子]}
+  - {id: PROD_COMM_BACKPLANE_CONNECTOR, type: product, name: 背板连接器, name_en: Backplane Connector, parent: PROD_ELEC_HIGH_SPEED_CONNECTOR, segment: SEG_COMM_CU_HS_CONNECTOR, import_dependence: high, aliases: [高速背板连接器, 正交背板连接器]}
+  - {id: PROD_COMM_RETIMER_CHIP, type: product, name: Retimer芯片, name_en: Retimer Chip for AEC, segment: SEG_COMM_CU_ACTIVE_CHIP, import_dependence: high, aliases: [AEC Retimer, 铜缆DSP芯片]}
+  - {id: PROD_COMM_REDRIVER_CHIP, type: product, name: Redriver芯片, name_en: Redriver Chip, segment: SEG_COMM_CU_ACTIVE_CHIP, import_dependence: high, aliases: [线性Redriver, 线性驱动芯片]}
+  - {id: PROD_COMM_CABLE_ASSEMBLY_OEM, type: product, name: 线缆组件代工, name_en: Cable Assembly Contract Manufacturing, segment: SEG_COMM_CU_CABLE_ASSEMBLY, kind: service, aliases: [高速线缆组件代工, 铜缆组装代工]}
+
+edges:
+  - [SEG_COMM_OPERATOR, part_of, SEG_COMM_SERVICES]
+  - [SEG_COMM_ENGINEERING, part_of, SEG_COMM_SERVICES]
+  - [SEG_COMM_VAS, part_of, SEG_COMM_SERVICES]
+  - [SEG_COMM_NETWORK_EQUIPMENT, part_of, SEG_COMM_EQUIPMENT]
+  - [SEG_COMM_WIRELESS, part_of, SEG_COMM_NETWORK_EQUIPMENT]
+  - [SEG_COMM_RF_DEVICE, part_of, SEG_COMM_NETWORK_EQUIPMENT]
+  - [SEG_COMM_TRANSPORT_ACCESS, part_of, SEG_COMM_NETWORK_EQUIPMENT]
+  - [SEG_COMM_DATACOM, part_of, SEG_COMM_NETWORK_EQUIPMENT]
+  - [SEG_COMM_OPTICAL_MODULE, part_of, SEG_COMM_NETWORK_EQUIPMENT]
+  - [SEG_COMM_OPTICAL_CHIP, part_of, SEG_COMM_NETWORK_EQUIPMENT]
+  - [SEG_COMM_OPTICAL_DEVICE, part_of, SEG_COMM_NETWORK_EQUIPMENT]
+  - [SEG_COMM_CABLE, part_of, SEG_COMM_EQUIPMENT]
+  - [SEG_COMM_FIBER_CABLE, part_of, SEG_COMM_CABLE]
+  - [SEG_COMM_COPPER_INTERCONNECT, part_of, SEG_COMM_CABLE]
+  - [SEG_COMM_TERMINAL, part_of, SEG_COMM_EQUIPMENT]
+  - [SEG_COMM_IOT_MODULE, part_of, SEG_COMM_TERMINAL]
+  - [SEG_COMM_OTHER, part_of, SEG_COMM_EQUIPMENT]
+  - [SEG_COMM_SATELLITE, part_of, SEG_COMM_OTHER]
+  - [SEG_COMM_TEST, part_of, SEG_COMM_OTHER]
+  - [SEG_COMM_OPERATOR, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_COMM_OPERATOR, serves, MKT_ENTERPRISE_IT]
+  - [SEG_COMM_OPERATOR, serves, MKT_GOVERNMENT]
+  - [SEG_COMM_ENGINEERING, serves, MKT_TELECOM_NETWORK]
+  - [SEG_COMM_ENGINEERING, serves, MKT_DATA_CENTER]
+  - [SEG_COMM_VAS, serves, MKT_ENTERPRISE_IT]
+  - [SEG_COMM_VAS, serves, MKT_FINANCE]
+  - [SEG_COMM_NETWORK_EQUIPMENT, serves, MKT_TELECOM_NETWORK]
+  - [SEG_COMM_WIRELESS, serves, MKT_TELECOM_NETWORK]
+  - [SEG_COMM_RF_DEVICE, serves, MKT_TELECOM_NETWORK]
+  - [SEG_COMM_TRANSPORT_ACCESS, serves, MKT_TELECOM_NETWORK]
+  - [SEG_COMM_DATACOM, serves, MKT_AI_DATA_CENTER]
+  - [SEG_COMM_DATACOM, serves, MKT_DATA_CENTER]
+  - [SEG_COMM_DATACOM, serves, MKT_ENTERPRISE_IT]
+  - [SEG_COMM_DATACOM, serves, MKT_TELECOM_NETWORK]
+  - [SEG_COMM_OPTICAL_MODULE, serves, MKT_AI_DATA_CENTER]
+  - [SEG_COMM_OPTICAL_MODULE, serves, MKT_DATA_CENTER]
+  - [SEG_COMM_OPTICAL_MODULE, serves, MKT_TELECOM_NETWORK]
+  - [SEG_COMM_OPTICAL_CHIP, serves, MKT_AI_DATA_CENTER]
+  - [SEG_COMM_OPTICAL_CHIP, serves, MKT_TELECOM_NETWORK]
+  - [SEG_COMM_OPTICAL_DEVICE, serves, MKT_AI_DATA_CENTER]
+  - [SEG_COMM_OPTICAL_DEVICE, serves, MKT_TELECOM_NETWORK]
+  - [SEG_COMM_CABLE, serves, MKT_TELECOM_NETWORK]
+  - [SEG_COMM_FIBER_CABLE, serves, MKT_TELECOM_NETWORK]
+  - [SEG_COMM_FIBER_CABLE, serves, MKT_DATA_CENTER]
+  - [SEG_COMM_COPPER_INTERCONNECT, serves, MKT_AI_DATA_CENTER]
+  - [SEG_COMM_TERMINAL, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_COMM_TERMINAL, serves, MKT_ENTERPRISE_IT]
+  - [SEG_COMM_IOT_MODULE, serves, MKT_EV]
+  - [SEG_COMM_IOT_MODULE, serves, MKT_POWER_GRID]
+  - [SEG_COMM_IOT_MODULE, serves, MKT_HOME_APPLIANCE]
+  - [SEG_COMM_IOT_MODULE, serves, MKT_INDUSTRIAL_AUTOMATION]
+  - [SEG_COMM_OTHER, serves, MKT_AEROSPACE]
+  - [SEG_COMM_SATELLITE, serves, MKT_AEROSPACE]
+  - [SEG_COMM_SATELLITE, serves, MKT_DEFENSE]
+  - [SEG_COMM_SATELLITE, serves, MKT_LOW_ALTITUDE]
+  - [SEG_COMM_TEST, serves, MKT_TELECOM_NETWORK]
+  # --- services ---
+  - [PROD_COMM_MOBILE_SERVICE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_COMM_BROADBAND, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_COMM_ENTERPRISE_LINE, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMM_ENTERPRISE_LINE, used_in, MKT_FINANCE]
+  - [PROD_COMM_ENTERPRISE_LINE, used_in, MKT_GOVERNMENT]
+  - [PROD_COMM_5G_PRIVATE_NETWORK, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_COMM_5G_PRIVATE_NETWORK, used_in, MKT_MINING]
+  - [PROD_COMM_OPERATOR_CLOUD, used_in, MKT_GOVERNMENT]
+  - [PROD_COMM_OPERATOR_CLOUD, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMM_TOWER_LEASING, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_COMM_NETWORK_DESIGN, upstream_of, PROD_COMM_NETWORK_CONSTRUCTION]
+  - [PROD_COMM_NETWORK_CONSTRUCTION, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_COMM_NETWORK_OPTIMIZATION, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_COMM_DC_ENGINEERING, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMM_DC_ENGINEERING, used_in, MKT_DATA_CENTER]
+  - [PROD_COMM_CPAAS, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMM_CPAAS, used_in, MKT_FINANCE]
+  - [PROD_COMM_IOT_CONNECTIVITY, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMM_CALL_CENTER, used_in, MKT_FINANCE]
+  - [TECH_5G6G, enables, PROD_COMM_5G_PRIVATE_NETWORK]
+  - [TECH_5G6G, enables, PROD_COMM_5G_BASE_STATION]
+  - [TECH_5G6G, enables, PROD_COMM_AAU]
+  - [TECH_5G6G, enables, PROD_COMM_FRONTHAUL_MODULE]
+  - [TECH_5G6G, enables, PROD_COMM_CELLULAR_MODULE]
+  - [TECH_5G6G, enables, PROD_COMM_CPE]
+  - [TECH_5G6G, enables, PROD_COMM_5G_MESSAGE]
+  - [TECH_IOT, enables, PROD_COMM_IOT_CONNECTIVITY]
+  - [TECH_IOT, enables, PROD_COMM_IOT_MODULE]
+  # --- wireless ---
+  - [PROD_COMM_AAU, component_of, PROD_COMM_5G_BASE_STATION]
+  - [PROD_COMM_BBU, component_of, PROD_COMM_5G_BASE_STATION]
+  - [PROD_COMM_BS_FILTER, component_of, PROD_COMM_AAU]
+  - [PROD_COMM_BS_ANTENNA, component_of, PROD_COMM_BASE_STATION]
+  - [PROD_COMM_PASSIVE_RF, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_ELEC_GAN_RF, component_of, PROD_COMM_AAU]
+  - [PROD_ELEC_FPGA, component_of, PROD_COMM_BBU]
+  - [PROD_COMM_BASE_STATION, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_COMM_CORE_NETWORK, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_COMM_FRONTHAUL_MODULE, component_of, PROD_COMM_AAU]
+  # --- transport / access / datacom ---
+  - [PROD_COMM_OTN, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_COMM_OLT, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_COMM_MICROWAVE, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_COMM_ROUTER, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_COMM_COHERENT_MODULE, component_of, PROD_COMM_OTN]
+  - [PROD_COMM_COHERENT_MODULE, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMM_OPTICAL_AMPLIFIER, component_of, PROD_COMM_OTN]
+  - [PROD_COMM_WDM_DEVICE, component_of, PROD_COMM_OTN]
+  - [PROD_COMM_PON_MODULE, component_of, PROD_COMM_OLT]
+  - [PROD_COMM_PON_MODULE, component_of, PROD_COMM_ONT]
+  - [PROD_COMM_ONT, used_in, PROD_COMM_BROADBAND]
+  - [PROD_COMM_ONT, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_COMM_HOME_ROUTER, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_COMM_CPE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_ELEC_CONNECTIVITY_CHIP, component_of, PROD_COMM_HOME_ROUTER]
+  - [PROD_COMM_DC_SWITCH, used_in, MKT_DATA_CENTER]
+  - [PROD_COMM_AI_SWITCH, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMM_SCALE_UP_SWITCH, component_of, PROD_COMP_RACK_SCALE_AI]
+  - [PROD_COMM_CAMPUS_SWITCH, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMM_INDUSTRIAL_SWITCH, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_COMM_INDUSTRIAL_SWITCH, used_in, MKT_POWER_GRID]
+  - [PROD_COMM_WLAN_AP, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMM_OCS, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMM_OCS, substitute_for, PROD_COMM_AI_SWITCH]
+  - [PROD_COMM_NIC, component_of, PROD_COMP_AI_SERVER]
+  - [PROD_ELEC_DPU, component_of, PROD_COMM_NIC]
+  # --- optical modules ---
+  - [PROD_COMM_OPTICAL_MODULE, component_of, PROD_COMM_SWITCH]
+  - [PROD_COMM_DATACOM_MODULE, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMM_800G_MODULE, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMM_1600G_MODULE, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMM_3200G_MODULE, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMM_400G_MODULE, used_in, MKT_DATA_CENTER]
+  - [PROD_COMM_100G_MODULE, used_in, MKT_DATA_CENTER]
+  - [PROD_COMM_200G_MODULE, used_in, MKT_DATA_CENTER]
+  - [PROD_COMM_AOC, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMM_LPO_MODULE, substitute_for, PROD_COMM_800G_MODULE]
+  - [PROD_COMM_CPO_ENGINE, substitute_for, PROD_COMM_1600G_MODULE]
+  - [PROD_COMM_CPO_ENGINE, component_of, PROD_COMM_AI_SWITCH]
+  - [PROD_COMM_ELS, used_in, PROD_COMM_CPO_ENGINE]
+  - [PROD_COMM_CW_LASER, component_of, PROD_COMM_ELS]
+  - [PROD_COMM_CW_LASER, component_of, PROD_COMM_SIPH_MODULE]
+  - [PROD_COMM_SIPH_CHIP, component_of, PROD_COMM_SIPH_MODULE]
+  - [PROD_COMM_SIPH_CHIP, component_of, PROD_COMM_CPO_ENGINE]
+  - [PROD_COMM_EML_CHIP, component_of, PROD_COMM_TOSA_ROSA]
+  - [PROD_COMM_EML_CHIP, component_of, PROD_COMM_800G_MODULE]
+  - [PROD_COMM_EML_CHIP, component_of, PROD_COMM_1600G_MODULE]
+  - [PROD_COMM_VCSEL_CHIP, component_of, PROD_COMM_AOC]
+  - [PROD_COMM_VCSEL_CHIP, component_of, PROD_COMM_DATACOM_MODULE]
+  - [PROD_COMM_VCSEL_CHIP, used_in, MKT_SMARTPHONE]
+  - [PROD_COMM_DFB_CHIP, component_of, PROD_COMM_FRONTHAUL_MODULE]
+  - [PROD_COMM_DFB_CHIP, component_of, PROD_COMM_PON_MODULE]
+  - [PROD_COMM_PD_CHIP, component_of, PROD_COMM_TOSA_ROSA]
+  - [PROD_COMM_OPTICAL_DSP, component_of, PROD_COMM_800G_MODULE]
+  - [PROD_COMM_OPTICAL_DSP, component_of, PROD_COMM_1600G_MODULE]
+  - [PROD_COMM_OPTICAL_DSP, component_of, PROD_COMM_COHERENT_MODULE]
+  - [PROD_COMM_DRIVER_TIA, component_of, PROD_COMM_OPTICAL_MODULE]
+  - [PROD_COMM_DRIVER_TIA, component_of, PROD_COMM_LPO_MODULE]
+  - [PROD_COMM_TFLN_MODULATOR, component_of, PROD_COMM_COHERENT_MODULE]
+  - [PROD_COMM_TOSA_ROSA, component_of, PROD_COMM_OPTICAL_MODULE]
+  - [PROD_COMM_TO_CAN, component_of, PROD_COMM_FRONTHAUL_MODULE]
+  - [PROD_COMM_TO_CAN, component_of, PROD_COMM_PON_MODULE]
+  - [PROD_COMM_OPTICAL_ISOLATOR, component_of, PROD_COMM_TOSA_ROSA]
+  - [PROD_COMM_TEC, component_of, PROD_COMM_TOSA_ROSA]
+  - [PROD_COMM_FAU, component_of, PROD_COMM_SIPH_MODULE]
+  - [PROD_COMM_FAU, component_of, PROD_COMM_CPO_ENGINE]
+  - [PROD_COMM_MICRO_OPTICS, component_of, PROD_COMM_OPTICAL_MODULE]
+  - [PROD_COMM_TFF, component_of, PROD_COMM_WDM_DEVICE]
+  - [PROD_COMM_WDM_DEVICE, component_of, PROD_COMM_DATACOM_MODULE]
+  - [PROD_COMM_PLC_CHIP, component_of, PROD_COMM_PLC_SPLITTER]
+  - [PROD_COMM_PLC_CHIP, component_of, PROD_COMM_WDM_DEVICE]
+  - [PROD_COMM_PLC_SPLITTER, component_of, PROD_COMM_ODN]
+  - [PROD_COMM_FIBER_SHUFFLE, used_in, PROD_COMM_AI_SWITCH]
+  - [PROD_COMM_LASER_EPI, upstream_of, PROD_COMM_EML_CHIP]
+  - [PROD_COMM_LASER_EPI, upstream_of, PROD_COMM_DFB_CHIP]
+  - [PROD_COMM_LASER_EPI, upstream_of, PROD_COMM_CW_LASER]
+  - [PROD_COMM_LASER_EPI, upstream_of, PROD_COMM_VCSEL_CHIP]
+  - [PROD_ELEC_INP_SUBSTRATE, upstream_of, PROD_COMM_LASER_EPI]
+  - [PROD_ELEC_INP_SUBSTRATE, upstream_of, PROD_COMM_PD_CHIP]
+  - [PROD_ELEC_GAAS_SUBSTRATE, upstream_of, PROD_COMM_LASER_EPI]
+  - [PROD_ELEC_MOCVD, used_in, PROD_COMM_LASER_EPI]
+  - [PROD_ELEC_SOI_WAFER, upstream_of, PROD_COMM_SIPH_CHIP]
+  - [TECH_CPO, enables, PROD_COMM_CPO_ENGINE]
+  - [TECH_CPO, enables, PROD_COMM_ELS]
+  - [TECH_CPO, enables, PROD_COMM_LPO_MODULE]
+  - [TECH_CPO, enables, PROD_COMM_FIBER_SHUFFLE]
+  - [TECH_COMM_SILICON_PHOTONICS, enables, PROD_COMM_SIPH_CHIP]
+  - [TECH_COMM_SILICON_PHOTONICS, enables, PROD_COMM_SIPH_MODULE]
+  - [TECH_COMM_SILICON_PHOTONICS, enables, PROD_COMM_CW_LASER]
+  - [TECH_COMM_SILICON_PHOTONICS, enables, PROD_COMM_CPO_ENGINE]
+  - [TECH_COMM_COHERENT, enables, PROD_COMM_COHERENT_MODULE]
+  - [TECH_COMM_COHERENT, enables, PROD_COMM_TFLN_MODULATOR]
+  - [PROD_COMM_OPTICAL_TEST, used_in, PROD_COMM_OPTICAL_MODULE]
+  # --- fiber / cable / copper ---
+  - [PROD_COMM_FIBER_PREFORM, uses_material, MAT_QUARTZ]
+  - [PROD_COMM_FIBER_PREFORM, uses_material, MAT_GALLIUM_GERMANIUM]
+  - [PROD_COMM_FIBER_PREFORM, upstream_of, PROD_COMM_OPTICAL_FIBER]
+  - [PROD_COMM_OPTICAL_FIBER, upstream_of, PROD_COMM_OPTICAL_CABLE]
+  - [PROD_COMM_OPTICAL_FIBER, upstream_of, PROD_COMM_SUBMARINE_CABLE]
+  - [PROD_COMM_OPTICAL_FIBER, upstream_of, PROD_COMM_MPO]
+  - [PROD_COMM_OPTICAL_FIBER, upstream_of, PROD_COMM_FIBER_CONNECTOR]
+  - [PROD_COMM_OPTICAL_FIBER, upstream_of, PROD_COMM_FAU]
+  - [PROD_COMM_OPTICAL_CABLE, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_COMM_SPECIALTY_FIBER, used_in, MKT_DEFENSE]
+  - [PROD_COMM_HOLLOW_CORE_FIBER, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMM_SUBMARINE_CABLE, component_of, PROD_COMM_SUBMARINE_NETWORK]
+  - [PROD_COMM_OPTICAL_AMPLIFIER, component_of, PROD_COMM_SUBMARINE_NETWORK]
+  - [PROD_COMM_SUBMARINE_NETWORK, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_COMM_COAX_CABLE, uses_material, MAT_COPPER]
+  - [PROD_COMM_COAX_CABLE, used_in, PROD_COMM_BASE_STATION]
+  - [PROD_COMM_DATA_CABLE, uses_material, MAT_COPPER]
+  - [PROD_COMM_DATA_CABLE, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMM_ODN, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_COMM_MPO, component_of, PROD_COMM_DC_CABLING]
+  - [PROD_COMM_FIBER_CONNECTOR, component_of, PROD_COMM_DC_CABLING]
+  - [PROD_COMM_DC_CABLING, used_in, MKT_DATA_CENTER]
+  - [PROD_COMM_HIGH_SPEED_WIRE, uses_material, MAT_COPPER]
+  - [PROD_COMM_HIGH_SPEED_WIRE, uses_material, MAT_SILVER]
+  - [PROD_COMM_HIGH_SPEED_WIRE, upstream_of, PROD_COMM_DAC]
+  - [PROD_COMM_HIGH_SPEED_WIRE, upstream_of, PROD_COMM_AEC]
+  - [PROD_COMM_HIGH_SPEED_WIRE, upstream_of, PROD_COMM_COPPER_BACKPLANE]
+  - [PROD_COMM_DAC, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMM_AEC, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMM_DAC, substitute_for, PROD_COMM_AOC]
+  - [PROD_COMM_AEC, substitute_for, PROD_COMM_AOC]
+  - [PROD_COMM_COPPER_BACKPLANE, component_of, PROD_COMP_RACK_SCALE_AI]
+  - [TECH_ELEC_HIGH_SPEED_INTERCONNECT, enables, PROD_COMM_AEC]
+  - [TECH_ELEC_HIGH_SPEED_INTERCONNECT, enables, PROD_COMM_COPPER_BACKPLANE]
+  # --- terminals ---
+  - [PROD_COMM_CELLULAR_MODULE, used_in, MKT_POWER_GRID]
+  - [PROD_COMM_CELLULAR_MODULE, used_in, MKT_INDUSTRIAL_AUTOMATION]
+  - [PROD_COMM_AUTO_MODULE, used_in, MKT_EV]
+  - [PROD_COMM_SMART_MODULE, used_in, MKT_ROBOTICS]
+  - [PROD_COMM_NON_CELLULAR_MODULE, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_ELEC_CONNECTIVITY_CHIP, component_of, PROD_COMM_NON_CELLULAR_MODULE]
+  - [PROD_ELEC_AIOT_SOC, component_of, PROD_COMM_SMART_MODULE]
+  - [PROD_COMM_UC_TERMINAL, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_COMM_PROFESSIONAL_RADIO, used_in, MKT_GOVERNMENT]
+  # --- satellite / GNSS / test ---
+  - [PROD_DEF_SATELLITE_PAYLOAD, component_of, PROD_DEF_LEO_COMM_SATELLITE]
+  - [PROD_COMM_PHASED_ARRAY, component_of, PROD_DEF_SATELLITE_PAYLOAD]
+  - [PROD_COMM_PHASED_ARRAY, component_of, PROD_DEF_SATCOM_TERMINAL]
+  - [PROD_ELEC_GAN_RF, component_of, PROD_COMM_PHASED_ARRAY]
+  - [PROD_DEF_LEO_COMM_SATELLITE, upstream_of, PROD_COMM_SATCOM_SERVICE]
+  - [PROD_COMM_SATCOM_SERVICE, used_in, MKT_AEROSPACE]
+  - [PROD_DEF_BEIDOU_CHIP_MODULE, component_of, PROD_COMM_GNSS_MODULE]
+  - [PROD_COMM_GNSS_MODULE, component_of, PROD_COMM_GNSS_RECEIVER]
+  - [PROD_COMM_GNSS_MODULE, used_in, MKT_EV]
+  - [PROD_COMM_GNSS_MODULE, used_in, MKT_LOW_ALTITUDE]
+  - [PROD_COMM_GNSS_RECEIVER, used_in, MKT_CONSTRUCTION]
+  - [PROD_COMM_GNSS_RECEIVER, used_in, MKT_AGRICULTURE]
+  - [PROD_COMM_POSITIONING_SERVICE, used_in, MKT_EV]
+  - [PROD_COMM_TEST_INSTRUMENT, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_COMM_NETWORK_VISIBILITY, used_in, MKT_TELECOM_NETWORK]
+  - [PROD_COMM_NETWORK_VISIBILITY, used_in, MKT_GOVERNMENT]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [SEG_COMM_CU_BULK_CABLE, part_of, SEG_COMM_COPPER_INTERCONNECT]
+  - [SEG_COMM_CU_CABLE_ASSEMBLY, part_of, SEG_COMM_COPPER_INTERCONNECT]
+  - [SEG_COMM_CU_BACKPLANE, part_of, SEG_COMM_COPPER_INTERCONNECT]
+  - [SEG_COMM_CU_HS_CONNECTOR, part_of, SEG_COMM_COPPER_INTERCONNECT]
+  - [SEG_COMM_CU_ACTIVE_CHIP, part_of, SEG_COMM_COPPER_INTERCONNECT]
+  - [SEG_COMM_CU_ACTIVE_CHIP, serves, MKT_AI_DATA_CENTER]
+  - [PROD_COMM_SILVER_PLATED_CONDUCTOR, uses_material, MAT_COPPER]
+  - [PROD_COMM_SILVER_PLATED_CONDUCTOR, uses_material, MAT_SILVER]
+  - [PROD_COMM_SILVER_PLATED_CONDUCTOR, upstream_of, PROD_COMM_HIGH_SPEED_WIRE]
+  - [PROD_COMM_FOAM_INSULATION, upstream_of, PROD_COMM_HIGH_SPEED_WIRE]
+  - [PROD_COMM_SHIELD_TAPE, upstream_of, PROD_COMM_HIGH_SPEED_WIRE]
+  - [PROD_COMM_HIGH_SPEED_WIRE, upstream_of, PROD_COMM_ACC]
+  - [PROD_COMM_REDRIVER_CHIP, component_of, PROD_COMM_ACC]
+  - [PROD_COMM_RETIMER_CHIP, component_of, PROD_COMM_AEC]
+  - [PROD_COMM_HS_IO_CONNECTOR, component_of, PROD_COMM_DC_SWITCH]
+  - [PROD_COMM_HS_IO_CONNECTOR, component_of, PROD_COMP_AI_SERVER]
+  - [PROD_COMM_BACKPLANE_CONNECTOR, component_of, PROD_COMM_COPPER_BACKPLANE]
+  - [PROD_COMM_BACKPLANE_CONNECTOR, component_of, PROD_COMP_RACK_SCALE_AI]
+  - [PROD_COMM_CABLE_ASSEMBLY_OEM, upstream_of, PROD_COMM_DAC]
+  - [PROD_COMM_CABLE_ASSEMBLY_OEM, upstream_of, PROD_COMM_ACC]
+  - [PROD_COMM_CABLE_ASSEMBLY_OEM, upstream_of, PROD_COMM_AEC]
+  - [PROD_COMM_DAC, used_in, PROD_COMM_DC_SWITCH]
+  - [PROD_COMM_ACC, used_in, PROD_COMM_DC_SWITCH]
+  - [PROD_COMM_AEC, used_in, PROD_COMM_DC_SWITCH]
+  - [PROD_COMM_DAC, used_in, PROD_COMP_AI_SERVER]
+  - [PROD_COMM_ACC, used_in, PROD_COMP_AI_SERVER]
+  - [PROD_COMM_AEC, used_in, PROD_COMP_AI_SERVER]
+  - [PROD_COMM_DAC, used_in, PROD_COMP_RACK_SCALE_AI]
+  - [PROD_COMM_ACC, used_in, PROD_COMP_RACK_SCALE_AI]
+  - [PROD_COMM_AEC, used_in, PROD_COMP_RACK_SCALE_AI]
+  - [PROD_COMM_ACC, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_COMM_ACC, substitute_for, PROD_COMM_AOC]
+  - [PROD_COMM_AEC, substitute_for, PROD_COMM_LPO_MODULE]
+  - [PROD_COMM_AEC, substitute_for, PROD_COMM_800G_MODULE]
+
+sw_l3_map:
+  "730102": [SEG_COMM_OPERATOR]
+  "730103": [SEG_COMM_ENGINEERING]
+  "730104": [SEG_COMM_VAS]
+  "730204": [SEG_COMM_NETWORK_EQUIPMENT, SEG_COMM_WIRELESS, SEG_COMM_RF_DEVICE, SEG_COMM_TRANSPORT_ACCESS, SEG_COMM_DATACOM, SEG_COMM_OPTICAL_MODULE, SEG_COMM_OPTICAL_CHIP, SEG_COMM_OPTICAL_DEVICE]
+  "730205": [SEG_COMM_CABLE, SEG_COMM_FIBER_CABLE, SEG_COMM_COPPER_INTERCONNECT]
+  "730206": [SEG_COMM_TERMINAL, SEG_COMM_IOT_MODULE]
+  "730207": [SEG_COMM_OTHER, SEG_COMM_SATELLITE, SEG_COMM_TEST]

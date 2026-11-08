@@ -13,6 +13,7 @@ import urllib.request
 from collections.abc import Sequence
 from pathlib import Path
 
+import duckdb
 from rich.console import Console
 from rich.logging import RichHandler
 from rich.table import Table
@@ -21,7 +22,9 @@ from quant_cn.core.clock import Clock
 from quant_cn.core.config import Config
 from quant_cn.core.date_codec import DateCodec
 from quant_cn.core.exceptions import LakeError, QuantCnError
+from quant_cn.data_loading.document_downloader import DocumentDownloader
 from quant_cn.lake.compactor import Compactor
+from quant_cn.lake.document_views import DocumentViews
 from quant_cn.lake.fetch_log import FetchLog
 from quant_cn.lake.lake_catalog import LakeCatalog
 from quant_cn.lake.lake_query import LakeQuery
@@ -56,6 +59,7 @@ class QuantCnCli:
 
     Used by:
         Makefile targets doctor, download, compact, lake-rebuild, lake-backup
+        cli.DocumentCommands            -- parser and dispatch
 
     Test cases:
         TC-QCC-001  doctor reports lake root and token presence without printing the token
@@ -93,8 +97,10 @@ class QuantCnCli:
         try:
             config = self._config or Config.load()
             method = f"_run_{args.command.replace('-', '_')}"
-            handler = getattr(self, method, None) or getattr(
-                ResearchCommands(self._console), method
+            handler = (
+                getattr(self, method, None)
+                or getattr(ResearchCommands(self._console), method, None)
+                or getattr(DocumentCommands(self._console), method)
             )
             return int(handler(config, args))
         except QuantCnError as exc:
@@ -121,7 +127,7 @@ class QuantCnCli:
         cu.add_argument("--no-progress", action="store_true")
         cu.add_argument("--runner", choices=["local", "prefect"], default="local")
         sub.add_parser("rebuild", help="recreate the DuckDB catalog and fetch log from parquet")
-        sub.add_parser("backup", help="rsync raw/ and the fetch log to lake.backup_target")
+        sub.add_parser("backup", help="rsync raw/, documents/ and the fetch log to backup_target")
         pc = sub.add_parser("project-catalog", help="rebuild schema project from repo + markdown")
         pc.add_argument("--no-lint", action="store_true", help="skip lint_findings")
         qy = sub.add_parser("query", help="run read-only SQL against the lake catalog")
@@ -132,6 +138,7 @@ class QuantCnCli:
             "evaluate", help="evaluate the factor campaign; write reports and trials"
         )
         ev.add_argument("--no-progress", action="store_true")
+        DocumentCommands.build_parser(sub)
         return parser
 
     def _run_doctor(self, config: Config, _args: argparse.Namespace) -> int:
@@ -299,7 +306,11 @@ class QuantCnCli:
         if target is None:
             raise LakeError("lake.backup_target is not set in config/local.yaml")
         root = config.lake.root
-        sources = [str(root / "raw"), str(root / "meta" / "fetch_log.parquet")]
+        sources = [
+            str(root / "raw"),
+            str(root / "documents"),
+            str(root / "meta" / "fetch_log.parquet"),
+        ]
         cmd = ["rsync", "-a", "--delete", *sources, f"{target}/"]
         self._console.print(" ".join(cmd))
         return subprocess.run(cmd, check=False).returncode
@@ -383,6 +394,95 @@ class ResearchCommands:
                 f"{step_report.name}: {step_report.fetched} factors, {step_report.rows} test rows"
             )
         return 0
+
+
+class DocumentCommands:
+    """
+    Purpose:
+        The document-side CLI command `download-docs` (plan 12 phase 2, D-101): for each source,
+        list the PDFs not yet in the manifest (counts per doc type), release the catalog, then
+        download them (unless `--dry-run`) and refresh `meta.documents`.
+
+    Contract:
+        Input:
+            console: Console
+        Output:
+            instance; `build_parser`, `_run_download_docs` (dispatched by QuantCnCli.run)
+        Raises:
+            (none at construction)
+
+    Used by:
+        cli.QuantCnCli  -- dispatch fallback
+
+    Test cases:
+        TC-QCC-010  download-docs --dry-run prints counts per type to download and exits 0
+    """
+
+    def __init__(self, console: Console) -> None:
+        self._console = console
+
+    @staticmethod
+    def build_parser(sub: argparse._SubParsersAction) -> None:  # type: ignore[type-arg]
+        """
+        Purpose:
+            Add the `download-docs` subcommand and its options to the CLI parser.
+
+        Contract:
+            Input:
+                sub: argparse subparsers of QuantCnCli
+            Output:
+                None
+            Raises:
+                (none)
+        """
+        dd = sub.add_parser("download-docs", help="download listed PDFs into documents/ (D-101)")
+        dd.add_argument(
+            "--sources", required=True, help="comma-separated config/documents.yaml keys"
+        )
+        dd.add_argument("--types", help="comma-separated doc types (default: all of the source)")
+        dd.add_argument("--start", help="publication date from, YYYYMMDD")
+        dd.add_argument("--end", help="publication date to, YYYYMMDD")
+        dd.add_argument("--limit", type=int, help="at most this many downloads per source")
+        dd.add_argument(
+            "--workers", type=int, help="override the source's workers in documents.yaml"
+        )
+        dd.add_argument("--dry-run", action="store_true", help="count candidates per type only")
+
+    def _run_download_docs(self, config: Config, args: argparse.Namespace) -> int:
+        types = QuantCnCli._parse_list(args.types)
+        sources = QuantCnCli._parse_list(args.sources) or []
+        catalog = LakeCatalog(config.lake.root, config.datasets)
+        downloader = DocumentDownloader(
+            config.lake.root,
+            LakeQuery(catalog),
+            config.documents,
+            Clock(),
+            workers_override=args.workers,
+        )
+        try:
+            todo = {s: downloader.list_todo(s, types, args.start, args.end) for s in sources}
+        finally:
+            catalog.close()  # downloads need no catalog: a metadata sweep may run meanwhile
+        for source, frame in todo.items():
+            counts = frame["doc_type"].value_counts().sort_index()
+            self._console.print(f"{source}: {len(frame)} to download")
+            for doc_type, n in counts.items():
+                self._console.print(f"  {doc_type}: {n}")
+            if not args.dry_run:
+                report = downloader.run(frame, args.limit)
+                self._console.print(f"{report.name}: {report.message}, {report.rows / 1e6:.1f} MB")
+        if not args.dry_run:
+            self._refresh_views(config)
+        return 0
+
+    def _refresh_views(self, config: Config) -> None:
+        catalog = LakeCatalog(config.lake.root, config.datasets)
+        try:
+            DocumentViews(config.lake.root, catalog.connection).refresh()
+        except (LakeError, duckdb.Error) as exc:  # catalog busy: views refresh on the next run
+            self._console.print(f"[yellow]meta.documents not refreshed:[/yellow] {exc}")
+        finally:
+            catalog.close()
 
 
 if __name__ == "__main__":

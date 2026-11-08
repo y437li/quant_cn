@@ -120,3 +120,14 @@ def test_tc_dp_007_extend_days(config: Config, lake: MiniLake, client: FakeTusha
     build_pipeline(config, lake, client).run(["trade_cal"], end="20260828")
     params = next(p for api, p in client.calls if api == "trade_cal")
     assert params["end_date"] == "20271002"
+
+
+# TC-DP-008
+def test_tc_dp_008_future_start_skipped(
+    config: Config, lake: MiniLake, client: FakeTushareClient
+) -> None:
+    report = build_pipeline(config, lake, client).run(
+        ["dc_index", "trade_cal"], end="20260828", dry_run=True
+    )
+    names = [s.name for s in report.steps]
+    assert "dc_index" not in names and "trade_cal" in names

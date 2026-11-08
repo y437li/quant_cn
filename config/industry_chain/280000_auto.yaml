@@ -1,0 +1,944 @@
+# SW L1 280000 汽车 — product taxonomy prior (plan 12 phase 1, D-097). Format: README.md. All edges are priors.
+
+sector: {sw_l1: "280000", name: 汽车, name_en: Automobiles}
+
+nodes:
+  # ---------------- segments ----------------
+  - {id: SEG_AUTO_PASSENGER_VEHICLE, type: segment, name: 乘用车整车, name_en: Passenger Vehicles}
+  - {id: SEG_AUTO_EV_PASSENGER, type: segment, name: 电动乘用车, name_en: Electric Passenger Vehicles}
+  - {id: SEG_AUTO_INTEGRATED_PASSENGER, type: segment, name: 综合乘用车, name_en: Diversified Passenger Vehicles}
+  - {id: SEG_AUTO_COMMERCIAL_VEHICLE, type: segment, name: 商用车整车, name_en: Commercial Vehicles}
+  - {id: SEG_AUTO_TRUCK, type: segment, name: 商用载货车, name_en: Trucks}
+  - {id: SEG_AUTO_BUS, type: segment, name: 商用载客车, name_en: Buses and Coaches}
+  - {id: SEG_AUTO_MOTO_OTHER, type: segment, name: 摩托车及其他, name_en: Motorcycles and Other Vehicles}
+  - {id: SEG_AUTO_MOTORCYCLE, type: segment, name: 摩托车整车, name_en: Motorcycles}
+  - {id: SEG_AUTO_OTHER_TRANSPORT_EQUIP, type: segment, name: 其他运输设备, name_en: Other Transport Equipment}
+  - {id: SEG_AUTO_PARTS, type: segment, name: 汽车零部件, name_en: Auto Parts}
+  - {id: SEG_AUTO_BODY, type: segment, name: 车身附件及饰件, name_en: Body Parts and Trim}
+  - {id: SEG_AUTO_LIGHTWEIGHT, type: segment, name: 汽车轻量化结构件, name_en: Lightweight Castings and Structures}
+  - {id: SEG_AUTO_CHASSIS_ENGINE, type: segment, name: 底盘与发动机系统, name_en: Chassis and Powertrain Systems}
+  - {id: SEG_AUTO_CHASSIS, type: segment, name: 汽车底盘系统, name_en: Chassis Systems}
+  - {id: SEG_AUTO_ENGINE, type: segment, name: 发动机及排放系统, name_en: Engines and Emission Systems}
+  - {id: SEG_AUTO_TRANSMISSION, type: segment, name: 汽车传动系统, name_en: Driveline and Transmission}
+  - {id: SEG_AUTO_E_DRIVE, type: segment, name: 新能源汽车电驱与电源系统, name_en: EV Electric Drive and Power Electronics}
+  - {id: SEG_AUTO_THERMAL, type: segment, name: 汽车热管理, name_en: Automotive Thermal Management}
+  - {id: SEG_AUTO_TIRE_WHEEL, type: segment, name: 轮胎轮毂, name_en: Tyres and Wheels}
+  - {id: SEG_AUTO_OTHER_PARTS, type: segment, name: 其他汽车零部件, name_en: Other Auto Parts}
+  - {id: SEG_AUTO_PASSIVE_SAFETY, type: segment, name: 汽车被动安全, name_en: Passive Safety Systems}
+  - {id: SEG_AUTO_ELECTRONICS, type: segment, name: 汽车电子电气系统, name_en: Automotive Electronics and Electrical}
+  - {id: SEG_AUTO_INTELLIGENT_DRIVING, type: segment, name: 智能驾驶部件, name_en: Intelligent Driving Hardware}
+  - {id: SEG_AUTO_SMART_COCKPIT, type: segment, name: 智能座舱, name_en: Smart Cockpit}
+  - {id: SEG_AUTO_HARNESS_CONNECTOR, type: segment, name: 汽车线束与连接器, name_en: Wiring Harness and Connectors}
+  - {id: SEG_AUTO_ROBOT_PARTS, type: segment, name: 汽零延伸人形机器人部件, name_en: Humanoid Robot Parts from Auto Suppliers}
+  - {id: SEG_AUTO_SERVICE, type: segment, name: 汽车服务, name_en: Automotive Services}
+  - {id: SEG_AUTO_DEALER, type: segment, name: 汽车经销商, name_en: Auto Dealers}
+  - {id: SEG_AUTO_INTEGRATED_SERVICE, type: segment, name: 汽车综合服务, name_en: Integrated Auto Services}
+
+  # ---------------- passenger vehicles ----------------
+  - {id: PROD_AUTO_PASSENGER_CAR, type: product, name: 乘用车, name_en: Passenger Car, segment: SEG_AUTO_INTEGRATED_PASSENGER, aliases: [轿车, SUV, MPV]}
+  - {id: PROD_AUTO_BEV_PASSENGER, type: product, name: 纯电动乘用车, name_en: Battery Electric Passenger Car, parent: PROD_AUTO_PASSENGER_CAR, segment: SEG_AUTO_EV_PASSENGER, aliases: [纯电动车, BEV]}
+  - {id: PROD_AUTO_PHEV_PASSENGER, type: product, name: 插电式混合动力乘用车, name_en: Plug-in Hybrid Passenger Car, parent: PROD_AUTO_PASSENGER_CAR, segment: SEG_AUTO_EV_PASSENGER, aliases: [插混, PHEV, DM-i]}
+  - {id: PROD_AUTO_EREV_PASSENGER, type: product, name: 增程式电动乘用车, name_en: Extended-Range Electric Passenger Car, parent: PROD_AUTO_PASSENGER_CAR, segment: SEG_AUTO_EV_PASSENGER, aliases: [增程车, EREV]}
+  - {id: PROD_AUTO_HEV_PASSENGER, type: product, name: 油电混合动力乘用车, name_en: Hybrid Electric Passenger Car, parent: PROD_AUTO_PASSENGER_CAR, segment: SEG_AUTO_INTEGRATED_PASSENGER, aliases: [油混, HEV]}
+  - {id: PROD_AUTO_ICE_PASSENGER, type: product, name: 燃油乘用车, name_en: ICE Passenger Car, parent: PROD_AUTO_PASSENGER_CAR, segment: SEG_AUTO_INTEGRATED_PASSENGER}
+  - {id: PROD_AUTO_ROBOTAXI, type: product, name: 无人驾驶出租车, name_en: Robotaxi, parent: PROD_AUTO_BEV_PASSENGER, segment: SEG_AUTO_EV_PASSENGER, aliases: [Robotaxi]}
+  - {id: PROD_AUTO_MINI_EV, type: product, name: 微型电动车, name_en: Mini EV, parent: PROD_AUTO_BEV_PASSENGER, segment: SEG_AUTO_EV_PASSENGER, aliases: [A00级电动车]}
+  - {id: PROD_AUTO_VEHICLE_EXPORT, type: product, name: 整车出口, name_en: Vehicle Exports, segment: SEG_AUTO_INTEGRATED_PASSENGER, aliases: [汽车出口]}
+
+  # ---------------- commercial vehicles ----------------
+  - {id: PROD_AUTO_TRUCK, type: product, name: 载货汽车, name_en: Truck, segment: SEG_AUTO_TRUCK, aliases: [货车, 卡车]}
+  - {id: PROD_AUTO_HEAVY_TRUCK, type: product, name: 重型卡车, name_en: Heavy-Duty Truck, parent: PROD_AUTO_TRUCK, segment: SEG_AUTO_TRUCK, aliases: [重卡, 牵引车]}
+  - {id: PROD_AUTO_NEV_HEAVY_TRUCK, type: product, name: 新能源重卡, name_en: New Energy Heavy Truck, parent: PROD_AUTO_HEAVY_TRUCK, segment: SEG_AUTO_TRUCK, aliases: [电动重卡, 换电重卡]}
+  - {id: PROD_AUTO_LNG_HEAVY_TRUCK, type: product, name: 天然气重卡, name_en: LNG Heavy Truck, parent: PROD_AUTO_HEAVY_TRUCK, segment: SEG_AUTO_TRUCK, aliases: [燃气重卡, LNG重卡]}
+  - {id: PROD_AUTO_MEDIUM_TRUCK, type: product, name: 中型卡车, name_en: Medium-Duty Truck, parent: PROD_AUTO_TRUCK, segment: SEG_AUTO_TRUCK, aliases: [中卡]}
+  - {id: PROD_AUTO_LIGHT_TRUCK, type: product, name: 轻型卡车, name_en: Light-Duty Truck, parent: PROD_AUTO_TRUCK, segment: SEG_AUTO_TRUCK, aliases: [轻卡]}
+  - {id: PROD_AUTO_MINI_TRUCK, type: product, name: 微型卡车, name_en: Mini Truck, parent: PROD_AUTO_TRUCK, segment: SEG_AUTO_TRUCK, aliases: [微卡]}
+  - {id: PROD_AUTO_PICKUP, type: product, name: 皮卡, name_en: Pickup Truck, parent: PROD_AUTO_TRUCK, segment: SEG_AUTO_TRUCK}
+  - {id: PROD_AUTO_LIGHT_VAN, type: product, name: 轻型客货车, name_en: Light Commercial Van, segment: SEG_AUTO_TRUCK, aliases: [物流车, 城配物流车, 微面]}
+  - {id: PROD_AUTO_SPECIAL_VEHICLE, type: product, name: 专用汽车, name_en: Special-Purpose Vehicle, segment: SEG_AUTO_TRUCK, aliases: [专用车, 冷藏车]}
+  - {id: PROD_AUTO_SEMI_TRAILER, type: product, name: 半挂车, name_en: Semi-Trailer, segment: SEG_AUTO_TRUCK, aliases: [挂车]}
+  - {id: PROD_AUTO_FCV_COMMERCIAL, type: product, name: 燃料电池商用车, name_en: Fuel Cell Commercial Vehicle, segment: SEG_AUTO_TRUCK, aliases: [氢燃料电池汽车, 氢能重卡, FCEV]}
+  - {id: PROD_AUTO_BUS, type: product, name: 客车, name_en: Bus and Coach, segment: SEG_AUTO_BUS, aliases: [大巴]}
+  - {id: PROD_AUTO_LARGE_BUS, type: product, name: 大型客车, name_en: Large Bus, parent: PROD_AUTO_BUS, segment: SEG_AUTO_BUS}
+  - {id: PROD_AUTO_MEDIUM_BUS, type: product, name: 中型客车, name_en: Medium Bus, parent: PROD_AUTO_BUS, segment: SEG_AUTO_BUS}
+  - {id: PROD_AUTO_LIGHT_BUS, type: product, name: 轻型客车, name_en: Light Bus, parent: PROD_AUTO_BUS, segment: SEG_AUTO_BUS, aliases: [轻客]}
+  - {id: PROD_AUTO_NEV_BUS, type: product, name: 新能源客车, name_en: New Energy Bus, parent: PROD_AUTO_BUS, segment: SEG_AUTO_BUS, aliases: [纯电动客车, 电动公交车]}
+  - {id: PROD_AUTO_SCHOOL_BUS, type: product, name: 校车, name_en: School Bus, parent: PROD_AUTO_BUS, segment: SEG_AUTO_BUS}
+
+  # ---------------- motorcycles and other vehicles ----------------
+  - {id: PROD_AUTO_MOTORCYCLE, type: product, name: 摩托车, name_en: Motorcycle, segment: SEG_AUTO_MOTORCYCLE}
+  - {id: PROD_AUTO_LARGE_MOTORCYCLE, type: product, name: 大排量摩托车, name_en: Large-Displacement Motorcycle, parent: PROD_AUTO_MOTORCYCLE, segment: SEG_AUTO_MOTORCYCLE, aliases: [中大排量摩托车]}
+  - {id: PROD_AUTO_ELECTRIC_MOTORCYCLE, type: product, name: 电动摩托车, name_en: Electric Motorcycle, parent: PROD_AUTO_MOTORCYCLE, segment: SEG_AUTO_MOTORCYCLE}
+  - {id: PROD_AUTO_E_BIKE, type: product, name: 电动两轮车, name_en: Electric Two-Wheeler, segment: SEG_AUTO_MOTORCYCLE, aliases: [电动自行车, 电动车, 电动轻便摩托车]}
+  - {id: PROD_AUTO_MOTORCYCLE_ENGINE, type: product, name: 摩托车发动机, name_en: Motorcycle Engine, segment: SEG_AUTO_MOTORCYCLE}
+  - {id: PROD_AUTO_ATV, type: product, name: 全地形车, name_en: All-Terrain Vehicle, segment: SEG_AUTO_OTHER_TRANSPORT_EQUIP, aliases: [ATV, UTV, 沙滩车]}
+  - {id: PROD_AUTO_LOW_SPEED_EV, type: product, name: 低速电动车, name_en: Low-Speed Electric Vehicle, segment: SEG_AUTO_OTHER_TRANSPORT_EQUIP, aliases: [高尔夫球车, 场地车]}
+  - {id: PROD_AUTO_PERSONAL_MOBILITY, type: product, name: 智能短交通工具, name_en: Personal Mobility Device, segment: SEG_AUTO_OTHER_TRANSPORT_EQUIP, aliases: [电动滑板车, 平衡车]}
+  - {id: PROD_AUTO_RV, type: product, name: 房车, name_en: Recreational Vehicle, segment: SEG_AUTO_OTHER_TRANSPORT_EQUIP, aliases: [旅居车, 露营车]}
+
+  # ---------------- chassis ----------------
+  - {id: PROD_AUTO_BRAKE_SYSTEM, type: product, name: 汽车制动系统, name_en: Brake System, segment: SEG_AUTO_CHASSIS}
+  - {id: PROD_AUTO_BRAKE_CALIPER, type: product, name: 制动卡钳, name_en: Brake Caliper, segment: SEG_AUTO_CHASSIS, aliases: [盘式制动器]}
+  - {id: PROD_AUTO_BRAKE_DISC, type: product, name: 制动盘, name_en: Brake Disc, segment: SEG_AUTO_CHASSIS, aliases: [刹车盘]}
+  - {id: PROD_AUTO_BRAKE_PAD, type: product, name: 刹车片, name_en: Brake Pad, segment: SEG_AUTO_CHASSIS, aliases: [摩擦片, 制动片]}
+  - {id: PROD_AUTO_DRUM_BRAKE, type: product, name: 鼓式制动器, name_en: Drum Brake, segment: SEG_AUTO_CHASSIS, aliases: [制动鼓]}
+  - {id: PROD_AUTO_VACUUM_BOOSTER, type: product, name: 真空助力器, name_en: Vacuum Brake Booster, segment: SEG_AUTO_CHASSIS}
+  - {id: PROD_AUTO_ELECTRIC_VACUUM_PUMP, type: product, name: 电子真空泵, name_en: Electric Vacuum Pump, segment: SEG_AUTO_CHASSIS}
+  - {id: PROD_AUTO_ABS_ESC, type: product, import_dependence: high, name: 车身电子稳定系统, name_en: ABS and ESC, segment: SEG_AUTO_CHASSIS, aliases: [防抱死制动系统]}
+  - {id: PROD_AUTO_EPB, type: product, name: 电子驻车制动系统, name_en: Electronic Parking Brake, segment: SEG_AUTO_CHASSIS, aliases: [EPB, 电子手刹]}
+  - {id: PROD_AUTO_EHB, type: product, import_dependence: medium, name: 线控制动系统, name_en: Electro-Hydraulic Brake-by-Wire, segment: SEG_AUTO_CHASSIS, aliases: [线控制动, One-Box, Two-Box, EHB, IBC]}
+  - {id: PROD_AUTO_EMB, type: product, import_dependence: medium, name: 电子机械制动, name_en: Electro-Mechanical Brake, segment: SEG_AUTO_CHASSIS, aliases: [EMB, 干式线控制动]}
+  - {id: PROD_AUTO_AIR_BRAKE, type: product, name: 商用车气压制动系统, name_en: Commercial Vehicle Air Brake, segment: SEG_AUTO_CHASSIS, aliases: [气制动, 商用车ABS, EBS]}
+  - {id: PROD_AUTO_RETARDER, type: product, name: 缓速器, name_en: Retarder, segment: SEG_AUTO_CHASSIS, aliases: [电涡流缓速器, 液力缓速器]}
+  - {id: PROD_AUTO_STEERING_SYSTEM, type: product, name: 汽车转向系统, name_en: Steering System, segment: SEG_AUTO_CHASSIS}
+  - {id: PROD_AUTO_EPS, type: product, name: 电动助力转向系统, name_en: Electric Power Steering, parent: PROD_AUTO_STEERING_SYSTEM, segment: SEG_AUTO_CHASSIS, aliases: [R-EPS, C-EPS]}
+  - {id: PROD_AUTO_HPS, type: product, name: 液压助力转向系统, name_en: Hydraulic Power Steering, parent: PROD_AUTO_STEERING_SYSTEM, segment: SEG_AUTO_CHASSIS, aliases: [HPS, 循环球转向器]}
+  - {id: PROD_AUTO_SBW, type: product, import_dependence: medium, name: 线控转向系统, name_en: Steer-by-Wire, parent: PROD_AUTO_STEERING_SYSTEM, segment: SEG_AUTO_CHASSIS, aliases: [线控转向, SBW]}
+  - {id: PROD_AUTO_STEERING_GEAR, type: product, name: 转向器, name_en: Steering Gear, segment: SEG_AUTO_CHASSIS, aliases: [齿轮齿条转向器]}
+  - {id: PROD_AUTO_STEERING_COLUMN, type: product, name: 转向管柱, name_en: Steering Column, segment: SEG_AUTO_CHASSIS}
+  - {id: PROD_AUTO_TIE_ROD, type: product, name: 转向拉杆, name_en: Tie Rod, segment: SEG_AUTO_CHASSIS, aliases: [球头拉杆]}
+  - {id: PROD_AUTO_SUSPENSION_SYSTEM, type: product, name: 汽车悬架系统, name_en: Suspension System, segment: SEG_AUTO_CHASSIS, aliases: [悬挂系统]}
+  - {id: PROD_AUTO_AIR_SUSPENSION, type: product, name: 空气悬架系统, name_en: Air Suspension, parent: PROD_AUTO_SUSPENSION_SYSTEM, segment: SEG_AUTO_CHASSIS, aliases: [空气悬架, 空悬]}
+  - {id: PROD_AUTO_AIR_SPRING, type: product, name: 空气弹簧, name_en: Air Spring, segment: SEG_AUTO_CHASSIS, aliases: [空簧]}
+  - {id: PROD_AUTO_AIR_SUPPLY_UNIT, type: product, import_dependence: medium, name: 空气悬架供气单元, name_en: Air Supply Unit, segment: SEG_AUTO_CHASSIS, aliases: [空气压缩机总成, 储气罐]}
+  - {id: PROD_AUTO_SHOCK_ABSORBER, type: product, name: 减震器, name_en: Shock Absorber, segment: SEG_AUTO_CHASSIS, aliases: [减振器]}
+  - {id: PROD_AUTO_CDC_DAMPER, type: product, import_dependence: medium, name: CDC电控减震器, name_en: Continuous Damping Control Damper, parent: PROD_AUTO_SHOCK_ABSORBER, segment: SEG_AUTO_CHASSIS, aliases: [CDC减振器, 可变阻尼减振器]}
+  - {id: PROD_AUTO_COIL_SPRING, type: product, name: 悬架弹簧, name_en: Suspension Coil Spring, segment: SEG_AUTO_CHASSIS, aliases: [螺旋弹簧, 钢板弹簧]}
+  - {id: PROD_AUTO_STABILIZER_BAR, type: product, name: 横向稳定杆, name_en: Stabilizer Bar, segment: SEG_AUTO_CHASSIS, aliases: [稳定杆]}
+  - {id: PROD_AUTO_CONTROL_ARM, type: product, name: 悬架控制臂, name_en: Control Arm, segment: SEG_AUTO_CHASSIS, aliases: [控制臂, 摆臂, 转向节]}
+  - {id: PROD_AUTO_SUBFRAME, type: product, name: 副车架, name_en: Subframe, segment: SEG_AUTO_CHASSIS}
+  - {id: PROD_AUTO_NVH_RUBBER, type: product, name: 汽车橡胶减振件, name_en: NVH Rubber Mounts and Bushings, segment: SEG_AUTO_CHASSIS, aliases: [悬置, 衬套, NVH减震件]}
+  - {id: PROD_AUTO_WHEEL_HUB_BEARING, type: product, name: 轮毂轴承单元, name_en: Wheel Hub Bearing Unit, segment: SEG_AUTO_CHASSIS, aliases: [轮毂轴承, 汽车轴承]}
+  - {id: PROD_AUTO_CHASSIS_DOMAIN, type: product, name: 底盘域控制器, name_en: Chassis Domain Controller, segment: SEG_AUTO_CHASSIS, aliases: [智能底盘控制器]}
+
+  # ---------------- engine and emissions ----------------
+  - {id: PROD_AUTO_ENGINE, type: product, name: 汽车发动机, name_en: Vehicle Engine, segment: SEG_AUTO_ENGINE}
+  - {id: PROD_AUTO_GASOLINE_ENGINE, type: product, name: 汽油发动机, name_en: Gasoline Engine, parent: PROD_AUTO_ENGINE, segment: SEG_AUTO_ENGINE}
+  - {id: PROD_AUTO_DIESEL_ENGINE, type: product, name: 车用柴油发动机, name_en: Vehicle Diesel Engine, parent: PROD_AUTO_ENGINE, segment: SEG_AUTO_ENGINE, aliases: [重卡发动机, 柴油机]}
+  - {id: PROD_AUTO_GAS_ENGINE, type: product, name: 天然气发动机, name_en: Natural Gas Engine, parent: PROD_AUTO_ENGINE, segment: SEG_AUTO_ENGINE, aliases: [燃气发动机]}
+  - {id: PROD_AUTO_HYBRID_ENGINE, type: product, name: 混动专用发动机, name_en: Hybrid-Dedicated Engine, parent: PROD_AUTO_ENGINE, segment: SEG_AUTO_ENGINE, aliases: [DHE, 增程器]}
+  - {id: PROD_AUTO_CYLINDER_BLOCK, type: product, name: 缸体缸盖, name_en: Cylinder Block and Head, segment: SEG_AUTO_ENGINE, aliases: [气缸体, 气缸盖]}
+  - {id: PROD_AUTO_PISTON, type: product, name: 活塞, name_en: Piston, segment: SEG_AUTO_ENGINE}
+  - {id: PROD_AUTO_PISTON_RING, type: product, name: 活塞环, name_en: Piston Ring, segment: SEG_AUTO_ENGINE}
+  - {id: PROD_AUTO_CYLINDER_LINER, type: product, name: 气缸套, name_en: Cylinder Liner, segment: SEG_AUTO_ENGINE, aliases: [缸套]}
+  - {id: PROD_AUTO_CRANKSHAFT, type: product, name: 曲轴, name_en: Crankshaft, segment: SEG_AUTO_ENGINE}
+  - {id: PROD_AUTO_CONNECTING_ROD, type: product, name: 连杆, name_en: Connecting Rod, segment: SEG_AUTO_ENGINE}
+  - {id: PROD_AUTO_CAMSHAFT, type: product, name: 凸轮轴, name_en: Camshaft, segment: SEG_AUTO_ENGINE}
+  - {id: PROD_AUTO_ENGINE_VALVE, type: product, name: 发动机气门, name_en: Engine Valve, segment: SEG_AUTO_ENGINE, aliases: [气门, 气门挺柱]}
+  - {id: PROD_AUTO_VVT, type: product, name: 可变气门正时系统, name_en: Variable Valve Timing, segment: SEG_AUTO_ENGINE, aliases: [VVT]}
+  - {id: PROD_AUTO_TIMING_SYSTEM, type: product, name: 正时系统, name_en: Timing Chain System, segment: SEG_AUTO_ENGINE, aliases: [正时链条, 正时皮带]}
+  - {id: PROD_AUTO_TURBOCHARGER, type: product, name: 涡轮增压器, name_en: Turbocharger, segment: SEG_AUTO_ENGINE, aliases: [增压器]}
+  - {id: PROD_AUTO_FUEL_INJECTION, type: product, import_dependence: high, name: 燃油喷射系统, name_en: Fuel Injection System, segment: SEG_AUTO_ENGINE, aliases: [高压共轨, 喷油器, 电控燃油喷射]}
+  - {id: PROD_AUTO_EGR, type: product, name: 废气再循环系统, name_en: Exhaust Gas Recirculation, segment: SEG_AUTO_ENGINE, aliases: [EGR, EGR阀]}
+  - {id: PROD_AUTO_OIL_PUMP, type: product, name: 发动机机油泵, name_en: Engine Oil Pump, segment: SEG_AUTO_ENGINE, aliases: [机油泵]}
+  - {id: PROD_AUTO_MECH_WATER_PUMP, type: product, name: 发动机机械水泵, name_en: Mechanical Coolant Pump, segment: SEG_AUTO_ENGINE}
+  - {id: PROD_AUTO_INTAKE_MANIFOLD, type: product, name: 进气歧管, name_en: Intake Manifold, segment: SEG_AUTO_ENGINE, aliases: [进气系统]}
+  - {id: PROD_AUTO_FILTER, type: product, name: 汽车滤清器, name_en: Automotive Filter, segment: SEG_AUTO_ENGINE, aliases: [空气滤清器, 机油滤清器, 燃油滤清器, 空调滤清器]}
+  - {id: PROD_AUTO_SPARK_PLUG, type: product, name: 火花塞, name_en: Spark Plug, segment: SEG_AUTO_ENGINE}
+  - {id: PROD_AUTO_IGNITION_COIL, type: product, name: 点火线圈, name_en: Ignition Coil, segment: SEG_AUTO_ENGINE}
+  - {id: PROD_AUTO_STARTER_ALTERNATOR, type: product, name: 起动机与发电机, name_en: Starter and Alternator, segment: SEG_AUTO_ENGINE, aliases: [起动机, 汽车发电机, BSG电机, 48V系统]}
+  - {id: PROD_AUTO_ENGINE_GASKET, type: product, name: 发动机密封件, name_en: Engine Gasket and Seal, segment: SEG_AUTO_ENGINE, aliases: [气缸垫]}
+  - {id: PROD_AUTO_EXHAUST_SYSTEM, type: product, name: 汽车排气系统, name_en: Exhaust System, segment: SEG_AUTO_ENGINE, aliases: [排气管, 消声器]}
+  - {id: PROD_AUTO_AFTERTREATMENT, type: product, name: 尾气后处理系统, name_en: Exhaust Aftertreatment System, segment: SEG_AUTO_ENGINE, aliases: [国六后处理]}
+  - {id: PROD_AUTO_CATALYST, type: product, name: 尾气净化催化剂, name_en: Exhaust Catalyst, segment: SEG_AUTO_ENGINE, aliases: [三元催化剂, 机动车尾气催化剂, 汽车催化剂, 国六催化剂]}
+  - {id: PROD_AUTO_CERAMIC_SUBSTRATE, type: product, import_dependence: medium, name: 蜂窝陶瓷载体, name_en: Honeycomb Ceramic Substrate, segment: SEG_AUTO_ENGINE, aliases: [蜂窝陶瓷]}
+  - {id: PROD_AUTO_DPF, type: product, name: 颗粒捕集器, name_en: Particulate Filter, segment: SEG_AUTO_ENGINE, aliases: [DPF, GPF]}
+  - {id: PROD_AUTO_SCR, type: product, name: SCR后处理系统, name_en: Selective Catalytic Reduction System, segment: SEG_AUTO_ENGINE, aliases: [尿素泵]}
+  - {id: PROD_AUTO_OXYGEN_SENSOR, type: product, import_dependence: medium, name: 氧传感器, name_en: Oxygen Sensor, segment: SEG_AUTO_ENGINE, aliases: [氮氧传感器, NOx传感器]}
+  - {id: PROD_AUTO_FUEL_TANK, type: product, name: 汽车燃油箱, name_en: Fuel Tank, segment: SEG_AUTO_ENGINE, aliases: [塑料油箱, 高压油箱]}
+
+  # ---------------- driveline and transmission ----------------
+  - {id: PROD_AUTO_TRANSMISSION, type: product, name: 汽车变速器, name_en: Transmission, segment: SEG_AUTO_TRANSMISSION, aliases: [变速箱]}
+  - {id: PROD_AUTO_MT, type: product, name: 手动变速器, name_en: Manual Transmission, parent: PROD_AUTO_TRANSMISSION, segment: SEG_AUTO_TRANSMISSION, aliases: [MT]}
+  - {id: PROD_AUTO_AT, type: product, import_dependence: high, name: 液力自动变速器, name_en: Automatic Transmission, parent: PROD_AUTO_TRANSMISSION, segment: SEG_AUTO_TRANSMISSION, aliases: [AT, 自动变速器]}
+  - {id: PROD_AUTO_DCT, type: product, name: 双离合变速器, name_en: Dual-Clutch Transmission, parent: PROD_AUTO_TRANSMISSION, segment: SEG_AUTO_TRANSMISSION, aliases: [DCT]}
+  - {id: PROD_AUTO_CVT, type: product, name: 无级变速器, name_en: Continuously Variable Transmission, parent: PROD_AUTO_TRANSMISSION, segment: SEG_AUTO_TRANSMISSION, aliases: [CVT]}
+  - {id: PROD_AUTO_AMT, type: product, name: 商用车AMT变速器, name_en: Automated Manual Transmission, parent: PROD_AUTO_TRANSMISSION, segment: SEG_AUTO_TRANSMISSION, aliases: [AMT]}
+  - {id: PROD_AUTO_DHT, type: product, name: 混动专用变速器, name_en: Dedicated Hybrid Transmission, parent: PROD_AUTO_TRANSMISSION, segment: SEG_AUTO_TRANSMISSION, aliases: [DHT, 混联变速器]}
+  - {id: PROD_AUTO_TRANSMISSION_GEAR, type: product, name: 变速器齿轮, name_en: Transmission Gear, segment: SEG_AUTO_TRANSMISSION, aliases: [汽车齿轮, 齿轮轴]}
+  - {id: PROD_AUTO_SYNCHRONIZER, type: product, name: 同步器, name_en: Synchronizer, segment: SEG_AUTO_TRANSMISSION, aliases: [同步器齿环]}
+  - {id: PROD_AUTO_CLUTCH, type: product, name: 离合器, name_en: Clutch, segment: SEG_AUTO_TRANSMISSION, aliases: [离合器总成, 双质量飞轮]}
+  - {id: PROD_AUTO_TORQUE_CONVERTER, type: product, name: 液力变矩器, name_en: Torque Converter, segment: SEG_AUTO_TRANSMISSION}
+  - {id: PROD_AUTO_TRANSMISSION_VALVE, type: product, name: 变速器电磁阀, name_en: Transmission Solenoid Valve, segment: SEG_AUTO_TRANSMISSION, aliases: [阀体]}
+  - {id: PROD_AUTO_DRIVE_SHAFT, type: product, name: 传动轴, name_en: Drive Shaft, segment: SEG_AUTO_TRANSMISSION, aliases: [半轴, 等速万向节, 等速驱动轴]}
+  - {id: PROD_AUTO_AXLE, type: product, name: 车桥, name_en: Axle, segment: SEG_AUTO_TRANSMISSION, aliases: [前桥, 后桥]}
+  - {id: PROD_AUTO_DIFFERENTIAL, type: product, name: 差速器, name_en: Differential, segment: SEG_AUTO_TRANSMISSION, aliases: [主减速器, 差速器总成]}
+  - {id: PROD_AUTO_TRANSFER_CASE, type: product, name: 分动器, name_en: Transfer Case, segment: SEG_AUTO_TRANSMISSION, aliases: [分动箱]}
+  - {id: PROD_AUTO_FORGINGS, type: product, name: 汽车锻件, name_en: Automotive Forgings, segment: SEG_AUTO_TRANSMISSION, aliases: [精密锻件, 冷锻件, 温锻件]}
+  - {id: PROD_AUTO_POWDER_METALLURGY, type: product, name: 汽车粉末冶金件, name_en: Powder Metallurgy Parts, segment: SEG_AUTO_TRANSMISSION, aliases: [粉末冶金零件]}
+
+  # ---------------- EV electric drive and power electronics ----------------
+  - {id: PROD_AUTO_E_AXLE, type: product, name: 电驱动总成, name_en: Electric Drive Assembly, segment: SEG_AUTO_E_DRIVE, aliases: [三合一电驱, 多合一电驱, 电驱桥, e-Axle]}
+  - {id: PROD_AUTO_HAIRPIN_MOTOR, type: product, name: 扁线电机, name_en: Hairpin Motor, parent: PROD_PWR_EV_DRIVE_MOTOR, segment: SEG_AUTO_E_DRIVE, aliases: [Hair-pin电机, 油冷扁线电机]}
+  - {id: PROD_AUTO_MOTOR_CONTROLLER, type: product, name: 新能源汽车电机控制器, name_en: EV Motor Controller, segment: SEG_AUTO_E_DRIVE, aliases: [电控, 逆变器, 电机控制器]}
+  - {id: PROD_AUTO_E_REDUCER, type: product, name: 新能源汽车减速器, name_en: EV Reduction Gearbox, segment: SEG_AUTO_E_DRIVE, aliases: [电驱减速器, 电驱齿轮]}
+  - {id: PROD_AUTO_MOTOR_SHAFT, type: product, name: 电机轴, name_en: Motor Shaft, segment: SEG_AUTO_E_DRIVE}
+  - {id: PROD_AUTO_MOTOR_HOUSING, type: product, name: 电驱壳体, name_en: E-Drive Housing, segment: SEG_AUTO_E_DRIVE, aliases: [电机壳体, 减速器壳体]}
+  - {id: PROD_AUTO_OBC, type: product, name: 车载充电机, name_en: On-Board Charger, segment: SEG_AUTO_E_DRIVE, aliases: [OBC]}
+  - {id: PROD_AUTO_DCDC, type: product, name: 车载DC-DC变换器, name_en: On-Board DC-DC Converter, segment: SEG_AUTO_E_DRIVE, aliases: [车载电源]}
+  - {id: PROD_AUTO_PDU, type: product, name: 高压配电盒, name_en: Power Distribution Unit, segment: SEG_AUTO_E_DRIVE, aliases: [高压配电单元]}
+  - {id: PROD_AUTO_POWER_INTEGRATED, type: product, name: 车载电源集成总成, name_en: Integrated On-Board Power Unit, segment: SEG_AUTO_E_DRIVE, aliases: [二合一电源, 三合一电源]}
+  - {id: PROD_AUTO_HV_FUSE, type: product, name: 新能源汽车熔断器, name_en: EV Fuse, segment: SEG_AUTO_E_DRIVE, aliases: [激励熔断器]}
+  - {id: PROD_AUTO_CHARGING_INLET, type: product, name: 车端充电插座, name_en: Vehicle Charging Inlet, segment: SEG_AUTO_E_DRIVE, aliases: [充电口]}
+
+  # ---------------- thermal management ----------------
+  - {id: PROD_AUTO_THERMAL_SYSTEM, type: product, name: 汽车热管理系统, name_en: Vehicle Thermal Management System, segment: SEG_AUTO_THERMAL}
+  - {id: PROD_AUTO_HEAT_PUMP, type: product, name: 汽车热泵空调系统, name_en: Automotive Heat Pump System, parent: PROD_AUTO_THERMAL_SYSTEM, segment: SEG_AUTO_THERMAL, aliases: [热泵空调]}
+  - {id: PROD_AUTO_AC_COMPRESSOR, type: product, name: 汽车空调压缩机, name_en: Automotive AC Compressor, segment: SEG_AUTO_THERMAL}
+  - {id: PROD_AUTO_E_COMPRESSOR, type: product, name: 汽车电动压缩机, name_en: Electric AC Compressor, parent: PROD_AUTO_AC_COMPRESSOR, segment: SEG_AUTO_THERMAL, aliases: [电动涡旋压缩机]}
+  - {id: PROD_AUTO_EXV, type: product, name: 汽车电子膨胀阀, name_en: Automotive Electronic Expansion Valve, segment: SEG_AUTO_THERMAL}
+  - {id: PROD_AUTO_WATER_VALVE, type: product, name: 电子水阀, name_en: Electronic Coolant Valve, segment: SEG_AUTO_THERMAL, aliases: [多通阀, 八通阀]}
+  - {id: PROD_AUTO_INTEGRATED_THERMAL_MODULE, type: product, name: 集成式热管理模块, name_en: Integrated Thermal Module, segment: SEG_AUTO_THERMAL, aliases: [集成模块, 冷媒集成模块, 冷却液集成模块]}
+  - {id: PROD_AUTO_ELECTRONIC_WATER_PUMP, type: product, name: 汽车电子水泵, name_en: Electric Coolant Pump, segment: SEG_AUTO_THERMAL}
+  - {id: PROD_AUTO_ELECTRONIC_OIL_PUMP, type: product, name: 汽车电子油泵, name_en: Electric Oil Pump, segment: SEG_AUTO_THERMAL}
+  - {id: PROD_AUTO_RADIATOR, type: product, name: 汽车散热器, name_en: Radiator, segment: SEG_AUTO_THERMAL, aliases: [水箱, 前端冷却模块]}
+  - {id: PROD_AUTO_INTERCOOLER, type: product, name: 中冷器, name_en: Intercooler, segment: SEG_AUTO_THERMAL}
+  - {id: PROD_AUTO_CHILLER, type: product, name: 电池冷却器, name_en: Battery Chiller, segment: SEG_AUTO_THERMAL, aliases: [Chiller]}
+  - {id: PROD_AUTO_COOLING_PLATE, type: product, name: 电池液冷板, name_en: Battery Cooling Plate, segment: SEG_AUTO_THERMAL, aliases: [水冷板]}
+  - {id: PROD_AUTO_HVAC_MODULE, type: product, name: 汽车空调箱总成, name_en: HVAC Module, segment: SEG_AUTO_THERMAL, aliases: [HVAC总成]}
+  - {id: PROD_AUTO_PTC_HEATER, type: product, name: PTC加热器, name_en: PTC Heater, segment: SEG_AUTO_THERMAL, aliases: [高压PTC, 风暖PTC, 水暖PTC]}
+  - {id: PROD_AUTO_AC_PIPE, type: product, name: 汽车空调管路, name_en: AC and Coolant Pipes, segment: SEG_AUTO_THERMAL, aliases: [热管理管路, 冷却管路]}
+  - {id: PROD_AUTO_HEAT_EXCHANGER, type: product, name: 汽车换热器, name_en: Automotive Heat Exchanger, segment: SEG_AUTO_THERMAL, aliases: [冷凝器, 蒸发器]}
+
+  # ---------------- body, trim, glass, lamps, seats ----------------
+  - {id: PROD_AUTO_BODY_STAMPING, type: product, name: 车身冲压件, name_en: Body Stamping, segment: SEG_AUTO_BODY, aliases: [冲压件, 白车身]}
+  - {id: PROD_AUTO_HOT_STAMPING, type: product, name: 热成型件, name_en: Hot-Stamped Parts, parent: PROD_AUTO_BODY_STAMPING, segment: SEG_AUTO_BODY, aliases: [热冲压件]}
+  - {id: PROD_AUTO_BODY_WELDING, type: product, name: 车身焊接总成, name_en: Body Welded Assembly, segment: SEG_AUTO_BODY}
+  - {id: PROD_AUTO_GLASS, type: product, name: 汽车玻璃, name_en: Automotive Glass, segment: SEG_AUTO_BODY, aliases: [汽车风挡玻璃]}
+  - {id: PROD_AUTO_PANORAMIC_ROOF, type: product, name: 全景天幕玻璃, name_en: Panoramic Glass Roof, parent: PROD_AUTO_GLASS, segment: SEG_AUTO_BODY, aliases: [天幕玻璃]}
+  - {id: PROD_AUTO_HUD_GLASS, type: product, name: HUD前挡玻璃, name_en: HUD Windshield, parent: PROD_AUTO_GLASS, segment: SEG_AUTO_BODY, aliases: [HUD玻璃]}
+  - {id: PROD_AUTO_DIMMING_GLASS, type: product, name: 智能调光玻璃, name_en: Smart Dimming Glass, parent: PROD_AUTO_GLASS, segment: SEG_AUTO_BODY, aliases: [调光玻璃, 电致变色玻璃]}
+  - {id: PROD_AUTO_SUNROOF, type: product, name: 汽车天窗, name_en: Sunroof, segment: SEG_AUTO_BODY}
+  - {id: PROD_AUTO_LAMP, type: product, name: 汽车车灯, name_en: Automotive Lamp, segment: SEG_AUTO_BODY, aliases: [车灯]}
+  - {id: PROD_AUTO_HEADLAMP, type: product, name: 汽车前照灯, name_en: Headlamp, parent: PROD_AUTO_LAMP, segment: SEG_AUTO_BODY, aliases: [前大灯, LED大灯]}
+  - {id: PROD_AUTO_ADB_HEADLAMP, type: product, name: 自适应远光大灯, name_en: Adaptive Driving Beam Headlamp, parent: PROD_AUTO_HEADLAMP, segment: SEG_AUTO_BODY, aliases: [ADB, DLP大灯, 像素大灯]}
+  - {id: PROD_AUTO_TAIL_LAMP, type: product, name: 汽车尾灯, name_en: Tail Lamp, parent: PROD_AUTO_LAMP, segment: SEG_AUTO_BODY, aliases: [贯穿式尾灯]}
+  - {id: PROD_AUTO_AMBIENT_LIGHT, type: product, name: 车内氛围灯, name_en: Interior Ambient Lighting, parent: PROD_AUTO_LAMP, segment: SEG_AUTO_BODY, aliases: [氛围灯]}
+  - {id: PROD_AUTO_LAMP_CONTROLLER, type: product, name: 车灯控制器, name_en: Lamp Control Module, segment: SEG_AUTO_BODY, aliases: [LED驱动模块]}
+  - {id: PROD_AUTO_SEAT, type: product, name: 汽车座椅, name_en: Automotive Seat, segment: SEG_AUTO_BODY, aliases: [座椅总成]}
+  - {id: PROD_AUTO_SEAT_FRAME, type: product, name: 座椅骨架, name_en: Seat Frame, segment: SEG_AUTO_BODY, aliases: [座椅滑轨, 调角器]}
+  - {id: PROD_AUTO_SEAT_COMFORT, type: product, name: 座椅舒适系统, name_en: Seat Comfort System, segment: SEG_AUTO_BODY, aliases: [座椅通风, 座椅加热, 座椅按摩]}
+  - {id: PROD_AUTO_SEAT_FOAM, type: product, name: 座椅面套与发泡, name_en: Seat Cover and Foam, segment: SEG_AUTO_BODY, aliases: [座椅面套, 汽车皮革]}
+  - {id: PROD_AUTO_INTERIOR, type: product, name: 汽车内饰件, name_en: Interior Trim, segment: SEG_AUTO_BODY, aliases: [内饰]}
+  - {id: PROD_AUTO_INSTRUMENT_PANEL, type: product, name: 仪表板总成, name_en: Instrument Panel Assembly, parent: PROD_AUTO_INTERIOR, segment: SEG_AUTO_BODY, aliases: [仪表台, 副仪表板]}
+  - {id: PROD_AUTO_DOOR_PANEL, type: product, name: 门板总成, name_en: Door Trim Panel, parent: PROD_AUTO_INTERIOR, segment: SEG_AUTO_BODY, aliases: [门内饰板]}
+  - {id: PROD_AUTO_HEADLINER, type: product, name: 顶棚总成, name_en: Headliner, parent: PROD_AUTO_INTERIOR, segment: SEG_AUTO_BODY}
+  - {id: PROD_AUTO_CARPET, type: product, name: 汽车地毯, name_en: Automotive Carpet, parent: PROD_AUTO_INTERIOR, segment: SEG_AUTO_BODY, aliases: [声学件, 隔音垫]}
+  - {id: PROD_AUTO_STEERING_WHEEL, type: product, name: 方向盘, name_en: Steering Wheel, parent: PROD_AUTO_INTERIOR, segment: SEG_AUTO_BODY}
+  - {id: PROD_AUTO_EXTERIOR_TRIM, type: product, name: 汽车外饰件, name_en: Exterior Trim, segment: SEG_AUTO_BODY, aliases: [外饰]}
+  - {id: PROD_AUTO_BUMPER, type: product, name: 保险杠, name_en: Bumper, parent: PROD_AUTO_EXTERIOR_TRIM, segment: SEG_AUTO_BODY, aliases: [前格栅]}
+  - {id: PROD_AUTO_MIRROR, type: product, name: 汽车后视镜, name_en: Rear-View Mirror, parent: PROD_AUTO_EXTERIOR_TRIM, segment: SEG_AUTO_BODY, aliases: [电子外后视镜, CMS]}
+  - {id: PROD_AUTO_SEALING_STRIP, type: product, name: 汽车密封条, name_en: Automotive Sealing Strip, segment: SEG_AUTO_BODY, aliases: [门框密封条]}
+  - {id: PROD_AUTO_WIPER, type: product, name: 雨刮系统, name_en: Wiper System, segment: SEG_AUTO_BODY, aliases: [雨刮器]}
+  - {id: PROD_AUTO_DOOR_SYSTEM, type: product, name: 车门系统, name_en: Door System, segment: SEG_AUTO_BODY, aliases: [电动尾门, 电吸门, 隐藏式门把手]}
+  - {id: PROD_AUTO_WINDOW_REGULATOR, type: product, name: 玻璃升降器, name_en: Window Regulator, segment: SEG_AUTO_BODY}
+  - {id: PROD_AUTO_LOCK, type: product, name: 汽车门锁, name_en: Automotive Lock, segment: SEG_AUTO_BODY, aliases: [门锁系统]}
+  - {id: PROD_AUTO_PLASTIC_PARTS, type: product, name: 汽车塑料件, name_en: Automotive Plastic Parts, segment: SEG_AUTO_BODY, aliases: [注塑件, 改性塑料件]}
+
+  # ---------------- lightweight castings and structures ----------------
+  - {id: PROD_AUTO_AL_DIE_CASTING, type: product, name: 汽车铝合金压铸件, name_en: Aluminum Die Casting, segment: SEG_AUTO_LIGHTWEIGHT, aliases: [铝压铸件, 铝合金精密压铸件]}
+  - {id: PROD_AUTO_GIGA_CASTING, type: product, name: 一体化压铸件, name_en: Integrated Giga Casting, parent: PROD_AUTO_AL_DIE_CASTING, segment: SEG_AUTO_LIGHTWEIGHT, aliases: [一体压铸, 一体化压铸后底板, Giga Casting]}
+  - {id: PROD_AUTO_SHOCK_TOWER, type: product, name: 车身结构件, name_en: Body Structural Casting, parent: PROD_AUTO_AL_DIE_CASTING, segment: SEG_AUTO_LIGHTWEIGHT, aliases: [减震塔, 纵梁]}
+  - {id: PROD_AUTO_MG_DIE_CASTING, type: product, name: 汽车镁合金压铸件, name_en: Magnesium Die Casting, segment: SEG_AUTO_LIGHTWEIGHT, aliases: [镁合金部件]}
+  - {id: PROD_AUTO_AL_EXTRUSION, type: product, name: 汽车铝挤压件, name_en: Aluminum Extrusion Parts, segment: SEG_AUTO_LIGHTWEIGHT, aliases: [防撞梁, 铝型材结构件]}
+  - {id: PROD_AUTO_BATTERY_TRAY, type: product, name: 电池托盘, name_en: Battery Tray, segment: SEG_AUTO_LIGHTWEIGHT, aliases: [电池箱体, 电池包壳体, 电池包箱体], parent: PROD_PWR_STRUCTURAL_PARTS}
+  - {id: PROD_AUTO_IRON_CASTING, type: product, name: 汽车铸铁件, name_en: Iron Casting, segment: SEG_AUTO_LIGHTWEIGHT, aliases: [球墨铸铁件, 灰铸铁件]}
+
+  # ---------------- tyres and wheels ----------------
+  - {id: PROD_AUTO_TIRE, type: product, name: 轮胎, name_en: Tyre, segment: SEG_AUTO_TIRE_WHEEL, aliases: [汽车轮胎]}
+  - {id: PROD_AUTO_PCR_TIRE, type: product, name: 半钢子午线轮胎, name_en: Passenger Car Radial Tyre, parent: PROD_AUTO_TIRE, segment: SEG_AUTO_TIRE_WHEEL, aliases: [半钢胎, PCR, 乘用车轮胎]}
+  - {id: PROD_AUTO_TBR_TIRE, type: product, name: 全钢子午线轮胎, name_en: Truck and Bus Radial Tyre, parent: PROD_AUTO_TIRE, segment: SEG_AUTO_TIRE_WHEEL, aliases: [全钢胎, TBR, 卡客车轮胎]}
+  - {id: PROD_AUTO_OTR_TIRE, type: product, name: 工程机械轮胎, name_en: Off-The-Road Tyre, parent: PROD_AUTO_TIRE, segment: SEG_AUTO_TIRE_WHEEL, aliases: [OTR, 巨胎, 非公路轮胎]}
+  - {id: PROD_AUTO_BIAS_TIRE, type: product, name: 斜交轮胎, name_en: Bias Tyre, parent: PROD_AUTO_TIRE, segment: SEG_AUTO_TIRE_WHEEL, aliases: [斜交胎]}
+  - {id: PROD_AUTO_TWO_WHEELER_TIRE, type: product, name: 两轮车轮胎, name_en: Two-Wheeler Tyre, parent: PROD_AUTO_TIRE, segment: SEG_AUTO_TIRE_WHEEL, aliases: [摩托车轮胎, 电动车轮胎]}
+  - {id: PROD_AUTO_WHEEL, type: product, name: 汽车车轮, name_en: Wheel, segment: SEG_AUTO_TIRE_WHEEL}
+  - {id: PROD_AUTO_AL_WHEEL, type: product, name: 铝合金车轮, name_en: Aluminum Alloy Wheel, parent: PROD_AUTO_WHEEL, segment: SEG_AUTO_TIRE_WHEEL, aliases: [铝合金轮毂, 铝轮]}
+  - {id: PROD_AUTO_FORGED_WHEEL, type: product, name: 锻造铝合金车轮, name_en: Forged Aluminum Wheel, parent: PROD_AUTO_AL_WHEEL, segment: SEG_AUTO_TIRE_WHEEL, aliases: [锻造轮毂]}
+  - {id: PROD_AUTO_STEEL_WHEEL, type: product, name: 钢制车轮, name_en: Steel Wheel, parent: PROD_AUTO_WHEEL, segment: SEG_AUTO_TIRE_WHEEL, aliases: [钢轮]}
+  - {id: PROD_AUTO_TPMS, type: product, name: 胎压监测系统, name_en: Tyre Pressure Monitoring System, segment: SEG_AUTO_TIRE_WHEEL, aliases: [TPMS]}
+
+  # ---------------- passive safety and other parts ----------------
+  - {id: PROD_AUTO_AIRBAG, type: product, name: 安全气囊, name_en: Airbag, segment: SEG_AUTO_PASSIVE_SAFETY}
+  - {id: PROD_AUTO_GAS_GENERATOR, type: product, name: 气体发生器, name_en: Airbag Inflator, segment: SEG_AUTO_PASSIVE_SAFETY, aliases: [安全气囊气体发生器]}
+  - {id: PROD_AUTO_AIRBAG_FABRIC, type: product, name: 安全气囊布, name_en: Airbag Fabric, segment: SEG_AUTO_PASSIVE_SAFETY, aliases: [气袋]}
+  - {id: PROD_AUTO_SEATBELT, type: product, name: 汽车安全带, name_en: Seatbelt, segment: SEG_AUTO_PASSIVE_SAFETY, aliases: [安全带]}
+  - {id: PROD_AUTO_FASTENER, type: product, name: 汽车紧固件, name_en: Automotive Fastener, segment: SEG_AUTO_OTHER_PARTS, aliases: [汽车螺栓, 车用标准件]}
+  - {id: PROD_AUTO_FLUID_HOSE, type: product, name: 汽车胶管, name_en: Automotive Hose, segment: SEG_AUTO_OTHER_PARTS, aliases: [流体管路, 制动软管, 尼龙管路]}
+  - {id: PROD_AUTO_BELT, type: product, name: 汽车传动带, name_en: Automotive Belt, segment: SEG_AUTO_OTHER_PARTS, aliases: [多楔带, 同步带]}
+  - {id: PROD_AUTO_SPRING_PART, type: product, name: 汽车精密弹簧, name_en: Precision Automotive Spring, segment: SEG_AUTO_OTHER_PARTS, aliases: [气门弹簧, 线簧]}
+  - {id: PROD_AUTO_AFTERMARKET_PARTS, type: product, name: 汽车后市场零部件, name_en: Aftermarket Auto Parts, segment: SEG_AUTO_OTHER_PARTS, aliases: [AM零部件, 售后件]}
+  - {id: PROD_AUTO_MOLD, type: product, name: 汽车模具, name_en: Automotive Tooling and Dies, segment: SEG_AUTO_OTHER_PARTS, aliases: [汽车覆盖件模具]}
+
+  # ---------------- electronics: domain controllers, ADAS ----------------
+  - {id: PROD_AUTO_ECU, type: product, name: 汽车电子控制单元, name_en: Electronic Control Unit, segment: SEG_AUTO_ELECTRONICS, aliases: [ECU, 控制器]}
+  - {id: PROD_AUTO_BODY_CONTROLLER, type: product, name: 车身控制器, name_en: Body Control Module, segment: SEG_AUTO_ELECTRONICS, aliases: [BCM, 车身域控制器, 区域控制器, ZCU]}
+  - {id: PROD_AUTO_DOMAIN_CONTROLLER, type: product, name: 汽车域控制器, name_en: Domain Controller, segment: SEG_AUTO_ELECTRONICS, aliases: [域控制器, 域控]}
+  - {id: PROD_AUTO_CENTRAL_COMPUTER, type: product, import_dependence: medium, name: 中央计算平台, name_en: Central Vehicle Computer, parent: PROD_AUTO_DOMAIN_CONTROLLER, segment: SEG_AUTO_ELECTRONICS, aliases: [舱驾一体, 中央计算单元]}
+  - {id: PROD_AUTO_ADAS_DOMAIN, type: product, import_dependence: medium, name: 智能驾驶域控制器, name_en: ADAS Domain Controller, parent: PROD_AUTO_DOMAIN_CONTROLLER, segment: SEG_AUTO_INTELLIGENT_DRIVING, aliases: [智驾域控, 自动驾驶域控制器, ADCU]}
+  - {id: PROD_AUTO_ADAS_SOLUTION, type: product, name: 智能驾驶系统方案, name_en: ADAS System Solution, segment: SEG_AUTO_INTELLIGENT_DRIVING, aliases: [NOA, 城市NOA, 高速NOA, 智驾方案]}
+  - {id: PROD_AUTO_LIDAR, type: product, name: 车载激光雷达, name_en: Automotive LiDAR, segment: SEG_AUTO_INTELLIGENT_DRIVING, aliases: [激光雷达, LiDAR]}
+  - {id: PROD_AUTO_MMWAVE_RADAR, type: product, import_dependence: medium, name: 毫米波雷达, name_en: Millimeter-Wave Radar, segment: SEG_AUTO_INTELLIGENT_DRIVING, aliases: [4D毫米波雷达, 角雷达]}
+  - {id: PROD_AUTO_ULTRASONIC_RADAR, type: product, name: 超声波雷达, name_en: Ultrasonic Parking Sensor, segment: SEG_AUTO_INTELLIGENT_DRIVING, aliases: [倒车雷达, 泊车雷达]}
+  - {id: PROD_AUTO_APA, type: product, name: 自动泊车系统, name_en: Automated Parking System, segment: SEG_AUTO_INTELLIGENT_DRIVING, aliases: [APA, AVP, 泊车域控]}
+  - {id: PROD_AUTO_GNSS_IMU, type: product, name: 车载高精度组合导航, name_en: GNSS and IMU Positioning Unit, segment: SEG_AUTO_INTELLIGENT_DRIVING, aliases: [组合导航, 高精定位]}
+  - {id: PROD_AUTO_V2X, type: product, name: 车路协同设备, name_en: V2X Equipment, segment: SEG_AUTO_INTELLIGENT_DRIVING, aliases: [V2X, C-V2X, 路侧单元, RSU, OBU]}
+  # ---------------- electronics: cockpit ----------------
+  - {id: PROD_AUTO_COCKPIT_DOMAIN, type: product, name: 智能座舱域控制器, name_en: Cockpit Domain Controller, parent: PROD_AUTO_DOMAIN_CONTROLLER, segment: SEG_AUTO_SMART_COCKPIT, aliases: [座舱域控]}
+  - {id: PROD_AUTO_IVI, type: product, name: 车载信息娱乐系统, name_en: In-Vehicle Infotainment, segment: SEG_AUTO_SMART_COCKPIT, aliases: [IVI, 车机, 车载导航]}
+  - {id: PROD_AUTO_CENTER_DISPLAY, type: product, name: 车载中控显示屏, name_en: Center Display, segment: SEG_AUTO_SMART_COCKPIT, aliases: [中控屏, 车载显示屏, 副驾娱乐屏]}
+  - {id: PROD_AUTO_INSTRUMENT_CLUSTER, type: product, name: 全液晶仪表, name_en: Digital Instrument Cluster, segment: SEG_AUTO_SMART_COCKPIT, aliases: [液晶仪表, 组合仪表]}
+  - {id: PROD_AUTO_HUD, type: product, name: 抬头显示系统, name_en: Head-Up Display, segment: SEG_AUTO_SMART_COCKPIT, aliases: [HUD, AR-HUD, W-HUD]}
+  - {id: PROD_AUTO_AUDIO, type: product, name: 车载音响系统, name_en: Automotive Audio System, segment: SEG_AUTO_SMART_COCKPIT, aliases: [车载扬声器, 车载功放]}
+  - {id: PROD_AUTO_TBOX, type: product, name: 车载通信终端, name_en: Telematics Box, segment: SEG_AUTO_SMART_COCKPIT, aliases: [T-Box, TBOX, 车联网终端]}
+  - {id: PROD_AUTO_DMS, type: product, name: 驾驶员监测系统, name_en: Driver Monitoring System, segment: SEG_AUTO_SMART_COCKPIT, aliases: [DMS, OMS]}
+  - {id: PROD_AUTO_WIRELESS_CHARGER, type: product, name: 车载无线充电模块, name_en: In-Car Wireless Charger, segment: SEG_AUTO_SMART_COCKPIT}
+  - {id: PROD_AUTO_DASHCAM, type: product, name: 行车记录仪, name_en: Dashcam, segment: SEG_AUTO_SMART_COCKPIT, aliases: [DVR]}
+  # ---------------- electronics: harness, connectors, sensors, motors ----------------
+  - {id: PROD_AUTO_WIRING_HARNESS, type: product, name: 汽车线束, name_en: Automotive Wiring Harness, segment: SEG_AUTO_HARNESS_CONNECTOR, aliases: [低压线束]}
+  - {id: PROD_AUTO_HV_HARNESS, type: product, name: 高压线束, name_en: High-Voltage Wiring Harness, parent: PROD_AUTO_WIRING_HARNESS, segment: SEG_AUTO_HARNESS_CONNECTOR}
+  - {id: PROD_AUTO_HS_HARNESS, type: product, name: 汽车高速线束, name_en: High-Speed Data Harness, parent: PROD_AUTO_WIRING_HARNESS, segment: SEG_AUTO_HARNESS_CONNECTOR, aliases: [以太网线束, 同轴线束]}
+  - {id: PROD_AUTO_CABLE, type: product, name: 汽车电线, name_en: Automotive Wire, segment: SEG_AUTO_HARNESS_CONNECTOR, aliases: [汽车线缆, 车用电缆]}
+  - {id: PROD_AUTO_BUSBAR, type: product, name: 汽车铜排, name_en: Automotive Busbar, segment: SEG_AUTO_HARNESS_CONNECTOR, aliases: [电池连接片, CCS集成母排]}
+  - {id: PROD_AUTO_SENSOR, type: product, name: 汽车传感器, name_en: Automotive Sensor, segment: SEG_AUTO_ELECTRONICS}
+  - {id: PROD_AUTO_PRESSURE_SENSOR, type: product, import_dependence: medium, name: 汽车压力传感器, name_en: Automotive Pressure Sensor, parent: PROD_AUTO_SENSOR, segment: SEG_AUTO_ELECTRONICS}
+  - {id: PROD_AUTO_POSITION_SENSOR, type: product, name: 汽车位置与速度传感器, name_en: Position and Speed Sensor, parent: PROD_AUTO_SENSOR, segment: SEG_AUTO_ELECTRONICS, aliases: [轮速传感器, 扭矩传感器, 角度传感器]}
+  - {id: PROD_AUTO_TEMP_SENSOR, type: product, name: 汽车温度传感器, name_en: Automotive Temperature Sensor, parent: PROD_AUTO_SENSOR, segment: SEG_AUTO_ELECTRONICS}
+  - {id: PROD_AUTO_CURRENT_SENSOR, type: product, name: 汽车电流传感器, name_en: Automotive Current Sensor, parent: PROD_AUTO_SENSOR, segment: SEG_AUTO_ELECTRONICS}
+  - {id: PROD_AUTO_MICRO_MOTOR, type: product, name: 汽车微电机, name_en: Automotive Micro Motor, segment: SEG_AUTO_ELECTRONICS, aliases: [座椅电机, 车窗电机, 执行器电机]}
+  - {id: PROD_AUTO_SWITCH, type: product, name: 汽车开关, name_en: Automotive Switch, segment: SEG_AUTO_ELECTRONICS, aliases: [组合开关]}
+  - {id: PROD_AUTO_HORN, type: product, name: 汽车喇叭, name_en: Automotive Horn, segment: SEG_AUTO_ELECTRONICS}
+  - {id: PROD_AUTO_SMART_KEY, type: product, name: 智能钥匙系统, name_en: Smart Key System, segment: SEG_AUTO_ELECTRONICS, aliases: [无钥匙进入, PEPS, UWB数字钥匙]}
+
+  # ---------------- humanoid robot parts from auto suppliers ----------------
+  - {id: PROD_AUTO_ROBOT_REDUCER, type: product, import_dependence: medium, name: 机器人关节减速器, name_en: Robot Joint Reducer, segment: SEG_AUTO_ROBOT_PARTS, aliases: [机器人谐波减速器, 机器人行星减速器], parent: PROD_MACH_REDUCER}
+  - {id: PROD_AUTO_ROBOT_STRUCTURE, type: product, name: 人形机器人结构件, name_en: Humanoid Robot Structural Parts, segment: SEG_AUTO_ROBOT_PARTS, aliases: [机器人轻量化结构件]}
+
+  # ---------------- auto services ----------------
+  - {id: PROD_AUTO_NEW_CAR_RETAIL, type: product, kind: service, name: 新车销售, name_en: New Vehicle Retail, segment: SEG_AUTO_DEALER, aliases: [汽车经销, 4S店]}
+  - {id: PROD_AUTO_LUXURY_DEALER, type: product, kind: service, name: 豪华品牌汽车经销, name_en: Luxury Brand Dealership, parent: PROD_AUTO_NEW_CAR_RETAIL, segment: SEG_AUTO_DEALER}
+  - {id: PROD_AUTO_AFTER_SALES, type: product, kind: service, name: 汽车售后维修保养, name_en: After-Sales Service, segment: SEG_AUTO_DEALER, aliases: [维修保养, 售后服务]}
+  - {id: PROD_AUTO_USED_CAR, type: product, kind: service, name: 二手车交易, name_en: Used Car Trading, segment: SEG_AUTO_INTEGRATED_SERVICE, aliases: [二手车, 汽车拍卖]}
+  - {id: PROD_AUTO_VEHICLE_INSPECTION, type: product, kind: service, name: 机动车检测服务, name_en: Vehicle Inspection Service, segment: SEG_AUTO_INTEGRATED_SERVICE, aliases: [机动车检测, 汽车检测, 整车检测]}
+  - {id: PROD_AUTO_FINANCE_LEASE, type: product, kind: service, name: 汽车金融与租赁, name_en: Auto Finance and Leasing, segment: SEG_AUTO_INTEGRATED_SERVICE, aliases: [汽车金融, 融资租赁]}
+  - {id: PROD_AUTO_TESTING_SERVICE, type: product, kind: service, name: 汽车研发测试服务, name_en: Automotive R&D and Testing Service, segment: SEG_AUTO_INTEGRATED_SERVICE, aliases: [汽车检验检测, 汽车设计]}
+
+edges:
+  # ---------- segment tree ----------
+  - [SEG_AUTO_EV_PASSENGER, part_of, SEG_AUTO_PASSENGER_VEHICLE]
+  - [SEG_AUTO_INTEGRATED_PASSENGER, part_of, SEG_AUTO_PASSENGER_VEHICLE]
+  - [SEG_AUTO_TRUCK, part_of, SEG_AUTO_COMMERCIAL_VEHICLE]
+  - [SEG_AUTO_BUS, part_of, SEG_AUTO_COMMERCIAL_VEHICLE]
+  - [SEG_AUTO_MOTORCYCLE, part_of, SEG_AUTO_MOTO_OTHER]
+  - [SEG_AUTO_OTHER_TRANSPORT_EQUIP, part_of, SEG_AUTO_MOTO_OTHER]
+  - [SEG_AUTO_BODY, part_of, SEG_AUTO_PARTS]
+  - [SEG_AUTO_LIGHTWEIGHT, part_of, SEG_AUTO_PARTS]
+  - [SEG_AUTO_CHASSIS_ENGINE, part_of, SEG_AUTO_PARTS]
+  - [SEG_AUTO_CHASSIS, part_of, SEG_AUTO_CHASSIS_ENGINE]
+  - [SEG_AUTO_ENGINE, part_of, SEG_AUTO_CHASSIS_ENGINE]
+  - [SEG_AUTO_TRANSMISSION, part_of, SEG_AUTO_CHASSIS_ENGINE]
+  - [SEG_AUTO_E_DRIVE, part_of, SEG_AUTO_CHASSIS_ENGINE]
+  - [SEG_AUTO_THERMAL, part_of, SEG_AUTO_PARTS]
+  - [SEG_AUTO_TIRE_WHEEL, part_of, SEG_AUTO_PARTS]
+  - [SEG_AUTO_OTHER_PARTS, part_of, SEG_AUTO_PARTS]
+  - [SEG_AUTO_PASSIVE_SAFETY, part_of, SEG_AUTO_OTHER_PARTS]
+  - [SEG_AUTO_ELECTRONICS, part_of, SEG_AUTO_PARTS]
+  - [SEG_AUTO_INTELLIGENT_DRIVING, part_of, SEG_AUTO_ELECTRONICS]
+  - [SEG_AUTO_SMART_COCKPIT, part_of, SEG_AUTO_ELECTRONICS]
+  - [SEG_AUTO_HARNESS_CONNECTOR, part_of, SEG_AUTO_ELECTRONICS]
+  - [SEG_AUTO_ROBOT_PARTS, part_of, SEG_AUTO_PARTS]
+  - [SEG_AUTO_DEALER, part_of, SEG_AUTO_SERVICE]
+  - [SEG_AUTO_INTEGRATED_SERVICE, part_of, SEG_AUTO_SERVICE]
+
+  # ---------- segments -> end markets ----------
+  - [SEG_AUTO_PASSENGER_VEHICLE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_AUTO_EV_PASSENGER, serves, MKT_EV]
+  - [SEG_AUTO_INTEGRATED_PASSENGER, serves, MKT_ICE_VEHICLE]
+  - [SEG_AUTO_INTEGRATED_PASSENGER, serves, MKT_EV]
+  - [SEG_AUTO_COMMERCIAL_VEHICLE, serves, MKT_COMMERCIAL_VEHICLE]
+  - [SEG_AUTO_TRUCK, serves, MKT_LOGISTICS]
+  - [SEG_AUTO_TRUCK, serves, MKT_CONSTRUCTION]
+  - [SEG_AUTO_BUS, serves, MKT_GOVERNMENT]
+  - [SEG_AUTO_MOTO_OTHER, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_AUTO_MOTORCYCLE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_AUTO_OTHER_TRANSPORT_EQUIP, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_AUTO_PARTS, serves, MKT_EV]
+  - [SEG_AUTO_PARTS, serves, MKT_ICE_VEHICLE]
+  - [SEG_AUTO_PARTS, serves, MKT_COMMERCIAL_VEHICLE]
+  - [SEG_AUTO_BODY, serves, MKT_EV]
+  - [SEG_AUTO_BODY, serves, MKT_ICE_VEHICLE]
+  - [SEG_AUTO_LIGHTWEIGHT, serves, MKT_EV]
+  - [SEG_AUTO_CHASSIS_ENGINE, serves, MKT_ICE_VEHICLE]
+  - [SEG_AUTO_CHASSIS_ENGINE, serves, MKT_COMMERCIAL_VEHICLE]
+  - [SEG_AUTO_CHASSIS, serves, MKT_EV]
+  - [SEG_AUTO_CHASSIS, serves, MKT_ICE_VEHICLE]
+  - [SEG_AUTO_ENGINE, serves, MKT_ICE_VEHICLE]
+  - [SEG_AUTO_ENGINE, serves, MKT_COMMERCIAL_VEHICLE]
+  - [SEG_AUTO_TRANSMISSION, serves, MKT_ICE_VEHICLE]
+  - [SEG_AUTO_TRANSMISSION, serves, MKT_EV]
+  - [SEG_AUTO_E_DRIVE, serves, MKT_EV]
+  - [SEG_AUTO_THERMAL, serves, MKT_EV]
+  - [SEG_AUTO_THERMAL, serves, MKT_ICE_VEHICLE]
+  - [SEG_AUTO_THERMAL, serves, MKT_ENERGY_STORAGE]
+  - [SEG_AUTO_TIRE_WHEEL, serves, MKT_ICE_VEHICLE]
+  - [SEG_AUTO_TIRE_WHEEL, serves, MKT_EV]
+  - [SEG_AUTO_TIRE_WHEEL, serves, MKT_COMMERCIAL_VEHICLE]
+  - [SEG_AUTO_TIRE_WHEEL, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_AUTO_OTHER_PARTS, serves, MKT_ICE_VEHICLE]
+  - [SEG_AUTO_OTHER_PARTS, serves, MKT_EV]
+  - [SEG_AUTO_PASSIVE_SAFETY, serves, MKT_EV]
+  - [SEG_AUTO_PASSIVE_SAFETY, serves, MKT_ICE_VEHICLE]
+  - [SEG_AUTO_ELECTRONICS, serves, MKT_EV]
+  - [SEG_AUTO_ELECTRONICS, serves, MKT_ICE_VEHICLE]
+  - [SEG_AUTO_INTELLIGENT_DRIVING, serves, MKT_EV]
+  - [SEG_AUTO_INTELLIGENT_DRIVING, serves, MKT_ROBOTICS]
+  - [SEG_AUTO_SMART_COCKPIT, serves, MKT_EV]
+  - [SEG_AUTO_HARNESS_CONNECTOR, serves, MKT_EV]
+  - [SEG_AUTO_HARNESS_CONNECTOR, serves, MKT_ICE_VEHICLE]
+  - [SEG_AUTO_ROBOT_PARTS, serves, MKT_HUMANOID_ROBOT]
+  - [SEG_AUTO_ROBOT_PARTS, serves, MKT_ROBOTICS]
+  - [SEG_AUTO_SERVICE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_AUTO_DEALER, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_AUTO_INTEGRATED_SERVICE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_AUTO_INTEGRATED_SERVICE, serves, MKT_FINANCE]
+
+  # ---------- vehicles -> end markets ----------
+  - [PROD_AUTO_BEV_PASSENGER, used_in, MKT_EV]
+  - [PROD_AUTO_PHEV_PASSENGER, used_in, MKT_EV]
+  - [PROD_AUTO_EREV_PASSENGER, used_in, MKT_EV]
+  - [PROD_AUTO_ICE_PASSENGER, used_in, MKT_ICE_VEHICLE]
+  - [PROD_AUTO_HEV_PASSENGER, used_in, MKT_ICE_VEHICLE]
+  - [PROD_AUTO_PASSENGER_CAR, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_AUTO_ROBOTAXI, used_in, MKT_EV]
+  - [PROD_AUTO_MINI_EV, used_in, MKT_EV]
+  - [PROD_AUTO_VEHICLE_EXPORT, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_AUTO_TRUCK, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_AUTO_TRUCK, used_in, MKT_LOGISTICS]
+  - [PROD_AUTO_HEAVY_TRUCK, used_in, MKT_LOGISTICS]
+  - [PROD_AUTO_HEAVY_TRUCK, used_in, MKT_MINING]
+  - [PROD_AUTO_NEV_HEAVY_TRUCK, used_in, MKT_EV]
+  - [PROD_AUTO_NEV_HEAVY_TRUCK, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_AUTO_LNG_HEAVY_TRUCK, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_AUTO_LIGHT_TRUCK, used_in, MKT_LOGISTICS]
+  - [PROD_AUTO_LIGHT_VAN, used_in, MKT_LOGISTICS]
+  - [PROD_AUTO_PICKUP, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_AUTO_SPECIAL_VEHICLE, used_in, MKT_CONSTRUCTION]
+  - [PROD_AUTO_SPECIAL_VEHICLE, used_in, MKT_ENVIRONMENTAL]
+  - [PROD_AUTO_SEMI_TRAILER, used_in, MKT_LOGISTICS]
+  - [PROD_AUTO_FCV_COMMERCIAL, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_AUTO_BUS, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_AUTO_NEV_BUS, used_in, MKT_EV]
+  - [PROD_AUTO_BUS, used_in, MKT_GOVERNMENT]
+  - [PROD_AUTO_MOTORCYCLE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_AUTO_E_BIKE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_AUTO_ATV, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_AUTO_ATV, used_in, MKT_AGRICULTURE]
+  - [PROD_AUTO_LOW_SPEED_EV, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_AUTO_PERSONAL_MOBILITY, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_AUTO_RV, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_AUTO_MOTORCYCLE_ENGINE, component_of, PROD_AUTO_MOTORCYCLE]
+  - [PROD_AUTO_MOTORCYCLE_ENGINE, component_of, PROD_AUTO_ATV]
+  - [PROD_AUTO_HEAVY_TRUCK, substitute_for, PROD_AUTO_NEV_HEAVY_TRUCK]
+  - [PROD_AUTO_BEV_PASSENGER, substitute_for, PROD_AUTO_ICE_PASSENGER]
+  - [PROD_AUTO_FCV_COMMERCIAL, substitute_for, PROD_AUTO_NEV_HEAVY_TRUCK]
+  - [PROD_AUTO_ELECTRIC_MOTORCYCLE, substitute_for, PROD_AUTO_MOTORCYCLE]
+
+  # ---------- vehicle-level assemblies -> vehicles ----------
+  - [PROD_AUTO_BRAKE_SYSTEM, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_BRAKE_SYSTEM, component_of, PROD_AUTO_TRUCK]
+  - [PROD_AUTO_BRAKE_SYSTEM, component_of, PROD_AUTO_BUS]
+  - [PROD_AUTO_STEERING_SYSTEM, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_STEERING_SYSTEM, component_of, PROD_AUTO_TRUCK]
+  - [PROD_AUTO_SUSPENSION_SYSTEM, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_SUSPENSION_SYSTEM, component_of, PROD_AUTO_TRUCK]
+  - [PROD_AUTO_SUSPENSION_SYSTEM, component_of, PROD_AUTO_BUS]
+  - [PROD_AUTO_ENGINE, component_of, PROD_AUTO_ICE_PASSENGER]
+  - [PROD_AUTO_GASOLINE_ENGINE, component_of, PROD_AUTO_ICE_PASSENGER]
+  - [PROD_AUTO_HYBRID_ENGINE, component_of, PROD_AUTO_PHEV_PASSENGER]
+  - [PROD_AUTO_HYBRID_ENGINE, component_of, PROD_AUTO_EREV_PASSENGER]
+  - [PROD_AUTO_HYBRID_ENGINE, component_of, PROD_AUTO_HEV_PASSENGER]
+  - [PROD_AUTO_DIESEL_ENGINE, component_of, PROD_AUTO_HEAVY_TRUCK]
+  - [PROD_AUTO_DIESEL_ENGINE, component_of, PROD_AUTO_BUS]
+  - [PROD_AUTO_DIESEL_ENGINE, component_of, PROD_AUTO_LIGHT_TRUCK]
+  - [PROD_AUTO_GAS_ENGINE, component_of, PROD_AUTO_LNG_HEAVY_TRUCK]
+  - [PROD_AUTO_TRANSMISSION, component_of, PROD_AUTO_ICE_PASSENGER]
+  - [PROD_AUTO_TRANSMISSION, component_of, PROD_AUTO_TRUCK]
+  - [PROD_AUTO_AMT, component_of, PROD_AUTO_HEAVY_TRUCK]
+  - [PROD_AUTO_DHT, component_of, PROD_AUTO_PHEV_PASSENGER]
+  - [PROD_AUTO_DHT, component_of, PROD_AUTO_HEV_PASSENGER]
+  - [PROD_AUTO_AXLE, component_of, PROD_AUTO_TRUCK]
+  - [PROD_AUTO_AXLE, component_of, PROD_AUTO_BUS]
+  - [PROD_AUTO_DRIVE_SHAFT, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_TRANSFER_CASE, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_E_AXLE, component_of, PROD_AUTO_BEV_PASSENGER]
+  - [PROD_AUTO_E_AXLE, component_of, PROD_AUTO_PHEV_PASSENGER]
+  - [PROD_AUTO_E_AXLE, component_of, PROD_AUTO_EREV_PASSENGER]
+  - [PROD_AUTO_E_AXLE, component_of, PROD_AUTO_NEV_HEAVY_TRUCK]
+  - [PROD_AUTO_E_AXLE, component_of, PROD_AUTO_NEV_BUS]
+  - [PROD_PWR_EV_DRIVE_MOTOR, component_of, PROD_AUTO_ELECTRIC_MOTORCYCLE]
+  - [PROD_AUTO_OBC, component_of, PROD_AUTO_BEV_PASSENGER]
+  - [PROD_AUTO_OBC, component_of, PROD_AUTO_PHEV_PASSENGER]
+  - [PROD_AUTO_DCDC, component_of, PROD_AUTO_BEV_PASSENGER]
+  - [PROD_AUTO_PDU, component_of, PROD_AUTO_BEV_PASSENGER]
+  - [PROD_PWR_BMS, component_of, PROD_AUTO_BEV_PASSENGER]
+  - [PROD_PWR_BMS, component_of, PROD_AUTO_PHEV_PASSENGER]
+  - [PROD_AUTO_CHARGING_INLET, component_of, PROD_AUTO_BEV_PASSENGER]
+  - [PROD_MACH_HYDROGEN_STORAGE_TANK, component_of, PROD_AUTO_FCV_COMMERCIAL]
+  - [PROD_AUTO_THERMAL_SYSTEM, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_HEAT_PUMP, component_of, PROD_AUTO_BEV_PASSENGER]
+  - [PROD_AUTO_BATTERY_TRAY, component_of, PROD_AUTO_BEV_PASSENGER]
+  - [PROD_AUTO_BATTERY_TRAY, component_of, PROD_AUTO_PHEV_PASSENGER]
+  - [PROD_AUTO_GIGA_CASTING, component_of, PROD_AUTO_BEV_PASSENGER]
+  - [PROD_AUTO_BODY_STAMPING, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_BODY_WELDING, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_GLASS, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_GLASS, component_of, PROD_AUTO_TRUCK]
+  - [PROD_AUTO_GLASS, component_of, PROD_AUTO_BUS]
+  - [PROD_AUTO_SUNROOF, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_LAMP, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_LAMP, component_of, PROD_AUTO_TRUCK]
+  - [PROD_AUTO_LAMP, component_of, PROD_AUTO_MOTORCYCLE]
+  - [PROD_AUTO_SEAT, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_SEAT, component_of, PROD_AUTO_BUS]
+  - [PROD_AUTO_INTERIOR, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_EXTERIOR_TRIM, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_SEALING_STRIP, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_WIPER, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_DOOR_SYSTEM, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_TIRE, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_PCR_TIRE, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_TBR_TIRE, component_of, PROD_AUTO_TRUCK]
+  - [PROD_AUTO_TBR_TIRE, component_of, PROD_AUTO_BUS]
+  - [PROD_AUTO_TWO_WHEELER_TIRE, component_of, PROD_AUTO_MOTORCYCLE]
+  - [PROD_AUTO_TWO_WHEELER_TIRE, component_of, PROD_AUTO_E_BIKE]
+  - [PROD_AUTO_WHEEL, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_STEEL_WHEEL, component_of, PROD_AUTO_TRUCK]
+  - [PROD_AUTO_TPMS, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_AIRBAG, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_SEATBELT, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_WIRING_HARNESS, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_WIRING_HARNESS, component_of, PROD_AUTO_TRUCK]
+  - [PROD_AUTO_HV_HARNESS, component_of, PROD_AUTO_BEV_PASSENGER]
+  - [PROD_AUTO_DOMAIN_CONTROLLER, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_BODY_CONTROLLER, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_ECU, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_ADAS_SOLUTION, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_ADAS_SOLUTION, component_of, PROD_AUTO_ROBOTAXI]
+  - [PROD_AUTO_IVI, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_TBOX, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_TBOX, component_of, PROD_AUTO_TRUCK]
+  - [PROD_AUTO_SMART_KEY, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_FUEL_TANK, component_of, PROD_AUTO_ICE_PASSENGER]
+  - [PROD_AUTO_FUEL_TANK, component_of, PROD_AUTO_PHEV_PASSENGER]
+  - [PROD_AUTO_EXHAUST_SYSTEM, component_of, PROD_AUTO_ICE_PASSENGER]
+  - [PROD_AUTO_AFTERTREATMENT, component_of, PROD_AUTO_HEAVY_TRUCK]
+  - [PROD_AUTO_AIR_BRAKE, component_of, PROD_AUTO_HEAVY_TRUCK]
+  - [PROD_AUTO_AIR_BRAKE, component_of, PROD_AUTO_BUS]
+  - [PROD_AUTO_RETARDER, component_of, PROD_AUTO_HEAVY_TRUCK]
+  - [PROD_AUTO_RETARDER, component_of, PROD_AUTO_BUS]
+
+  # ---------- chassis sub-components ----------
+  - [PROD_AUTO_BRAKE_CALIPER, component_of, PROD_AUTO_BRAKE_SYSTEM]
+  - [PROD_AUTO_BRAKE_DISC, component_of, PROD_AUTO_BRAKE_SYSTEM]
+  - [PROD_AUTO_BRAKE_PAD, component_of, PROD_AUTO_BRAKE_CALIPER]
+  - [PROD_AUTO_DRUM_BRAKE, component_of, PROD_AUTO_BRAKE_SYSTEM]
+  - [PROD_AUTO_VACUUM_BOOSTER, component_of, PROD_AUTO_BRAKE_SYSTEM]
+  - [PROD_AUTO_ELECTRIC_VACUUM_PUMP, component_of, PROD_AUTO_BRAKE_SYSTEM]
+  - [PROD_AUTO_ABS_ESC, component_of, PROD_AUTO_BRAKE_SYSTEM]
+  - [PROD_AUTO_EPB, component_of, PROD_AUTO_BRAKE_SYSTEM]
+  - [PROD_AUTO_EHB, component_of, PROD_AUTO_BRAKE_SYSTEM]
+  - [PROD_AUTO_EMB, component_of, PROD_AUTO_BRAKE_SYSTEM]
+  - [PROD_AUTO_EHB, substitute_for, PROD_AUTO_VACUUM_BOOSTER]
+  - [PROD_AUTO_EHB, substitute_for, PROD_AUTO_ABS_ESC]
+  - [PROD_AUTO_EMB, substitute_for, PROD_AUTO_EHB]
+  - [PROD_AUTO_ELECTRIC_VACUUM_PUMP, used_in, MKT_EV]
+  - [PROD_AUTO_EHB, used_in, MKT_EV]
+  - [PROD_AUTO_EMB, used_in, MKT_EV]
+  - [PROD_AUTO_STEERING_GEAR, component_of, PROD_AUTO_EPS]
+  - [PROD_AUTO_STEERING_COLUMN, component_of, PROD_AUTO_EPS]
+  - [PROD_AUTO_TIE_ROD, component_of, PROD_AUTO_STEERING_SYSTEM]
+  - [PROD_AUTO_MICRO_MOTOR, component_of, PROD_AUTO_EPS]
+  - [PROD_AUTO_POSITION_SENSOR, component_of, PROD_AUTO_EPS]
+  - [PROD_AUTO_STEERING_GEAR, component_of, PROD_AUTO_SBW]
+  - [PROD_AUTO_SBW, substitute_for, PROD_AUTO_EPS]
+  - [PROD_AUTO_EPS, substitute_for, PROD_AUTO_HPS]
+  - [PROD_AUTO_SBW, used_in, MKT_EV]
+  - [PROD_AUTO_AIR_SPRING, component_of, PROD_AUTO_AIR_SUSPENSION]
+  - [PROD_AUTO_AIR_SUPPLY_UNIT, component_of, PROD_AUTO_AIR_SUSPENSION]
+  - [PROD_AUTO_CDC_DAMPER, component_of, PROD_AUTO_AIR_SUSPENSION]
+  - [PROD_AUTO_ECU, component_of, PROD_AUTO_AIR_SUSPENSION]
+  - [PROD_AUTO_AIR_SUSPENSION, used_in, MKT_EV]
+  - [PROD_AUTO_AIR_SUSPENSION, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_AUTO_SHOCK_ABSORBER, component_of, PROD_AUTO_SUSPENSION_SYSTEM]
+  - [PROD_AUTO_COIL_SPRING, component_of, PROD_AUTO_SUSPENSION_SYSTEM]
+  - [PROD_AUTO_AIR_SPRING, substitute_for, PROD_AUTO_COIL_SPRING]
+  - [PROD_AUTO_STABILIZER_BAR, component_of, PROD_AUTO_SUSPENSION_SYSTEM]
+  - [PROD_AUTO_CONTROL_ARM, component_of, PROD_AUTO_SUSPENSION_SYSTEM]
+  - [PROD_AUTO_SUBFRAME, component_of, PROD_AUTO_SUSPENSION_SYSTEM]
+  - [PROD_AUTO_NVH_RUBBER, component_of, PROD_AUTO_SUSPENSION_SYSTEM]
+  - [PROD_AUTO_NVH_RUBBER, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_WHEEL_HUB_BEARING, component_of, PROD_AUTO_SUSPENSION_SYSTEM]
+  - [PROD_AUTO_CHASSIS_DOMAIN, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_CHASSIS_DOMAIN, used_in, MKT_EV]
+
+  # ---------- engine sub-components ----------
+  - [PROD_AUTO_CYLINDER_BLOCK, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_PISTON, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_PISTON_RING, component_of, PROD_AUTO_PISTON]
+  - [PROD_AUTO_CYLINDER_LINER, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_CRANKSHAFT, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_CONNECTING_ROD, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_CAMSHAFT, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_ENGINE_VALVE, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_VVT, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_TIMING_SYSTEM, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_TURBOCHARGER, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_FUEL_INJECTION, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_EGR, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_OIL_PUMP, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_MECH_WATER_PUMP, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_INTAKE_MANIFOLD, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_FILTER, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_SPARK_PLUG, component_of, PROD_AUTO_GASOLINE_ENGINE]
+  - [PROD_AUTO_IGNITION_COIL, component_of, PROD_AUTO_GASOLINE_ENGINE]
+  - [PROD_AUTO_STARTER_ALTERNATOR, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_ENGINE_GASKET, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_BELT, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_SPRING_PART, component_of, PROD_AUTO_ENGINE_VALVE]
+  - [PROD_AUTO_ECU, component_of, PROD_AUTO_ENGINE]
+  - [PROD_AUTO_OXYGEN_SENSOR, component_of, PROD_AUTO_EXHAUST_SYSTEM]
+  - [PROD_AUTO_AFTERTREATMENT, component_of, PROD_AUTO_EXHAUST_SYSTEM]
+  - [PROD_AUTO_CATALYST, component_of, PROD_AUTO_AFTERTREATMENT]
+  - [PROD_AUTO_CERAMIC_SUBSTRATE, upstream_of, PROD_AUTO_CATALYST]
+  - [PROD_AUTO_CERAMIC_SUBSTRATE, upstream_of, PROD_AUTO_DPF]
+  - [PROD_AUTO_DPF, component_of, PROD_AUTO_AFTERTREATMENT]
+  - [PROD_AUTO_SCR, component_of, PROD_AUTO_AFTERTREATMENT]
+  - [PROD_AUTO_AFTERTREATMENT, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_AUTO_AFTERTREATMENT, used_in, MKT_ENVIRONMENTAL]
+  - [PROD_AUTO_DIESEL_ENGINE, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_AUTO_GASOLINE_ENGINE, used_in, MKT_ICE_VEHICLE]
+  - [PROD_AUTO_HYBRID_ENGINE, used_in, MKT_EV]
+  - [PROD_AUTO_TURBOCHARGER, used_in, MKT_ICE_VEHICLE]
+
+  # ---------- driveline sub-components ----------
+  - [PROD_AUTO_TRANSMISSION_GEAR, component_of, PROD_AUTO_TRANSMISSION]
+  - [PROD_AUTO_SYNCHRONIZER, component_of, PROD_AUTO_MT]
+  - [PROD_AUTO_SYNCHRONIZER, component_of, PROD_AUTO_DCT]
+  - [PROD_AUTO_CLUTCH, component_of, PROD_AUTO_MT]
+  - [PROD_AUTO_CLUTCH, component_of, PROD_AUTO_DCT]
+  - [PROD_AUTO_TORQUE_CONVERTER, component_of, PROD_AUTO_AT]
+  - [PROD_AUTO_TRANSMISSION_VALVE, component_of, PROD_AUTO_AT]
+  - [PROD_AUTO_TRANSMISSION_VALVE, component_of, PROD_AUTO_DCT]
+  - [PROD_AUTO_DIFFERENTIAL, component_of, PROD_AUTO_AXLE]
+  - [PROD_AUTO_DIFFERENTIAL, component_of, PROD_AUTO_E_REDUCER]
+  - [PROD_AUTO_TRANSMISSION_GEAR, component_of, PROD_AUTO_AXLE]
+  - [PROD_AUTO_FORGINGS, upstream_of, PROD_AUTO_TRANSMISSION_GEAR]
+  - [PROD_AUTO_FORGINGS, upstream_of, PROD_AUTO_CRANKSHAFT]
+  - [PROD_AUTO_FORGINGS, upstream_of, PROD_AUTO_DRIVE_SHAFT]
+  - [PROD_AUTO_POWDER_METALLURGY, component_of, PROD_AUTO_TRANSMISSION]
+  - [PROD_AUTO_POWDER_METALLURGY, component_of, PROD_AUTO_VVT]
+  - [PROD_AUTO_DHT, substitute_for, PROD_AUTO_DCT]
+  - [PROD_AUTO_ELECTRONIC_OIL_PUMP, component_of, PROD_AUTO_DHT]
+
+  # ---------- e-drive sub-components ----------
+  - [PROD_PWR_EV_DRIVE_MOTOR, component_of, PROD_AUTO_E_AXLE]
+  - [PROD_AUTO_MOTOR_CONTROLLER, component_of, PROD_AUTO_E_AXLE]
+  - [PROD_AUTO_E_REDUCER, component_of, PROD_AUTO_E_AXLE]
+  - [PROD_AUTO_MOTOR_HOUSING, component_of, PROD_AUTO_E_AXLE]
+  - [PROD_PWR_EV_DRIVE_MOTOR, component_of, PROD_AUTO_DHT]
+  - [PROD_PWR_MOTOR_CORE, component_of, PROD_PWR_EV_DRIVE_MOTOR]
+  - [PROD_AUTO_MOTOR_SHAFT, component_of, PROD_PWR_EV_DRIVE_MOTOR]
+  - [PROD_AUTO_TRANSMISSION_GEAR, component_of, PROD_AUTO_E_REDUCER]
+  - [PROD_AUTO_HAIRPIN_MOTOR, used_in, MKT_EV]
+  - [PROD_AUTO_CURRENT_SENSOR, component_of, PROD_AUTO_MOTOR_CONTROLLER]
+  - [PROD_AUTO_CURRENT_SENSOR, component_of, PROD_PWR_BMS]
+  - [PROD_AUTO_OBC, component_of, PROD_AUTO_POWER_INTEGRATED]
+  - [PROD_AUTO_DCDC, component_of, PROD_AUTO_POWER_INTEGRATED]
+  - [PROD_AUTO_PDU, component_of, PROD_AUTO_POWER_INTEGRATED]
+  - [PROD_PWR_HV_DC_RELAY, component_of, PROD_AUTO_PDU]
+  - [PROD_AUTO_HV_FUSE, component_of, PROD_AUTO_PDU]
+  - [PROD_ELEC_HV_CONNECTOR, component_of, PROD_AUTO_HV_HARNESS]
+  - [PROD_AUTO_HV_HARNESS, component_of, PROD_AUTO_E_AXLE]
+  - [PROD_AUTO_CHARGING_INLET, used_in, MKT_EV]
+  - [PROD_MACH_HYDROGEN_STORAGE_TANK, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_AUTO_E_AXLE, used_in, MKT_EV]
+  - [PROD_AUTO_MOTOR_CONTROLLER, used_in, MKT_EV]
+  - [PROD_PWR_HV_DC_RELAY, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_PWR_BMS, used_in, MKT_ENERGY_STORAGE]
+  - [TECH_SIC_GAN, enables, PROD_AUTO_MOTOR_CONTROLLER]
+  - [TECH_SIC_GAN, enables, PROD_AUTO_OBC]
+
+  # ---------- thermal sub-components ----------
+  - [PROD_AUTO_HEAT_PUMP, substitute_for, PROD_AUTO_PTC_HEATER]
+  - [PROD_AUTO_E_COMPRESSOR, component_of, PROD_AUTO_HEAT_PUMP]
+  - [PROD_AUTO_AC_COMPRESSOR, component_of, PROD_AUTO_THERMAL_SYSTEM]
+  - [PROD_AUTO_EXV, component_of, PROD_AUTO_HEAT_PUMP]
+  - [PROD_AUTO_EXV, component_of, PROD_AUTO_INTEGRATED_THERMAL_MODULE]
+  - [PROD_AUTO_WATER_VALVE, component_of, PROD_AUTO_INTEGRATED_THERMAL_MODULE]
+  - [PROD_AUTO_ELECTRONIC_WATER_PUMP, component_of, PROD_AUTO_INTEGRATED_THERMAL_MODULE]
+  - [PROD_AUTO_CHILLER, component_of, PROD_AUTO_INTEGRATED_THERMAL_MODULE]
+  - [PROD_AUTO_HEAT_EXCHANGER, component_of, PROD_AUTO_HEAT_PUMP]
+  - [PROD_AUTO_INTEGRATED_THERMAL_MODULE, component_of, PROD_AUTO_HEAT_PUMP]
+  - [PROD_AUTO_HVAC_MODULE, component_of, PROD_AUTO_THERMAL_SYSTEM]
+  - [PROD_AUTO_PTC_HEATER, component_of, PROD_AUTO_HVAC_MODULE]
+  - [PROD_AUTO_RADIATOR, component_of, PROD_AUTO_THERMAL_SYSTEM]
+  - [PROD_AUTO_INTERCOOLER, component_of, PROD_AUTO_TURBOCHARGER]
+  - [PROD_AUTO_COOLING_PLATE, component_of, PROD_AUTO_THERMAL_SYSTEM]
+  - [PROD_AUTO_AC_PIPE, component_of, PROD_AUTO_THERMAL_SYSTEM]
+  - [PROD_AUTO_ELECTRONIC_OIL_PUMP, component_of, PROD_AUTO_E_AXLE]
+  - [PROD_AUTO_ELECTRONIC_WATER_PUMP, substitute_for, PROD_AUTO_MECH_WATER_PUMP]
+  - [PROD_AUTO_HEAT_PUMP, used_in, MKT_EV]
+  - [PROD_AUTO_E_COMPRESSOR, used_in, MKT_EV]
+  - [PROD_AUTO_COOLING_PLATE, used_in, MKT_EV]
+  - [PROD_AUTO_COOLING_PLATE, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_AUTO_CHILLER, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_AUTO_ELECTRONIC_WATER_PUMP, used_in, MKT_DATA_CENTER]
+  - [PROD_AUTO_HEAT_EXCHANGER, used_in, MKT_AI_DATA_CENTER]
+  - [TECH_LIQUID_COOLING, enables, PROD_AUTO_COOLING_PLATE]
+
+  # ---------- body ----------
+  - [PROD_AUTO_HOT_STAMPING, component_of, PROD_AUTO_BODY_WELDING]
+  - [PROD_AUTO_BODY_STAMPING, component_of, PROD_AUTO_BODY_WELDING]
+  - [PROD_AUTO_MOLD, upstream_of, PROD_AUTO_BODY_STAMPING]
+  - [PROD_AUTO_MOLD, upstream_of, PROD_AUTO_PLASTIC_PARTS]
+  - [PROD_AUTO_GIGA_CASTING, substitute_for, PROD_AUTO_BODY_WELDING]
+  - [PROD_AUTO_HUD_GLASS, component_of, PROD_AUTO_HUD]
+  - [PROD_AUTO_PANORAMIC_ROOF, substitute_for, PROD_AUTO_SUNROOF]
+  - [PROD_AUTO_DIMMING_GLASS, component_of, PROD_AUTO_PANORAMIC_ROOF]
+  - [PROD_AUTO_LAMP_CONTROLLER, component_of, PROD_AUTO_HEADLAMP]
+  - [PROD_AUTO_LAMP_CONTROLLER, component_of, PROD_AUTO_TAIL_LAMP]
+  - [PROD_AUTO_SEAT_FRAME, component_of, PROD_AUTO_SEAT]
+  - [PROD_AUTO_SEAT_COMFORT, component_of, PROD_AUTO_SEAT]
+  - [PROD_AUTO_SEAT_FOAM, component_of, PROD_AUTO_SEAT]
+  - [PROD_AUTO_MICRO_MOTOR, component_of, PROD_AUTO_SEAT]
+  - [PROD_AUTO_MICRO_MOTOR, component_of, PROD_AUTO_WINDOW_REGULATOR]
+  - [PROD_AUTO_MICRO_MOTOR, component_of, PROD_AUTO_DOOR_SYSTEM]
+  - [PROD_AUTO_WINDOW_REGULATOR, component_of, PROD_AUTO_DOOR_SYSTEM]
+  - [PROD_AUTO_LOCK, component_of, PROD_AUTO_DOOR_SYSTEM]
+  - [PROD_AUTO_DOOR_PANEL, component_of, PROD_AUTO_DOOR_SYSTEM]
+  - [PROD_AUTO_AIRBAG, component_of, PROD_AUTO_STEERING_WHEEL]
+  - [PROD_AUTO_GAS_GENERATOR, component_of, PROD_AUTO_AIRBAG]
+  - [PROD_AUTO_AIRBAG_FABRIC, component_of, PROD_AUTO_AIRBAG]
+  - [PROD_AUTO_PLASTIC_PARTS, component_of, PROD_AUTO_INTERIOR]
+  - [PROD_AUTO_PLASTIC_PARTS, component_of, PROD_AUTO_BUMPER]
+  - [PROD_AUTO_AMBIENT_LIGHT, component_of, PROD_AUTO_INTERIOR]
+
+  # ---------- lightweight ----------
+  - [PROD_AUTO_AL_DIE_CASTING, component_of, PROD_AUTO_MOTOR_HOUSING]
+  - [PROD_AUTO_AL_DIE_CASTING, component_of, PROD_AUTO_SUBFRAME]
+  - [PROD_AUTO_AL_DIE_CASTING, component_of, PROD_AUTO_CONTROL_ARM]
+  - [PROD_AUTO_AL_DIE_CASTING, component_of, PROD_AUTO_TRANSMISSION]
+  - [PROD_AUTO_SHOCK_TOWER, component_of, PROD_AUTO_BODY_WELDING]
+  - [PROD_AUTO_GIGA_CASTING, substitute_for, PROD_AUTO_BODY_STAMPING]
+  - [PROD_AUTO_MG_DIE_CASTING, component_of, PROD_AUTO_INSTRUMENT_PANEL]
+  - [PROD_AUTO_MG_DIE_CASTING, component_of, PROD_AUTO_SEAT_FRAME]
+  - [PROD_AUTO_AL_EXTRUSION, component_of, PROD_AUTO_BATTERY_TRAY]
+  - [PROD_AUTO_AL_EXTRUSION, component_of, PROD_AUTO_BODY_WELDING]
+  - [PROD_AUTO_IRON_CASTING, component_of, PROD_AUTO_CYLINDER_BLOCK]
+  - [PROD_AUTO_IRON_CASTING, component_of, PROD_AUTO_BRAKE_DISC]
+  - [PROD_AUTO_IRON_CASTING, component_of, PROD_AUTO_AXLE]
+  - [PROD_AUTO_BATTERY_TRAY, used_in, MKT_EV]
+  - [PROD_AUTO_GIGA_CASTING, used_in, MKT_EV]
+
+  # ---------- tyres and wheels ----------
+  - [PROD_AUTO_OTR_TIRE, used_in, MKT_MINING]
+  - [PROD_AUTO_OTR_TIRE, used_in, MKT_CONSTRUCTION]
+  - [PROD_AUTO_OTR_TIRE, used_in, MKT_AGRICULTURE]
+  - [PROD_AUTO_PCR_TIRE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_AUTO_TBR_TIRE, used_in, MKT_COMMERCIAL_VEHICLE]
+  - [PROD_AUTO_TBR_TIRE, used_in, MKT_LOGISTICS]
+  - [PROD_AUTO_TPMS, component_of, PROD_AUTO_WHEEL]
+  - [PROD_AUTO_FORGED_WHEEL, used_in, MKT_EV]
+  - [PROD_AUTO_AL_WHEEL, substitute_for, PROD_AUTO_STEEL_WHEEL]
+
+  # ---------- electronics ----------
+  - [PROD_AUTO_ADAS_DOMAIN, component_of, PROD_AUTO_ADAS_SOLUTION]
+  - [PROD_COMP_ADAS_SOFTWARE, component_of, PROD_AUTO_ADAS_SOLUTION]
+  - [PROD_ELEC_AUTO_CAMERA_MODULE, component_of, PROD_AUTO_ADAS_SOLUTION]
+  - [PROD_AUTO_LIDAR, component_of, PROD_AUTO_ADAS_SOLUTION]
+  - [PROD_AUTO_MMWAVE_RADAR, component_of, PROD_AUTO_ADAS_SOLUTION]
+  - [PROD_AUTO_ULTRASONIC_RADAR, component_of, PROD_AUTO_APA]
+  - [PROD_ELEC_AUTO_CAMERA_MODULE, component_of, PROD_AUTO_APA]
+  - [PROD_AUTO_APA, component_of, PROD_AUTO_ADAS_SOLUTION]
+  - [PROD_AUTO_GNSS_IMU, component_of, PROD_AUTO_ADAS_SOLUTION]
+  - [PROD_COMP_HD_MAP, used_in, PROD_AUTO_ADAS_SOLUTION]
+  - [PROD_AUTO_V2X, used_in, PROD_AUTO_ADAS_SOLUTION]
+  - [PROD_AUTO_V2X, used_in, MKT_GOVERNMENT]
+  - [PROD_AUTO_CENTRAL_COMPUTER, substitute_for, PROD_AUTO_ADAS_DOMAIN]
+  - [PROD_AUTO_CENTRAL_COMPUTER, substitute_for, PROD_AUTO_COCKPIT_DOMAIN]
+  - [PROD_AUTO_DOMAIN_CONTROLLER, substitute_for, PROD_AUTO_ECU]
+  - [PROD_AUTO_ADAS_SOLUTION, used_in, MKT_EV]
+  - [PROD_AUTO_LIDAR, used_in, MKT_ROBOTICS]
+  - [PROD_AUTO_LIDAR, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_AUTO_LIDAR, used_in, MKT_LOW_ALTITUDE]
+  - [PROD_ELEC_AUTO_CAMERA_MODULE, used_in, MKT_ROBOTICS]
+  - [PROD_AUTO_ADAS_DOMAIN, used_in, MKT_ROBOTICS]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_AUTO_ADAS_SOLUTION]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_AUTO_ADAS_DOMAIN]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_COMP_ADAS_SOFTWARE]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_AUTO_ROBOTAXI]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_AUTO_LIDAR]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_AUTO_EMB]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_AUTO_SBW]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_AUTO_EHB]
+  - [TECH_AUTONOMOUS_DRIVING, enables, PROD_AUTO_APA]
+  - [TECH_AI_LARGE_MODEL, enables, PROD_COMP_ADAS_SOFTWARE]
+  - [TECH_AI_LARGE_MODEL, enables, PROD_COMP_COCKPIT_SOFTWARE]
+  - [TECH_5G6G, enables, PROD_AUTO_TBOX]
+  - [TECH_5G6G, enables, PROD_AUTO_V2X]
+  - [TECH_IOT, enables, PROD_AUTO_TBOX]
+  - [PROD_AUTO_COCKPIT_DOMAIN, component_of, PROD_AUTO_IVI]
+  - [PROD_COMP_COCKPIT_SOFTWARE, component_of, PROD_AUTO_IVI]
+  - [PROD_AUTO_CENTER_DISPLAY, component_of, PROD_AUTO_IVI]
+  - [PROD_AUTO_INSTRUMENT_CLUSTER, component_of, PROD_AUTO_INSTRUMENT_PANEL]
+  - [PROD_AUTO_HUD, component_of, PROD_AUTO_PASSENGER_CAR]
+  - [PROD_AUTO_HUD, substitute_for, PROD_AUTO_INSTRUMENT_CLUSTER]
+  - [PROD_AUTO_AUDIO, component_of, PROD_AUTO_IVI]
+  - [PROD_AUTO_DMS, component_of, PROD_AUTO_IVI]
+  - [PROD_AUTO_WIRELESS_CHARGER, component_of, PROD_AUTO_INSTRUMENT_PANEL]
+  - [PROD_AUTO_DASHCAM, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_AUTO_IVI, used_in, MKT_EV]
+  - [PROD_AUTO_CABLE, upstream_of, PROD_AUTO_WIRING_HARNESS]
+  - [PROD_ELEC_AUTO_CONNECTOR, component_of, PROD_AUTO_WIRING_HARNESS]
+  - [PROD_ELEC_AUTO_HS_CONNECTOR, component_of, PROD_AUTO_HS_HARNESS]
+  - [PROD_AUTO_HS_HARNESS, component_of, PROD_AUTO_ADAS_SOLUTION]
+  - [PROD_AUTO_BUSBAR, component_of, PROD_AUTO_PDU]
+  - [PROD_AUTO_BUSBAR, used_in, MKT_EV]
+  - [PROD_ELEC_HV_CONNECTOR, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_ELEC_AUTO_CONNECTOR, used_in, MKT_ICE_VEHICLE]
+  - [PROD_AUTO_PRESSURE_SENSOR, component_of, PROD_AUTO_ABS_ESC]
+  - [PROD_AUTO_PRESSURE_SENSOR, component_of, PROD_AUTO_HEAT_PUMP]
+  - [PROD_AUTO_TEMP_SENSOR, component_of, PROD_AUTO_THERMAL_SYSTEM]
+  - [PROD_AUTO_POSITION_SENSOR, component_of, PROD_AUTO_ABS_ESC]
+  - [PROD_AUTO_SWITCH, component_of, PROD_AUTO_INTERIOR]
+  - [PROD_AUTO_SMART_KEY, component_of, PROD_AUTO_BODY_CONTROLLER]
+
+  # ---------- humanoid robot parts ----------
+  - [PROD_MACH_PLANETARY_ROLLER_SCREW, component_of, PROD_MACH_LINEAR_ACTUATOR]
+  - [PROD_MACH_MICRO_LEAD_SCREW, component_of, PROD_MACH_LINEAR_ACTUATOR]
+  - [PROD_MACH_MICRO_LEAD_SCREW, component_of, PROD_MACH_DEXTEROUS_HAND]
+  - [PROD_PWR_FRAMELESS_TORQUE_MOTOR, component_of, PROD_MACH_LINEAR_ACTUATOR]
+  - [PROD_PWR_FRAMELESS_TORQUE_MOTOR, component_of, PROD_MACH_ROTARY_ACTUATOR]
+  - [PROD_AUTO_ROBOT_REDUCER, component_of, PROD_MACH_ROTARY_ACTUATOR]
+  - [PROD_AUTO_POSITION_SENSOR, component_of, PROD_MACH_ROTARY_ACTUATOR]
+  - [PROD_MACH_LINEAR_ACTUATOR, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_MACH_ROTARY_ACTUATOR, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_MACH_PLANETARY_ROLLER_SCREW, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_MACH_MICRO_LEAD_SCREW, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_AUTO_ROBOT_REDUCER, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_AUTO_ROBOT_REDUCER, used_in, MKT_ROBOTICS]
+  - [PROD_PWR_FRAMELESS_TORQUE_MOTOR, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_AUTO_ROBOT_STRUCTURE, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_MACH_DEXTEROUS_HAND, used_in, MKT_HUMANOID_ROBOT]
+  - [PROD_AUTO_TRANSMISSION_GEAR, upstream_of, PROD_AUTO_ROBOT_REDUCER]
+  - [PROD_AUTO_AL_DIE_CASTING, upstream_of, PROD_AUTO_ROBOT_STRUCTURE]
+  - [PROD_AUTO_MG_DIE_CASTING, upstream_of, PROD_AUTO_ROBOT_STRUCTURE]
+  - [PROD_AUTO_ELECTRONIC_OIL_PUMP, used_in, MKT_HUMANOID_ROBOT]
+
+  # ---------- services ----------
+  - [PROD_AUTO_PASSENGER_CAR, upstream_of, PROD_AUTO_NEW_CAR_RETAIL]
+  - [PROD_AUTO_NEW_CAR_RETAIL, upstream_of, PROD_AUTO_AFTER_SALES]
+  - [PROD_AUTO_NEW_CAR_RETAIL, upstream_of, PROD_AUTO_USED_CAR]
+  - [PROD_AUTO_AFTERMARKET_PARTS, used_in, PROD_AUTO_AFTER_SALES]
+  - [PROD_AUTO_FINANCE_LEASE, used_in, PROD_AUTO_NEW_CAR_RETAIL]
+  - [PROD_AUTO_FINANCE_LEASE, used_in, MKT_FINANCE]
+  - [PROD_AUTO_VEHICLE_INSPECTION, used_in, MKT_GOVERNMENT]
+  - [PROD_AUTO_TESTING_SERVICE, used_in, MKT_EV]
+  - [PROD_AUTO_AFTER_SALES, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_AUTO_TIRE, used_in, PROD_AUTO_AFTER_SALES]
+  - [PROD_AUTO_BRAKE_PAD, used_in, PROD_AUTO_AFTER_SALES]
+  - [PROD_AUTO_FILTER, used_in, PROD_AUTO_AFTER_SALES]
+
+  # ---------- materials ----------
+  - [PROD_AUTO_BODY_STAMPING, uses_material, MAT_STEEL]
+  - [PROD_AUTO_HOT_STAMPING, uses_material, MAT_STEEL]
+  - [PROD_AUTO_BODY_WELDING, uses_material, MAT_STEEL]
+  - [PROD_AUTO_AL_DIE_CASTING, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_GIGA_CASTING, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_MG_DIE_CASTING, uses_material, MAT_MAGNESIUM]
+  - [PROD_AUTO_AL_EXTRUSION, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_BATTERY_TRAY, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_IRON_CASTING, uses_material, MAT_IRON_ORE]
+  - [PROD_AUTO_IRON_CASTING, uses_material, MAT_COKE]
+  - [PROD_AUTO_AL_WHEEL, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_STEEL_WHEEL, uses_material, MAT_STEEL]
+  - [PROD_AUTO_TIRE, uses_material, MAT_NATURAL_RUBBER]
+  - [PROD_AUTO_TIRE, uses_material, MAT_SYNTHETIC_RUBBER]
+  - [PROD_AUTO_TIRE, uses_material, MAT_CARBON_BLACK]
+  - [PROD_AUTO_TIRE, uses_material, MAT_STEEL]
+  - [PROD_AUTO_TIRE, uses_material, MAT_POLYESTER]
+  - [PROD_AUTO_NVH_RUBBER, uses_material, MAT_NATURAL_RUBBER]
+  - [PROD_AUTO_NVH_RUBBER, uses_material, MAT_SYNTHETIC_RUBBER]
+  - [PROD_AUTO_SEALING_STRIP, uses_material, MAT_SYNTHETIC_RUBBER]
+  - [PROD_AUTO_FLUID_HOSE, uses_material, MAT_SYNTHETIC_RUBBER]
+  - [PROD_AUTO_FLUID_HOSE, uses_material, MAT_ENGINEERING_PLASTICS]
+  - [PROD_AUTO_BELT, uses_material, MAT_SYNTHETIC_RUBBER]
+  - [PROD_AUTO_AIR_SPRING, uses_material, MAT_NATURAL_RUBBER]
+  - [PROD_AUTO_GLASS, uses_material, MAT_FLAT_GLASS]
+  - [PROD_AUTO_GLASS, uses_material, MAT_SODA_ASH]
+  - [PROD_AUTO_PLASTIC_PARTS, uses_material, MAT_PLASTICS]
+  - [PROD_AUTO_PLASTIC_PARTS, uses_material, MAT_ENGINEERING_PLASTICS]
+  - [PROD_AUTO_BUMPER, uses_material, MAT_PLASTICS]
+  - [PROD_AUTO_INTERIOR, uses_material, MAT_PLASTICS]
+  - [PROD_AUTO_FUEL_TANK, uses_material, MAT_PLASTICS]
+  - [PROD_MACH_HYDROGEN_STORAGE_TANK, uses_material, MAT_CARBON_FIBER]
+  - [PROD_AUTO_SEAT_FRAME, uses_material, MAT_STEEL]
+  - [PROD_AUTO_SEAT_FOAM, uses_material, MAT_POLYESTER]
+  - [PROD_AUTO_AIRBAG_FABRIC, uses_material, MAT_ENGINEERING_PLASTICS]
+  - [PROD_AUTO_CARPET, uses_material, MAT_POLYESTER]
+  - [PROD_AUTO_CRANKSHAFT, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_AUTO_TRANSMISSION_GEAR, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_AUTO_FORGINGS, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_AUTO_WHEEL_HUB_BEARING, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_AUTO_COIL_SPRING, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_AUTO_STABILIZER_BAR, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_AUTO_FASTENER, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_PLANETARY_ROLLER_SCREW, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_MACH_MICRO_LEAD_SCREW, uses_material, MAT_SPECIAL_STEEL]
+  - [PROD_PWR_FRAMELESS_TORQUE_MOTOR, uses_material, MAT_RARE_EARTH]
+  - [PROD_AUTO_ROBOT_STRUCTURE, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_PISTON, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_CYLINDER_BLOCK, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_BRAKE_DISC, uses_material, MAT_STEEL]
+  - [PROD_AUTO_EXHAUST_SYSTEM, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_PWR_EV_DRIVE_MOTOR, uses_material, MAT_RARE_EARTH]
+  - [PROD_PWR_EV_DRIVE_MOTOR, uses_material, MAT_COPPER]
+  - [PROD_AUTO_HAIRPIN_MOTOR, uses_material, MAT_COPPER]
+  - [PROD_PWR_MOTOR_CORE, uses_material, MAT_ELECTRICAL_STEEL]
+  - [PROD_AUTO_MOTOR_HOUSING, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_MICRO_MOTOR, uses_material, MAT_COPPER]
+  - [PROD_AUTO_WIRING_HARNESS, uses_material, MAT_COPPER]
+  - [PROD_AUTO_HV_HARNESS, uses_material, MAT_COPPER]
+  - [PROD_AUTO_CABLE, uses_material, MAT_COPPER]
+  - [PROD_AUTO_CABLE, uses_material, MAT_PLASTICS]
+  - [PROD_ELEC_AUTO_CONNECTOR, uses_material, MAT_COPPER]
+  - [PROD_ELEC_AUTO_CONNECTOR, uses_material, MAT_ENGINEERING_PLASTICS]
+  - [PROD_AUTO_BUSBAR, uses_material, MAT_COPPER]
+  - [PROD_AUTO_BUSBAR, uses_material, MAT_ALUMINUM]
+  - [PROD_PWR_HV_DC_RELAY, uses_material, MAT_COPPER]
+  - [PROD_AUTO_RADIATOR, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_HEAT_EXCHANGER, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_COOLING_PLATE, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_CHILLER, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_AC_PIPE, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_EXV, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_AUTO_E_COMPRESSOR, uses_material, MAT_ALUMINUM]
+  - [PROD_AUTO_SPARK_PLUG, uses_material, MAT_NICKEL]
+  - [PROD_AUTO_POWDER_METALLURGY, uses_material, MAT_IRON_ORE]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_AUTO_COOLING_PLATE, component_of, PROD_PWR_BATTERY_PACK]
+  - [PROD_AUTO_ROBOT_STRUCTURE, component_of, PROD_MACH_HUMANOID_ROBOT]
+
+sw_l3_map:
+  "280202": [SEG_AUTO_BODY, SEG_AUTO_LIGHTWEIGHT]
+  "280203": [SEG_AUTO_CHASSIS_ENGINE, SEG_AUTO_CHASSIS, SEG_AUTO_ENGINE, SEG_AUTO_TRANSMISSION, SEG_AUTO_E_DRIVE, SEG_AUTO_THERMAL, SEG_AUTO_LIGHTWEIGHT, SEG_AUTO_ROBOT_PARTS]
+  "280204": [SEG_AUTO_TIRE_WHEEL]
+  "280205": [SEG_AUTO_OTHER_PARTS, SEG_AUTO_PASSIVE_SAFETY, SEG_AUTO_LIGHTWEIGHT, SEG_AUTO_THERMAL, SEG_AUTO_ROBOT_PARTS]
+  "280206": [SEG_AUTO_ELECTRONICS, SEG_AUTO_INTELLIGENT_DRIVING, SEG_AUTO_SMART_COCKPIT, SEG_AUTO_HARNESS_CONNECTOR, SEG_AUTO_E_DRIVE]
+  "280302": [SEG_AUTO_DEALER]
+  "280303": [SEG_AUTO_INTEGRATED_SERVICE]
+  "280401": [SEG_AUTO_OTHER_TRANSPORT_EQUIP]
+  "280402": [SEG_AUTO_MOTORCYCLE]
+  "280501": [SEG_AUTO_EV_PASSENGER]
+  "280502": [SEG_AUTO_INTEGRATED_PASSENGER, SEG_AUTO_EV_PASSENGER]
+  "280601": [SEG_AUTO_TRUCK]
+  "280602": [SEG_AUTO_BUS]

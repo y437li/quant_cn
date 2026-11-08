@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Mapping
 
 from quant_cn.core.base_api_client import BaseApiClient
@@ -23,6 +24,8 @@ from quant_cn.data_loading.fetchers import (
 )
 from quant_cn.lake.lake_query import LakeQuery
 from quant_cn.lake.trading_calendar import TradingCalendar
+
+logger = logging.getLogger(__name__)
 
 
 class FetcherFactory:
@@ -49,6 +52,7 @@ class FetcherFactory:
         TC-FF-002  enum values resolved from values or values_from; missing list raises ConfigError
         TC-FF-003  values_from_dataset keys resolved from a curated dataset with a filter
         TC-FF-004  source selects the client; an unconfigured source raises ConfigError
+        TC-FF-005  values_from_dataset on a dataset not yet curated gives no keys (warning)
     """
 
     def __init__(
@@ -105,6 +109,9 @@ class FetcherFactory:
         if source is not None:
             if self._query is None:
                 raise ConfigError(f"{spec.name}: values_from_dataset needs a LakeQuery")
+            if not self._query.has_view(f"curated.{source.dataset}"):
+                logger.warning("%s: curated.%s not built yet: no keys", spec.name, source.dataset)
+                return []
             where = f" WHERE {source.where}" if source.where else ""
             table = f"curated.{source.dataset}{where}"
             sql = f"SELECT DISTINCT {source.column} AS k FROM {table} ORDER BY 1"

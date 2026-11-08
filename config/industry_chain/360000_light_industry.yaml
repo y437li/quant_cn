@@ -1,0 +1,273 @@
+# Shenwan 360000 轻工制造 — product taxonomy prior (plan 12 phase 1, D-097). Format: README.md.
+# Personal-care / hygiene products sit in SW 770000 美容护理, not here.
+sector: {sw_l1: "360000", name: 轻工制造, name_en: Light Industry}
+
+nodes:
+  # --- segments ---
+  - {id: SEG_LIGHT_PAPER, type: segment, name: 造纸, name_en: Papermaking}
+  - {id: SEG_LIGHT_BULK_PAPER, type: segment, name: 大宗用纸, name_en: Bulk Paper, aliases: [大宗纸]}
+  - {id: SEG_LIGHT_SPECIALTY_PAPER, type: segment, name: 特种纸, name_en: Specialty Paper}
+  - {id: SEG_LIGHT_PACKAGING_PRINTING, type: segment, name: 包装印刷, name_en: Packaging and Printing}
+  - {id: SEG_LIGHT_PRINTING, type: segment, name: 印刷, name_en: Printing}
+  - {id: SEG_LIGHT_METAL_PACKAGING, type: segment, name: 金属包装, name_en: Metal Packaging}
+  - {id: SEG_LIGHT_PLASTIC_PACKAGING, type: segment, name: 塑料包装, name_en: Plastic Packaging}
+  - {id: SEG_LIGHT_PAPER_PACKAGING, type: segment, name: 纸包装, name_en: Paper Packaging}
+  - {id: SEG_LIGHT_INTEGRATED_PACKAGING, type: segment, name: 综合包装, name_en: Integrated Packaging Solutions}
+  - {id: SEG_LIGHT_HOME, type: segment, name: 家居用品, name_en: Home Furnishings}
+  - {id: SEG_LIGHT_TILE_FLOOR, type: segment, name: 瓷砖地板, name_en: Tiles and Flooring}
+  - {id: SEG_LIGHT_FINISHED_FURNITURE, type: segment, name: 成品家居, name_en: Finished Furniture, aliases: [成品家具]}
+  - {id: SEG_LIGHT_CUSTOM_FURNITURE, type: segment, name: 定制家居, name_en: Custom Furniture, aliases: [定制家具]}
+  - {id: SEG_LIGHT_SANITARY, type: segment, name: 卫浴制品, name_en: Sanitary Ware, aliases: [卫浴]}
+  - {id: SEG_LIGHT_OTHER_HOME, type: segment, name: 其他家居用品, name_en: Other Household Products}
+  - {id: SEG_LIGHT_ECIG, type: segment, name: 电子烟, name_en: E-Cigarettes, aliases: [新型烟草, 雾化电子烟]}
+  - {id: SEG_LIGHT_LEISURE, type: segment, name: 文娱用品, name_en: Stationery and Leisure Goods}
+  - {id: SEG_LIGHT_STATIONERY, type: segment, name: 文化用品, name_en: Stationery and Office Supplies}
+  - {id: SEG_LIGHT_ENTERTAINMENT, type: segment, name: 娱乐用品, name_en: "Toys, Sports and Entertainment Goods"}
+
+  # --- bulk paper ---
+  - {id: PROD_LIGHT_CULTURAL_PAPER, type: product, name: 文化用纸, name_en: Cultural Paper, segment: SEG_LIGHT_BULK_PAPER, aliases: [文化纸]}
+  - {id: PROD_LIGHT_WOODFREE_PAPER, type: product, name: 双胶纸, name_en: Woodfree Uncoated Paper, parent: PROD_LIGHT_CULTURAL_PAPER, segment: SEG_LIGHT_BULK_PAPER, aliases: [胶版纸]}
+  - {id: PROD_LIGHT_COATED_PAPER, type: product, name: 铜版纸, name_en: Coated Paper, parent: PROD_LIGHT_CULTURAL_PAPER, segment: SEG_LIGHT_BULK_PAPER, aliases: [涂布纸]}
+  - {id: PROD_LIGHT_NEWSPRINT, type: product, name: 新闻纸, name_en: Newsprint, parent: PROD_LIGHT_CULTURAL_PAPER, segment: SEG_LIGHT_BULK_PAPER}
+  - {id: PROD_LIGHT_PACKAGING_PAPER, type: product, name: 包装用纸, name_en: Packaging Paper, segment: SEG_LIGHT_BULK_PAPER, aliases: [包装纸]}
+  - {id: PROD_LIGHT_BOXBOARD, type: product, name: 白卡纸, name_en: Folding Boxboard, parent: PROD_LIGHT_PACKAGING_PAPER, segment: SEG_LIGHT_BULK_PAPER, aliases: [白板纸, 食品卡]}
+  - {id: PROD_LIGHT_CONTAINERBOARD, type: product, name: 箱板瓦楞纸, name_en: Containerboard, parent: PROD_LIGHT_PACKAGING_PAPER, segment: SEG_LIGHT_BULK_PAPER, aliases: [箱板纸, 瓦楞纸, 牛卡纸]}
+  - {id: PROD_LIGHT_RECYCLED_FIBER, type: product, name: 废纸浆, name_en: Recycled Fiber, segment: SEG_LIGHT_BULK_PAPER, aliases: [废纸, 国废, 再生纤维浆]}
+  - {id: PROD_LIGHT_MARKET_PULP, type: product, name: 自产化学浆, name_en: Integrated Chemical Pulp, segment: SEG_LIGHT_BULK_PAPER, aliases: [自制浆, 林浆纸一体化]}
+  # --- specialty paper ---
+  - {id: PROD_LIGHT_DECOR_PAPER, type: product, name: 装饰原纸, name_en: Decor Paper, segment: SEG_LIGHT_SPECIALTY_PAPER}
+  - {id: PROD_LIGHT_RELEASE_PAPER, type: product, name: 离型纸, name_en: Release Paper, segment: SEG_LIGHT_SPECIALTY_PAPER, aliases: [格拉辛纸, 离型原纸]}
+  - {id: PROD_LIGHT_THERMAL_PAPER, type: product, name: 热敏纸, name_en: Thermal Paper, segment: SEG_LIGHT_SPECIALTY_PAPER}
+  - {id: PROD_LIGHT_TOBACCO_PAPER, type: product, name: 烟草用纸, name_en: Tobacco Paper, segment: SEG_LIGHT_SPECIALTY_PAPER, aliases: [卷烟纸, 滤嘴棒纸, 再造烟叶]}
+  - {id: PROD_LIGHT_FOOD_PAPER, type: product, name: 食品用纸, name_en: Food-Contact Paper, segment: SEG_LIGHT_SPECIALTY_PAPER, aliases: [食品包装纸, 纸杯原纸]}
+  - {id: PROD_LIGHT_FILTER_PAPER, type: product, name: 过滤纸, name_en: Filter Paper, segment: SEG_LIGHT_SPECIALTY_PAPER, aliases: [滤纸]}
+  - {id: PROD_LIGHT_ELECTRICAL_PAPER, type: product, name: 电工用纸, name_en: Electrical Insulating Paper, segment: SEG_LIGHT_SPECIALTY_PAPER, aliases: [绝缘纸, 电解电容器纸]}
+  - {id: PROD_LIGHT_ARAMID_PAPER, type: product, name: 芳纶纸, name_en: Aramid Paper, parent: PROD_LIGHT_ELECTRICAL_PAPER, segment: SEG_LIGHT_SPECIALTY_PAPER}
+  - {id: PROD_LIGHT_LABEL_PAPER, type: product, name: 标签用纸, name_en: Label Paper, segment: SEG_LIGHT_SPECIALTY_PAPER, aliases: [不干胶原纸]}
+  # --- printing ---
+  - {id: PROD_LIGHT_BOOK_PRINTING, type: product, kind: service, name: 出版物印刷, name_en: Publication Printing, segment: SEG_LIGHT_PRINTING, aliases: [书刊印刷]}
+  - {id: PROD_LIGHT_PACKAGE_PRINTING, type: product, name: 包装印刷品, name_en: Packaging Printing, segment: SEG_LIGHT_PRINTING, aliases: [彩盒印刷]}
+  - {id: PROD_LIGHT_CIGARETTE_PACK, type: product, name: 烟标, name_en: Cigarette Packaging, parent: PROD_LIGHT_PACKAGE_PRINTING, segment: SEG_LIGHT_PRINTING, aliases: [烟标印刷]}
+  - {id: PROD_LIGHT_SECURITY_PRINTING, type: product, name: 防伪印刷, name_en: Security Printing, segment: SEG_LIGHT_PRINTING, aliases: [票证印刷]}
+  # --- metal packaging ---
+  - {id: PROD_LIGHT_TWO_PIECE_CAN, type: product, name: 二片罐, name_en: Two-Piece Can, segment: SEG_LIGHT_METAL_PACKAGING, aliases: [铝制易拉罐, 两片罐]}
+  - {id: PROD_LIGHT_THREE_PIECE_CAN, type: product, name: 三片罐, name_en: Three-Piece Can, segment: SEG_LIGHT_METAL_PACKAGING, aliases: [马口铁罐, 食品罐]}
+  - {id: PROD_LIGHT_CAN_END, type: product, name: 易拉盖, name_en: Can End, segment: SEG_LIGHT_METAL_PACKAGING, aliases: [罐盖]}
+  - {id: PROD_LIGHT_AEROSOL_CAN, type: product, name: 气雾罐, name_en: Aerosol Can, segment: SEG_LIGHT_METAL_PACKAGING}
+  - {id: PROD_LIGHT_STEEL_DRUM, type: product, name: 钢桶, name_en: Steel Drum, segment: SEG_LIGHT_METAL_PACKAGING, aliases: [工业钢桶]}
+  # --- plastic packaging ---
+  - {id: PROD_LIGHT_PLASTIC_FILM_PKG, type: product, name: 塑料软包装, name_en: Flexible Plastic Packaging, segment: SEG_LIGHT_PLASTIC_PACKAGING, aliases: [软包装, 复合膜包装]}
+  - {id: PROD_LIGHT_PET_BOTTLE, type: product, name: PET瓶及瓶坯, name_en: PET Bottles and Preforms, segment: SEG_LIGHT_PLASTIC_PACKAGING, aliases: [瓶坯, 塑料瓶]}
+  - {id: PROD_LIGHT_BOTTLE_CAP, type: product, name: 塑料瓶盖, name_en: Plastic Closures, segment: SEG_LIGHT_PLASTIC_PACKAGING, aliases: [瓶盖]}
+  - {id: PROD_LIGHT_PLASTIC_CONTAINER, type: product, name: 塑料容器, name_en: Rigid Plastic Containers, segment: SEG_LIGHT_PLASTIC_PACKAGING, aliases: [塑料餐盒, 一次性餐具]}
+  - {id: PROD_LIGHT_BIODEGRADABLE_PKG, type: product, name: 可降解包装, name_en: Biodegradable Packaging, segment: SEG_LIGHT_PLASTIC_PACKAGING, aliases: [纸浆模塑, 植物纤维餐具]}
+  # --- paper packaging ---
+  - {id: PROD_LIGHT_CORRUGATED_BOX, type: product, name: 瓦楞纸箱, name_en: Corrugated Boxes, segment: SEG_LIGHT_PAPER_PACKAGING, aliases: [纸箱, 瓦楞纸板]}
+  - {id: PROD_LIGHT_FOLDING_CARTON, type: product, name: 彩盒纸盒, name_en: Folding Cartons, segment: SEG_LIGHT_PAPER_PACKAGING, aliases: [精品盒, 彩盒]}
+  - {id: PROD_LIGHT_ASEPTIC_CARTON, type: product, name: 无菌包装, name_en: Aseptic Cartons, segment: SEG_LIGHT_PAPER_PACKAGING, aliases: [液态奶包装, 利乐包]}
+  - {id: PROD_LIGHT_PAPER_CUP, type: product, name: 纸杯纸袋, name_en: Paper Cups and Bags, segment: SEG_LIGHT_PAPER_PACKAGING, aliases: [纸袋, 纸吸管]}
+  - {id: PROD_LIGHT_ELECTRONICS_PKG, type: product, name: 消费电子包装, name_en: Consumer Electronics Packaging, segment: SEG_LIGHT_INTEGRATED_PACKAGING, aliases: [3C包装]}
+  - {id: PROD_LIGHT_PACKAGING_SERVICE, type: product, kind: service, name: 一体化包装服务, name_en: Integrated Packaging Services, segment: SEG_LIGHT_INTEGRATED_PACKAGING, aliases: [包装供应链服务]}
+  # --- tiles and flooring ---
+  - {id: PROD_LIGHT_CERAMIC_TILE, type: product, name: 陶瓷砖, name_en: Ceramic Tiles, segment: SEG_LIGHT_TILE_FLOOR, aliases: [瓷砖, 建筑陶瓷砖, 抛釉砖, 瓷质砖]}
+  - {id: PROD_LIGHT_WOOD_FLOOR, type: product, name: 木地板, name_en: Wood Flooring, segment: SEG_LIGHT_TILE_FLOOR, aliases: [实木地板, 强化地板]}
+  - {id: PROD_LIGHT_SPC_FLOOR, type: product, name: 塑料地板, name_en: SPC/LVT Flooring, segment: SEG_LIGHT_TILE_FLOOR, aliases: [SPC地板, PVC地板, LVT地板]}
+  # --- furniture ---
+  - {id: PROD_LIGHT_SOFA, type: product, name: 沙发, name_en: Sofas, segment: SEG_LIGHT_FINISHED_FURNITURE, aliases: [软体家具, 功能沙发]}
+  - {id: PROD_LIGHT_MATTRESS, type: product, name: 床垫, name_en: Mattresses, segment: SEG_LIGHT_FINISHED_FURNITURE, aliases: [软床]}
+  - {id: PROD_LIGHT_PANEL_FURNITURE, type: product, name: 成品板式家具, name_en: Panel Furniture, segment: SEG_LIGHT_FINISHED_FURNITURE, aliases: [实木家具]}
+  - {id: PROD_LIGHT_OFFICE_FURNITURE, type: product, name: 办公家具, name_en: Office Furniture, segment: SEG_LIGHT_FINISHED_FURNITURE, aliases: [办公椅]}
+  - {id: PROD_LIGHT_CABINET, type: product, name: 定制橱柜, name_en: Custom Kitchen Cabinets, segment: SEG_LIGHT_CUSTOM_FURNITURE, aliases: [整体橱柜]}
+  - {id: PROD_LIGHT_WARDROBE, type: product, name: 定制衣柜, name_en: Custom Wardrobes, segment: SEG_LIGHT_CUSTOM_FURNITURE, aliases: [全屋定制]}
+  - {id: PROD_LIGHT_WOOD_DOOR, type: product, name: 木门, name_en: Wooden Doors, segment: SEG_LIGHT_CUSTOM_FURNITURE, aliases: [木门窗]}
+  # --- sanitary ware ---
+  - {id: PROD_LIGHT_TOILET, type: product, name: 卫生陶瓷, name_en: Sanitary Ceramics, segment: SEG_LIGHT_SANITARY, aliases: [马桶, 坐便器, 陶瓷洁具]}
+  - {id: PROD_LIGHT_SMART_TOILET, type: product, name: 智能马桶, name_en: Smart Toilets, parent: PROD_LIGHT_TOILET, segment: SEG_LIGHT_SANITARY, aliases: [智能坐便器, 智能马桶盖]}
+  - {id: PROD_LIGHT_FAUCET, type: product, name: 水龙头五金, name_en: Faucets and Bath Hardware, segment: SEG_LIGHT_SANITARY, aliases: [龙头, 花洒, 卫浴五金]}
+  - {id: PROD_LIGHT_BATH_CABINET, type: product, name: 浴室柜, name_en: Bathroom Cabinets, segment: SEG_LIGHT_SANITARY}
+  # --- other household products ---
+  - {id: PROD_LIGHT_HOUSEWARE, type: product, name: 家居日用品, name_en: Housewares, segment: SEG_LIGHT_OTHER_HOME, aliases: [日用塑料制品, 收纳用品]}
+  - {id: PROD_LIGHT_INSULATED_CUP, type: product, name: 保温杯, name_en: Insulated Drinkware, segment: SEG_LIGHT_OTHER_HOME, aliases: [不锈钢真空保温器皿, 水杯]}
+  - {id: PROD_LIGHT_OUTDOOR_FURNITURE, type: product, name: 户外家具, name_en: Outdoor Furniture, segment: SEG_LIGHT_OTHER_HOME, aliases: [户外休闲家具, 遮阳用品]}
+  - {id: PROD_LIGHT_PET_PRODUCTS, type: product, name: 宠物用品, name_en: Pet Supplies, segment: SEG_LIGHT_OTHER_HOME}
+  - {id: PROD_LIGHT_ECIG_DEVICE, type: product, name: 电子烟设备, name_en: E-Cigarette Devices, segment: SEG_LIGHT_ECIG, aliases: [雾化设备, 换弹式电子烟, 一次性电子烟, 电子雾化设备, 电子烟]}
+  - {id: PROD_LIGHT_ATOMIZER_CORE, type: product, name: 雾化芯, name_en: Atomizer Core, segment: SEG_LIGHT_ECIG, aliases: [陶瓷雾化芯]}
+  - {id: PROD_LIGHT_HNB, type: product, name: 加热不燃烧烟具, name_en: Heat-Not-Burn Devices, segment: SEG_LIGHT_ECIG, aliases: [HNB]}
+  # --- stationery and leisure ---
+  - {id: PROD_LIGHT_WRITING_INSTRUMENT, type: product, name: 书写工具, name_en: Writing Instruments, segment: SEG_LIGHT_STATIONERY, aliases: [笔, 中性笔]}
+  - {id: PROD_LIGHT_STUDENT_STATIONERY, type: product, name: 学生文具, name_en: Student Stationery, segment: SEG_LIGHT_STATIONERY, aliases: [本册, 文具]}
+  - {id: PROD_LIGHT_OFFICE_SUPPLIES, type: product, name: 办公用品, name_en: Office Supplies, segment: SEG_LIGHT_STATIONERY, aliases: [办公直销]}
+  - {id: PROD_LIGHT_TOYS, type: product, name: 玩具, name_en: Toys, segment: SEG_LIGHT_ENTERTAINMENT, aliases: [积木, 潮玩]}
+  - {id: PROD_LIGHT_SPORTS_GOODS, type: product, name: 体育用品, name_en: Sporting Goods, segment: SEG_LIGHT_ENTERTAINMENT, aliases: [健身器材, 运动器械]}
+  - {id: PROD_LIGHT_CRAFTS, type: product, name: 工艺礼品, name_en: Crafts and Gifts, segment: SEG_LIGHT_ENTERTAINMENT, aliases: [工艺品, 节日用品]}
+  - {id: PROD_LIGHT_MUSICAL_INSTRUMENT, type: product, name: 乐器, name_en: Musical Instruments, segment: SEG_LIGHT_ENTERTAINMENT, aliases: [钢琴]}
+  - {id: PROD_LIGHT_OUTDOOR_GEAR, type: product, name: 户外运动装备, name_en: Outdoor Gear, segment: SEG_LIGHT_ENTERTAINMENT, aliases: [露营装备, 骑行装备]}
+
+edges:
+  # segment tree
+  - [SEG_LIGHT_BULK_PAPER, part_of, SEG_LIGHT_PAPER]
+  - [SEG_LIGHT_SPECIALTY_PAPER, part_of, SEG_LIGHT_PAPER]
+  - [SEG_LIGHT_PRINTING, part_of, SEG_LIGHT_PACKAGING_PRINTING]
+  - [SEG_LIGHT_METAL_PACKAGING, part_of, SEG_LIGHT_PACKAGING_PRINTING]
+  - [SEG_LIGHT_PLASTIC_PACKAGING, part_of, SEG_LIGHT_PACKAGING_PRINTING]
+  - [SEG_LIGHT_PAPER_PACKAGING, part_of, SEG_LIGHT_PACKAGING_PRINTING]
+  - [SEG_LIGHT_INTEGRATED_PACKAGING, part_of, SEG_LIGHT_PACKAGING_PRINTING]
+  - [SEG_LIGHT_TILE_FLOOR, part_of, SEG_LIGHT_HOME]
+  - [SEG_LIGHT_FINISHED_FURNITURE, part_of, SEG_LIGHT_HOME]
+  - [SEG_LIGHT_CUSTOM_FURNITURE, part_of, SEG_LIGHT_HOME]
+  - [SEG_LIGHT_SANITARY, part_of, SEG_LIGHT_HOME]
+  - [SEG_LIGHT_OTHER_HOME, part_of, SEG_LIGHT_HOME]
+  - [SEG_LIGHT_ECIG, part_of, SEG_LIGHT_OTHER_HOME]
+  - [SEG_LIGHT_STATIONERY, part_of, SEG_LIGHT_LEISURE]
+  - [SEG_LIGHT_ENTERTAINMENT, part_of, SEG_LIGHT_LEISURE]
+  # serves
+  - [SEG_LIGHT_BULK_PAPER, serves, MKT_PACKAGING]
+  - [SEG_LIGHT_BULK_PAPER, serves, MKT_MEDIA_ENTERTAINMENT]
+  - [SEG_LIGHT_BULK_PAPER, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_LIGHT_SPECIALTY_PAPER, serves, MKT_PACKAGING]
+  - [SEG_LIGHT_SPECIALTY_PAPER, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_LIGHT_PACKAGING_PRINTING, serves, MKT_PACKAGING]
+  - [SEG_LIGHT_PRINTING, serves, MKT_MEDIA_ENTERTAINMENT]
+  - [SEG_LIGHT_METAL_PACKAGING, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_LIGHT_PLASTIC_PACKAGING, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_LIGHT_PAPER_PACKAGING, serves, MKT_LOGISTICS]
+  - [SEG_LIGHT_INTEGRATED_PACKAGING, serves, MKT_CONSUMER_ELECTRONICS]
+  - [SEG_LIGHT_HOME, serves, MKT_REAL_ESTATE]
+  - [SEG_LIGHT_HOME, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_LIGHT_ECIG, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_LIGHT_LEISURE, serves, MKT_RETAIL_CONSUMER]
+  # paper chain
+  - [PROD_LIGHT_CULTURAL_PAPER, uses_material, MAT_PULP]
+  - [PROD_LIGHT_BOXBOARD, uses_material, MAT_PULP]
+  - [PROD_BEAU_TISSUE_PAPER, uses_material, MAT_PULP]
+  - [PROD_LIGHT_CONTAINERBOARD, uses_material, MAT_PULP]
+  - [PROD_LIGHT_MARKET_PULP, uses_material, MAT_TIMBER]
+  - [PROD_LIGHT_MARKET_PULP, upstream_of, PROD_LIGHT_CULTURAL_PAPER]
+  - [PROD_LIGHT_MARKET_PULP, upstream_of, PROD_LIGHT_BOXBOARD]
+  - [PROD_LIGHT_MARKET_PULP, upstream_of, PROD_BEAU_TISSUE_PAPER]
+  - [PROD_LIGHT_RECYCLED_FIBER, upstream_of, PROD_LIGHT_CONTAINERBOARD]
+  - [PROD_LIGHT_DECOR_PAPER, uses_material, MAT_PULP]
+  - [PROD_LIGHT_DECOR_PAPER, uses_material, MAT_TITANIUM_DIOXIDE]
+  - [PROD_LIGHT_RELEASE_PAPER, uses_material, MAT_PULP]
+  - [PROD_LIGHT_THERMAL_PAPER, uses_material, MAT_PULP]
+  - [PROD_LIGHT_TOBACCO_PAPER, uses_material, MAT_PULP]
+  - [PROD_LIGHT_FOOD_PAPER, uses_material, MAT_PULP]
+  - [PROD_LIGHT_FILTER_PAPER, used_in, MKT_ICE_VEHICLE]
+  - [PROD_LIGHT_ELECTRICAL_PAPER, used_in, MKT_POWER_GRID]
+  - [PROD_LIGHT_ARAMID_PAPER, used_in, MKT_EV]
+  - [PROD_LIGHT_DECOR_PAPER, used_in, PROD_LIGHT_PANEL_FURNITURE]
+  - [PROD_LIGHT_DECOR_PAPER, used_in, PROD_LIGHT_WARDROBE]
+  - [PROD_LIGHT_DECOR_PAPER, used_in, PROD_LIGHT_WOOD_FLOOR]
+  - [PROD_LIGHT_RELEASE_PAPER, used_in, PROD_LIGHT_LABEL_PAPER]
+  - [PROD_LIGHT_THERMAL_PAPER, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_LIGHT_CULTURAL_PAPER, used_in, PROD_LIGHT_BOOK_PRINTING]
+  - [PROD_LIGHT_CULTURAL_PAPER, used_in, PROD_LIGHT_STUDENT_STATIONERY]
+  - [PROD_LIGHT_FOOD_PAPER, upstream_of, PROD_LIGHT_PAPER_CUP]
+  # paper -> packaging
+  - [PROD_LIGHT_CONTAINERBOARD, upstream_of, PROD_LIGHT_CORRUGATED_BOX]
+  - [PROD_LIGHT_BOXBOARD, upstream_of, PROD_LIGHT_FOLDING_CARTON]
+  - [PROD_LIGHT_BOXBOARD, upstream_of, PROD_LIGHT_CIGARETTE_PACK]
+  - [PROD_LIGHT_BOXBOARD, upstream_of, PROD_LIGHT_ASEPTIC_CARTON]
+  - [PROD_LIGHT_BOXBOARD, upstream_of, PROD_LIGHT_PACKAGE_PRINTING]
+  - [PROD_LIGHT_FOLDING_CARTON, upstream_of, PROD_LIGHT_ELECTRONICS_PKG]
+  - [PROD_LIGHT_CORRUGATED_BOX, used_in, MKT_LOGISTICS]
+  - [PROD_LIGHT_CORRUGATED_BOX, used_in, MKT_PACKAGING]
+  - [PROD_LIGHT_FOLDING_CARTON, used_in, MKT_PACKAGING]
+  - [PROD_LIGHT_ASEPTIC_CARTON, uses_material, MAT_ALUMINUM]
+  - [PROD_LIGHT_ASEPTIC_CARTON, uses_material, MAT_PLASTICS]
+  - [PROD_LIGHT_ASEPTIC_CARTON, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_LIGHT_PAPER_CUP, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_LIGHT_ELECTRONICS_PKG, used_in, MKT_SMARTPHONE]
+  - [PROD_LIGHT_PACKAGING_SERVICE, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_LIGHT_BIODEGRADABLE_PKG, substitute_for, PROD_LIGHT_PLASTIC_CONTAINER]
+  - [PROD_LIGHT_BIODEGRADABLE_PKG, uses_material, MAT_PULP]
+  - [PROD_LIGHT_SECURITY_PRINTING, used_in, MKT_GOVERNMENT]
+  # metal and plastic packaging
+  - [PROD_LIGHT_TWO_PIECE_CAN, uses_material, MAT_ALUMINUM]
+  - [PROD_LIGHT_CAN_END, uses_material, MAT_ALUMINUM]
+  - [PROD_LIGHT_CAN_END, component_of, PROD_LIGHT_TWO_PIECE_CAN]
+  - [PROD_LIGHT_THREE_PIECE_CAN, uses_material, MAT_STEEL]
+  - [PROD_LIGHT_AEROSOL_CAN, uses_material, MAT_STEEL]
+  - [PROD_LIGHT_STEEL_DRUM, uses_material, MAT_STEEL]
+  - [PROD_LIGHT_TWO_PIECE_CAN, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_LIGHT_THREE_PIECE_CAN, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_LIGHT_STEEL_DRUM, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_LIGHT_PLASTIC_FILM_PKG, uses_material, MAT_PLASTICS]
+  - [PROD_LIGHT_PET_BOTTLE, uses_material, MAT_PX_PTA]
+  - [PROD_LIGHT_BOTTLE_CAP, uses_material, MAT_PLASTICS]
+  - [PROD_LIGHT_BOTTLE_CAP, component_of, PROD_LIGHT_PET_BOTTLE]
+  - [PROD_LIGHT_PLASTIC_CONTAINER, uses_material, MAT_PLASTICS]
+  - [PROD_LIGHT_PET_BOTTLE, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_LIGHT_PLASTIC_FILM_PKG, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_LIGHT_TWO_PIECE_CAN, substitute_for, PROD_LIGHT_PET_BOTTLE]
+  # home furnishing
+  - [PROD_LIGHT_CERAMIC_TILE, uses_material, MAT_NATURAL_GAS]
+  - [PROD_LIGHT_CERAMIC_TILE, used_in, MKT_REAL_ESTATE]
+  - [PROD_LIGHT_WOOD_FLOOR, uses_material, MAT_TIMBER]
+  - [PROD_LIGHT_SPC_FLOOR, uses_material, MAT_PLASTICS]
+  - [PROD_LIGHT_SPC_FLOOR, substitute_for, PROD_LIGHT_WOOD_FLOOR]
+  - [PROD_LIGHT_WOOD_FLOOR, used_in, MKT_REAL_ESTATE]
+  - [PROD_LIGHT_SOFA, uses_material, MAT_TIMBER]
+  - [PROD_LIGHT_MATTRESS, uses_material, MAT_STEEL]
+  - [PROD_LIGHT_PANEL_FURNITURE, uses_material, MAT_TIMBER]
+  - [PROD_LIGHT_CABINET, uses_material, MAT_TIMBER]
+  - [PROD_LIGHT_WARDROBE, uses_material, MAT_TIMBER]
+  - [PROD_LIGHT_WOOD_DOOR, uses_material, MAT_TIMBER]
+  - [PROD_LIGHT_CABINET, used_in, MKT_REAL_ESTATE]
+  - [PROD_LIGHT_WARDROBE, used_in, MKT_REAL_ESTATE]
+  - [PROD_LIGHT_WOOD_DOOR, used_in, MKT_REAL_ESTATE]
+  - [PROD_LIGHT_SOFA, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_LIGHT_MATTRESS, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_LIGHT_OFFICE_FURNITURE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_LIGHT_TOILET, used_in, MKT_REAL_ESTATE]
+  - [PROD_LIGHT_FAUCET, uses_material, MAT_COPPER]
+  - [PROD_LIGHT_FAUCET, used_in, MKT_REAL_ESTATE]
+  - [PROD_LIGHT_BATH_CABINET, used_in, MKT_REAL_ESTATE]
+  - [PROD_LIGHT_INSULATED_CUP, uses_material, MAT_STAINLESS_STEEL]
+  - [PROD_LIGHT_HOUSEWARE, uses_material, MAT_PLASTICS]
+  - [PROD_LIGHT_HOUSEWARE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_LIGHT_INSULATED_CUP, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_HA_LIGHTING_FIXTURE, used_in, MKT_REAL_ESTATE]
+  - [PROD_LIGHT_OUTDOOR_FURNITURE, uses_material, MAT_ALUMINUM]
+  - [PROD_LIGHT_OUTDOOR_FURNITURE, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_LIGHT_PET_PRODUCTS, used_in, MKT_RETAIL_CONSUMER]
+  # e-cigarettes
+  - [PROD_LIGHT_ATOMIZER_CORE, component_of, PROD_LIGHT_ECIG_DEVICE]
+  - [PROD_LIGHT_HNB, substitute_for, PROD_LIGHT_ECIG_DEVICE]
+  # stationery and leisure
+  - [PROD_LIGHT_WRITING_INSTRUMENT, uses_material, MAT_PLASTICS]
+  - [PROD_LIGHT_STUDENT_STATIONERY, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_LIGHT_WRITING_INSTRUMENT, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_LIGHT_OFFICE_SUPPLIES, used_in, MKT_ENTERPRISE_IT]
+  - [PROD_LIGHT_TOYS, uses_material, MAT_PLASTICS]
+  - [PROD_LIGHT_TOYS, used_in, MKT_MEDIA_ENTERTAINMENT]
+  - [PROD_LIGHT_TOYS, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_LIGHT_SPORTS_GOODS, uses_material, MAT_STEEL]
+  - [PROD_LIGHT_SPORTS_GOODS, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_LIGHT_CRAFTS, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_LIGHT_MUSICAL_INSTRUMENT, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_LIGHT_OUTDOOR_GEAR, used_in, MKT_RETAIL_CONSUMER]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_LIGHT_TWO_PIECE_CAN, used_in, PROD_FOOD_BEER]
+  - [PROD_LIGHT_TWO_PIECE_CAN, used_in, PROD_FOOD_ENERGY_DRINK]
+  - [PROD_LIGHT_PET_BOTTLE, used_in, PROD_FOOD_PACKAGED_WATER]
+  - [PROD_LIGHT_PET_BOTTLE, used_in, PROD_FOOD_TEA_DRINK]
+  - [PROD_LIGHT_TOBACCO_PAPER, used_in, MKT_TOBACCO]
+  - [PROD_LIGHT_CIGARETTE_PACK, used_in, MKT_TOBACCO]
+  - [SEG_LIGHT_ECIG, serves, MKT_TOBACCO]
+
+sw_l3_map:
+  "360102": [SEG_LIGHT_BULK_PAPER]
+  "360103": [SEG_LIGHT_SPECIALTY_PAPER]
+  "360202": [SEG_LIGHT_PRINTING]
+  "360203": [SEG_LIGHT_METAL_PACKAGING]
+  "360204": [SEG_LIGHT_PLASTIC_PACKAGING]
+  "360205": [SEG_LIGHT_PAPER_PACKAGING]
+  "360206": [SEG_LIGHT_INTEGRATED_PACKAGING]
+  "360306": [SEG_LIGHT_TILE_FLOOR]
+  "360307": [SEG_LIGHT_FINISHED_FURNITURE]
+  "360308": [SEG_LIGHT_CUSTOM_FURNITURE]
+  "360309": [SEG_LIGHT_SANITARY]
+  "360311": [SEG_LIGHT_OTHER_HOME, SEG_LIGHT_ECIG]
+  "360501": [SEG_LIGHT_STATIONERY]
+  "360502": [SEG_LIGHT_ENTERTAINMENT]

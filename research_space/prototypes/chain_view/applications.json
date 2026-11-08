@@ -1,0 +1,2149 @@
+{
+ "002130.SZ": {
+  "pages": [
+   10,
+   25
+  ],
+  "lines": {
+   "新能源汽车产品": [
+    {
+     "node_id": "MKT_EV",
+     "name": "新能源汽车",
+     "weight": "主要",
+     "evidence": {
+      "quote": "产品广泛应用于各类电动汽车充电及车内高压连接系统",
+      "page": 14
+     }
+    },
+    {
+     "node_id": "MKT_COMMERCIAL_VEHICLE",
+     "name": "重型卡车、物流车、电动船舶等专用车市场",
+     "weight": "次要",
+     "evidence": {
+      "quote": "聚焦重型卡车、物流车、电动船舶等潜力较大的专用车市场",
+      "page": 15
+     }
+    },
+    {
+     "node_id": "MKT_MINING",
+     "name": "矿用卡车",
+     "weight": "次要",
+     "evidence": {
+      "quote": "可广泛应用于重型卡车、矿用卡车等重载特种车辆",
+      "page": 17
+     }
+    }
+   ],
+   "电力产品": [
+    {
+     "node_id": "MKT_POWER_GRID",
+     "name": "发电、配电、输配电",
+     "weight": "主要",
+     "evidence": {
+      "quote": "可广泛应用于发电、配电、成套设备、轨道交通、石油化工、高铁、船舶等领域",
+      "page": 13
+     }
+    },
+    {
+     "node_id": "MKT_RAIL",
+     "name": "轨道交通",
+     "weight": "次要",
+     "evidence": {
+      "quote": "持续深化电缆附件在输配电、轨道交通、核电及新能源发电等重点领域的应用布局",
+      "page": 14
+     }
+    },
+    {
+     "node_id": "MKT_NUCLEAR_POWER",
+     "name": "核电",
+     "weight": "次要",
+     "evidence": {
+      "quote": "持续深化电缆附件在输配电、轨道交通、核电及新能源发电等重点领域的应用布局",
+      "page": 14
+     }
+    },
+    {
+     "node_id": "MKT_OIL_GAS",
+     "name": "石油化工",
+     "weight": "次要",
+     "evidence": {
+      "quote": "可广泛应用于发电、配电、成套设备、轨道交通、石油化工、高铁、船舶等领域",
+      "page": 13
+     }
+    },
+    {
+     "node_id": "MKT_RAIL",
+     "name": "高铁",
+     "weight": "次要",
+     "evidence": {
+      "quote": "可广泛应用于发电、配电、成套设备、轨道交通、石油化工、高铁、船舶等领域",
+      "page": 13
+     }
+    },
+    {
+     "node_id": "MKT_SHIPBUILDING",
+     "name": "船舶",
+     "weight": "次要",
+     "evidence": {
+      "quote": "可广泛应用于发电、配电、成套设备、轨道交通、石油化工、高铁、船舶等领域",
+      "page": 13
+     }
+    }
+   ],
+   "电子材料": [
+    {
+     "node_id": "MKT_CONSUMER_ELECTRONICS",
+     "name": "电子、电器",
+     "weight": "主要",
+     "evidence": {
+      "quote": "广泛应用于电子、电器、通讯、汽车、轨道交通、医疗、核电、航空航天等众多领域",
+      "page": 10
+     }
+    },
+    {
+     "node_id": "MKT_TELECOM_NETWORK",
+     "name": "通讯",
+     "weight": "次要",
+     "evidence": {
+      "quote": "广泛应用于电子、电器、通讯、汽车、轨道交通、医疗、核电、航空航天等众多领域",
+      "page": 10
+     }
+    },
+    {
+     "node_id": "MKT_ICE_VEHICLE",
+     "name": "汽车",
+     "weight": "次要",
+     "evidence": {
+      "quote": "广泛应用于电子、电器、通讯、汽车、轨道交通、医疗、核电、航空航天等众多领域",
+      "page": 10
+     }
+    },
+    {
+     "node_id": "MKT_RAIL",
+     "name": "轨道交通",
+     "weight": "次要",
+     "evidence": {
+      "quote": "广泛应用于电子、电器、通讯、汽车、轨道交通、医疗、核电、航空航天等众多领域",
+      "page": 10
+     }
+    },
+    {
+     "node_id": "MKT_HEALTHCARE",
+     "name": "医疗",
+     "weight": "次要",
+     "evidence": {
+      "quote": "广泛应用于电子、电器、通讯、汽车、轨道交通、医疗、核电、航空航天等众多领域",
+      "page": 10
+     }
+    },
+    {
+     "node_id": "MKT_NUCLEAR_POWER",
+     "name": "核电",
+     "weight": "次要",
+     "evidence": {
+      "quote": "广泛应用于电子、电器、通讯、汽车、轨道交通、医疗、核电、航空航天等众多领域",
+      "page": 10
+     }
+    },
+    {
+     "node_id": "MKT_AEROSPACE",
+     "name": "航空航天",
+     "weight": "次要",
+     "evidence": {
+      "quote": "广泛应用于电子、电器、通讯、汽车、轨道交通、医疗、核电、航空航天等众多领域",
+      "page": 10
+     }
+    },
+    {
+     "node_id": "MKT_ENERGY_STORAGE",
+     "name": "储能",
+     "weight": "次要",
+     "evidence": {
+      "quote": "集中资源大力开发新能源汽车、储能、医疗、低空飞行等新兴重点行业的增量需求",
+      "page": 11
+     }
+    },
+    {
+     "node_id": "MKT_LOW_ALTITUDE",
+     "name": "低空飞行",
+     "weight": "次要",
+     "evidence": {
+      "quote": "集中资源大力开发新能源汽车、储能、医疗、低空飞行等新兴重点行业的增量需求",
+      "page": 11
+     }
+    },
+    {
+     "node_id": "PROD_AUTO_NEV_BUS",
+     "name": "新能源客车高压线束",
+     "weight": "次要",
+     "evidence": {
+      "quote": "产品成功应用于新能源客车高压线束，实现国产化替代并获得客户认可",
+      "page": 16
+     }
+    }
+   ],
+   "通信线缆": [
+    {
+     "node_id": "MKT_DATA_CENTER",
+     "name": "数据中心/算力中心",
+     "weight": "主要",
+     "evidence": {
+      "quote": "受益于全球数据中心、人工智能、高性能计算及智能汽车等下游应用需求的快速增长",
+      "page": 12
+     }
+    },
+    {
+     "node_id": "MKT_AI_DATA_CENTER",
+     "name": "算力中心",
+     "weight": "主要",
+     "evidence": {
+      "quote": "通信线缆主要应用于算力中心、工业自动化、智能汽车及消费电子等领域",
+      "page": 18
+     }
+    },
+    {
+     "node_id": "MKT_INDUSTRIAL_AUTOMATION",
+     "name": "工业自动化",
+     "weight": "次要",
+     "evidence": {
+      "quote": "通信线缆主要应用于算力中心、工业自动化、智能汽车及消费电子等领域",
+      "page": 18
+     }
+    },
+    {
+     "node_id": "MKT_ICE_VEHICLE",
+     "name": "智能汽车",
+     "weight": "次要",
+     "evidence": {
+      "quote": "通信线缆主要应用于算力中心、工业自动化、智能汽车及消费电子等领域",
+      "page": 18
+     }
+    },
+    {
+     "node_id": "MKT_CONSUMER_ELECTRONICS",
+     "name": "消费电子",
+     "weight": "次要",
+     "evidence": {
+      "quote": "通信线缆主要应用于算力中心、工业自动化、智能汽车及消费电子等领域",
+      "page": 18
+     }
+    },
+    {
+     "node_id": "MKT_ROBOTICS",
+     "name": "工业装备及机器人",
+     "weight": "次要",
+     "evidence": {
+      "quote": "产品广泛应用于高速通信设备、工业装备及机器人、汽车等核心市场",
+      "page": 12
+     }
+    },
+    {
+     "node_id": "MKT_HUMANOID_ROBOT",
+     "name": "人形机器人",
+     "weight": "次要",
+     "evidence": {
+      "quote": "可广泛应用于工业自动化生产线、智能制造装备及人形机器人等领域",
+      "page": 16
+     }
+    }
+   ],
+   "风力发电": [
+    {
+     "node_id": "MKT_WIND",
+     "name": "风力发电",
+     "weight": "主要",
+     "evidence": {
+      "quote": "青岛风电河头店、东大寨及河崖风电场总容量为144.2MW，2025 年度上网电量为2.83 亿千瓦时，全部销售给国网山东省电力公司烟台供电公司",
+      "page": 16
+     }
+    }
+   ]
+  },
+  "customer_types": {
+   "新能源汽车产品": [
+    "电动汽车整车/充电系统客户",
+    "专用车客户"
+   ],
+   "电力产品": [
+    "电网/输配电客户",
+    "核电客户",
+    "轨道交通客户",
+    "石油化工客户",
+    "船舶客户"
+   ],
+   "电子材料": [
+    "电子电器客户",
+    "医疗客户",
+    "汽车客户",
+    "核电客户"
+   ],
+   "通信线缆": [
+    "数据中心/算力中心客户",
+    "汽车客户",
+    "工业自动化客户",
+    "机器人客户"
+   ],
+   "风力发电": [
+    "电网公司"
+   ]
+  },
+  "counterparties": [
+   {
+    "name": "国网山东省电力公司烟台供电公司",
+    "role": "customer",
+    "detail": "风电上网电量全部销售给该公司",
+    "evidence": {
+     "quote": "全部销售给国网山东省电力公司烟台供电公司",
+     "page": 16
+    }
+   },
+   {
+    "name": "国家电网",
+    "role": "customer",
+    "detail": "500kV电缆附件成功配套中标国家电网工程项目",
+    "evidence": {
+     "quote": "公司500kV 电缆附件成功配套中标国家电网工程项目",
+     "page": 17
+    }
+   },
+   {
+    "name": "乐庭智联",
+    "role": "subsidiary",
+    "detail": "控股子公司，经营通信线缆业务",
+    "evidence": {
+     "quote": "公司通信线缆业务由控股子公司乐庭智联经营",
+     "page": 12
+    }
+   },
+   {
+    "name": "华磊迅拓",
+    "role": "subsidiary",
+    "detail": "业绩未达预期并计提商誉减值",
+    "evidence": {
+     "quote": "上年同期对业绩未达预期的华磊迅拓计提了商誉减值",
+     "page": 25
+    }
+   }
+  ],
+  "dropped": 0,
+  "tokens": 11254,
+  "cached": false
+ },
+ "300308.SZ": {
+  "pages": [
+   11,
+   23
+  ],
+  "lines": {
+   "光通信收发模块": [
+    {
+     "node_id": "MKT_DATA_CENTER",
+     "name": "云计算数据中心",
+     "weight": "主要",
+     "evidence": {
+      "quote": "产品服务于云计算数据中心、数据通信、5G 无线网络、电信传输和固网接入等领域的国内外客户",
+      "page": 11
+     }
+    },
+    {
+     "node_id": "MKT_AI_DATA_CENTER",
+     "name": "AI数据中心",
+     "weight": "主要",
+     "evidence": {
+      "quote": "基于AI 数据中心的快速发展，当前数通市场已成为光模块产业增长的核心驱动力",
+      "page": 20
+     }
+    },
+    {
+     "node_id": "MKT_TELECOM_NETWORK",
+     "name": "5G无线网络、电信传输和固网接入",
+     "weight": "主要",
+     "evidence": {
+      "quote": "为电信设备商客户提供5G 前传、中传和回传光模块，应用于城域网、骨干网和核心网传输光模块以及应用于固网FTTX 光纤接入的光器件",
+      "page": 11
+     }
+    },
+    {
+     "node_id": "MKT_CONSUMER_ELECTRONICS",
+     "name": "消费电子",
+     "weight": "次要",
+     "evidence": {
+      "quote": "新兴市场包括消费电子和工业自动化等领域，具有巨大的发展潜力",
+      "page": 20
+     }
+    },
+    {
+     "node_id": "MKT_INDUSTRIAL_AUTOMATION",
+     "name": "工业自动化",
+     "weight": "次要",
+     "evidence": {
+      "quote": "新兴市场包括消费电子和工业自动化等领域，具有巨大的发展潜力",
+      "page": 20
+     }
+    }
+   ],
+   "其他": []
+  },
+  "customer_types": {
+   "光通信收发模块": [
+    "云数据中心客户",
+    "电信设备商客户",
+    "全球领先的云数据中心客户和国内外主流通信设备厂商"
+   ],
+   "其他": []
+  },
+  "counterparties": [
+   {
+    "name": "苏州旭创",
+    "role": "subsidiary",
+    "detail": "全资子公司",
+    "evidence": {
+     "quote": "公司全资子公司苏州旭创作 为IEEE 光通信光模块OSFP 企业产业联盟成员",
+     "page": 22
+    }
+   },
+   {
+    "name": "谷歌",
+    "role": "mention",
+    "detail": "行业背景中token调用量举例",
+    "evidence": {
+     "quote": "以谷歌为例，2024 年4 月谷歌月均token 调用量为9.7 万亿",
+     "page": 14
+    }
+   },
+   {
+    "name": "字节豆包",
+    "role": "mention",
+    "detail": "行业背景中token调用量举例",
+    "evidence": {
+     "quote": "字节豆包的日均token 调用量则从2024 年3 月的1200 亿跃升至2025 年12 月的50 万亿",
+     "page": 14
+    }
+   },
+   {
+    "name": "微软",
+    "role": "mention",
+    "detail": "行业背景云厂商资本开支统计",
+    "evidence": {
+     "quote": "2025 年Q4 单季度，微软、亚马逊、Meta、谷歌合计资本开支同比提升64%",
+     "page": 15
+    }
+   },
+   {
+    "name": "亚马逊",
+    "role": "mention",
+    "detail": "行业背景云厂商资本开支统计",
+    "evidence": {
+     "quote": "2025 年Q4 单季度，微软、亚马逊、Meta、谷歌合计资本开支同比提升64%",
+     "page": 15
+    }
+   },
+   {
+    "name": "Meta",
+    "role": "mention",
+    "detail": "行业背景云厂商资本开支统计",
+    "evidence": {
+     "quote": "2025 年Q4 单季度，微软、亚马逊、Meta、谷歌合计资本开支同比提升64%",
+     "page": 15
+    }
+   },
+   {
+    "name": "阿里",
+    "role": "mention",
+    "detail": "行业背景国内云厂商资本开支统计",
+    "evidence": {
+     "quote": "2025 年Q1-Q3，阿里/腾讯/百度的合计资本开支为1637 亿元，同比增长92%",
+     "page": 15
+    }
+   },
+   {
+    "name": "腾讯",
+    "role": "mention",
+    "detail": "行业背景国内云厂商资本开支统计",
+    "evidence": {
+     "quote": "2025 年Q1-Q3，阿里/腾讯/百度的合计资本开支为1637 亿元，同比增长92%",
+     "page": 15
+    }
+   },
+   {
+    "name": "百度",
+    "role": "mention",
+    "detail": "行业背景国内云厂商资本开支统计",
+    "evidence": {
+     "quote": "2025 年Q1-Q3，阿里/腾讯/百度的合计资本开支为1637 亿元，同比增长92%",
+     "page": 15
+    }
+   },
+   {
+    "name": "Intel",
+    "role": "mention",
+    "detail": "图表资料来源",
+    "evidence": {
+     "quote": "图6：硅光模块结构 资料来源：Intel",
+     "page": 18
+    }
+   },
+   {
+    "name": "思科",
+    "role": "mention",
+    "detail": "图表资料来源",
+    "evidence": {
+     "quote": "资料来源：思科官网、西南证券",
+     "page": 19
+    }
+   },
+   {
+    "name": "Credo",
+    "role": "mention",
+    "detail": "图表资料来源",
+    "evidence": {
+     "quote": "图8：LRO 内部结构 资料来源：Credo",
+     "page": 19
+    }
+   },
+   {
+    "name": "Macom",
+    "role": "mention",
+    "detail": "行业数据引用",
+    "evidence": {
+     "quote": "根据Macom 的数据，具有DSP 功能的800G 多模光模块的功耗可超过13W",
+     "page": 18
+    }
+   }
+  ],
+  "dropped": 0,
+  "tokens": 8641,
+  "cached": false
+ },
+ "300750.SZ": {
+  "pages": [
+   14,
+   23
+  ],
+  "lines": {
+   "储能电池系统": [
+    {
+     "node_id": "MKT_ENERGY_STORAGE",
+     "name": "储能",
+     "weight": "主要",
+     "evidence": {
+      "quote": "公司的储能电池广泛应用于表前储能和表后储能领域，包括公用事业储能、工商业储能及数据中心储能等。",
+      "page": 15
+     }
+    },
+    {
+     "node_id": "MKT_DATA_CENTER",
+     "name": "数据中心",
+     "weight": "次要",
+     "evidence": {
+      "quote": "PR系列、Unic系列及安鑫系列、PU系列分别可满足家庭储能、工商储能、数据中心能源管理需求。",
+      "page": 15
+     }
+    }
+   ],
+   "动力电池系统": [
+    {
+     "node_id": "PROD_AUTO_BEV_PASSENGER",
+     "name": "纯电动乘用车",
+     "weight": "主要",
+     "evidence": {
+      "quote": "乘用车应用领域，公司产品可应用于BEV、REV、PHEV、HEV 等不同细分市场，广泛应用于私家车、运营车等领域",
+      "page": 15
+     }
+    },
+    {
+     "node_id": "PROD_AUTO_PHEV_PASSENGER",
+     "name": "插电式混合动力乘用车",
+     "weight": "主要",
+     "evidence": {
+      "quote": "乘用车应用领域，公司产品可应用于BEV、REV、PHEV、HEV 等不同细分市场，广泛应用于私家车、运营车等领域",
+      "page": 15
+     }
+    },
+    {
+     "node_id": "MKT_COMMERCIAL_VEHICLE",
+     "name": "商用车",
+     "weight": "主要",
+     "evidence": {
+      "quote": "商业应用领域，公司产品可应用于道路客运、城市配送、重载运输、道路清洁等客车及商用车领域。",
+      "page": 15
+     }
+    },
+    {
+     "node_id": "MKT_SHIPBUILDING",
+     "name": "船舶",
+     "weight": "次要",
+     "evidence": {
+      "quote": "此外，公司产品还可应用于船舶、航空器、电动工具、电动两轮车等领域。",
+      "page": 15
+     }
+    },
+    {
+     "node_id": "MKT_AEROSPACE",
+     "name": "航空器",
+     "weight": "次要",
+     "evidence": {
+      "quote": "此外，公司产品还可应用于船舶、航空器、电动工具、电动两轮车等领域。",
+      "page": 15
+     }
+    }
+   ],
+   "电池材料及回收": [
+    {
+     "node_id": "PROD_ENV_BLACK_MASS",
+     "name": "电池黑粉",
+     "weight": "次要",
+     "evidence": {
+      "quote": "公司亦通过回收方式，对废旧电池中的镍、钴、锰、锂、磷、铁、铝、铜等金属材料及其他材料进行加工、提纯、合成等工艺",
+      "page": 15
+     }
+    }
+   ],
+   "电池矿产资源": [
+    {
+     "node_id": "MAT_LITHIUM_CARBONATE",
+     "name": "锂",
+     "weight": "次要",
+     "evidence": {
+      "quote": "公司通过自建、参股、合资等多种方式参与锂、镍、钴、磷等电池矿产资源及相关产品的投资、建设及运营。",
+      "page": 15
+     }
+    },
+    {
+     "node_id": "MAT_NICKEL",
+     "name": "镍",
+     "weight": "次要",
+     "evidence": {
+      "quote": "公司通过自建、参股、合资等多种方式参与锂、镍、钴、磷等电池矿产资源及相关产品的投资、建设及运营。",
+      "page": 15
+     }
+    },
+    {
+     "node_id": "MAT_COBALT",
+     "name": "钴",
+     "weight": "次要",
+     "evidence": {
+      "quote": "公司通过自建、参股、合资等多种方式参与锂、镍、钴、磷等电池矿产资源及相关产品的投资、建设及运营。",
+      "page": 15
+     }
+    }
+   ]
+  },
+  "customer_types": {
+   "储能电池系统": [
+    "全球系统集成商",
+    "投资商",
+    "开发商",
+    "电网公司",
+    "EPC总包商",
+    "核心供应链企业"
+   ],
+   "动力电池系统": [
+    "乘用车客户",
+    "商用车客户",
+    "海外客户"
+   ],
+   "电池材料及回收": [],
+   "电池矿产资源": []
+  },
+  "counterparties": [
+   {
+    "name": "一汽解放",
+    "role": "customer",
+    "detail": "深化战略合作，共同引领商用车电动化进程加速",
+    "evidence": {
+     "quote": "公司与一汽解放、北汽福田、东风商用车等深化战略合作，共同引领商用车电动化进程加速",
+     "page": 21
+    }
+   },
+   {
+    "name": "北汽福田",
+    "role": "customer",
+    "detail": "深化战略合作，共同引领商用车电动化进程加速",
+    "evidence": {
+     "quote": "公司与一汽解放、北汽福田、东风商用车等深化战略合作，共同引领商用车电动化进程加速",
+     "page": 21
+    }
+   },
+   {
+    "name": "东风商用车",
+    "role": "customer",
+    "detail": "深化战略合作，共同引领商用车电动化进程加速",
+    "evidence": {
+     "quote": "公司与一汽解放、北汽福田、东风商用车等深化战略合作，共同引领商用车电动化进程加速",
+     "page": 21
+    }
+   },
+   {
+    "name": "VW",
+    "role": "customer",
+    "detail": "获得定点",
+    "evidence": {
+     "quote": "持续获得VW、BMW、Stellantis、Volvo、DMG等海外客户诸多定点。",
+     "page": 21
+    }
+   },
+   {
+    "name": "BMW",
+    "role": "customer",
+    "detail": "获得定点",
+    "evidence": {
+     "quote": "持续获得VW、BMW、Stellantis、Volvo、DMG等海外客户诸多定点。",
+     "page": 21
+    }
+   },
+   {
+    "name": "Stellantis",
+    "role": "customer",
+    "detail": "获得定点",
+    "evidence": {
+     "quote": "持续获得VW、BMW、Stellantis、Volvo、DMG等海外客户诸多定点。",
+     "page": 21
+    }
+   },
+   {
+    "name": "Volvo",
+    "role": "customer",
+    "detail": "获得定点",
+    "evidence": {
+     "quote": "持续获得VW、BMW、Stellantis、Volvo、DMG等海外客户诸多定点。",
+     "page": 21
+    }
+   },
+   {
+    "name": "DMG",
+    "role": "customer",
+    "detail": "获得定点",
+    "evidence": {
+     "quote": "持续获得VW、BMW、Stellantis、Volvo、DMG等海外客户诸多定点。",
+     "page": 21
+    }
+   },
+   {
+    "name": "海博思创",
+    "role": "partner",
+    "detail": "达成长期战略合作",
+    "evidence": {
+     "quote": "公司与海博思创、中车株洲所、思源电气等合作伙伴达成长期战略合作",
+     "page": 22
+    }
+   },
+   {
+    "name": "中车株洲所",
+    "role": "partner",
+    "detail": "达成长期战略合作",
+    "evidence": {
+     "quote": "公司与海博思创、中车株洲所、思源电气等合作伙伴达成长期战略合作",
+     "page": 22
+    }
+   },
+   {
+    "name": "思源电气",
+    "role": "partner",
+    "detail": "达成长期战略合作",
+    "evidence": {
+     "quote": "公司与海博思创、中车株洲所、思源电气等合作伙伴达成长期战略合作",
+     "page": 22
+    }
+   },
+   {
+    "name": "广汽",
+    "role": "partner",
+    "detail": "换电战略合作",
+    "evidence": {
+     "quote": "公司已与广汽、长安、一汽、上汽、奇瑞等多家车企达成换电战略合作",
+     "page": 22
+    }
+   },
+   {
+    "name": "长安",
+    "role": "partner",
+    "detail": "换电战略合作",
+    "evidence": {
+     "quote": "公司已与广汽、长安、一汽、上汽、奇瑞等多家车企达成换电战略合作",
+     "page": 22
+    }
+   },
+   {
+    "name": "一汽",
+    "role": "partner",
+    "detail": "换电战略合作",
+    "evidence": {
+     "quote": "公司已与广汽、长安、一汽、上汽、奇瑞等多家车企达成换电战略合作",
+     "page": 22
+    }
+   },
+   {
+    "name": "上汽",
+    "role": "partner",
+    "detail": "换电战略合作",
+    "evidence": {
+     "quote": "公司已与广汽、长安、一汽、上汽、奇瑞等多家车企达成换电战略合作",
+     "page": 22
+    }
+   },
+   {
+    "name": "奇瑞",
+    "role": "partner",
+    "detail": "换电战略合作",
+    "evidence": {
+     "quote": "公司已与广汽、长安、一汽、上汽、奇瑞等多家车企达成换电战略合作",
+     "page": 22
+    }
+   },
+   {
+    "name": "陕重汽",
+    "role": "partner",
+    "detail": "战略合作，推出换电车型",
+    "evidence": {
+     "quote": "骐骥换电与整车企业的战略合作持续深化，与一汽解放、陕重汽等10 余家企业，共同推出30 余款标准化换电车型",
+     "page": 23
+    }
+   },
+   {
+    "name": "重庆高速",
+    "role": "partner",
+    "detail": "战略合作",
+    "evidence": {
+     "quote": "公司还与重庆高速、赣粤高速、河南交投等全国30 多家高速及交投公司建立战略合作",
+     "page": 23
+    }
+   },
+   {
+    "name": "赣粤高速",
+    "role": "partner",
+    "detail": "战略合作",
+    "evidence": {
+     "quote": "公司还与重庆高速、赣粤高速、河南交投等全国30 多家高速及交投公司建立战略合作",
+     "page": 23
+    }
+   },
+   {
+    "name": "河南交投",
+    "role": "partner",
+    "detail": "战略合作",
+    "evidence": {
+     "quote": "公司还与重庆高速、赣粤高速、河南交投等全国30 多家高速及交投公司建立战略合作",
+     "page": 23
+    }
+   },
+   {
+    "name": "海螺集团",
+    "role": "partner",
+    "detail": "联合推进零碳工厂解决方案",
+    "evidence": {
+     "quote": "公司亦携手中石化、海螺集团、辽宁方大集团、中天钢铁等企业，联合推进源网荷储一体化、零碳工厂解决方案落地",
+     "page": 23
+    }
+   },
+   {
+    "name": "辽宁方大集团",
+    "role": "partner",
+    "detail": "联合推进零碳工厂解决方案",
+    "evidence": {
+     "quote": "公司亦携手中石化、海螺集团、辽宁方大集团、中天钢铁等企业，联合推进源网荷储一体化、零碳工厂解决方案落地",
+     "page": 23
+    }
+   },
+   {
+    "name": "中天钢铁",
+    "role": "partner",
+    "detail": "联合推进零碳工厂解决方案",
+    "evidence": {
+     "quote": "公司亦携手中石化、海螺集团、辽宁方大集团、中天钢铁等企业，联合推进源网荷储一体化、零碳工厂解决方案落地",
+     "page": 23
+    }
+   },
+   {
+    "name": "峰飞航空",
+    "role": "subsidiary",
+    "detail": "旗下成员企业",
+    "evidence": {
+     "quote": "公司旗下成员企业峰飞航空成功开发了全球首架获颁适航三证的吨级以上eVTOL 航空器",
+     "page": 23
+    }
+   }
+  ],
+  "dropped": 7,
+  "tokens": 11305,
+  "cached": false
+ },
+ "600276.SH": {
+  "pages": [
+   8,
+   57
+  ],
+  "lines": {
+   "代谢和心血管": [
+    {
+     "node_id": "MKT_HEALTHCARE",
+     "name": "2型糖尿病",
+     "weight": "主要",
+     "evidence": {
+      "quote": "配合饮食控制和运动，适用于适合接受磷酸瑞格列汀和盐酸二甲双胍治疗的2 型糖尿病成人患者改善血糖控制。",
+      "page": 16
+     }
+    },
+    {
+     "node_id": "MKT_HEALTHCARE",
+     "name": "高胆固醇血症/血脂异常",
+     "weight": "主要",
+     "evidence": {
+      "quote": "用于接受中等或以上剂量他汀类药物治疗，仍无法达到低密度脂蛋白胆固醇(LDL-C)目标的原发性高胆固醇血症",
+      "page": 16
+     }
+    }
+   ],
+   "免疫和呼吸系统": [
+    {
+     "node_id": "MKT_HEALTHCARE",
+     "name": "强直性脊柱炎/类风湿关节炎/特应性皮炎/斑秃",
+     "weight": "主要",
+     "evidence": {
+      "quote": "用于对一种或多种TNF 抑制剂疗效不佳或不耐受的活动性强直性脊柱炎成人患者。",
+      "page": 16
+     }
+    },
+    {
+     "node_id": "MKT_HEALTHCARE",
+     "name": "银屑病",
+     "weight": "主要",
+     "evidence": {
+      "quote": "用于治疗适合接受系统治疗或光疗的中重度斑块状银屑病的成人患者。",
+      "page": 16
+     }
+    },
+    {
+     "node_id": "MKT_HEALTHCARE",
+     "name": "骨关节炎疼痛",
+     "weight": "主要",
+     "evidence": {
+      "quote": "缓解骨关节炎的疼痛症状。",
+      "page": 16
+     }
+    }
+   ],
+   "其他": [
+    {
+     "node_id": "MKT_HEALTHCARE",
+     "name": "外阴阴道假丝酵母菌病(VVC)",
+     "weight": "主要",
+     "evidence": {
+      "quote": "用于治疗重度外阴阴道假丝酵母菌病(VVC)。",
+      "page": 17
+     }
+    }
+   ],
+   "神经科学": [
+    {
+     "node_id": "MKT_HEALTHCARE",
+     "name": "术后中重度疼痛",
+     "weight": "主要",
+     "evidence": {
+      "quote": "适用于治疗术后中重度疼痛。",
+      "page": 17
+     }
+    },
+    {
+     "node_id": "MKT_HEALTHCARE",
+     "name": "镇静和麻醉",
+     "weight": "主要",
+     "evidence": {
+      "quote": "非气管插管手术/操作中的镇静和麻醉。",
+      "page": 17
+     }
+    }
+   ],
+   "肿瘤": [
+    {
+     "node_id": "MKT_HEALTHCARE",
+     "name": "肿瘤治疗",
+     "weight": "主要",
+     "evidence": {
+      "quote": "公司在肿瘤领域有丰富的研发管线，覆盖激酶抑制剂、ADC、肿瘤免疫、激素受体调控、支持治疗",
+      "page": 8
+     }
+    }
+   ],
+   "造影剂": [
+    {
+     "node_id": "MKT_HEALTHCARE",
+     "name": "磁共振成像(MRI)",
+     "weight": "主要",
+     "evidence": {
+      "quote": "成人中枢神经系统（CNS）之外的全身其他各部位病变的磁共振成像（MRI）",
+      "page": 29
+     }
+    }
+   ]
+  },
+  "customer_types": {
+   "代谢和心血管": [
+    "医院",
+    "其他医疗机构",
+    "药店",
+    "分销商"
+   ],
+   "免疫和呼吸系统": [
+    "医院",
+    "其他医疗机构",
+    "药店",
+    "分销商"
+   ],
+   "其他": [
+    "医院",
+    "其他医疗机构",
+    "药店",
+    "分销商"
+   ],
+   "神经科学": [
+    "医院",
+    "其他医疗机构",
+    "药店",
+    "分销商"
+   ],
+   "肿瘤": [
+    "医院",
+    "其他医疗机构",
+    "药店",
+    "分销商"
+   ],
+   "造影剂": [
+    "医院",
+    "其他医疗机构",
+    "药店",
+    "分销商"
+   ]
+  },
+  "counterparties": [
+   {
+    "name": "MSD",
+    "role": "customer",
+    "detail": "对外许可首付款2亿美元已确认为收入",
+    "evidence": {
+     "quote": "公司收到（1）MSD 2 亿美元、IDEAYA 7500 万美元以及Merck KGaA 1500 万欧元的对外许可首付款，已确认为收入",
+     "page": 20
+    }
+   },
+   {
+    "name": "IDEAYA",
+    "role": "customer",
+    "detail": "对外许可首付款7500万美元已确认为收入",
+    "evidence": {
+     "quote": "公司收到（1）MSD 2 亿美元、IDEAYA 7500 万美元以及Merck KGaA 1500 万欧元的对外许可首付款，已确认为收入",
+     "page": 20
+    }
+   },
+   {
+    "name": "Merck KGaA",
+    "role": "customer",
+    "detail": "对外许可首付款1500万欧元已确认为收入",
+    "evidence": {
+     "quote": "公司收到（1）MSD 2 亿美元、IDEAYA 7500 万美元以及Merck KGaA 1500 万欧元的对外许可首付款，已确认为收入",
+     "page": 20
+    }
+   },
+   {
+    "name": "Braveheart Bio",
+    "role": "customer",
+    "detail": "对外许可首付款及股权6500万美元已确认为收入",
+    "evidence": {
+     "quote": "（2）Braveheart Bio 对外许可首付款及股权6500 万美元，已确认为收入",
+     "page": 20
+    }
+   },
+   {
+    "name": "GSK",
+    "role": "customer",
+    "detail": "对外许可首付款5亿美元，按履约进度确认收入约1亿美元",
+    "evidence": {
+     "quote": "（3）GSK 5 亿美元对外许可首付款，并根据履约义务的完成进度已确认收入约1 亿美元",
+     "page": 20
+    }
+   }
+  ],
+  "dropped": 0,
+  "tokens": 20854,
+  "cached": false
+ },
+ "688126.SH": {
+  "pages": [
+   15,
+   25
+  ],
+  "lines": {
+   "200mm及以下尺寸半导体硅片": [
+    {
+     "node_id": "MKT_SEMI_FAB",
+     "name": "芯片制造",
+     "weight": "主要",
+     "evidence": {
+      "quote": "为下游芯片制造企业提供关键核心材料",
+      "page": 15
+     }
+    },
+    {
+     "node_id": null,
+     "name": "MEMS",
+     "weight": "次要",
+     "evidence": {
+      "quote": "子公司Okmetic 200mm 及以下尺寸MEMS 用抛光片技术水平和细分市场份额全球领先",
+      "page": 23
+     }
+    }
+   ],
+   "300mm半导体硅片": [
+    {
+     "node_id": "MKT_SEMI_FAB",
+     "name": "芯片制造",
+     "weight": "主要",
+     "evidence": {
+      "quote": "为下游芯片制造企业提供关键核心材料",
+      "page": 15
+     }
+    },
+    {
+     "node_id": "MKT_AI_DATA_CENTER",
+     "name": "AI应用及数据中心",
+     "weight": "次要",
+     "evidence": {
+      "quote": "AI 应用及数据中心基础设施需求成为核心增长动力",
+      "page": 16
+     }
+    },
+    {
+     "node_id": "MKT_EV",
+     "name": "汽车电子",
+     "weight": "次要",
+     "evidence": {
+      "quote": "深耕AI 芯片、汽车电子、硅光等新兴领域",
+      "page": 15
+     }
+    }
+   ],
+   "受托加工服务": []
+  },
+  "customer_types": {
+   "200mm及以下尺寸半导体硅片": [
+    "芯片制造企业",
+    "国内外知名客户"
+   ],
+   "300mm半导体硅片": [
+    "芯片制造企业",
+    "国际一流与国内主流芯片制造企业"
+   ],
+   "受托加工服务": []
+  },
+  "counterparties": [
+   {
+    "name": "台积电",
+    "role": "customer",
+    "detail": "国际客户，芯片制造企业",
+    "evidence": {
+     "quote": "国际客户包括台积电、联电、意法半导体、威世等全球头部芯片厂商",
+     "page": 15
+    }
+   },
+   {
+    "name": "联电",
+    "role": "customer",
+    "detail": "国际客户，芯片制造企业",
+    "evidence": {
+     "quote": "国际客户包括台积电、联电、意法半导体、威世等全球头部芯片厂商",
+     "page": 15
+    }
+   },
+   {
+    "name": "意法半导体",
+    "role": "customer",
+    "detail": "国际客户，芯片制造企业",
+    "evidence": {
+     "quote": "国际客户包括台积电、联电、意法半导体、威世等全球头部芯片厂商",
+     "page": 15
+    }
+   },
+   {
+    "name": "威世",
+    "role": "customer",
+    "detail": "国际客户，芯片制造企业",
+    "evidence": {
+     "quote": "国际客户包括台积电、联电、意法半导体、威世等全球头部芯片厂商",
+     "page": 15
+    }
+   },
+   {
+    "name": "中芯国际",
+    "role": "customer",
+    "detail": "国内客户，芯片制造企业",
+    "evidence": {
+     "quote": "国内客户涵盖中芯国际、华虹宏力、华润微等主要芯片制造企业",
+     "page": 15
+    }
+   },
+   {
+    "name": "华虹宏力",
+    "role": "customer",
+    "detail": "国内客户，芯片制造企业",
+    "evidence": {
+     "quote": "国内客户涵盖中芯国际、华虹宏力、华润微等主要芯片制造企业",
+     "page": 15
+    }
+   },
+   {
+    "name": "华润微",
+    "role": "customer",
+    "detail": "国内客户，芯片制造企业",
+    "evidence": {
+     "quote": "国内客户涵盖中芯国际、华虹宏力、华润微等主要芯片制造企业",
+     "page": 15
+    }
+   },
+   {
+    "name": "上海新昇晶投半导体科技有限公司",
+    "role": "subsidiary",
+    "detail": "购买少数股权的子公司",
+    "evidence": {
+     "quote": "购买子公司上海新昇晶投半导体科技有限公司、上海新昇晶科半导体科技有限公司、上海新昇晶睿半导体科技有限公司的少数股权",
+     "page": 21
+    }
+   },
+   {
+    "name": "上海新昇晶科半导体科技有限公司",
+    "role": "subsidiary",
+    "detail": "购买少数股权的子公司",
+    "evidence": {
+     "quote": "购买子公司上海新昇晶投半导体科技有限公司、上海新昇晶科半导体科技有限公司、上海新昇晶睿半导体科技有限公司的少数股权",
+     "page": 21
+    }
+   },
+   {
+    "name": "上海新昇晶睿半导体科技有限公司",
+    "role": "subsidiary",
+    "detail": "购买少数股权的子公司",
+    "evidence": {
+     "quote": "购买子公司上海新昇晶投半导体科技有限公司、上海新昇晶科半导体科技有限公司、上海新昇晶睿半导体科技有限公司的少数股权",
+     "page": 21
+    }
+   },
+   {
+    "name": "Okmetic",
+    "role": "subsidiary",
+    "detail": "控股子公司",
+    "evidence": {
+     "quote": "公司控股子公司Okmetic 主要生产经营地在欧洲",
+     "page": 22
+    }
+   },
+   {
+    "name": "新傲科技",
+    "role": "subsidiary",
+    "detail": "控股子公司",
+    "evidence": {
+     "quote": "控股子公司新傲科技、上海新昇、新硅聚合主要生产经营地在中国大陆",
+     "page": 22
+    }
+   },
+   {
+    "name": "上海新昇",
+    "role": "subsidiary",
+    "detail": "控股子公司",
+    "evidence": {
+     "quote": "控股子公司新傲科技、上海新昇、新硅聚合主要生产经营地在中国大陆",
+     "page": 22
+    }
+   },
+   {
+    "name": "新硅聚合",
+    "role": "subsidiary",
+    "detail": "控股子公司",
+    "evidence": {
+     "quote": "控股子公司新傲科技、上海新昇、新硅聚合主要生产经营地在中国大陆",
+     "page": 22
+    }
+   },
+   {
+    "name": "新傲芯翼",
+    "role": "subsidiary",
+    "detail": "子公司",
+    "evidence": {
+     "quote": "子公司新傲科技和新傲芯翼已建成300mmSOI 硅片试验线",
+     "page": 23
+    }
+   },
+   {
+    "name": "日本信越化学",
+    "role": "competitor",
+    "detail": "全球前五大硅片厂商",
+    "evidence": {
+     "quote": "分别为日本信越化学、日本SUMCO、中国台湾环球晶圆、德国Siltronic 及韩国SK Siltron",
+     "page": 17
+    }
+   },
+   {
+    "name": "日本SUMCO",
+    "role": "competitor",
+    "detail": "全球前五大硅片厂商",
+    "evidence": {
+     "quote": "分别为日本信越化学、日本SUMCO、中国台湾环球晶圆、德国Siltronic 及韩国SK Siltron",
+     "page": 17
+    }
+   },
+   {
+    "name": "中国台湾环球晶圆",
+    "role": "competitor",
+    "detail": "全球前五大硅片厂商",
+    "evidence": {
+     "quote": "分别为日本信越化学、日本SUMCO、中国台湾环球晶圆、德国Siltronic 及韩国SK Siltron",
+     "page": 17
+    }
+   },
+   {
+    "name": "德国Siltronic",
+    "role": "competitor",
+    "detail": "全球前五大硅片厂商",
+    "evidence": {
+     "quote": "分别为日本信越化学、日本SUMCO、中国台湾环球晶圆、德国Siltronic 及韩国SK Siltron",
+     "page": 17
+    }
+   },
+   {
+    "name": "韩国SK Siltron",
+    "role": "competitor",
+    "detail": "全球前五大硅片厂商",
+    "evidence": {
+     "quote": "分别为日本信越化学、日本SUMCO、中国台湾环球晶圆、德国Siltronic 及韩国SK Siltron",
+     "page": 17
+    }
+   },
+   {
+    "name": "国际半导体产业协会（SEMI）",
+    "role": "mention",
+    "detail": "行业统计机构",
+    "evidence": {
+     "quote": "根据国际半导体产业协会（SEMI）统计",
+     "page": 16
+    }
+   },
+   {
+    "name": "世界半导体贸易统计组织（WSTS）",
+    "role": "mention",
+    "detail": "行业统计机构",
+    "evidence": {
+     "quote": "据世界半导体贸易统计组织（WSTS）统计",
+     "page": 19
+    }
+   },
+   {
+    "name": "美国半导体行业协会（SIA）",
+    "role": "mention",
+    "detail": "行业统计机构",
+    "evidence": {
+     "quote": "美国半导体行业协会（SIA）明确预计",
+     "page": 19
+    }
+   }
+  ],
+  "dropped": 0,
+  "tokens": 11453,
+  "cached": false
+ },
+ "688234.SH": {
+  "pages": [
+   14,
+   30
+  ],
+  "lines": {
+   "碳化硅半导体材料": [
+    {
+     "node_id": "MKT_EV",
+     "name": "新能源汽车",
+     "weight": "主要",
+     "evidence": {
+      "quote": "碳化硅衬底可被广泛应用于功率半导体器件、射频半导体器件以及光波导、TF-SAW 滤波器、散热部件等下游产品中，主要应用行业包括新能源汽车、光伏及储能系统、电力电网、轨道交通、通信、AI 眼镜、智能手机、半导体激光等。",
+      "page": 17
+     }
+    },
+    {
+     "node_id": "MKT_SOLAR",
+     "name": "光伏",
+     "weight": "主要",
+     "evidence": {
+      "quote": "主要应用行业包括新能源汽车、光伏及储能系统、电力电网、轨道交通、通信、AI 眼镜、智能手机、半导体激光等。",
+      "page": 17
+     }
+    },
+    {
+     "node_id": "MKT_ENERGY_STORAGE",
+     "name": "储能系统",
+     "weight": "主要",
+     "evidence": {
+      "quote": "主要应用行业包括新能源汽车、光伏及储能系统、电力电网、轨道交通、通信、AI 眼镜、智能手机、半导体激光等。",
+      "page": 17
+     }
+    },
+    {
+     "node_id": "MKT_POWER_GRID",
+     "name": "电力电网",
+     "weight": "主要",
+     "evidence": {
+      "quote": "主要应用行业包括新能源汽车、光伏及储能系统、电力电网、轨道交通、通信、AI 眼镜、智能手机、半导体激光等。",
+      "page": 17
+     }
+    },
+    {
+     "node_id": "MKT_RAIL",
+     "name": "轨道交通",
+     "weight": "主要",
+     "evidence": {
+      "quote": "主要应用行业包括新能源汽车、光伏及储能系统、电力电网、轨道交通、通信、AI 眼镜、智能手机、半导体激光等。",
+      "page": 17
+     }
+    },
+    {
+     "node_id": "MKT_TELECOM_NETWORK",
+     "name": "通信",
+     "weight": "主要",
+     "evidence": {
+      "quote": "主要应用行业包括新能源汽车、光伏及储能系统、电力电网、轨道交通、通信、AI 眼镜、智能手机、半导体激光等。",
+      "page": 17
+     }
+    },
+    {
+     "node_id": "MKT_WEARABLES_XR",
+     "name": "AI眼镜",
+     "weight": "主要",
+     "evidence": {
+      "quote": "主要应用行业包括新能源汽车、光伏及储能系统、电力电网、轨道交通、通信、AI 眼镜、智能手机、半导体激光等。",
+      "page": 17
+     }
+    },
+    {
+     "node_id": "MKT_SMARTPHONE",
+     "name": "智能手机",
+     "weight": "主要",
+     "evidence": {
+      "quote": "主要应用行业包括新能源汽车、光伏及储能系统、电力电网、轨道交通、通信、AI 眼镜、智能手机、半导体激光等。",
+      "page": 17
+     }
+    },
+    {
+     "node_id": "MKT_AI_DATA_CENTER",
+     "name": "AI数据中心",
+     "weight": "次要",
+     "evidence": {
+      "quote": "公司的碳化硅衬底可广泛应用于新能源汽车、AI 数据中心、光伏系统、AI 眼镜、轨道交通、电网、家电及先进通信基站等领域。",
+      "page": 18
+     }
+    },
+    {
+     "node_id": "MKT_HOME_APPLIANCE",
+     "name": "家电",
+     "weight": "次要",
+     "evidence": {
+      "quote": "公司的碳化硅衬底可广泛应用于新能源汽车、AI 数据中心、光伏系统、AI 眼镜、轨道交通、电网、家电及先进通信基站等领域。",
+      "page": 18
+     }
+    },
+    {
+     "node_id": "MKT_DATA_CENTER",
+     "name": "数据中心",
+     "weight": "次要",
+     "evidence": {
+      "quote": "公司碳化硅衬底可应用于AI 数据中心所需的高效率电源、PSU、HVDC、SST 等场景，将为公司打开新的成长空间。",
+      "page": 24
+     }
+    },
+    {
+     "node_id": null,
+     "name": "半导体激光",
+     "weight": "次要",
+     "evidence": {
+      "quote": "主要应用行业包括新能源汽车、光伏及储能系统、电力电网、轨道交通、通信、AI 眼镜、智能手机、半导体激光等。",
+      "page": 17
+     }
+    },
+    {
+     "node_id": null,
+     "name": "先进封装",
+     "weight": "次要",
+     "evidence": {
+      "quote": "公司积极向AI 数据中心、微纳光学、先进封装等新兴领域拓展，碳化硅衬底材料在新兴领域发展潜力巨大。",
+      "page": 18
+     }
+    },
+    {
+     "node_id": null,
+     "name": "微纳光学",
+     "weight": "次要",
+     "evidence": {
+      "quote": "公司积极向AI 数据中心、微纳光学、先进封装等新兴领域拓展，碳化硅衬底材料在新兴领域发展潜力巨大。",
+      "page": 18
+     }
+    },
+    {
+     "node_id": null,
+     "name": "充电设施",
+     "weight": "次要",
+     "evidence": {
+      "quote": "在新能源领域，碳化硅材料已广泛应用于电动汽车、光伏储能、电网、轨道交通、充电设施和家电等场景。",
+      "page": 24
+     }
+    },
+    {
+     "node_id": null,
+     "name": "高功率激光器芯片散热层",
+     "weight": "次要",
+     "evidence": {
+      "quote": "公司目前已成功将半绝缘碳化硅衬底应用于高功率激光器芯片的散热层，并已形成批量出货",
+      "page": 24
+     }
+    }
+   ]
+  },
+  "customer_types": {
+   "碳化硅半导体材料": [
+    "全球前十大功率半导体器件制造商",
+    "国际知名半导体公司",
+    "新兴领域龙头客户"
+   ]
+  },
+  "counterparties": [
+   {
+    "name": "舜宇奥来微纳光学（上海）有限公司",
+    "role": "partner",
+    "detail": "战略合作，推动碳化硅材料在光学领域的应用",
+    "evidence": {
+     "quote": "公司于2025 年7 月与舜宇奥来微纳光学（上海）有限公司达成战略合作，通过整合公司材料优势与对方光学技术专长，推动碳化硅材料在光学领域的应用",
+     "page": 24
+    }
+   }
+  ],
+  "dropped": 1,
+  "tokens": 12612,
+  "cached": false
+ },
+ "000876.SZ": {
+  "pages": [
+   16,
+   25
+  ],
+  "lines": {
+   "饲料": [
+    {
+     "node_id": "MKT_AGRICULTURE",
+     "name": "养殖（禽料、猪料、水产料、反刍料）",
+     "weight": "主要",
+     "evidence": {
+      "quote": "公司产品也覆盖了禽料、猪料、水产料与反刍料等几乎所有料种",
+      "page": 16
+     }
+    },
+    {
+     "node_id": "PROD_AGRI_HOG_CONTRACT_FARMING",
+     "name": "合同养殖户、内部养殖场",
+     "weight": "次要",
+     "evidence": {
+      "quote": "公司生产的猪料，除向外部市场销售外，也供下游的合同养殖户、内部养殖场使用",
+      "page": 16
+     }
+    }
+   ],
+   "猪产业": [
+    {
+     "node_id": "PROD_FOOD_HOG_SLAUGHTER",
+     "name": "生猪屠宰",
+     "weight": "主要",
+     "evidence": {
+      "quote": "在有屠宰配套的区域，公司出栏肥猪都会优先向内部屠宰厂送宰，在无屠宰配套的区域则都向外部销售",
+      "page": 17
+     }
+    },
+    {
+     "node_id": "PROD_FOOD_FRESH_PORK",
+     "name": "生鲜猪肉",
+     "weight": "次要",
+     "evidence": {
+      "quote": "公司在2022 年又推出生鲜高端黑猪品牌“知初”",
+      "page": 25
+     }
+    }
+   ],
+   "其他": []
+  },
+  "customer_types": {
+   "饲料": [
+    "其他饲料企业",
+    "经销商",
+    "大型养殖场",
+    "规模场、养殖企业",
+    "中小养殖户"
+   ],
+   "猪产业": [
+    "内部屠宰厂",
+    "外部屠宰企业",
+    "猪贩子",
+    "合作放养农户"
+   ],
+   "其他": []
+  },
+  "counterparties": [
+   {
+    "name": "千喜鹤",
+    "role": "subsidiary",
+    "detail": "公司猪肉品牌，2008年北京奥运会指定供应商",
+    "evidence": {
+     "quote": "“千喜鹤”是2008 年北京奥运会的指定供应商",
+     "page": 25
+    }
+   },
+   {
+    "name": "知初",
+    "role": "subsidiary",
+    "detail": "公司生鲜高端黑猪品牌",
+    "evidence": {
+     "quote": "公司在2022 年又推出生鲜高端黑猪品牌“知初”",
+     "page": 25
+    }
+   }
+  ],
+  "dropped": 0,
+  "tokens": 11302,
+  "cached": false
+ },
+ "000895.SZ": {
+  "pages": [
+   10,
+   25
+  ],
+  "lines": {
+   "包装肉制品": [
+    {
+     "node_id": "MKT_FOOD_CONSUMPTION",
+     "name": "食品消费",
+     "weight": "主要",
+     "evidence": {
+      "quote": "包装肉制品由高温、低温、速冻、零食四大品类组成，包括火腿肠、火腿、香肠、酱卤熟食、餐饮食材、罐头等细分品项",
+      "page": 10
+     }
+    },
+    {
+     "node_id": "MKT_RETAIL_CONSUMER",
+     "name": "居民消费",
+     "weight": "次要",
+     "evidence": {
+      "quote": "零食品类以“多品项、更方便”为目标，推出“汇小铺”子品牌，开发了虎皮鸡爪、水晶猪皮、卡滋咔咔猪皮脆片等休闲零食产品，满足年轻群体消费偏好",
+      "page": 10
+     }
+    }
+   ],
+   "生鲜猪产品": [
+    {
+     "node_id": "MKT_FOOD_CONSUMPTION",
+     "name": "食品消费",
+     "weight": "主要",
+     "evidence": {
+      "quote": "生鲜猪产品以冷鲜猪肉为主，依托世界一流的生猪屠宰与冷分割生产线",
+      "page": 13
+     }
+    }
+   ],
+   "其他": [
+    {
+     "node_id": "MKT_FOOD_CONSUMPTION",
+     "name": "食品消费",
+     "weight": "次要",
+     "evidence": {
+      "quote": "禽产品专注于高品质冰鲜鸡系列产品，依托公司自繁自养的白羽肉鸡和世界先进的自动化生产线",
+      "page": 14
+     }
+    }
+   ]
+  },
+  "customer_types": {
+   "包装肉制品": [
+    "经销商",
+    "AB商超",
+    "CD终端",
+    "会员超市",
+    "连锁便利店",
+    "休闲零食店",
+    "农贸批发",
+    "餐饮"
+   ],
+   "生鲜猪产品": [
+    "特约店",
+    "商超",
+    "酒店餐饮",
+    "加工厂",
+    "农贸批发",
+    "社区生鲜店",
+    "社区团购",
+    "即时零售"
+   ],
+   "其他": [
+    "家庭烹饪",
+    "餐饮定制"
+   ]
+  },
+  "counterparties": [
+   {
+    "name": "罗特克斯",
+    "role": "subsidiary",
+    "detail": "控股股东",
+    "evidence": {
+     "quote": "公司与控股股东罗特克斯合作，利用全球资源助力企业降本增效",
+     "page": 23
+    }
+   },
+   {
+    "name": "河南省汇润食品有限公司",
+    "role": "partner",
+    "detail": "携手试行屠宰厂轻资产运营模式",
+    "evidence": {
+     "quote": "公司在河南省濮阳市与河南省汇润食品有限公司携手，试行屠宰厂的轻资产运营模式",
+     "page": 23
+    }
+   },
+   {
+    "name": "双汇电子商务有限公司",
+    "role": "subsidiary",
+    "detail": "子公司，运作线上直销业务",
+    "evidence": {
+     "quote": "目前公司的线上直销业务由子公司双汇电子商务有限公司运作",
+     "page": 17
+    }
+   },
+   {
+    "name": "华强方特",
+    "role": "partner",
+    "detail": "联合开展跨界营销",
+    "evidence": {
+     "quote": "联合华强方特主题乐园策划万圣节、跨年夜快闪活动",
+     "page": 15
+    }
+   },
+   {
+    "name": "武汉大学",
+    "role": "partner",
+    "detail": "联合策划零食产品推广活动",
+    "evidence": {
+     "quote": "联合武汉大学策划零食产品推广活动",
+     "page": 15
+    }
+   },
+   {
+    "name": "Smithfield",
+    "role": "mention",
+    "detail": "高端品牌",
+    "evidence": {
+     "quote": "依托Smithfield、Argal 等高端品牌，推出了巴黎风味火腿、西班牙特里佐烤肠等西式特色产品",
+     "page": 10
+    }
+   },
+   {
+    "name": "Argal",
+    "role": "mention",
+    "detail": "高端品牌",
+    "evidence": {
+     "quote": "依托Smithfield、Argal 等高端品牌，推出了巴黎风味火腿、西班牙特里佐烤肠等西式特色产品",
+     "page": 10
+    }
+   }
+  ],
+  "dropped": 0,
+  "tokens": 8706,
+  "cached": false
+ },
+ "002714.SZ": {
+  "pages": [
+   14,
+   27
+  ],
+  "lines": {
+   "屠宰、肉食产品": [
+    {
+     "node_id": "MKT_FOOD_CONSUMPTION",
+     "name": "食品消费",
+     "weight": "主要",
+     "evidence": {
+      "quote": "公司通过自养自宰的业务模式，将食品安全做到全程可知、可控、可追溯，保障食品质量与安全。",
+      "page": 16
+     }
+    },
+    {
+     "node_id": "MKT_RETAIL_CONSUMER",
+     "name": "消费者",
+     "weight": "次要",
+     "evidence": {
+      "quote": "屠宰端能够获取消费者对猪肉产品的实际需求，推动养殖端以市场需求为导向进行生猪育种、生产",
+      "page": 16
+     }
+    }
+   ],
+   "生猪": [
+    {
+     "node_id": "MKT_AGRICULTURE",
+     "name": "生猪养殖",
+     "weight": "主要",
+     "evidence": {
+      "quote": "向市场提供优质、稳定的仔猪供应、系统的养殖防控技术服务，与客户风险共担、价值共享",
+      "page": 15
+     }
+    }
+   ],
+   "饲料原料": [
+    {
+     "node_id": null,
+     "name": "饲料加工",
+     "weight": "主要",
+     "evidence": {
+      "quote": "公司自建饲料厂，自主研发营养配方并生产饲料以满足各阶段生猪饲养需求",
+      "page": 16
+     }
+    }
+   ]
+  },
+  "customer_types": {
+   "屠宰、肉食产品": [
+    "消费者",
+    "全国各地不同类型客户"
+   ],
+   "生猪": [
+    "生猪养殖参与者",
+    "客户"
+   ],
+   "饲料原料": []
+  },
+  "counterparties": [
+   {
+    "name": "正大集团",
+    "role": "competitor",
+    "detail": "行业交流的生猪养殖参与者",
+    "evidence": {
+     "quote": "与正大集团、温氏股份、新希望、神农集团等国内外生猪养殖参与者交流互鉴",
+     "page": 15
+    }
+   },
+   {
+    "name": "温氏股份",
+    "role": "competitor",
+    "detail": "行业交流的生猪养殖参与者",
+    "evidence": {
+     "quote": "与正大集团、温氏股份、新希望、神农集团等国内外生猪养殖参与者交流互鉴",
+     "page": 15
+    }
+   },
+   {
+    "name": "新希望",
+    "role": "competitor",
+    "detail": "行业交流的生猪养殖参与者",
+    "evidence": {
+     "quote": "与正大集团、温氏股份、新希望、神农集团等国内外生猪养殖参与者交流互鉴",
+     "page": 15
+    }
+   },
+   {
+    "name": "神农集团",
+    "role": "competitor",
+    "detail": "行业交流的生猪养殖参与者",
+    "evidence": {
+     "quote": "与正大集团、温氏股份、新希望、神农集团等国内外生猪养殖参与者交流互鉴",
+     "page": 15
+    }
+   },
+   {
+    "name": "越南BAF公司",
+    "role": "partner",
+    "detail": "签署合作协议",
+    "evidence": {
+     "quote": "公司设立越南牧原有限公司，与越南BAF 公司签署合作协议，积极探索海外市场。",
+     "page": 15
+    }
+   },
+   {
+    "name": "河南宏信检测技术有限公司",
+    "role": "subsidiary",
+    "detail": "公司设立的检测公司",
+    "evidence": {
+     "quote": "公司设立河南宏信检测技术有限公司，从兽药、水源、饲料、生猪养殖到屠宰肉食",
+     "page": 23
+    }
+   },
+   {
+    "name": "内乡县牧原现代农业综合体有限公司",
+    "role": "subsidiary",
+    "detail": "获得China GAP认证的子公司",
+    "evidence": {
+     "quote": "内乡县牧原现代农业综合体有限公司获得China GAP 认证和国家首个优质畜禽产品全产业链数字化认证。",
+     "page": 23
+    }
+   }
+  ],
+  "dropped": 0,
+  "tokens": 8196,
+  "cached": false
+ },
+ "300498.SZ": {
+  "pages": [
+   10,
+   32
+  ],
+  "lines": {
+   "肉鸡类": [
+    {
+     "node_id": "MKT_FOOD_CONSUMPTION",
+     "name": "食用消费",
+     "weight": "主要",
+     "evidence": {
+      "quote": "肉鸡和肉猪主要用于食用消费，经屠宰加工后分别成为鸡肉和猪肉产品，供应餐饮、食品加工、零售终端等市场。",
+      "page": 10
+     }
+    }
+   ],
+   "肉猪类": [
+    {
+     "node_id": "MKT_FOOD_CONSUMPTION",
+     "name": "食用消费",
+     "weight": "主要",
+     "evidence": {
+      "quote": "肉鸡和肉猪主要用于食用消费，经屠宰加工后分别成为鸡肉和猪肉产品，供应餐饮、食品加工、零售终端等市场。",
+      "page": 10
+     }
+    }
+   ],
+   "肉制品加工产品": [
+    {
+     "node_id": "MKT_FOOD_CONSUMPTION",
+     "name": "餐饮、食品加工、零售终端",
+     "weight": "主要",
+     "evidence": {
+      "quote": "经屠宰加工后分别成为鸡肉和猪肉产品，供应餐饮、食品加工、零售终端等市场。",
+      "page": 10
+     }
+    }
+   ],
+   "其他养殖类": [
+    {
+     "node_id": "MKT_FOOD_CONSUMPTION",
+     "name": "食用消费",
+     "weight": "次要",
+     "evidence": {
+      "quote": "其他产品为仔猪、白羽鸡苗、肉鸭、鸡蛋、农牧设备和兽药等。",
+      "page": 10
+     }
+    }
+   ],
+   "兽药": [
+    {
+     "node_id": null,
+     "name": "养殖物资（提供给合作农户）",
+     "weight": "次要",
+     "evidence": {
+      "quote": "负责生产鸡苗、猪苗、饲料、兽药等养殖物资提供给合作农户。",
+      "page": 11
+     }
+    }
+   ],
+   "工程、设备类": [
+    {
+     "node_id": null,
+     "name": "农牧设备（未明确下游）",
+     "weight": "次要",
+     "evidence": {
+      "quote": "其他产品为仔猪、白羽鸡苗、肉鸭、鸡蛋、农牧设备和兽药等。",
+      "page": 10
+     }
+    }
+   ],
+   "其他": []
+  },
+  "customer_types": {
+   "肉鸡类": [
+    "批发商",
+    "终端零售商",
+    "家庭、酒店、食堂等中式烹饪"
+   ],
+   "肉猪类": [
+    "批发商",
+    "肉联厂"
+   ],
+   "肉制品加工产品": [
+    "餐饮企业",
+    "食品加工企业",
+    "零售终端",
+    "团膳配餐企业",
+    "经销商"
+   ],
+   "其他养殖类": [
+    "批发商",
+    "终端零售商",
+    "社区零售",
+    "大型食品加工、团膳配餐企业",
+    "经销商"
+   ],
+   "兽药": [
+    "合作农户"
+   ],
+   "工程、设备类": [],
+   "其他": []
+  },
+  "counterparties": [
+   {
+    "name": "立华股份",
+    "role": "competitor",
+    "detail": "同行企业，销售价格变化趋势对比",
+    "evidence": {
+     "quote": "公司与同行企业立华股份、湘佳股份的销售价格变化趋势也基本一致，不存在重大差异。",
+     "page": 15
+    }
+   },
+   {
+    "name": "湘佳股份",
+    "role": "competitor",
+    "detail": "同行企业，销售价格变化趋势对比",
+    "evidence": {
+     "quote": "公司与同行企业立华股份、湘佳股份的销售价格变化趋势也基本一致，不存在重大差异。",
+     "page": 15
+    }
+   },
+   {
+    "name": "牧原股份",
+    "role": "competitor",
+    "detail": "同行企业，毛猪销售价格走势对比",
+    "evidence": {
+     "quote": "公司毛猪销售价格与市场均价紧密贴合，与牧原股份、新希望的价格走势高度趋同，不存在重大差异。",
+     "page": 15
+    }
+   },
+   {
+    "name": "新希望",
+    "role": "competitor",
+    "detail": "同行企业，毛猪销售价格走势对比",
+    "evidence": {
+     "quote": "公司毛猪销售价格与市场均价紧密贴合，与牧原股份、新希望的价格走势高度趋同，不存在重大差异。",
+     "page": 15
+    }
+   },
+   {
+    "name": "东瑞股份",
+    "role": "competitor",
+    "detail": "同行企业业绩预告对比",
+    "evidence": {
+     "quote": "东瑞股份 归属于母公司股东的净利润-17000 万元至-12000 万元",
+     "page": 16
+    }
+   },
+   {
+    "name": "新五丰",
+    "role": "competitor",
+    "detail": "同行企业业绩预告对比",
+    "evidence": {
+     "quote": "新五丰 归属于母公司股东的净利润-96000 万元至-70000 万元",
+     "page": 16
+    }
+   },
+   {
+    "name": "巨星农牧",
+    "role": "competitor",
+    "detail": "同行企业业绩预告对比",
+    "evidence": {
+     "quote": "巨星农牧 归属于母公司股东的净利润2600 万元至3600 万元",
+     "page": 16
+    }
+   },
+   {
+    "name": "天邦食品",
+    "role": "competitor",
+    "detail": "同行企业业绩预告对比",
+    "evidence": {
+     "quote": "天邦食品 归属于母公司股东的净利润-131000 万元至-111000 万元",
+     "page": 16
+    }
+   },
+   {
+    "name": "正邦科技",
+    "role": "competitor",
+    "detail": "同行企业业绩预告对比",
+    "evidence": {
+     "quote": "正邦科技 归属于母公司股东的净利润-60000 万元至-47000 万元",
+     "page": 17
+    }
+   },
+   {
+    "name": "广东中芯种业科技有限公司",
+    "role": "subsidiary",
+    "detail": "下属子公司，专业化猪育种公司",
+    "evidence": {
+     "quote": "公司下属子公司-广东中芯种业科技有限公司是行业内具有领先技术优势和规模优势的专业化猪育种公司之一。",
+     "page": 27
+    }
+   },
+   {
+    "name": "华南农业大学",
+    "role": "partner",
+    "detail": "产学研合作",
+    "evidence": {
+     "quote": "与华南农业大学、南京农业大学、中国农业大学、中山大学等多所院校和科研院所建立紧密型“产学研”合作关系。",
+     "page": 26
+    }
+   },
+   {
+    "name": "南京农业大学",
+    "role": "partner",
+    "detail": "产学研合作",
+    "evidence": {
+     "quote": "与华南农业大学、南京农业大学、中国农业大学、中山大学等多所院校和科研院所建立紧密型“产学研”合作关系。",
+     "page": 26
+    }
+   },
+   {
+    "name": "中国农业大学",
+    "role": "partner",
+    "detail": "产学研合作",
+    "evidence": {
+     "quote": "与华南农业大学、南京农业大学、中国农业大学、中山大学等多所院校和科研院所建立紧密型“产学研”合作关系。",
+     "page": 26
+    }
+   },
+   {
+    "name": "中山大学",
+    "role": "partner",
+    "detail": "产学研合作",
+    "evidence": {
+     "quote": "与华南农业大学、南京农业大学、中国农业大学、中山大学等多所院校和科研院所建立紧密型“产学研”合作关系。",
+     "page": 26
+    }
+   },
+   {
+    "name": "华为",
+    "role": "partner",
+    "detail": "数字化转型合作",
+    "evidence": {
+     "quote": "2021 年开始与华为合作，全面启动数字化转型，打造全方位的数智化体系。",
+     "page": 29
+    }
+   },
+   {
+    "name": "金蝶",
+    "role": "supplier",
+    "detail": "引入金蝶EAS集中式信息系统",
+    "evidence": {
+     "quote": "2005 年引入金蝶EAS 集中式信息系统，实现了生产管理、财务、营销等业务的集中管理",
+     "page": 29
+    }
+   },
+   {
+    "name": "东方证券",
+    "role": "mention",
+    "detail": "数据来源/跟踪数据",
+    "evidence": {
+     "quote": "根据东方证券跟踪数据，公司毛鸡销售价格与中速类中华土鸡（黄羽肉鸡）均价趋势一致",
+     "page": 15
+    }
+   }
+  ],
+  "dropped": 0,
+  "tokens": 13745,
+  "cached": false
+ }
+}

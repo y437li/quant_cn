@@ -37,6 +37,13 @@ class Clock:
         data_loading.BaostockClient      -- injected type or call
         lake.RebuildAudit                -- injected type or call
         cli.ResearchCommands             -- injected type or call
+        data_loading.BaseWebClient       -- sleeps between requests and retries
+        data_loading.CninfoClient        -- injected type or call
+        data_loading.EastmoneyReportClient -- injected type or call
+        cli.DocumentCommands             -- injected type or call
+        data_loading.DocumentDownloader  -- injected type or call
+        data_loading.RequestPacer        -- injected type or call
+        data_loading.DeepSeekClient     -- pacing and peak-hour pricing
 
     Test cases:
         TC-CL-001  today_str is YYYYMMDD and equals get_now().date()

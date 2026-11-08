@@ -1,0 +1,90 @@
+# Shenwan 450000 商贸零售 — product taxonomy prior (plan 12 phase 1, D-097). Format: README.md.
+# Almost every offering here is a service (kind: service); goods sold are other sectors' products.
+sector: {sw_l1: "450000", name: 商贸零售, name_en: Retail and Trade}
+
+nodes:
+  # --- segments ---
+  - {id: SEG_RETL_TRADE, type: segment, name: 贸易, name_en: Trading and Supply Chain, aliases: [贸易Ⅱ, 贸易Ⅲ]}
+  - {id: SEG_RETL_GENERAL_RETAIL, type: segment, name: 一般零售, name_en: General Retail}
+  - {id: SEG_RETL_DEPT_STORE, type: segment, name: 百货, name_en: Department Stores}
+  - {id: SEG_RETL_SUPERMARKET, type: segment, name: 超市, name_en: Supermarkets}
+  - {id: SEG_RETL_MULTI_FORMAT, type: segment, name: 多业态零售, name_en: Multi-Format Retail}
+  - {id: SEG_RETL_COMMERCIAL_PROPERTY, type: segment, name: 商业物业经营, name_en: Commercial Property Operation, aliases: [购物中心运营]}
+  - {id: SEG_RETL_SPECIALTY_CHAIN, type: segment, name: 专业连锁, name_en: Specialty Chain Retail, aliases: [专业连锁Ⅱ, 专业连锁Ⅲ]}
+  - {id: SEG_RETL_ECOMMERCE, type: segment, name: 互联网电商, name_en: Internet E-Commerce}
+  - {id: SEG_RETL_GENERAL_ECOMMERCE, type: segment, name: 综合电商, name_en: General E-Commerce Platforms}
+  - {id: SEG_RETL_CROSS_BORDER, type: segment, name: 跨境电商, name_en: Cross-Border E-Commerce}
+  - {id: SEG_RETL_ECOMMERCE_SERVICE, type: segment, name: 电商服务, name_en: E-Commerce Services}
+  - {id: SEG_RETL_TRAVEL_RETAIL, type: segment, name: 旅游零售, name_en: Travel Retail, aliases: [免税]}
+
+  # --- products / services ---
+  - {id: PROD_RETL_BULK_COMMODITY_TRADE, type: product, kind: service, name: 大宗商品供应链, name_en: Bulk Commodity Supply Chain, segment: SEG_RETL_TRADE, aliases: [大宗贸易, 供应链管理服务]}
+  - {id: PROD_RETL_IMPORT_EXPORT, type: product, kind: service, name: 进出口贸易, name_en: Import-Export Trading, segment: SEG_RETL_TRADE, aliases: [外贸, 进出口代理]}
+  - {id: PROD_RETL_DEPT_STORE_OP, type: product, kind: service, name: 百货商场经营, name_en: Department Store Operation, segment: SEG_RETL_DEPT_STORE, aliases: [百货联营]}
+  - {id: PROD_RETL_HYPERMARKET, type: product, kind: service, name: 大卖场, name_en: Hypermarkets, segment: SEG_RETL_SUPERMARKET, aliases: [大型超市]}
+  - {id: PROD_RETL_COMMUNITY_GROCERY, type: product, kind: service, name: 社区生鲜超市, name_en: Community Fresh Grocery, segment: SEG_RETL_SUPERMARKET, aliases: [生鲜超市, 社区超市]}
+  - {id: PROD_RETL_CONVENIENCE_STORE, type: product, kind: service, name: 便利店, name_en: Convenience Stores, segment: SEG_RETL_MULTI_FORMAT}
+  - {id: PROD_RETL_SHOPPING_MALL, type: product, kind: service, name: 购物中心, name_en: Shopping Malls, segment: SEG_RETL_COMMERCIAL_PROPERTY, aliases: [商业综合体, 购物中心运营, 商场租金]}
+  - {id: PROD_RETL_RENTAL_INCOME, type: product, kind: service, name: 商业租赁, name_en: Retail Leasing, segment: SEG_RETL_COMMERCIAL_PROPERTY, aliases: [商铺出租, 租金收入]}
+  - {id: PROD_RETL_SPECIALTY_MARKET, type: product, kind: service, name: 专业市场, name_en: Wholesale Specialty Markets, segment: SEG_RETL_COMMERCIAL_PROPERTY, aliases: [批发市场, 商品市场]}
+  - {id: PROD_RETL_JEWELRY_RETAIL, type: product, kind: service, name: 珠宝零售, name_en: Jewellery Retail, segment: SEG_RETL_SPECIALTY_CHAIN, aliases: [黄金珠宝零售]}
+  - {id: PROD_RETL_ELECTRONICS_RETAIL, type: product, kind: service, name: 家电3C零售, name_en: Electronics Retail, segment: SEG_RETL_SPECIALTY_CHAIN, aliases: [家电连锁]}
+  - {id: PROD_RETL_HOME_IMPROVEMENT, type: product, kind: service, name: 家居建材卖场, name_en: Home Improvement Malls, segment: SEG_RETL_SPECIALTY_CHAIN, aliases: [家居卖场]}
+  - {id: PROD_RETL_DISCOUNT_SNACK, type: product, kind: service, name: 量贩零食店, name_en: Discount Snack Stores, segment: SEG_RETL_SPECIALTY_CHAIN, aliases: [零食量贩, 量贩零食门店, 零食折扣店]}
+  - {id: PROD_RETL_MARKETPLACE, type: product, kind: service, name: 电商平台, name_en: E-Commerce Marketplace, segment: SEG_RETL_GENERAL_ECOMMERCE, aliases: [线上商城, 自营电商]}
+  - {id: PROD_RETL_LIVE_COMMERCE, type: product, kind: service, name: 直播电商, name_en: Live-Streaming Commerce, segment: SEG_RETL_ECOMMERCE_SERVICE, aliases: [直播带货]}
+  - {id: PROD_RETL_TP_OPERATION, type: product, kind: service, name: 品牌电商代运营, name_en: E-Commerce Operation Services, segment: SEG_RETL_ECOMMERCE_SERVICE, aliases: [代运营, TP服务]}
+  - {id: PROD_RETL_ECOMMERCE_SAAS, type: product, kind: service, name: 电商SaaS服务, name_en: E-Commerce SaaS, segment: SEG_RETL_ECOMMERCE_SERVICE}
+  - {id: PROD_RETL_CROSS_BORDER_B2C, type: product, kind: service, name: 跨境出口电商, name_en: Cross-Border Export B2C, segment: SEG_RETL_CROSS_BORDER, aliases: [亚马逊卖家, 出海电商]}
+  - {id: PROD_RETL_CROSS_BORDER_LOGISTICS, type: product, kind: service, name: 跨境物流服务, name_en: Cross-Border Logistics, segment: SEG_RETL_CROSS_BORDER}
+  - {id: PROD_RETL_DUTY_FREE, type: product, kind: service, name: 免税零售, name_en: Duty-Free Retail, segment: SEG_RETL_TRAVEL_RETAIL, aliases: [离岛免税, 机场免税, 市内免税]}
+
+edges:
+  - [SEG_RETL_DEPT_STORE, part_of, SEG_RETL_GENERAL_RETAIL]
+  - [SEG_RETL_SUPERMARKET, part_of, SEG_RETL_GENERAL_RETAIL]
+  - [SEG_RETL_MULTI_FORMAT, part_of, SEG_RETL_GENERAL_RETAIL]
+  - [SEG_RETL_COMMERCIAL_PROPERTY, part_of, SEG_RETL_GENERAL_RETAIL]
+  - [SEG_RETL_GENERAL_ECOMMERCE, part_of, SEG_RETL_ECOMMERCE]
+  - [SEG_RETL_CROSS_BORDER, part_of, SEG_RETL_ECOMMERCE]
+  - [SEG_RETL_ECOMMERCE_SERVICE, part_of, SEG_RETL_ECOMMERCE]
+  - [SEG_RETL_TRADE, serves, MKT_STEEL_INDUSTRY]
+  - [SEG_RETL_TRADE, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_RETL_TRADE, serves, MKT_LOGISTICS]
+  - [SEG_RETL_GENERAL_RETAIL, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_RETL_SUPERMARKET, serves, MKT_FOOD_CONSUMPTION]
+  - [SEG_RETL_COMMERCIAL_PROPERTY, serves, MKT_REAL_ESTATE]
+  - [SEG_RETL_SPECIALTY_CHAIN, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_RETL_ECOMMERCE, serves, MKT_RETAIL_CONSUMER]
+  - [SEG_RETL_ECOMMERCE_SERVICE, serves, MKT_APPAREL]
+  - [SEG_RETL_TRAVEL_RETAIL, serves, MKT_RETAIL_CONSUMER]
+  - [PROD_RETL_BULK_COMMODITY_TRADE, uses_material, MAT_STEEL]
+  - [PROD_RETL_BULK_COMMODITY_TRADE, uses_material, MAT_IRON_ORE]
+  - [PROD_RETL_BULK_COMMODITY_TRADE, uses_material, MAT_THERMAL_COAL]
+  - [PROD_RETL_JEWELRY_RETAIL, uses_material, MAT_GOLD]
+  - [PROD_RETL_JEWELRY_RETAIL, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_RETL_ELECTRONICS_RETAIL, used_in, MKT_HOME_APPLIANCE]
+  - [PROD_AUTO_NEW_CAR_RETAIL, used_in, MKT_ICE_VEHICLE]
+  - [PROD_AUTO_NEW_CAR_RETAIL, used_in, MKT_EV]
+  - [PROD_RETL_HOME_IMPROVEMENT, used_in, MKT_REAL_ESTATE]
+  - [PROD_RETL_DISCOUNT_SNACK, used_in, MKT_FOOD_CONSUMPTION]
+  - [PROD_RETL_DISCOUNT_SNACK, substitute_for, PROD_RETL_CONVENIENCE_STORE]
+  - [PROD_RETL_MARKETPLACE, substitute_for, PROD_RETL_DEPT_STORE_OP]
+  - [PROD_RETL_MARKETPLACE, substitute_for, PROD_RETL_HYPERMARKET]
+  - [PROD_RETL_LIVE_COMMERCE, substitute_for, PROD_RETL_MARKETPLACE]
+  - [PROD_RETL_TP_OPERATION, used_in, PROD_RETL_MARKETPLACE]
+  - [PROD_RETL_ECOMMERCE_SAAS, used_in, PROD_RETL_MARKETPLACE]
+  - [PROD_RETL_CROSS_BORDER_LOGISTICS, used_in, PROD_RETL_CROSS_BORDER_B2C]
+  - [PROD_RETL_CROSS_BORDER_B2C, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_RETL_DUTY_FREE, used_in, MKT_RETAIL_CONSUMER]
+
+sw_l3_map:
+  "450201": [SEG_RETL_TRADE]
+  "450301": [SEG_RETL_DEPT_STORE]
+  "450302": [SEG_RETL_SUPERMARKET]
+  "450303": [SEG_RETL_MULTI_FORMAT]
+  "450304": [SEG_RETL_COMMERCIAL_PROPERTY]
+  "450401": [SEG_RETL_SPECIALTY_CHAIN]
+  "450601": [SEG_RETL_GENERAL_ECOMMERCE]
+  "450602": [SEG_RETL_CROSS_BORDER]
+  "450603": [SEG_RETL_ECOMMERCE_SERVICE]
+  "450701": [SEG_RETL_TRAVEL_RETAIL]

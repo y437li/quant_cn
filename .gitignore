@@ -62,3 +62,11 @@ logs/
 # ---- agent runtime (Claude Code) ----
 .claude/run/
 .claude/settings.local.json
+
+# plan 15: generated front-end build
+apps/chain_api/web/dist/
+
+# plan 15 / chain view: generated from the lake by research_space/prototypes/chain_view/build_market_view.py
+research_space/prototypes/chain_view/co/*.json
+research_space/prototypes/chain_view/view_data*.json
+research_space/prototypes/chain_view/views.json

@@ -1,0 +1,46 @@
+# config/material_prices.yaml — material node → futures contract(s) for the input-cost / output-price index (D-118)
+#
+# Used by pricing-power signals P3 (cost pass-through) and P4 (output-price exposure), BUSINESS_MODEL_DESIGN §4.5.
+# Keys are taxonomy material ids (config/industry_chain/_common.yaml). Values list continuous main contracts in
+# fut_daily (`<code>.<exchange>`); several contracts are averaged after normalising each to its own mean.
+# A material without a liquid domestic contract is left out (no index rather than a wrong one).
+materials:
+  MAT_COPPER: [CU.SHF]
+  MAT_ALUMINUM: [AL.SHF]
+  MAT_NICKEL: [NI.SHF]
+  MAT_ZINC: [ZN.SHF]
+  MAT_LEAD: [PB.SHF]
+  MAT_TIN: [SN.SHF]
+  MAT_GOLD: [AU.SHF]
+  MAT_SILVER: [AG.SHF]
+  MAT_LITHIUM_CARBONATE: [LC.GFE]
+  MAT_LITHIUM_HYDROXIDE: [LC.GFE]   # tracks carbonate closely; no separate contract
+  MAT_IRON_ORE: [I.DCE]
+  MAT_STEEL: [RB.SHF, HC.SHF]
+  MAT_STAINLESS_STEEL: [SS.SHF]
+  MAT_COKING_COAL: [JM.DCE]
+  MAT_COKE: [J.DCE]
+  MAT_THERMAL_COAL: [ZC.ZCE]        # thin after 2022; kept for history
+  MAT_CRUDE_OIL: [SC.INE]
+  MAT_PX_PTA: [TA.ZCE, PX.ZCE]
+  MAT_METHANOL: [MA.ZCE]
+  MAT_ETHYLENE: [EG.DCE]            # proxy: ethylene glycol, the liquid ethylene derivative
+  MAT_PROPYLENE: [PP.DCE]           # proxy: polypropylene
+  MAT_PLASTICS: [L.DCE, PP.DCE, V.DCE]
+  MAT_NATURAL_RUBBER: [RU.SHF, NR.INE]
+  MAT_SYNTHETIC_RUBBER: [RU.SHF]    # proxy until a synthetic-rubber contract is loaded
+  MAT_SILICON_METAL: [SI.GFE]
+  MAT_POLYSILICON: [PS.GFE]
+  MAT_SODA_ASH: [SA.ZCE]
+  MAT_FLAT_GLASS: [FG.ZCE]
+  MAT_PULP: [SP.SHF]
+  MAT_COTTON: [CF.ZCE]
+  MAT_POLYESTER: [PF.ZCE]
+  MAT_GRAIN: [C.DCE]
+  MAT_SOYBEAN_MEAL: [M.DCE]
+  MAT_SUGAR: [SR.ZCE]
+  MAT_LIVE_HOGS: [LH.DCE]
+  MAT_ASPHALT: [BU.SHF]
+  MAT_LPG: [PG.DCE]
+  MAT_BUNKER_FUEL: [FU.SHF, LU.INE]
+  MAT_CHLOR_ALKALI: [SH.ZCE]        # caustic soda

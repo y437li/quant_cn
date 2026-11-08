@@ -6,7 +6,7 @@
 | Owner | executor quant-cn-b7 (build) / quant-cn-a1 (design, record, monitor) |
 | Created | 2026-09-28 |
 | Notion | pending |
-| Decisions | D-047, D-049, D-050, D-053, D-062, D-063, D-065 |
+| Decisions | D-047, D-049, D-050, D-053, D-062, D-063, D-065, D-119 (proposed) |
 | Depends on plans | 01, 02 (done); 03 ph1 leftovers folded in here |
 
 ## Goal
@@ -32,6 +32,7 @@ layer is multi-source and every new endpoint is permission-checked before any ba
 | 7 | Analysts and events | one-call tier check for `report_rc`; then `report_rc` 2019+ if allowed, `stk_surv`, `broker_recommend`, `hk_hold`, `forecast`, `express`, `stk_holdertrade`, `share_float` (month windows), `disclosure_date`, `stk_holdernumber` | tier result recorded as a decision; per dataset: known-on column set, PIT test on one announcement; `report_rc` consensus snapshot computable for one stock-date if fetched | 1 | done (28f6085) |
 | 8 | Statement fields + refetch | seven fields added (DATA_LOADING_DESIGN §3c); `--force` refetch of 30 quarters for the three statements | curated row counts unchanged ±0.1%; new columns populated ≥ 95% where applicable; `update_flag` handling intact (D-038) | 1 | done (f40cea8) |
 | 10 | Third source and verification | `AkShareClient` (gap-filler: LME copper if needed, official macro release calendars replacing lag rules, exchange member position files), SSE/SZSE margin-target lists into `external/` + a `margin_targets` dataset, `BaoStockClient` verification of closes/adj_factor as a nightly quality view (`quality.price_crosscheck`), NBS/PBOC release dates | release dates replace `release_lag_days` for CPI/PPI/PMI/M2; lending list loaded with provenance; cross-check view shows mismatch rate (< 0.1% expected) and never overwrites Tushare data | 5, 6 | done (cd174ec, 4d4dfae); 200-stock resample deferred |
+| 11 | ETF and fund holdings (permissions opened 2026-11-08) | `etf_basic` (none; 1,916 ETFs, `index_code` on 1,717), `etf_index` (none; 561), `etf_share_size` (trade_date from 2019; 411 rows on 2019-01-02, 1,719 on 2026-11-06), `fund_adj` (trade_date from 2019), `fund_portfolio` (period from 2019, `ann_date` known-on; one period exceeds 8,000 rows → offset paging); optional: `research_report` replaces the Eastmoney list scraper (D-119) | every listed ETF in `fund_share` maps to `etf_basic` (unmatched listed); `etf_share_size` total_size vs `fund_share × fund_nav` within 2% on 3 dates; 510300 holdings for 2026H1 = 339 rows and weights sum ≈ stock share of NAV; PIT test on one `fund_portfolio` ann_date; DATA_CATALOG §1 rows | 3, 7 | todo |
 | 9 | Coverage notebook | `YYYYMMDD_lake_coverage.ipynb`: per dataset first/last date, rows, sessions covered, known-on rule, reconciliation results; outputs committed | runs top to bottom; DATA_CATALOG §1 updated for every new dataset | 2–8 | done (17c50b2) |
 
 ## Classes
@@ -45,6 +46,7 @@ layer is multi-source and every new endpoint is permission-checked before any ba
 | `FetcherFactory` | extend (source-aware, values_from_dataset) | data_loading | 1 | `DownloadPipeline` |
 | `PitAligner` | extend (`known_on_rule`, `release_lag_days`) | lake | 1, 5 | `DerivedViews`, factors |
 | `DerivedViews` | extend (member-computed Shenwan L1 returns fallback) | lake | 2 | `SectorIndexPanel` (plan 10) |
+| `DatasetSpec`, `FetcherFactory`, `TushareClient` | reuse (config only: sweep kinds none / trade_date / period, existing offset paging) | core, data_loading | 11 | `DownloadPipeline` |
 
 ## Risks
 - Permission tiers (`sw_daily`, `report_rc`, `cyq_perf`, `fut_holding` for commodity exchanges): every new endpoint is checked with one call before scheduling; a denied endpoint becomes a recorded decision, not a silent gap.
@@ -61,12 +63,17 @@ layer is multi-source and every new endpoint is permission-checked before any ba
 - D-083 (`--force` keeps `.prev` files) pending.
 
 ## Open questions
-None at assignment; DATA_LOADING_DESIGN §3c recommendations adopted (FRED first, AkShare only on proven need; small commodity set first, all exchanges' `fut_daily` anyway since it is one sweep).
+- Phase 11: replace the Eastmoney list scraper (`em_stock_reports`, `em_industry_reports`) with Tushare `research_report`? Same source and PDFs (165 vs 164 stock reports on 2026-08-25), adds `ts_code`/`ind_name`, removes scraping terms risk; neither covers 华泰/中金/招商 PDFs. Recommendation: yes for new days, keep existing files (D-119, user).
+- Phase 11: `fund_portfolio` scope — all funds (full holdings in H1/annual, top-10 in Q1/Q3) or equity/mixed funds only? Recommendation: all, filter in views.
+- Crowding measures (ETF flows by Shenwan industry via `index_code`, fund over/underweights) are derived series: out of plan 11, to the consensus-gap work after approval.
+
+At assignment none; DATA_LOADING_DESIGN §3c recommendations adopted (FRED first, AkShare only on proven need; small commodity set first, all exchanges' `fut_daily` anyway since it is one sweep).
 
 ## Log
 
 | Date | Phase | Change |
 |---|---|---|
+| 2026-11-08 | 11 | Phase 11 drafted, awaiting approval. One-call probes OK: etf_basic 1,916, etf_index 561, etf_share_size (510300 from 2012-05-28), fund_portfolio (8,000-row page, has_more), fund_adj 749 rows on 2019-01-02, research_report 208 rows on 2026-08-25. report_rc refreshed 2026-09-01 → 2026-11-08 (run 3a200cb50c80: 35 keys fetched, 4 empty, 23,733 rows; curated 1,742,050) |
 | 2026-09-29 | 7 | Backfill started through 2026-09-28, ~15,500 calls, lake busy ~8 h: report_rc, stk_surv, hk_hold, stk_holdertrade 2,828 calendar days each from 2019; share_float 3,924 days from 2016; forecast_vip, express_vip, disclosure_date (end_date), stk_holdernumber (enddate) 30 periods; broker_recommend 93 months (no publication date returned → period_start_lag 0, catalog row says rule). D-081 code in and tested (SweepSpec.days/param_name, DateCodec.list_days, period_start_lag, repeated-page guard; TC-DC-006, TC-DS-006, TC-DSF-005, TC-DWF-004, TC-TC-009, TC-EDR-005), uncommitted. Keys: report_rc (ts_code, report_date, org_name, report_title, quarter); stk_surv (ts_code, surv_date, rece_org, fund_visitors); stk_holdertrade handbook key + after_share, avg_price (5 duplicates found); hk_hold (code, trade_date, exchange) |
 | 2026-09-29 | 7 | **Leak prevented:** derived.fundamentals_long unpivoted every period-swept dataset and would have pulled forecast, express, disclosure and holdernumber into the fundamentals and PIT states; now limited to datasets curated under fundamentals/ (digests to confirm unchanged) |
 | 2026-09-29 | 8 | Phase 8 done (f40cea8, cae8e3f). Seven fields added (income revenue, operate_profit, oper_cost; balancesheet total_hldr_eqy_exc_min_int, bond_payable, st_borr; cashflow c_recp_cap_contrib); --force refetch of 90 keys, run a8b9a544845e ok. Rows: income 228,813 → 228,830 (+0.007%), balancesheet 219,764 → 219,782, cashflow 247,101 → 247,112 (deltas = versions filed since). update_flag intact. Fill on report_type 1: revenue 99.9%, operate_profit 99.9%, oper_cost 97.8% (banks none), total_hldr_eqy 100%; line items bond_payable 17%, st_borr 76%, c_recp_cap_contrib 38% NULL where absent (DATA_CATALOG §3b). Digests changed by design: fundamentals_long fd8956ea → 6576db3f, states 1e7df153 → c7b6697a (+1.20M long rows); other four unchanged; rebuild reproduces all six. make check 278 passed, 49 datasets, stale 0 |

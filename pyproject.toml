@@ -10,6 +10,7 @@ dependencies = [
     "plotly>=6",
     "pyarrow>=17",
     "pydantic>=2.8",
+    "pymupdf>=1.24",
     "python-dotenv>=1",
     "pyyaml>=6",
     "rich>=13",
@@ -52,6 +53,9 @@ known-first-party = ["quant_cn", "tests"]
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["D1", "PLR2004"]
 "scripts/**" = ["T201"]
+# Chinese report text: full-width punctuation in patterns and fixtures is intentional (plan 12)
+"src/quant_cn/industry_graph/**" = ["RUF001"]
+"tests/industry_graph/**" = ["D1", "PLR2004", "RUF001"]
 
 [tool.mypy]
 strict = true
@@ -89,7 +93,7 @@ layers = [
     "quant_cn.back_testing | quant_cn.portfolio | quant_cn.visualization",
     "quant_cn.pipeline",
     "quant_cn.factor",
-    "quant_cn.statistic | quant_cn.calculation",
+    "quant_cn.statistic | quant_cn.calculation | quant_cn.industry_graph",
     "quant_cn.data_loading",
     "quant_cn.lake",
     "quant_cn.core",

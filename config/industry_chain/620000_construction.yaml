@@ -1,0 +1,234 @@
+# 建筑装饰 (SW 620000) product taxonomy — plan 12 phase 1, D-097. All edges are priors (source: prior).
+# Almost all offerings are services (kind: service); physical goods are steel-structure fabrication and seedlings.
+
+sector: {sw_l1: "620000", name: 建筑装饰, name_en: Construction and Decoration}
+
+nodes:
+  # ---------------- segments ----------------
+  - {id: SEG_CONS_HOUSING, type: segment, name: 房屋建设, name_en: Building Construction, aliases: [房建]}
+  - {id: SEG_CONS_DECORATION, type: segment, name: 装修装饰, name_en: Decoration and Fit-Out}
+  - {id: SEG_CONS_INFRA, type: segment, name: 基础建设, name_en: Infrastructure Construction, aliases: [基建市政工程]}
+  - {id: SEG_CONS_LANDSCAPE, type: segment, name: 园林工程, name_en: Landscaping and Ecological Engineering, parent: SEG_CONS_INFRA}
+  - {id: SEG_CONS_SPECIALIZED, type: segment, name: 专业工程, name_en: Specialized Engineering}
+  - {id: SEG_CONS_STEEL_STRUCTURE, type: segment, name: 钢结构, name_en: Steel Structure, parent: SEG_CONS_SPECIALIZED}
+  - {id: SEG_CONS_CHEMICAL_ENG, type: segment, name: 化学工程, name_en: Chemical Engineering, parent: SEG_CONS_SPECIALIZED}
+  - {id: SEG_CONS_INTERNATIONAL, type: segment, name: 国际工程, name_en: International Engineering, parent: SEG_CONS_SPECIALIZED}
+  - {id: SEG_CONS_OTHER_SPECIALIZED, type: segment, name: 其他专业工程, name_en: Other Specialized Engineering, parent: SEG_CONS_SPECIALIZED}
+  - {id: SEG_CONS_CONSULTING, type: segment, name: 工程咨询服务, name_en: Engineering Consulting Services, aliases: [勘察设计]}
+
+  # ---------------- housing ----------------
+  - {id: PROD_CONS_RESIDENTIAL, type: product, kind: service, name: 住宅施工, name_en: Residential Construction, segment: SEG_CONS_HOUSING, aliases: [住宅工程]}
+  - {id: PROD_CONS_PUBLIC_BUILDING, type: product, kind: service, name: 公共建筑施工, name_en: Public Building Construction, segment: SEG_CONS_HOUSING, aliases: [公建工程]}
+  - {id: PROD_CONS_INDUSTRIAL_PLANT, type: product, kind: service, name: 工业厂房施工, name_en: Industrial Plant Construction, segment: SEG_CONS_HOUSING, aliases: [厂房工程]}
+  - {id: PROD_CONS_PREFAB_BUILDING, type: product, kind: service, name: 装配式建筑施工, name_en: Prefabricated Building Construction, segment: SEG_CONS_HOUSING, aliases: [装配式建筑, 建筑工业化]}
+  - {id: PROD_CONS_URBAN_RENEWAL, type: product, kind: service, name: 城市更新工程, name_en: Urban Renewal Construction, segment: SEG_CONS_HOUSING, aliases: [老旧小区改造, 城中村改造工程]}
+
+  # ---------------- infrastructure ----------------
+  - {id: PROD_CONS_HIGHWAY, type: product, kind: service, name: 公路工程, name_en: Highway Construction, segment: SEG_CONS_INFRA, aliases: [高速公路施工]}
+  - {id: PROD_CONS_RAILWAY, type: product, kind: service, name: 铁路工程, name_en: Railway Construction, segment: SEG_CONS_INFRA, aliases: [高铁施工]}
+  - {id: PROD_CONS_URBAN_RAIL, type: product, kind: service, name: 城市轨道交通工程, name_en: Urban Rail Transit Construction, segment: SEG_CONS_INFRA, aliases: [地铁施工]}
+  - {id: PROD_CONS_BRIDGE_TUNNEL, type: product, kind: service, name: 桥梁隧道工程, name_en: Bridge and Tunnel Construction, segment: SEG_CONS_INFRA, aliases: [桥隧工程]}
+  - {id: PROD_CONS_WATER_CONSERVANCY, type: product, kind: service, name: 水利水电工程, name_en: Water Conservancy and Hydropower Construction, segment: SEG_CONS_INFRA, aliases: [水利工程]}
+  - {id: PROD_CONS_PUMPED_STORAGE, type: product, kind: service, name: 抽水蓄能工程, name_en: Pumped Storage Construction, segment: SEG_CONS_INFRA}
+  - {id: PROD_CONS_POWER_EPC, type: product, kind: service, name: 电力工程承包, name_en: Power Project EPC, segment: SEG_CONS_INFRA, aliases: [电网工程]}
+  - {id: PROD_CONS_MUNICIPAL, type: product, kind: service, name: 市政工程, name_en: Municipal Engineering, segment: SEG_CONS_INFRA, aliases: [市政道路, 管网工程, 地下管廊]}
+  - {id: PROD_CONS_PORT_DREDGING, type: product, kind: service, name: 港口航道与疏浚工程, name_en: Port Waterway and Dredging, segment: SEG_CONS_INFRA, aliases: [疏浚, 港口工程]}
+  - {id: PROD_CONS_INFRA_INVESTMENT, type: product, kind: service, name: 基建投资运营, name_en: Infrastructure Investment and Operation, segment: SEG_CONS_INFRA, aliases: [PPP项目, BOT, 特许经营]}
+
+  # ---------------- landscape ----------------
+  - {id: PROD_CONS_LANDSCAPE, type: product, kind: service, name: 园林绿化工程, name_en: Landscaping Construction, segment: SEG_CONS_LANDSCAPE, aliases: [园林工程施工]}
+
+  # ---------------- steel structure ----------------
+  - {id: PROD_CONS_STEEL_STRUCTURE_FAB, type: product, name: 钢结构构件, name_en: Fabricated Steel Structure, segment: SEG_CONS_STEEL_STRUCTURE, aliases: [钢结构制造, 建筑钢结构]}
+  - {id: PROD_CONS_STEEL_BRIDGE_FAB, type: product, name: 钢结构桥梁构件, name_en: Steel Bridge Girders, parent: PROD_CONS_STEEL_STRUCTURE_FAB, segment: SEG_CONS_STEEL_STRUCTURE, aliases: [钢箱梁]}
+  - {id: PROD_CONS_STEEL_STRUCTURE_INSTALL, type: product, kind: service, name: 钢结构工程, name_en: Steel Structure Installation, segment: SEG_CONS_STEEL_STRUCTURE, aliases: [钢结构安装]}
+  - {id: PROD_CONS_STEEL_ENCLOSURE, type: product, kind: service, name: 金属围护系统, name_en: Metal Roofing and Cladding Systems, segment: SEG_CONS_STEEL_STRUCTURE, aliases: [屋面围护, 金属屋面]}
+  - {id: PROD_CONS_BIPV, type: product, kind: service, name: 光伏建筑一体化工程, name_en: BIPV Construction, segment: SEG_CONS_STEEL_STRUCTURE, aliases: [分布式光伏屋面]}
+
+  # ---------------- chemical engineering ----------------
+  - {id: PROD_CONS_CHEM_EPC, type: product, kind: service, name: 化工工程总承包, name_en: Chemical Plant EPC, segment: SEG_CONS_CHEMICAL_ENG, aliases: [化工EPC]}
+  - {id: PROD_CONS_COAL_CHEM_EPC, type: product, kind: service, name: 煤化工工程, name_en: Coal Chemical EPC, parent: PROD_CONS_CHEM_EPC, segment: SEG_CONS_CHEMICAL_ENG}
+  - {id: PROD_CONS_REFINERY_EPC, type: product, kind: service, name: 炼化工程, name_en: Refinery and Petrochemical EPC, parent: PROD_CONS_CHEM_EPC, segment: SEG_CONS_CHEMICAL_ENG, aliases: [石化工程]}
+  - {id: PROD_CONS_PROCESS_LICENSING, type: product, kind: service, name: 工艺包技术许可, name_en: Process Technology Licensing, segment: SEG_CONS_CHEMICAL_ENG, aliases: [工艺包]}
+  - {id: PROD_CONS_INDUSTRIAL_EPC, type: product, kind: service, name: 工业工程总承包, name_en: Industrial Plant EPC, segment: SEG_CONS_CHEMICAL_ENG, aliases: [冶金工程, 建材工程]}
+
+  # ---------------- international ----------------
+  - {id: PROD_CONS_INTL_EPC, type: product, kind: service, name: 国际工程承包, name_en: International EPC Contracting, segment: SEG_CONS_INTERNATIONAL, aliases: [海外工程, 一带一路工程]}
+
+  # ---------------- other specialised ----------------
+  - {id: PROD_CONS_CLEANROOM, type: product, kind: service, name: 洁净室工程, name_en: Cleanroom Engineering, segment: SEG_CONS_OTHER_SPECIALIZED, aliases: [洁净厂房, 高科技厂房工程]}
+  - {id: PROD_CONS_FOUNDATION, type: product, kind: service, name: 地基基础工程, name_en: Foundation Engineering, segment: SEG_CONS_OTHER_SPECIALIZED, aliases: [桩基工程]}
+  - {id: PROD_CONS_MINING_SERVICE, type: product, kind: service, name: 矿山工程服务, name_en: Mining Contracting Services, segment: SEG_CONS_OTHER_SPECIALIZED, aliases: [矿山施工]}
+  - {id: PROD_CONS_MEP, type: product, kind: service, name: 机电安装工程, name_en: MEP Installation, segment: SEG_CONS_OTHER_SPECIALIZED, aliases: [机电安装]}
+  - {id: PROD_CONS_SMART_BUILDING, type: product, kind: service, name: 建筑智能化工程, name_en: Intelligent Building Systems, segment: SEG_CONS_OTHER_SPECIALIZED, aliases: [智能化工程]}
+  - {id: PROD_CONS_DATA_CENTER_BUILD, type: product, kind: service, name: 数据中心建设工程, name_en: Data Center Construction, segment: SEG_CONS_OTHER_SPECIALIZED, aliases: [IDC机房建设]}
+  - {id: PROD_CONS_FIRE_PROTECTION, type: product, kind: service, name: 消防工程, name_en: Fire Protection Engineering, segment: SEG_CONS_OTHER_SPECIALIZED}
+
+  # ---------------- decoration ----------------
+  - {id: PROD_CONS_PUBLIC_DECORATION, type: product, kind: service, name: 公共建筑装饰, name_en: Commercial and Public Fit-Out, segment: SEG_CONS_DECORATION, aliases: [公装, 酒店装饰]}
+  - {id: PROD_CONS_RESIDENTIAL_DECORATION, type: product, kind: service, name: 住宅精装修, name_en: Residential Fit-Out, segment: SEG_CONS_DECORATION, aliases: [住宅装饰, 家装]}
+  - {id: PROD_CONS_CURTAIN_WALL, type: product, kind: service, name: 幕墙工程, name_en: Curtain Wall Engineering, segment: SEG_CONS_DECORATION, aliases: [建筑幕墙]}
+  - {id: PROD_CONS_EXHIBITION, type: product, kind: service, name: 展陈工程, name_en: Exhibition Fit-Out, segment: SEG_CONS_DECORATION, aliases: [展览展示工程]}
+
+  # ---------------- consulting ----------------
+  - {id: PROD_CONS_SURVEY, type: product, kind: service, name: 工程勘察, name_en: Geotechnical Survey, segment: SEG_CONS_CONSULTING, aliases: [岩土勘察, 测绘]}
+  - {id: PROD_CONS_DESIGN, type: product, kind: service, name: 工程设计, name_en: Engineering Design, segment: SEG_CONS_CONSULTING, aliases: [建筑设计, 设计院]}
+  - {id: PROD_CONS_PLANNING, type: product, kind: service, name: 规划设计, name_en: Urban Planning and Design, segment: SEG_CONS_CONSULTING, aliases: [城市规划]}
+  - {id: PROD_CONS_SUPERVISION, type: product, kind: service, name: 工程监理, name_en: Construction Supervision, segment: SEG_CONS_CONSULTING}
+  - {id: PROD_CONS_COST_CONSULTING, type: product, kind: service, name: 造价咨询, name_en: Cost Consulting, segment: SEG_CONS_CONSULTING, aliases: [工程造价]}
+  - {id: PROD_CONS_WHOLE_PROCESS, type: product, kind: service, name: 全过程工程咨询, name_en: Whole-Process Engineering Consulting, segment: SEG_CONS_CONSULTING, aliases: [项目管理, 代建管理]}
+  - {id: PROD_CONS_DESIGN_EPC, type: product, kind: service, name: 设计牵头总承包, name_en: Design-Led EPC, segment: SEG_CONS_CONSULTING, aliases: [工程总承包EPC]}
+
+edges:
+  - [SEG_CONS_LANDSCAPE, part_of, SEG_CONS_INFRA]
+  - [SEG_CONS_STEEL_STRUCTURE, part_of, SEG_CONS_SPECIALIZED]
+  - [SEG_CONS_CHEMICAL_ENG, part_of, SEG_CONS_SPECIALIZED]
+  - [SEG_CONS_INTERNATIONAL, part_of, SEG_CONS_SPECIALIZED]
+  - [SEG_CONS_OTHER_SPECIALIZED, part_of, SEG_CONS_SPECIALIZED]
+  - [SEG_CONS_HOUSING, serves, MKT_REAL_ESTATE]
+  - [SEG_CONS_HOUSING, serves, MKT_GOVERNMENT]
+  - [SEG_CONS_INFRA, serves, MKT_CONSTRUCTION]
+  - [SEG_CONS_INFRA, serves, MKT_GOVERNMENT]
+  - [SEG_CONS_INFRA, serves, MKT_RAIL]
+  - [SEG_CONS_LANDSCAPE, serves, MKT_ENVIRONMENTAL]
+  - [SEG_CONS_STEEL_STRUCTURE, serves, MKT_CONSTRUCTION]
+  - [SEG_CONS_CHEMICAL_ENG, serves, MKT_CHEMICAL_INDUSTRY]
+  - [SEG_CONS_INTERNATIONAL, serves, MKT_CONSTRUCTION]
+  - [SEG_CONS_OTHER_SPECIALIZED, serves, MKT_SEMI_FAB]
+  - [SEG_CONS_OTHER_SPECIALIZED, serves, MKT_MINING]
+  - [SEG_CONS_DECORATION, serves, MKT_REAL_ESTATE]
+  - [SEG_CONS_CONSULTING, serves, MKT_CONSTRUCTION]
+  - [SEG_CONS_CONSULTING, serves, MKT_GOVERNMENT]
+
+  # design / consulting precede construction
+  - [PROD_CONS_SURVEY, upstream_of, PROD_CONS_DESIGN]
+  - [PROD_CONS_PLANNING, upstream_of, PROD_CONS_DESIGN]
+  - [PROD_CONS_DESIGN, upstream_of, PROD_CONS_RESIDENTIAL]
+  - [PROD_CONS_DESIGN, upstream_of, PROD_CONS_PUBLIC_BUILDING]
+  - [PROD_CONS_DESIGN, upstream_of, PROD_CONS_HIGHWAY]
+  - [PROD_CONS_DESIGN, upstream_of, PROD_CONS_DESIGN_EPC]
+  - [PROD_CONS_PROCESS_LICENSING, upstream_of, PROD_CONS_CHEM_EPC]
+  - [PROD_CONS_SUPERVISION, used_in, MKT_CONSTRUCTION]
+  - [PROD_CONS_COST_CONSULTING, used_in, MKT_CONSTRUCTION]
+  - [PROD_CONS_WHOLE_PROCESS, used_in, MKT_GOVERNMENT]
+  - [PROD_CONS_DESIGN, used_in, MKT_CONSTRUCTION]
+
+  # housing
+  - [PROD_CONS_FOUNDATION, upstream_of, PROD_CONS_RESIDENTIAL]
+  - [PROD_CONS_FOUNDATION, upstream_of, PROD_CONS_PUBLIC_BUILDING]
+  - [PROD_CONS_RESIDENTIAL, upstream_of, PROD_CONS_RESIDENTIAL_DECORATION]
+  - [PROD_CONS_PUBLIC_BUILDING, upstream_of, PROD_CONS_PUBLIC_DECORATION]
+  - [PROD_CONS_PUBLIC_BUILDING, upstream_of, PROD_CONS_CURTAIN_WALL]
+  - [PROD_BM_PRECAST_COMPONENT, upstream_of, PROD_CONS_PREFAB_BUILDING]
+  - [PROD_CONS_STEEL_STRUCTURE_FAB, upstream_of, PROD_CONS_PREFAB_BUILDING]
+  - [PROD_BM_RMC, upstream_of, PROD_CONS_RESIDENTIAL]
+  - [PROD_STL_REBAR, upstream_of, PROD_CONS_RESIDENTIAL]
+  - [PROD_CONS_RESIDENTIAL, uses_material, MAT_CEMENT]
+  - [PROD_CONS_RESIDENTIAL, uses_material, MAT_STEEL]
+  - [PROD_CONS_RESIDENTIAL, used_in, MKT_REAL_ESTATE]
+  - [PROD_CONS_PREFAB_BUILDING, used_in, MKT_REAL_ESTATE]
+  - [PROD_CONS_PUBLIC_BUILDING, used_in, MKT_GOVERNMENT]
+  - [PROD_CONS_PUBLIC_BUILDING, used_in, MKT_HEALTHCARE]
+  - [PROD_CONS_INDUSTRIAL_PLANT, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CONS_INDUSTRIAL_PLANT, used_in, MKT_EV]
+  - [PROD_CONS_URBAN_RENEWAL, used_in, MKT_REAL_ESTATE]
+  - [PROD_CONS_URBAN_RENEWAL, used_in, MKT_GOVERNMENT]
+
+  # infrastructure
+  - [PROD_STL_RAIL, upstream_of, PROD_CONS_RAILWAY]
+  - [PROD_BM_RAIL_SLAB, upstream_of, PROD_CONS_RAILWAY]
+  - [PROD_BM_SHIELD_SEGMENT, upstream_of, PROD_CONS_URBAN_RAIL]
+  - [PROD_BM_OPC, upstream_of, PROD_CONS_HIGHWAY]
+  - [PROD_STL_PC_STRAND, upstream_of, PROD_CONS_BRIDGE_TUNNEL]
+  - [PROD_BM_CONCRETE_PIPE, upstream_of, PROD_CONS_WATER_CONSERVANCY]
+  - [PROD_BM_PE_PIPE, upstream_of, PROD_CONS_MUNICIPAL]
+  - [PROD_STL_DUCTILE_IRON_PIPE, upstream_of, PROD_CONS_MUNICIPAL]
+  - [PROD_CONS_HIGHWAY, uses_material, MAT_CEMENT]
+  - [PROD_CONS_BRIDGE_TUNNEL, uses_material, MAT_STEEL]
+  - [PROD_CONS_HIGHWAY, upstream_of, PROD_CONS_INFRA_INVESTMENT]
+  - [PROD_CONS_HIGHWAY, used_in, MKT_CONSTRUCTION]
+  - [PROD_CONS_HIGHWAY, used_in, MKT_LOGISTICS]
+  - [PROD_CONS_RAILWAY, used_in, MKT_RAIL]
+  - [PROD_CONS_URBAN_RAIL, used_in, MKT_RAIL]
+  - [PROD_CONS_BRIDGE_TUNNEL, used_in, MKT_CONSTRUCTION]
+  - [PROD_CONS_WATER_CONSERVANCY, used_in, MKT_HYDRO_POWER]
+  - [PROD_CONS_WATER_CONSERVANCY, used_in, MKT_AGRICULTURE]
+  - [PROD_CONS_PUMPED_STORAGE, used_in, MKT_ENERGY_STORAGE]
+  - [PROD_CONS_POWER_EPC, used_in, MKT_SOLAR]
+  - [PROD_CONS_POWER_EPC, used_in, MKT_WIND]
+  - [PROD_CONS_POWER_EPC, used_in, MKT_POWER_GRID]
+  - [PROD_CONS_POWER_EPC, used_in, MKT_THERMAL_POWER]
+  - [PROD_CONS_POWER_EPC, used_in, MKT_NUCLEAR_POWER]
+  - [PROD_CONS_MUNICIPAL, used_in, MKT_GOVERNMENT]
+  - [PROD_CONS_PORT_DREDGING, used_in, MKT_LOGISTICS]
+  - [PROD_CONS_INFRA_INVESTMENT, used_in, MKT_GOVERNMENT]
+
+  # landscape
+  - [PROD_AGRI_SEEDLINGS, upstream_of, PROD_CONS_LANDSCAPE]
+  - [PROD_CONS_LANDSCAPE, used_in, MKT_GOVERNMENT]
+  - [PROD_CONS_LANDSCAPE, used_in, MKT_REAL_ESTATE]
+  - [PROD_ENV_ECO_RESTORATION, used_in, MKT_ENVIRONMENTAL]
+
+  # steel structure
+  - [PROD_STL_PLATE, upstream_of, PROD_CONS_STEEL_STRUCTURE_FAB]
+  - [PROD_STL_SECTION, upstream_of, PROD_CONS_STEEL_STRUCTURE_FAB]
+  - [PROD_STL_BRIDGE_PLATE, upstream_of, PROD_CONS_STEEL_BRIDGE_FAB]
+  - [PROD_CONS_STEEL_STRUCTURE_FAB, uses_material, MAT_STEEL]
+  - [PROD_CONS_STEEL_STRUCTURE_FAB, upstream_of, PROD_CONS_STEEL_STRUCTURE_INSTALL]
+  - [PROD_STL_COLOR_COATED, upstream_of, PROD_CONS_STEEL_ENCLOSURE]
+  - [PROD_CONS_STEEL_ENCLOSURE, upstream_of, PROD_CONS_BIPV]
+  - [PROD_CONS_STEEL_STRUCTURE_INSTALL, used_in, MKT_CONSTRUCTION]
+  - [PROD_CONS_STEEL_STRUCTURE_FAB, used_in, MKT_CONSTRUCTION]
+  - [PROD_CONS_STEEL_BRIDGE_FAB, used_in, MKT_CONSTRUCTION]
+  - [PROD_CONS_STEEL_ENCLOSURE, used_in, MKT_CONSTRUCTION]
+  - [PROD_CONS_BIPV, used_in, MKT_SOLAR]
+
+  # chemical / industrial / international
+  - [PROD_CONS_CHEM_EPC, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CONS_COAL_CHEM_EPC, used_in, MKT_CHEMICAL_INDUSTRY]
+  - [PROD_CONS_REFINERY_EPC, used_in, MKT_OIL_GAS]
+  - [PROD_CONS_INDUSTRIAL_EPC, used_in, MKT_STEEL_INDUSTRY]
+  - [PROD_CONS_INDUSTRIAL_EPC, used_in, MKT_MINING]
+  - [PROD_CONS_INTL_EPC, used_in, MKT_CONSTRUCTION]
+  - [PROD_CONS_INTL_EPC, used_in, MKT_POWER_GRID]
+
+  # other specialised
+  - [PROD_CONS_CLEANROOM, used_in, MKT_SEMI_FAB]
+  - [PROD_CONS_CLEANROOM, used_in, MKT_HEALTHCARE]
+  - [PROD_CONS_CLEANROOM, used_in, MKT_CONSUMER_ELECTRONICS]
+  - [PROD_CONS_FOUNDATION, used_in, MKT_CONSTRUCTION]
+  - [PROD_CONS_MINING_SERVICE, used_in, MKT_MINING]
+  - [PROD_CONS_MEP, used_in, MKT_CONSTRUCTION]
+  - [PROD_CONS_SMART_BUILDING, used_in, MKT_REAL_ESTATE]
+  - [PROD_CONS_DATA_CENTER_BUILD, used_in, MKT_DATA_CENTER]
+  - [PROD_CONS_DATA_CENTER_BUILD, used_in, MKT_AI_DATA_CENTER]
+  - [PROD_CONS_FIRE_PROTECTION, used_in, MKT_CONSTRUCTION]
+  - [TECH_LIQUID_COOLING, enables, PROD_CONS_DATA_CENTER_BUILD]
+  - [TECH_IOT, enables, PROD_CONS_SMART_BUILDING]
+
+  # decoration
+  - [PROD_BM_LOW_E_GLASS, upstream_of, PROD_CONS_CURTAIN_WALL]
+  - [PROD_BM_INSULATING_GLASS, upstream_of, PROD_CONS_CURTAIN_WALL]
+  - [PROD_NFM_ARCH_ALU_PROFILE, upstream_of, PROD_CONS_CURTAIN_WALL]
+  - [PROD_BM_GYPSUM_BOARD, upstream_of, PROD_CONS_PUBLIC_DECORATION]
+  - [PROD_LIGHT_CERAMIC_TILE, upstream_of, PROD_CONS_RESIDENTIAL_DECORATION]
+  - [PROD_BM_INTERIOR_PAINT, upstream_of, PROD_CONS_RESIDENTIAL_DECORATION]
+  - [PROD_CONS_CURTAIN_WALL, used_in, MKT_REAL_ESTATE]
+  - [PROD_CONS_PUBLIC_DECORATION, used_in, MKT_REAL_ESTATE]
+  - [PROD_CONS_PUBLIC_DECORATION, used_in, MKT_GOVERNMENT]
+  - [PROD_CONS_RESIDENTIAL_DECORATION, used_in, MKT_REAL_ESTATE]
+  - [PROD_CONS_RESIDENTIAL_DECORATION, used_in, MKT_RETAIL_CONSUMER]
+  - [PROD_CONS_EXHIBITION, used_in, MKT_MEDIA_ENTERTAINMENT]
+  # --- cross-sector bridges (merge 2026-11-07) ---
+  - [PROD_CONS_DATA_CENTER_BUILD, upstream_of, PROD_COMP_IDC_SERVICE]
+
+sw_l3_map:
+  "620101": [SEG_CONS_HOUSING]
+  "620201": [SEG_CONS_DECORATION]
+  "620306": [SEG_CONS_INFRA]
+  "620307": [SEG_CONS_LANDSCAPE]
+  "620401": [SEG_CONS_STEEL_STRUCTURE]
+  "620402": [SEG_CONS_CHEMICAL_ENG]
+  "620403": [SEG_CONS_INTERNATIONAL]
+  "620404": [SEG_CONS_OTHER_SPECIALIZED]
+  "620601": [SEG_CONS_CONSULTING]

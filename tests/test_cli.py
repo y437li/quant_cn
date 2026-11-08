@@ -124,3 +124,20 @@ def test_tc_qcc_009_evaluate_empty(config: Config) -> None:
     assert QuantCnCli(config, console).run(["evaluate", "--no-progress"]) == 0
     assert "0 factors" in console.export_text()
     assert not (config.lake.root / "derived" / "reports").exists()
+
+
+# TC-QCC-010
+def test_tc_qcc_010_download_docs_dry_run(config: Config) -> None:
+    folder = config.lake.root / "curated" / "documents" / "em_industry_reports" / "year=2026"
+    folder.mkdir(parents=True)
+    rows = {"info_code": ["A1", "A2"], "em_industry_code": ["101", "102"], "title": ["x", "y"],
+            "publish_date": ["20261031", "20261101"]}  # fmt: skip
+    pd.DataFrame(rows).to_parquet(folder / "part-0.parquet")
+    catalog = LakeCatalog(config.lake.root, config.datasets)
+    catalog.refresh_views()
+    catalog.close()
+    console = Console(record=True, width=200)
+    argv = ["download-docs", "--sources", "em_industry", "--dry-run"]
+    assert QuantCnCli(config, console).run(argv) == 0
+    text = console.export_text()
+    assert "em_industry: 2 to download" in text and "industry_report: 2" in text

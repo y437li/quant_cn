@@ -48,9 +48,12 @@ class ConfigError(QuantCnError):
         core.Config.get_dataset            -- unknown dataset name
         data_loading.TushareClient         -- missing token
         data_loading.FetcherFactory.build  -- unknown sweep kind
+        industry_graph.ProductTaxonomy     -- missing folder, bad file, duplicate node id
         pipeline.DownloadPipeline.run      -- unknown dataset requested
         pipeline.CuratePipeline            -- injected type or call
         factor.FactorFactory               -- injected type or call
+        data_loading.DocumentDownloader  -- unknown document source
+        data_loading.DeepSeekClient      -- API key missing
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError
@@ -98,6 +101,17 @@ class DataSourceError(QuantCnError):
         core.PermissionDeniedError        -- subclass
         data_loading.AkshareClient        -- injected type or call
         data_loading.BaostockClient       -- injected type or call
+        data_loading.CninfoClient         -- missing date range
+        data_loading.EastmoneyReportClient -- unknown report kind
+        data_loading.DocumentDownloader  -- failed download recorded
+        data_loading.RequestPacer        -- failure after retries
+        industry_graph.PdfTextExtractor   -- unreadable or non-PDF file
+        industry_graph.ApplicationExtractor -- reply does not fit the shape
+        industry_graph.ValuationExtractor  -- reply does not fit the shape
+        industry_graph.QuarterlyNoteExtractor  -- reply does not fit the shape
+        industry_graph.BrokerViewSynthesizer  -- unknown scope, reply does not fit the shape
+        industry_graph.BusinessModeExtractor  -- reply does not fit the shape
+        industry_graph.PricingAdjudicator  -- reply does not fit the shape, label not allowed
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError
@@ -158,6 +172,9 @@ class LakeError(QuantCnError):
         lake.RebuildAudit          -- injected type or call
         lake.LakeReader            -- injected type or call
         lake.TickerAliasMap        -- injected type or call
+        data_loading.DocumentDownloader  -- metadata missing, manifest write
+        lake.DocumentViews               -- view creation
+        cli.DocumentCommands             -- catalog busy when refreshing document views
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError

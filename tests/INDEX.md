@@ -10,6 +10,7 @@ Mirrors `src/quant_cn`; one `test_<module>.py` per module, one test per TC ID (C
 | [`core/`](core/INDEX.md) | tests for `quant_cn.core` |
 | [`data_loading/`](data_loading/INDEX.md) | tests for `quant_cn.data_loading` |
 | [`factor/`](factor/INDEX.md) | TODO purpose |
+| [`industry_graph/`](industry_graph/INDEX.md) | tests for `quant_cn.industry_graph` |
 | [`lake/`](lake/INDEX.md) | tests for `quant_cn.lake` |
 | [`pipeline/`](pipeline/INDEX.md) | tests for `quant_cn.pipeline` |
 | [`portfolio/`](portfolio/INDEX.md) | tests for `quant_cn.portfolio` |

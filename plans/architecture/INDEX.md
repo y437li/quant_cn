@@ -5,6 +5,7 @@ Design documents: what is built and why it is shaped this way. Each names the pl
 ## Files
 | File | Purpose | Contains |
 |---|---|---|
+| `BUSINESS_MODEL_DESIGN.md` | v0.3 (D-112): how each company makes money, lifecycle stage, cycle clock, durability, moat, accounting quality, governance, competition, sensitivity, PIT and validation rules — 12 archetypes with revenue-driver formulas, CompanyCard.business_model blocks (segments, driver tree, cost structure, pricing, customers, supply, capital, cyclicality, growth, integration), sources and build order | §1–§5; implemented by plan 12 ph4/ph6 and plan 13 |
 | `CALCULATION_DESIGN.md` | v1.1 (D-032, D-046–D-052): calculation package, CBOE VIX method mapped to Tushare option/SHIBOR data, deviations and quality flags, datasets to add, tests | §1–§6; implemented by plan 03 |
 | `DATA_LOADING_DESIGN.md` | v2.1 (§3c multi-source, paging rule D-076 step 100, recent-empty rule D-078): local env config keeping the lake outside the repo, fetcher/pipeline classes and run behaviour, flow monitoring | §1–§5; implemented by plan 01 ph1–4 |
 | `ETF_PAIRS_DESIGN.md` | v1.0 (D-056): long/short ETF pairs research track: shortable legs in A-shares, pair families, cointegration method, costs, datasets, promotion criteria | §1–§7 |
