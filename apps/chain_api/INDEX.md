@@ -13,4 +13,4 @@ Go module `quantcn/chainapi`: the read-only API described in `openapi.yaml`. Bui
 | File | Purpose | Contains |
 |---|---|---|
 | `go.mod` | module definition (no third-party dependencies in the demo) |  |
-| `openapi.yaml` | the API contract: every handler and the TS client follow it |  |
+| `openapi.yaml` | the API contract: every handler and the TS client follow it (incl. `GET /api/watchlist`, schemas `Watchlist`, `WatchlistEntry`) |  |

@@ -60,6 +60,16 @@ paths:
       responses:
         "200": { description: view, content: { application/json: { schema: { type: object } } } }
         "404": { $ref: "#/components/responses/Error" }
+  /api/watchlist:
+    get:
+      summary: The 观察账本 watchlist (plan 15 phase 7) as written by the Python WatchlistBuilder
+      description: |
+        Read from watchlist.json on every request. Every number (gap to buy, PE and yield at the buy price,
+        status) is computed in Python; the API and front end only display it. No file gives the empty
+        document {as_of: "", near_pct: 0.1, entries: [], missing: []}.
+      responses:
+        "200": { description: watchlist, content: { application/json: { schema: { $ref: "#/components/schemas/Watchlist" } } } }
+        "500": { $ref: "#/components/responses/Error" }
 components:
   responses:
     Error:
@@ -120,3 +130,40 @@ components:
       properties:
         nodes: { type: array, items: { type: object, properties: { code: { type: string }, name: { type: string }, in_sector: { type: boolean } } } }
         edges: { type: array, items: { type: object, properties: { from: { type: string }, to: { type: string }, kind: { type: string }, label: { type: string } } } }
+    Watchlist:
+      type: object
+      required: [as_of, near_pct, entries, missing]
+      properties:
+        as_of: { type: string, description: "YYYYMMDD of the latest price; empty when there is no file" }
+        near_pct: { type: number, description: "gap (fraction) within which a stock counts as near", example: 0.1 }
+        entries: { type: array, items: { $ref: "#/components/schemas/WatchlistEntry" } }
+        missing: { type: array, items: { type: string }, description: codes in the YAML with no price in the lake }
+    WatchlistEntry:
+      type: object
+      required: [code, name, buy_low, buy_high, price, gap_to_buy, status, weekly]
+      properties:
+        code: { type: string, example: 002507.SZ }
+        name: { type: string }
+        buy_low: { type: number }
+        buy_high: { type: number, description: equals buy_low for a single buy price }
+        added: { type: string, description: YYYYMMDD }
+        thesis: { type: string }
+        watch: { type: string }
+        price: { type: number, description: unadjusted close }
+        price_date: { type: string, description: YYYYMMDD }
+        pe_ttm: { type: number, nullable: true }
+        pb: { type: number, nullable: true }
+        div_yield: { type: number, nullable: true, description: fraction }
+        dps_ttm: { type: number, nullable: true }
+        eps_year: { type: string, nullable: true, example: "2026" }
+        eps_fy: { type: number, nullable: true, description: broker median EPS for eps_year }
+        eps_brokers: { type: integer, nullable: true }
+        target_low: { type: number, nullable: true }
+        target_high: { type: number, nullable: true }
+        low_52w: { type: number, nullable: true }
+        high_52w: { type: number, nullable: true }
+        gap_to_buy: { type: number, maximum: 0, description: "fraction; 0 = inside the buy zone" }
+        pe_at_buy: { type: number, nullable: true }
+        yield_at_buy: { type: number, nullable: true, description: fraction }
+        status: { type: string, enum: [in, near, far] }
+        weekly: { type: array, items: { type: object, required: [date, close], properties: { date: { type: string }, close: { type: number } } } }

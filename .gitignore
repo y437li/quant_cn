@@ -70,3 +70,6 @@ apps/chain_api/web/dist/
 research_space/prototypes/chain_view/co/*.json
 research_space/prototypes/chain_view/view_data*.json
 research_space/prototypes/chain_view/views.json
+
+# personal watchlist output for the chain app (D-120)
+research_space/prototypes/chain_view/watchlist.json

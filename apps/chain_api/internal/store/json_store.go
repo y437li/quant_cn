@@ -9,7 +9,8 @@ import (
 	"sync"
 )
 
-// JSONStore serves the chain_view builder output (view_data.json, co/<l1>.json, views.json).
+// JSONStore serves the chain_view builder output (view_data.json, co/<l1>.json, views.json) and the
+// watchlist builder output (watchlist.json, read per request: watchlist.go).
 //
 // Purpose: the demo store of plan 15 (phases 3–4), loaded once at start; per-sector company
 // detail files are read on first use and cached.

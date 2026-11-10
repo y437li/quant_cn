@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"quantcn/chainapi/internal/store"
@@ -102,4 +104,45 @@ func TestTCAPI006Static(t *testing.T) {
 	if rec.Code != 405 {
 		t.Fatal("POST must be 405")
 	}
+}
+
+// TC-API-007: /api/watchlist serves the fixture; an absent file gives the empty document; a
+// malformed file gives 500.
+func TestTCAPI007Watchlist(t *testing.T) {
+	code, obj, _ := get(t, newServer(t), "/api/watchlist")
+	entries, _ := obj["entries"].([]any)
+	if code != 200 || obj["as_of"] != "20261106" || len(entries) != 2 {
+		t.Fatalf("present: %d %v", code, obj["as_of"])
+	}
+	if e := entries[1].(map[string]any); e["name"] != "盐津铺子" || e["gap_to_buy"] != -0.3941 || e["status"] != "far" {
+		t.Fatalf("entry: %v", e)
+	}
+	for wl, want := range map[string]int{"": 200, "{bad": 500} {
+		s, err := store.NewJSONStore(dataDir(t, wl))
+		if err != nil {
+			t.Fatal(err)
+		}
+		code, obj, _ := get(t, NewServer(s, nil), "/api/watchlist")
+		if code != want {
+			t.Fatalf("%q: %d %v", wl, code, obj)
+		}
+		if want == 200 && (obj["as_of"] != "" || obj["near_pct"] != 0.1 || len(obj["entries"].([]any)) != 0 || obj["missing"] == nil) {
+			t.Fatalf("empty document: %v", obj)
+		}
+	}
+}
+
+// dataDir copies the fixture view_data.json into a temporary folder, plus watchlist.json when wl is set.
+func dataDir(t *testing.T, wl string) string {
+	t.Helper()
+	dir := t.TempDir()
+	b, err := os.ReadFile("../store/testdata/view_data.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	_ = os.WriteFile(filepath.Join(dir, "view_data.json"), b, 0o600)
+	if wl != "" {
+		_ = os.WriteFile(filepath.Join(dir, "watchlist.json"), []byte(wl), 0o600)
+	}
+	return dir
 }

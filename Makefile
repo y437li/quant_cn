@@ -83,7 +83,13 @@ NODE_BIN ?= /opt/homebrew/opt/node@22/bin
 WEB_BUILD := $(HOME)/.builds/chain_web
 APP_BIN := $(HOME)/.builds/chainapi
 APP_DATA ?= research_space/prototypes/chain_view
-.PHONY: app app-api app-web app-run app-check app-smoke
+.PHONY: app app-api app-web app-run app-check app-smoke watchlist
+
+WATCHLIST_DATASETS := daily,daily_basic,report_rc
+watchlist:        ## refresh the last 14 days of prices and forecasts, then write $(APP_DATA)/watchlist.json (D-120)
+	$(CLI) download --datasets $(WATCHLIST_DATASETS) --start $$(date -v-14d +%Y%m%d)
+	$(CLI) compact --datasets $(WATCHLIST_DATASETS)
+	$(CLI) watchlist --out $(APP_DATA)
 
 app-api:          ## build the Go API binary into ~/.builds (off the exFAT volume)
 	cd apps/chain_api && $(GO) vet ./... && $(GO) build -buildvcs=false -o $(APP_BIN) ./cmd/chainapi
