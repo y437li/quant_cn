@@ -57,6 +57,7 @@ class QuoteChecker:
         industry_graph.ValuationExtractor    -- checks methods, target price, assumptions
         industry_graph.QuarterlyNoteExtractor  -- checks quarterly-note items
         industry_graph.BusinessModeExtractor  -- checks mode claims and price actions
+        industry_graph.MoatExtractor  -- checks moat claims
 
     Test cases:
         TC-QC-001  quote on the claimed page kept; on another page kept with that page; absent

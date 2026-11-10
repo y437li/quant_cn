@@ -2,7 +2,7 @@
 
 Industry-chain view (plan 12 phase 6), market-wide since 2026-11-07: a chain network (dagre, upstream → downstream) and a tabbed company dossier (overview, products and services, customers, suppliers, peers, chain, evidence). Published as a private artifact: https://claude.ai/artifact/5LYDCKATYJnPnsbY2Rvu3z
 
-Generated, git-ignored (rebuild with `build_market_view.py`): `view_data.json`, `views.json`, `co/*.json`; the 10-company prototype data `view_data_proto10.json`.
+Generated, git-ignored (rebuild with `build_market_view.py`): `view_data.json`, `views.json`, `co/*.json`; the 10-company prototype data `view_data_proto10.json`. `watchlist.json` (git-ignored, personal targets) is written by `make watchlist` (D-120).
 
 ## Folders
 | Folder | Purpose |

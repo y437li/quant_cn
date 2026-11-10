@@ -152,3 +152,52 @@ svg.dupont.big .yr { font-size: 120px; }
 .dp-chip .x { border: 0; background: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 0 4px; }
 @media (max-width: 860px) { .dupont-page { grid-template-columns: minmax(0, 1fr); } }
 .dp-tip { position: absolute; z-index: 10; pointer-events: none; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 9px; box-shadow: 0 6px 18px rgba(0,0,0,.18); font-size: 12px; min-width: 150px; }
+.dp-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.dp-head h3 { margin: 2px 0; }
+.chip:disabled { opacity: .45; cursor: default; }
+/* Watchlist page (观察账本, plan 15 phase 7) */
+.chip .badge { display: inline-block; min-width: 16px; margin-left: 5px; padding: 0 4px; border-radius: 999px; background: var(--c3); color: #fff; font-size: 11px; line-height: 16px; text-align: center; font-family: var(--mono); }
+.wl-page { display: grid; gap: 12px; align-content: start; min-height: 0; overflow: auto; }
+.wl-head h2 { font-family: var(--display); font-weight: 600; font-size: 20px; margin: 0 0 4px; }
+.wl-head p { margin: 0; color: var(--muted); }
+.wl-head b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.wl-cards { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+.wl-card, .wl-section, .wl-empty { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.wl-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+.wl-name { font-size: 16px; font-weight: 600; }
+.wl-code { color: var(--muted); font-size: 12px; margin-left: 6px; font-family: var(--mono); }
+.wl-pill { font-size: 12px; padding: 1px 8px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.wl-pill.in, .wl-gap.in { color: var(--c2); }
+.wl-pill.near, .wl-gap.near { color: var(--c3); }
+.wl-pill.far { color: var(--muted); }
+.wl-big { font-family: var(--mono); font-size: 24px; font-variant-numeric: tabular-nums; }
+.wl-gap { font-variant-numeric: tabular-nums; }
+.wl-kv { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.wl-kv div { display: grid; gap: 2px; min-width: 0; }
+.wl-k { color: var(--muted); font-size: 11px; }
+.wl-v { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 13px; }
+.wl-range, .wl-chart { position: relative; min-width: 0; overflow: hidden; }
+.wl-range svg, .wl-chart svg { display: block; }
+.wl-52w { stroke: var(--prior); stroke-width: 4; stroke-linecap: round; }
+.wl-zone { fill: var(--c2); fill-opacity: .35; }
+.wl-target { fill: none; stroke: var(--muted); stroke-dasharray: 3 3; }
+.wl-dot { fill: var(--c1); stroke: var(--panel); stroke-width: 2; }
+.wl-lbl, .wl-ax { font-size: 11px; fill: var(--muted); font-family: var(--body); }
+.wl-ax { font-family: var(--mono); font-size: 10px; }
+.wl-grid { stroke: var(--soft); }
+.wl-band { fill: var(--c2); fill-opacity: .22; }
+.wl-band-top { stroke: var(--c2); stroke-dasharray: 4 3; }
+.wl-line { fill: none; stroke: var(--c1); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.wl-tip { position: absolute; pointer-events: none; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 6px 18px rgba(0,0,0,.18); padding: 4px 8px; font-size: 12px; white-space: nowrap; font-family: var(--mono); }
+.wl-tip span { display: block; color: var(--muted); font-family: var(--body); }
+.wl-card .note { margin: 0; }
+.wl-card .note strong { color: var(--ink); font-weight: 500; }
+.wl-section h3 { margin: 0; font-size: 14px; font-weight: 600; }
+.wl-table th, .wl-table td { white-space: nowrap; }
+.wl-empty p { margin: 0; line-height: 1.7; }
+.wl-empty code, .wl-notes code { font-family: var(--mono); background: var(--soft); padding: 0 4px; border-radius: 3px; }
+.wl-notes { font-size: 12px; color: var(--muted); }
+.wl-notes summary { cursor: pointer; color: var(--ink); }
+.wl-notes dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 8px 0 0; }
+.wl-notes dt { color: var(--ink); } .wl-notes dd { margin: 0; }
+@media (max-width: 520px) { .wl-kv { grid-template-columns: repeat(2, minmax(0, 1fr)); } .wl-notes dl { grid-template-columns: 1fr; } }

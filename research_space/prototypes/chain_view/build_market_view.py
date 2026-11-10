@@ -270,11 +270,11 @@ def latest(table, cols):
 
 
 cf = latest("cashflow", "c_pay_acq_const_fiolta, depr_fa_coga_dpba, n_cashflow_act")
-bs = latest("balancesheet", "cip, fix_assets")
+bs = latest("balancesheet", "cip, fix_assets, accounts_receiv, contract_liab, adv_receipts")
 inc = latest("income", "revenue, oper_cost")
 roic = defaultdict(dict)
 for ts, end, v in duckdb.sql(f"""SELECT ts_code, end_date, roic FROM read_parquet('{FUND}/fina_indicator/**/*.parquet')
-        WHERE end_date LIKE '%1231' AND end_date >= '20210101'
+        WHERE end_date LIKE '%1231' AND end_date >= '20190101'
         QUALIFY row_number() OVER (PARTITION BY ts_code, end_date ORDER BY ann_date DESC) = 1""").fetchall():
     if v is not None:
         roic[ts][end[:4]] = v
@@ -819,6 +819,175 @@ for line in (adj_file.read_text().splitlines() if adj_file.exists() else []):  #
 from collections import Counter
 print("pricing power:", Counter(v["label"] for v in pricing_power.values()), "archetype check:", Counter(v["status"] for v in arche_checks.values()))
 
+# --- moat (BUSINESS_MODEL_DESIGN §4.4): claimed (DeepSeek, 核心竞争力) vs proven (ROIC, margins, share) ---------
+SUBTYPES = [("franchise", re.compile(r"特许经营|经营权|收费权|专营权|独家经营")),
+            ("license", re.compile(r"牌照|资质|许可证|准入|批文|注册证|认证")),
+            ("patent", re.compile(r"专利|发明|知识产权|核心技术|技术壁垒|自主研发")),
+            ("brand", re.compile(r"品牌|商标|老字号|驰名|知名度"))]
+
+
+def claim_subtype(c):
+    """Finer label of a claim from its own words (no LLM): franchise / license / patent / brand, else the type."""
+    text = f"{c.get('claim', '')} {c.get('evidence', {}).get('quote', '')}"
+    return next((k for k, rx in SUBTYPES if rx.search(text)), c["type"])
+
+
+def rd_ratio(ts):
+    f = fin_table.get(ts, {}).get("2025", {})
+    return f.get("rd_exp_r")
+
+
+def chain_position(ts):
+    """Bargaining position in the chain (user, 2026-11-09: "产业链定价权"): advances from customers, receivables, and
+    dependence on the top-5 customers / suppliers. strong / weak / neutral with the numbers."""
+    b = bs.get(ts, {}).get("2025")
+    f = fin.get(ts)
+    if not b or not f or not f["rev"]:
+        return None
+    _cip, _fa, ar, cl, adv = b
+    rev = f["rev"]
+    adv_r = ((cl or 0) + (adv or 0)) / rev
+    ar_r = (ar or 0) / rev
+    p = parse.get(ts)
+    cust = p[3]["total_pct"] if p else None
+    supp = p[4]["total_pct"] if p else None
+    detail = f"预收/合同负债占营收 {adv_r:.0%}，应收占营收 {ar_r:.0%}，前五客户 {'—' if cust is None else f'{cust:.0f}%'}，前五供应商 {'—' if supp is None else f'{supp:.0f}%'}"
+    l3code = (members.get(ts, {}).get("sw") or [None])[-1]
+    arche = (bm_l3.get(str(l3code)) or {}).get("archetype")
+    concentrated = cust is not None and cust >= 50 and arche not in ("A7", "A12")  # utilities sell to the grid by design
+    if concentrated or ar_r >= 0.4:
+        return "weak", detail
+    if (adv_r >= 0.10 or ar_r <= 0.05) and (cust is None or cust < 30):
+        return "strong", detail
+    return "neutral", detail
+
+moat_claims = {}
+mc_file = LAKE / "meta/runs/business/moat_claims.jsonl"
+for line in (mc_file.read_text().splitlines() if mc_file.exists() else []):
+    r = json.loads(line)
+    if "error" not in r and r["code"] in by6:
+        moat_claims[by6[r["code"]]] = r
+ROIC_FLOOR, ROIC_WIDE = 8.0, 15.0  # cost-of-capital proxy; a wide moat earns well above it
+
+
+def roic_series(ts):
+    return [roic[ts][y] for y in sorted(roic.get(ts, {}))][-6:]
+
+
+def roic_mean(ts):
+    xs = roic_series(ts)
+    return statistics.mean(xs) if xs else None
+
+
+def gm_rank(ts):
+    group, _ = peer_group(ts)
+    f = fin.get(ts)
+    peers = [t for t in group if fin[t]["gm"] is not None]
+    if not f or f["gm"] is None or len(peers) < 5:
+        return None
+    return sum(fin[t]["gm"] < f["gm"] for t in peers) / len(peers)
+
+
+def gm_stability(ts):
+    group, _ = peer_group(ts)
+    pstd = [gm_std[t] for t in group if t in gm_std]
+    if ts not in gm_std or len(pstd) < 5 or not statistics.median(pstd):
+        return None
+    return gm_std[ts] / statistics.median(pstd)  # < 1 = steadier than peers
+
+
+def top_share(ts):
+    big = {p for r in revenue.get(ts, []) for p in r["pids"] if leaders.get(p, {}).get("n", 0) >= 5}
+    return max((ld["share"] for pid in big for ld in leaders[pid]["top"] if ld["code"] == ts), default=0.0)
+
+
+def peer_roic(ts):
+    group, _ = peer_group(ts)
+    xs = [m for m in (roic_mean(t) for t in group) if m is not None]
+    return statistics.median(xs) if len(xs) >= 5 else None
+
+
+def test_claim(kind, ts, ctx):
+    """True / False / None (untestable) for one claimed moat type, with the numbers used."""
+    rank, stab, share, rm, prm, above = ctx["rank"], ctx["stab"], ctx["share"], ctx["roic"], ctx["peer_roic"], ctx["above"]
+    if kind == "intangible" and rank is not None and stab is not None:
+        return rank >= 2 / 3 and stab < 1.0, f"毛利率同行分位 {rank:.0%}，波动为同行的 {stab:.1f} 倍"
+    if kind == "cost" and rm is not None and prm is not None:
+        ok = (rank is None or rank < 2 / 3) and rm >= prm + 3 or share >= 0.3
+        return ok, f"ROIC 均值 {rm:.1f}%（同行中位 {prm:.1f}%），毛利率分位 {'—' if rank is None else f'{rank:.0%}'}，份额 {share:.0%}"
+    if kind == "switching" and stab is not None and rm is not None:
+        return stab < 0.8 and rm >= 10, f"毛利率波动为同行的 {stab:.1f} 倍，ROIC 均值 {rm:.1f}%"
+    if kind == "network" and rm is not None:
+        return rm >= ROIC_WIDE and share >= 0.3, f"ROIC 均值 {rm:.1f}%，份额 {share:.0%}"
+    if kind == "efficient_scale" and rm is not None:
+        return share >= 0.3 and above >= 4, f"份额 {share:.0%}，近 6 年 ROIC ≥8% 的年数 {above}"
+    return None, "数据不足以检验"
+
+
+def moat_card(ts):
+    xs = roic_series(ts)
+    if len(xs) < 4:
+        return {"width": "insufficient", "trend": None, "roic": dict(sorted(roic.get(ts, {}).items())), "claims": []}
+    above = sum(x >= ROIC_FLOOR for x in xs)
+    wide_years = sum(x >= ROIC_WIDE for x in xs)
+    trend = statistics.mean(xs[-3:]) - statistics.mean(xs[:3])
+    ctx = {"rank": gm_rank(ts), "stab": gm_stability(ts), "share": top_share(ts), "roic": statistics.mean(xs),
+           "peer_roic": peer_roic(ts), "above": above}
+    edge = (ctx["rank"] is not None and ctx["rank"] >= 0.5) or ctx["share"] >= 0.3
+    width = "wide" if wide_years >= 5 and edge and trend > -5 else "narrow" if above >= 4 else "none"
+    mc = moat_claims.get(ts) or {}
+    claims = []
+    rstd = statistics.pstdev(xs)
+    peer_rstd = [statistics.pstdev(roic_series(t)) for t in peer_group(ts)[0] if len(roic_series(t)) >= 4]
+    rd = rd_ratio(ts)
+    peer_rd = [r for r in (rd_ratio(t) for t in peer_group(ts)[0]) if r is not None]
+    for c in mc.get("claims", []):
+        sub = claim_subtype(c)
+        if sub == "patent" and rd is not None and len(peer_rd) >= 5 and ctx["rank"] is not None:
+            med = statistics.median(peer_rd)
+            ok, why = rd >= med and ctx["rank"] >= 0.5, f"研发费用率 {rd:.1%}（同行中位 {med:.1%}），毛利率分位 {ctx['rank']:.0%}"
+        elif sub == "license":
+            ok, why = above >= 4, f"近 6 年 ROIC ≥8% 的年数 {above}"
+        elif sub == "franchise" and len(peer_rstd) >= 5:
+            med = statistics.median(peer_rstd)
+            ok, why = rstd < med and above >= 4, f"ROIC 波动 {rstd:.1f}pp（同行中位 {med:.1f}pp），≥8% 的年数 {above}"
+        else:
+            ok, why = test_claim("intangible" if sub == "brand" else c["type"], ts, ctx)
+        claims.append({**c, "subtype": sub, "proven": ok, "test": why})
+    proven = sorted({c["subtype"] for c in claims if c["proven"]})
+    # measured sources, whatever the company claims
+    sources = []
+    pl = (pricing_power.get(ts) or {}).get("label")
+    if pl in ("maker", "lean_maker"):
+        sources.append({"key": "pricing_power", "detail": {"maker": "定价者", "lean_maker": "偏定价者"}[pl]})
+    firsts = [nodes[pid]["n"] for pid in {p for r in revenue.get(ts, []) for p in r["pids"]}
+              if leaders.get(pid, {}).get("n", 0) >= 5 and leaders[pid]["top"][0]["code"] == ts and leaders[pid]["top"][0]["share"] >= 0.3 and pid in nodes]
+    if firsts:
+        sources.append({"key": "market_share", "detail": f"细分第一（份额 ≥30%）：{'、'.join(firsts[:3])}"})
+    cp = chain_position(ts)
+    if cp and cp[0] == "strong":
+        sources.append({"key": "chain_position", "detail": cp[1]})
+    return {"width": width, "trend_pp": round(trend, 1),
+            "roic": dict(sorted(roic.get(ts, {}).items())), "above_floor": above, "wide_years": wide_years,
+            "gm_rank": ctx["rank"], "gm_stability": ctx["stab"], "share": ctx["share"], "peer_roic": ctx["peer_roic"],
+            "claims": claims, "summary": mc.get("summary", ""), "proven_types": proven, "read": bool(mc),
+            "sources": sources, "chain_position": cp}
+
+
+moats = {ts: moat_card(ts) for ts in members}
+# trend relative to peers: the market-wide ROIC cycle (high 2020–21, low 2023–25) is not a moat change
+for ts, m in moats.items():
+    if m.get("trend_pp") is None:
+        m["trend"] = None
+        continue
+    group, _ = peer_group(ts)
+    pt = [moats[t]["trend_pp"] for t in group if moats.get(t, {}).get("trend_pp") is not None]
+    rel = m["trend_pp"] - (statistics.median(pt) if len(pt) >= 5 else 0.0)
+    m["trend_rel_pp"] = round(rel, 1)
+    m["trend"] = "widening" if rel >= 3 else "eroding" if rel <= -3 else "stable"
+print("moat width:", Counter(v["width"] for v in moats.values()), "trend:", Counter(v["trend"] for v in moats.values()),
+      "claims read:", sum(v.get("read", False) for v in moats.values()))
+
 # --- peers: cosine similarity of revenue-weighted product vectors (moved out of the page, APP_STANDARD §1) ---
 vectors = {}
 for ts, rev in revenue.items():
@@ -894,7 +1063,7 @@ for ts, m in members.items():
                            "apps": {r["item"]: r["apps"] for r in rev}, "valuations": vals.get(ts, []),
                            "quarterly": quarterly.get(ts, []), "business": business_card(ts),
                            "broker_view": views["company"].get(ts), "peers": peers.get(ts, []), "financials": fin_table.get(ts, {}), "quarters": quarters.get(ts, []), "dupont": dupont.get(ts, []),
-                           "pricing_power": pricing_power.get(ts), "archetype_check": arche_checks.get(ts),
+                           "pricing_power": pricing_power.get(ts), "archetype_check": arche_checks.get(ts), "moat": moats.get(ts),
                            "regions": [], "eliminations": elims.get(ts, []), "internal": []}
     stats["companies"] += 1
     stats["with_llm"] += bool(a["src"])

@@ -65,6 +65,7 @@ class BaseLlmClient(ABC):
         industry_graph.BrokerViewSynthesizer  -- injected client
         industry_graph.BusinessModeExtractor  -- injected client
         industry_graph.PricingAdjudicator  -- injected client
+        industry_graph.MoatExtractor  -- injected client
 
     Test cases:
         TC-BAC-001  cannot be instantiated; subclass must implement fetch_json

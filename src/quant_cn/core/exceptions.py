@@ -112,6 +112,7 @@ class DataSourceError(QuantCnError):
         industry_graph.BrokerViewSynthesizer  -- unknown scope, reply does not fit the shape
         industry_graph.BusinessModeExtractor  -- reply does not fit the shape
         industry_graph.PricingAdjudicator  -- reply does not fit the shape, label not allowed
+        industry_graph.MoatExtractor  -- reply does not fit the shape
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError
@@ -175,6 +176,7 @@ class LakeError(QuantCnError):
         data_loading.DocumentDownloader  -- metadata missing, manifest write
         lake.DocumentViews               -- view creation
         cli.DocumentCommands             -- catalog busy when refreshing document views
+        portfolio.WatchlistBuilder  -- empty curated.daily, missing output directory
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError

@@ -6,7 +6,7 @@
 | Owner | user (approve) / agent (build) |
 | Created | 2026-11-08 |
 | Notion | pending |
-| Decisions | D-116, D-099, D-104, D-115 |
+| Decisions | D-116, D-099, D-104, D-115, D-120 |
 | Depends on plans | 12 (graph, CompanyCard), 13 (broker views) |
 
 ## Goal
@@ -34,6 +34,7 @@ A local web app replaces the single-file prototype `research_space/prototypes/ch
 | 3 | Go API | `apps/chain_api`: an `openapi.yaml` contract, and handlers for `/search`, `/companies/{code}`, `/nodes/{id}`, `/sectors/{l1}/network`, `/views/{scope}/{id}`. DuckDB is opened read-only on the parquet files, never on the catalog file | `go test ./...` passes against fixture parquet. Every endpoint is validated against `openapi.yaml`. p95 latency < 200 ms on the full lake, measured locally | 2 | todo |
 | 4 | React shell | `apps/chain_web`: search, company page with all prototype tabs, swim-lane graph, zoom / fullscreen / resizable panel. Typed client generated from `openapi.yaml` | Vitest unit tests pass. A Playwright smoke test opens 5 companies (牧原, 宁德时代, 立讯, 茅台, 中国平安) and every tab without console errors | 3 | todo |
 | 5 | Networks and product pages | Sector company network, product / segment pages (makers, valuation view, cycle clock), industry pages | The Playwright smoke test covers 3 sectors and 3 products. Visual parity with prototype v14 is checked by the user | 4 | todo |
+| 7 | Watchlist page (观察账本) | `config/local.watchlist.yaml` (git-ignored; `config/watchlist.example.yaml` committed): code, buy_low, buy_high, added, thesis, watch. Python `WatchlistBuilder` reads it plus the lake (unadjusted close, pe_ttm, pb, dv_ttm, 52-week range, weekly closes, `report_rc` median EPS and target range since the last reporting season) and writes `watchlist.json` with every number computed (gap to buy, PE and yield at the buy price, status in / near ≤ 10% / far). Go `GET /api/watchlist`; React page `#watchlist` (third header chip, badge when a stock is near or in its zone): cards with range bar and weekly chart, valuation table. `make watchlist` refreshes prices then the JSON | Contract tests for `WatchlistBuilder` (TC for gap, status edges, missing EPS, single-price zone); `go test` for the endpoint against a fixture; vitest for the page; Playwright smoke opens `#watchlist`. Numbers on the page equal the 2026-11-06 values (涪陵榨菜 11.84 → 15.5% to 10.00; 盐津铺子 41.26 → 39.4% to 25.00). `make check` passes | 4 | done 2026-11-08 (uncommitted): make check green — ruff/mypy 144 files, lint_contracts 0, 491 passed, Go ok, vitest 12 passed; app-smoke SMOKE OK with 涪陵榨菜 11.84 → 15.5%, 盐津铺子 41.26 → 39.4% |
 | 6 | Package and hand over | `make app` builds the front end and embeds it in one Go binary; `make app-run` starts it. README in `apps/`. The prototype is kept as a reference | `make app-run` serves the app on localhost from a clean checkout. `make check` passes (real output pasted). Registry and INDEX files are current | 5 | todo |
 
 ## Classes
@@ -46,6 +47,9 @@ A local web app replaces the single-file prototype `research_space/prototypes/ch
 | `LakeCatalog`, `LakeQuery` | reuse | `quant_cn.lake` | 2 |
 | Go packages `api`, `store`, `search` | new | `apps/chain_api` | 3 |
 | React feature modules `company`, `network`, `product`, `search` | new | `apps/chain_web` | 4–5 |
+| `WatchlistBuilder` | new (name and package via `naming` skill; proposed `quant_cn.portfolio`) | `quant_cn.portfolio` | 7 |
+| `Store.GetWatchlist`, handler `/api/watchlist` | extend | `apps/chain_api` | 7 |
+| React feature module `watchlist` | new | `apps/chain_web` | 7 |
 
 ## Risks
 - **Three languages to maintain.** Mitigation: Go and TS only read and display; one OpenAPI contract; the standards addendum before any code.
@@ -58,6 +62,8 @@ A local web app replaces the single-file prototype `research_space/prototypes/ch
 - Hosting: answered 2026-11-08: local demo on this Mac for now (no auth, localhost only).
 - Who uses it besides you? (sharing and accounts)
 - Should the front end keep the claude.ai artifact as a shareable snapshot, or retire it after phase 6?
+- ~~Phase 7 editing~~ answered 2026-11-08: YAML or Claude, app read-only (D-120 accepted).
+- Phase 7 refresh: on demand (`make watchlist`) for now; a daily launchd job later if wanted.
 
 ## Log
 
@@ -72,3 +78,7 @@ A local web app replaces the single-file prototype `research_space/prototypes/ch
 | 2026-11-08 | 5 | DuPont page: chart fills the panel (viewBox 1200×760, height follows the window), larger labels and points; every point hoverable (tooltip: name, code, sector, L3, year, ROE, turnover) and clickable (DuPont page: add / remove from comparison; company and sector planes: open the company). `names` lookup added to bootstrap. Server restart now `pkill -f "chainapi -data"` (the old pattern also matched queued shell jobs) |
 | 2026-11-08 | 5 | DuPont market cloud now ends with the latest quarter (2026Q3, annualised ×4/3; 5,515 companies that reported it) as the final frame of the slider and play; company plane background follows the selected point's period |
 | 2026-11-08 | 5 | DuPont driver and warning per point (Python): driver margin / turnover / leverage / mixed; flag thin (multiplier ≥ 5) or gap (npm × turnover × multiplier vs ROE > 30% or sign); flagged points hollow, tooltip shows driver and warning, DuPont page filter by driver and "hide distorted ROE", company DuPont table column. 2025: margin 990, turnover 236, leverage 702, mixed 3,700; thin 316, gap 350 |
+| 2026-11-08 | 7 | Done. Python: `core.WatchlistEntry`/`WatchlistSettings` (core/watchlist_entry.py; config.py was over 600 lines), `portfolio.WatchlistBuilder` (TC-WB-001..009), CLI `watchlist --out` in `ResearchCommands` (parsers moved there; QuantCnCli was over 300 lines), TC-C-015/016, TC-QCC-011, `make watchlist` (download + compact daily, daily_basic, report_rc last 14 days, then write). `watchlist.json` git-ignored. Go: `store/watchlist.go`, `GET /api/watchlist` (absent file = empty document), TC-ST-007..009, TC-API-007. React: `features/watchlist` (cards, range bar, weekly chart, valuation table, empty state), header chip 观察账本 with near/in badge, TC-WL-001..008, smoke extended. Consensus window = 30 days (eps brokers 6 / 14 vs 8 / 18 in the earlier since-10-20 cut) |
+| 2026-11-08 | 7 | Approved ("ok"); defaults taken: YAML edits, on-demand refresh, artifact kept until the user confirms deletion |
+| 2026-11-08 | 7 | Phase 7 watchlist page drafted, awaiting approval (user: "不用artifact，在app里集成"; targets 涪陵榨菜 9–10, 盐津铺子 25); D-120 proposed |
+| 2026-11-08 | 5 | DuPont page: 全部清除 button (clears selected companies, sector highlight, driver filter, hide-distorted; back to the latest period); disabled when nothing to clear |
