@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pandas as pd
 import pytest
@@ -141,3 +142,14 @@ def test_tc_qcc_010_download_docs_dry_run(config: Config) -> None:
     assert QuantCnCli(config, console).run(argv) == 0
     text = console.export_text()
     assert "em_industry: 2 to download" in text and "industry_report: 2" in text
+
+
+# TC-QCC-011
+def test_tc_qcc_011_watchlist_empty(config: Config, tmp_path: Path) -> None:
+    LakeCatalog(config.lake.root, config.datasets).close()  # create the catalog file
+    console = Console(record=True, width=200)
+    out = tmp_path / "app_data"
+    out.mkdir()
+    assert QuantCnCli(config, console).run(["watchlist", "--out", str(out)]) == 0
+    assert json.loads((out / "watchlist.json").read_text(encoding="utf-8"))["entries"] == []
+    assert "0 entries" in console.export_text()

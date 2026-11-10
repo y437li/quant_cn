@@ -120,3 +120,8 @@ enum_values:
              "UKOIL", "USOIL", "COPPER", "10USNOTE", "SPX500", "NAS100", "HKG33", "CHN50"]
   # index_weight constituents (plan 11 phase 2): CSI 300 / 500 / 1000, SSE 50
   weight_indices: ["000300.SH", "000905.SH", "000852.SH", "000016.SH"]
+
+watchlist:                       # plan 15 phase 7 (D-120); targets in config/local.watchlist.yaml
+  near_pct: 0.10                 # within 10% above the buy price = "near"
+  history_days: 365              # 52-week range and weekly line
+  consensus_days: 30             # report_rc forecasts counted in the EPS consensus

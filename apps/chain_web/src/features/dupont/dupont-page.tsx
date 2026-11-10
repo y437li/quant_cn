@@ -73,7 +73,11 @@ export function DupontPage({ codes, setCodes }: { codes: string[]; setCodes: (c:
           caption={`${codes.length ? `彩色轨迹 = 所选公司 ${years[0]}→${year}；` : ""}${sector ? `蓝点 = ${boot.sectors[sector]}（点击加入对比）；` : ""}`} />
       </section>
       <aside className="dp-side">
-        <h3>选公司</h3>
+        <div className="dp-head">
+          <h3>选公司</h3>
+          <button type="button" className="chip" disabled={!codes.length && !sector && !driver && !hideFlagged}
+            title="清除所有已选公司，并恢复高亮行业和筛选" onClick={() => { setCodes([]); setSector(""); setDriver(""); setHideFlagged(false); setPlaying(false); setYi(years.length - 1); }}>全部清除</button>
+        </div>
         <CompanyPicker onPick={add} />
         <div className="dp-chips">{codes.map((c, i) => (
           <span key={c} className="dp-chip" style={{ borderColor: PALETTE[i % PALETTE.length] }}>

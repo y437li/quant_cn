@@ -36,6 +36,8 @@ class DateCodec:
         data_loading.DateWindowFetcher             -- injected type or call
         lake.EffectiveDateResolver                 -- injected type or call
         factor.FactorFactory                       -- injected type or call
+        portfolio.WatchlistBuilder                 -- window start dates
+        cli.ResearchCommands                       -- composition of WatchlistBuilder
 
     Test cases:
         TC-DC-001  to_date/to_str round trip

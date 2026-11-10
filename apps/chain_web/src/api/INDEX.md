@@ -5,4 +5,4 @@ Typed API client.
 ## Files
 | File | Purpose | Contains |
 |---|---|---|
-| `client.ts` | types and fetchers for every endpoint | `api` |
+| `client.ts` | types and fetchers for every endpoint | `api`, `Watchlist`, `WatchlistEntry` |

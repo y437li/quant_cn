@@ -999,3 +999,19 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Alternatives: keep the Eastmoney scraper (rejected if approved: duplicate source, scraping fragility and site terms); fetch both (rejected: duplicate rows of the same reports).
 - Consequences: a `research_report` dataset (trade_date sweep) in plan 11 ph11; `em_stock_reports` / `em_industry_reports` stop at the switch date (`end:` in config); `DocumentDownloader` reads URLs from the new dataset; plan 13 notes that PDF text covers about a quarter of reports.
 - Links: D-096, D-100, plan 11 ph11, plan 12 ph2, plan 13
+
+### D-120 Watchlist targets live in a git-ignored config file; the app stays read-only
+- Status: accepted (2026-11-08, user "ok" to plan 15 phase 7).
+- Context: plan 15 keeps the Go API read-only and every number in Python (D-116). A watchlist needs user-owned targets (buy range, thesis) and daily prices.
+- Decision: targets in `config/local.watchlist.yaml` (matches the existing `config/local.*.yaml` ignore rule; `config/watchlist.example.yaml` committed); Python `WatchlistBuilder` computes gap, status and valuation at the buy price into `watchlist.json`; Go serves it at `GET /api/watchlist`; React shows it. Targets change by editing the file or asking Claude.
+- Alternatives: a write endpoint to edit targets in the page (rejected for now: breaks D-116, needs storage and validation in Go); targets committed in `config/` (rejected: personal positions in git history); keep the claude.ai artifact (rejected by the user).
+- Consequences: plan 15 phase 7; `make watchlist`; the page shows data as of the last refresh, not live quotes.
+- Links: D-116, plan 15 ph7
+
+### D-121 Structural deduction is a PIT rule pipeline whose labels must pass a historical replay
+- Status: proposed (2026-11-09, plan 16 drafted).
+- Context: the 2026-11-09 scratch scans (40-material transmission, 255-industry four-dimension scan) gave useful readings but used current SW membership, restated statements and hand-set thresholds.
+- Decision: industry labels (新兴扩张 / 进入广泛竞争 / 出清·进行中 / 出清·见底 / 供给锁定 / 格局改善) are computed by rules in `config/deduction_rules.yaml` on point-in-time data (ann_date ≤ as_of, historical membership). Each label keeps its rule trace. Thresholds are frozen before a replay from 2019; a label is shown as `validated` only if its direction holds with t ≥ 2, otherwise as `descriptive`.
+- Alternatives: LLM judgement per industry (rejected: not testable, not reproducible); unsupervised clustering (rejected: labels not interpretable); no validation (rejected: thresholds would be fitted to today's story).
+- Consequences: new `config/deduction_rules.yaml`; classes in plan 16; the prototype `clock_l3` is replaced by the classifier output; the app shows label status.
+- Links: BUSINESS_MODEL_DESIGN §4.2, §4b.4, §4b.5, §4b.6; D-112, D-118; plan 16

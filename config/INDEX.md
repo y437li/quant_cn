@@ -11,7 +11,8 @@ Configuration only, no code. Loaded by `core.Config`; secrets never live here (e
 | File | Purpose | Contains |
 |---|---|---|
 | `README.md` | meaning and precedence of every configuration key |  |
-| `base.yaml` | lake root default, Tushare paging/retry settings, download order and start dates, enum key lists | `lake`, `tushare`, `download`, `enum_values` |
+| `base.yaml` | lake root default, Tushare paging/retry settings, download order and start dates, enum key lists, watchlist thresholds | `lake`, `tushare`, `download`, `enum_values`, `watchlist` |
+| `watchlist.example.yaml` | template for the git-ignored `local.watchlist.yaml`: buy targets for the app's 观察账本 page (D-120) | `entries` |
 | `business_models.yaml` | business-model archetypes A1–A12 (formula, drivers, pricing, pass-through, cycle signals, moat types, valuation methods, 68 operating-mode variants) and the SW L3 → archetype default map (D-112; Opus prior, user spot-check) | `archetypes`, `sw_l3` (346) |
 | `datasets.yaml` | one entry per dataset: endpoint, sweep, primary key, known-on column, fields, curated layout | 72 datasets |
 | `documents.yaml` | document sources for DocumentDownloader: metadata dataset, URL and file templates, doc-type title rules (D-101) | `sources`: cninfo, cninfo_kw, em_industry, em_stock |

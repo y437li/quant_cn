@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { api, type Bootstrap, type Company, type CompanyBrief, type Maker, type Network } from "./api/client";
+import { api, type Bootstrap, type Company, type CompanyBrief, type Maker, type Network, type Watchlist } from "./api/client";
 import { ChainGraph, type GraphControl } from "./components/chain-graph";
 import { Ctx, type Selection } from "./components/context";
 import { Splitter } from "./components/splitter";
@@ -8,10 +8,12 @@ import { NodeDossier } from "./features/node/node-dossier";
 import { SearchBox } from "./features/search/search-box";
 import { SectorDossier } from "./features/sector/sector-dossier";
 import { DupontPage } from "./features/dupont/dupont-page";
+import { WatchlistPage } from "./features/watchlist/watchlist-page";
+import { badgeCount } from "./features/watchlist/watchlist-format";
 import { buildCompanyElements, buildNetworkElements, buildNodeElements, buildSectorElements, type El } from "./graph/elements";
 import { buildIndex } from "./graph/taxonomy";
 
-/** Purpose: the app shell: header (search, sector, quick list), graph stage with controls, resizable dossier. URL hash keeps the selection. */
+/** Purpose: the app shell: header (search, sector, page chips, quick list), graph stage with controls, resizable dossier; the DuPont (#dupont=) and watchlist (#watchlist) pages replace the stage. URL hash keeps the selection. */
 type Loaded =
   | { kind: "company"; c: Company; related: Record<string, CompanyBrief> }
   | { kind: "node"; id: string; makers: Maker[] }
@@ -35,12 +37,18 @@ export function App() {
   const tx = useMemo(() => (boot ? buildIndex(boot) : null), [boot]);
   const readDupont = () => { const m = location.hash.match(/^#dupont=?(.*)$/); return m ? m[1].split(",").filter(Boolean).map(decodeURIComponent) : null; };
   const [dupont, setDupont] = useState<string[] | null>(readDupont());
-  useEffect(() => { const f = () => setDupont(readDupont()); addEventListener("hashchange", f); return () => removeEventListener("hashchange", f); }, []);
-  const openDupont = (codes: string[]) => { location.hash = "#dupont=" + codes.map(encodeURIComponent).join(","); setDupont(codes); };
+  const readWatch = () => location.hash === "#watchlist";
+  const [watch, setWatch] = useState(readWatch());
+  const [wl, setWl] = useState<{ doc: Watchlist | null; error: string | null }>({ doc: null, error: null });
+  useEffect(() => { const f = () => { setDupont(readDupont()); setWatch(readWatch()); }; addEventListener("hashchange", f); return () => removeEventListener("hashchange", f); }, []);
+  useEffect(() => { api.getWatchlist().then((doc) => setWl({ doc, error: null })).catch((e) => setWl({ doc: null, error: e.message })); }, [watch]);
+  const openDupont = (codes: string[]) => { location.hash = "#dupont=" + codes.map(encodeURIComponent).join(","); setWatch(false); setDupont(codes); };
+  const openWatch = () => { location.hash = "#watchlist"; setDupont(null); setWatch(true); };
+  const nBadge = badgeCount(wl.doc?.entries);
 
   useEffect(() => { api.getBootstrap().then(setBoot).catch((e) => setError(e.message)); }, []);
   useEffect(() => { const f = () => { const s = parseHash(); if (s) setSel(s); }; addEventListener("hashchange", f); return () => removeEventListener("hashchange", f); }, []);
-  const select = useCallback((s: Selection) => { if (location.hash !== toHash(s)) location.hash = toHash(s); setDupont(null); setSel(s); }, []);
+  const select = useCallback((s: Selection) => { if (location.hash !== toHash(s)) location.hash = toHash(s); setDupont(null); setWatch(false); setSel(s); }, []);
 
   useEffect(() => {
     if (!tx) return;
@@ -84,12 +92,13 @@ export function App() {
             </select>
           </label>
           <nav className="pages">
-            <button type="button" className={`chip ${dupont ? "" : "on"}`} onClick={() => select(sel)}>产业链图谱</button>
+            <button type="button" className={`chip ${dupont || watch ? "" : "on"}`} onClick={() => select(sel)}>产业链图谱</button>
             <button type="button" className={`chip ${dupont ? "on" : ""}`} onClick={() => openDupont(dupont || (sel.kind === "company" ? [sel.id] : []))}>杜邦坐标</button>
+            <button type="button" className={`chip ${watch ? "on" : ""}`} onClick={openWatch} data-page="watchlist">观察账本{nBadge > 0 && <span className="badge" title="接近或已到买入区间的股票数">{nBadge}</span>}</button>
           </nav>
           <div className="quick">{boot.quick.map((q) => <button type="button" key={q.code} className={`chip ${sel.kind === "company" && sel.id === q.code ? "on" : ""}`} onClick={() => select({ kind: "company", id: q.code })}>{q.name}</button>)}</div>
         </header>
-        {dupont ? <DupontPage codes={dupont} setCodes={openDupont} /> : (
+        {watch ? <WatchlistPage doc={wl.doc} error={wl.error} /> : dupont ? <DupontPage codes={dupont} setCodes={openDupont} /> : (
         <main className={wide ? "wide" : ""}>
           <section className="stage" ref={stage} aria-label="产业链网络">
             <div className="controls">

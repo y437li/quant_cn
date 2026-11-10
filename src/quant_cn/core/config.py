@@ -15,6 +15,7 @@ from quant_cn.core.dataset_spec import DatasetSpec
 from quant_cn.core.date_codec import DateCodec
 from quant_cn.core.document_source import DocumentSource
 from quant_cn.core.exceptions import ConfigError
+from quant_cn.core.watchlist_entry import WatchlistEntry, WatchlistSettings
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 ENV_LAKE_ROOT = "QUANT_CN_LAKE_ROOT"
@@ -349,6 +350,8 @@ class Config(BaseModel):
             campaign:    CampaignConfig          -- config/factors.yaml `campaign` (phase 5)
             documents:   dict[str, DocumentSource] -- config/documents.yaml `sources` (D-101)
             llm:         LlmConfig               -- base.yaml `llm` + DEEPSEEK_API_KEY (D-098)
+            watchlist:   list[WatchlistEntry]    -- config/local.watchlist.yaml `entries` (D-120)
+            watchlist_settings: WatchlistSettings  -- base.yaml `watchlist` (D-120)
         Output:
             frozen pydantic model
         Raises:
@@ -362,6 +365,7 @@ class Config(BaseModel):
         cli.ServiceBuilder           -- injected type or call
         cli.ResearchCommands         -- injected type or call
         cli.DocumentCommands  -- documents sources and lake root
+        portfolio.WatchlistBuilder  -- watchlist entries and settings
 
     Test cases:
         TC-C-001  env > local.yaml > base.yaml precedence for lake.lake_root
@@ -378,6 +382,8 @@ class Config(BaseModel):
         TC-C-012  config/factors.yaml loads six factors with their classes; missing file = []
         TC-C-013  config/factors.yaml campaign loads; missing section gives the defaults
         TC-C-014  base.yaml llm section loads; key read from env only and hidden from repr
+        TC-C-015  config/local.watchlist.yaml loads; missing file = []; buy_high < buy_low refused
+        TC-C-016  base.yaml watchlist section loads; missing section gives the defaults
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -395,6 +401,8 @@ class Config(BaseModel):
     campaign: CampaignConfig = Field(default_factory=CampaignConfig)
     documents: dict[str, DocumentSource] = Field(default_factory=dict)
     llm: LlmConfig = Field(default_factory=LlmConfig)
+    watchlist: list[WatchlistEntry] = Field(default_factory=list)
+    watchlist_settings: WatchlistSettings = Field(default_factory=WatchlistSettings)
 
     @classmethod
     def load(
@@ -423,7 +431,6 @@ class Config(BaseModel):
         local = cls._read_yaml(root / "config" / "local.yaml", required=False)
         merged = cls._build_merged(base, local)
         datasets = cls._read_yaml(root / "config" / "datasets.yaml", required=True)
-        extras = cls._read_extras(root)
 
         lake = dict(merged.get("lake", {}))
         if environ.get(ENV_LAKE_ROOT):
@@ -431,6 +438,7 @@ class Config(BaseModel):
         lake["root"] = cls._normalize_root(root, str(lake.get("root", "")))
         tushare = {**merged.get("tushare", {}), "token": environ.get(ENV_TOKEN, "")}
         try:
+            extras = cls._read_extras(root)
             config = cls(
                 repo_root=root,
                 lake=LakeConfig(**lake),
@@ -440,6 +448,7 @@ class Config(BaseModel):
                 datasets={name: DatasetSpec(name=name, **spec) for name, spec in datasets.items()},
                 universe=UniverseConfig(**merged.get("universe", {})),
                 llm=LlmConfig(**{**merged.get("llm", {}), "api_key": environ.get(ENV_LLM_KEY, "")}),
+                watchlist_settings=WatchlistSettings(**merged.get("watchlist", {})),
                 **extras,
             )
         except (ValidationError, TypeError) as exc:
@@ -508,17 +517,19 @@ class Config(BaseModel):
 
     @classmethod
     def _read_extras(cls, root: Path) -> dict[str, Any]:
-        """The optional list files: futures categories, ticker aliases, factors, documents."""
+        """The optional list files: futures categories, aliases, factors, documents, watchlist."""
         categories = cls._read_yaml(root / "config" / "futures_categories.yaml", required=False)
         aliases = cls._read_yaml(root / "config" / "ticker_aliases.yaml", required=False)
         factors = cls._read_yaml(root / "config" / "factors.yaml", required=False)
         documents = cls._read_yaml(root / "config" / "documents.yaml", required=False)
+        watchlist = cls._read_yaml(root / "config" / "local.watchlist.yaml", required=False)
         return {
             "futures_categories": [FuturesCategory(**c) for c in categories.get("categories", [])],
             "ticker_aliases": [TickerAlias(**a) for a in aliases.get("aliases", [])],
             "factors": [FactorSpec(**f) for f in factors.get("factors", [])],
             "campaign": CampaignConfig(**factors.get("campaign", {})),
             "documents": {k: DocumentSource(**v) for k, v in documents.get("sources", {}).items()},
+            "watchlist": [WatchlistEntry(**e) for e in watchlist.get("entries", [])],
         }
 
     @staticmethod

@@ -34,6 +34,7 @@ from quant_cn.lake.release_lag_checker import ReleaseLagChecker
 from quant_cn.lake.run_log import RunLog
 from quant_cn.pipeline.curate_pipeline import DIGEST_FILE
 from quant_cn.pipeline.runner import PipelineReport
+from quant_cn.portfolio.watchlist_builder import WatchlistBuilder
 from quant_cn.service_builder import ServiceBuilder
 
 MIN_FREE_GB = 20
@@ -133,11 +134,7 @@ class QuantCnCli:
         qy = sub.add_parser("query", help="run read-only SQL against the lake catalog")
         qy.add_argument("sql", help='SQL, e.g. "SELECT * FROM project.todo"')
         qy.add_argument("--limit", type=int, default=50)
-        sub.add_parser("release-lags", help="warn when a release-lag rule is earlier than observed")
-        ev = sub.add_parser(
-            "evaluate", help="evaluate the factor campaign; write reports and trials"
-        )
-        ev.add_argument("--no-progress", action="store_true")
+        ResearchCommands.build_parser(sub)
         DocumentCommands.build_parser(sub)
         return parser
 
@@ -347,14 +344,16 @@ class ResearchCommands:
     """
     Purpose:
         The research-side CLI commands, kept apart so QuantCnCli stays within its size limit:
-        `release-lags` (D-086) and `evaluate` (factor campaign reports and trial log, plan 04
-        phase 5). QuantCnCli parses the arguments and dispatches here.
+        `release-lags` (D-086), `evaluate` (factor campaign reports and trial log, plan 04
+        phase 5) and `watchlist` (the app's 观察账本 data, D-120). QuantCnCli parses the
+        arguments and dispatches here.
 
     Contract:
         Input:
             console: Console
         Output:
-            instance; `_run_release_lags`, `_run_evaluate` (dispatched by QuantCnCli.run)
+            instance; `build_parser`, `_run_release_lags`, `_run_evaluate`, `_run_watchlist`
+            (dispatched by QuantCnCli.run)
         Raises:
             (none at construction)
 
@@ -364,10 +363,33 @@ class ResearchCommands:
     Test cases:
         TC-QCC-008  release-lags prints one line per checked dataset and exits 0 on warnings
         TC-QCC-009  evaluate without features exits 0 and writes nothing
+        TC-QCC-011  watchlist without entries writes an empty watchlist.json and exits 0
     """
 
     def __init__(self, console: Console) -> None:
         self._console = console
+
+    @staticmethod
+    def build_parser(sub: argparse._SubParsersAction[argparse.ArgumentParser]) -> None:
+        """
+        Purpose:
+            Add the `release-lags`, `watchlist` and `evaluate` subcommands to the CLI parser.
+
+        Contract:
+            Input:
+                sub: argparse subparsers of QuantCnCli
+            Output:
+                None
+            Raises:
+                (none)
+        """
+        sub.add_parser("release-lags", help="warn when a release-lag rule is earlier than observed")
+        wl = sub.add_parser("watchlist", help="write watchlist.json for the chain app (D-120)")
+        wl.add_argument("--out", type=Path, required=True, help="the app's data directory")
+        ev = sub.add_parser(
+            "evaluate", help="evaluate the factor campaign; write reports and trials"
+        )
+        ev.add_argument("--no-progress", action="store_true")
 
     def _run_release_lags(self, config: Config, _args: argparse.Namespace) -> int:
         catalog = LakeCatalog(config.lake.root, config.datasets, read_only=True)
@@ -377,6 +399,15 @@ class ResearchCommands:
             catalog.close()
         self._console.print("\n".join(ReleaseLagChecker.build_lines(frame)))
         return 0  # a warning, not a failure (D-086)
+
+    def _run_watchlist(self, config: Config, args: argparse.Namespace) -> int:
+        catalog = LakeCatalog(config.lake.root, config.datasets, read_only=True)
+        try:
+            path = WatchlistBuilder(config, LakeQuery(catalog), DateCodec()).write(args.out)
+        finally:
+            catalog.close()
+        self._console.print(f"watchlist: {len(config.watchlist)} entries -> {path}")
+        return 0
 
     def _run_evaluate(self, config: Config, args: argparse.Namespace) -> int:
         catalog = LakeCatalog(config.lake.root, config.datasets)

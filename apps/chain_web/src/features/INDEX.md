@@ -10,3 +10,4 @@ Views.
 | [`sector/`](sector/INDEX.md) | Shenwan L1 dossier |
 | [`search/`](search/INDEX.md) | search box |
 | [`dupont/`](dupont/INDEX.md) | dedicated DuPont page |
+| [`watchlist/`](watchlist/INDEX.md) | 观察账本 page (`#watchlist`) |

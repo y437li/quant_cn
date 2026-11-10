@@ -20,6 +20,7 @@ L1: base classes, exceptions, Config, Schema, DateCodec, TickerNormalizer, loggi
 | `base_store.py` | Extension point for where fetched data is written | `BaseStore` |
 | `clock.py` | Injectable time source so sleeps and "today" are controllable in tests (SRC_DESIGN §2.1) | `Clock` |
 | `config.py` | Typed configuration: `config/*.yaml` merged with machine overrides and environment (D-021) | `LakeConfig`, `TushareConfig`, `DownloadConfig`, `FactorSpec`, `CampaignConfig`, `UniverseConfig`, `FuturesCategory`, `TickerAlias`, `LlmConfig`, `Config` |
+| `watchlist_entry.py` | the user's watchlist targets and the watchlist page settings (D-120) | `WatchlistEntry`, `WatchlistSettings` |
 | `dataset_spec.py` | Typed view of one `config/datasets.yaml` entry: endpoint, sweep, keys, curated layout | `ValuesFromDataset`, `SweepSpec`, `CuratedSpec`, `DatasetSpec` |
 | `date_codec.py` | The only place that converts between `YYYYMMDD` strings and dates (D-005) | `DateCodec` |
 | `document_source.py` | which documents are downloaded and where they land, as data (config/documents.yaml, D-101) | `DocumentRule`, `DocumentSource` |

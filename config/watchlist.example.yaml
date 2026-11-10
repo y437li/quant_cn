@@ -1,0 +1,9 @@
+# Copy to config/local.watchlist.yaml (git-ignored, D-120) and edit. Read by Config.watchlist.
+# Prices are unadjusted CNY, the same basis as the quoted share price.
+entries:
+  - code: "002507.SZ"            # ts_code
+    buy_low: 9.0                 # lower edge of the buy range
+    buy_high: 10.0               # upper edge; equal to buy_low for one target price
+    added: "20261108"            # YYYYMMDD
+    thesis: "Why the stock is on the list."
+    watch: "Signals to follow before buying."

@@ -15,3 +15,4 @@ Company dossier.
 | `quarterly-table.tsx` | last 8 single quarters: revenue, margins, expense ratios, YoY | `QuarterlyTable` |
 | `dupont-chart.tsx` | DuPont plane (asset turnover × ROE) path over L3 peers, SVG | `DupontChart` |
 | `pricing-card.tsx` | pricing power with signal votes, posterior archetype check, DeepSeek variant / pricing reading (D-118) | `PricingCard` |
+| `moat-card.tsx` | moat width and trend from ROIC, claimed advantages tested against numbers (§4.4) | `MoatCard` |

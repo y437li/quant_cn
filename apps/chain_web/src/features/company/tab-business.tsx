@@ -4,6 +4,7 @@ import { Kpis, Note, NodeLink, Tag } from "../../components/ui";
 import { ratio, yi } from "../../lib/format";
 import { DupontChart } from "./dupont-chart";
 import { PricingCard } from "./pricing-card";
+import { MoatCard } from "./moat-card";
 
 /** Purpose: the 商业模式 tab: archetype default, drivers, variants, lifecycle, cycle clocks, moat numbers (BUSINESS_MODEL_DESIGN). */
 const PRICING_ZH: Record<string, string> = { market: "随市场价", spread: "加工价差", negotiated: "议价", bid: "招投标", brand: "品牌定价", regulated: "政府定价", contract: "合同定价" };
@@ -75,11 +76,7 @@ export function BusinessTab({ c }: { c: Company }) {
       <PricingCard c={c} />
       <h3>杜邦轨迹：ROE 与资产周转率</h3>
       <DupontChart c={c} />
-      <h3>护城河线索（数字，待与年报“核心竞争力”声明对照）</h3>
-      <table><tbody>
-        <tr><td>ROIC</td><td>{Object.entries(bz.roic || {}).map(([y, v]) => `${y}: ${Number(v).toFixed(1)}%`).join(" · ") || "—"}</td></tr>
-        <tr><td>毛利率（行业中位）</td><td className="num">{ratio(bz.gm)}（{ratio(bz.peer_gm)}）</td></tr>
-      </tbody></table>
+      <MoatCard c={c} />
     </>
   );
 }

@@ -50,6 +50,7 @@ class LakeQuery:
         cli.ResearchCommands         -- injected type or call
         cli.DocumentCommands             -- injected type or call
         data_loading.DocumentDownloader  -- metadata and manifest reads
+        portfolio.WatchlistBuilder       -- prices, valuation and consensus for the watchlist
 
     Test cases:
         TC-LQ-001  sql returns a DataFrame with parameters bound

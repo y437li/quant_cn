@@ -14,9 +14,11 @@ import (
 // Server routes /api/* to the Store and everything else to the static front end.
 //
 // Purpose: thin HTTP layer; no business logic (APP_STANDARD §1).
-// Contract: JSON responses; 400 for bad parameters, 404 for unknown ids, 405 for non-GET.
+// Contract: JSON responses; 400 for bad parameters, 404 for unknown ids, 405 for non-GET,
+// 500 when a data file is malformed.
 // Test cases: TC-API-001 bootstrap, TC-API-002 search 400/200, TC-API-003 company 404/200,
-// TC-API-004 sector network, TC-API-005 views 404, TC-API-006 static fallback.
+// TC-API-004 sector network, TC-API-005 views 404, TC-API-006 static fallback,
+// TC-API-007 watchlist present / absent (500 when the file is malformed).
 type Server struct {
 	store  store.Store
 	static http.Handler
@@ -55,6 +57,8 @@ func (h *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, h.store.ListSectorCompanies(parts[1]))
 	case len(parts) == 3 && parts[0] == "sectors" && parts[2] == "network":
 		writeJSON(w, h.store.GetSectorNetwork(parts[1], r.URL.Query().Get("outside") != "false"))
+	case len(parts) == 1 && parts[0] == "watchlist":
+		h.handleWatchlist(w)
 	case len(parts) == 3 && parts[0] == "views":
 		h.handleView(w, parts[1], parts[2])
 	default:
@@ -100,6 +104,15 @@ func (h *Server) handleView(w http.ResponseWriter, scope, id string) {
 		return
 	}
 	writeJSON(w, v)
+}
+
+func (h *Server) handleWatchlist(w http.ResponseWriter) {
+	wl, err := h.store.GetWatchlist()
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "watchlist: "+err.Error())
+		return
+	}
+	writeJSON(w, wl)
 }
 
 func writeJSON(w http.ResponseWriter, v any) {

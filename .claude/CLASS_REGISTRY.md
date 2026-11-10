@@ -29,7 +29,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `VarianceStripCalculator` | `quant_cn.calculation.variance_strip_calculator` | 4 | none | sigma^2 = (2/T) sum(dK/K^2 e^{RT} Q(K)) - (1/T)(F/K0 - 1)^2 over puts below K0, calls above K0 and the call/put average at K0 | 1 | `calculation.VixCalculator` | `tests/calculation/test_variance_strip_calculator.py` (TC-VSC-001..003) | 2026-09-27 |
 | `VixCalculator` | `quant_cn.calculation.vix_calculator` | 4 | none | Orchestrate the white-paper steps per trading day: select near/next terms, rate per term, forward and K0, variance strip, interpolation on the chosen clock | 1 | `research_space/notebooks/20260927_vix_calculation.ipynb` | `tests/calculation/test_vix_calculator.py` (TC-VC-001..003) | 2026-09-27 |
 | `QuantCnCli` | `quant_cn.cli` | 8 | none | `python -m quant_cn.cli <command>`: doctor, download, compact, curate, rebuild, backup, project-catalog, query | 1 | `Makefile targets doctor, download, compact, lake-rebuild, lake-backup`, `cli.DocumentCommands` | `tests/test_cli.py` (TC-QCC-001..007) | 2026-09-27 |
-| `ResearchCommands` | `quant_cn.cli` | 8 | none | The research-side CLI commands, kept apart so QuantCnCli stays within its size limit: `release-lags` (D-086) and `evaluate` (factor campaign reports and trial log, plan 04 phase 5) | 0 | `cli.QuantCnCli` | `tests/test_cli.py` (TC-QCC-008..009) | 2026-09-27 |
+| `ResearchCommands` | `quant_cn.cli` | 8 | none | The research-side CLI commands, kept apart so QuantCnCli stays within its size limit: `release-lags` (D-086), `evaluate` (factor campaign reports and trial log, plan 04 phase 5) and `watchlist` (D-120) | 1 | `cli.QuantCnCli` | `tests/test_cli.py` (TC-QCC-008..009, 011) | 2026-09-27 |
 | `BaseApiClient` | `quant_cn.core.base_api_client` | 1 | ABC | Abstract vendor client: one logical query returns all pages as one DataFrame. | 1 | `data_loading.TushareClient`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
 | `BaseFetchLog` | `quant_cn.core.base_fetch_log` | 1 | ABC | Abstract record of which (dataset, key) pairs are fully downloaded. | 5 | `lake.FetchLog`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher` | `tests/lake/test_fetch_log.py` (TC-FL-001..003) | 2026-09-27 |
 | `BaseFetcher` | `quant_cn.core.base_fetcher` | 1 | ABC | Download one dataset as a sequence of keys | 5 | `data_loading.SingleCallFetcher`, `data_loading.EnumFetcher`, `data_loading.DateSweepFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.FetcherFactory.build`, `pipeline.FetchStep`, `data_loading.DateWindowFetcher` | `tests/core/test_base_fetcher.py` (TC-BF-001..007) | 2026-09-27 |
@@ -45,7 +45,9 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `UniverseConfig` | `quant_cn.core.config` | 1 | BaseModel | Rules of the tradeable universe per session (FACTOR_TESTING_DESIGN §11, D-054). | 0 | `core.Config`, `pipeline.UniverseStep` | `tests/core/test_config.py` (TC-C-011..011) | 2026-09-27 |
 | `FuturesCategory` | `quant_cn.core.config` | 1 | BaseModel | One member-category label that `fut_holding` lists among real brokers (D-079). | 0 | `core.Config`, `lake.DerivedViews` | `tests/core/test_config.py` (TC-C-009..009) | 2026-09-27 |
 | `TickerAlias` | `quant_cn.core.config` | 1 | BaseModel | One retired code and the code its company trades on afterwards (D-053, D-089). | 0 | `core.Config`, `lake.TickerAliasMap`, `lake.DerivedViews` | `tests/core/test_config.py` (TC-C-010..010) | 2026-09-27 |
-| `Config` | `quant_cn.core.config` | 1 | BaseModel | The typed configuration injected everywhere: YAML defaults, machine overrides, environment. | 3 | `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands`, `cli.DocumentCommands` | `tests/core/test_config.py` (TC-C-001..013) | 2026-09-27 |
+| `Config` | `quant_cn.core.config` | 1 | BaseModel | The typed configuration injected everywhere: YAML defaults, machine overrides, environment. | 3 | `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands`, `cli.DocumentCommands`, `portfolio.WatchlistBuilder` | `tests/core/test_config.py` (TC-C-001..016) | 2026-09-27 |
+| `WatchlistEntry` | `quant_cn.core.config` | 1 | BaseModel | One stock the user watches and the price range at which they would buy it (D-120). | 0 | `core.Config`, `portfolio.WatchlistBuilder` | `tests/core/test_config.py` (TC-C-015) | 2026-11-08 |
+| `WatchlistSettings` | `quant_cn.core.config` | 1 | BaseModel | Thresholds and windows of the watchlist page (base.yaml `watchlist`, D-120). | 0 | `core.Config`, `portfolio.WatchlistBuilder` | `tests/core/test_config.py` (TC-C-016) | 2026-11-08 |
 | `ValuesFromDataset` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Enumerate sweep keys from another curated dataset (e.g | 0 | `core.SweepSpec` | `tests/data_loading/test_fetcher_factory.py` (TC-FF-003..003) | 2026-09-27 |
 | `SweepSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | How a dataset is swept so each call returns the whole market for one key. | 1 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
 | `CuratedSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Where a dataset lands in `curated/` and which date column drives its yearly partition. | 0 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
@@ -115,7 +117,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `ExposureReader` | `quant_cn.lake.exposure_reader` | 2 | none | Per universe member and session: the Shenwan L1 group in effect (derived.industry_l1, l1_grouping = the PIT row or the back-filled first-known L1, flagged | 1 | `pipeline.FeatureStep`, `cli.ServiceBuilder` | `tests/lake/test_lake_reader.py` (TC-EXR-001..001) | 2026-09-27 |
 | `FetchLog` | `quant_cn.lake.fetch_log` | 2 | BaseFetchLog | Record finished (dataset, key) pairs in `meta.fetch_log`, mirror them to `meta/fetch_log.parquet` on save, and rebuild the table after the DuckDB file is lost. | 6 | `cli.QuantCnCli`, `cli.ServiceBuilder` | `tests/lake/test_fetch_log.py` (TC-FL-001..006) | 2026-09-27 |
 | `LakeCatalog` | `quant_cn.lake.lake_catalog` | 2 | none | Own the lake's single DuckDB connection (`meta/quant_cn.duckdb`): schemas `raw`, `curated`, `meta` | 8 | `lake.FetchLog`, `lake.RunLog`, `lake.LakeQuery`, `lake.Compactor`, `pipeline.FetchStep.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `lake.DerivedViews`, `lake.PitAligner`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `lake.QualityViews`, `lake.LakeReader`, `lake.TickerAliasMap`, `cli.ResearchCommands`, `cli.DocumentCommands` | `tests/lake/test_lake_catalog.py` (TC-LC-001..005) | 2026-09-27 |
-| `LakeQuery` | `quant_cn.lake.lake_query` | 2 | none | Run read queries against the catalog views | 5 | `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader` | `tests/lake/test_lake_query.py` (TC-LQ-001..005) | 2026-09-27 |
+| `LakeQuery` | `quant_cn.lake.lake_query` | 2 | none | Run read queries against the catalog views | 5 | `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader`, `portfolio.WatchlistBuilder` | `tests/lake/test_lake_query.py` (TC-LQ-001..005) | 2026-09-27 |
 | `LakeReader` | `quant_cn.lake.lake_reader` | 2 | none | The read API factors, the universe step and notebooks use (SRC_DESIGN §2.2b, D-089): one curated dataset as a panel, dense or sparse prices, point-in-time fundamentals, reference tables (in-memory frames and view discovery: LakeQuery) | 5 | `cli.ServiceBuilder`, (none yet), `factor.FactorFactory`, `pipeline.EvaluationStep`, `pipeline.FeatureStep` | `tests/lake/test_lake_reader.py` (TC-LRD-001..007) | 2026-09-27 |
 | `PanelCache` | `quant_cn.lake.panel_cache` | 2 | none | Keep recently read panels in memory, keyed by (method, arguments), least recently used evicted first once the total size exceeds `max_bytes` | 4 | `lake.LakeReader`, `cli.ServiceBuilder` | `tests/lake/test_panel_cache.py` (TC-PCH-001..003) | 2026-09-27 |
 | `ParquetWriter` | `quant_cn.lake.parquet_writer` | 2 | BaseStore | Write raw fetch results and curated partitions as zstd parquet, atomically (write `.tmp`, fsync, rename), so a crash never leaves a half-written file. | 6 | `cli.QuantCnCli`, `cli.ServiceBuilder`, `pipeline.UniverseStep`, `pipeline.EvaluationStep`, `pipeline.FeatureStep` | `tests/lake/test_parquet_writer.py` (TC-PW-001..008) | 2026-09-27 |
@@ -123,6 +125,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `ProjectCatalog` | `quant_cn.lake.project_catalog` | 2 | none | Rebuild schema `project` in the lake's DuckDB from the repository: folders, files, classes, methods, used_by, contracts, test_cases, decisions, plans, phases, datasets, lint_findings, plus views tree, class_graph, stale and todo | 1 | `cli.ServiceBuilder` | `tests/lake/test_project_catalog.py` (TC-PJC-001..004) | 2026-09-27 |
 | `QualityViews` | `quant_cn.lake.quality_views` | 2 | none | Create the `quality` schema: cross-source comparisons that report, never overwrite (D-065) | 1 | `lake.DerivedViews.refresh` | `tests/lake/test_quality_views.py` (TC-QV-001..003) | 2026-09-27 |
 | `RebuildAudit` | `quant_cn.lake.rebuild_audit` | 2 | none | Record, on `rebuild`, what changed below raw/ since the last one | 2 | `cli.QuantCnCli` | `tests/lake/test_rebuild_audit.py` (TC-RA-001..002) | 2026-09-27 |
+| `WatchlistBuilder` | `quant_cn.portfolio.watchlist_builder` | 5 | none | Join the user's buy targets with the latest lake prices, valuation and broker consensus; compute the gap to the buy price, status and valuation at that price (plan 15 ph7, D-120) | 3 | `cli.ResearchCommands` | `tests/portfolio/test_watchlist_builder.py` (TC-WB-001..009) | 2026-11-08 |
 | `ReleaseLagChecker` | `quant_cn.lake.release_lag_checker` | 2 | none | For every dataset with `known_on_rule: period_end_lag` and `release_dates` set, measure the observed lag (release date - period end) in that curated release-date dataset and count releases that came later than the rule | 2 | `cli.ResearchCommands` | `tests/lake/test_release_lag_checker.py` (TC-RLC-001..003) | 2026-09-27 |
 | `RunLog` | `quant_cn.lake.run_log` | 2 | BaseRunLog | Append run and per-key events to `meta.run_log` (run_id, started_at, finished_at, kind, dataset, key, status, n_rows, duration_ms, message) and echo them to logging. | 3 | `cli.QuantCnCli`, `cli.ServiceBuilder`, `cli.ResearchCommands` | `tests/lake/test_run_log.py` (TC-RL-001..002) | 2026-09-27 |
 | `TickerAliasMap` | `quant_cn.lake.ticker_alias_map` | 2 | none | Map retired codes to their surviving codes so a company has one history | 4 | `lake.DerivedViews`, `lake.LakeReader`, `cli.ServiceBuilder` | `tests/lake/test_ticker_alias_map.py` (TC-TAM-001..004) | 2026-09-27 |
@@ -212,6 +215,10 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `AdjudicationReply` | `quant_cn.quant_cn.industry_graph.pricing_adjudicator` | 4 | BaseModel | The LLM reply before validation. | 0 | `industry_graph.PricingAdjudicator` | `tests/industry_graph/test_pricing_adjudicator.py` (TC-PAD-003..003) | 2026-11-07 |
 | `Adjudication` | `quant_cn.quant_cn.industry_graph.pricing_adjudicator` | 4 | none | The validated verdict. | 0 | `industry_graph.PricingAdjudicator` | `tests/industry_graph/test_pricing_adjudicator.py` (TC-PAD-001..003) | 2026-11-07 |
 | `PricingAdjudicator` | `quant_cn.quant_cn.industry_graph.pricing_adjudicator` | 4 | none | For a company whose rule-based pricing-power label is insufficient or whose archetype check is inconsistent (BUSINESS_MODEL_DESIGN §4.5, §4b.7), give the model every measured signal, the annual-report claims and the broker-view summary, each under a key, and ask for one label, a confidence, whether the default archetype holds (or which allowed archetype fits) and the reasons. | 1 | `lake` | `tests/industry_graph/test_pricing_adjudicator.py` (TC-PAD-001..003) | 2026-11-07 |
+| `MoatClaim` | `quant_cn.quant_cn.industry_graph.moat_extractor` | 4 | BaseModel | One claimed advantage: its moat type, a short statement, the figure the company gives (if any) and the evidence. | 0 | `industry_graph.MoatReply`, `industry_graph.MoatExtractor` | `tests/industry_graph/test_moat_extractor.py` (TC-ME-002..002) | 2026-11-07 |
+| `MoatReply` | `quant_cn.quant_cn.industry_graph.moat_extractor` | 4 | BaseModel | The LLM reply before validation. | 0 | `industry_graph.MoatExtractor` | `tests/industry_graph/test_moat_extractor.py` (TC-ME-003..003) | 2026-11-07 |
+| `MoatResult` | `quant_cn.quant_cn.industry_graph.moat_extractor` | 4 | none | The quote-checked claims of one report. | 0 | `industry_graph.MoatExtractor` | `tests/industry_graph/test_moat_extractor.py` (TC-ME-001..001) | 2026-11-07 |
+| `MoatExtractor` | `quant_cn.quant_cn.industry_graph.moat_extractor` | 4 | none | Read the 核心竞争力分析 pages of one annual report and list the advantages the company claims, each classified as one of MOAT_TYPES (cost, switching costs, intangibles, network effects, efficient scale) with the figure it cites. | 1 | `lake` | `tests/industry_graph/test_moat_extractor.py` (TC-ME-001..003) | 2026-11-07 |
 
 ## B. Class details (one block per class; methods carry their own purpose)
 
@@ -388,14 +395,15 @@ never column lists (those live in section E).
 | `_run_curate` (private) | internal helper over 20 lines | Config, argparse.Namespace -> int | — | internal | — |
 
 ### `ResearchCommands` — `quant_cn.cli` (L8)
-- **Purpose:** The research-side CLI commands, kept apart so QuantCnCli stays within its size limit: `release-lags` (D-086) and `evaluate` (factor campaign reports and trial log, plan 04 phase 5). QuantCnCli parses the arguments and dispatches here.
+- **Purpose:** The research-side CLI commands, kept apart so QuantCnCli stays within its size limit: `release-lags` (D-086), `evaluate` (factor campaign reports and trial log, plan 04 phase 5) and `watchlist` (D-120). QuantCnCli parses the arguments and dispatches here.
 - **Base:** none. **Depends on (injected):** Console.
 - **Used by:** `cli.QuantCnCli`.
-- **Tests:** `tests/test_cli.py` (TC-QCC-008..009).
+- **Tests:** `tests/test_cli.py` (TC-QCC-008..009, 011).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
 | `__init__` | wire dependencies | Console -> None | — | callers of the class | — |
+| `build_parser` | Add the `release-lags`, `watchlist` and `evaluate` subcommands to the CLI parser. | argparse._SubParsersAction -> None | — | `cli.QuantCnCli._build_parser` | see class |
 
 ### `BaseApiClient` — `quant_cn.core.base_api_client` (L1)
 - **Purpose:** Abstract vendor client: one logical query returns all pages as one DataFrame.
@@ -557,11 +565,29 @@ never column lists (those live in section E).
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
 
+### `WatchlistEntry` — `quant_cn.core.config` (L1)
+- **Purpose:** One stock the user watches and the price range at which they would buy it (D-120); loaded from git-ignored `config/local.watchlist.yaml`.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `core.Config`, `portfolio.WatchlistBuilder`.
+- **Tests:** `tests/core/test_config.py` (TC-C-015).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `WatchlistSettings` — `quant_cn.core.config` (L1)
+- **Purpose:** Thresholds and windows of the watchlist page: near_pct, history_days, consensus_days (base.yaml `watchlist`, D-120).
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `core.Config`, `portfolio.WatchlistBuilder`.
+- **Tests:** `tests/core/test_config.py` (TC-C-016).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
 ### `Config` — `quant_cn.core.config` (L1)
 - **Purpose:** The typed configuration injected everywhere: YAML defaults, machine overrides, environment.
 - **Base:** BaseModel. **Depends on (injected):** —.
-- **Used by:** `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands`, `cli.DocumentCommands`.
-- **Tests:** `tests/core/test_config.py` (TC-C-001..013).
+- **Used by:** `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands`, `cli.DocumentCommands`, `portfolio.WatchlistBuilder`.
+- **Tests:** `tests/core/test_config.py` (TC-C-001..016).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -1450,6 +1476,18 @@ never column lists (those live in section E).
 | `__init__` | wire dependencies | Path, Clock -> None | — | callers of the class | — |
 | `record_orphans` | Write the fetch-log orphans removed by this rebuild. | dict[str, list[str]] -> Path | `LakeError` | as class | see class |
 | `record_rewrites` | Record every rewritten raw file (old vs new rows) and delete the kept `.prev` copies. | — -> list[dict[str, object]] | `LakeError` | as class | see class |
+
+### `WatchlistBuilder` — `quant_cn.portfolio.watchlist_builder` (L5)
+- **Purpose:** Join the user's buy targets (`Config.watchlist`) with the latest unadjusted close, daily_basic valuation, 52-week range, weekly closes and the report_rc consensus; compute gap to the buy price, status (in / near / far) and PE and dividend yield at the buy price; write `watchlist.json` for the chain app (plan 15 ph7, D-120).
+- **Base:** none. **Depends on (injected):** `Config`, `LakeQuery`, `DateCodec`.
+- **Used by:** `cli.ResearchCommands` (`watchlist` command).
+- **Tests:** `tests/portfolio/test_watchlist_builder.py` (TC-WB-001..009).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `build` | the watchlist document as of the latest day in curated.daily | () -> dict {as_of, near_pct, entries, missing} | LakeError | `write` | TC-WB-001..007, 009 |
+| `write` | build and write `watchlist.json` into the app data dir | out_dir: Path -> Path | LakeError | `cli.ResearchCommands._run_watchlist` | TC-WB-008 |
+| `compute_status` | classify a price against the top of its buy range | price, buy_high, near_pct -> "in" / "near" / "far" | — | `build` | TC-WB-002 |
 
 ### `ReleaseLagChecker` — `quant_cn.lake.release_lag_checker` (L2)
 - **Purpose:** For every dataset with `known_on_rule: period_end_lag` and `release_dates` set, measure the observed lag (release date - period end) in that curated release-date dataset and count releases that came later than the rule. A rule earlier than any observed release is look-ahead; D-086 raises it to the observed maximum and `make check` warns if it recurs. The period of a release is the last month end before it, or its own month end when the release falls on/after day 25 (month-end PMI releases).
@@ -2435,6 +2473,44 @@ never column lists (those live in section E).
 |---|---|---|---|---|---|
 | `__init__` | wire dependencies | BaseLlmClient, str \| None -> None | — | callers of the class | — |
 | `fetch_verdict` | Ask for the verdict and validate it. | str, str, Mapping[str, str], Mapping[str, str] -> Adjudication | `DataSourceError` | as class | see class |
+
+### `MoatClaim` — `quant_cn.quant_cn.industry_graph.moat_extractor` (L4)
+- **Purpose:** One claimed advantage: its moat type, a short statement, the figure the company gives (if any) and the evidence.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.MoatReply`, `industry_graph.MoatExtractor`.
+- **Tests:** `tests/industry_graph/test_moat_extractor.py` (TC-ME-002..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `MoatReply` — `quant_cn.quant_cn.industry_graph.moat_extractor` (L4)
+- **Purpose:** The LLM reply before validation.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.MoatExtractor`.
+- **Tests:** `tests/industry_graph/test_moat_extractor.py` (TC-ME-003..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `MoatResult` — `quant_cn.quant_cn.industry_graph.moat_extractor` (L4)
+- **Purpose:** The quote-checked claims of one report.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.MoatExtractor`.
+- **Tests:** `tests/industry_graph/test_moat_extractor.py` (TC-ME-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `MoatExtractor` — `quant_cn.quant_cn.industry_graph.moat_extractor` (L4)
+- **Purpose:** Read the 核心竞争力分析 pages of one annual report and list the advantages the company claims, each classified as one of MOAT_TYPES (cost, switching costs, intangibles, network effects, efficient scale) with the figure it cites. These are claims, not proof: the rule layer tests them against ROIC, margins and share (§4.4). Kept: claims with an allowed type and a verbatim quote on a sent page.
+- **Base:** none. **Depends on (injected):** BaseLlmClient, int, str | None.
+- **Used by:** `lake`.
+- **Tests:** `tests/industry_graph/test_moat_extractor.py` (TC-ME-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | BaseLlmClient, int, str \| None -> None | — | callers of the class | — |
+| `fetch_claims` | Ask the model about one report and validate the answer against the text. | str, Sequence[tuple[int, str]] -> MoatResult | `DataSourceError` | as class | see class |
 
 ## C. Abstract base classes / extension points
 

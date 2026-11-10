@@ -12,6 +12,6 @@ React + TypeScript front end (Vite, Cytoscape.js). Sources only: dependencies in
 | File | Purpose | Contains |
 |---|---|---|
 | `package.json` | pinned dependencies and scripts |  |
-| `tsconfig.json` | strict TypeScript |  |
+| `tsconfig.json` | strict TypeScript (JSON imports on for test fixtures) |  |
 | `vite.config.ts` | dev proxy to the Go API; vitest config |  |
 | `index.html` | page shell |  |

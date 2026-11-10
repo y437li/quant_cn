@@ -32,6 +32,17 @@ export interface Kpi { id: string; name: string; unit?: string; freq?: string; d
 export interface SearchHit { kind: "company" | "node"; id: string; label: string; sub: string }
 export interface Maker { code: string; name: string; item: string; pct: number; how: string }
 export interface Network { nodes: { code: string; name: string; in_sector: boolean }[]; edges: { from: string; to: string; kind: string; label: string }[] }
+/** Watchlist (观察账本, plan 15 phase 7): every number is computed in Python; fractions for gap, yields. */
+export type WatchStatus = "in" | "near" | "far";
+export interface WeeklyClose { date: string; close: number }
+export interface WatchlistEntry {
+  code: string; name: string; buy_low: number; buy_high: number; added: string; thesis: string; watch: string;
+  price: number; price_date: string; pe_ttm: number | null; pb: number | null; div_yield: number | null; dps_ttm: number | null;
+  eps_year: string | null; eps_fy: number | null; eps_brokers: number | null; target_low: number | null; target_high: number | null;
+  low_52w: number | null; high_52w: number | null; gap_to_buy: number; pe_at_buy: number | null; yield_at_buy: number | null;
+  status: WatchStatus; weekly: WeeklyClose[];
+}
+export interface Watchlist { as_of: string; near_pct: number; entries: WatchlistEntry[]; missing: string[] }
 
 async function getJSON<T>(path: string): Promise<T> {
   const r = await fetch(path);
@@ -51,5 +62,6 @@ export const api = {
   listMakers: (id: string) => getJSON<Maker[]>(`/api/nodes/${enc(id)}/makers`),
   listSectorCompanies: (l1: string) => getJSON<CompanyBrief[]>(`/api/sectors/${enc(l1)}/companies`),
   getSectorNetwork: (l1: string, outside: boolean) => getJSON<Network>(`/api/sectors/${enc(l1)}/network?outside=${outside}`),
+  getWatchlist: () => getJSON<Watchlist>("/api/watchlist"),
   getView: (scope: "product" | "industry", id: string) => getJSON<BrokerView>(`/api/views/${scope}/${enc(id)}`).catch(() => null),
 };

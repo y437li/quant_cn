@@ -137,3 +137,35 @@ def test_tc_c_014_llm_config(repo: Path, tmp_path: Path) -> None:
         Config.load(repo_root=repo, env={"QUANT_CN_LAKE_ROOT": str(tmp_path / "l2")}).llm.api_key
         == ""
     )
+
+
+# TC-C-015
+def test_tc_c_015_watchlist_entries(repo: Path, tmp_path: Path) -> None:
+    env = {"QUANT_CN_LAKE_ROOT": str(tmp_path / "lake")}
+    assert Config.load(repo_root=repo, env=env).watchlist == []
+    path = repo / "config" / "local.watchlist.yaml"
+    path.write_text(
+        "entries:\n"
+        "  - {code: '002507.SZ', buy_low: 9.0, buy_high: 10.0, added: '20261108'}\n"
+        "  - {code: '002847.SZ', buy_low: 25.0, buy_high: 25.0, added: '20261108', thesis: t}\n"
+    )
+    entries = Config.load(repo_root=repo, env=env).watchlist
+    assert [(e.code, e.buy_low, e.buy_high, e.thesis) for e in entries] == [
+        ("002507.SZ", 9.0, 10.0, ""),
+        ("002847.SZ", 25.0, 25.0, "t"),
+    ]
+    path.write_text("entries:\n  - {code: X, buy_low: 10.0, buy_high: 9.0, added: '20261108'}\n")
+    with pytest.raises(ConfigError):
+        Config.load(repo_root=repo, env=env)
+
+
+# TC-C-016
+def test_tc_c_016_watchlist_settings(repo: Path, tmp_path: Path) -> None:
+    env = {"QUANT_CN_LAKE_ROOT": str(tmp_path / "lake")}
+    settings = Config.load(repo_root=repo, env=env).watchlist_settings
+    assert settings.near_pct == pytest.approx(0.10)
+    assert (settings.history_days, settings.consensus_days) == (365, 30)
+    base = repo / "config" / "base.yaml"
+    text = base.read_text()
+    base.write_text(text[: text.index("\nwatchlist:")] + "\n")
+    assert Config.load(repo_root=repo, env=env).watchlist_settings.history_days == 365
