@@ -6,6 +6,7 @@ Tests for `quant_cn.calculation`; known answers from Black-76 synthetic chains (
 | File | Purpose | Contains |
 |---|---|---|
 | `test_black76_model.py` | tests for `black76_model`, one function per TC ID |  |
+| `test_company_cycle_panel.py` | tests for `company_cycle_panel`, one function per TC ID | `PanelHarness` |
 | `test_expiry_clock.py` | tests for `expiry_clock`, one function per TC ID |  |
 | `test_forward_price_estimator.py` | tests for `forward_price_estimator`, one function per TC ID |  |
 | `test_futures_positioning.py` | tests for `futures_positioning`, one function per TC ID |  |
@@ -17,3 +18,5 @@ Tests for `quant_cn.calculation`; known answers from Black-76 synthetic chains (
 | `test_term_selector.py` | tests for `term_selector`, one function per TC ID |  |
 | `test_variance_strip_calculator.py` | tests for `variance_strip_calculator`, one function per TC ID |  |
 | `test_vix_calculator.py` | tests for `vix_calculator`, one function per TC ID |  |
+| `test_futures_curve.py` | tests for `futures_curve`, one function per TC ID | |
+| `test_implied_expectations.py` | tests for `implied_expectations`, one function per TC ID | |

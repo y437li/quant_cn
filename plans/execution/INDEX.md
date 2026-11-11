@@ -17,5 +17,5 @@ Execution plans, `NN_<slug>.md`, from the `plan` skill template. `ROADMAP.md` is
 | `12_industry_chain_graph.md` | evidence-backed A-share industry-chain graph: Opus taxonomy, CNINFO documents, DeepSeek extraction/validation, graph query | 6 phases, class table, risks |
 | `13_broker_valuation.md` | broker valuation logic from research reports: method, multiples, target price, comparables, assumptions; per-industry induction | 4 phases, risks |
 | `15_chain_web_app.md` | industry-chain web app: React front end, Go read-only API, Python graph export | |
-| `16_structural_deduction.md` | structural deduction pipeline: four-dimension industry metrics, structure labels, price transmission, scenarios, replay | |
+| `16_structural_deduction.md` | opportunity discovery and market-implied deduction: cycle panel, priced-in expectations, screens, deep-dive workflow, replay | |
 | `ROADMAP.md` | every plan with what it builds, which design it implements, dependencies and status | roadmap table, status vocabulary |

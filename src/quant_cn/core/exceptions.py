@@ -177,6 +177,7 @@ class LakeError(QuantCnError):
         lake.DocumentViews               -- view creation
         cli.DocumentCommands             -- catalog busy when refreshing document views
         portfolio.WatchlistBuilder  -- empty curated.daily, missing output directory
+        lake.StatementVersionReader  -- view missing, bad dates
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError

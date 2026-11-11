@@ -23,6 +23,7 @@ L1: base classes, exceptions, Config, Schema, DateCodec, TickerNormalizer, loggi
 | `watchlist_entry.py` | the user's watchlist targets and the watchlist page settings (D-120) | `WatchlistEntry`, `WatchlistSettings` |
 | `dataset_spec.py` | Typed view of one `config/datasets.yaml` entry: endpoint, sweep, keys, curated layout | `ValuesFromDataset`, `SweepSpec`, `CuratedSpec`, `DatasetSpec` |
 | `date_codec.py` | The only place that converts between `YYYYMMDD` strings and dates (D-005) | `DateCodec` |
+| `discovery_settings.py` | settings of the opportunity-discovery pipeline (plan 16, D-121) | `DiscoverySettings` |
 | `document_source.py` | which documents are downloaded and where they land, as data (config/documents.yaml, D-101) | `DocumentRule`, `DocumentSource` |
 | `exceptions.py` | Project exception hierarchy; every raised error is a `QuantCnError` (CODING_STANDARD §2.5) | `QuantCnError`, `ConfigError`, `SchemaError`, `DataSourceError`, `PermissionDeniedError`, `LakeError` |
 | `frames.py` | Shared panel schemas that cross package boundaries (SRC_DESIGN §3); long format, YYYYMMDD dates | `PRICE_PANEL`, `FUNDAMENTALS_PIT`, `VIX_PANEL`, `GEX_PANEL`, `FUTURES_POSITIONING`, `MARGIN_VINTAGES`, `MARGIN_LADDER`, `UNIVERSE_PANEL`, `FACTOR_PANEL`, `IC_SERIES`, `IC_TEST`, `TRIAL_LOG`, `FORWARD_RETURN`, `QUANTILE_RETURNS`, `EXPOSURE_PANEL` |
