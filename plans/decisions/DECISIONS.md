@@ -1043,3 +1043,11 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Consequences: plan 18; new CNINFO keyword 股权激励 and doc type `incentive_plan`; periodic-report rules exclude 问询函 / 回复; `SectionDetector` gains the 经营计划 section; the Q&A datasets must be brought current. Amendment 2026-11-11 (user): contracts, bid wins and operating-data announcements are tracked the same way (`ContractItem`, quote-checked, `known_on` = ann_date); backlog = announced, unrecognised value / trailing revenue.
 - Links: D-102, D-105, D-122, plan 12, plan 13, plan 16, plan 18
 
+### D-125 Label backfill runs one fiscal year at a time into per-year staging, period taken from the title
+- Status: accepted (2026-11-11, user: "我们可以补齐老数据的label" → "we can do it year by year").
+- Context: labels cover only the latest period (FY2025 annual, 2026 H1, 2026 Q1/Q3, broker reports of the last 12 months) while FY2023–FY2024 annual reports, 2024–2025 interim reports and 37k older broker reports are downloaded or listed. `applications_full.py` labels every PDF in a folder as the current period, and `business_modes` / `moat_claims` rows carry no period, so appending history to the current files would mix years.
+- Decision: `meta/runs/backfill_annual.py <FY> <stage>` selects reports from the manifest by the title's fiscal year (latest version per company), reuses AnnualReportParser, ApplicationExtractor, BusinessModeExtractor and MoatExtractor unchanged, writes `meta/runs/backfill/fy<FY>/{parse.parquet, applications, business_modes, moat_claims}.jsonl` with `period` on every row, on Ark (D-122). Order: FY2024, FY2023 annual; broker stock reports 2023-11 → 2025-10 (download, then ValuationExtractor); 2024–2025 interim reports. Industry reports need a new extractor and a plan change first.
+- Alternatives: append to the current files (rejected: mixed years, period bug); one big run over everything (rejected by the user: year by year lets each year be checked before the next).
+- Consequences: the current FY2025 files stay the source of the chain view; the per-year files become the history that plan 15 ph2 (`GraphExportStep`) and plan 17 / 18 read; the old `applications_full.py` must not be rerun without a title-year filter.
+- Links: D-098, D-118, D-122, plan 12 ph4, plan 13 ph3, plan 17, plan 18
+
