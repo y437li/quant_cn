@@ -1040,6 +1040,6 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Context: the lake has earnings previews (`forecast_vip`, 84.1% of 2026 H1 actuals inside the range) but no forward statements; business plans, IR records and incentive targets sit in CNINFO PDFs.
 - Decision: one item table (company, source, metric, period, value or range, kind target / expectation / commitment, quote, page, `known_on` = ann_date next session). LLM labeling runs on the Ark API (D-122) and every item is quote-checked. Outcomes use the first actual known after the item, never a restated value. Credibility per company = hit rate and mean bias with n.
 - Alternatives: previews only (rejected: not forward-looking); LLM summary of "management tone" (rejected: unverifiable, not matchable to actuals); latest restated actuals (rejected: look-ahead).
-- Consequences: plan 18; new CNINFO keyword 股权激励 and doc type `incentive_plan`; periodic-report rules exclude 问询函 / 回复; `SectionDetector` gains the 经营计划 section; the Q&A datasets must be brought current.
+- Consequences: plan 18; new CNINFO keyword 股权激励 and doc type `incentive_plan`; periodic-report rules exclude 问询函 / 回复; `SectionDetector` gains the 经营计划 section; the Q&A datasets must be brought current. Amendment 2026-11-11 (user): contracts, bid wins and operating-data announcements are tracked the same way (`ContractItem`, quote-checked, `known_on` = ann_date); backlog = announced, unrecognised value / trailing revenue.
 - Links: D-102, D-105, D-122, plan 12, plan 13, plan 16, plan 18
 
