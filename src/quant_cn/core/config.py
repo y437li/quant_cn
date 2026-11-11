@@ -126,13 +126,13 @@ class DownloadConfig(BaseModel):
 class LlmConfig(BaseModel):
     """
     Purpose:
-        The LLM endpoint used for extraction (D-098): OpenAI-compatible chat completions URL,
+        The LLM endpoint used for extraction (D-098, D-122): OpenAI-compatible chat completions URL,
         default model, limits, and the API key, which comes from env DEEPSEEK_API_KEY only.
 
     Contract:
         Input:
             url:            str        -- chat-completions endpoint
-            model:          str        -- default model, e.g. "deepseek-flash"
+            model:          str        -- default model, e.g. "deepseek-v4-1-flash"
             timeout_s:      float > 0
             retries:        int >= 0
             retry_sleep_s:  float >= 0
@@ -158,8 +158,8 @@ class LlmConfig(BaseModel):
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    url: str = "https://api.deepseek.com/chat/completions"
-    model: str = "deepseek-flash"
+    url: str = "https://ark.cn-beijing.volces.com/api/coding/v3/chat/completions"
+    model: str = "deepseek-v4-1-flash"
     timeout_s: float = Field(default=120.0, gt=0)
     retries: int = Field(default=3, ge=0)
     retry_sleep_s: float = Field(default=10.0, ge=0)

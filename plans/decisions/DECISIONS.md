@@ -762,7 +762,7 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Links: plan 12 ph1, ph5
 
 ### D-098 DeepSeek extracts and validates; Opus reviews samples and merges taxonomy proposals
-- Status: proposed with plan 12 (2026-11-07).
+- Status: proposed with plan 12 (2026-11-07); provider, endpoint and default model superseded by D-122 (2026-11-11).
 - Decision: `DeepSeekClient` (`DEEPSEEK_API_KEY` from `.env` only) runs both the extractor and the validator, with separate prompts. Default model `deepseek-flash` (user, 2026-11-07); the phase-4 pilot runs flash and `deepseek-v4-pro` on the same 50 companies, and pro is used only where flash misses the 85% precision bar (customer/supplier edges, the 0.70–0.90 band). The old key was revoked by the user on 2026-11-07. Every response is cached by prompt hash so rebuilds are free and deterministic. Opus reviews the pilot and validation samples and merges node proposals into the taxonomy.
 - Links: plan 12 ph4, ph5
 
@@ -1018,3 +1018,11 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Alternatives: industry-label pipeline (v1, rejected: describes, does not discover); LLM judgement without tags (rejected: unverifiable); a single "normal earnings" base (rejected: drives opposite answers).
 - Consequences: plan 16 v2 classes (`CompanyCyclePanel`, `FuturesCurve`, `ImpliedExpectations`, `IdeaScreener`, `ClaimVerifier`, `DiscoveryReplay`, `DiscoveryStep`); new `config/discovery_rules.yaml`; app page 机会发现.
 - Links: BUSINESS_MODEL_DESIGN §4.2, §4b.4–4b.6; D-112, D-118; plan 16
+
+### D-122 LLM extraction runs on Volcengine Ark Coding Plan, model pinned to deepseek-v4-1-flash
+- Status: accepted (2026-11-11, user "改一下" after a live test of the new key).
+- Context: the user replaced the DeepSeek direct key with a Volcengine Ark Coding Plan key (`ark-…`), which api.deepseek.com does not accept.
+- Decision: `llm.url` = `https://ark.cn-beijing.volces.com/api/coding/v3/chat/completions`; default model `deepseek-v4-1-flash` (pinned, not the moving alias `ark-code-latest`, so the prompt-hash cache stays one model); `deepseek-v4-pro` stays available on the same plan. Key still from env `DEEPSEEK_API_KEY`; `DeepSeekClient` unchanged (same OpenAI-compatible payload, `thinking: {type: disabled}` and JSON mode verified on 2026-11-11). Prices set to 0 because the plan is a flat subscription.
+- Alternatives: `ark-code-latest` (rejected: model can change under the cache); Ark pay-per-use `/api/v3` (not chosen: user holds a Coding Plan key); keep DeepSeek direct (rejected: user switched keys).
+- Consequences: cached replies under `deepseek-flash` are not reused (cache key includes model); logged `cost_cny` reads 0; plan rate limits and terms of use apply to bulk extraction and are the user's to check; the rest of D-098 (extractor/validator split, Opus review) stands.
+- Links: D-098, plan 12 ph4

@@ -17,19 +17,22 @@ tushare:
   rate_limit_markers: ["每分钟", "频率"]
   permission_markers: ["权限", "积分"]
 
-llm:                             # extraction model (D-098); key from env DEEPSEEK_API_KEY only
-  url: https://api.deepseek.com/chat/completions
-  model: deepseek-flash
+llm:                             # extraction model (D-098, D-122); key from env DEEPSEEK_API_KEY only
+  url: https://ark.cn-beijing.volces.com/api/coding/v3/chat/completions  # Volcengine Ark Coding Plan
+  model: deepseek-v4-1-flash     # pinned, not ark-code-latest, so the prompt-hash cache stays one model
   timeout_s: 180
   retries: 3
   retry_sleep_s: 10
   min_interval_s: 0.2
   max_tokens: 8000
   thinking: false                # reasoning used 13k tokens on one report and truncated JSON at 6k
-  # peak prices, CNY per 1M tokens (api-docs.deepseek.com pricing, 2026-11-07); off-peak = half
+  # CNY per 1M tokens; Ark Coding Plan is a flat subscription, so marginal cost is 0 (D-122).
+  # DeepSeek direct pay-per-use rates kept for reference (2026-11-07, peak; off-peak = half):
+  #   deepseek-flash {input_hit: 0.04, input_miss: 2.0, output: 8.0}
+  #   deepseek-v4-pro {input_hit: 0.30, input_miss: 9.0, output: 27.0}
   prices:
-    deepseek-flash: {input_hit: 0.04, input_miss: 2.0, output: 8.0}
-    deepseek-v4-pro: {input_hit: 0.30, input_miss: 9.0, output: 27.0}
+    deepseek-v4-1-flash: {input_hit: 0.0, input_miss: 0.0, output: 0.0}
+    deepseek-v4-pro: {input_hit: 0.0, input_miss: 0.0, output: 0.0}
   peak_hours: [[9, 12], [14, 18]]  # Beijing time, Mon-Fri (holidays treated as peak: conservative)
 
 download:

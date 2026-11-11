@@ -69,7 +69,7 @@ versions and corrections. Keeping full Chinese reports only leaves ≈ 60k PDFs.
 
 ## Open questions
 - Notion parent page for plan mirrors (still `pending` for all plans).
-- DeepSeek budget ceiling for the full run; models available: `deepseek-v4-pro`, `deepseek-flash` (key in `.env`, verified 2026-11-07).
+- DeepSeek budget ceiling for the full run; models available: `deepseek-v4-pro`, `deepseek-flash` (key in `.env`, verified 2026-11-07). Since 2026-11-11 served via Volcengine Ark Coding Plan (D-122): `deepseek-v4-1-flash` (default) and `deepseek-v4-pro`, flat subscription, no per-token cost.
 
 ## Log
 

@@ -49,7 +49,7 @@ def test_tc_dsc_001_request_and_parse(clock: FakeClock) -> None:
     transport = FakeLlmTransport([build_reply('{"answer": "动力电池"}')])
     reply = DeepSeekClient(build_config(), clock, None, transport).fetch_json("sys", "user")
     payload, headers = transport.calls[0]
-    assert payload["model"] == "deepseek-flash" and payload["temperature"] == 0
+    assert payload["model"] == "deepseek-v4-1-flash" and payload["temperature"] == 0
     assert payload["response_format"] == {"type": "json_object"}
     assert payload["thinking"] == {"type": "disabled"}
     assert [m["role"] for m in payload["messages"]] == ["system", "user"]
@@ -95,7 +95,7 @@ class BeijingClock(FakeClock):
 
 # TC-DSC-004
 def test_tc_dsc_004_cost() -> None:
-    prices = {"deepseek-flash": {"input_hit": 0.04, "input_miss": 2.0, "output": 8.0}}
+    prices = {"deepseek-v4-1-flash": {"input_hit": 0.04, "input_miss": 2.0, "output": 8.0}}
     bj = dt.timezone(dt.timedelta(hours=8))
     peak = DeepSeekClient(
         build_config(prices=prices), BeijingClock(dt.datetime(2026, 11, 9, 10, tzinfo=bj))
@@ -103,12 +103,12 @@ def test_tc_dsc_004_cost() -> None:
     off = DeepSeekClient(
         build_config(prices=prices), BeijingClock(dt.datetime(2026, 11, 7, 10, tzinfo=bj))
     )
-    assert peak.compute_cost("deepseek-flash", 1_000_000, 1_000_000, 1_000_000) == pytest.approx(
-        10.04
-    )
-    assert off.compute_cost("deepseek-flash", 1_000_000, 1_000_000, 1_000_000) == pytest.approx(
-        5.02
-    )
+    assert peak.compute_cost(
+        "deepseek-v4-1-flash", 1_000_000, 1_000_000, 1_000_000
+    ) == pytest.approx(10.04)
+    assert off.compute_cost(
+        "deepseek-v4-1-flash", 1_000_000, 1_000_000, 1_000_000
+    ) == pytest.approx(5.02)
     assert peak.compute_cost("unknown-model", 10, 0, 10) == 0.0
     transport = FakeLlmTransport([build_reply('{"a": 1}')])
     client = DeepSeekClient(
@@ -133,5 +133,7 @@ def test_tc_dsc_005_ledger(clock: FakeClock, tmp_path: Path) -> None:
     lines = [json.loads(x) for x in ledger.read_text().splitlines()]
     assert [x["label"] for x in lines] == ["pilot", "pilot again"]
     assert (
-        lines[0]["calls"] == 1 and lines[0]["model"] == "deepseek-flash" and "cost_cny" in lines[0]
+        lines[0]["calls"] == 1
+        and lines[0]["model"] == "deepseek-v4-1-flash"
+        and "cost_cny" in lines[0]
     )

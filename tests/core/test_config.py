@@ -131,7 +131,7 @@ def test_tc_c_013_campaign(config: Config, tmp_path: Path) -> None:
 def test_tc_c_014_llm_config(repo: Path, tmp_path: Path) -> None:
     env = {"QUANT_CN_LAKE_ROOT": str(tmp_path / "lake"), "DEEPSEEK_API_KEY": "sk-secret"}
     config = Config.load(repo_root=repo, env=env)
-    assert config.llm.model == "deepseek-flash" and config.llm.thinking is False
+    assert config.llm.model == "deepseek-v4-1-flash" and config.llm.thinking is False
     assert config.llm.api_key == "sk-secret" and "sk-secret" not in repr(config.llm)
     assert (
         Config.load(repo_root=repo, env={"QUANT_CN_LAKE_ROOT": str(tmp_path / "l2")}).llm.api_key
