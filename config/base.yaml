@@ -33,7 +33,7 @@ llm:                             # extraction model (D-098, D-122); key from env
   prices:
     deepseek-v4-1-flash: {input_hit: 0.0, input_miss: 0.0, output: 0.0}
     deepseek-v4-pro: {input_hit: 0.0, input_miss: 0.0, output: 0.0}
-  peak_hours: [[9, 12], [14, 18]]  # Beijing time, Mon-Fri (holidays treated as peak: conservative)
+  peak_hours: []                 # Ark Coding Plan has no peak pricing (D-122); DeepSeek direct was [[9, 12], [14, 18]]
 
 download:
   default_start: "20190101"      # D-015b

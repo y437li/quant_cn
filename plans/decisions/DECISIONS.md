@@ -1024,5 +1024,22 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Context: the user replaced the DeepSeek direct key with a Volcengine Ark Coding Plan key (`ark-…`), which api.deepseek.com does not accept.
 - Decision: `llm.url` = `https://ark.cn-beijing.volces.com/api/coding/v3/chat/completions`; default model `deepseek-v4-1-flash` (pinned, not the moving alias `ark-code-latest`, so the prompt-hash cache stays one model); `deepseek-v4-pro` stays available on the same plan. Key still from env `DEEPSEEK_API_KEY`; `DeepSeekClient` unchanged (same OpenAI-compatible payload, `thinking: {type: disabled}` and JSON mode verified on 2026-11-11). Prices set to 0 because the plan is a flat subscription.
 - Alternatives: `ark-code-latest` (rejected: model can change under the cache); Ark pay-per-use `/api/v3` (not chosen: user holds a Coding Plan key); keep DeepSeek direct (rejected: user switched keys).
-- Consequences: cached replies under `deepseek-flash` are not reused (cache key includes model); logged `cost_cny` reads 0; plan rate limits and terms of use apply to bulk extraction and are the user's to check; the rest of D-098 (extractor/validator split, Opus review) stands.
+- Consequences: cached replies under `deepseek-flash` are not reused (cache key includes model); logged `cost_cny` reads 0; plan rate limits and terms of use apply to bulk extraction and are the user's to check; the rest of D-098 (extractor/validator split, Opus review) stands. Amendment 2026-11-11: `llm.peak_hours: []`, so the run scripts' off-peak wait no longer blocks daytime runs.
 - Links: D-098, plan 12 ph4
+
+### D-123 Peers come from labeled evidence and replace SW L3 in peer comparisons
+- Status: accepted (2026-11-11, user approved plan 17).
+- Context: peer comparisons (GM rank, pricing power, moat) use Shenwan L3, which mixes chain stages; D-102's `GraphQuery.peers` was never built. Labels now cover product mix (83% of companies with a cosine ≥ 0.5 peer), business mode (94%), broker comparables (17%, 3,813 pairs) and named competitors (476 resolved mentions).
+- Decision: score company pairs from these signals with config weights and a chain-stage penalty, keep the reason per pair, cluster within chain stage into named peer groups, and use the groups instead of SW L3; companies with weak evidence fall back to SW L3 and are flagged. Quality is measured on broker pairs named in ≥ 2 reports, held out of the evidence.
+- Alternatives: SW L3 only (rejected: mixes upstream and downstream); product cosine only (rejected: mapping errors pair equipment makers with their customers); LLM judges every pair (rejected: unverifiable, O(n²)).
+- Consequences: plan 17; `GraphQuery.peers` moves from plan 12 ph6 to plan 17; groups are a snapshot (`as_of`), not PIT, so factor backtests must not join them historically.
+- Links: D-099, D-102, D-118, D-122, plan 12 ph6, plan 13, plan 17
+
+### D-124 Company guidance is tracked as quote-checked PIT items matched to first-known actuals
+- Status: accepted (2026-11-11, user approved plan 18).
+- Context: the lake has earnings previews (`forecast_vip`, 84.1% of 2026 H1 actuals inside the range) but no forward statements; business plans, IR records and incentive targets sit in CNINFO PDFs.
+- Decision: one item table (company, source, metric, period, value or range, kind target / expectation / commitment, quote, page, `known_on` = ann_date next session). LLM labeling runs on the Ark API (D-122) and every item is quote-checked. Outcomes use the first actual known after the item, never a restated value. Credibility per company = hit rate and mean bias with n.
+- Alternatives: previews only (rejected: not forward-looking); LLM summary of "management tone" (rejected: unverifiable, not matchable to actuals); latest restated actuals (rejected: look-ahead).
+- Consequences: plan 18; new CNINFO keyword 股权激励 and doc type `incentive_plan`; periodic-report rules exclude 问询函 / 回复; `SectionDetector` gains the 经营计划 section; the Q&A datasets must be brought current.
+- Links: D-102, D-105, D-122, plan 12, plan 13, plan 16, plan 18
+
