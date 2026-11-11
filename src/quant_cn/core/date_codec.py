@@ -38,6 +38,8 @@ class DateCodec:
         factor.FactorFactory                       -- injected type or call
         portfolio.WatchlistBuilder                 -- window start dates
         cli.ResearchCommands                       -- composition of WatchlistBuilder
+        lake.StatementVersionReader                -- validates as_of and start
+        calculation.CompanyCyclePanel              -- validates as_of
 
     Test cases:
         TC-DC-001  to_date/to_str round trip

@@ -125,3 +125,11 @@ watchlist:                       # plan 15 phase 7 (D-120); targets in config/lo
   near_pct: 0.10                 # within 10% above the buy price = "near"
   history_days: 365              # 52-week range and weekly line
   consensus_days: 30             # report_rc forecasts counted in the EPS consensus
+
+discovery:                       # plan 16 (D-121)
+  history_years: 10              # annual reports behind the cycle norm (median profit, max margin)
+  min_years: 5                   # fewer annual reports -> cycle columns NaN
+  normal_pe: 12                  # PE of normal profit: primary base of years priced (ImpliedExpectations)
+  discount_rate: 0.09            # discount rate of excess profit and of the reverse DCF
+  dcf_years: 10                  # explicit years of the reverse DCF before exiting at normal_pe
+  max_years: 50                  # years priced above this are capped (market pays a perpetuity)

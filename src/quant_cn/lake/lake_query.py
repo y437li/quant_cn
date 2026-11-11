@@ -51,6 +51,7 @@ class LakeQuery:
         cli.DocumentCommands             -- injected type or call
         data_loading.DocumentDownloader  -- metadata and manifest reads
         portfolio.WatchlistBuilder       -- prices, valuation and consensus for the watchlist
+        lake.StatementVersionReader      -- statement versions known on a date
 
     Test cases:
         TC-LQ-001  sql returns a DataFrame with parameters bound

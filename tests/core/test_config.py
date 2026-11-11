@@ -169,3 +169,28 @@ def test_tc_c_016_watchlist_settings(repo: Path, tmp_path: Path) -> None:
     text = base.read_text()
     base.write_text(text[: text.index("\nwatchlist:")] + "\n")
     assert Config.load(repo_root=repo, env=env).watchlist_settings.history_days == 365
+
+
+def test_tc_c_017_discovery_settings(repo: Path, tmp_path: Path) -> None:
+    env = {"QUANT_CN_LAKE_ROOT": str(tmp_path / "lake")}
+    settings = Config.load(repo_root=repo, env=env).discovery
+    assert (settings.history_years, settings.min_years) == (10, 5)
+    base = repo / "config" / "base.yaml"
+    text = base.read_text()
+    base.write_text(text[: text.index("\ndiscovery:")] + "\n")
+    assert Config.load(repo_root=repo, env=env).discovery.history_years == 10
+    base.write_text(text.replace("history_years: 10", "history_years: 2"))
+    with pytest.raises(ConfigError):
+        Config.load(repo_root=repo, env=env)
+
+
+# TC-C-018
+def test_tc_c_018_implied_expectation_settings(repo: Path, tmp_path: Path) -> None:
+    env = {"QUANT_CN_LAKE_ROOT": str(tmp_path / "lake")}
+    s = Config.load(repo_root=repo, env=env).discovery
+    assert (s.normal_pe, s.discount_rate, s.dcf_years, s.max_years) == (12.0, 0.09, 10, 50.0)
+    base = repo / "config" / "base.yaml"
+    text = base.read_text()
+    base.write_text(text.replace("discount_rate: 0.09", "discount_rate: 0.5"))
+    with pytest.raises(ConfigError):
+        Config.load(repo_root=repo, env=env)

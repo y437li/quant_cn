@@ -1,73 +1,96 @@
-# 16 — Structural deduction pipeline (结构性推演流程)
+# 16 — Opportunity discovery and market-implied deduction (机会发现与推演流程)
 
 | | |
 |---|---|
-| Status | drafted, awaiting approval |
+| Status | approved 2026-11-09 (user: "都行"); doing phase 1 |
 | Owner | user (approve) / agent (build) |
 | Created | 2026-11-09 |
 | Notion | pending |
-| Decisions | D-121 (proposed), D-112, D-118, D-116, D-005 |
-| Depends on plans | 11 (statements, fut_daily, report_rc), 12 (taxonomy graph, uses_material edges), 15 (app) |
+| Decisions | D-121, D-112, D-118, D-116, D-005 |
+| Depends on plans | 11 (statements, fut_daily, report_rc, margin_detail), 12 (chain graph), 15 (app) |
 
 ## Goal
-A repeatable, point-in-time pipeline: once per quarter after earnings (and weekly for prices), it computes four dimensions for every SW L3 industry and taxonomy product: price, margins, efficiency and structure. It labels each industry's structural state with explicit rules and traces the moves in material prices to the companies that make and use each material. It ranks the survivors in industries that are clearing and turns target prices into required earnings scenarios. A historical replay checks every label before the app shows it as reliable.
+A repeatable pipeline that finds opportunities without being given ideas. For every A-share company and industry it answers, point in time, three questions:
+- **Where is it in its own cycle?**
+- **How much does today's price already pay for?** This is updated daily from prices and futures curves.
+- **Where does that disagree with consensus and the chain evidence?**
+
+It then hands the ranked gaps to a standard, source-tagged deep-dive workflow (industry agents plus chain deduction), verifies the agents' numbers against the lake, and shows the result in the app.
+
+## What v1 got wrong (2026-11-09 sessions)
+- **Industry description is not discovery.** v1 started from L3 labels.
+- **YoY alone misled.** Memory modules looked like an inflection; Q3 profit had already halved QoQ.
+- **"Low PE" was read as an opportunity.** For cyclicals at peak margins it is the opposite (周期股卖便宜买贵).
+- **"Cheap" is the wrong question; "priced in" is the right one.** Aluminium at PE 6.4 already pays for about 7.6 years of excess profit.
+- **Each agent used its own profit base,** which gave opposite answers on the same stock (中远海能: 0 vs 32 years priced).
+- **Claims mixed computed facts, broker views, news and assumptions without labels.** 4 of 17 checked numbers needed correction (VERIFY.md).
 
 ## Scope
 - In:
-  - Implements BUSINESS_MODEL_DESIGN §4.2 (cycle clock), §4b.4 (competition) and §4b.5 (sensitivity) as classes. Logic is moved out of the prototype (`build_market_view.py` clock and P3 slope) and out of the 2026-11-09 scratch scans (`chain_scan.py`, `structure_scan.py`).
-  - Rules live in `config/deduction_rules.yaml`.
-  - Outputs: `derived/deduction/*.parquet` plus JSON for the app.
-  - New app page 推演.
+  - Company cycle panel (PIT, deducted profit).
+  - Market-implied expectations: years priced, the commodity price implied against the futures curve, and reverse DCF.
+  - Idea screens, with rules in `config/discovery_rules.yaml`.
+  - Financial-sector metrics: NIM, asset quality, turnover, premiums.
+  - Deep-dive workflow: brief templates, source-tag schema, and an automatic recheck of [自算] claims.
+  - Historical replay.
+  - App page and watchlist fields.
 - Out:
-  - LLM narrative.
-  - New datasets: freight index, agricultural spot prices (青菜头, 鹌鹑蛋) and lithium makers' mapping gaps go to plan 11 / plan 12 as open items.
-  - Trading signals and portfolio construction (plan 06).
-  - Any computation in Go or TypeScript (D-116).
+  - Trading and portfolio construction (plan 06).
+  - New paid data. Gaps go to plan 11: memory contract prices, freight index, agricultural spot, sulphur and coal spot series.
+  - Any computation in Go / TS (D-116).
 
 ## Phases
 
 | # | Phase | Deliverable | Done criterion | Depends on | Status |
 |---|---|---|---|---|---|
-| 1 | Industry metrics (PIT) | **Company TTM panel at each quarter-end as known on `as_of`** (ann_date ≤ as_of; uses the historical SW membership): revenue, GM, NM, asset turnover, ROE, capex/depreciation (annual), loss flag. Aggregated per SW L3 and per taxonomy product (fina_mainbz). Matched sample for changes, plus median alongside the sum. CR3, entrants and exits. Written to `derived/deduction/industry_metrics.parquet` | Contract tests pass. Numbers at as_of 2026-11-06 match the scratch scan within rounding (PCB GM 26.8%, capex/dep 2.6; 硅料硅片 loss share 100%). No row uses a statement announced after as_of (test) | — | todo |
-| 2 | Structure classifier | Rules for 新兴扩张 / 进入广泛竞争 / 出清·进行中 / 出清·见底 / 供给锁定 / 格局改善 / 无, with thresholds in `config/deduction_rules.yaml`. Each label stores the rule trace (which conditions fired). The trajectory over the last 8 quarters feeds the cycle clock, replacing the prototype's `clock_l3` | One test per rule edge. Labels for every L3. The user spot-checks 30 labels; the bar is ≥ 85% (BMD §4b.6) | 1 | todo |
-| 3 | Price transmission and margin nowcast | Material price index (continuous contracts, `material_prices.yaml`). Maker and user exposure per company from graph edges, weighted by revenue share. Per-company pass-through slope (ΔGM on Δindex, lagged 0–2 quarters). Next-quarter GM nowcast compared with the consensus EPS revision (report_rc, 30 and 90 days) | Tests pass. On 2023Q1–2026Q3 replays the nowcast beats a naive "last GM" forecast for companies with a measured slope (MAE reported). Flag list: costs moved but consensus has not | 1 | todo |
-| 4 | Company layer and scenarios | **Survivor ranking** in clearing industries: net cash, cost position (GM rank in L3), capex discipline, loss streak, debt maturity. **Scenario valuer**: price = EPS × PE at the 5-year min / p10 / median, crossed with EPS paths (flat / −10% / −25% / consensus). It also gives consensus-implied profit for the remaining quarters and the scenario needed to reach a target price. `WatchlistBuilder` adds the scenario grid | Tests pass. The 2026-11-06 values reproduce: 盐津 implied Q4 profit ≈ 1.63 亿, 25 元 = 9.3× TTM; 涪陵 10 元 = 16.3× | 1 | todo |
-| 5 | Historical replay (validation) | Run phases 1–3 at every quarter-end as_of from 2019 (PIT). For each label measure the next-4-quarter margin change and the return relative to SW L1, with NW t and a block bootstrap (`statistic`). Thresholds are frozen before the replay. Report notebook | Every label has a hit rate and t-stat in the notebook. A label is marked `validated` only if its direction holds with t ≥ 2; otherwise the app shows it as `descriptive` | 2, 3 | todo |
-| 6 | Pipeline and app page | `DeductionStep` and `make deduction` (prices weekly, statements after each season) write parquet plus `deduction.json`. Go `GET /api/deduction`. React `#deduction`: industry map (4 dims, label, trajectory), transmission table, survivors, scenarios; links to company pages and the watchlist | `make check` passes (real output). Smoke opens `#deduction` and 3 industries. Registry and INDEX files are current | 2–5 | todo |
+| 1 | Company cycle panel | **Per company and quarter-end as known on `as_of`** (ann_date ≤ as_of): single-quarter and TTM revenue, GM, net and deducted profit (`profit_dedt`), YoY **and QoQ**, 10-year median profit, 10-year max margin, `margin_peak`, ROE and turnover. The SW L3 four-dimension aggregates are kept as context columns. Financials get their own block: NIM, NPL, provision coverage, credit cost, turnover share, premiums and NBV where available. Writes `derived/discovery/company_panel.parquet` | Contract tests pass. No row uses a statement announced after as_of (test). The 2026-11-06 values match VERIFY.md (e.g. 江波龙 Q3 QoQ −44%, 药明 deducted TTM 202 亿) | — | done 2026-11-09 (uncommitted): make check green — ruff, mypy 149 files, layers KEPT, lint_contracts 0, 513 passed, Go ok, vitest 12; 6,504 companies in 26 s on the lake; 江波龙 Q3 QoQ −44%, 药明 deducted TTM 202 亿 reproduced. Financial block deferred (NIM / NPL / premiums not in the lake; see Log) |
+| 2 | Market-implied expectations (daily) | **Years priced:** excess profit over three fixed bases (10-year median × normal PE, pre-cycle market cap, and the industry median PE), all shown. **Commodity-implied price:** profit sensitivity per company (disclosed volumes or a regression on the material index) is solved for the price that justifies the market cap, then compared with the back-month futures curve (`fut_daily`). **Reverse DCF** implied growth compared with the consensus path (report_rc) | Tests pass. Today's values reproduce: 云铝 ≈ 7.6 years, 中国铝业 ≈ 10.8, 中远海控 ≈ 4.5; lithium-carbonate curve flat at about 92k against 天齐 ≈ 30 years. Base sensitivity reported per stock | 1 | todo |
+| 3 | Idea screens and ranking | Rules in `config/discovery_rules.yaml`: inflection with QoQ confirmation, turnaround, de-rated quality, demand acceleration, crowded deterioration, cleared-industry price turn, cost move not in consensus, zero coverage, peak-margin warning. Ranked by the **gap between what is priced and the evidence**; output per industry, including small caps (≥ 20 亿) and financials | Tests per rule edge. On 2026-11-06 the screen returns the round-1 picks with their warnings (memory = peak trap, aluminium = largely priced). Run time < 5 min | 1, 2 | todo |
+| 4 | Deep-dive workflow and claim verification | Versioned brief templates (`research_space/briefs/`, from BRIEF / INDUSTRY / SMALLCAP.md). A claims table schema (claim, value, source type [自算/研报/新闻/假设], query or URL, sensitivity). `ClaimVerifier` recomputes every [自算] claim from the lake and flags mismatches. A Workflow script runs one agent per 产业大类 plus small caps plus financials, then a synthesis pass. Reports are stored with as_of | The verifier reproduces VERIFY.md (4 mismatches flagged out of 17). One full run produces reports for all groups, a cross-industry synthesis and a verified claims table | 3 | todo |
+| 5 | Historical replay | Phases 1–3 run at every quarter-end from 2019 (PIT; historical SW membership; delisted companies kept). For each screen and for the priced-in gap, measure the next-4-quarter excess return against SW L1 and the margin change, with NW t and block bootstrap. Thresholds are frozen before the run | Each screen is labelled `validated` (t ≥ 2, right sign) or `descriptive`. Report notebook | 3 | todo |
+| 6 | Pipeline, app and watchlist | `DiscoveryStep` with `make discovery` (prices and futures daily, statements after each season). Go `GET /api/discovery`. React `#discovery`: ranked gaps, cycle position, years priced, implied price against the futures curve, report links with source tags. `WatchlistBuilder` adds years priced and cycle position | `make check` passes (real output); smoke test opens `#discovery`; registry and INDEX files are current | 2–5 | todo |
 
 ## Classes
 
 | Class | Action | Package | Phase |
 |---|---|---|---|
-| `IndustryMetricsBuilder` (company TTM panel + L3 / product aggregates) | new | `quant_cn.industry_graph` (L4) | 1 |
+| `CompanyCyclePanel` | new | `quant_cn.calculation` (L4) | 1 |
+| `StatementVersionReader` (statement values known on as_of; keeps the panel pure) | new | `quant_cn.lake` (L2) | 1 |
+| `DiscoverySettings` (base.yaml `discovery`) | new | `quant_cn.core` (L1) | 1 |
 | `PitAligner`, `LakeQuery`, `DateCodec` | reuse | `lake`, `core` | 1 |
-| `StructureClassifier` | new | `quant_cn.industry_graph` | 2 |
-| `MaterialPriceIndex`, `TransmissionMapper`, `MarginNowcaster` | new (check plan 10 `ContinuousFutures` first; extend it if built) | `quant_cn.industry_graph` | 3 |
-| `SurvivorRanker` | new | `quant_cn.industry_graph` | 4 |
-| `ScenarioValuer` | new | `quant_cn.portfolio` (L7) | 4 |
-| `WatchlistBuilder` | extend (scenario grid) | `quant_cn.portfolio` | 4 |
-| `DeductionReplay` | new; uses `statistic` NW t / bootstrap | `quant_cn.back_testing` | 5 |
-| `DeductionStep` | new | `quant_cn.pipeline` | 6 |
-| Go `store.GetDeduction`, handler; React feature `deduction` | new | `apps/chain_api`, `apps/chain_web` | 6 |
+| `FuturesCurve` (back-month curve per material; plan 10 `ContinuousFutures` is not built, so a new class) | new | `quant_cn.calculation` | 2 |
+| `ImpliedExpectations` (years priced, implied price, reverse DCF) | new | `quant_cn.calculation` | 2 |
+| `IdeaScreener` | new | `quant_cn.portfolio` (L7) | 3 |
+| `ClaimVerifier` | new | `quant_cn.portfolio` | 4 |
+| Workflow script and brief templates | new (not package code) | `research_space/briefs/`, `.claude/workflows/` | 4 |
+| `DiscoveryReplay` | new; uses `statistic` | `quant_cn.back_testing` | 5 |
+| `DiscoveryStep` | new | `quant_cn.pipeline` | 6 |
+| `WatchlistBuilder` | extend | `quant_cn.portfolio` | 6 |
+| Go `store.GetDiscovery`, handler; React feature `discovery` | new | `apps/chain_api`, `apps/chain_web` | 6 |
 
 Names and packages are final only after the `naming` skill.
 
 ## Risks
-- **Look-ahead and survivorship.** Using current SW membership and restated statements would flatter the replay. Mitigation: ann_date ≤ as_of, historical `index_member_all`, and delisted companies kept.
-- **Aggregates dominated by giants.** Mitigation: medians and the matched sample shown beside the sums; the product level comes from fina_mainbz.
-- **Overfitted thresholds.** Mitigation: freeze the thresholds before phase 5, report all labels, and mark unvalidated labels `descriptive`.
-- **Unlisted capacity is invisible** (量贩零食, private PV capacity). Mitigation: shown as a coverage note per industry (listed revenue vs industry revenue where known).
-- **Mapping gaps** (lithium makers, freight, farm inputs) leave holes in the transmission layer. Mitigation: a coverage column per material, and the gaps listed in plan 11 / 12.
+- **The definition of "normal" drives "years priced".** Mitigation: three fixed bases always shown side by side, and no single number is presented as the truth.
+- **Look-ahead and survivorship in the replay.** Mitigation: ann_date ≤ as_of, historical membership, delisted companies kept.
+- **Agent hallucination and unverifiable news.** Mitigation: source tags are mandatory; [自算] claims are rechecked automatically; [新闻] claims need two sources or are marked unverified; [假设] claims carry a sensitivity.
+- **Cost of the agent runs** (about 1.6M tokens for 10 agents on 2026-11-09). Mitigation: the deep-dive runs only on the ranked top gaps; a quarterly cadence; the user approves each run.
+- **Data gaps** (memory prices, freight, farm and sulphur spot, bank NIM fields). Mitigation: a coverage column per screen; the gaps are listed in plan 11.
 
 ## Open questions
-- Package for phases 1–3: `industry_graph` (proposed) or a new L4 package `industry_structure`?
-- Is the product level (fina_mainbz → taxonomy nodes) in phase 1, or a later phase after L3?
-- Refresh cadence: prices weekly, statements after each earnings season. Add launchd?
-- Should the scenario grid use PE only, or also PB for cyclicals and EV/EBITDA for heavy-asset industries?
-- Add the missing data to plan 11 now (SCFI / CCFI freight, agricultural spot)?
+- ~~Replay before the app page~~ answered 2026-11-09: yes (phase order 1 → 2 → 3 → 4 → 5 → 6 kept).
+- ~~Normal PE~~ answered 2026-11-09: both shown. The fixed 12 is the primary base; the stock's own 10-year median PE is the second base, next to the pre-cycle market cap.
+- ~~Deep-dive cadence~~ answered 2026-11-09: after each earnings season, plus a trigger when a top-ranked gap crosses the threshold; each run is approved by the user (cost).
+- ~~Financials~~ answered 2026-11-09: kept in plan 16 (phase 1 block, phase 3 screens).
 
 ## Log
 
 | Date | Phase | Change |
 |---|---|---|
-| 2026-11-09 | — | drafted (user: "做一套流程，能够做详尽的推演的"); based on the 2026-11-09 scans (chain transmission over 40 materials; four-dimension L3 scan of 255 industries) |
+| 2026-11-09 | — | v1 drafted (user: "做一套流程，能够做详尽的推演的") |
+| 2026-11-09 | — | v2 rewrite (user: "改写计划16"): from industry labels to discovery → priced-in → deep dive → verify; lessons from round 1 (QoQ, 卖便宜买贵, priced-in, common base, source tags); classes and phases replaced |
+| 2026-11-09 | — | approved (user: "都行"); open questions answered with the proposed defaults; D-121 accepted; phase 1 doing |
+| 2026-11-09 | 2 | `FuturesCurve` + `CurveSummary` (calculation, TC-FCV-001..005) built in parallel by the chain-graph session (agreed with the phase-1 session): curve per family / material from fut_daily + fut_basic, slope from the most-held month; 2026-11-06 check: 碳酸锂 flat at ~91.9k (+0.2%), 沪铝 −1.9%, 原油 −11.9% backwardation |
+| 2026-11-09 | 1 | Done. `core.DiscoverySettings` (TC-C-017), `lake.StatementVersionReader` (TC-SVR-001..004), `calculation.CompanyCyclePanel` (TC-CCP-001..009). Deviations: (a) the panel is pure (calculation has no I/O), so the lake read is the new `StatementVersionReader`; (b) writing `derived/discovery/company_panel.parquet` moves to `DiscoveryStep` (phase 6); (c) the financial block (NIM, NPL, provision coverage, premiums, NBV) is not in fina_indicator_vip, so it moves to phase 3 and needs a plan 11 dataset (bank / insurer indicators). make check green, 513 passed |
+| 2026-11-09 | 2 | `ImpliedExpectations` (TC-IE-001..005): years priced on three bases (normal PE 12, own median PE, pre-cycle cap) on net and deducted profit, premium to normal value, reverse-DCF implied growth; DiscoverySettings gains normal_pe, discount_rate, dcf_years, max_years (TC-C-018). 2026-11-06 full market (5,573 companies): 云铝 7.6, 中国铝业 10.8, 中远海控 4.5, 天齐 30.4 years — check values reproduced. Commodity-implied price vs the futures curve still open (needs per-company quarterly profit history and a material price series) |
+| 2026-11-09 | 2 | Commodity-implied price: `FuturesCurve.build_dominant_series` (TC-FCV-006), `ImpliedExpectations.compute_sensitivity` (OLS of single-quarter profit from `CompanyCyclePanel.list_quarters` on the quarter's mean dominant futures price, x4; n ≥ 8, R² ≥ 0.3) and `compute_implied_price` (TC-IE-006..007). 2026-11-06 check vs the 12-month futures price: 云铝 R² 0.82, implied AL 20.1k vs 22.6k (−11%); 中国铝业 20.7k (−8%); 紫金 R² 0.90, implied CU 99.4k vs 102.3k (−3%); 天齐 R² 0.33, implied LC 85.8k vs 92.1k (−7%); 赣锋 and 山东黄金 below R² 0.3 → NaN. make check green, 523 passed. Reverse DCF vs consensus path (report_rc) still open |

@@ -28,6 +28,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `TermSelector` | `quant_cn.calculation.term_selector` | 4 | none | Choose the two nearest expiries with at least `min_days` calendar days to expiry. | 1 | `calculation.VixCalculator` | `tests/calculation/test_term_selector.py` (TC-TS-001..002) | 2026-09-27 |
 | `VarianceStripCalculator` | `quant_cn.calculation.variance_strip_calculator` | 4 | none | sigma^2 = (2/T) sum(dK/K^2 e^{RT} Q(K)) - (1/T)(F/K0 - 1)^2 over puts below K0, calls above K0 and the call/put average at K0 | 1 | `calculation.VixCalculator` | `tests/calculation/test_variance_strip_calculator.py` (TC-VSC-001..003) | 2026-09-27 |
 | `VixCalculator` | `quant_cn.calculation.vix_calculator` | 4 | none | Orchestrate the white-paper steps per trading day: select near/next terms, rate per term, forward and K0, variance strip, interpolation on the chosen clock | 1 | `research_space/notebooks/20260927_vix_calculation.ipynb` | `tests/calculation/test_vix_calculator.py` (TC-VC-001..003) | 2026-09-27 |
+| `CompanyCyclePanel` | `quant_cn.calculation.company_cycle_panel` | 4 | none | Place every company's latest quarter in its own cycle, point in time: single quarter and TTM, YoY and QoQ, deducted profit, 10-year median profit and max margin, margin_peak (plan 16 ph1, D-121) | 4 | (none yet) | `tests/calculation/test_company_cycle_panel.py` (TC-CCP-001..010) | 2026-11-09 |
 | `QuantCnCli` | `quant_cn.cli` | 8 | none | `python -m quant_cn.cli <command>`: doctor, download, compact, curate, rebuild, backup, project-catalog, query | 1 | `Makefile targets doctor, download, compact, lake-rebuild, lake-backup`, `cli.DocumentCommands` | `tests/test_cli.py` (TC-QCC-001..007) | 2026-09-27 |
 | `ResearchCommands` | `quant_cn.cli` | 8 | none | The research-side CLI commands, kept apart so QuantCnCli stays within its size limit: `release-lags` (D-086), `evaluate` (factor campaign reports and trial log, plan 04 phase 5) and `watchlist` (D-120) | 1 | `cli.QuantCnCli` | `tests/test_cli.py` (TC-QCC-008..009, 011) | 2026-09-27 |
 | `BaseApiClient` | `quant_cn.core.base_api_client` | 1 | ABC | Abstract vendor client: one logical query returns all pages as one DataFrame. | 1 | `data_loading.TushareClient`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
@@ -45,9 +46,10 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `UniverseConfig` | `quant_cn.core.config` | 1 | BaseModel | Rules of the tradeable universe per session (FACTOR_TESTING_DESIGN §11, D-054). | 0 | `core.Config`, `pipeline.UniverseStep` | `tests/core/test_config.py` (TC-C-011..011) | 2026-09-27 |
 | `FuturesCategory` | `quant_cn.core.config` | 1 | BaseModel | One member-category label that `fut_holding` lists among real brokers (D-079). | 0 | `core.Config`, `lake.DerivedViews` | `tests/core/test_config.py` (TC-C-009..009) | 2026-09-27 |
 | `TickerAlias` | `quant_cn.core.config` | 1 | BaseModel | One retired code and the code its company trades on afterwards (D-053, D-089). | 0 | `core.Config`, `lake.TickerAliasMap`, `lake.DerivedViews` | `tests/core/test_config.py` (TC-C-010..010) | 2026-09-27 |
-| `Config` | `quant_cn.core.config` | 1 | BaseModel | The typed configuration injected everywhere: YAML defaults, machine overrides, environment. | 3 | `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands`, `cli.DocumentCommands`, `portfolio.WatchlistBuilder` | `tests/core/test_config.py` (TC-C-001..016) | 2026-09-27 |
+| `Config` | `quant_cn.core.config` | 1 | BaseModel | The typed configuration injected everywhere: YAML defaults, machine overrides, environment. | 3 | `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands`, `cli.DocumentCommands`, `portfolio.WatchlistBuilder` | `tests/core/test_config.py` (TC-C-001..017) | 2026-09-27 |
 | `WatchlistEntry` | `quant_cn.core.config` | 1 | BaseModel | One stock the user watches and the price range at which they would buy it (D-120). | 0 | `core.Config`, `portfolio.WatchlistBuilder` | `tests/core/test_config.py` (TC-C-015) | 2026-11-08 |
 | `WatchlistSettings` | `quant_cn.core.config` | 1 | BaseModel | Thresholds and windows of the watchlist page (base.yaml `watchlist`, D-120). | 0 | `core.Config`, `portfolio.WatchlistBuilder` | `tests/core/test_config.py` (TC-C-016) | 2026-11-08 |
+| `DiscoverySettings` | `quant_cn.core.discovery_settings` | 1 | BaseModel | Thresholds and windows of the discovery pipeline (base.yaml `discovery`, plan 16, D-121) | 0 | `core.Config`, `calculation.CompanyCyclePanel`, `calculation.ImpliedExpectations` | `tests/core/test_config.py` (TC-C-017..018) | 2026-11-09 |
 | `ValuesFromDataset` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Enumerate sweep keys from another curated dataset (e.g | 0 | `core.SweepSpec` | `tests/data_loading/test_fetcher_factory.py` (TC-FF-003..003) | 2026-09-27 |
 | `SweepSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | How a dataset is swept so each call returns the whole market for one key. | 1 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
 | `CuratedSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Where a dataset lands in `curated/` and which date column drives its yearly partition. | 0 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
@@ -129,6 +131,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `ReleaseLagChecker` | `quant_cn.lake.release_lag_checker` | 2 | none | For every dataset with `known_on_rule: period_end_lag` and `release_dates` set, measure the observed lag (release date - period end) in that curated release-date dataset and count releases that came later than the rule | 2 | `cli.ResearchCommands` | `tests/lake/test_release_lag_checker.py` (TC-RLC-001..003) | 2026-09-27 |
 | `RunLog` | `quant_cn.lake.run_log` | 2 | BaseRunLog | Append run and per-key events to `meta.run_log` (run_id, started_at, finished_at, kind, dataset, key, status, n_rows, duration_ms, message) and echo them to logging. | 3 | `cli.QuantCnCli`, `cli.ServiceBuilder`, `cli.ResearchCommands` | `tests/lake/test_run_log.py` (TC-RL-001..002) | 2026-09-27 |
 | `TickerAliasMap` | `quant_cn.lake.ticker_alias_map` | 2 | none | Map retired codes to their surviving codes so a company has one history | 4 | `lake.DerivedViews`, `lake.LakeReader`, `cli.ServiceBuilder` | `tests/lake/test_ticker_alias_map.py` (TC-TAM-001..004) | 2026-09-27 |
+| `StatementVersionReader` | `quant_cn.lake.statement_version_reader` | 2 | none | Statement values per (company, period, field) as known on a date: latest known_on <= as_of, retired codes mapped (plan 16 ph1) | 1 | (none yet) | `tests/lake/test_statement_version_reader.py` (TC-SVR-001..004) | 2026-11-09 |
 | `TradingCalendar` | `quant_cn.lake.trading_calendar` | 2 | none | Answer trading-day questions (sessions in a range, is_open, next, prev) from the SSE calendar in the lake | 5 | `data_loading.DateSweepFetcher.list_keys`, `data_loading.FetcherFactory`, `cli.ServiceBuilder`, `lake.EffectiveDateResolver`, `lake.LakeReader`, `factor.FactorFactory` | `tests/lake/test_trading_calendar.py` (TC-TCA-001..004) | 2026-09-27 |
 | `CompactStep` | `quant_cn.pipeline.curate_pipeline` | 6 | BaseStep | Adapt Compactor to a pipeline step: one unit per dataset. | 3 | `pipeline.CuratePipeline` | `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..001) | 2026-09-27 |
 | `DeriveStep` | `quant_cn.pipeline.curate_pipeline` | 6 | BaseStep | Build the derived views and the PIT states view, then record a digest per derived view. | 5 | `pipeline.CuratePipeline`, `pipeline.FeatureStep`, `cli.ServiceBuilder` | `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..004) | 2026-09-27 |
@@ -219,6 +222,9 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `MoatReply` | `quant_cn.quant_cn.industry_graph.moat_extractor` | 4 | BaseModel | The LLM reply before validation. | 0 | `industry_graph.MoatExtractor` | `tests/industry_graph/test_moat_extractor.py` (TC-ME-003..003) | 2026-11-07 |
 | `MoatResult` | `quant_cn.quant_cn.industry_graph.moat_extractor` | 4 | none | The quote-checked claims of one report. | 0 | `industry_graph.MoatExtractor` | `tests/industry_graph/test_moat_extractor.py` (TC-ME-001..001) | 2026-11-07 |
 | `MoatExtractor` | `quant_cn.quant_cn.industry_graph.moat_extractor` | 4 | none | Read the 核心竞争力分析 pages of one annual report and list the advantages the company claims, each classified as one of MOAT_TYPES (cost, switching costs, intangibles, network effects, efficient scale) with the figure it cites. | 1 | `lake` | `tests/industry_graph/test_moat_extractor.py` (TC-ME-001..003) | 2026-11-07 |
+| `CurveSummary` | `quant_cn.quant_cn.calculation.futures_curve` | 4 | none | The shape of one contract family's curve on one date: front, most-held, 6- and 12-month and last prices, and the slope from the most-held month to 12 months after it (or to the last later month when the curve is shorter). | 0 | `calculation.FuturesCurve` | `tests/calculation/test_futures_curve.py` (TC-FCV-002..002) | 2026-11-07 |
+| `FuturesCurve` | `quant_cn.quant_cn.calculation.futures_curve` | 4 | none | Back-month futures curve per contract family (e.g. | 5 | `plan` | `tests/calculation/test_futures_curve.py` (TC-FCV-001..006) | 2026-11-07 |
+| `ImpliedExpectations` | `quant_cn.quant_cn.calculation.implied_expectations` | 4 | none | Turn a market cap into what it already pays for (D-121: "priced in", not "cheap"). | 5 | `plan` | `tests/calculation/test_implied_expectations.py` (TC-IE-001..007) | 2026-11-07 |
 
 ## B. Class details (one block per class; methods carry their own purpose)
 
@@ -368,6 +374,20 @@ never column lists (those live in section E).
 |---|---|---|---|---|---|
 | `__init__` | wire dependencies | ZeroRule -> None | — | callers of the class | — |
 | `compute` | Variance and number of strikes used for one term. | pd.DataFrame, float, float, float, float -> tuple[float, int] | `KeyError` | as class | see class |
+
+### `CompanyCyclePanel` — `quant_cn.calculation.company_cycle_panel` (L4)
+- **Purpose:** For every company, as known on a date, place its latest quarter in its own cycle: single-quarter and TTM revenue, GM, profit and deducted profit with YoY and QoQ, ROE and turnover, 10-year median annual profit and max annual net margin, ttm_vs_med and margin_peak (plan 16 ph1, D-121). Pure: versions come in as a frame from `lake.StatementVersionReader`.
+- **Base:** none. **Depends on (injected):** DateCodec, DiscoverySettings.
+- **Used by:** (none yet; pipeline.DiscoveryStep plan 16 ph6).
+- **Tests:** `tests/calculation/test_company_cycle_panel.py` (TC-CCP-001..010).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | DateCodec, DiscoverySettings -> None | — | callers of the class | — |
+| `list_fields` | fundamentals_long fields the panel needs | () -> list[str] | — | callers | TC-CCP-009 |
+| `compute_start` | earliest period end needed for as_of | str -> str | `ValueError` | callers | TC-CCP-009 |
+| `list_quarters` | single-quarter history per company (last `count`) | pd.DataFrame, str, int -> pd.DataFrame | `ValueError` | research checks; plan 16 ph3 IdeaScreener (sensitivity input to `ImpliedExpectations.compute_sensitivity`) | TC-CCP-010 |
+| `build` | the cycle panel as known on as_of | pd.DataFrame, str -> pd.DataFrame | `ValueError` | callers | TC-CCP-001..009 |
 
 ### `VixCalculator` — `quant_cn.calculation.vix_calculator` (L4)
 - **Purpose:** Orchestrate the white-paper steps per trading day: select near/next terms, rate per term, forward and K0, variance strip, interpolation on the chosen clock; one VIX_PANEL row per (trade_date, underlying). A day that cannot be computed gets vix NaN and a "failed: <reason>" quality_flag instead of stopping the run.
@@ -583,11 +603,20 @@ never column lists (those live in section E).
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
 
+### `DiscoverySettings` — `quant_cn.core.discovery_settings` (L1)
+- **Purpose:** Thresholds and windows of the discovery pipeline: history_years, min_years (base.yaml `discovery`, plan 16, D-121).
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `core.Config`, `calculation.CompanyCyclePanel`.
+- **Tests:** `tests/core/test_config.py` (TC-C-017).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
 ### `Config` — `quant_cn.core.config` (L1)
 - **Purpose:** The typed configuration injected everywhere: YAML defaults, machine overrides, environment.
 - **Base:** BaseModel. **Depends on (injected):** —.
 - **Used by:** `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands`, `cli.DocumentCommands`, `portfolio.WatchlistBuilder`.
-- **Tests:** `tests/core/test_config.py` (TC-C-001..016).
+- **Tests:** `tests/core/test_config.py` (TC-C-001..017).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -638,7 +667,7 @@ never column lists (those live in section E).
 ### `DateCodec` — `quant_cn.core.date_codec` (L1)
 - **Purpose:** Validate and convert Tushare `YYYYMMDD` date strings and generate date keys for sweeps.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `core.Config.load`, `data_loading.DateSweepFetcher.list_keys`, `data_loading.PeriodSweepFetcher.list_keys`, `pipeline.DownloadPipeline.run`, `data_loading.FetcherFactory`, `cli.QuantCnCli`, `lake.PitAligner`, `visualization.PriceChart`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `lake.EffectiveDateResolver`, `factor.FactorFactory`.
+- **Used by:** `core.Config.load`, `data_loading.DateSweepFetcher.list_keys`, `data_loading.PeriodSweepFetcher.list_keys`, `pipeline.DownloadPipeline.run`, `data_loading.FetcherFactory`, `cli.QuantCnCli`, `lake.PitAligner`, `visualization.PriceChart`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `lake.EffectiveDateResolver`, `factor.FactorFactory`, `lake.StatementVersionReader`, `calculation.CompanyCyclePanel`.
 - **Tests:** `tests/core/test_date_codec.py` (TC-DC-001..006).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1373,7 +1402,7 @@ never column lists (those live in section E).
 ### `LakeQuery` — `quant_cn.lake.lake_query` (L2)
 - **Purpose:** Run read queries against the catalog views; the only way code above the lake reads data.
 - **Base:** none. **Depends on (injected):** LakeCatalog.
-- **Used by:** `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader`.
+- **Used by:** `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader`, `lake.StatementVersionReader`.
 - **Tests:** `tests/lake/test_lake_query.py` (TC-LQ-001..005).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1514,10 +1543,21 @@ never column lists (those live in section E).
 | `record_event` | Append one key event. | str, str, str, str, int, int, str -> None | `LakeError` | as class | see class |
 | `close_run` | Set status, message and finished_at on the run row. | str, str, str -> None | `LakeError` | as class | see class |
 
+### `StatementVersionReader` — `quant_cn.lake.statement_version_reader` (L2)
+- **Purpose:** Read every company's statement values as known on one date: per (company, period, field) the version with the latest known_on <= as_of (D-092 versions), retired codes mapped to surviving codes (plan 16 ph1).
+- **Base:** none. **Depends on (injected):** LakeQuery, TickerAliasMap, DateCodec.
+- **Used by:** (none yet; pipeline.DiscoveryStep plan 16 ph6).
+- **Tests:** `tests/lake/test_statement_version_reader.py` (TC-SVR-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | LakeQuery, TickerAliasMap, DateCodec -> None | — | callers of the class | — |
+| `read_versions` | statement values per (company, period, field) known on as_of | Sequence[str], str, str -> pd.DataFrame | `LakeError` | callers | TC-SVR-001..004 |
+
 ### `TickerAliasMap` — `quant_cn.lake.ticker_alias_map` (L2)
 - **Purpose:** Map retired codes to their surviving codes so a company has one history. Tushare keeps a retired code's rows and back-fills the same history under the new code, but some datasets (stk_limit, moneyflow, margin_detail) exist only under the old code before the change. `refresh` builds `derived.ticker_alias`: pairs detected from the data (a code missing from stock_basic whose closes equal a listed code's on >= 20 shared dates, >= 99% equal) plus the config pairs; every candidate keeps its match statistics, and an old code matching more than one listed code is kept but not accepted. `normalize_codes` renames accepted old codes and, where both codes have a row for the same key, keeps the new code's row.
 - **Base:** none. **Depends on (injected):** LakeCatalog, LakeQuery, Sequence[TickerAlias].
-- **Used by:** `lake.DerivedViews`, `lake.LakeReader`, `cli.ServiceBuilder`.
+- **Used by:** `lake.DerivedViews`, `lake.LakeReader`, `cli.ServiceBuilder`, `lake.StatementVersionReader`.
 - **Tests:** `tests/lake/test_ticker_alias_map.py` (TC-TAM-001..004).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -2511,6 +2551,45 @@ never column lists (those live in section E).
 |---|---|---|---|---|---|
 | `__init__` | wire dependencies | BaseLlmClient, int, str \| None -> None | — | callers of the class | — |
 | `fetch_claims` | Ask the model about one report and validate the answer against the text. | str, Sequence[tuple[int, str]] -> MoatResult | `DataSourceError` | as class | see class |
+
+### `CurveSummary` — `quant_cn.quant_cn.calculation.futures_curve` (L4)
+- **Purpose:** The shape of one contract family's curve on one date: front, most-held, 6- and 12-month and last prices, and the slope from the most-held month to 12 months after it (or to the last later month when the curve is shorter).
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `calculation.FuturesCurve`.
+- **Tests:** `tests/calculation/test_futures_curve.py` (TC-FCV-002..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `FuturesCurve` — `quant_cn.quant_cn.calculation.futures_curve` (L4)
+- **Purpose:** Back-month futures curve per contract family (e.g. "AL.SHF") and per material node (config/material_prices.yaml maps MAT_* ids to families), for the commodity price the market implies against the curve (plan 16 phase 2). A curve on a date is every listed month of the family that has a quote that day and has not expired (delivery month >= the trade month), priced at settle (close when settle is missing), with months ahead counted from the trade month. PIT: only quotes of that trade date are used.
+- **Base:** none. **Depends on (injected):** pd.DataFrame, Mapping[str, Sequence[str]].
+- **Used by:** `plan`.
+- **Tests:** `tests/calculation/test_futures_curve.py` (TC-FCV-001..006).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | pd.DataFrame, Mapping[str, Sequence[str]] -> None | — | callers of the class | — |
+| `list_families` | Contract families mapped to a material node. | str -> list[str] | — | as class | see class |
+| `build_curve` | The family's curve on one date. | pd.DataFrame, str, str -> pd.DataFrame | `ValueError` | as class | see class |
+| `compute_summary` | Front, dominant, 6m, 12m and last prices and the curve shape. | pd.DataFrame, str, str -> CurveSummary | — | as class | see class |
+| `list_material_summaries` | One summary per family of a material. | pd.DataFrame, str, str -> list[CurveSummary] | `ValueError` | as class | see class |
+| `build_dominant_series` | Daily price of the most-held unexpired month (regressor for profit sensitivity). | pd.DataFrame, str -> pd.DataFrame | `ValueError` | research checks; `ImpliedExpectations.compute_sensitivity` input | TC-FCV-006 |
+
+### `ImpliedExpectations` — `quant_cn.quant_cn.calculation.implied_expectations` (L4)
+- **Purpose:** Turn a market cap into what it already pays for (D-121: "priced in", not "cheap"). Years priced: the market cap above a normal value V0 is read as an annuity of excess profit E = TTM profit - 10-year median profit, discounted at `discount_rate`; n = -ln(1 - r*(MC - V0)/E) / ln(1 + r), 0 when MC ≤ V0, `max_years` when the market pays more than a perpetuity of E, NaN when E ≤ 0. Three bases, always shown side by side: V0 = median profit x `normal_pe` (primary), x the stock's own median PE, and the pre-cycle market cap. Each on net profit and on deducted net profit. Reverse DCF: the constant growth g of TTM profit over `dcf_years`, exiting at `normal_pe` x final profit, that makes the discounted value equal the market cap (bisection in GROWTH_BOUNDS, clamped). Pure: the caller loads market caps and PEs.
+- **Base:** none. **Depends on (injected):** DiscoverySettings.
+- **Used by:** `plan`.
+- **Tests:** `tests/calculation/test_implied_expectations.py` (TC-IE-001..007). Inputs from `calculation.CompanyCyclePanel.list_quarters` and `calculation.FuturesCurve.build_dominant_series` (passed in by the caller).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | DiscoverySettings -> None | — | callers of the class | — |
+| `compute_years` | Years of excess profit the market cap pays for above a base value. | float, float, float -> float | — | as class | see class |
+| `compute_implied_growth` | Annual profit growth over dcf_years that justifies the market cap (reverse DCF). | float, float -> float | — | as class | see class |
+| `compute_sensitivity` | Annual profit change per unit commodity price (OLS of quarterly profit on quarterly mean futures price, x4; NaN below 8 quarters or R² 0.3). | pd.DataFrame, pd.DataFrame -> dict[str, float] | — | as class | TC-IE-006 |
+| `compute_implied_price` | Commodity price at which normal_pe x profit(p) equals the market cap. | float, float, float, float -> float | — | as class | TC-IE-007 |
+| `build` | Years priced on three bases and implied growth for every company with a market cap. | pd.DataFrame, pd.DataFrame -> pd.DataFrame | `ValueError` | as class | see class |
 
 ## C. Abstract base classes / extension points
 

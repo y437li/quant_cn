@@ -72,6 +72,7 @@ class TickerAliasMap:
         lake.DerivedViews   -- refresh during curate
         lake.LakeReader     -- apply to panels and PIT fundamentals
         cli.ServiceBuilder  -- injected type or call
+        lake.StatementVersionReader  -- retired codes on statement versions
 
     Test cases:
         TC-TAM-001  detection finds the equal-close pair with its statistics; config pairs kept

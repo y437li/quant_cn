@@ -1008,10 +1008,13 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Consequences: plan 15 phase 7; `make watchlist`; the page shows data as of the last refresh, not live quotes.
 - Links: D-116, plan 15 ph7
 
-### D-121 Structural deduction is a PIT rule pipeline whose labels must pass a historical replay
-- Status: proposed (2026-11-09, plan 16 drafted).
-- Context: the 2026-11-09 scratch scans (40-material transmission, 255-industry four-dimension scan) gave useful readings but used current SW membership, restated statements and hand-set thresholds.
-- Decision: industry labels (新兴扩张 / 进入广泛竞争 / 出清·进行中 / 出清·见底 / 供给锁定 / 格局改善) are computed by rules in `config/deduction_rules.yaml` on point-in-time data (ann_date ≤ as_of, historical membership). Each label keeps its rule trace. Thresholds are frozen before a replay from 2019; a label is shown as `validated` only if its direction holds with t ≥ 2, otherwise as `descriptive`.
-- Alternatives: LLM judgement per industry (rejected: not testable, not reproducible); unsupervised clustering (rejected: labels not interpretable); no validation (rejected: thresholds would be fitted to today's story).
-- Consequences: new `config/deduction_rules.yaml`; classes in plan 16; the prototype `clock_l3` is replaced by the classifier output; the app shows label status.
-- Links: BUSINESS_MODEL_DESIGN §4.2, §4b.4, §4b.5, §4b.6; D-112, D-118; plan 16
+### D-121 Opportunity discovery is a PIT pipeline: priced-in expectations, screens validated by replay, source-tagged deep dives
+- Status: accepted (2026-11-09, user "都行" to plan 16 v2; v1 text replaced before any approval).
+- Context: the 2026-11-09 rounds showed that industry labels do not find ideas. YoY alone misleads (memory modules), and low PE at peak margins is a trap (周期股卖便宜买贵). "Cheap" must be replaced by "priced in": aluminium at PE 6.4 already pays for about 7.6 years of excess profit. Agents used different profit bases, and 4 of 17 checked numbers needed correction.
+- Decision:
+  - Discovery runs on a PIT company cycle panel (QoQ and YoY, deducted profit, 10-year median and max margin) and on daily market-implied expectations: years priced over three fixed bases, the commodity price implied against the futures curve, and reverse DCF.
+  - Screens are rules in `config/discovery_rules.yaml`, ranked by the gap between what is priced and the evidence. They are frozen before a replay from 2019 and shown as `validated` (t ≥ 2) or `descriptive`.
+  - Deep dives use versioned briefs; every claim is tagged [自算/研报/新闻/假设], and [自算] claims are rechecked against the lake.
+- Alternatives: industry-label pipeline (v1, rejected: describes, does not discover); LLM judgement without tags (rejected: unverifiable); a single "normal earnings" base (rejected: drives opposite answers).
+- Consequences: plan 16 v2 classes (`CompanyCyclePanel`, `FuturesCurve`, `ImpliedExpectations`, `IdeaScreener`, `ClaimVerifier`, `DiscoveryReplay`, `DiscoveryStep`); new `config/discovery_rules.yaml`; app page 机会发现.
+- Links: BUSINESS_MODEL_DESIGN §4.2, §4b.4–4b.6; D-112, D-118; plan 16

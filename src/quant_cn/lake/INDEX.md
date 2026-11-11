@@ -23,5 +23,6 @@ L2: parquet writer, DuckDB catalog, fetch log, compactor, query API, PIT aligner
 | `rebuild_audit.py` | What `rebuild` confirms: fetch-log orphans (D-073) and rewritten raw files (D-083) | `RebuildAudit` |
 | `release_lag_checker.py` | Checks release-lag rules against observed official release dates (D-086) | `ReleaseLagChecker` |
 | `run_log.py` | Run history for monitoring: `meta.run_log` in DuckDB, mirrored to logging (D-022) | `RunLog` |
+| `statement_version_reader.py` | Statement values per (company, period, field) as known on a date (plan 16) | `StatementVersionReader` |
 | `ticker_alias_map.py` | Retired codes mapped to their surviving codes (D-053, D-089): one company, one history | `TickerAliasMap` |
 | `trading_calendar.py` | Trading-day arithmetic from the downloaded `trade_cal` (SRC_DESIGN §2.2) | `TradingCalendar` |

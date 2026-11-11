@@ -13,6 +13,7 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from quant_cn.core.dataset_spec import DatasetSpec
 from quant_cn.core.date_codec import DateCodec
+from quant_cn.core.discovery_settings import DiscoverySettings
 from quant_cn.core.document_source import DocumentSource
 from quant_cn.core.exceptions import ConfigError
 from quant_cn.core.watchlist_entry import WatchlistEntry, WatchlistSettings
@@ -352,6 +353,7 @@ class Config(BaseModel):
             llm:         LlmConfig               -- base.yaml `llm` + DEEPSEEK_API_KEY (D-098)
             watchlist:   list[WatchlistEntry]    -- config/local.watchlist.yaml `entries` (D-120)
             watchlist_settings: WatchlistSettings  -- base.yaml `watchlist` (D-120)
+            discovery:   DiscoverySettings       -- base.yaml `discovery` (plan 16, D-121)
         Output:
             frozen pydantic model
         Raises:
@@ -384,6 +386,7 @@ class Config(BaseModel):
         TC-C-014  base.yaml llm section loads; key read from env only and hidden from repr
         TC-C-015  config/local.watchlist.yaml loads; missing file = []; buy_high < buy_low refused
         TC-C-016  base.yaml watchlist section loads; missing section gives the defaults
+        TC-C-017  base.yaml discovery section loads; missing section gives the defaults
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -403,6 +406,7 @@ class Config(BaseModel):
     llm: LlmConfig = Field(default_factory=LlmConfig)
     watchlist: list[WatchlistEntry] = Field(default_factory=list)
     watchlist_settings: WatchlistSettings = Field(default_factory=WatchlistSettings)
+    discovery: DiscoverySettings = Field(default_factory=DiscoverySettings)
 
     @classmethod
     def load(
@@ -431,7 +435,6 @@ class Config(BaseModel):
         local = cls._read_yaml(root / "config" / "local.yaml", required=False)
         merged = cls._build_merged(base, local)
         datasets = cls._read_yaml(root / "config" / "datasets.yaml", required=True)
-
         lake = dict(merged.get("lake", {}))
         if environ.get(ENV_LAKE_ROOT):
             lake["root"] = environ[ENV_LAKE_ROOT]
@@ -449,6 +452,7 @@ class Config(BaseModel):
                 universe=UniverseConfig(**merged.get("universe", {})),
                 llm=LlmConfig(**{**merged.get("llm", {}), "api_key": environ.get(ENV_LLM_KEY, "")}),
                 watchlist_settings=WatchlistSettings(**merged.get("watchlist", {})),
+                discovery=DiscoverySettings(**merged.get("discovery", {})),
                 **extras,
             )
         except (ValidationError, TypeError) as exc:
