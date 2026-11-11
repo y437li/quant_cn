@@ -16,6 +16,7 @@ from quant_cn.core.date_codec import DateCodec
 from quant_cn.core.discovery_settings import DiscoverySettings
 from quant_cn.core.document_source import DocumentSource
 from quant_cn.core.exceptions import ConfigError
+from quant_cn.core.guidance_settings import GuidanceSettings
 from quant_cn.core.watchlist_entry import WatchlistEntry, WatchlistSettings
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -354,6 +355,7 @@ class Config(BaseModel):
             watchlist:   list[WatchlistEntry]    -- config/local.watchlist.yaml `entries` (D-120)
             watchlist_settings: WatchlistSettings  -- base.yaml `watchlist` (D-120)
             discovery:   DiscoverySettings       -- base.yaml `discovery` (plan 16, D-121)
+            guidance:    GuidanceSettings        -- base.yaml `guidance` (plan 18, D-124)
         Output:
             frozen pydantic model
         Raises:
@@ -387,6 +389,7 @@ class Config(BaseModel):
         TC-C-015  config/local.watchlist.yaml loads; missing file = []; buy_high < buy_low refused
         TC-C-016  base.yaml watchlist section loads; missing section gives the defaults
         TC-C-017  base.yaml discovery section loads; missing section gives the defaults
+        TC-C-019  base.yaml guidance section loads; missing section gives the defaults; bounds
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -407,6 +410,7 @@ class Config(BaseModel):
     watchlist: list[WatchlistEntry] = Field(default_factory=list)
     watchlist_settings: WatchlistSettings = Field(default_factory=WatchlistSettings)
     discovery: DiscoverySettings = Field(default_factory=DiscoverySettings)
+    guidance: GuidanceSettings = Field(default_factory=GuidanceSettings)
 
     @classmethod
     def load(
@@ -449,16 +453,24 @@ class Config(BaseModel):
                 download=DownloadConfig(**merged.get("download", {})),
                 enum_values=merged.get("enum_values", {}),
                 datasets={name: DatasetSpec(name=name, **spec) for name, spec in datasets.items()},
-                universe=UniverseConfig(**merged.get("universe", {})),
                 llm=LlmConfig(**{**merged.get("llm", {}), "api_key": environ.get(ENV_LLM_KEY, "")}),
-                watchlist_settings=WatchlistSettings(**merged.get("watchlist", {})),
-                discovery=DiscoverySettings(**merged.get("discovery", {})),
+                **cls._build_settings(merged),
                 **extras,
             )
         except (ValidationError, TypeError) as exc:
             raise ConfigError(f"invalid configuration: {exc}") from exc
         config._check()
         return config
+
+    @staticmethod
+    def _build_settings(merged: Mapping[str, Any]) -> dict[str, BaseModel]:
+        """The base.yaml sections that map one-to-one onto a settings model (missing = defaults)."""
+        return {
+            "universe": UniverseConfig(**merged.get("universe", {})),
+            "watchlist_settings": WatchlistSettings(**merged.get("watchlist", {})),
+            "discovery": DiscoverySettings(**merged.get("discovery", {})),
+            "guidance": GuidanceSettings(**merged.get("guidance", {})),
+        }
 
     def get_dataset(self, name: str) -> DatasetSpec:
         """

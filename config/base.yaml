@@ -136,3 +136,8 @@ discovery:                       # plan 16 (D-121)
   discount_rate: 0.09            # discount rate of excess profit and of the reverse DCF
   dcf_years: 10                  # explicit years of the reverse DCF before exiting at normal_pe
   max_years: 50                  # years priced above this are capped (market pays a perpetuity)
+
+guidance:                        # plan 18 (D-124)
+  history_start: "20180101"     # first period end tracked (earnings previews)
+  window_years: 3                # track record: period ends within this many years before as_of
+  min_outcomes: 3                # fewer scored periods -> track record flagged insufficient

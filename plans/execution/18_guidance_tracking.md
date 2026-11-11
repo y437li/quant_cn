@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | approved 2026-11-11 (user: "两个都批准，先做plan 18第一阶段"); doing phase 1 |
+| Status | approved 2026-11-11 (user: "两个都批准，先做plan 18第一阶段"); phase 1 done |
 | Owner | user (approve) / agent (build) |
 | Created | 2026-11-11 |
 | Notion | pending |
@@ -24,7 +24,7 @@ Every quantitative statement a company makes about its own future (earnings prev
 
 | # | Phase | Deliverable | Done criterion | Depends on | Status |
 |---|---|---|---|---|---|
-| 1 | Earnings-preview tracker | `ForecastTracker` → `derived/guidance/forecast_outcomes.parquet`: per (company, period, version) the range, the actual (first statement known after it), in / above / below, distance in range widths, revision path; per company a hit rate and bias since 2018 | 2026 H1 reproduces the probe (1,878 matched, 84.1% in range). PIT test: an outcome is invisible before the actual's `f_ann_date` next session. No LLM | — | doing |
+| 1 | Earnings-preview tracker | `ForecastTracker` → `derived/guidance/forecast_outcomes.parquet`: per (company, period, version) the range, the actual (first statement known after it), in / above / below, distance in range widths, revision path; per company a hit rate and bias since 2018 | 2026 H1 reproduces the probe (1,878 matched, 84.1% in range). PIT test: an outcome is invisible before the actual's `f_ann_date` next session. No LLM | — | done |
 | 2 | Acquisition fixes | `cninfo_keyword_announcements` gains 股权激励; `config/documents.yaml` gains `incentive_plan` and excludes 问询函 / 回复 from periodic rules; existing misfiled manifest rows re-typed; Q&A gap fixed (`irm_qa_sh` stops 2024-07-11, `irm_qa_sz` has no curated files) | Incentive drafts since 2023-11 downloaded (count in the Log); 0 inquiry replies left under `semiannual`; both Q&A datasets current to the last session | — | todo |
 | 3 | Guidance extraction (pilot) | `SectionDetector` extended to locate 经营计划 / 未来发展展望; `GuidanceExtractor` (prompt per doc type, pydantic `GuidanceItem`: metric, period, value or range, unit, kind target / expectation / commitment, condition, quote, page) | 50 companies × (annual plan, IR record, incentive draft): Opus hand check ≥ 85% precision on metric + period + value; every kept item's quote found on its page | 2 | todo |
 | 4 | Full extraction | Same class over all FY2023–FY2025 annual reports, IR records, incentive drafts, restructuring reports since 2023-11 → `derived/guidance/items.parquet` (`known_on` = ann_date, next session) | Run complete with failures < 1%; items per source and per metric in the Log; Ark calls and tokens recorded in `meta/llm_usage.jsonl` | 3 | todo |
@@ -60,3 +60,5 @@ Every quantitative statement a company makes about its own future (earnings prev
 |---|---|---|
 | 2026-11-11 | — | drafted at the user's request ("我们有企业的guidance吗？我们可以track他们吗" → "可以，label相关的用方舟的api"); probe: 2026 H1 previews 1,878 matched, 84.1% in range, 7.7% above, 8.1% below; `irm_qa_sh` last row 2024-07-11 |
 | 2026-11-11 | — | approved (user: "两个都批准，先做plan 18第一阶段") |
+| 2026-11-11 | 1 | done: `ForecastTracker` (TC-FT-001..008), `GuidanceSettings` (TC-C-019, base.yaml `guidance`), `StatementVersionReader.read_first_versions` (TC-SVR-005); real run as of 20261111: 48,134 preview versions, 4,626 companies, 2,727 with ≥ 3 scored periods; 2026 H1 last versions 1,878 scored, 84.1% in / 8.1% below / 7.7% above (= probe); all years 79.3% in, median abs surprise 3.6%; revised periods: v1 inside 19.9%. Output in `meta/runs/guidance/forecast_{outcomes,track}.parquet` (run script `meta/runs/guidance_forecasts.py`) until `GuidanceStep` writes `derived/guidance` in ph6. `make check`: 533 passed |
+| 2026-11-11 | 1 | extended (user "ok"): `days_after_end` and `ex_ante` per version; track record adds the last pre-period-end version per period (n_ex_ante, ex_ante_hit_rate, ex_ante_mean_surprise, ex_ante_sufficient; TC-FT-009..010). Ex-ante first versions: 5,363, 57.7% in range, median miss 7.5% (vs 80.5% / 3.4% after the period end). In the 3-year window only 389 companies have an ex-ante preview and 12 have ≥ 3, so ex-ante credibility needs a longer window or more sources. `make check`: 535 passed |

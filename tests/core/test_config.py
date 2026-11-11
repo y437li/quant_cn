@@ -6,6 +6,7 @@ import pytest
 
 from quant_cn.core.config import Config
 from quant_cn.core.exceptions import ConfigError
+from quant_cn.core.guidance_settings import GuidanceSettings
 
 REPO = Path(__file__).resolve().parents[2]
 
@@ -192,5 +193,20 @@ def test_tc_c_018_implied_expectation_settings(repo: Path, tmp_path: Path) -> No
     base = repo / "config" / "base.yaml"
     text = base.read_text()
     base.write_text(text.replace("discount_rate: 0.09", "discount_rate: 0.5"))
+    with pytest.raises(ConfigError):
+        Config.load(repo_root=repo, env=env)
+
+
+# TC-C-019
+def test_tc_c_019_guidance_settings(repo: Path, tmp_path: Path) -> None:
+    env = {"QUANT_CN_LAKE_ROOT": str(tmp_path / "lake")}
+    s = Config.load(repo_root=repo, env=env).guidance
+    assert (s.history_start, s.window_years, s.min_outcomes) == ("20180101", 3, 3)
+    base = repo / "config" / "base.yaml"
+    text = base.read_text()
+    start, end = text.index("guidance:"), text.index("min_outcomes: 3") + len("min_outcomes: 3")
+    base.write_text(text[:start] + text[end:])
+    assert Config.load(repo_root=repo, env=env).guidance == GuidanceSettings()
+    base.write_text(text.replace("window_years: 3", "window_years: 0"))
     with pytest.raises(ConfigError):
         Config.load(repo_root=repo, env=env)

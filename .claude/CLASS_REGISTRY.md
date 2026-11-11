@@ -29,6 +29,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `VarianceStripCalculator` | `quant_cn.calculation.variance_strip_calculator` | 4 | none | sigma^2 = (2/T) sum(dK/K^2 e^{RT} Q(K)) - (1/T)(F/K0 - 1)^2 over puts below K0, calls above K0 and the call/put average at K0 | 1 | `calculation.VixCalculator` | `tests/calculation/test_variance_strip_calculator.py` (TC-VSC-001..003) | 2026-09-27 |
 | `VixCalculator` | `quant_cn.calculation.vix_calculator` | 4 | none | Orchestrate the white-paper steps per trading day: select near/next terms, rate per term, forward and K0, variance strip, interpolation on the chosen clock | 1 | `research_space/notebooks/20260927_vix_calculation.ipynb` | `tests/calculation/test_vix_calculator.py` (TC-VC-001..003) | 2026-09-27 |
 | `CompanyCyclePanel` | `quant_cn.calculation.company_cycle_panel` | 4 | none | Place every company's latest quarter in its own cycle, point in time: single quarter and TTM, YoY and QoQ, deducted profit, 10-year median profit and max margin, margin_peak (plan 16 ph1, D-121) | 4 | (none yet) | `tests/calculation/test_company_cycle_panel.py` (TC-CCP-001..010) | 2026-11-09 |
+| `ForecastTracker` | `quant_cn.calculation.forecast_tracker` | 4 | none | Score every earnings preview (all revisions) against the first reported parent net profit: range in CNY, in / above / below / pending / no_range / after_actual, position, surprise, revision path, days_after_end / ex_ante; per-company hit rate and bias over window_years, overall and for previews published before the period end (plan 18 ph1, D-124) | 3 | (none yet) | `tests/calculation/test_forecast_tracker.py` (TC-FT-001..010) | 2026-11-11 |
 | `QuantCnCli` | `quant_cn.cli` | 8 | none | `python -m quant_cn.cli <command>`: doctor, download, compact, curate, rebuild, backup, project-catalog, query | 1 | `Makefile targets doctor, download, compact, lake-rebuild, lake-backup`, `cli.DocumentCommands` | `tests/test_cli.py` (TC-QCC-001..007) | 2026-09-27 |
 | `ResearchCommands` | `quant_cn.cli` | 8 | none | The research-side CLI commands, kept apart so QuantCnCli stays within its size limit: `release-lags` (D-086), `evaluate` (factor campaign reports and trial log, plan 04 phase 5) and `watchlist` (D-120) | 1 | `cli.QuantCnCli` | `tests/test_cli.py` (TC-QCC-008..009, 011) | 2026-09-27 |
 | `BaseApiClient` | `quant_cn.core.base_api_client` | 1 | ABC | Abstract vendor client: one logical query returns all pages as one DataFrame. | 1 | `data_loading.TushareClient`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
@@ -50,11 +51,12 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `WatchlistEntry` | `quant_cn.core.config` | 1 | BaseModel | One stock the user watches and the price range at which they would buy it (D-120). | 0 | `core.Config`, `portfolio.WatchlistBuilder` | `tests/core/test_config.py` (TC-C-015) | 2026-11-08 |
 | `WatchlistSettings` | `quant_cn.core.config` | 1 | BaseModel | Thresholds and windows of the watchlist page (base.yaml `watchlist`, D-120). | 0 | `core.Config`, `portfolio.WatchlistBuilder` | `tests/core/test_config.py` (TC-C-016) | 2026-11-08 |
 | `DiscoverySettings` | `quant_cn.core.discovery_settings` | 1 | BaseModel | Thresholds and windows of the discovery pipeline (base.yaml `discovery`, plan 16, D-121) | 0 | `core.Config`, `calculation.CompanyCyclePanel`, `calculation.ImpliedExpectations` | `tests/core/test_config.py` (TC-C-017..018) | 2026-11-09 |
+| `GuidanceSettings` | `quant_cn.core.guidance_settings` | 1 | BaseModel | Windows and minimum sample of guidance tracking (base.yaml `guidance`, plan 18, D-124) | 0 | `core.Config`, `calculation.ForecastTracker` | `tests/core/test_config.py` (TC-C-019) | 2026-11-11 |
 | `ValuesFromDataset` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Enumerate sweep keys from another curated dataset (e.g | 0 | `core.SweepSpec` | `tests/data_loading/test_fetcher_factory.py` (TC-FF-003..003) | 2026-09-27 |
 | `SweepSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | How a dataset is swept so each call returns the whole market for one key. | 1 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
 | `CuratedSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Where a dataset lands in `curated/` and which date column drives its yearly partition. | 0 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
 | `DatasetSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Everything the lake and the fetchers need to know about one dataset, as data (D-012). | 2 | `core.Config`, `core.BaseFetcher`, `core.BaseStore`, `lake.ParquetWriter`, `lake.LakeCatalog`, `lake.Compactor.rebuild`, `data_loading.FetcherFactory.build`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `pipeline.CompactStep`, `lake.DerivedViews`, `lake.ProjectCatalog`, `data_loading.DateWindowFetcher`, `lake.EffectiveDateResolver`, `lake.ReleaseLagChecker`, `lake.LakeReader` | `tests/core/test_dataset_spec.py` (TC-DS-001..009) | 2026-09-27 |
-| `DateCodec` | `quant_cn.core.date_codec` | 1 | none | Validate and convert Tushare `YYYYMMDD` date strings and generate date keys for sweeps. | 6 | `core.Config.load`, `data_loading.DateSweepFetcher.list_keys`, `data_loading.PeriodSweepFetcher.list_keys`, `pipeline.DownloadPipeline.run`, `data_loading.FetcherFactory`, `cli.QuantCnCli`, `lake.PitAligner`, `visualization.PriceChart`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `lake.EffectiveDateResolver`, `factor.FactorFactory` | `tests/core/test_date_codec.py` (TC-DC-001..006) | 2026-09-27 |
+| `DateCodec` | `quant_cn.core.date_codec` | 1 | none | Validate and convert Tushare `YYYYMMDD` date strings and generate date keys for sweeps. | 6 | `core.Config.load`, `data_loading.DateSweepFetcher.list_keys`, `data_loading.PeriodSweepFetcher.list_keys`, `pipeline.DownloadPipeline.run`, `data_loading.FetcherFactory`, `cli.QuantCnCli`, `lake.PitAligner`, `visualization.PriceChart`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `lake.EffectiveDateResolver`, `factor.FactorFactory`, `calculation.ForecastTracker` | `tests/core/test_date_codec.py` (TC-DC-001..006) | 2026-09-27 |
 | `Finding` | `quant_cn.core.docs.base_checker` | 1 | none | One rule violation at a location, printable as `path:line [rule] message`. | 1 | `core.docs.BaseChecker.run`, `core.docs.ContractChecker`, `core.docs.IndexChecker`, `core.docs.SizeChecker`, `core.docs.NameChecker`, `core.docs.ContractLinter` | `tests/core/docs/test_base_checker.py` (TC-BCH-001..001) | 2026-09-27 |
 | `BaseChecker` | `quant_cn.core.docs.base_checker` | 1 | ABC | Abstract repository check: inspect the tree, return findings (empty = pass). | 1 | `core.docs.ContractChecker`, `core.docs.IndexChecker`, `core.docs.SizeChecker`, `core.docs.NameChecker`, `core.docs.ContractLinter` | `tests/core/docs/test_base_checker.py` (TC-BCH-001..001) | 2026-09-27 |
 | `MethodInfo` | `quant_cn.core.docs.code_scanner` | 1 | none | One function defined directly in a class body. | 2 | `core.docs.ClassInfo`, `core.docs.CodeScanner.read_module`, `core.docs.ModuleInfo` | `tests/core/docs/test_code_scanner.py` (TC-CS-001..001) | 2026-09-27 |
@@ -131,7 +133,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `ReleaseLagChecker` | `quant_cn.lake.release_lag_checker` | 2 | none | For every dataset with `known_on_rule: period_end_lag` and `release_dates` set, measure the observed lag (release date - period end) in that curated release-date dataset and count releases that came later than the rule | 2 | `cli.ResearchCommands` | `tests/lake/test_release_lag_checker.py` (TC-RLC-001..003) | 2026-09-27 |
 | `RunLog` | `quant_cn.lake.run_log` | 2 | BaseRunLog | Append run and per-key events to `meta.run_log` (run_id, started_at, finished_at, kind, dataset, key, status, n_rows, duration_ms, message) and echo them to logging. | 3 | `cli.QuantCnCli`, `cli.ServiceBuilder`, `cli.ResearchCommands` | `tests/lake/test_run_log.py` (TC-RL-001..002) | 2026-09-27 |
 | `TickerAliasMap` | `quant_cn.lake.ticker_alias_map` | 2 | none | Map retired codes to their surviving codes so a company has one history | 4 | `lake.DerivedViews`, `lake.LakeReader`, `cli.ServiceBuilder` | `tests/lake/test_ticker_alias_map.py` (TC-TAM-001..004) | 2026-09-27 |
-| `StatementVersionReader` | `quant_cn.lake.statement_version_reader` | 2 | none | Statement values per (company, period, field) as known on a date: latest known_on <= as_of, retired codes mapped (plan 16 ph1) | 1 | (none yet) | `tests/lake/test_statement_version_reader.py` (TC-SVR-001..004) | 2026-11-09 |
+| `StatementVersionReader` | `quant_cn.lake.statement_version_reader` | 2 | none | Statement values per (company, period, field) as known on a date: latest known_on <= as_of, or the first announced version with its known_on (D-124); retired codes mapped (plan 16 ph1, plan 18 ph1) | 2 | (none yet) | `tests/lake/test_statement_version_reader.py` (TC-SVR-001..005) | 2026-11-09 |
 | `TradingCalendar` | `quant_cn.lake.trading_calendar` | 2 | none | Answer trading-day questions (sessions in a range, is_open, next, prev) from the SSE calendar in the lake | 5 | `data_loading.DateSweepFetcher.list_keys`, `data_loading.FetcherFactory`, `cli.ServiceBuilder`, `lake.EffectiveDateResolver`, `lake.LakeReader`, `factor.FactorFactory` | `tests/lake/test_trading_calendar.py` (TC-TCA-001..004) | 2026-09-27 |
 | `CompactStep` | `quant_cn.pipeline.curate_pipeline` | 6 | BaseStep | Adapt Compactor to a pipeline step: one unit per dataset. | 3 | `pipeline.CuratePipeline` | `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..001) | 2026-09-27 |
 | `DeriveStep` | `quant_cn.pipeline.curate_pipeline` | 6 | BaseStep | Build the derived views and the PIT states view, then record a digest per derived view. | 5 | `pipeline.CuratePipeline`, `pipeline.FeatureStep`, `cli.ServiceBuilder` | `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..004) | 2026-09-27 |
@@ -389,6 +391,19 @@ never column lists (those live in section E).
 | `list_quarters` | single-quarter history per company (last `count`) | pd.DataFrame, str, int -> pd.DataFrame | `ValueError` | research checks; plan 16 ph3 IdeaScreener (sensitivity input to `ImpliedExpectations.compute_sensitivity`) | TC-CCP-010 |
 | `build` | the cycle panel as known on as_of | pd.DataFrame, str -> pd.DataFrame | `ValueError` | callers | TC-CCP-001..009 |
 
+### `ForecastTracker` — `quant_cn.calculation.forecast_tracker` (L4)
+- **Purpose:** Score every earnings preview (业绩预告, all revisions) against the first reported net profit attributable to the parent, and summarise each company's record as hit rate and bias (plan 18 ph1, D-124). Pure: forecast_vip / express_vip come from `lake.LakeReader.read_panel`, the actual from `lake.StatementVersionReader.read_first_versions`, so a restated actual is never used.
+- **Base:** none. **Depends on (injected):** DateCodec, GuidanceSettings.
+- **Used by:** (none yet; pipeline.GuidanceStep plan 18 ph6; run script `meta/runs/guidance_forecasts.py`).
+- **Tests:** `tests/calculation/test_forecast_tracker.py` (TC-FT-001..010).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | DateCodec, GuidanceSettings -> None | — | callers of the class | — |
+| `list_fields` | fundamentals_long field of the actual | () -> list[str] | — | callers | TC-FT-008 |
+| `build` | one row per preview version known on as_of with range, outcome, position, surprise, revision, days_after_end / ex_ante, first flash report | pd.DataFrame, pd.DataFrame, pd.DataFrame, str -> pd.DataFrame | `ValueError` | callers | TC-FT-001..006, 008, 009 |
+| `build_track_record` | per company: hit / above / below rates, mean and median abs surprise, first-version hit rate, sufficient; the same for the last pre-period-end version (n_ex_ante, ex_ante_hit_rate, ex_ante_mean_surprise, ex_ante_sufficient) | pd.DataFrame, str -> pd.DataFrame | `ValueError` | callers | TC-FT-007, 008, 010 |
+
 ### `VixCalculator` — `quant_cn.calculation.vix_calculator` (L4)
 - **Purpose:** Orchestrate the white-paper steps per trading day: select near/next terms, rate per term, forward and K0, variance strip, interpolation on the chosen clock; one VIX_PANEL row per (trade_date, underlying). A day that cannot be computed gets vix NaN and a "failed: <reason>" quality_flag instead of stopping the run.
 - **Base:** none. **Depends on (injected):** RiskFreeCurve, OptionChainBuilder, TermSelector, ForwardPriceEstimator, VarianceStripCalculator, TermInterpolator, ExpiryClock.
@@ -608,6 +623,15 @@ never column lists (those live in section E).
 - **Base:** BaseModel. **Depends on (injected):** —.
 - **Used by:** `core.Config`, `calculation.CompanyCyclePanel`.
 - **Tests:** `tests/core/test_config.py` (TC-C-017).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `GuidanceSettings` — `quant_cn.core.guidance_settings` (L1)
+- **Purpose:** Windows and minimum sample of guidance tracking: history_start, window_years, min_outcomes (base.yaml `guidance`, plan 18, D-124).
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `core.Config`, `calculation.ForecastTracker`.
+- **Tests:** `tests/core/test_config.py` (TC-C-019).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -1544,15 +1568,16 @@ never column lists (those live in section E).
 | `close_run` | Set status, message and finished_at on the run row. | str, str, str -> None | `LakeError` | as class | see class |
 
 ### `StatementVersionReader` — `quant_cn.lake.statement_version_reader` (L2)
-- **Purpose:** Read every company's statement values as known on one date: per (company, period, field) the version with the latest known_on <= as_of (D-092 versions), retired codes mapped to surviving codes (plan 16 ph1).
+- **Purpose:** Read every company's statement values as known on one date: per (company, period, field) the version with the latest known_on <= as_of (D-092 versions), or the first version ever announced with its known_on (guidance outcomes, D-124); retired codes mapped to surviving codes (plan 16 ph1, plan 18 ph1).
 - **Base:** none. **Depends on (injected):** LakeQuery, TickerAliasMap, DateCodec.
-- **Used by:** (none yet; pipeline.DiscoveryStep plan 16 ph6).
-- **Tests:** `tests/lake/test_statement_version_reader.py` (TC-SVR-001..004).
+- **Used by:** (none yet; pipeline.DiscoveryStep plan 16 ph6, pipeline.GuidanceStep plan 18 ph6).
+- **Tests:** `tests/lake/test_statement_version_reader.py` (TC-SVR-001..005).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
 | `__init__` | wire dependencies | LakeQuery, TickerAliasMap, DateCodec -> None | — | callers of the class | — |
 | `read_versions` | statement values per (company, period, field) known on as_of | Sequence[str], str, str -> pd.DataFrame | `LakeError` | callers | TC-SVR-001..004 |
+| `read_first_versions` | first announced value per (company, period, field) with its known_on | Sequence[str], str, str -> pd.DataFrame | `LakeError` | callers (ForecastTracker input) | TC-SVR-005 |
 
 ### `TickerAliasMap` — `quant_cn.lake.ticker_alias_map` (L2)
 - **Purpose:** Map retired codes to their surviving codes so a company has one history. Tushare keeps a retired code's rows and back-fills the same history under the new code, but some datasets (stk_limit, moneyflow, margin_detail) exist only under the old code before the change. `refresh` builds `derived.ticker_alias`: pairs detected from the data (a code missing from stock_basic whose closes equal a listed code's on >= 20 shared dates, >= 99% equal) plus the config pairs; every candidate keeps its match statistics, and an old code matching more than one listed code is kept but not accepted. `normalize_codes` renames accepted old codes and, where both codes have a row for the same key, keeps the new code's row.

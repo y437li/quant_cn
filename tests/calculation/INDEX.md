@@ -7,6 +7,7 @@ Tests for `quant_cn.calculation`; known answers from Black-76 synthetic chains (
 |---|---|---|
 | `test_black76_model.py` | tests for `black76_model`, one function per TC ID |  |
 | `test_company_cycle_panel.py` | tests for `company_cycle_panel`, one function per TC ID | `PanelHarness` |
+| `test_forecast_tracker.py` | tests for `forecast_tracker`, one function per TC ID |  |
 | `test_expiry_clock.py` | tests for `expiry_clock`, one function per TC ID |  |
 | `test_forward_price_estimator.py` | tests for `forward_price_estimator`, one function per TC ID |  |
 | `test_futures_positioning.py` | tests for `futures_positioning`, one function per TC ID |  |

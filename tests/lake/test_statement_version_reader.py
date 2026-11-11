@@ -9,7 +9,11 @@ from quant_cn.core.config import Config, TickerAlias
 from quant_cn.core.date_codec import DateCodec
 from quant_cn.core.exceptions import LakeError
 from quant_cn.lake.derived_views import DerivedViews
-from quant_cn.lake.statement_version_reader import COLUMNS, StatementVersionReader
+from quant_cn.lake.statement_version_reader import (
+    COLUMNS,
+    FIRST_COLUMNS,
+    StatementVersionReader,
+)
 from quant_cn.lake.ticker_alias_map import TickerAliasMap
 from tests.support import MiniLake, SampleFactorLake
 
@@ -81,3 +85,16 @@ def test_tc_svr_004_errors(lake: MiniLake, config: Config) -> None:
     _write_lake(lake, config)
     with pytest.raises(LakeError):
         reader.read_versions(["revenue"], "2025-11-01", "20200101")
+
+
+def test_tc_svr_005_first_versions(lake: MiniLake, config: Config) -> None:
+    """TC-SVR-005"""
+    _write_lake(lake, config)
+    reader = _build_reader(lake)
+    out = reader.read_first_versions(["total_profit"], "20251101", "20200101")
+    assert list(out.columns) == FIRST_COLUMNS
+    row = out[out["end_date"] == "20250630"].iloc[0]
+    assert (row["value"], row["known_on"]) == (pytest.approx(1.0), "20250820")  # not 1.5
+    early = reader.read_first_versions(["total_profit"], "20250801", "20200101")
+    assert "20250630" not in set(early["end_date"])
+    assert set(out["ts_code"]) == {NEW}

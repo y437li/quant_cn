@@ -8,6 +8,7 @@ L4: domain financial computations over lake frames (CBOE VIX, Black-76); pure, n
 | `__init__.py` | package marker |  |
 | `black76_model.py` | Black-76 option prices on a forward and implied volatility by bisection | `Black76Model` |
 | `company_cycle_panel.py` | Company cycle panel as known on a date: quarters, TTM, YoY/QoQ, deducted profit, 10-year norm (plan 16) | `CompanyCyclePanel` |
+| `forecast_tracker.py` | Earnings previews (all revisions) scored against the first reported profit; per-company hit rate and bias (plan 18) | `ForecastTracker` |
 | `expiry_clock.py` | How time to expiry is measured: calendar minutes (CBOE) or trading sessions | `ExpiryClock` |
 | `forward_price_estimator.py` | Forward price and K0 from put-call parity (CBOE white paper step 1) | `ForwardPriceEstimator` |
 | `futures_positioning.py` | Index-futures positioning: open interest regimes, top-20 broker nets, basis (plan 09) | `FuturesPositioning` |

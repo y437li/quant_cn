@@ -35,6 +35,7 @@ class DateCodec:
         cli.ServiceBuilder                         -- injected type or call
         data_loading.DateWindowFetcher             -- injected type or call
         lake.EffectiveDateResolver                 -- injected type or call
+        calculation.ForecastTracker                -- as_of checks, track-record window
         factor.FactorFactory                       -- injected type or call
         portfolio.WatchlistBuilder                 -- window start dates
         cli.ResearchCommands                       -- composition of WatchlistBuilder
