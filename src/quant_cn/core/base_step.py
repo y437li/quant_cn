@@ -34,6 +34,7 @@ class BaseStep(ABC):
         pipeline.UniverseStep     -- subclass
         pipeline.EvaluationStep   -- subclass
         pipeline.FeatureStep      -- subclass
+        pipeline.RiskModelStep  -- injected type or call
 
     Test cases:
         TC-BAC-001  abstract bases cannot be instantiated

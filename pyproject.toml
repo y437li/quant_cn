@@ -15,6 +15,7 @@ dependencies = [
     "pyyaml>=6",
     "rich>=13",
     "scipy>=1.14",
+    "statsmodels>=0.15.0",
 ]
 
 [project.optional-dependencies]
@@ -92,7 +93,7 @@ layers = [
     "quant_cn.service_builder",
     "quant_cn.back_testing | quant_cn.portfolio | quant_cn.visualization",
     "quant_cn.pipeline",
-    "quant_cn.factor",
+    "quant_cn.factor | quant_cn.risk",
     "quant_cn.statistic | quant_cn.calculation | quant_cn.industry_graph",
     "quant_cn.data_loading",
     "quant_cn.lake",

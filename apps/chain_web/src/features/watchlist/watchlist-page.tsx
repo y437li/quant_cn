@@ -1,12 +1,13 @@
 import type { ReactNode } from "react";
 import type { Watchlist, WatchlistEntry } from "../../api/client";
 import { useApp } from "../../components/context";
+import { EtfProxyPanel } from "./etf-proxy-panel";
 import { RangeBar, WeeklyChart } from "./watchlist-charts";
 import { buyText, epsYearOf, gapPct, gapText, nearestEntry, pctOf, px, statusLabel, targetText, times, ymd } from "./watchlist-format";
 
 /**
  * Purpose: the 观察账本 page (#watchlist, plan 15 phase 7): a headline with the stock nearest its buy price,
- * one card per stock (status, gap, valuation at the buy price, range bar, weekly chart, thesis) and a
+ * the 国家队 ETF panel (phase 7b), one card per stock (status, gap, valuation at the buy price, range bar, weekly chart, thesis) and a
  * valuation table. Read-only: targets are edited in config/local.watchlist.yaml and refreshed with make watchlist.
  * Contract: doc null while loading; error shows a message; every number is displayed as Python wrote it.
  */
@@ -24,6 +25,7 @@ export function WatchlistPage({ doc, error }: { doc: Watchlist | null; error: st
           <p>还没有观察的股票。</p>
         )}
       </header>
+      <EtfProxyPanel />
       {doc.entries.length === 0 && <EmptyState />}
       {doc.missing.length > 0 && <p className="note">这些代码在数据湖里没有价格，没有显示：{doc.missing.join("、")}</p>}
       {doc.entries.length > 0 && (

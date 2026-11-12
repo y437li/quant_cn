@@ -75,3 +75,36 @@ def test_tc_fr_005_plan04_frames() -> None:
         row = {c: sample.get(c, 1.0) for c in schema.columns}
         out = schema.validate(schema.normalize(pd.DataFrame([row]), strict=True))
         assert list(out.columns) == schema.columns and len(out) == 1
+
+
+# TC-FR-006
+def test_tc_fr_006_plan05_risk_frames() -> None:
+    text = {
+        "trade_date": "20260924",
+        "ts_code": "600000.SH",
+        "factor": "size",
+        "factor_i": "size",
+        "factor_j": "beta",
+        "method": "ewma",
+        "portfolio": "p1",
+        "component": "total",
+        "kind": "total",
+        "metric": "bias",
+        "scope": "factor:size",
+        "notes": "",
+    }
+    schemas = [
+        frames.RISK_EXPOSURE,
+        frames.FACTOR_RETURN,
+        frames.SPECIFIC_RETURN,
+        frames.FACTOR_COV,
+        frames.SPECIFIC_RISK,
+        frames.RISK_DECOMP,
+        frames.RISK_VALIDATION,
+    ]
+    for schema in schemas:
+        row = {c: text.get(c, 1.0) for c in schema.columns}
+        out = schema.validate(schema.normalize(pd.DataFrame([row]), strict=True))
+        assert list(out.columns) == schema.columns
+        with pytest.raises(SchemaError):
+            schema.validate(schema.normalize(pd.DataFrame([row, row]), strict=True))

@@ -73,3 +73,6 @@ research_space/prototypes/chain_view/views.json
 
 # personal watchlist output for the chain app (D-120)
 research_space/prototypes/chain_view/watchlist.json
+research_space/prototypes/chain_view/etf_proxy.json
+research_space/prototypes/chain_view/factor_monitor.json
+research_space/prototypes/chain_view/holdings_risk.json

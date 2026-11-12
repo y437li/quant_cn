@@ -1051,6 +1051,22 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Consequences: the current FY2025 files stay the source of the chain view; the per-year files become the history that plan 15 ph2 (`GraphExportStep`) and plan 17 / 18 read; the old `applications_full.py` must not be rerun without a title-year filter.
 - Links: D-098, D-118, D-122, plan 12 ph4, plan 13 ph3, plan 17, plan 18
 
+### D-126 National-team positioning is proxied by per-index ETF AUM and split-proof net flows
+- Status: accepted (2026-11-11; user: "他们的合算是国家队的持仓", "各个指数的etf proxy", "但基本国家队有那么大的力量", "要track一下", "可以每天track吗？"). The 11 core ETFs are the proxy, the rest are shown as other money; position is measured at the current price of each index's reference ETF so price moves do not read as trading; refreshed daily by launchd.
+- Context: 汇金/证金 buy and sell the market mostly through the big broad-index ETFs (510300, 510310, 510330, 159919, 510050, 510500, 512100, 159915, 588000, ...). Their exact holdings are disclosed only twice a year, but ETF shares are daily (`fund_share`). On the lake: 143 such ETFs hold 13,114亿 on 2026-11-06; flows were +9,608亿 in 2024, −17,966亿 in 2026H1 and +5,418亿 since 2026-10-01.
+- Decision: one proxy per index (沪深300, 中证A500, 上证50, 中证500, 中证1000, 创业板指, 科创50) plus the total. Members are listed, non-feeder, non-enhanced ETFs that track 100% of the index, mapped by rule and committed in `config/etf_proxies.yaml`. Net flow = AUM_t − AUM_{t−1} × close/pre_close, so share splits and consolidations do not count as flows. 沪深300 is the benchmark for the watchlist stocks.
+- Alternatives: a single largest ETF (510300) as the index (rejected by the user: the sum is what the national team holds); Δshares × close (rejected: 159845 2022-08 and 512100 2022-09 consolidations show up as fake flows); index levels from index_daily alone (rejected: no positioning signal).
+- Consequences: the proxy measures all holders, not just the national team, until disclosed holder data (plan 11 ph11) is joined in; `make watchlist` also refreshes fund_daily and fund_share; `fund_share` lags `fund_daily` by a few days (2026-11-06 vs 11-11).
+- Links: D-120, plan 15 ph7b, plan 11 ph11, plan 06b
+
+### D-128 US market sensitivity: S&P 500 partial beta from Tushare index_global, gated style
+- Status: accepted (2026-11-11, user: "这里面要加美股s&p的factor", "spx only"); gate passed the same day (adj R² 0.2711 vs 0.2695, bias stats in band), so the default model is `cne5_v2_spx`.
+- Context: A-shares open after the US close, so the overnight S&P 500 move is a common shock that country, industry and Beta may not fully absorb; RISK_FACTOR_LIST §4b planned macro betas behind the v3 gate but no US series was in the lake (FRED blocked on its key, plan 11 ph6).
+- Decision: dataset `index_global` (Tushare, SPX from 2015, `known_on_rule: next_session`). Descriptor `us_beta` = the S&P coefficient of a 252-session (half-life 63) weighted regression of the stock's China close-to-close return on the China cap-weighted market and the S&P return of every US close dated in [previous China session, session), compounded; style `us_sensitivity` in `config/risk_model.yaml`, entering the default only if median adjusted R² rises and random-portfolio and benchmark bias stats stay in [0.85, 1.15] against `cne5_v2`.
+- Alternatives: FXCM `SPX500` already in fx_daily (rejected: history only from 2022-07, bar dates shifted one day, weekend bars); a raw (not partial) S&P beta (rejected: mostly re-measures China Beta, as the overnight S&P return correlates with the next China market return); Nasdaq / Hang Seng too (user: SPX only).
+- Consequences: `PriceDescriptors.compute_partial_beta`, `DescriptorBuilder.compute_overnight_return`; configured as an `external_series` entry (generalised the same day for D-134 / D-130: `ExternalSeriesSpec`, `ThemeBasketSpec`, `RiskInputs.external` / `themes`); `make download` gains index_global; plan 05 phase 7.
+- Links: D-061, D-127, RISK_FACTOR_LIST §4b, plans/execution/05_risk_model.md ph7
+
 ### D-129 CNINFO periodic-report list starts 2023-01-01 (FY2022 annual and 2023 interim reports)
 - Status: accepted (2026-11-11, user "可以" to extending the history; follows D-125 year-by-year backfill).
 - Context: `cninfo_announcements` started 2023-11-01, so the lake holds only ~100 FY2022 annual reports and ~60–120 of each 2023 Q1 / H1 / Q3 report, while FY2023–FY2025 are complete. Three-year comparisons of business mix, business mode and moat need a full 2023 year.
@@ -1059,3 +1075,105 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Consequences: about 20k more PDFs and the CNINFO request load that comes with them; interim-report labelling needs a title-period script like `backfill_annual.py` (applications for semiannual, QuarterlyNoteExtractor for Q1/Q3).
 - Links: D-111, D-125, plan 12 ph2 / ph4
 
+
+### D-132 Factor monitor and holdings risk are daily app pages fed by the stored risk frames
+- Status: accepted (2026-11-12, user "ok"; plan 15 ph7c / ph7d).
+- Context: the user wants each factor's daily return and volatility recorded, and the risk exposure of their real holdings. The risk model already stores daily factor returns and covariance (D-127); `make risk-model` is a full refit (≈ 12–20 min).
+- Decision: no new model math. `FactorMonitorBuilder` turns `derived.risk_factor_return` / `risk_factor_cov` into `factor_monitor.json` (returns over windows, forecast vol, realized vol, σ-move). Holdings live in git-ignored `config/local.positions.yaml` (same rule as D-120); `HoldingsRiskBuilder` reuses `RiskModel.load_snapshot` + `RiskDecomposer` against 沪深300 into `holdings_risk.json`, and appends each day's positions and risk decomposition to the lake (`derived/holdings/{positions,risk}`, partition per date, replaced on rerun) so history accumulates outside git; the YAML stays the only input. Both are served read-only by Go and run in `make track-daily` after a full `risk-model` refit.
+- Alternatives: an incremental risk-model step (deferred: bigger change, refit fits in the evening window); positions in the claude.ai artifact or committed config (rejected: personal data, D-120); computing factor stats in Go / TS (rejected: D-116).
+- Consequences: the daily job runs ≈ 25 min longer and holds the DuckDB write lock during the refit; pages show the last close, not live quotes.
+- Links: D-116, D-120, D-126, D-127, plan 05, plan 15 ph7c / ph7d
+
+### D-133 External sensitivities: Arm, gold, US 10y yield and crude oil as gated styles
+- Status: proposed (2026-11-12, plan 05 ph8 (d)–(g); user: "把arm也加进去吧", "还有原油,美国的利率，以及黄金的sensitive").
+- Context: the user wants exposure to Arm (Nasdaq ARM) in the risk model and the factor monitor (plan 15 ph7c). The model already has an overnight S&P 500 partial beta (D-128) built from the generic `external_series` mechanism.
+- Decision: add dataset `us_daily` (Tushare; ARM only), drop the IPO-day row, and add `{descriptor: arm_beta, dataset: us_daily, code: ARM}` to `external_series` with style `arm_sensitivity` = partial beta on the last ARM return before the China session, China market controlled (252 d, half-life 63). Same mechanism for gold (XAUUSD.FXCM, +1 day), the US 10-year yield (`us_tycr` y10, new kind `level` = daily change, next China session) and crude (INE SC main contract from `fut_daily`, same day; FXCM USOil/UKOil end 2023-06-01). Each enters the default model only if it passes the phase-7 gate (adjusted R², bias stats) against the current default.
+- Alternatives: a theme basket of A-share Arm-ecosystem names (rejected for now: membership is a judgement call, and the user asked for Arm itself); the SOX index (not requested; can be a second series later).
+- Consequences: exposures exist only from ≈ 2024-09 (ARM listed 2023-09-14, 252-day window); before that the style is absent, not zero. One more Tushare dataset to refresh daily.
+- Links: D-127, D-128, plan 05 ph8, plan 15 ph7c
+
+### D-134 USD sensitivity style from USDCNH (FXCM bars shifted one day)
+- Status: accepted (2026-11-11, user request "美元因子" via session quant-cn-5c; default chosen by the user's "ok" to the recommendation).
+- Context: CNY moves separate exporters (USD revenue, e.g. TiO2) from USD-cost / USD-debt names; USDOLLAR in fx_daily starts only 2022-07.
+- Decision: `usd_beta` = partial beta of the China-day-t return on the USDCNH.FXCM bid-close change over [previous session, session), China market controlled (252 d, half-life 63); FXCM dates a bar by its open, so `date_shift_days: 1`. Style `usd_sensitivity` in the default. Gate vs `cne5_v2_spx` (2019→2026, alone): median adj R² 0.2727 vs 0.2711; random portfolios 100% in band (median 1.018); CSI 300/500/1000 0.933/1.081/1.044; own bias 1.075.
+- Alternatives: USDOLLAR (rejected: history from 2022-07); onshore CNY fixing (not in the lake).
+- Consequences: `ExternalSeriesSpec` entry in `config/risk_model.yaml`; plan 05 phase 8; combined `cne5_v3` numbers in D-131.
+- Links: D-128, plans/execution/05_risk_model.md ph8
+
+### D-130 AI / data-center sensitivity is a monitor style, not a model factor
+- Status: accepted (2026-11-11, user: "AI/数据中心因子可以monitor", "单独展示").
+- Context: the 885887.TI 数据中心(AIDC) basket beta is the strongest new style (daily mean |t| 5.4, 6.9 in 2026; adj R² 0.2756 vs 0.2711 alone) but raised under-forecasting (random-portfolio median bias 1.019 → 1.044, CSI 500 1.08 → 1.11), and `ths_member` is a 2026 snapshot without in/out dates, so history before 2025 carries hindsight.
+- Decision: `ThemeBasketSpec` (circ_mv-weighted members excluding the stock, from the 2020-03-06 list date) feeds `aidc_beta`; style `ai_dc_sensitivity` is a `monitor_styles` entry: exposures in RISK_EXPOSURE and daily returns from the regression re-run with the style added (`FactorReturnEstimator.compute_monitor`), written to `derived/reports/risk_<name>/monitor_returns.parquet` and shown in its own notebook section; not in FACTOR_COV, SPECIFIC_RISK or any risk forecast. Revisit as a model style after the USE4 NW-lag fix.
+- Alternatives: model style now (rejected: worse bias, hindsight); drop it (rejected: the user wants it tracked).
+- Consequences: monitor regressions double the regression time of `make risk-model` (~+1 min).
+- Links: D-061, D-128, plans/execution/05_risk_model.md ph8
+
+### D-131 Free-cash-flow yield as its own style, not inside Earnings Yield
+- Status: accepted (2026-11-11, user request via session quant-cn-5c; default per the recommendation the user accepted).
+- Context: OCF and FCF diverge for heavy-capex names (钛白粉, express, coal); FCFP = (TTM n_cashflow_act − TTM c_pay_acq_const_fiolta) / mcap, PIT through `read_fundamentals_pit`.
+- Decision: style `cash_flow_yield` (FCFP, orthogonalised to earnings_yield and book_to_price) in the default. Gate alone vs `cne5_v2_spx`: (A) own style adj R² 0.2714 vs 0.2711, bias stats unchanged, median factor |bias − 1| 0.054 vs 0.057 — passes, marginally; (B) FCFP inside earnings_yield (0.44 / 0.23 / 0.33) 0.2707 — fails, rejected.
+- Alternatives: variant B (rejected by the gate); leave out (rejected: passes and isolates the capex effect).
+- Consequences: `c_pay_acq_const_fiolta_ttm` read with the other TTM fields. Combined default `cne5_v3` (with D-134), live run 650d1711f7fe: median adj R² 0.2732 vs 0.2711, last-year 0.3012 vs 0.2985, random portfolios 100% in band (median 1.018), median factor abs(bias − 1) 0.054, CSI 300/500/1000 0.934/1.082/1.046; own bias cash_flow_yield 0.989, usd_sensitivity 1.079.
+- Links: D-061, D-127, plans/execution/05_risk_model.md ph8
+
+### D-135 Scalable digests for the risk tables
+- Status: accepted by execution (2026-11-11).
+- Context: the exact digest (md5 of every row's text, ordered) failed on `derived.risk_exposure` (115.6 M rows with 13 styles): DuckDB out of memory at 32 GB.
+- Decision: `DeriveStep.build_digests(views, scalable=True)` = "h:" + md5(row count | sum | xor of a 64-bit hash of every row's text), order-independent; 3.9 s and 0.5 GB on 115.6 M rows. `RiskModelStep` uses it; every other view keeps the exact digest, so existing manifest values are unchanged.
+- Alternatives: per-year exact digests (rejected: still materialises ~15 M rows of text per year); raise the DuckDB memory limit (rejected: shared catalog, 64 GB machine).
+- Consequences: risk digests detect any change but are not byte-level proofs of order; rebuild comparisons still work.
+- Links: D-094, D-127
+
+### D-127 Risk model build choices (plan 05): reuse industry view, full seeded refit outside curate, monthly growth snapshots
+- Status: accepted by execution (2026-11-11, user: "把A股版barra 做好"); open to review. (Re-added 2026-11-11 after the entry was lost in a concurrent rewrite of this file; text unchanged.)
+- Context: plan 05 was approved with an `IndustryClassifier`, a per-date incremental `RiskModelStep` inside curate and six frames; building it on the real lake (5,000+ stocks, 2019→) needed concrete choices.
+- Decision: (1) no `IndustryClassifier`: `derived.industry_l1.l1_grouping` via `ExposureReader` is the industry definition (D-071, D-093). (2) `make risk-model` refits the whole history (exposures, factor returns and residuals per year; covariance and specific risk over the full history), seeded so reruns are byte-identical; it records digests but is not part of `curate`. (3) Growth descriptors (EGRO, SGRO) come from `StatementVersionReader` snapshots on each month-end session, held until the next one (PIT at the snapshot, at most one month stale); SGRO uses revenue, not revenue per share (a constant share count cancels in slope / mean). (4) A seventh frame `SPECIFIC_RETURN` keeps the residuals. (5) A style is left out of a session when less than `min_coverage` (50%) of the names have a raw value, so a style made only of filled values never enters the regression. (6) Descriptors are clipped iteratively at ±3 sd. (7) Covariances are daily variances with NW for a 21-day horizon; eigenfactor bias profile refitted every 21 sessions; R² is the weighted uncentred Barra R²; returns are total returns (no risk-free subtraction). (8) Default model `cne5_v2` = CNE5's ten styles without analyst descriptors (renormalised weights, RISK_FACTOR_LIST §1).
+- Alternatives: incremental per-date fit inside curate (rejected: curate runs daily and the covariance / specific stages need the whole history; a full refit takes ~15 min); a new `IndustryClassifier` (rejected: duplicates `derived.industry_l1`); daily `StatementVersionReader` calls for growth (rejected: ~2,000 queries for a slowly changing descriptor).
+- Consequences: `config/risk_model.yaml` holds every tunable; `derived/risk_{exposure,factor_return,specific_return,factor_cov,specific_risk}` + `derived/reports/risk_<name>/validation.parquet`; `portfolio` / `back_testing` read the frames; import-linter layer 5 now lists `quant_cn.factor | quant_cn.risk`. Later defaults: `cne5_v2_spx` (D-128), `cne5_v3` (D-131, D-134).
+- Links: D-045, D-061, D-071, D-093, plans/execution/05_risk_model.md, RISK_MODEL_DESIGN
+
+### D-136 Morning e-mail report sent over Gmail SMTP with an app password
+- Status: proposed (2026-11-12, plan 15 ph7e; user: "send a morning report to my gmail for the monitor in chinese desgin the outlay", "用电脑宽度").
+- Context: the 因子监控 / 持仓 / 观察账本 pages only exist on this Mac. The user wants the same facts in their inbox each morning, in Chinese, laid out for a desktop mail client. No mail connector is available in this environment.
+- Decision: Python `MorningReportBuilder` renders one e-mail-safe HTML (tables + inline styles, no scripts or external images, 960 px desktop layout) from factor_monitor.json, holdings_risk.json and watchlist.json; `MailSender` sends it with `smtplib` over smtp.gmail.com:587 (STARTTLS) using a Gmail app password in `.env` (`GMAIL_APP_PASSWORD`, never committed); sender and recipient addresses in git-ignored `config/local.yaml`. A weekday launchd job sends at a fixed morning time after the evening `track-daily` run; it skips with a log line when the data is older than the last session.
+- Alternatives: a claude.ai artifact or Notion page (rejected: the user asked for Gmail; holdings are personal); Gmail API with OAuth (deferred: more setup for one fixed recipient); macOS Mail via AppleScript (rejected: depends on a configured Mail account and the GUI session).
+- Consequences: personal holdings leave the Mac by e-mail to the user's own Gmail; the user must create an app password (needs 2-step verification on the Google account); one more launchd job.
+- Links: D-116, D-120, D-132, plan 15 ph7e
+
+### D-137 Daily App Store game charts from Apple's public RSS feeds
+- Status: accepted (2026-11-11, plan 19 approved: "可以track"; asked: "在湖里 track一下各个国家，各个地区的苹果畅销榜和免费榜游戏").
+- Context: there is no free history of game chart ranks (七麦 / 点点 / Sensor Tower are login- or pay-walled); revenue and contract liabilities arrive quarterly, too late to see a game fading.
+- Decision: capture Apple's legacy iTunes RSS charts (top grossing and top free, genre 6014 games, top 100) for the markets in `config/app_charts.yaml` once a day into dataset `app_store_charts` via a new `snapshot` sweep kind (one key per capture date, never backfilled, `known_on` = capture date); link apps to listed companies by `artist_id` in `config/app_publishers.yaml`.
+- Alternatives: paid rank vendors (rejected for now: cost and terms); scraping 七麦 web pages (rejected: login wall, terms); LLM web search (rejected: the Ark DeepSeek endpoint has no browsing, and answers are not a time series).
+- Consequences: history starts on the first capture day; iOS only; one more step in `make track-daily`; a new sweep kind that later "today only" sources can reuse.
+- Links: D-063, D-120, plan 19, plan 15 ph7b
+
+### D-138 DeriveStep uses the D-135 hash digest for derived.risk_* (amends D-135)
+- Status: accepted by execution (2026-11-12).
+- Context: once the risk tables were registered as derived views, `curate`'s DeriveStep built the exact digest of `derived.risk_exposure` (142 M rows) and ran out of memory at 32 GB, so the 11-12 daily update stopped before the features and the risk refit.
+- Decision: `DeriveStep.run` uses `build_digests(..., scalable=True)` for views starting `derived.risk_`, exact for all others — the same digest RiskModelStep writes, so the manifest values agree.
+- Alternatives: drop risk tables from DeriveStep digests (rejected: curate would stop recording them); raise memory (rejected in D-135).
+- Consequences: TC-CP-006; non-risk digests unchanged. (Numbered D-138: D-137 was taken concurrently.)
+- Links: D-135, D-094
+
+### D-139 Manual cycle series: committed public file + git-ignored licensed file, PIT by publication date
+- Status: accepted (2026-11-12, user approved plan 20).
+- Context: the cycle signals behind several holdings and watchlist names are not in Tushare: the Clarksons newbuilding price index (中国船舶) and TiO2 / ilmenite prices (龙佰). Wind EDB likely has them, but it is licensed and terminal-bound.
+- Decision:
+  - Public observations go in a committed `config/manual_series.yaml`, each row with a source URL.
+  - Licensed exports go in git-ignored `config/local.manual_series.yaml` and are flagged `licensed`.
+  - Both files are loaded into curated `alt/manual_series` with `known_on` = publication date.
+  - Series that akshare covers use the existing akshare source instead.
+- Alternatives:
+  - WindPy integration: rejected, because it needs a logged-in terminal and adds new paid data (plan 16 scope).
+  - Ad-hoc scripts in meta/runs: rejected, because the data is not PIT and is invisible to the app.
+- Consequences: values are only as good as their sources. The rows are context for cycle position, not trading signals.
+- Links: D-120, D-121, D-005, plan 20
+
+### D-140 statsmodels as a project dependency
+- Status: accepted by execution (2026-11-12, user: "装呗").
+- Context: the time-series tests used in research sessions were run ad hoc in a throwaway `uv run --with` environment: Engle-Granger and Johansen cointegration (中证1000 vs 银行) and ADF.
+- Decision: add `statsmodels>=0.15.0` to `pyproject.toml` / `uv.lock`. It is used in research notebooks and scripts; any library class that uses it goes through `new-class` as usual.
+- Alternatives: hand-rolled tests in numpy (rejected: error-prone critical values); keep using throwaway environments (rejected: not reproducible).
+- Consequences: one more dependency in the shared venv; peers sharing `$HOME/.venvs/quant_cn` see it after `uv sync`.
+- Links: D-005

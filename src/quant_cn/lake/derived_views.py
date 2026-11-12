@@ -29,6 +29,15 @@ FEATURES_VIEW = f"{SCHEMA}.features"
 _TABLES = {
     "universe": "trade_date, ts_code, in_universe, reason",
     "features": "trade_date, ts_code, factor, value, value_raw",
+    # plan 05 risk model (RiskModelStep)
+    "risk_exposure": "trade_date, ts_code, factor, exposure, exposure_raw, is_filled",
+    "risk_factor_return": "trade_date, factor, ret, t_stat, r2, n_obs",
+    "risk_specific_return": "trade_date, ts_code, resid, weight",
+    "risk_factor_cov": "trade_date, factor_i, factor_j, cov, cov_raw, horizon_days",
+    "risk_specific_risk": "trade_date, ts_code, sigma, sigma_raw, method",
+    # plan 15 ph7d: the user's book per session (HoldingsRiskBuilder, D-132)
+    "holdings_positions": "trade_date, code, shares, cost, close, value, pnl, weight",
+    "holdings_risk": "trade_date, component, value",
 }
 # statements only: event datasets are period-swept too (forecast_vip, disclosure_date; D-081)
 FUNDAMENTALS_PREFIX = "fundamentals/"
@@ -195,6 +204,8 @@ class DerivedViews:
         pipeline.DeriveStep      -- injected type or call
         cli.ServiceBuilder       -- injected type or call
         pipeline.FeatureStep     -- injected type or call
+        pipeline.RiskModelStep  -- injected type or call
+        cli.ResearchCommands  -- holdings-risk refreshes derived.holdings_* views
 
     Test cases:
         TC-DV-001  prices_adj joins daily and adj_factor with close_adj = close * adj_factor
@@ -289,8 +300,9 @@ class DerivedViews:
             Input:
                 (none)
             Output:
-                list[str]  -- views created: derived.universe / derived.features when their
-                              year files exist; dropped otherwise
+                list[str]  -- views created: derived.universe / derived.features /
+                              derived.risk_* / derived.holdings_* when their year files
+                              exist; dropped otherwise
             Raises:
                 LakeError  -- DuckDB rejects a view
         """

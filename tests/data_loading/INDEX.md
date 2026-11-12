@@ -13,4 +13,6 @@ Tests for `quant_cn.data_loading`. No network, no files outside `tmp_path`.
 | `test_fetchers.py` | tests for `fetchers`, one function per TC ID |  |
 | `test_http_transport.py` | tests for `http_transport`, one function per TC ID | `CutResponse` |
 | `test_tushare_client.py` | tests for `tushare_client`, one function per TC ID | `ScriptedTransport` |
-| `test_web_clients.py` | tests for `base_web_client`, `cninfo_client`, `eastmoney_report_client`, one function per TC ID | `FakeWebTransport`, `SplittingTransport` |
+| `test_snapshot_fetcher.py` | tests for `snapshot_fetcher`, one function per TC ID |  |
+| `test_manual_series_client.py` | tests for `manual_series_client`, one function per TC ID (TC-MSC-001..003) | — |
+| `test_web_clients.py` | tests for `base_web_client`, `cninfo_client`, `eastmoney_report_client`, `app_store_client`, one function per TC ID | `FakeWebTransport`, `SplittingTransport` |

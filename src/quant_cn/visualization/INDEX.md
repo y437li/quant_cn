@@ -10,3 +10,4 @@ L5: charts for prices, factors, backtest results; plotly, themed, notebook + HTM
 | `chart_theme.py` | Theme tokens for charts: surfaces, ink, grid and the up/down pair, per light or dark mode | `ChartTheme` |
 | `factor_chart.py` | Factor campaign charts: rolling IC with a band, ICIR bars, quantile ladder, IC by horizon | `FactorChart` |
 | `price_chart.py` | Candlestick + volume chart for one ticker from a PRICE_PANEL frame | `PriceChart` |
+| `risk_chart.py` | Risk model charts: cumulative factor returns, factor correlations, risk decomposition (plan 05) | `RiskChart` |

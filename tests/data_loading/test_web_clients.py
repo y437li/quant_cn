@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+import urllib.error
 from collections.abc import Mapping
 from typing import Any
 
+import pandas as pd
 import pytest
 
 from quant_cn.core.exceptions import DataSourceError
+from quant_cn.data_loading.app_store_client import COLUMNS as APPLE_COLUMNS
+from quant_cn.data_loading.app_store_client import AppStoreClient
 from quant_cn.data_loading.cninfo_client import COLUMNS as CNINFO_COLUMNS
 from quant_cn.data_loading.cninfo_client import CninfoClient
 from quant_cn.data_loading.eastmoney_report_client import COLUMNS as EM_COLUMNS
@@ -190,3 +194,63 @@ def test_tc_cnc_004_split_over_cap(clock: FakeClock) -> None:
         "bj",
     }
     assert len(out) == 6  # one row for the 28th plus one per board on the 29th
+
+
+def build_entry(app_id: str, name: str, price: str = "0.00000") -> dict[str, Any]:
+    return {
+        "im:name": {"label": name},
+        "im:price": {"attributes": {"amount": price, "currency": "CNY"}},
+        "id": {"attributes": {"im:id": app_id, "im:bundleId": f"com.x.{app_id}"}},
+        "im:artist": {"label": "Giant Games, Inc.",
+                      "attributes": {"href": "https://apps.apple.com/cn/developer/x/id1500?uo=2"}},
+        "category": {"attributes": {"im:id": "6014"}},
+        "im:releaseDate": {"label": "2026-05-26T00:00:00-07:00"},
+    }  # fmt: skip
+
+
+def build_apple(transport: HttpTransport, clock: FakeClock) -> AppStoreClient:
+    return AppStoreClient(clock, transport, min_interval_s=0, retries=0, retry_sleep_s=0)
+
+
+CHARTS = {"country": "cn", "charts": "topgrossingapplications,topfreeapplications"}
+
+
+# TC-ASC-001
+def test_tc_asc_001_two_charts_flattened(clock: FakeClock) -> None:
+    grossing = {"feed": {"entry": [build_entry("1", "A", "6.00000"), build_entry("2", "B")]}}
+    free = {"feed": {"entry": [build_entry("3", "C")]}}
+    transport = FakeWebTransport([grossing, free])
+    df = build_apple(transport, clock).query("rss", CHARTS, [])
+    assert list(df.columns) == APPLE_COLUMNS
+    assert df[["chart", "rank", "app_id"]].values.tolist() == [
+        ["grossing", 1, "1"], ["grossing", 2, "2"], ["free", 1, "3"]]  # fmt: skip
+    first = df.iloc[0]
+    assert (first.artist_id, first.release_date, first.currency) == ("1500", "20260526", "CNY")
+    assert first.price == pytest.approx(6.0)
+    assert first.captured_at == "20260830 18:00:00" and "capture_date" not in df.columns
+    assert "/cn/rss/topgrossingapplications/limit=200/genre=6014/json" in transport.urls[0]
+    assert pd.api.types.is_string_dtype(df["app_id"]) and df["rank"].dtype == "int64"
+
+
+# TC-ASC-002
+def test_tc_asc_002_single_and_empty_feed(clock: FakeClock) -> None:
+    transport = FakeWebTransport([{"feed": {"entry": build_entry("9", "Z")}}, {"feed": {}}])
+    df = build_apple(transport, clock).query("rss", CHARTS, [])
+    assert df.app_id.tolist() == ["9"]
+    empty = build_apple(FakeWebTransport([{"feed": {}}]), clock).query(
+        "rss", {"country": "cn", "charts": "topfreeapplications"}, []
+    )
+    assert len(empty) == 0 and list(empty.columns) == APPLE_COLUMNS
+
+
+# TC-ASC-003
+def test_tc_asc_003_missing_store_and_failures(clock: FakeClock) -> None:
+    gone = urllib.error.HTTPError("u", 404, "Not Found", None, None)  # type: ignore[arg-type]
+    transport = FakeWebTransport([gone, {"feed": {"entry": [build_entry("1", "A")]}}])
+    assert len(build_apple(transport, clock).query("rss", CHARTS, [])) == 1
+    with pytest.raises(DataSourceError):
+        build_apple(FakeWebTransport([OSError("down")]), clock).query("rss", CHARTS, [])
+    with pytest.raises(DataSourceError):
+        build_apple(FakeWebTransport([]), clock).query("rss", {"charts": "topfreeapplications"}, [])
+    with pytest.raises(DataSourceError):
+        build_apple(FakeWebTransport([]), clock).query("rss", {"country": "cn", "charts": "x"}, [])

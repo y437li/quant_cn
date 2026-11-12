@@ -80,12 +80,18 @@ download:
     - cn_m
     - shibor_lpr
     - fx_daily
+    - index_global
     - forecast_vip
     - express_vip
     - disclosure_date
     - stk_holdernumber
     - stk_holdertrade
     - share_float
+    - top10_floatholders
+    - top10_holders
+    - dividend
+    - stk_managers
+    - stk_rewards
     - stk_surv
     - hk_hold
     - broker_recommend
@@ -123,6 +129,8 @@ enum_values:
              "UKOIL", "USOIL", "COPPER", "10USNOTE", "SPX500", "NAS100", "HKG33", "CHN50"]
   # index_weight constituents (plan 11 phase 2): CSI 300 / 500 / 1000, SSE 50
   weight_indices: ["000300.SH", "000905.SH", "000852.SH", "000016.SH"]
+  # index_global (plan 05 phase 7): S&P 500 for the risk model's US-sensitivity style
+  global_indices: ["SPX"]
 
 watchlist:                       # plan 15 phase 7 (D-120); targets in config/local.watchlist.yaml
   near_pct: 0.10                 # within 10% above the buy price = "near"

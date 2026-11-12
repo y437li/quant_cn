@@ -20,11 +20,14 @@ L1: base classes, exceptions, Config, Schema, DateCodec, TickerNormalizer, loggi
 | `base_store.py` | Extension point for where fetched data is written | `BaseStore` |
 | `clock.py` | Injectable time source so sleeps and "today" are controllable in tests (SRC_DESIGN §2.1) | `Clock` |
 | `config.py` | Typed configuration: `config/*.yaml` merged with machine overrides and environment (D-021) | `LakeConfig`, `TushareConfig`, `DownloadConfig`, `FactorSpec`, `CampaignConfig`, `UniverseConfig`, `FuturesCategory`, `TickerAlias`, `LlmConfig`, `Config` |
+| `positions_book.py` | The user's holdings (one combined book) from git-ignored config/local.positions.yaml (plan 15 ph7d) | `PositionsBook`, `Position` |
 | `watchlist_entry.py` | the user's watchlist targets and the watchlist page settings (D-120) | `WatchlistEntry`, `WatchlistSettings` |
+| `etf_proxy_settings.py` | members, start and window of the national-team ETF proxy (config/etf_proxies.yaml, D-126) | `EtfProxyIndex`, `EtfProxySettings` |
 | `dataset_spec.py` | Typed view of one `config/datasets.yaml` entry: endpoint, sweep, keys, curated layout | `ValuesFromDataset`, `SweepSpec`, `CuratedSpec`, `DatasetSpec` |
 | `date_codec.py` | The only place that converts between `YYYYMMDD` strings and dates (D-005) | `DateCodec` |
 | `discovery_settings.py` | settings of the opportunity-discovery pipeline (plan 16, D-121) | `DiscoverySettings` |
 | `guidance_settings.py` | settings of company guidance tracking (plan 18, D-124) | `GuidanceSettings` |
+| `risk_model_settings.py` | Settings of the Barra-style risk model (config/risk_model.yaml, D-127) | `StyleSpec`, `ExternalSeriesSpec`, `ThemeBasketSpec`, `RiskModelSettings` |
 | `document_source.py` | which documents are downloaded and where they land, as data (config/documents.yaml, D-101) | `DocumentRule`, `DocumentSource` |
 | `exceptions.py` | Project exception hierarchy; every raised error is a `QuantCnError` (CODING_STANDARD §2.5) | `QuantCnError`, `ConfigError`, `SchemaError`, `DataSourceError`, `PermissionDeniedError`, `LakeError` |
 | `frames.py` | Shared panel schemas that cross package boundaries (SRC_DESIGN §3); long format, YYYYMMDD dates | `PRICE_PANEL`, `FUNDAMENTALS_PIT`, `VIX_PANEL`, `GEX_PANEL`, `FUTURES_POSITIONING`, `MARGIN_VINTAGES`, `MARGIN_LADDER`, `UNIVERSE_PANEL`, `FACTOR_PANEL`, `IC_SERIES`, `IC_TEST`, `TRIAL_LOG`, `FORWARD_RETURN`, `QUANTILE_RETURNS`, `EXPOSURE_PANEL` |

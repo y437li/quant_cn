@@ -31,6 +31,7 @@ class HttpTransport:
         data_loading.TushareClient         -- default transport
         data_loading.CninfoClient          -- default transport
         data_loading.EastmoneyReportClient -- default transport
+        data_loading.AppStoreClient        -- default transport
         data_loading.BaseWebClient         -- default transport
         data_loading.DocumentDownloader    -- default transport
         data_loading.DeepSeekClient        -- default transport

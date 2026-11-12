@@ -79,7 +79,8 @@ type Network struct {
 // Purpose: one interface over the demo JSON store now and the derived/graph parquet store later
 // (plan 15 phase 2), so handlers and the front end never change.
 // Contract: all methods are safe for concurrent use; ErrNotFound for unknown ids.
-// Test cases: TC-ST-001..009 in json_store_test.go and watchlist_test.go.
+// Test cases: TC-ST-001..018 in json_store_test.go, watchlist_test.go, etf_proxy_test.go,
+// factor_monitor_test.go and holdings_risk_test.go.
 type Store interface {
 	GetBootstrap() map[string]any
 	FindHits(q string, limit int) []SearchHit
@@ -89,4 +90,7 @@ type Store interface {
 	GetSectorNetwork(l1 string, outside bool) Network
 	GetView(scope, id string) (map[string]any, error)
 	GetWatchlist() (Watchlist, error)
+	GetEtfProxy() (EtfProxy, error)
+	GetFactorMonitor() (FactorMonitor, error)
+	GetHoldingsRisk() (HoldingsRisk, error)
 }

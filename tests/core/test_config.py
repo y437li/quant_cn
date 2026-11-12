@@ -210,3 +210,19 @@ def test_tc_c_019_guidance_settings(repo: Path, tmp_path: Path) -> None:
     base.write_text(text.replace("window_years: 3", "window_years: 0"))
     with pytest.raises(ConfigError):
         Config.load(repo_root=repo, env=env)
+
+
+# TC-C-020
+def test_tc_c_020_etf_proxy_settings(repo: Path, tmp_path: Path) -> None:
+    env = {"QUANT_CN_LAKE_ROOT": str(tmp_path / "lake")}
+    assert Config.load(repo_root=repo, env=env).etf_proxy.indices == []
+    path = repo / "config" / "etf_proxies.yaml"
+    path.write_text(
+        (REPO / "config" / "etf_proxies.yaml").read_text(encoding="utf-8"), encoding="utf-8"
+    )
+    settings = Config.load(repo_root=repo, env=env).etf_proxy
+    assert settings.indices[0].name == "中证A500" and "510300.SH" in settings.core
+    assert (settings.start, settings.benchmark_contains) == ("20220101", "\u00d7100%")
+    path.write_text("indices:\n  - {name: X, benchmark: '(', reference: A}\n", encoding="utf-8")
+    with pytest.raises(ConfigError):
+        Config.load(repo_root=repo, env=env)

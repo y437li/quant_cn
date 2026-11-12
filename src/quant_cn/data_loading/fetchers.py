@@ -91,6 +91,7 @@ class EnumFetcher(BaseFetcher):
 
     Used by:
         data_loading.FetcherFactory.build  -- sweep kinds "list_status", "ts_code", "exchange"
+        data_loading.SnapshotFetcher       -- subclass (today-only keys)
 
     Test cases:
         TC-EF-001  keys are the configured values; params carry the key and range

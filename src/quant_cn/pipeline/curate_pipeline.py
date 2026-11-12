@@ -20,6 +20,7 @@ from quant_cn.lake.pit_aligner import PitAligner
 from quant_cn.pipeline.runner import BaseRunner, PipelineReport
 
 DIGEST_FILE = "derived_digests.json"
+SCALABLE_PREFIX = "derived.risk_"  # 100 M+ row risk tables take the hash digest (D-135)
 
 
 class CompactStep(BaseStep):
@@ -120,11 +121,14 @@ class DeriveStep(BaseStep):
         pipeline.CuratePipeline  -- second step
         pipeline.FeatureStep     -- injected type or call
         cli.ServiceBuilder       -- injected type or call
+        pipeline.RiskModelStep  -- injected type or call
 
     Test cases:
         TC-CP-001  curate compacts, builds derived views, PIT states and writes digests
         TC-CP-002  digests are identical after deleting the catalog and curating again
         TC-CP-004  refresh_digests merges new view digests into the existing file
+        TC-CP-005  scalable digests are order-independent, change with any value, "" when empty
+        TC-CP-006  run gives derived.risk_* tables the scalable digest, other views the exact one
     """
 
     def __init__(
@@ -169,7 +173,8 @@ class DeriveStep(BaseStep):
     def run(self, run_id: str, progress: ProgressHook | None = None) -> StepReport:
         """
         Purpose:
-            Refresh derived views (and PIT states when fundamentals exist), write digests.
+            Refresh derived views (and PIT states when fundamentals exist), write digests:
+            exact for every view, the scalable hash digest for `derived.risk_*` (D-135).
 
         Contract:
             Input:
@@ -182,35 +187,49 @@ class DeriveStep(BaseStep):
         views = self._views.refresh()
         if "derived.fundamentals_long" in views and self._query.has_view("curated.trade_cal"):
             views.append(self._aligner.refresh())
-        digests = self.build_digests(views)
+        exact = [v for v in views if not v.startswith(SCALABLE_PREFIX)]
+        large = [v for v in views if v.startswith(SCALABLE_PREFIX)]
+        digests = {**self.build_digests(exact), **self.build_digests(large, scalable=True)}
         self._write_digests(digests)
         if progress:
             progress("derived", "fetched")
         return StepReport(self.name, keys_total=len(views), message=", ".join(views))
 
-    def build_digests(self, views: Sequence[str]) -> dict[str, str]:
+    def build_digests(self, views: Sequence[str], scalable: bool = False) -> dict[str, str]:
         """
         Purpose:
-            md5 over every row of each view, rows ordered by their text form; equal digests mean
-            byte-identical derived data.
+            One digest per view; equal digests mean identical derived data. Exact mode: md5 over
+            every row, rows ordered by their text form. Scalable mode (D-135, views of 100 M+
+            rows): md5 of the row count and the sum and xor of a 64-bit hash of every row's text
+            form, order-independent and without materialising the rows.
 
         Contract:
             Input:
-                views: Sequence[str]  -- existing view names
+                views:    Sequence[str]  -- existing view names
+                scalable: bool           -- True = hash-aggregate digest (prefix "h:")
             Output:
-                dict[str, str]  -- view -> md5 hex ("" for an empty view)
+                dict[str, str]  -- view -> md5 hex ("" for an empty view), "h:<md5>" if scalable
             Raises:
                 LakeError  -- query failure
         """
         out: dict[str, str] = {}
         for view in views:
+            if scalable:
+                sql = (
+                    "SELECT 'h:' || md5(count(*)::VARCHAR || '|' || sum(hash(t::VARCHAR))::VARCHAR "
+                    f"|| '|' || bit_xor(hash(t::VARCHAR))::VARCHAR) AS h FROM {view} t "
+                    "HAVING count(*) > 0"
+                )
+                frame = self._query.sql(sql)
+                out[view] = str(frame["h"].iloc[0]) if len(frame) else ""
+                continue
             rows = "string_agg(t::VARCHAR, chr(10) ORDER BY t::VARCHAR)"
             sql = f"SELECT md5({rows}) AS h FROM {view} t"
             value = self._query.sql(sql)["h"].iloc[0]
             out[view] = str(value) if isinstance(value, str) else ""
         return out
 
-    def refresh_digests(self, views: Sequence[str]) -> dict[str, str]:
+    def refresh_digests(self, views: Sequence[str], scalable: bool = False) -> dict[str, str]:
         """
         Purpose:
             Recompute the digests of views built after this step (derived.features) and merge
@@ -219,6 +238,7 @@ class DeriveStep(BaseStep):
         Contract:
             Input:
                 views: Sequence[str]  -- existing views
+                scalable: bool        -- passed to build_digests (risk tables, D-135)
             Output:
                 dict[str, str]  -- the merged digest map written
             Raises:
@@ -226,7 +246,8 @@ class DeriveStep(BaseStep):
         """
         path = self._manifest_dir / DIGEST_FILE
         current = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
-        merged = {**{str(k): str(v) for k, v in current.items()}, **self.build_digests(views)}
+        fresh = self.build_digests(views, scalable)
+        merged = {**{str(k): str(v) for k, v in current.items()}, **fresh}
         self._write_digests(merged)
         return merged
 

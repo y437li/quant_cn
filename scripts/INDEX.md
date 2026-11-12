@@ -2,6 +2,11 @@
 
 Dev tooling, not part of the package.
 
+## Folders
+| Folder | Purpose |
+|---|---|
+| [`launchd/`](launchd/INDEX.md) | macOS launchd job templates installed by `make track-install` |
+
 ## Files
 | File | Purpose | Contains |
 |---|---|---|

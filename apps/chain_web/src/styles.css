@@ -200,4 +200,52 @@ svg.dupont.big .yr { font-size: 120px; }
 .wl-notes summary { cursor: pointer; color: var(--ink); }
 .wl-notes dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 8px 0 0; }
 .wl-notes dt { color: var(--ink); } .wl-notes dd { margin: 0; }
+.ep .ep-head { margin: 0; line-height: 1.6; }
+.ep-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; font-size: 12px; color: var(--muted); }
+.ep-key { display: inline-block; width: 14px; height: 3px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
+.ep-key.core, .ep-line.core { background: var(--c1); stroke: var(--c1); }
+.ep-key.other, .ep-line.other { background: var(--c3); stroke: var(--c3); }
+.ep-line { fill: none; stroke-width: 2; stroke-linejoin: round; }
+.ep-bar.ep-in { fill: var(--c1); } .ep-bar.ep-out { fill: var(--c3); } .ep-bar.ep-flat { fill: var(--prior); }
+.ep-recent { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; font-size: 12px; }
+.ep-day { display: inline-flex; gap: 4px; align-items: baseline; font-family: var(--mono); }
+.ep code { font-family: var(--mono); background: var(--soft); padding: 0 4px; border-radius: 3px; }
 @media (max-width: 520px) { .wl-kv { grid-template-columns: repeat(2, minmax(0, 1fr)); } .wl-notes dl { grid-template-columns: 1fr; } }
+
+/* 因子监控 (plan 15 phase 7c) */
+.fm-charts { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+.fm-chart { position: relative; min-width: 0; overflow: hidden; }
+.fm-chart svg { display: block; }
+.fm-line { fill: none; stroke-width: 1.6; }
+.fm-line.c1 { stroke: var(--c1); }
+.fm-line.c2 { stroke: var(--c2); }
+.fm-line.c3 { stroke: var(--c3); }
+.fm-zero { stroke: var(--muted); stroke-dasharray: 3 3; }
+.fm-cursor { stroke: var(--muted); stroke-width: 1; }
+.fm-legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--muted); }
+.fm-legend span::before { content: ""; display: inline-block; width: 12px; height: 2px; margin-right: 4px; vertical-align: middle; background: currentColor; }
+.fm-legend .c1::before { background: var(--c1); }
+.fm-legend .c2::before { background: var(--c2); }
+.fm-legend .c3::before { background: var(--c3); }
+.fm-scroll { overflow-x: auto; }
+.fm-table { border-collapse: collapse; width: 100%; font-size: 12px; font-variant-numeric: tabular-nums; }
+.fm-table th, .fm-table td { padding: 4px 8px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--soft); }
+.fm-table th:first-child, .fm-table td:first-child { text-align: left; position: sticky; left: 0; background: var(--panel); }
+.fm-table th { color: var(--muted); font-weight: 500; }
+.fm-table td { font-family: var(--mono); }
+.fm-table td:first-child { font-family: var(--body); }
+.fm-table tbody tr { cursor: pointer; }
+.fm-table tbody tr:hover td, .fm-table tr.on td { background: var(--soft); }
+.fm-table tr.alert td:first-child { box-shadow: inset 3px 0 0 var(--c3); }
+.fm-table .up { color: var(--risk); }
+.fm-table .down { color: var(--market); }
+
+/* 持仓 (plan 15 phase 7d) */
+.hr-tiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); }
+.hr-bar { display: inline-block; position: relative; width: 120px; height: 10px; background: var(--soft); border-radius: 2px; vertical-align: middle; }
+.hr-bar::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--muted); }
+.hr-bar i { position: absolute; top: 0; bottom: 0; border-radius: 2px; }
+.hr-bar i.pos { background: var(--c1); }
+.hr-bar i.neg { background: var(--c3); }
+.hr-corr td { text-align: center; }
+.hr-expo td { text-align: center; }

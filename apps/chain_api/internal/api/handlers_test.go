@@ -132,6 +132,33 @@ func TestTCAPI007Watchlist(t *testing.T) {
 	}
 }
 
+// TC-API-008: /api/etf-proxy serves the fixture; an absent file gives the empty document; a
+// malformed file gives 500.
+func TestTCAPI008EtfProxy(t *testing.T) {
+	code, obj, _ := get(t, newServer(t), "/api/etf-proxy")
+	indices, _ := obj["indices"].([]any)
+	if code != 200 || obj["as_of"] != "20261106" || len(indices) != 2 {
+		t.Fatalf("present: %d %v", code, obj["as_of"])
+	}
+	for body, want := range map[string]int{"": 200, "{bad": 500} {
+		dir := dataDir(t, "")
+		if body != "" {
+			_ = os.WriteFile(filepath.Join(dir, "etf_proxy.json"), []byte(body), 0o600)
+		}
+		s, err := store.NewJSONStore(dir)
+		if err != nil {
+			t.Fatal(err)
+		}
+		code, obj, _ := get(t, NewServer(s, nil), "/api/etf-proxy")
+		if code != want {
+			t.Fatalf("%q: %d %v", body, code, obj)
+		}
+		if want == 200 && (obj["as_of"] != "" || len(obj["indices"].([]any)) != 0 || obj["totals"] == nil) {
+			t.Fatalf("empty document: %v", obj)
+		}
+	}
+}
+
 // dataDir copies the fixture view_data.json into a temporary folder, plus watchlist.json when wl is set.
 func dataDir(t *testing.T, wl string) string {
 	t.Helper()
@@ -145,4 +172,58 @@ func dataDir(t *testing.T, wl string) string {
 		_ = os.WriteFile(filepath.Join(dir, "watchlist.json"), []byte(wl), 0o600)
 	}
 	return dir
+}
+
+// TC-API-009: /api/factor-monitor serves the fixture; an absent file gives the empty document;
+// a malformed file gives 500.
+func TestTCAPI009FactorMonitor(t *testing.T) {
+	code, obj, _ := get(t, newServer(t), "/api/factor-monitor")
+	factors, _ := obj["factors"].([]any)
+	if code != 200 || obj["as_of"] != "20261111" || len(factors) != 3 {
+		t.Fatalf("present: %d %v", code, obj["as_of"])
+	}
+	for body, want := range map[string]int{"": 200, "{bad": 500} {
+		dir := dataDir(t, "")
+		if body != "" {
+			_ = os.WriteFile(filepath.Join(dir, "factor_monitor.json"), []byte(body), 0o600)
+		}
+		s, err := store.NewJSONStore(dir)
+		if err != nil {
+			t.Fatal(err)
+		}
+		code, obj, _ := get(t, NewServer(s, nil), "/api/factor-monitor")
+		if code != want {
+			t.Fatalf("%q: %d %v", body, code, obj)
+		}
+		if want == 200 && (obj["as_of"] != "" || len(obj["factors"].([]any)) != 0 || obj["dates"] == nil) {
+			t.Fatalf("empty document: %v", obj)
+		}
+	}
+}
+
+// TC-API-010: /api/holdings-risk serves the fixture; an absent file gives the empty document;
+// a malformed file gives 500.
+func TestTCAPI010HoldingsRisk(t *testing.T) {
+	code, obj, _ := get(t, newServer(t), "/api/holdings-risk")
+	positions, _ := obj["positions"].([]any)
+	if code != 200 || obj["as_of"] != "20261111" || len(positions) != 3 {
+		t.Fatalf("present: %d %v", code, obj["as_of"])
+	}
+	for body, want := range map[string]int{"": 200, "{bad": 500} {
+		dir := dataDir(t, "")
+		if body != "" {
+			_ = os.WriteFile(filepath.Join(dir, "holdings_risk.json"), []byte(body), 0o600)
+		}
+		s, err := store.NewJSONStore(dir)
+		if err != nil {
+			t.Fatal(err)
+		}
+		code, obj, _ := get(t, NewServer(s, nil), "/api/holdings-risk")
+		if code != want {
+			t.Fatalf("%q: %d %v", body, code, obj)
+		}
+		if want == 200 && (obj["as_of"] != "" || len(obj["positions"].([]any)) != 0 || obj["risk"] == nil) {
+			t.Fatalf("empty document: %v", obj)
+		}
+	}
 }

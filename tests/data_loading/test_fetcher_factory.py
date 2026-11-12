@@ -15,6 +15,7 @@ from quant_cn.data_loading.fetchers import (
     PeriodSweepFetcher,
     SingleCallFetcher,
 )
+from quant_cn.data_loading.snapshot_fetcher import SnapshotFetcher
 from quant_cn.lake.compactor import Compactor
 from quant_cn.lake.trading_calendar import TradingCalendar
 from tests.support import FakeTushareClient, MiniLake, Sample
@@ -30,6 +31,7 @@ def build_factory(config: Config, lake: MiniLake) -> FetcherFactory:
         lake.clock,
         TradingCalendar(lake.query),
         DateCodec(),
+        extra_clients={"apple": FakeTushareClient()},
     )
 
 
@@ -49,6 +51,7 @@ def build_factory(config: Config, lake: MiniLake) -> FetcherFactory:
         ("fund_basic", SingleCallFetcher),
         ("daily", DateSweepFetcher),
         ("income_vip", PeriodSweepFetcher),
+        ("app_store_charts", SnapshotFetcher),
     ],
 )
 def test_tc_ff_001_kind_mapping(config: Config, lake: MiniLake, name: str, cls: type) -> None:

@@ -19,6 +19,9 @@ import (
 // Test cases: TC-API-001 bootstrap, TC-API-002 search 400/200, TC-API-003 company 404/200,
 // TC-API-004 sector network, TC-API-005 views 404, TC-API-006 static fallback,
 // TC-API-007 watchlist present / absent (500 when the file is malformed).
+// TC-API-008 etf-proxy present / absent (500 when the file is malformed).
+// TC-API-009 factor-monitor present / absent (500 when the file is malformed).
+// TC-API-010 holdings-risk present / absent (500 when the file is malformed).
 type Server struct {
 	store  store.Store
 	static http.Handler
@@ -59,6 +62,12 @@ func (h *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, h.store.GetSectorNetwork(parts[1], r.URL.Query().Get("outside") != "false"))
 	case len(parts) == 1 && parts[0] == "watchlist":
 		h.handleWatchlist(w)
+	case len(parts) == 1 && parts[0] == "etf-proxy":
+		h.handleEtfProxy(w)
+	case len(parts) == 1 && parts[0] == "factor-monitor":
+		h.handleFactorMonitor(w)
+	case len(parts) == 1 && parts[0] == "holdings-risk":
+		h.handleHoldingsRisk(w)
 	case len(parts) == 3 && parts[0] == "views":
 		h.handleView(w, parts[1], parts[2])
 	default:
@@ -113,6 +122,33 @@ func (h *Server) handleWatchlist(w http.ResponseWriter) {
 		return
 	}
 	writeJSON(w, wl)
+}
+
+func (h *Server) handleEtfProxy(w http.ResponseWriter) {
+	p, err := h.store.GetEtfProxy()
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "etf proxy: "+err.Error())
+		return
+	}
+	writeJSON(w, p)
+}
+
+func (h *Server) handleFactorMonitor(w http.ResponseWriter) {
+	m, err := h.store.GetFactorMonitor()
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "factor monitor: "+err.Error())
+		return
+	}
+	writeJSON(w, m)
+}
+
+func (h *Server) handleHoldingsRisk(w http.ResponseWriter) {
+	d, err := h.store.GetHoldingsRisk()
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "holdings risk: "+err.Error())
+		return
+	}
+	writeJSON(w, d)
 }
 
 func writeJSON(w http.ResponseWriter, v any) {

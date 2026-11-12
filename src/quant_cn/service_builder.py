@@ -17,10 +17,12 @@ from quant_cn.core.docs.plan_reader import PlanReader
 from quant_cn.core.docs.registry_reader import RegistryReader
 from quant_cn.core.docs.repo_files import RepoFiles
 from quant_cn.data_loading.akshare_client import AkshareClient
+from quant_cn.data_loading.app_store_client import AppStoreClient
 from quant_cn.data_loading.baostock_client import BaostockClient
 from quant_cn.data_loading.cninfo_client import CninfoClient
 from quant_cn.data_loading.eastmoney_report_client import EastmoneyReportClient
 from quant_cn.data_loading.fetcher_factory import FetcherFactory
+from quant_cn.data_loading.manual_series_client import ManualSeriesClient
 from quant_cn.data_loading.tushare_client import TushareClient
 from quant_cn.factor.factor_evaluator import FactorEvaluator
 from quant_cn.factor.factor_factory import FactorFactory
@@ -38,14 +40,20 @@ from quant_cn.lake.parquet_writer import ParquetWriter
 from quant_cn.lake.pit_aligner import PitAligner
 from quant_cn.lake.project_catalog import ProjectCatalog
 from quant_cn.lake.run_log import RunLog
+from quant_cn.lake.statement_version_reader import StatementVersionReader
 from quant_cn.lake.ticker_alias_map import TickerAliasMap
 from quant_cn.lake.trading_calendar import TradingCalendar
 from quant_cn.pipeline.curate_pipeline import CuratePipeline, DeriveStep
 from quant_cn.pipeline.download_pipeline import DownloadPipeline
 from quant_cn.pipeline.evaluation_step import EvaluationStep
 from quant_cn.pipeline.feature_step import FeatureStep
+from quant_cn.pipeline.risk_model_step import RiskModelStep
+from quant_cn.pipeline.risk_validation_writer import RiskValidationWriter
 from quant_cn.pipeline.runner import BaseRunner, LocalRunner
 from quant_cn.pipeline.universe_step import UniverseStep
+from quant_cn.risk.risk_input_loader import RiskInputLoader
+from quant_cn.risk.risk_model_factory import RiskModelFactory
+from quant_cn.risk.risk_model_validator import RiskModelValidator
 from quant_cn.statistic.block_bootstrap import BlockBootstrap
 from quant_cn.statistic.hac_variance import HacVariance
 from quant_cn.statistic.ic_calculator import IcCalculator
@@ -69,7 +77,7 @@ class ServiceBuilder:
             (none)
         Output:
             instance; `build_download_pipeline`, `build_curate_pipeline`, `build_features`,
-            `build_evaluation`, `build_runner`,
+            `build_evaluation`, `build_risk_model`, `build_runner`,
             `build_project_catalog`
         Raises:
             (none at construction)
@@ -118,6 +126,8 @@ class ServiceBuilder:
                 "baostock": BaostockClient(clock),
                 "cninfo": CninfoClient(clock),
                 "eastmoney": EastmoneyReportClient(clock),
+                "apple": AppStoreClient(clock),
+                "manual": ManualSeriesClient(config.repo_root),
             },
             query=LakeQuery(catalog),
         )
@@ -274,6 +284,49 @@ class ServiceBuilder:
             camp.id,
             params,
             camp.start,
+        )
+
+    def build_risk_model(self, config: Config, catalog: LakeCatalog) -> RiskModelStep:
+        """
+        Purpose:
+            RiskModelStep for config/risk_model.yaml (plan 05, D-127): loader, model,
+            validation report, view refresh and digests.
+
+        Contract:
+            Input:
+                config: Config; catalog: LakeCatalog (writable)
+            Output:
+                RiskModelStep
+            Raises:
+                (none)
+        """
+        settings, query, codec = config.risk_model, LakeQuery(catalog), DateCodec()
+        reader, writer = self.build_reader(config, catalog), ParquetWriter(config.lake.root)
+        calendar = TradingCalendar(query)
+        aliases = TickerAliasMap(catalog, query, config.ticker_aliases)
+        versions = StatementVersionReader(query, aliases, codec)
+        loader = RiskInputLoader(
+            reader,
+            ExposureReader(query),
+            versions,
+            calendar,
+            codec,
+            query,
+            settings.external_series,
+            settings.theme_baskets,
+        )
+        model = RiskModelFactory(query).build(settings)
+        views = DerivedViews(
+            catalog, query, config.datasets, config.futures_categories, config.ticker_aliases
+        )
+        derive = DeriveStep(
+            views, PitAligner(catalog, query, codec), query, config.lake.root / "meta" / "manifest"
+        )
+        validation = RiskValidationWriter(
+            query, reader, RiskModelValidator(model, settings.seed), writer, settings
+        )
+        return RiskModelStep(
+            query, loader, model, calendar, writer, views, derive, validation, settings
         )
 
     def build_project_catalog(self, config: Config, catalog: LakeCatalog) -> ProjectCatalog:

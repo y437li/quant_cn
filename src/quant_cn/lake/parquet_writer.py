@@ -38,6 +38,10 @@ class ParquetWriter(BaseStore):
         pipeline.UniverseStep    -- injected type or call
         pipeline.EvaluationStep  -- injected type or call
         pipeline.FeatureStep     -- injected type or call
+        pipeline.RiskModelStep  -- injected type or call
+        pipeline.RiskValidationWriter  -- injected type or call
+        portfolio.HoldingsHistoryWriter  -- injected type or call
+        cli.ResearchCommands  -- holdings-risk history writer
 
     Test cases:
         TC-PW-001  raw file lands at raw/<dataset>/<param>=<key>.parquet with coerced dtypes

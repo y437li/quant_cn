@@ -15,8 +15,10 @@ from quant_cn.core.dataset_spec import DatasetSpec
 from quant_cn.core.date_codec import DateCodec
 from quant_cn.core.discovery_settings import DiscoverySettings
 from quant_cn.core.document_source import DocumentSource
+from quant_cn.core.etf_proxy_settings import EtfProxySettings
 from quant_cn.core.exceptions import ConfigError
 from quant_cn.core.guidance_settings import GuidanceSettings
+from quant_cn.core.risk_model_settings import RiskModelSettings
 from quant_cn.core.watchlist_entry import WatchlistEntry, WatchlistSettings
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -354,8 +356,10 @@ class Config(BaseModel):
             llm:         LlmConfig               -- base.yaml `llm` + DEEPSEEK_API_KEY (D-098)
             watchlist:   list[WatchlistEntry]    -- config/local.watchlist.yaml `entries` (D-120)
             watchlist_settings: WatchlistSettings  -- base.yaml `watchlist` (D-120)
+            etf_proxy:   EtfProxySettings        -- config/etf_proxies.yaml (D-126); missing = empty
             discovery:   DiscoverySettings       -- base.yaml `discovery` (plan 16, D-121)
             guidance:    GuidanceSettings        -- base.yaml `guidance` (plan 18, D-124)
+            risk_model:  RiskModelSettings       -- config/risk_model.yaml (plan 05, D-127)
         Output:
             frozen pydantic model
         Raises:
@@ -370,6 +374,7 @@ class Config(BaseModel):
         cli.ResearchCommands         -- injected type or call
         cli.DocumentCommands  -- documents sources and lake root
         portfolio.WatchlistBuilder  -- watchlist entries and settings
+        portfolio.EtfProxyBuilder   -- etf_proxy settings
 
     Test cases:
         TC-C-001  env > local.yaml > base.yaml precedence for lake.lake_root
@@ -388,6 +393,7 @@ class Config(BaseModel):
         TC-C-014  base.yaml llm section loads; key read from env only and hidden from repr
         TC-C-015  config/local.watchlist.yaml loads; missing file = []; buy_high < buy_low refused
         TC-C-016  base.yaml watchlist section loads; missing section gives the defaults
+        TC-C-020  config/etf_proxies.yaml loads; missing file = empty settings; bad regex refused
         TC-C-017  base.yaml discovery section loads; missing section gives the defaults
         TC-C-019  base.yaml guidance section loads; missing section gives the defaults; bounds
     """
@@ -409,8 +415,10 @@ class Config(BaseModel):
     llm: LlmConfig = Field(default_factory=LlmConfig)
     watchlist: list[WatchlistEntry] = Field(default_factory=list)
     watchlist_settings: WatchlistSettings = Field(default_factory=WatchlistSettings)
+    etf_proxy: EtfProxySettings = Field(default_factory=EtfProxySettings)
     discovery: DiscoverySettings = Field(default_factory=DiscoverySettings)
     guidance: GuidanceSettings = Field(default_factory=GuidanceSettings)
+    risk_model: RiskModelSettings = Field(default_factory=RiskModelSettings)
 
     @classmethod
     def load(
@@ -533,12 +541,14 @@ class Config(BaseModel):
 
     @classmethod
     def _read_extras(cls, root: Path) -> dict[str, Any]:
-        """The optional list files: futures categories, aliases, factors, documents, watchlist."""
+        """Optional files: futures categories, aliases, factors, documents, watchlist, proxies."""
         categories = cls._read_yaml(root / "config" / "futures_categories.yaml", required=False)
         aliases = cls._read_yaml(root / "config" / "ticker_aliases.yaml", required=False)
         factors = cls._read_yaml(root / "config" / "factors.yaml", required=False)
         documents = cls._read_yaml(root / "config" / "documents.yaml", required=False)
         watchlist = cls._read_yaml(root / "config" / "local.watchlist.yaml", required=False)
+        risk = cls._read_yaml(root / "config" / "risk_model.yaml", required=False)
+        proxies = cls._read_yaml(root / "config" / "etf_proxies.yaml", required=False)
         return {
             "futures_categories": [FuturesCategory(**c) for c in categories.get("categories", [])],
             "ticker_aliases": [TickerAlias(**a) for a in aliases.get("aliases", [])],
@@ -546,6 +556,8 @@ class Config(BaseModel):
             "campaign": CampaignConfig(**factors.get("campaign", {})),
             "documents": {k: DocumentSource(**v) for k, v in documents.get("sources", {}).items()},
             "watchlist": [WatchlistEntry(**e) for e in watchlist.get("entries", [])],
+            "risk_model": RiskModelSettings(**risk),
+            "etf_proxy": EtfProxySettings(**proxies),
         }
 
     @staticmethod

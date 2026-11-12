@@ -32,6 +32,7 @@ class BaseApiClient(ABC):
         data_loading.AkshareClient       -- subclass
         data_loading.BaostockClient      -- subclass
         data_loading.BaseWebClient       -- subclass
+        data_loading.ManualSeriesClient  -- subclass (hand-entered series, D-139)
 
     Test cases:
         TC-BAC-001  cannot be instantiated; subclass must implement query

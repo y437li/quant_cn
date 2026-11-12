@@ -40,6 +40,7 @@ class Clock:
         data_loading.BaseWebClient       -- sleeps between requests and retries
         data_loading.CninfoClient        -- injected type or call
         data_loading.EastmoneyReportClient -- injected type or call
+        data_loading.AppStoreClient        -- capture time stamp
         cli.DocumentCommands             -- injected type or call
         data_loading.DocumentDownloader  -- injected type or call
         data_loading.RequestPacer        -- injected type or call

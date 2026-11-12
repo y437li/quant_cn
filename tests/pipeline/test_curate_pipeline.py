@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 
+import pandas as pd
 import pytest
 
 from quant_cn.core.config import Config
@@ -90,3 +91,48 @@ def test_tc_cp_004_refresh_digests(seeded: MiniLake, config: Config) -> None:
     before = read_digests(seeded)
     merged = step.refresh_digests(["derived.fundamentals_long"])
     assert set(before) <= set(merged) and merged == read_digests(seeded)
+
+
+# TC-CP-005
+def test_tc_cp_005_scalable_digests(seeded: MiniLake, config: Config) -> None:
+    step = DeriveStep(
+        DerivedViews(seeded.catalog, seeded.query, config.datasets),
+        PitAligner(seeded.catalog, seeded.query, DateCodec()),
+        seeded.query,
+        seeded.lake_root / "meta" / "manifest",
+    )
+    a = pd.DataFrame({"k": ["x", "y", "z"], "v": [1.0, 2.0, 3.0]})
+    names = [
+        seeded.query.register_frame("dig_a", a),
+        seeded.query.register_frame(
+            "dig_b", pd.DataFrame({"k": ["z", "y", "x"], "v": [3.0, 2.0, 1.0]})
+        ),
+        seeded.query.register_frame(
+            "dig_c", pd.DataFrame({"k": ["x", "y", "z"], "v": [1.0, 2.0, 3.5]})
+        ),
+        seeded.query.register_frame(
+            "dig_e", pd.DataFrame({"k": ["x"], "v": [1.0]}).iloc[0:0].copy()
+        ),
+    ]
+    out = step.build_digests(names, scalable=True)
+    assert out[names[0]] == out[names[1]] and out[names[0]].startswith("h:")
+    assert out[names[2]] != out[names[0]]
+    assert out[names[3]] == ""
+
+
+# TC-CP-006
+def test_tc_cp_006_risk_tables_scalable(seeded: MiniLake, config: Config) -> None:
+    spec = pd.DataFrame(
+        {
+            "trade_date": ["20260105"],
+            "ts_code": ["000001.SZ"],
+            "sigma": [0.02],
+            "sigma_raw": [0.0],
+            "method": ["x"],
+        }
+    )
+    seeded.writer.write_derived("risk_specific_risk", 2026, spec)
+    build_curate(config, seeded.catalog).run()
+    digests = read_digests(seeded)
+    assert digests["derived.risk_specific_risk"].startswith("h:")
+    assert len(digests["derived.fundamentals_base"]) == 32

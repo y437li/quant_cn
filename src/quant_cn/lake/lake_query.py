@@ -51,7 +51,16 @@ class LakeQuery:
         cli.DocumentCommands             -- injected type or call
         data_loading.DocumentDownloader  -- metadata and manifest reads
         portfolio.WatchlistBuilder       -- prices, valuation and consensus for the watchlist
+        portfolio.EtfProxyBuilder        -- ETF basics, shares and prices for the proxy
         lake.StatementVersionReader      -- statement versions known on a date
+        risk.RiskModel  -- injected type or call
+        risk.RiskModelFactory  -- injected type or call
+        pipeline.RiskModelStep  -- injected type or call
+        pipeline.RiskValidationWriter  -- injected type or call
+        risk.RiskInputLoader  -- injected type or call
+        risk.FactorMonitorBuilder  -- injected type or call
+        portfolio.HoldingsHistoryWriter  -- injected type or call
+        portfolio.HoldingsRiskBuilder  -- injected type or call
 
     Test cases:
         TC-LQ-001  sql returns a DataFrame with parameters bound

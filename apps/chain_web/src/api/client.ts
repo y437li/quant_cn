@@ -43,6 +43,39 @@ export interface WatchlistEntry {
   status: WatchStatus; weekly: WeeklyClose[];
 }
 export interface Watchlist { as_of: string; near_pct: number; entries: WatchlistEntry[]; missing: string[] }
+/** National-team ETF proxy (国家队 ETF, plan 15 phase 7b, D-126): 亿元, computed in Python. */
+export interface ProxyMark { date: string; position: number | null }
+export interface ProxyTotals { aum: number | null; position: number | null; flow_recent: number | null; flow_ytd: number | null; peak: ProxyMark; trough_since_peak: ProxyMark }
+export interface ProxyWeek { date: string; core_flow?: number | null; other_flow?: number | null; core_position?: number | null; other_position?: number | null }
+export interface ProxyIndex {
+  name: string; reference: string; n_etf: number; aum: number | null; position: number | null; core_position: number | null;
+  flow_recent: number | null; flow_ytd: number | null; weekly: { date: string; position: number | null; flow: number | null }[];
+}
+export interface EtfProxy {
+  as_of: string; price_as_of: string; start: string; n_members: number; totals: { core?: ProxyTotals; other?: ProxyTotals };
+  recent: { date: string; core?: number | null; other?: number | null }[]; weekly: ProxyWeek[];
+  yearly: { year: string; core?: number | null; other?: number | null }[]; indices: ProxyIndex[];
+}
+/** Factor monitor (因子监控, plan 15 phase 7c, D-132): fractions, computed in Python. */
+export interface FactorReturns { d1: number | null; w1: number | null; m1: number | null; m3: number | null; ytd: number | null; y1: number | null }
+export interface MonitoredFactor {
+  factor: string; label: string; kind: "country" | "style" | "industry"; ret: FactorReturns;
+  forecast_vol: number | null; realized_vol_21: number | null; realized_vol_63: number | null; vol_ratio: number | null; sigma_move: number | null;
+  cum: (number | null)[]; forecast: (number | null)[]; realized: (number | null)[];
+}
+export interface FactorMonitor { as_of: string; model: string; n_sessions: number; dates: string[]; factors: MonitoredFactor[] }
+/** Holdings risk (持仓, plan 15 phase 7d, D-132): CNY values, fractions for weights / vols / shares of risk. */
+export interface HoldingPosition {
+  code: string; name: string; shares: number | null; cost: number | null; close: number | null; value: number | null; weight: number | null;
+  pnl: number | null; pnl_pct: number | null; vol: number | null; contrib: number | null;
+}
+export interface HoldingFactor { factor: string; label: string; kind: "country" | "style" | "industry"; exposure: number | null; active: number | null; contrib: number | null }
+export interface HoldingsRisk {
+  as_of: string; model: string; benchmark: string; cash: number; value: number; stock_value: number; pnl: number;
+  risk: Record<string, number | null>; positions: HoldingPosition[]; factors: HoldingFactor[];
+  correlation: { codes: string[]; matrix: number[][] };
+  stock_exposures: { styles: string[]; rows: { code: string; industry: string; values: (number | null)[] }[] }; missing: string[];
+}
 
 async function getJSON<T>(path: string): Promise<T> {
   const r = await fetch(path);
@@ -63,5 +96,8 @@ export const api = {
   listSectorCompanies: (l1: string) => getJSON<CompanyBrief[]>(`/api/sectors/${enc(l1)}/companies`),
   getSectorNetwork: (l1: string, outside: boolean) => getJSON<Network>(`/api/sectors/${enc(l1)}/network?outside=${outside}`),
   getWatchlist: () => getJSON<Watchlist>("/api/watchlist"),
+  getEtfProxy: () => getJSON<EtfProxy>("/api/etf-proxy"),
+  getFactorMonitor: () => getJSON<FactorMonitor>("/api/factor-monitor"),
+  getHoldingsRisk: () => getJSON<HoldingsRisk>("/api/holdings-risk"),
   getView: (scope: "product" | "industry", id: string) => getJSON<BrokerView>(`/api/views/${scope}/${enc(id)}`).catch(() => null),
 };

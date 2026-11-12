@@ -31,14 +31,14 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `CompanyCyclePanel` | `quant_cn.calculation.company_cycle_panel` | 4 | none | Place every company's latest quarter in its own cycle, point in time: single quarter and TTM, YoY and QoQ, deducted profit, 10-year median profit and max margin, margin_peak (plan 16 ph1, D-121) | 4 | (none yet) | `tests/calculation/test_company_cycle_panel.py` (TC-CCP-001..010) | 2026-11-09 |
 | `ForecastTracker` | `quant_cn.calculation.forecast_tracker` | 4 | none | Score every earnings preview (all revisions) against the first reported parent net profit: range in CNY, in / above / below / pending / no_range / after_actual, position, surprise, revision path, days_after_end / ex_ante; per-company hit rate and bias over window_years, overall and for previews published before the period end (plan 18 ph1, D-124) | 3 | (none yet) | `tests/calculation/test_forecast_tracker.py` (TC-FT-001..010) | 2026-11-11 |
 | `QuantCnCli` | `quant_cn.cli` | 8 | none | `python -m quant_cn.cli <command>`: doctor, download, compact, curate, rebuild, backup, project-catalog, query | 1 | `Makefile targets doctor, download, compact, lake-rebuild, lake-backup`, `cli.DocumentCommands` | `tests/test_cli.py` (TC-QCC-001..007) | 2026-09-27 |
-| `ResearchCommands` | `quant_cn.cli` | 8 | none | The research-side CLI commands, kept apart so QuantCnCli stays within its size limit: `release-lags` (D-086), `evaluate` (factor campaign reports and trial log, plan 04 phase 5) and `watchlist` (D-120) | 1 | `cli.QuantCnCli` | `tests/test_cli.py` (TC-QCC-008..009, 011) | 2026-09-27 |
-| `BaseApiClient` | `quant_cn.core.base_api_client` | 1 | ABC | Abstract vendor client: one logical query returns all pages as one DataFrame. | 1 | `data_loading.TushareClient`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
+| `ResearchCommands` | `quant_cn.cli` | 8 | none | The research-side CLI commands, kept apart so QuantCnCli stays within its size limit: `release-lags` (D-086), `evaluate` (factor campaign reports and trial log, plan 04 phase 5), `risk-model` (D-127), `watchlist` (D-120), `etf-proxy` (D-126), `factor-monitor` and `holdings-risk` (D-132) | 1 | `cli.QuantCnCli` | `tests/test_cli.py` (TC-QCC-008..009, 011..014) | 2026-09-27 |
+| `BaseApiClient` | `quant_cn.core.base_api_client` | 1 | ABC | Abstract vendor client: one logical query returns all pages as one DataFrame. | 1 | `data_loading.TushareClient`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `data_loading.ManualSeriesClient` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
 | `BaseFetchLog` | `quant_cn.core.base_fetch_log` | 1 | ABC | Abstract record of which (dataset, key) pairs are fully downloaded. | 5 | `lake.FetchLog`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher` | `tests/lake/test_fetch_log.py` (TC-FL-001..003) | 2026-09-27 |
 | `BaseFetcher` | `quant_cn.core.base_fetcher` | 1 | ABC | Download one dataset as a sequence of keys | 5 | `data_loading.SingleCallFetcher`, `data_loading.EnumFetcher`, `data_loading.DateSweepFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.FetcherFactory.build`, `pipeline.FetchStep`, `data_loading.DateWindowFetcher` | `tests/core/test_base_fetcher.py` (TC-BF-001..007) | 2026-09-27 |
 | `BaseRunLog` | `quant_cn.core.base_run_log` | 1 | ABC | Abstract append-only log of runs and per-key events | 3 | `lake.RunLog`, `core.BaseFetcher.run`, `pipeline.LocalRunner`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `pipeline.PrefectRunner`, `data_loading.DateWindowFetcher` | `tests/lake/test_run_log.py` (TC-RL-001..001) | 2026-09-27 |
 | `BaseStep` | `quant_cn.core.base_step` | 1 | ABC | Abstract unit of pipeline work: list its units, then run and report. | 3 | `pipeline.FetchStep`, `pipeline.BaseRunner.run`, `pipeline.LocalRunner.run`, `pipeline.CompactStep`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `pipeline.PrefectRunner`, `pipeline.UniverseStep`, `pipeline.EvaluationStep`, `pipeline.FeatureStep` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
 | `BaseStore` | `quant_cn.core.base_store` | 1 | ABC | Abstract sink for raw fetch results and curated partitions. | 2 | `lake.ParquetWriter`, `core.BaseFetcher`, `lake.Compactor`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher` | `tests/core/test_base_classes.py` (TC-BAC-001..001) | 2026-09-27 |
-| `Clock` | `quant_cn.core.clock` | 1 | none | The single source of wall time, monotonic time and sleeping | 4 | `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.FetcherFactory`, `data_loading.PeriodSweepFetcher`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `lake.RebuildAudit`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader`, `data_loading.RequestPacer` | `tests/core/test_clock.py` (TC-CL-001..002) | 2026-09-27 |
+| `Clock` | `quant_cn.core.clock` | 1 | none | The single source of wall time, monotonic time and sleeping | 4 | `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.FetcherFactory`, `data_loading.PeriodSweepFetcher`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `lake.RebuildAudit`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader`, `data_loading.RequestPacer`, `data_loading.AppStoreClient` | `tests/core/test_clock.py` (TC-CL-001..002) | 2026-09-27 |
 | `LakeConfig` | `quant_cn.core.config` | 1 | BaseModel | Where the lake lives and whether it may sit inside the repository. | 0 | `core.Config` | `tests/core/test_config.py` (TC-C-001..001) | 2026-09-27 |
 | `TushareConfig` | `quant_cn.core.config` | 1 | BaseModel | Tushare endpoint, paging, retry and rate-limit settings | 0 | `core.Config`, `data_loading.TushareClient` | `tests/core/test_config.py` (TC-C-002..002) | 2026-09-27 |
 | `DownloadConfig` | `quant_cn.core.config` | 1 | BaseModel | Which datasets to download, in what order, and from which start dates (D-015b). | 0 | `core.Config` | `tests/core/test_config.py` (TC-C-004..004) | 2026-09-27 |
@@ -47,16 +47,20 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `UniverseConfig` | `quant_cn.core.config` | 1 | BaseModel | Rules of the tradeable universe per session (FACTOR_TESTING_DESIGN §11, D-054). | 0 | `core.Config`, `pipeline.UniverseStep` | `tests/core/test_config.py` (TC-C-011..011) | 2026-09-27 |
 | `FuturesCategory` | `quant_cn.core.config` | 1 | BaseModel | One member-category label that `fut_holding` lists among real brokers (D-079). | 0 | `core.Config`, `lake.DerivedViews` | `tests/core/test_config.py` (TC-C-009..009) | 2026-09-27 |
 | `TickerAlias` | `quant_cn.core.config` | 1 | BaseModel | One retired code and the code its company trades on afterwards (D-053, D-089). | 0 | `core.Config`, `lake.TickerAliasMap`, `lake.DerivedViews` | `tests/core/test_config.py` (TC-C-010..010) | 2026-09-27 |
-| `Config` | `quant_cn.core.config` | 1 | BaseModel | The typed configuration injected everywhere: YAML defaults, machine overrides, environment. | 3 | `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands`, `cli.DocumentCommands`, `portfolio.WatchlistBuilder` | `tests/core/test_config.py` (TC-C-001..017) | 2026-09-27 |
+| `Config` | `quant_cn.core.config` | 1 | BaseModel | The typed configuration injected everywhere: YAML defaults, machine overrides, environment. | 3 | `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands`, `cli.DocumentCommands`, `portfolio.WatchlistBuilder`, `portfolio.EtfProxyBuilder` | `tests/core/test_config.py` (TC-C-001..020) | 2026-09-27 |
 | `WatchlistEntry` | `quant_cn.core.config` | 1 | BaseModel | One stock the user watches and the price range at which they would buy it (D-120). | 0 | `core.Config`, `portfolio.WatchlistBuilder` | `tests/core/test_config.py` (TC-C-015) | 2026-11-08 |
 | `WatchlistSettings` | `quant_cn.core.config` | 1 | BaseModel | Thresholds and windows of the watchlist page (base.yaml `watchlist`, D-120). | 0 | `core.Config`, `portfolio.WatchlistBuilder` | `tests/core/test_config.py` (TC-C-016) | 2026-11-08 |
+| `EtfProxyIndex` | `quant_cn.core.etf_proxy_settings` | 1 | BaseModel | One broad index whose ETFs are summed into the national-team proxy: name, benchmark regex on fund_basic.benchmark, reference ETF (D-126). | 0 | `core.EtfProxySettings` | `tests/core/test_config.py` (TC-C-020) | 2026-11-11 |
+| `EtfProxySettings` | `quant_cn.core.etf_proxy_settings` | 1 | BaseModel | Which ETFs make up the national-team proxy (indices, core list, member name / benchmark rules) and its start and recent window (config/etf_proxies.yaml, D-126). | 0 | `core.Config`, `portfolio.EtfProxyBuilder`, `portfolio.EtfFlowCalculator` | `tests/core/test_config.py` (TC-C-020) | 2026-11-11 |
+| `PositionsBook` | `quant_cn.core.positions_book` | 1 | BaseModel | The user's holdings as one combined book (cash, positions) read from git-ignored `config/local.positions.yaml`; loaded here, not by Config, because config.py is at its size limit (plan 15 ph7d, D-132). | 2 | `portfolio.HoldingsRiskBuilder`, `cli.ResearchCommands` | `tests/portfolio/test_holdings_risk_builder.py` (TC-PB-001..002) | 2026-11-12 |
+| `Position` | `quant_cn.core.positions_book` | 1 | BaseModel | One holding: code, name, shares, cost per share; broker snapshot fields ignored. | 0 | `core.PositionsBook` | `tests/portfolio/test_holdings_risk_builder.py` (TC-PB-001) | 2026-11-12 |
 | `DiscoverySettings` | `quant_cn.core.discovery_settings` | 1 | BaseModel | Thresholds and windows of the discovery pipeline (base.yaml `discovery`, plan 16, D-121) | 0 | `core.Config`, `calculation.CompanyCyclePanel`, `calculation.ImpliedExpectations` | `tests/core/test_config.py` (TC-C-017..018) | 2026-11-09 |
 | `GuidanceSettings` | `quant_cn.core.guidance_settings` | 1 | BaseModel | Windows and minimum sample of guidance tracking (base.yaml `guidance`, plan 18, D-124) | 0 | `core.Config`, `calculation.ForecastTracker` | `tests/core/test_config.py` (TC-C-019) | 2026-11-11 |
 | `ValuesFromDataset` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Enumerate sweep keys from another curated dataset (e.g | 0 | `core.SweepSpec` | `tests/data_loading/test_fetcher_factory.py` (TC-FF-003..003) | 2026-09-27 |
 | `SweepSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | How a dataset is swept so each call returns the whole market for one key. | 1 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
 | `CuratedSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Where a dataset lands in `curated/` and which date column drives its yearly partition. | 0 | `core.DatasetSpec` | `tests/core/test_dataset_spec.py` (TC-DS-001..001) | 2026-09-27 |
 | `DatasetSpec` | `quant_cn.core.dataset_spec` | 1 | BaseModel | Everything the lake and the fetchers need to know about one dataset, as data (D-012). | 2 | `core.Config`, `core.BaseFetcher`, `core.BaseStore`, `lake.ParquetWriter`, `lake.LakeCatalog`, `lake.Compactor.rebuild`, `data_loading.FetcherFactory.build`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `pipeline.CompactStep`, `lake.DerivedViews`, `lake.ProjectCatalog`, `data_loading.DateWindowFetcher`, `lake.EffectiveDateResolver`, `lake.ReleaseLagChecker`, `lake.LakeReader` | `tests/core/test_dataset_spec.py` (TC-DS-001..009) | 2026-09-27 |
-| `DateCodec` | `quant_cn.core.date_codec` | 1 | none | Validate and convert Tushare `YYYYMMDD` date strings and generate date keys for sweeps. | 6 | `core.Config.load`, `data_loading.DateSweepFetcher.list_keys`, `data_loading.PeriodSweepFetcher.list_keys`, `pipeline.DownloadPipeline.run`, `data_loading.FetcherFactory`, `cli.QuantCnCli`, `lake.PitAligner`, `visualization.PriceChart`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `lake.EffectiveDateResolver`, `factor.FactorFactory`, `calculation.ForecastTracker` | `tests/core/test_date_codec.py` (TC-DC-001..006) | 2026-09-27 |
+| `DateCodec` | `quant_cn.core.date_codec` | 1 | none | Validate and convert Tushare `YYYYMMDD` date strings and generate date keys for sweeps. | 6 | `core.Config.load`, `data_loading.DateSweepFetcher.list_keys`, `data_loading.PeriodSweepFetcher.list_keys`, `pipeline.DownloadPipeline.run`, `data_loading.FetcherFactory`, `cli.QuantCnCli`, `lake.PitAligner`, `visualization.PriceChart`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `lake.EffectiveDateResolver`, `factor.FactorFactory`, `calculation.ForecastTracker`, `portfolio.EtfProxyBuilder` | `tests/core/test_date_codec.py` (TC-DC-001..006) | 2026-09-27 |
 | `Finding` | `quant_cn.core.docs.base_checker` | 1 | none | One rule violation at a location, printable as `path:line [rule] message`. | 1 | `core.docs.BaseChecker.run`, `core.docs.ContractChecker`, `core.docs.IndexChecker`, `core.docs.SizeChecker`, `core.docs.NameChecker`, `core.docs.ContractLinter` | `tests/core/docs/test_base_checker.py` (TC-BCH-001..001) | 2026-09-27 |
 | `BaseChecker` | `quant_cn.core.docs.base_checker` | 1 | ABC | Abstract repository check: inspect the tree, return findings (empty = pass). | 1 | `core.docs.ContractChecker`, `core.docs.IndexChecker`, `core.docs.SizeChecker`, `core.docs.NameChecker`, `core.docs.ContractLinter` | `tests/core/docs/test_base_checker.py` (TC-BCH-001..001) | 2026-09-27 |
 | `MethodInfo` | `quant_cn.core.docs.code_scanner` | 1 | none | One function defined directly in a class body. | 2 | `core.docs.ClassInfo`, `core.docs.CodeScanner.read_module`, `core.docs.ModuleInfo` | `tests/core/docs/test_code_scanner.py` (TC-CS-001..001) | 2026-09-27 |
@@ -95,11 +99,11 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `BaostockClient` | `quant_cn.data_loading.baostock_client` | 3 | BaseApiClient | Call one BaoStock query per request (`api_name` = method, e.g | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_baostock_client.py` (TC-BSC-001..003) | 2026-09-27 |
 | `FetcherFactory` | `quant_cn.data_loading.fetcher_factory` | 3 | none | Build the right fetcher for a DatasetSpec and inject the shared dependencies. | 1 | `pipeline.DownloadPipeline`, `cli.ServiceBuilder` | `tests/data_loading/test_fetcher_factory.py` (TC-FF-001..004) | 2026-09-27 |
 | `SingleCallFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Datasets fetched in one (paged) call, key "all": trade_cal, namechange. | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-SCF-001..001) | 2026-09-27 |
-| `EnumFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Datasets swept over an enumerated list: stock_basic by list_status (L, D, P), index_daily / fund_daily by ts_code, opt_basic by exchange. | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-EF-001..001) | 2026-09-27 |
+| `EnumFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Datasets swept over an enumerated list: stock_basic by list_status (L, D, P), index_daily / fund_daily by ts_code, opt_basic by exchange. | 2 | `data_loading.FetcherFactory.build`, `data_loading.SnapshotFetcher` | `tests/data_loading/test_fetchers.py` (TC-EF-001..001) | 2026-09-27 |
 | `DateSweepFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Whole-market daily sweeps: trade_date and nav_date keys are trading days (daily, adj_factor, daily_basic, moneyflow, stk_limit, fund_nav) | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-DSF-001..005) | 2026-09-27 |
 | `PeriodSweepFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Whole-market report-period sweeps (the *_vip fundamentals): one key per quarter end. | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-PSF-001..001) | 2026-09-27 |
 | `DateWindowFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Range-only endpoints swept by calendar window (D-063): one call per month ("YYYYMM" keys) or year ("YYYY" keys) with start_date / end_date clipped to the run range | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-DWF-001..004) | 2026-09-27 |
-| `HttpTransport` | `quant_cn.data_loading.http_transport` | 3 | none | Send one HTTP request and return the decoded JSON object or the raw bytes (JSON POST, form POST, GET JSON, GET bytes). | 4 | `data_loading.TushareClient`, `data_loading.CninfoClient`, `data_loading.EastmoneyReportClient`, `data_loading.BaseWebClient`, `data_loading.DocumentDownloader` | `tests/data_loading/test_tushare_client.py`, `test_http_transport.py` (TC-TC-001, TC-HT-001) | 2026-09-27 |
+| `HttpTransport` | `quant_cn.data_loading.http_transport` | 3 | none | Send one HTTP request and return the decoded JSON object or the raw bytes (JSON POST, form POST, GET JSON, GET bytes). | 4 | `data_loading.TushareClient`, `data_loading.CninfoClient`, `data_loading.EastmoneyReportClient`, `data_loading.AppStoreClient`, `data_loading.BaseWebClient`, `data_loading.DocumentDownloader` | `tests/data_loading/test_tushare_client.py`, `test_http_transport.py` (TC-TC-001, TC-HT-001) | 2026-09-27 |
 | `TushareClient` | `quant_cn.data_loading.tushare_client` | 3 | BaseApiClient | Query Tushare Pro: one logical query follows limit/offset paging until a short page and returns all rows | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..009) | 2026-09-27 |
 | `FactorInputs` | `quant_cn.factor.base_factor` | 5 | none | The panels a factor may read, loaded once by FactorFactory for all factors of a run | 1 | `factor.BaseFactor`, `factor.FactorFactory`, `factor.library.EarningsYieldFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor` | `tests/factor/test_base_factor.py` (TC-FIN-001..001) | 2026-09-27 |
 | `BaseFactor` | `quant_cn.factor.base_factor` | 5 | ABC | Abstract factor: declares which inputs, fundamentals fields and daily_basic columns it needs and how many sessions of price history before the first output date | 3 | `factor.FactorFactory`, `factor.library.*`, `factor.library.EarningsYieldFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor`, `pipeline.FeatureStep` | `tests/factor/test_base_factor.py` (TC-BFA-001..002) | 2026-09-27 |
@@ -121,7 +125,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `ExposureReader` | `quant_cn.lake.exposure_reader` | 2 | none | Per universe member and session: the Shenwan L1 group in effect (derived.industry_l1, l1_grouping = the PIT row or the back-filled first-known L1, flagged | 1 | `pipeline.FeatureStep`, `cli.ServiceBuilder` | `tests/lake/test_lake_reader.py` (TC-EXR-001..001) | 2026-09-27 |
 | `FetchLog` | `quant_cn.lake.fetch_log` | 2 | BaseFetchLog | Record finished (dataset, key) pairs in `meta.fetch_log`, mirror them to `meta/fetch_log.parquet` on save, and rebuild the table after the DuckDB file is lost. | 6 | `cli.QuantCnCli`, `cli.ServiceBuilder` | `tests/lake/test_fetch_log.py` (TC-FL-001..006) | 2026-09-27 |
 | `LakeCatalog` | `quant_cn.lake.lake_catalog` | 2 | none | Own the lake's single DuckDB connection (`meta/quant_cn.duckdb`): schemas `raw`, `curated`, `meta` | 8 | `lake.FetchLog`, `lake.RunLog`, `lake.LakeQuery`, `lake.Compactor`, `pipeline.FetchStep.run`, `pipeline.DownloadPipeline.run`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `lake.DerivedViews`, `lake.PitAligner`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `lake.QualityViews`, `lake.LakeReader`, `lake.TickerAliasMap`, `cli.ResearchCommands`, `cli.DocumentCommands` | `tests/lake/test_lake_catalog.py` (TC-LC-001..005) | 2026-09-27 |
-| `LakeQuery` | `quant_cn.lake.lake_query` | 2 | none | Run read queries against the catalog views | 5 | `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader`, `portfolio.WatchlistBuilder` | `tests/lake/test_lake_query.py` (TC-LQ-001..005) | 2026-09-27 |
+| `LakeQuery` | `quant_cn.lake.lake_query` | 2 | none | Run read queries against the catalog views | 5 | `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader`, `portfolio.WatchlistBuilder`, `portfolio.EtfProxyBuilder`, `risk.FactorMonitorBuilder` | `tests/lake/test_lake_query.py` (TC-LQ-001..005) | 2026-09-27 |
 | `LakeReader` | `quant_cn.lake.lake_reader` | 2 | none | The read API factors, the universe step and notebooks use (SRC_DESIGN §2.2b, D-089): one curated dataset as a panel, dense or sparse prices, point-in-time fundamentals, reference tables (in-memory frames and view discovery: LakeQuery) | 5 | `cli.ServiceBuilder`, (none yet), `factor.FactorFactory`, `pipeline.EvaluationStep`, `pipeline.FeatureStep` | `tests/lake/test_lake_reader.py` (TC-LRD-001..007) | 2026-09-27 |
 | `PanelCache` | `quant_cn.lake.panel_cache` | 2 | none | Keep recently read panels in memory, keyed by (method, arguments), least recently used evicted first once the total size exceeds `max_bytes` | 4 | `lake.LakeReader`, `cli.ServiceBuilder` | `tests/lake/test_panel_cache.py` (TC-PCH-001..003) | 2026-09-27 |
 | `ParquetWriter` | `quant_cn.lake.parquet_writer` | 2 | BaseStore | Write raw fetch results and curated partitions as zstd parquet, atomically (write `.tmp`, fsync, rename), so a crash never leaves a half-written file. | 6 | `cli.QuantCnCli`, `cli.ServiceBuilder`, `pipeline.UniverseStep`, `pipeline.EvaluationStep`, `pipeline.FeatureStep` | `tests/lake/test_parquet_writer.py` (TC-PW-001..008) | 2026-09-27 |
@@ -130,13 +134,17 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `QualityViews` | `quant_cn.lake.quality_views` | 2 | none | Create the `quality` schema: cross-source comparisons that report, never overwrite (D-065) | 1 | `lake.DerivedViews.refresh` | `tests/lake/test_quality_views.py` (TC-QV-001..003) | 2026-09-27 |
 | `RebuildAudit` | `quant_cn.lake.rebuild_audit` | 2 | none | Record, on `rebuild`, what changed below raw/ since the last one | 2 | `cli.QuantCnCli` | `tests/lake/test_rebuild_audit.py` (TC-RA-001..002) | 2026-09-27 |
 | `WatchlistBuilder` | `quant_cn.portfolio.watchlist_builder` | 5 | none | Join the user's buy targets with the latest lake prices, valuation and broker consensus; compute the gap to the buy price, status and valuation at that price (plan 15 ph7, D-120) | 3 | `cli.ResearchCommands` | `tests/portfolio/test_watchlist_builder.py` (TC-WB-001..009) | 2026-11-08 |
+| `EtfFlowCalculator` | `quant_cn.portfolio.etf_flow_calculator` | 5 | none | Pick the ETFs tracking each configured index and compute daily AUM, split- and gap-proof net subscriptions and position at today's price (plan 15 ph7b, D-126). | 2 | `portfolio.EtfProxyBuilder`, `cli.ResearchCommands` | `tests/portfolio/test_etf_flow_calculator.py` (TC-EFC-001..005) | 2026-11-11 |
+| `EtfProxyBuilder` | `quant_cn.portfolio.etf_proxy_builder` | 5 | none | Sum broad-index ETFs into the national-team proxy (core vs other, per index, weekly, yearly, recent days) and write `etf_proxy.json` for the chain app (plan 15 ph7b, D-126). | 2 | `cli.ResearchCommands` | `tests/portfolio/test_etf_proxy_builder.py` (TC-EP-001..004) | 2026-11-11 |
+| `HoldingsHistoryWriter` | `quant_cn.portfolio.holdings_history_writer` | 5 | none | Store one session of the holdings document in the lake (derived/holdings_positions with a CASH row, derived/holdings_risk), one file per year, the session replaced on rerun (plan 15 ph7d, D-132). | 1 | `portfolio.HoldingsRiskBuilder`, `cli.ResearchCommands` | `tests/portfolio/test_holdings_history_writer.py` (TC-HHW-001..001) | 2026-11-12 |
+| `HoldingsRiskBuilder` | `quant_cn.portfolio.holdings_risk_builder` | 5 | none | Value the user's book at the last risk-model session and decompose its risk (total / factor / specific, active vs a benchmark, exposures, per-stock vol and share of risk, correlations); write `holdings_risk.json` and the lake history (plan 15 ph7d, D-132). | 2 | `cli.ResearchCommands` | `tests/portfolio/test_holdings_risk_builder.py` (TC-HRB-001..004) | 2026-11-12 |
 | `ReleaseLagChecker` | `quant_cn.lake.release_lag_checker` | 2 | none | For every dataset with `known_on_rule: period_end_lag` and `release_dates` set, measure the observed lag (release date - period end) in that curated release-date dataset and count releases that came later than the rule | 2 | `cli.ResearchCommands` | `tests/lake/test_release_lag_checker.py` (TC-RLC-001..003) | 2026-09-27 |
 | `RunLog` | `quant_cn.lake.run_log` | 2 | BaseRunLog | Append run and per-key events to `meta.run_log` (run_id, started_at, finished_at, kind, dataset, key, status, n_rows, duration_ms, message) and echo them to logging. | 3 | `cli.QuantCnCli`, `cli.ServiceBuilder`, `cli.ResearchCommands` | `tests/lake/test_run_log.py` (TC-RL-001..002) | 2026-09-27 |
 | `TickerAliasMap` | `quant_cn.lake.ticker_alias_map` | 2 | none | Map retired codes to their surviving codes so a company has one history | 4 | `lake.DerivedViews`, `lake.LakeReader`, `cli.ServiceBuilder` | `tests/lake/test_ticker_alias_map.py` (TC-TAM-001..004) | 2026-09-27 |
 | `StatementVersionReader` | `quant_cn.lake.statement_version_reader` | 2 | none | Statement values per (company, period, field) as known on a date: latest known_on <= as_of, or the first announced version with its known_on (D-124); retired codes mapped (plan 16 ph1, plan 18 ph1) | 2 | (none yet) | `tests/lake/test_statement_version_reader.py` (TC-SVR-001..005) | 2026-11-09 |
 | `TradingCalendar` | `quant_cn.lake.trading_calendar` | 2 | none | Answer trading-day questions (sessions in a range, is_open, next, prev) from the SSE calendar in the lake | 5 | `data_loading.DateSweepFetcher.list_keys`, `data_loading.FetcherFactory`, `cli.ServiceBuilder`, `lake.EffectiveDateResolver`, `lake.LakeReader`, `factor.FactorFactory` | `tests/lake/test_trading_calendar.py` (TC-TCA-001..004) | 2026-09-27 |
 | `CompactStep` | `quant_cn.pipeline.curate_pipeline` | 6 | BaseStep | Adapt Compactor to a pipeline step: one unit per dataset. | 3 | `pipeline.CuratePipeline` | `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..001) | 2026-09-27 |
-| `DeriveStep` | `quant_cn.pipeline.curate_pipeline` | 6 | BaseStep | Build the derived views and the PIT states view, then record a digest per derived view. | 5 | `pipeline.CuratePipeline`, `pipeline.FeatureStep`, `cli.ServiceBuilder` | `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..004) | 2026-09-27 |
+| `DeriveStep` | `quant_cn.pipeline.curate_pipeline` | 6 | BaseStep | Build the derived views and the PIT states view, then record a digest per derived view (hash digest for `derived.risk_*`, D-135). | 5 | `pipeline.CuratePipeline`, `pipeline.FeatureStep`, `cli.ServiceBuilder`, `pipeline.RiskModelStep` | `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..006) | 2026-09-27 |
 | `CuratePipeline` | `quant_cn.pipeline.curate_pipeline` | 6 | none | Rebuild everything below raw/: compact every dataset, create derived views and PIT states, regenerate lake indexes, and record digests in meta/manifest/derived_digests.json. | 1 | `cli.ServiceBuilder` | `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..003) | 2026-09-27 |
 | `FetchStep` | `quant_cn.pipeline.download_pipeline` | 6 | BaseStep | Adapt one dataset's fetcher to a pipeline step: keys computed in list_units (so the calendar fetched earlier in the run is visible), catalog view refreshed after the run. | 3 | `pipeline.DownloadPipeline.run` | `tests/pipeline/test_download_pipeline.py` (TC-DP-002..002) | 2026-09-27 |
 | `DownloadPipeline` | `quant_cn.pipeline.download_pipeline` | 6 | none | Resolve which datasets and date ranges to download, run one FetchStep per dataset through the runner, and regenerate the lake indexes | 1 | `cli.ServiceBuilder` | `tests/pipeline/test_download_pipeline.py` (TC-DP-001..007) | 2026-09-27 |
@@ -147,7 +155,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `BaseRunner` | `quant_cn.pipeline.runner` | 6 | ABC | Extension point for how steps are executed (local now, Prefect later, D-022) | 1 | `pipeline.LocalRunner`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `pipeline.PrefectRunner`, `cli.ServiceBuilder` | `tests/pipeline/test_runner.py` (TC-LR-001..001) | 2026-09-27 |
 | `LocalRunner` | `quant_cn.pipeline.runner` | 6 | BaseRunner | Run steps serially in this process with a rich progress bar per step | 1 | `cli.ServiceBuilder` | `tests/pipeline/test_runner.py` (TC-LR-001..003) | 2026-09-27 |
 | `UniverseStep` | `quant_cn.pipeline.universe_step` | 6 | BaseStep | Build UNIVERSE_PANEL: one row per stock listed on each session (list_date <= t < delist_date | 3 | `cli.ServiceBuilder` | `tests/core/docs/test_contract_checker.py`, `tests/pipeline/test_universe_step.py` (TC-US-001..004) | 2026-09-27 |
-| `ServiceBuilder` | `quant_cn.service_builder` | 8 | none | Wire services for the CLI commands (the composition root's constructors): download and curate pipelines with the chosen runner, and the project catalog. | 7 | `cli.QuantCnCli`, `cli.ResearchCommands` | `tests/test_cli.py` (TC-QCC-002..003) | 2026-09-27 |
+| `ServiceBuilder` | `quant_cn.service_builder` | 8 | none | Wire services for the CLI commands (the composition root's constructors): download and curate pipelines with the chosen runner, and the project catalog. | 8 | `cli.QuantCnCli`, `cli.ResearchCommands` | `tests/test_cli.py` (TC-QCC-002..003) | 2026-09-27 |
 | `BlockBootstrap` | `quant_cn.statistic.block_bootstrap` | 4 | none | Resample a time series (or several aligned series with the same draws) in blocks so serial correlation survives: stationary bootstrap with geometric block lengths (Politis & Romano 1994) or circular block bootstrap with fixed blocks (Politis & Romano 1992) | 4 | `statistic.IcSignificance`, `factor.FactorEvaluator`, `cli.ServiceBuilder` | `tests/statistic/test_block_bootstrap.py` (TC-BB-001..004) | 2026-09-27 |
 | `HacVariance` | `quant_cn.statistic.hac_variance` | 4 | none | Heteroskedasticity- and autocorrelation-consistent variance of a sample mean with the Bartlett kernel (Newey & West 1987 | 4 | `statistic.IcSignificance`, `cli.ServiceBuilder` | `tests/statistic/test_hac_variance.py` (TC-HAC-001..004) | 2026-09-27 |
 | `IcCalculator` | `quant_cn.statistic.ic_calculator` | 4 | none | Per-date information coefficient between factor values and forward returns across the universe: IC_t = corr_rank(f_{i,t}, r_{i,t->t+h}) (Spearman | 2 | `factor.FactorEvaluator`, `cli.ServiceBuilder` | `tests/statistic/test_ic_calculator.py` (TC-ICC-001..004) | 2026-09-27 |
@@ -167,9 +175,15 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `DocumentSource` | `quant_cn.core.document_source` | 1 | BaseModel | One document source of config/documents.yaml: the curated metadata dataset listing the documents, its key columns, the PDF URL and file-name templates (`{column}` placeholders), the folder under `documents/`, and how a row gets its doc type (a fixed `doc_type` or title `rules`, first match wins) | 0 | `core.Config`, `data_loading.DocumentClassifier`, `data_loading.DocumentDownloader` | `tests/core/test_document_source.py` (TC-DSR-001..002) | 2026-11-07 |
 | `DocumentViews` | `quant_cn.lake.document_views` | 2 | none | Expose the document manifest in the catalog. | 1 | `lake.LakeCatalog.refresh_views`, `cli.DocumentCommands` | `tests/lake/test_document_views.py` (TC-DOV-001..001) | 2026-11-07 |
 | `RequestPacer` | `quant_cn.data_loading.request_pacer` | 3 | none | Run one request callable at a time-spaced rate with retries: request starts are at least `min_interval_s` apart across all threads sharing the pacer, and a call raising OSError, ValueError or KeyError is retried after `retry_sleep_s` up to `retries` times | 2 | `data_loading.BaseWebClient`, `data_loading.DocumentDownloader` | `tests/data_loading/test_document_downloader.py` (TC-RP-001..002) | 2026-11-07 |
-| `BaseWebClient` | `quant_cn.data_loading.base_web_client` | 3 | BaseApiClient | Base for vendor clients that page a public website's JSON API (CNINFO, Eastmoney). | 1 | `data_loading.CninfoClient`, `data_loading.EastmoneyReportClient` | `tests/data_loading/test_web_clients.py` (TC-BWC-001..002) | 2026-11-07 |
+| `BaseWebClient` | `quant_cn.data_loading.base_web_client` | 3 | BaseApiClient | Base for vendor clients that page a public website's JSON API (CNINFO, Eastmoney). | 1 | `data_loading.CninfoClient`, `data_loading.EastmoneyReportClient`, `data_loading.AppStoreClient` | `tests/data_loading/test_web_clients.py` (TC-BWC-001..002) | 2026-11-07 |
 | `CninfoClient` | `quant_cn.data_loading.cninfo_client` | 3 | BaseWebClient | List CNINFO announcements for the whole A-share market (`column=szse` covers SZ, SH and BJ) over a date range, optionally one category (e.g. | 2 | `cli.ServiceBuilder` | `tests/data_loading/test_web_clients.py` (TC-CNC-001..003) | 2026-11-07 |
 | `EastmoneyReportClient` | `quant_cn.data_loading.eastmoney_report_client` | 3 | BaseWebClient | List Eastmoney (东方财富) broker research reports published in a date range for one report kind (`q_type` "0" stock, "1" industry, "2" strategy), following `pageNo` until `TotalPage`. | 2 | `cli.ServiceBuilder` | `tests/data_loading/test_web_clients.py` (TC-EMR-001..002) | 2026-11-07 |
+| `AppStoreClient` | `quant_cn.data_loading.app_store_client` | 3 | BaseWebClient | One country's App Store top charts (legacy iTunes RSS JSON, top 100) flattened to rows: rank, app and artist ids, release date, price, capture time (D-137). | 2 | `cli.ServiceBuilder` | `tests/data_loading/test_web_clients.py` (TC-ASC-001..003) | 2026-11-11 |
+| `ManualSeriesClient` | `quant_cn.data_loading.manual_series_client` | 3 | BaseApiClient | Hand-entered cycle series (public `config/manual_series.yaml` + git-ignored `config/local.manual_series.yaml`) served as one vendor frame for curated `alt/manual_series`, known_on = published (plan 20, D-139). | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_manual_series_client.py` (TC-MSC-001..003) | 2026-11-12 |
+| `ManualSeriesDef` | `quant_cn.data_loading.manual_series_client` | 3 | BaseModel | One manual series definition: id, name, unit, freq, kind, linked ts_codes. | 0 | `data_loading.ManualSeriesClient`, `data_loading.ManualSeriesFile` | `tests/data_loading/test_manual_series_client.py` (TC-MSC-001) | 2026-11-12 |
+| `ManualObservation` | `quant_cn.data_loading.manual_series_client` | 3 | BaseModel | One manual value: series, date, value, published (>= date), source URL, note, revision flag. | 0 | `data_loading.ManualSeriesClient`, `data_loading.ManualSeriesFile` | `tests/data_loading/test_manual_series_client.py` (TC-MSC-002) | 2026-11-12 |
+| `ManualSeriesFile` | `quant_cn.data_loading.manual_series_client` | 3 | BaseModel | Content of one manual-series YAML file: series and observations. | 0 | `data_loading.ManualSeriesClient` | `tests/data_loading/test_manual_series_client.py` (TC-MSC-001) | 2026-11-12 |
+| `SnapshotFetcher` | `quant_cn.data_loading.snapshot_fetcher` | 3 | EnumFetcher | Sweep for sources with no history: keys "<today>_<value>" from the Clock, run range ignored, never backfilled (D-137). | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_snapshot_fetcher.py` (TC-SNF-001..003) | 2026-11-11 |
 | `DocumentClassifier` | `quant_cn.data_loading.document_classifier` | 3 | none | Give each listed document its type: the source's fixed `doc_type`, or the first title rule whose `include` matches and whose `exclude` does not (e.g. | 1 | `data_loading.DocumentDownloader` | `tests/data_loading/test_document_downloader.py` (TC-DCL-001..002) | 2026-11-07 |
 | `DocumentDownloader` | `quant_cn.data_loading.document_downloader` | 3 | none | Download the PDFs listed in a document source's curated metadata (config/documents.yaml) into `documents/<folder>/<doc_type>/<YYYY>/<MM>/<file>` (D-101). | 3 | `cli.DocumentCommands` | `tests/data_loading/test_document_downloader.py` (TC-DD-001..004) | 2026-11-07 |
 | `DocumentCommands` | `quant_cn.cli` | 8 | none | The document-side CLI command `download-docs` (plan 12 phase 2, D-101): for each source, print candidate counts per doc type (`--dry-run`) or download the PDFs not yet in the manifest and print the outcome | 1 | `cli.QuantCnCli` | `tests/test_cli.py` (TC-QCC-010..010) | 2026-11-07 |
@@ -227,6 +241,34 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `CurveSummary` | `quant_cn.quant_cn.calculation.futures_curve` | 4 | none | The shape of one contract family's curve on one date: front, most-held, 6- and 12-month and last prices, and the slope from the most-held month to 12 months after it (or to the last later month when the curve is shorter). | 0 | `calculation.FuturesCurve` | `tests/calculation/test_futures_curve.py` (TC-FCV-002..002) | 2026-11-07 |
 | `FuturesCurve` | `quant_cn.quant_cn.calculation.futures_curve` | 4 | none | Back-month futures curve per contract family (e.g. | 5 | `plan` | `tests/calculation/test_futures_curve.py` (TC-FCV-001..006) | 2026-11-07 |
 | `ImpliedExpectations` | `quant_cn.quant_cn.calculation.implied_expectations` | 4 | none | Turn a market cap into what it already pays for (D-121: "priced in", not "cheap"). | 5 | `plan` | `tests/calculation/test_implied_expectations.py` (TC-IE-001..007) | 2026-11-07 |
+| `BaseRiskModel` | `quant_cn.risk.base_risk_model` | 5 | ABC | Abstract risk model: produces the RISK_EXPOSURE / FACTOR_RETURN / FACTOR_COV / SPECIFIC_RISK frames for a pipeline step and answers portfolio-risk questions for a session from those frames. | 2 | `risk.RiskModel`, `risk.RiskModelValidator`, `portfolio.HoldingsRiskBuilder` | `tests/risk/test_base_risk_model.py` (TC-BRM-001..001) | 2026-11-11 |
+| `BayesianShrinker` | `quant_cn.risk.bayesian_shrinker` | 5 | none | Pull each stock's specific vol toward the cap-weighted mean of its size group, more so the further it is from it: sigma_sh = v sigma_bar + (1 - v) sigma with v = q \|sigma - sigma_bar\| / (delta + q \|sigma - sigma_bar\|), delta the root mean square deviation inside the group. | 1 | `risk.SpecificRiskEstimator`, `risk.RiskModelFactory` | `tests/risk/test_bayesian_shrinker.py` (TC-BS-001..002) | 2026-11-11 |
+| `DescriptorBuilder` | `quant_cn.risk.descriptor_builder` | 5 | none | One row per universe member and session in [start, end] with its Shenwan L1 group, circulating market cap (regression weight base, CNY) and every raw CNE5 descriptor: LNCAP = ln(total market cap in CNY), NLSIZE = cube of the cap-weighted standardised LNCAP, the price descriptors (PriceDescriptors on the dense return matrix; market = previous-day circ_mv weighted return of all stocks), the value / leverage descriptors and the growth descriptors from the latest monthly snapshot on or before the session, and one partial beta per configured external series (the foreign return that closed between the previous and the current China close, e.g. | 3 | `risk.RiskModel`, `risk.RiskModelFactory` | `tests/risk/test_descriptor_builder.py` (TC-DB-001..005) | 2026-11-11 |
+| `EigenfactorAdjuster` | `quant_cn.risk.eigenfactor_adjuster` | 5 | none | Remove the systematic underestimation of risk of the smallest-variance eigenportfolios of a sample covariance. | 2 | `risk.FactorCovarianceEstimator`, `risk.RiskModelFactory` | `tests/risk/test_eigenfactor_adjuster.py` (TC-EFA-001..003) | 2026-11-11 |
+| `EwmWindow` | `quant_cn.risk.ewm_window` | 5 | none | The trailing-window kernel of every Barra descriptor and covariance estimate: weight w_k = 0.5^(k / half_life) on the observation k sessions before the current one (k = lag .. | 3 | `risk.PriceDescriptors`, `risk.FactorCovarianceEstimator`, `risk.SpecificRiskEstimator`, `risk.VolatilityRegimeAdjuster` | `tests/risk/test_ewm_window.py` (TC-EW-001..003) | 2026-11-11 |
+| `ExposureStandardizer` | `quant_cn.risk.exposure_standardizer` | 5 | none | Turn the descriptor table into RISK_EXPOSURE, per session: each descriptor is standardised (circ_mv-weighted mean 0, equal-weighted sd 1), then clipped at +-winsor_sd and standardised again until no value exceeds the bound (at most 20 rounds); a style is the weighted mean of its descriptors' z-scores (weights renormalised over the descriptors a stock has), restandardised and clipped, then orthogonalised to its configured styles (OLS residual, Neutralizer) and restandardised; a style with raw coverage below `min_coverage` of the session's names is dropped for that session. | 1 | `risk.RiskModel`, `risk.RiskModelFactory` | `tests/risk/test_exposure_standardizer.py` (TC-EXS-001..004) | 2026-11-11 |
+| `FactorCovarianceEstimator` | `quant_cn.risk.factor_covariance_estimator` | 5 | none | For every session t, the factor covariance forecast for t+1 from factor returns up to t over the last `cov_window` sessions: zero-mean exponentially weighted covariances with pairwise missing-data normalisation and Newey-West autocorrelation terms (Bartlett weights, `cov_nw_lags`), volatilities with `vol_half_life` and correlations with `corr_half_life` (CNE5 90 / 480), combined as D C D and made PSD (cov_raw); then the eigenfactor adjustment (gamma profile refitted every `eigen_refit_days` sessions or when the factor set changes) and the volatility regime multiplier lambda^2 (cov). | 2 | `risk.RiskModel`, `risk.RiskModelFactory` | `tests/risk/test_factor_covariance_estimator.py` (TC-FCE-001..003) | 2026-11-11 |
+| `FactorMonitorBuilder` | `quant_cn.risk.factor_monitor_builder` | 5 | none | Turn the stored risk-model frames into the factor monitor: for every factor (country, Shenwan L1 industries, styles) its compounded return over 1 d / 1 w / 1 m / 3 m / YTD / 1 y, forecast volatility (sqrt of the covariance diagonal, annualised with 252), realized volatility over 21 and 63 sessions, their ratio, and today's return in units of the forecast daily sigma made at the previous close; plus daily series of the cumulative return, forecast vol and 21-session realized vol for the last `series_days` sessions. | 2 | `cli.ResearchCommands` | `tests/risk/test_factor_monitor_builder.py` (TC-FMB-001..004) | 2026-11-11 |
+| `FactorReturnEstimator` | `quant_cn.risk.factor_return_estimator` | 5 | none | For each return session t, regress stock returns from the close of t-1 to the close of t on exposures known at the close of t-1: r = f_c + sum_i X_i f_i + sum_s X_s f_s + u, weights sqrt(circ_mv at t-1) capped at the `weight_cap_quantile` cross-sectional quantile. | 3 | `risk.RiskModel`, `risk.RiskModelFactory` | `tests/risk/test_factor_return_estimator.py` (TC-FRE-001..005) | 2026-11-11 |
+| `FundamentalDescriptors` | `quant_cn.risk.fundamental_descriptors` | 5 | none | CNE5 descriptors from statements already aligned point in time (FUNDAMENTALS_PIT for balance and TTM fields; StatementVersionReader snapshots for annual history): BTOP = common equity / market cap; ETOP, CETOP = TTM net profit (parent) and operating cash flow / market cap; MLEV = (ME + LD) / ME, DTOA = total liabilities / total assets, FCFP = (TTM operating cash flow - TTM capex, c_pay_acq_const_fiolta) / market cap (D-131); BLEV = (BE + LD) / BE with LD = long-term borrowings + bonds payable (preferred equity is not reported separately and taken as 0); EGRO, SGRO = slope of the last up to `years` annual EPS / revenue on time divided by their mean absolute value (revenue instead of revenue per share: a constant share count cancels in slope / mean). | 2 | `risk.DescriptorBuilder`, `risk.RiskModelFactory` | `tests/risk/test_fundamental_descriptors.py` (TC-FD-001..003) | 2026-11-11 |
+| `PriceDescriptors` | `quant_cn.risk.price_descriptors` | 5 | none | The CNE5 descriptors that need only daily returns and turnover, computed for every session and stock at once on wide matrices (rows = sessions in order, columns = stocks): BETA and HSIGMA (exponentially weighted regression on the cap-weighted market, 252 d, half-life 63), RSTR (weighted sum of log returns over 504 d, half-life 126, lag 21), DASTD (weighted sd of returns, 252 d, half-life 42), CMRA (range of cumulative log returns over the last 12 months), STOM / STOQ / STOA (log share turnover over 1 / 3 / 12 months). | 6 | `risk.DescriptorBuilder`, `risk.RiskModelFactory` | `tests/risk/test_price_descriptors.py` (TC-PD-001..005) | 2026-11-11 |
+| `RiskDecomposer` | `quant_cn.risk.risk_decomposer` | 5 | none | Euler decomposition of a portfolio's forecast volatility at one session: total, factor and specific risk, each factor's contribution b_k (F b)_k / sigma (contributions plus the specific part h' D h / sigma sum to sigma), and the portfolio's factor exposures. | 1 | `research_space/notebooks/20261111_risk_model_validation.ipynb`, `portfolio.HoldingsRiskBuilder`, `cli.ResearchCommands` | `tests/risk/test_risk_decomposer.py` (TC-RD-001..002) | 2026-11-11 |
+| `RiskInputs` | `quant_cn.risk.risk_input_loader` | 5 | none | Everything the descriptors need for exposures on [start, end], all point in time: dense prices and daily_basic from PRICE_HISTORY sessions before start (descriptor windows), universe members with their Shenwan L1 group (EXPOSURE_PANEL), balance and TTM fields (FUNDAMENTALS_PIT) and month-end snapshots of annual EPS and revenue. | 0 | `risk.RiskInputLoader`, `risk.DescriptorBuilder`, `risk.RiskModel` | `tests/risk/test_risk_input_loader.py` (TC-RIL-001..001) | 2026-11-11 |
+| `RiskInputLoader` | `quant_cn.risk.risk_input_loader` | 5 | none | Read RiskInputs for one exposure window through the lake readers only (no parquet paths): LakeReader for prices, daily_basic and FUNDAMENTALS_PIT, ExposureReader for universe members with Shenwan L1 (D-093), StatementVersionReader for the annual reports known on each month-end session (growth descriptors refresh monthly, PIT at the snapshot date; D-127). | 2 | `pipeline.RiskModelStep`, `cli.ServiceBuilder` | `tests/risk/test_risk_input_loader.py` (TC-RIL-001..003) | 2026-11-11 |
+| `RiskModel` | `quant_cn.risk.risk_model` | 5 | BaseRiskModel | CNE5-style model for A-shares (country + Shenwan L1 + configured styles) as a sequence of pure stages the pipeline step runs year by year: exposures from RiskInputs (DescriptorBuilder -> ExposureStandardizer), factor returns and residuals (exposures at t-1, returns t-1 -> t, circ_mv at t-1; FactorReturnEstimator), the factor covariance over the whole factor-return history (FactorCovarianceEstimator) and specific risk (SpecificRiskEstimator). | 9 | `risk.RiskModelFactory`, `pipeline.RiskModelStep` | `tests/risk/test_risk_model.py` (TC-RM-001..003) | 2026-11-11 |
+| `RiskModelFactory` | `quant_cn.risk.risk_model_factory` | 5 | none | Wire a RiskModel and all its estimators from one RiskModelSettings (config/ risk_model.yaml), so variants (six styles vs ten, other half-lives) are config only. | 1 | `cli.ServiceBuilder`, `research_space/notebooks/20261111_risk_model_validation.ipynb`, `cli.ResearchCommands` | `tests/risk/test_risk_model_factory.py` (TC-RMF-001..001) | 2026-11-11 |
+| `RiskModelValidator` | `quant_cn.risk.risk_model_validator` | 5 | none | Test whether forecasts match realised risk. | 5 | `research_space/notebooks/20261111_risk_model_validation.ipynb`, `pipeline.RiskValidationWriter`, `cli.ServiceBuilder` | `tests/risk/test_risk_model_validator.py` (TC-RMV-001..004) | 2026-11-11 |
+| `RiskSnapshot` | `quant_cn.risk.risk_snapshot` | 5 | none | The model as of one session's close, ready for portfolio arithmetic: X (stocks x factors, country column = 1), F (factors x factors, daily variance) and specific vol. | 5 | `risk.RiskModel`, `risk.RiskDecomposer`, `risk.BaseRiskModel`, `risk.RiskModelValidator`, `portfolio.HoldingsRiskBuilder` | `tests/risk/test_risk_snapshot.py` (TC-RSN-001..004) | 2026-11-11 |
+| `SpecificRiskEstimator` | `quant_cn.risk.specific_risk_estimator` | 5 | none | Specific (idiosyncratic) volatility forecasts in three steps. | 3 | `risk.RiskModel`, `risk.RiskModelFactory` | `tests/risk/test_specific_risk_estimator.py` (TC-SRE-001..003) | 2026-11-11 |
+| `StructuralSpecificRisk` | `quant_cn.risk.structural_specific_risk` | 5 | none | Predict specific volatility from exposures (USE4 / CNE5 structural model): regress ln(sigma_ts) on the factor exposures (industry dummies and styles) over stocks with a full residual history, weighted by cap, then sigma_str = E0 exp(X b) with E0 = sum w sigma_ts / sum w exp(X b) over the fit set (removes the log-retransformation bias). | 1 | `risk.SpecificRiskEstimator`, `risk.RiskModelFactory` | `tests/risk/test_structural_specific_risk.py` (TC-SSR-001..002) | 2026-11-11 |
+| `VolatilityRegimeAdjuster` | `quant_cn.risk.volatility_regime_adjuster` | 5 | none | Scale risk forecasts by lambda_t so they track the current volatility regime: the cross-sectional bias statistic B_t^2 = weighted mean of (x_t / sigma_{t-1})^2 (factor returns over their forecast vol, equal weights; or specific returns over specific risk, cap weights) is averaged with an exponential kernel (half-life h, window 6 h) and lambda_t = sqrt(of that average). | 2 | `risk.FactorCovarianceEstimator`, `risk.SpecificRiskEstimator`, `risk.RiskModelFactory` | `tests/risk/test_volatility_regime_adjuster.py` (TC-VRA-001..003) | 2026-11-11 |
+| `StyleSpec` | `quant_cn.core.risk_model_settings` | 1 | BaseModel | One style factor: its descriptors with CNE5 weights and the factors it is orthogonalised against (RISK_FACTOR_LIST §1). | 1 | `core.RiskModelSettings`, `risk.ExposureStandardizer` | `tests/core/test_risk_model_settings.py` (TC-RMS-001..001) | 2026-11-11 |
+| `ExternalSeriesSpec` | `quant_cn.core.risk_model_settings` | 1 | BaseModel | One external daily series behind a partial-beta descriptor (D-128, D-134): where it is in the lake and how its dates map to China sessions. | 0 | `core.RiskModelSettings`, `risk.RiskInputLoader` | `tests/core/test_risk_model_settings.py` (TC-RMS-003..003) | 2026-11-11 |
+| `ThemeBasketSpec` | `quant_cn.core.risk_model_settings` | 1 | BaseModel | A theme basket behind a partial-beta descriptor (D-130): the circ_mv-weighted return of a concept's current members (excluding the stock itself), from the concept's list date on. | 0 | `core.RiskModelSettings`, `risk.RiskInputLoader` | `tests/core/test_risk_model_settings.py` (TC-RMS-003..003) | 2026-11-11 |
+| `RiskModelSettings` | `quant_cn.core.risk_model_settings` | 1 | BaseModel | Every tunable of the risk model in one typed object, CNE5 defaults (RISK_MODEL_DESIGN §1): estimation universe, style set, regression weights, covariance and specific-risk half-lives and lags, eigenfactor and volatility-regime adjustments. | 2 | `core.Config`, `risk.ExposureStandardizer`, `risk.FactorCovarianceEstimator`, `risk.SpecificRiskEstimator`, `risk.RiskModelFactory`, `risk.RiskModel`, `pipeline.RiskModelStep`, `pipeline.RiskValidationWriter` | `tests/core/test_risk_model_settings.py` (TC-RMS-001..002) | 2026-11-11 |
+| `RiskModelStep` | `quant_cn.pipeline.risk_model_step` | 6 | BaseStep | Fit the configured RiskModel from `settings.start` to the last universe session and write one file per year of each frame (derived/risk_exposure, risk_factor_return, risk_specific_return, risk_factor_cov, risk_specific_risk). | 3 | `cli.ServiceBuilder` | `tests/pipeline/test_risk_model_step.py` (TC-RMST-001..002) | 2026-11-11 |
+| `RiskValidationWriter` | `quant_cn.pipeline.risk_validation_writer` | 6 | none | After a fit, test the stored model over the last `validation_sessions` forecast sessions and write derived/reports/risk_<name>/validation.parquet (RISK_VALIDATION): median / mean R^2 (whole history and window), the bias statistic of every factor, of `validation_portfolios` random long-only portfolios of `validation_names` stocks drawn from the names with a forecast on the first window session, and of each benchmark index (index_weight weights on or before the window start, held fixed), plus the summary rows share_in_band and median_bias over the random portfolios. | 1 | `pipeline.RiskModelStep`, `cli.ServiceBuilder` | `tests/pipeline/test_risk_validation_writer.py` (TC-RVW-001..002) | 2026-11-11 |
+| `RiskChart` | `quant_cn.visualization.risk_chart` | 7 | BaseChart | Three views of the risk model (plan 05 phase 5), over frames only: "cumulative" (FACTOR_RETURN) compounded returns of the chosen factors, one line each, labelled at the line end so identity does not rest on colour; "correlation" (FACTOR_COV) the factor correlation matrix of one session as a diverging heatmap (-1..1); "decomposition" (RISK_DECOMP) each factor's contribution to a portfolio's annualised volatility as horizontal bars (specific risk as its own bar), total in the title. | 1 | `research_space/notebooks/20261111_risk_model_validation.ipynb` | `tests/visualization/test_risk_chart.py` (TC-RC-001..003) | 2026-11-11 |
 
 ## B. Class details (one block per class; methods carry their own purpose)
 
@@ -430,20 +472,20 @@ never column lists (those live in section E).
 | `_run_curate` (private) | internal helper over 20 lines | Config, argparse.Namespace -> int | — | internal | — |
 
 ### `ResearchCommands` — `quant_cn.cli` (L8)
-- **Purpose:** The research-side CLI commands, kept apart so QuantCnCli stays within its size limit: `release-lags` (D-086), `evaluate` (factor campaign reports and trial log, plan 04 phase 5) and `watchlist` (D-120). QuantCnCli parses the arguments and dispatches here.
+- **Purpose:** The research-side CLI commands, kept apart so QuantCnCli stays within its size limit: `release-lags` (D-086), `evaluate` (factor campaign reports and trial log, plan 04 phase 5), `risk-model` (D-127), `watchlist` (D-120), `etf-proxy` (D-126), `factor-monitor` and `holdings-risk` (D-132). QuantCnCli parses the arguments and dispatches here.
 - **Base:** none. **Depends on (injected):** Console.
 - **Used by:** `cli.QuantCnCli`.
-- **Tests:** `tests/test_cli.py` (TC-QCC-008..009, 011).
+- **Tests:** `tests/test_cli.py` (TC-QCC-008..009, 011..014).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
 | `__init__` | wire dependencies | Console -> None | — | callers of the class | — |
-| `build_parser` | Add the `release-lags`, `watchlist` and `evaluate` subcommands to the CLI parser. | argparse._SubParsersAction -> None | — | `cli.QuantCnCli._build_parser` | see class |
+| `build_parser` | Add the `release-lags`, `watchlist`, `etf-proxy`, `factor-monitor`, `holdings-risk`, `evaluate` and `risk-model` subcommands to the CLI parser. | argparse._SubParsersAction -> None | — | `cli.QuantCnCli._build_parser` | see class |
 
 ### `BaseApiClient` — `quant_cn.core.base_api_client` (L1)
 - **Purpose:** Abstract vendor client: one logical query returns all pages as one DataFrame.
 - **Base:** ABC. **Depends on (injected):** —.
-- **Used by:** `data_loading.TushareClient`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`.
+- **Used by:** `data_loading.TushareClient`, `core.BaseFetcher`, `data_loading.FetcherFactory`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.PeriodSweepFetcher`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `data_loading.BaseWebClient`, `data_loading.ManualSeriesClient`.
 - **Tests:** `tests/core/test_base_classes.py` (TC-BAC-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -518,7 +560,7 @@ never column lists (those live in section E).
 ### `Clock` — `quant_cn.core.clock` (L1)
 - **Purpose:** The single source of wall time, monotonic time and sleeping; tests inject a fake subclass.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.FetcherFactory`, `data_loading.PeriodSweepFetcher`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `lake.RebuildAudit`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader`, `data_loading.RequestPacer`.
+- **Used by:** `data_loading.TushareClient`, `core.BaseFetcher.run`, `lake.RunLog`, `lake.Compactor.rebuild`, `pipeline.DownloadPipeline`, `cli.QuantCnCli`, `data_loading.DateSweepFetcher`, `data_loading.EnumFetcher`, `data_loading.FetcherFactory`, `data_loading.PeriodSweepFetcher`, `lake.ProjectCatalog`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `lake.RebuildAudit`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader`, `data_loading.RequestPacer`, `data_loading.AppStoreClient`.
 - **Tests:** `tests/core/test_clock.py` (TC-CL-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -618,6 +660,24 @@ never column lists (those live in section E).
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
 
+### `EtfProxyIndex` — `quant_cn.core.etf_proxy_settings` (L1)
+- **Purpose:** One broad index whose ETFs are summed into the proxy: display name, regex searched in `fund_basic.benchmark`, reference ETF whose price deflates positions (D-126).
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `core.EtfProxySettings`.
+- **Tests:** `tests/core/test_config.py` (TC-C-020).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `EtfProxySettings` — `quant_cn.core.etf_proxy_settings` (L1)
+- **Purpose:** Members of the national-team ETF proxy: indices (first matching pattern wins), core ts_codes, name / benchmark rules, start date and recent window (config/etf_proxies.yaml; missing file = no indices, D-126).
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `core.Config`, `portfolio.EtfProxyBuilder`, `portfolio.EtfFlowCalculator`.
+- **Tests:** `tests/core/test_config.py` (TC-C-020).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
 ### `DiscoverySettings` — `quant_cn.core.discovery_settings` (L1)
 - **Purpose:** Thresholds and windows of the discovery pipeline: history_years, min_years (base.yaml `discovery`, plan 16, D-121).
 - **Base:** BaseModel. **Depends on (injected):** —.
@@ -639,8 +699,8 @@ never column lists (those live in section E).
 ### `Config` — `quant_cn.core.config` (L1)
 - **Purpose:** The typed configuration injected everywhere: YAML defaults, machine overrides, environment.
 - **Base:** BaseModel. **Depends on (injected):** —.
-- **Used by:** `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands`, `cli.DocumentCommands`, `portfolio.WatchlistBuilder`.
-- **Tests:** `tests/core/test_config.py` (TC-C-001..017).
+- **Used by:** `cli.QuantCnCli`, `data_loading.FetcherFactory`, `pipeline.DownloadPipeline`, `pipeline.CuratePipeline`, `cli.ServiceBuilder`, `cli.ResearchCommands`, `cli.DocumentCommands`, `portfolio.WatchlistBuilder`, `portfolio.EtfProxyBuilder`.
+- **Tests:** `tests/core/test_config.py` (TC-C-001..020).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -691,7 +751,7 @@ never column lists (those live in section E).
 ### `DateCodec` — `quant_cn.core.date_codec` (L1)
 - **Purpose:** Validate and convert Tushare `YYYYMMDD` date strings and generate date keys for sweeps.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `core.Config.load`, `data_loading.DateSweepFetcher.list_keys`, `data_loading.PeriodSweepFetcher.list_keys`, `pipeline.DownloadPipeline.run`, `data_loading.FetcherFactory`, `cli.QuantCnCli`, `lake.PitAligner`, `visualization.PriceChart`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `lake.EffectiveDateResolver`, `factor.FactorFactory`, `lake.StatementVersionReader`, `calculation.CompanyCyclePanel`.
+- **Used by:** `core.Config.load`, `data_loading.DateSweepFetcher.list_keys`, `data_loading.PeriodSweepFetcher.list_keys`, `pipeline.DownloadPipeline.run`, `data_loading.FetcherFactory`, `cli.QuantCnCli`, `lake.PitAligner`, `visualization.PriceChart`, `cli.ServiceBuilder`, `data_loading.DateWindowFetcher`, `lake.EffectiveDateResolver`, `factor.FactorFactory`, `lake.StatementVersionReader`, `calculation.CompanyCyclePanel`, `portfolio.EtfProxyBuilder`.
 - **Tests:** `tests/core/test_date_codec.py` (TC-DC-001..006).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1160,14 +1220,14 @@ never column lists (those live in section E).
 ### `HttpTransport` — `quant_cn.data_loading.http_transport` (L3)
 - **Purpose:** Send one HTTP request and return the decoded JSON object or the raw bytes: a JSON POST (Tushare), a form POST (CNINFO, D-096), a GET returning JSON (Eastmoney report lists) and a GET returning bytes (PDF downloads). Browser-like User-Agent on every call.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `data_loading.TushareClient`, `data_loading.CninfoClient`, `data_loading.EastmoneyReportClient`, `data_loading.BaseWebClient`, `data_loading.DocumentDownloader`.
+- **Used by:** `data_loading.TushareClient`, `data_loading.CninfoClient`, `data_loading.EastmoneyReportClient`, `data_loading.BaseWebClient`, `data_loading.DocumentDownloader`, `data_loading.AppStoreClient`.
 - **Tests:** `tests/data_loading/test_tushare_client.py` (TC-TC-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
 | `fetch_json` | POST `payload` as JSON to `url`. | str, Mapping[str, Any], float -> dict[str, Any] | `OSError`, `ValueError` | as class | see class |
 | `fetch_form_json` | POST `form` url-encoded to `url` and decode the JSON reply. | str, Mapping[str, str], float -> dict[str, Any] | `OSError`, `ValueError` | `data_loading.CninfoClient` | TC-CNC-001 |
-| `fetch_get_json` | GET `url` and decode the JSON reply. | str, float -> dict[str, Any] | `OSError`, `ValueError` | `data_loading.EastmoneyReportClient` | TC-EMR-001 |
+| `fetch_get_json` | GET `url` and decode the JSON reply. | str, float -> dict[str, Any] | `OSError`, `ValueError` | `data_loading.EastmoneyReportClient`, `data_loading.AppStoreClient` | TC-EMR-001, TC-ASC-001 |
 | `fetch_bytes` | GET `url` and return the body (a PDF download). | str, float -> bytes | `OSError` | `data_loading.DocumentDownloader` | TC-DD-002 |
 
 ### `TushareClient` — `quant_cn.data_loading.tushare_client` (L3)
@@ -1426,7 +1486,7 @@ never column lists (those live in section E).
 ### `LakeQuery` — `quant_cn.lake.lake_query` (L2)
 - **Purpose:** Run read queries against the catalog views; the only way code above the lake reads data.
 - **Base:** none. **Depends on (injected):** LakeCatalog.
-- **Used by:** `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader`, `lake.StatementVersionReader`.
+- **Used by:** `lake.TradingCalendar`, `lake.Compactor.rebuild`, `cli.QuantCnCli`, `pipeline.CuratePipeline`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `cli.ServiceBuilder`, `data_loading.FetcherFactory`, `lake.QualityViews`, `lake.ReleaseLagChecker`, `lake.LakeReader`, `lake.TickerAliasMap`, `pipeline.UniverseStep`, `lake.ExposureReader`, `pipeline.EvaluationStep`, `pipeline.FeatureStep`, `cli.ResearchCommands`, `cli.DocumentCommands`, `data_loading.DocumentDownloader`, `lake.StatementVersionReader`, `portfolio.EtfProxyBuilder`, `risk.FactorMonitorBuilder`.
 - **Tests:** `tests/lake/test_lake_query.py` (TC-LQ-001..005).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1542,6 +1602,68 @@ never column lists (those live in section E).
 | `write` | build and write `watchlist.json` into the app data dir | out_dir: Path -> Path | LakeError | `cli.ResearchCommands._run_watchlist` | TC-WB-008 |
 | `compute_status` | classify a price against the top of its buy range | price, buy_high, near_pct -> "in" / "near" / "far" | — | `build` | TC-WB-002 |
 
+### `EtfFlowCalculator` — `quant_cn.portfolio.etf_flow_calculator` (L5)
+- **Purpose:** Pick the ETFs tracking each configured index 100% (no feeder / enhanced) and compute per ETF and day: AUM (fd_share x close), net flow = AUM_t - AUM_{t-1} x g_t / g_{t-1} on real share rows (g = cumulative close / pre_close, so splits and missing days give no false flow), position at today's price = AUM x g_last / g of the index's reference ETF (plan 15 ph7b, D-126).
+- **Base:** none. **Depends on (injected):** `EtfProxySettings`.
+- **Used by:** `portfolio.EtfProxyBuilder`, `cli.ResearchCommands` (wiring).
+- **Tests:** `tests/portfolio/test_etf_flow_calculator.py` (TC-EFC-001..005).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `build_members` | members of each configured index, tagged core or not | funds: DataFrame (ts_code, name, benchmark) -> DataFrame (ts_code, index, is_core) | — | `portfolio.EtfProxyBuilder.build` | TC-EFC-005 |
+| `compute_daily` | daily AUM, net flow and position at today's price per member ETF | prices, shares, members: DataFrame -> DataFrame (ts_code, index, is_core, trade_date, aum, flow, position; 亿元) | — | `portfolio.EtfProxyBuilder.build` | TC-EFC-001..004 |
+
+### `HoldingsRiskBuilder` — `quant_cn.portfolio.holdings_risk_builder` (L5)
+- **Purpose:** Value the PositionsBook at curated.daily closes of the last risk-model session on or before a date; weights over stocks + cash; RiskDecomposer against the benchmark's latest index_weight (tracking error); exposures with Shenwan L1 labels and shares of risk; per-stock own vol and Euler share of variance and model correlations from `RiskSnapshot.compute_stock_cov`; each stock's style exposures and Shenwan L1 industry (`stock_exposures`); codes without a close or forecast listed in `missing`. Writes `holdings_risk.json` and hands the session to HoldingsHistoryWriter (plan 15 ph7d, D-132).
+- **Base:** none. **Depends on (injected):** `PositionsBook`, `LakeQuery`, `BaseRiskModel`, `RiskDecomposer`, `HoldingsHistoryWriter`; benchmark index_code.
+- **Used by:** `cli.ResearchCommands` (`holdings-risk` command).
+- **Tests:** `tests/portfolio/test_holdings_risk_builder.py` (TC-HRB-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `build` | the holdings risk document at the last risk session on or before trade_date | trade_date: str -> dict | LakeError | `write` | TC-HRB-001, 002, 004 |
+| `write` | build, write `holdings_risk.json`, store the session in the lake | out_dir: Path, trade_date: str -> Path | LakeError | `cli.ResearchCommands._run_holdings_risk` | TC-HRB-003, 004 |
+| `_build_risk` (private, > 20 lines) | decomposition rows into annualised risk and factor rows | snap, weights, session -> dict | — | `build` | TC-HRB-001 |
+
+### `HoldingsHistoryWriter` — `quant_cn.portfolio.holdings_history_writer` (L5)
+- **Purpose:** Replace one session's rows in derived/holdings_positions (positions + CASH row) and derived/holdings_risk (risk components, `x:` exposures, `c:` shares of risk), one year file each, so the book's history accumulates in the lake outside git (plan 15 ph7d, D-132).
+- **Base:** none. **Depends on (injected):** `LakeQuery`, `ParquetWriter`.
+- **Used by:** `portfolio.HoldingsRiskBuilder`, `cli.ResearchCommands`.
+- **Tests:** `tests/portfolio/test_holdings_history_writer.py` (TC-HHW-001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `write` | replace the session in both year files | doc: dict -> list[Path] | LakeError | `portfolio.HoldingsRiskBuilder.write` | TC-HHW-001 |
+
+### `PositionsBook` — `quant_cn.core.positions_book` (L1)
+- **Purpose:** The user's holdings as one combined book (cash, positions with shares and cost) from git-ignored `config/local.positions.yaml`; missing file = empty book. Loaded here rather than by `Config` because config.py is at the 600-line limit (§2.6).
+- **Base:** BaseModel. **Depends on (injected):** none.
+- **Used by:** `portfolio.HoldingsRiskBuilder`, `cli.ResearchCommands`.
+- **Tests:** `tests/portfolio/test_holdings_risk_builder.py` (TC-PB-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `load` | read the book from the repo root | repo_root: Path -> PositionsBook | ConfigError | `cli.ResearchCommands._run_holdings_risk` | TC-PB-001, 002 |
+| `list_codes` | ts_codes in file order | () -> list[str] | — | `_check_codes`, callers | TC-PB-001 |
+
+### `Position` — `quant_cn.core.positions_book` (L1)
+- **Purpose:** One holding: code, name, shares (> 0), cost per share (>= 0); broker snapshot fields ignored.
+- **Base:** BaseModel. **Depends on (injected):** none.
+- **Used by:** `core.PositionsBook`.
+- **Tests:** `tests/portfolio/test_holdings_risk_builder.py` (TC-PB-001).
+
+### `EtfProxyBuilder` — `quant_cn.portfolio.etf_proxy_builder` (L5)
+- **Purpose:** Read fund_basic, fund_share and fund_daily from `start`, run `EtfFlowCalculator`, and summarise core (national-team ETFs) vs other: totals (AUM, position, recent and YTD flow, peak and trough since peak), recent daily flows, weekly flow and position, yearly flow, per-index table with weekly series; write `etf_proxy.json` for the chain app (plan 15 ph7b, D-126).
+- **Base:** none. **Depends on (injected):** `Config`, `LakeQuery`, `DateCodec`, `EtfFlowCalculator`.
+- **Used by:** `cli.ResearchCommands` (`etf-proxy` command).
+- **Tests:** `tests/portfolio/test_etf_proxy_builder.py` (TC-EP-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `build` | the proxy document from start to the last share day | () -> dict {as_of, price_as_of, start, n_members, totals, recent, weekly, yearly, indices} | LakeError | `write` | TC-EP-001, 002, 004 |
+| `write` | build and write `etf_proxy.json` into the app data dir | out_dir: Path -> Path | LakeError | `cli.ResearchCommands._run_etf_proxy` | TC-EP-003 |
+| `_build_summary` (private, > 20 lines) | group daily rows into totals, recent, weekly, yearly and per-index blocks | daily: DataFrame, as_of: str -> dict | — | `build` | TC-EP-001 |
+
 ### `ReleaseLagChecker` — `quant_cn.lake.release_lag_checker` (L2)
 - **Purpose:** For every dataset with `known_on_rule: period_end_lag` and `release_dates` set, measure the observed lag (release date - period end) in that curated release-date dataset and count releases that came later than the rule. A rule earlier than any observed release is look-ahead; D-086 raises it to the observed maximum and `make check` warns if it recurs. The period of a release is the last month end before it, or its own month end when the release falls on/after day 25 (month-end PMI releases).
 - **Base:** none. **Depends on (injected):** LakeQuery, Mapping[str, DatasetSpec], str.
@@ -1624,8 +1746,8 @@ never column lists (those live in section E).
 ### `DeriveStep` — `quant_cn.pipeline.curate_pipeline` (L6)
 - **Purpose:** Build the derived views and the PIT states view, then record a digest per derived view.
 - **Base:** BaseStep. **Depends on (injected):** DerivedViews, PitAligner, LakeQuery, Path.
-- **Used by:** `pipeline.CuratePipeline`, `pipeline.FeatureStep`, `cli.ServiceBuilder`.
-- **Tests:** `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..004).
+- **Used by:** `pipeline.CuratePipeline`, `pipeline.FeatureStep`, `cli.ServiceBuilder`, `pipeline.RiskModelStep`.
+- **Tests:** `tests/pipeline/test_curate_pipeline.py` (TC-CP-001..006).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -1767,6 +1889,7 @@ never column lists (those live in section E).
 | `build_runner` | LocalRunner, or PrefectRunner for name "prefect" (optional extra "flows", D-022). | RunLog, str, bool -> BaseRunner | `ModuleNotFoundError` | as class | see class |
 | `build_reader` | The lake read API (D-089): PIT aligner, alias map, calendar and an optional cache. | Config, LakeCatalog, bool -> LakeReader | — | as class | see class |
 | `build_evaluation` | EvaluationStep for the configured campaign (2,000 seeded block-bootstrap resamples). | Config, LakeCatalog -> EvaluationStep | — | as class | see class |
+| `build_risk_model` | RiskModelStep for config/risk_model.yaml (plan 05, D-127): loader, model, validation report, view refresh and digests. | Config, LakeCatalog -> RiskModelStep | — | as class | see class |
 | `build_project_catalog` | ProjectCatalog over the repository with the contract linter. | Config, LakeCatalog -> ProjectCatalog | — | as class | see class |
 
 ### `BlockBootstrap` — `quant_cn.statistic.block_bootstrap` (L4)
@@ -2001,7 +2124,7 @@ never column lists (those live in section E).
 ### `BaseWebClient` — `quant_cn.data_loading.base_web_client` (L3)
 - **Purpose:** Base for vendor clients that page a public website's JSON API (CNINFO, Eastmoney). It holds the transport, the timeout and a RequestPacer. Every request is spaced by `min_interval_s` and transport failures are retried after `retry_sleep_s`, so a long sweep survives short outages without hammering the site.
 - **Base:** BaseApiClient. **Depends on (injected):** Clock, HttpTransport | None, float, int, float, float.
-- **Used by:** `data_loading.CninfoClient`, `data_loading.EastmoneyReportClient`.
+- **Used by:** `data_loading.CninfoClient`, `data_loading.EastmoneyReportClient`, `data_loading.AppStoreClient`.
 - **Tests:** `tests/data_loading/test_web_clients.py` (TC-BWC-001..002).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -2033,6 +2156,58 @@ never column lists (those live in section E).
 | `get_vendor_name` | Vendor name for messages. | — -> str | — | as class | see class |
 | `query` | Every report of one kind published in [start_date, end_date]. | str, Mapping[str, str], Sequence[str] -> pd.DataFrame | `DataSourceError` | as class | see class |
 
+
+### `AppStoreClient` — `quant_cn.data_loading.app_store_client` (L3)
+- **Purpose:** One country's App Store top charts as rows: for each chart GET the legacy iTunes RSS JSON feed (Apple caps it at 100 entries) and flatten every entry to COLUMNS (rank = feed position, app_id, artist_id from the artist link, release_date YYYYMMDD, price and currency, captured_at from the Clock). A store that does not exist (HTTP 400 / 404) or an empty feed gives zero rows (D-137).
+- **Base:** BaseWebClient. **Depends on (injected):** Clock, HttpTransport | None, float, int, float.
+- **Used by:** `cli.ServiceBuilder`.
+- **Tests:** `tests/data_loading/test_web_clients.py` (TC-ASC-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Clock, HttpTransport \| None, float, int, float -> None | — | callers of the class | — |
+| `get_vendor_name` | Vendor name for messages. | — -> str | — | as class | see class |
+| `query` | Every chart in `params["charts"]` for one country, flattened. | str, Mapping[str, str], Sequence[str] -> pd.DataFrame | `DataSourceError` | `core.BaseFetcher.fetch_one` | TC-ASC-001..003 |
+
+### `ManualSeriesClient` — `quant_cn.data_loading.manual_series_client` (L3)
+- **Purpose:** Serve the hand-entered series in `config/manual_series.yaml` (public, committed) and `config/local.manual_series.yaml` (licensed exports, git-ignored) as one validated vendor frame, so download / compact write curated `alt/manual_series` with known_on = published; every row keeps its source URL (plan 20, D-139).
+- **Base:** BaseApiClient. **Depends on (injected):** Path.
+- **Used by:** `cli.ServiceBuilder`.
+- **Tests:** `tests/data_loading/test_manual_series_client.py` (TC-MSC-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Path -> None | — | callers of the class | — |
+| `query` | All observations of both files, validated, one row per (series, date, published). | str, Mapping[str, str], Sequence[str] -> pd.DataFrame | `ConfigError` | `core.BaseFetcher.fetch_one` | TC-MSC-001..003 |
+
+### `ManualSeriesDef` — `quant_cn.data_loading.manual_series_client` (L3)
+- **Purpose:** One manual series definition: id, name, unit, freq (daily / weekly / monthly / quarterly), kind (index / price / spread / count), linked ts_codes.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `data_loading.ManualSeriesClient`, `data_loading.ManualSeriesFile`.
+- **Tests:** `tests/data_loading/test_manual_series_client.py` (TC-MSC-001).
+
+### `ManualObservation` — `quant_cn.data_loading.manual_series_client` (L3)
+- **Purpose:** One manual value: series, date, value, published (>= date, the PIT date), http(s) source URL, note, revision flag.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `data_loading.ManualSeriesClient`, `data_loading.ManualSeriesFile`.
+- **Tests:** `tests/data_loading/test_manual_series_client.py` (TC-MSC-002).
+
+### `ManualSeriesFile` — `quant_cn.data_loading.manual_series_client` (L3)
+- **Purpose:** The content of one manual-series YAML file: series definitions and observations.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `data_loading.ManualSeriesClient`.
+- **Tests:** `tests/data_loading/test_manual_series_client.py` (TC-MSC-001).
+
+### `SnapshotFetcher` — `quant_cn.data_loading.snapshot_fetcher` (L3)
+- **Purpose:** Capture a source that only serves the current state: one key per value for today, "<today>_<value>", today from the injected Clock; the run range is ignored so past dates are never requested; `sweep.key_field` (capture date) is filled from the key's date part (D-137).
+- **Base:** EnumFetcher. **Depends on (injected):** DatasetSpec, BaseApiClient, BaseStore, BaseFetchLog, BaseRunLog, Clock, Sequence[str].
+- **Used by:** `data_loading.FetcherFactory.build` (sweep kind "snapshot").
+- **Tests:** `tests/data_loading/test_snapshot_fetcher.py` (TC-SNF-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `list_keys` | Today's keys, one per value. | str, str -> list[str] | — | `core.BaseFetcher.run` | TC-SNF-001 |
+| `build_params` | The value part of the key under the sweep parameter, plus constant parameters. | str, str, str -> dict[str, str] | — | `core.BaseFetcher.fetch_one` | TC-SNF-002 |
 ### `DocumentClassifier` — `quant_cn.data_loading.document_classifier` (L3)
 - **Purpose:** Give each listed document its type: the source's fixed `doc_type`, or the first title rule whose `include` matches and whose `exclude` does not (e.g. "2025年年度报告" → annual; "2025年年度报告摘要" → none; "2025年半年度报告" → semiannual because that rule comes first).
 - **Base:** none. **Depends on (injected):** DocumentSource.
@@ -2615,6 +2790,342 @@ never column lists (those live in section E).
 | `compute_sensitivity` | Annual profit change per unit commodity price (OLS of quarterly profit on quarterly mean futures price, x4; NaN below 8 quarters or R² 0.3). | pd.DataFrame, pd.DataFrame -> dict[str, float] | — | as class | TC-IE-006 |
 | `compute_implied_price` | Commodity price at which normal_pe x profit(p) equals the market cap. | float, float, float, float -> float | — | as class | TC-IE-007 |
 | `build` | Years priced on three bases and implied growth for every company with a market cap. | pd.DataFrame, pd.DataFrame -> pd.DataFrame | `ValueError` | as class | see class |
+### `BaseRiskModel` — `quant_cn.risk.base_risk_model` (L5)
+- **Purpose:** Abstract risk model: produces the RISK_EXPOSURE / FACTOR_RETURN / FACTOR_COV / SPECIFIC_RISK frames for a pipeline step and answers portfolio-risk questions for a session from those frames. A statistical (PCA) model would be another subclass (D-045).
+- **Base:** ABC. **Depends on (injected):** str.
+- **Used by:** `risk.RiskModel`, `risk.RiskModelValidator`, `portfolio.HoldingsRiskBuilder`.
+- **Tests:** `tests/risk/test_base_risk_model.py` (TC-BRM-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | str -> None | — | callers of the class | — |
+| `load_snapshot` | The fitted model as of a session. | str -> RiskSnapshot | `LakeError` | as class | see class |
+| `compute_portfolio_risk` | Forecast daily volatility of a portfolio held from the close of `trade_date`. | pd.Series, str -> float | `LakeError` | as class | see class |
+
+### `BayesianShrinker` — `quant_cn.risk.bayesian_shrinker` (L5)
+- **Purpose:** Pull each stock's specific vol toward the cap-weighted mean of its size group, more so the further it is from it: sigma_sh = v sigma_bar + (1 - v) sigma with v = q \|sigma - sigma_bar\| / (delta + q \|sigma - sigma_bar\|), delta the root mean square deviation inside the group. Corrects the over-prediction of extreme historical vols (mean reversion of specific risk).
+- **Base:** none. **Depends on (injected):** float, int.
+- **Used by:** `risk.SpecificRiskEstimator`, `risk.RiskModelFactory`.
+- **Tests:** `tests/risk/test_bayesian_shrinker.py` (TC-BS-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | float, int -> None | — | callers of the class | — |
+| `compute` | Shrunk specific vol for one session. | np.ndarray, np.ndarray -> np.ndarray | — | as class | see class |
+
+### `DescriptorBuilder` — `quant_cn.risk.descriptor_builder` (L5)
+- **Purpose:** One row per universe member and session in [start, end] with its Shenwan L1 group, circulating market cap (regression weight base, CNY) and every raw CNE5 descriptor: LNCAP = ln(total market cap in CNY), NLSIZE = cube of the cap-weighted standardised LNCAP, the price descriptors (PriceDescriptors on the dense return matrix; market = previous-day circ_mv weighted return of all stocks), the value / leverage descriptors and the growth descriptors from the latest monthly snapshot on or before the session, and one partial beta per configured external series (the foreign return that closed between the previous and the current China close, e.g. S&P 500 or USDCNH; D-128, D-134) and per theme basket (circ_mv-weighted return of the concept's members excluding the stock itself, from the concept's start; D-130), with the China market as control (FundamentalDescriptors). Stocks whose code ends with an excluded suffix are dropped.
+- **Base:** none. **Depends on (injected):** PriceDescriptors, FundamentalDescriptors, Standardizer, Sequence[str].
+- **Used by:** `risk.RiskModel`, `risk.RiskModelFactory`.
+- **Tests:** `tests/risk/test_descriptor_builder.py` (TC-DB-001..005).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | PriceDescriptors, FundamentalDescriptors, Standardizer, Sequence[str] -> None | — | callers of the class | — |
+| `compute` | The descriptor table of the window. | RiskInputs -> pd.DataFrame | `KeyError` | as class | see class |
+| `compute_theme_return` | Weighted theme-basket return seen by every stock: members get the basket without themselves, non-members the whole basket. | np.ndarray, np.ndarray, np.ndarray -> np.ndarray | — | as class | see class |
+| `compute_overnight_return` | Foreign index return aligned to China sessions: for session t with previous session p, the compounded return of every foreign close dated d with p <= d < t (a US close dated d happens on the morning of d + 1 Beijing time, between the two China closes). | list[str], pd.DataFrame -> np.ndarray | `KeyError` | as class | see class |
+
+### `EigenfactorAdjuster` — `quant_cn.risk.eigenfactor_adjuster` (L5)
+- **Purpose:** Remove the systematic underestimation of risk of the smallest-variance eigenportfolios of a sample covariance. For the matrix F0 = U0 D0 U0^T: simulate `sims` histories of `n_obs` returns from N(0, F0), estimate each sample covariance F_m = U_m D_m U_m^T with the estimation weights, compare the true variance of the simulated eigenportfolios diag(U_m^T F0 U_m) with the estimated D_m, and form the bias v(k) = sqrt(mean_m ratio) per eigen rank k. The adjusted matrix is U0 diag(gamma^2 D0) U0^T with gamma = scale (v - 1) + 1. The bias profile (gamma by rank) can be reused across nearby dates (`compute_adjusted`): it depends on the spectrum shape and sample length.
+- **Base:** none. **Depends on (injected):** int, float.
+- **Used by:** `risk.FactorCovarianceEstimator`, `risk.RiskModelFactory`.
+- **Tests:** `tests/risk/test_eigenfactor_adjuster.py` (TC-EFA-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | int, float -> None | — | callers of the class | — |
+| `compute_gamma` | The eigen-rank scaling gamma for a covariance estimated with `weights`. | np.ndarray, np.ndarray, int -> np.ndarray | `np.linalg.LinAlgError` | as class | see class |
+| `compute_adjusted` | Scale the eigenvalues of `cov` by gamma^2 (ascending rank order). | np.ndarray, np.ndarray -> np.ndarray | `ValueError` | as class | see class |
+
+### `EwmWindow` — `quant_cn.risk.ewm_window` (L5)
+- **Purpose:** The trailing-window kernel of every Barra descriptor and covariance estimate: weight w_k = 0.5^(k / half_life) on the observation k sessions before the current one (k = lag .. lag + window - 1), normalised to sum 1. Sums are exact finite-window convolutions along axis 0 (scipy.signal.lfilter with an FIR kernel), so a value at row t uses rows t - lag - window + 1 .. t - lag only.
+- **Base:** none. **Depends on (injected):** int, float, int.
+- **Used by:** `risk.PriceDescriptors`, `risk.FactorCovarianceEstimator`, `risk.SpecificRiskEstimator`, `risk.VolatilityRegimeAdjuster`.
+- **Tests:** `tests/risk/test_ewm_window.py` (TC-EW-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | int, float, int -> None | — | callers of the class | — |
+| `weights` | The normalised weights, most recent first (without the lag zeros). | — -> np.ndarray | — | as class | see class |
+| `compute_sum` | Weighted trailing sum per row and column; NaN counts as 0. | np.ndarray -> np.ndarray | — | as class | see class |
+| `compute_count` | Number of valid observations inside each trailing window. | np.ndarray -> np.ndarray | — | as class | see class |
+
+### `ExposureStandardizer` — `quant_cn.risk.exposure_standardizer` (L5)
+- **Purpose:** Turn the descriptor table into RISK_EXPOSURE, per session: each descriptor is standardised (circ_mv-weighted mean 0, equal-weighted sd 1), then clipped at +-winsor_sd and standardised again until no value exceeds the bound (at most 20 rounds); a style is the weighted mean of its descriptors' z-scores (weights renormalised over the descriptors a stock has), restandardised and clipped, then orthogonalised to its configured styles (OLS residual, Neutralizer) and restandardised; a style with raw coverage below `min_coverage` of the session's names is dropped for that session. Missing exposures of a kept style are filled with the prediction of an OLS of the style on Shenwan L1 dummies and size (is_filled = 1). Industry rows: factor "ind_<l1_code>", exposure 1, is_filled = industry_backfilled (D-071). Monitor styles (D-130) are built the same way after the model styles.
+- **Base:** none. **Depends on (injected):** RiskModelSettings, Standardizer, Neutralizer.
+- **Used by:** `risk.RiskModel`, `risk.RiskModelFactory`.
+- **Tests:** `tests/risk/test_exposure_standardizer.py` (TC-EXS-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | RiskModelSettings, Standardizer, Neutralizer -> None | — | callers of the class | — |
+| `compute` | Style and industry exposures for every row of the descriptor table. | pd.DataFrame -> pd.DataFrame | `KeyError` | as class | see class |
+
+### `FactorCovarianceEstimator` — `quant_cn.risk.factor_covariance_estimator` (L5)
+- **Purpose:** For every session t, the factor covariance forecast for t+1 from factor returns up to t over the last `cov_window` sessions: zero-mean exponentially weighted covariances with pairwise missing-data normalisation and Newey-West autocorrelation terms (Bartlett weights, `cov_nw_lags`), volatilities with `vol_half_life` and correlations with `corr_half_life` (CNE5 90 / 480), combined as D C D and made PSD (cov_raw); then the eigenfactor adjustment (gamma profile refitted every `eigen_refit_days` sessions or when the factor set changes) and the volatility regime multiplier lambda^2 (cov). Units: daily variance; horizon_days records the NW horizon. A factor enters a session's matrix only with >= min_factor_obs observations in its window.
+- **Base:** none. **Depends on (injected):** RiskModelSettings, EigenfactorAdjuster, VolatilityRegimeAdjuster.
+- **Used by:** `risk.RiskModel`, `risk.RiskModelFactory`.
+- **Tests:** `tests/risk/test_factor_covariance_estimator.py` (TC-FCE-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | RiskModelSettings, EigenfactorAdjuster, VolatilityRegimeAdjuster -> None | — | callers of the class | — |
+| `compute` | FACTOR_COV for every session of the factor-return history (from `start` if given). | pd.DataFrame, str \| None -> pd.DataFrame | `SchemaError` | as class | see class |
+| `compute_raw` | EWMA + Newey-West covariance of one window (last row = most recent). | np.ndarray -> np.ndarray | — | as class | see class |
+
+### `FactorMonitorBuilder` — `quant_cn.risk.factor_monitor_builder` (L5)
+- **Purpose:** Turn the stored risk-model frames into the factor monitor: for every factor (country, Shenwan L1 industries, styles) its compounded return over 1 d / 1 w / 1 m / 3 m / YTD / 1 y, forecast volatility (sqrt of the covariance diagonal, annualised with 252), realized volatility over 21 and 63 sessions, their ratio, and today's return in units of the forecast daily sigma made at the previous close; plus daily series of the cumulative return, forecast vol and 21-session realized vol for the last `series_days` sessions. No model math: only derived.risk_factor_return and derived.risk_factor_cov are read.
+- **Base:** none. **Depends on (injected):** LakeQuery, str, int.
+- **Used by:** `cli.ResearchCommands`.
+- **Tests:** `tests/risk/test_factor_monitor_builder.py` (TC-FMB-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | LakeQuery, str, int -> None | — | callers of the class | — |
+| `build` | The factor monitor document as of the last factor-return session. | — -> dict[str, Any] | `LakeError` | as class | see class |
+| `write` | Build the document and write it as `factor_monitor.json` for the app's data dir. | Path -> Path | `LakeError` | as class | see class |
+
+### `FactorReturnEstimator` — `quant_cn.risk.factor_return_estimator` (L5)
+- **Purpose:** For each return session t, regress stock returns from the close of t-1 to the close of t on exposures known at the close of t-1: r = f_c + sum_i X_i f_i + sum_s X_s f_s + u, weights sqrt(circ_mv at t-1) capped at the `weight_cap_quantile` cross-sectional quantile. Country and industry factors are identified by the constraint sum_i w_i f_i = 0 with w_i the industry's share of circ_mv, imposed by the restriction f = R g (the largest industry is expressed through the others), so the country factor is the cap-weighted market. Styles with no exposure on a session are left out of it. R^2 is the weighted uncentred R^2 1 - sum w u^2 / sum w r^2 (Barra convention).
+- **Base:** none. **Depends on (injected):** Sequence[str], float, int.
+- **Used by:** `risk.RiskModel`, `risk.RiskModelFactory`.
+- **Tests:** `tests/risk/test_factor_return_estimator.py` (TC-FRE-001..005).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | Sequence[str], float, int -> None | — | callers of the class | — |
+| `compute` | Factor returns and residuals for every session of the panel. | pd.DataFrame -> tuple[pd.DataFrame, pd.DataFrame] | `KeyError` | as class | see class |
+| `compute_monitor` | Returns of monitor styles (D-130): per session the constrained WLS is rerun with one monitor style added to the model's styles, and only that style's coefficient, t-stat and the R^2 gain are kept, so the risk model itself is unchanged. | pd.DataFrame, Sequence[str] -> pd.DataFrame | `KeyError` | as class | see class |
+| `compute_date` | The constrained WLS of one session. | pd.DataFrame, Sequence[str] -> tuple[pd.DataFrame, pd.DataFrame] \| None | `KeyError` | as class | see class |
+
+### `FundamentalDescriptors` — `quant_cn.risk.fundamental_descriptors` (L5)
+- **Purpose:** CNE5 descriptors from statements already aligned point in time (FUNDAMENTALS_PIT for balance and TTM fields; StatementVersionReader snapshots for annual history): BTOP = common equity / market cap; ETOP, CETOP = TTM net profit (parent) and operating cash flow / market cap; MLEV = (ME + LD) / ME, DTOA = total liabilities / total assets, FCFP = (TTM operating cash flow - TTM capex, c_pay_acq_const_fiolta) / market cap (D-131); BLEV = (BE + LD) / BE with LD = long-term borrowings + bonds payable (preferred equity is not reported separately and taken as 0); EGRO, SGRO = slope of the last up to `years` annual EPS / revenue on time divided by their mean absolute value (revenue instead of revenue per share: a constant share count cancels in slope / mean).
+- **Base:** none. **Depends on (injected):** int, int.
+- **Used by:** `risk.DescriptorBuilder`, `risk.RiskModelFactory`.
+- **Tests:** `tests/risk/test_fundamental_descriptors.py` (TC-FD-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | int, int -> None | — | callers of the class | — |
+| `compute_value_leverage` | Value and leverage descriptors per (trade_date, ts_code). | pd.DataFrame -> pd.DataFrame | `KeyError` | as class | see class |
+| `compute_growth` | EGRO and SGRO per (as_of, ts_code) from the annual reports known on each as_of. | pd.DataFrame -> pd.DataFrame | `KeyError` | as class | see class |
+
+### `PriceDescriptors` — `quant_cn.risk.price_descriptors` (L5)
+- **Purpose:** The CNE5 descriptors that need only daily returns and turnover, computed for every session and stock at once on wide matrices (rows = sessions in order, columns = stocks): BETA and HSIGMA (exponentially weighted regression on the cap-weighted market, 252 d, half-life 63), RSTR (weighted sum of log returns over 504 d, half-life 126, lag 21), DASTD (weighted sd of returns, 252 d, half-life 42), CMRA (range of cumulative log returns over the last 12 months), STOM / STOQ / STOA (log share turnover over 1 / 3 / 12 months). Values at row t use rows <= t only.
+- **Base:** none. **Depends on (injected):** int, int, int, int, int, int, int, int.
+- **Used by:** `risk.DescriptorBuilder`, `risk.RiskModelFactory`.
+- **Tests:** `tests/risk/test_price_descriptors.py` (TC-PD-001..005).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | int, int, int, int, int, int, int, int -> None | — | callers of the class | — |
+| `compute_beta` | BETA (slope) and HSIGMA (residual sd) of the weighted regression r = a + b m + e. | np.ndarray, np.ndarray -> tuple[np.ndarray, np.ndarray] | — | as class | see class |
+| `compute_partial_beta` | Slope on an external return in the weighted regression r = a + b m + c x + e (same window and half-life as BETA): the sensitivity to x beyond the home market m, e.g. | np.ndarray, np.ndarray, np.ndarray -> np.ndarray | — | as class | see class |
+| `compute_rstr` | RSTR: weighted sum of ln(1 + r) over the window, skipping the most recent `lag`. | np.ndarray -> np.ndarray | — | as class | see class |
+| `compute_dastd` | DASTD: exponentially weighted standard deviation of daily returns. | np.ndarray -> np.ndarray | — | as class | see class |
+| `compute_cmra` | CMRA: max minus min over T = 1..months of the cumulative log return of the last T months (Z(T) = sum of ln(1 + r) over the last 21 T sessions), i.e. | np.ndarray, int -> np.ndarray | — | as class | see class |
+| `compute_liquidity` | STOM, STOQ, STOA from daily share turnover (a fraction of free-float shares). | np.ndarray -> dict[str, np.ndarray] | — | as class | see class |
+
+### `RiskDecomposer` — `quant_cn.risk.risk_decomposer` (L5)
+- **Purpose:** Euler decomposition of a portfolio's forecast volatility at one session: total, factor and specific risk, each factor's contribution b_k (F b)_k / sigma (contributions plus the specific part h' D h / sigma sum to sigma), and the portfolio's factor exposures. With a benchmark, the same for active weights h - h_b (tracking error). Daily units; annualise with sqrt(252) when presenting.
+- **Base:** none. **Depends on (injected):** none.
+- **Used by:** `research_space/notebooks/20261111_risk_model_validation.ipynb`, `portfolio.HoldingsRiskBuilder`, `cli.ResearchCommands`.
+- **Tests:** `tests/risk/test_risk_decomposer.py` (TC-RD-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `compute` | RISK_DECOMP rows of one portfolio (and its active version against a benchmark). | RiskSnapshot, pd.Series, str, pd.Series \| None -> pd.DataFrame | `QuantCnError` | as class | see class |
+
+### `RiskInputs` — `quant_cn.risk.risk_input_loader` (L5)
+- **Purpose:** Everything the descriptors need for exposures on [start, end], all point in time: dense prices and daily_basic from PRICE_HISTORY sessions before start (descriptor windows), universe members with their Shenwan L1 group (EXPOSURE_PANEL), balance and TTM fields (FUNDAMENTALS_PIT) and month-end snapshots of annual EPS and revenue.
+- **Base:** none. **Depends on (injected):** none.
+- **Used by:** `risk.RiskInputLoader`, `risk.DescriptorBuilder`, `risk.RiskModel`.
+- **Tests:** `tests/risk/test_risk_input_loader.py` (TC-RIL-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `RiskInputLoader` — `quant_cn.risk.risk_input_loader` (L5)
+- **Purpose:** Read RiskInputs for one exposure window through the lake readers only (no parquet paths): LakeReader for prices, daily_basic and FUNDAMENTALS_PIT, ExposureReader for universe members with Shenwan L1 (D-093), StatementVersionReader for the annual reports known on each month-end session (growth descriptors refresh monthly, PIT at the snapshot date; D-127).
+- **Base:** none. **Depends on (injected):** LakeReader, ExposureReader, StatementVersionReader, TradingCalendar, DateCodec, LakeQuery, Sequence[ExternalSeriesSpec], Sequence[ThemeBasketSpec].
+- **Used by:** `pipeline.RiskModelStep`, `cli.ServiceBuilder`.
+- **Tests:** `tests/risk/test_risk_input_loader.py` (TC-RIL-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | LakeReader, ExposureReader, StatementVersionReader, TradingCalendar, DateCodec, LakeQuery, Sequence[ExternalSeriesSpec], Sequence[ThemeBasketSpec] -> None | — | callers of the class | — |
+| `load` | All panels for exposures on [start, end]. | str, str -> RiskInputs | `ValueError`, `LakeError` | as class | see class |
+| `list_snapshot_dates` | Month-end sessions used as growth snapshots: the last session of each month in [start, end] plus the last session before start. | str, str -> list[str] | — | as class | see class |
+
+### `RiskModel` — `quant_cn.risk.risk_model` (L5)
+- **Purpose:** CNE5-style model for A-shares (country + Shenwan L1 + configured styles) as a sequence of pure stages the pipeline step runs year by year: exposures from RiskInputs (DescriptorBuilder -> ExposureStandardizer), factor returns and residuals (exposures at t-1, returns t-1 -> t, circ_mv at t-1; FactorReturnEstimator), the factor covariance over the whole factor-return history (FactorCovarianceEstimator) and specific risk (SpecificRiskEstimator). Reads the stored frames back from derived.risk_* views for portfolio questions.
+- **Base:** BaseRiskModel. **Depends on (injected):** RiskModelSettings, DescriptorBuilder, ExposureStandardizer, FactorReturnEstimator, FactorCovarianceEstimator, SpecificRiskEstimator, LakeQuery.
+- **Used by:** `risk.RiskModelFactory`, `pipeline.RiskModelStep`.
+- **Tests:** `tests/risk/test_risk_model.py` (TC-RM-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | RiskModelSettings, DescriptorBuilder, ExposureStandardizer, FactorReturnEstimator, FactorCovarianceEstimator, SpecificRiskEstimator, LakeQuery -> None | — | callers of the class | — |
+| `compute_exposures` | RISK_EXPOSURE for the inputs' window. | RiskInputs -> pd.DataFrame | `KeyError` | as class | see class |
+| `compute_factor_returns` | FACTOR_RETURN and SPECIFIC_RETURN for the sessions of [inputs.start, inputs.end]. | pd.DataFrame, RiskInputs -> tuple[pd.DataFrame, pd.DataFrame] | `KeyError` | as class | see class |
+| `compute_monitor_returns` | Daily returns of the monitor styles (D-130), estimated beside the model. | pd.DataFrame, RiskInputs -> pd.DataFrame | `KeyError` | as class | see class |
+| `build_regression_panel` | One row per stock and return session t: ret (t-1 -> t), circ_mv (CNY at t-1), l1_code and style exposures at t-1. | pd.DataFrame, RiskInputs -> pd.DataFrame | `KeyError` | as class | see class |
+| `compute_covariance` | FACTOR_COV from the factor-return history. | pd.DataFrame, str \| None -> pd.DataFrame | `SchemaError` | as class | see class |
+| `compute_specific_session` | Pre-regime specific vol of one session's members. | pd.Series, pd.Series, pd.DataFrame, pd.Series -> pd.DataFrame | `KeyError` | as class | see class |
+| `compute_specific_time_series` | Time-series specific vol and residual counts (SpecificRiskEstimator). | pd.DataFrame -> tuple[pd.DataFrame, pd.DataFrame] | — | as class | see class |
+| `compute_specific_final` | SPECIFIC_RISK after the specific volatility regime adjustment. | pd.DataFrame, pd.DataFrame -> pd.DataFrame | `SchemaError` | as class | see class |
+| `load_snapshot` | The stored model of one session. | str -> RiskSnapshot | `LakeError` | as class | see class |
+
+### `RiskModelFactory` — `quant_cn.risk.risk_model_factory` (L5)
+- **Purpose:** Wire a RiskModel and all its estimators from one RiskModelSettings (config/ risk_model.yaml), so variants (six styles vs ten, other half-lives) are config only.
+- **Base:** none. **Depends on (injected):** LakeQuery.
+- **Used by:** `cli.ServiceBuilder`, `research_space/notebooks/20261111_risk_model_validation.ipynb`, `cli.ResearchCommands`.
+- **Tests:** `tests/risk/test_risk_model_factory.py` (TC-RMF-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | LakeQuery -> None | — | callers of the class | — |
+| `build` | The model for these settings. | RiskModelSettings -> RiskModel | — | as class | see class |
+
+### `RiskModelValidator` — `quant_cn.risk.risk_model_validator` (L5)
+- **Purpose:** Test whether forecasts match realised risk. Bias statistic of a series of forecasts: B = sd(z) with z_t = r_{t+1} / sigma_t (forecast at the close of t, return over t+1); B ~ 1 when unbiased, with a 95% band of about 1 +- sqrt(2 / T). Applied to every factor (FACTOR_COV diagonal vs FACTOR_RETURN), to random long-only portfolios (snapshots of the model vs realised stock returns) and to any named portfolio (e.g. CSI 300 weights). Also reports the cross-sectional fit (median / mean R^2) and the q-statistic mean(z^2 - ln z^2) when asked.
+- **Base:** none. **Depends on (injected):** BaseRiskModel, int.
+- **Used by:** `research_space/notebooks/20261111_risk_model_validation.ipynb`, `pipeline.RiskValidationWriter`, `cli.ServiceBuilder`.
+- **Tests:** `tests/risk/test_risk_model_validator.py` (TC-RMV-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | BaseRiskModel, int -> None | — | callers of the class | — |
+| `compute_bias` | Bias statistic and q-statistic per scope. | pd.DataFrame, str -> pd.DataFrame | `KeyError` | as class | see class |
+| `compute_factor_bias` | Bias statistic of every factor's variance forecast over forecasts made in [start, end]. | pd.DataFrame, pd.DataFrame, str, str -> pd.DataFrame | `SchemaError` | as class | see class |
+| `build_random_portfolios` | Random long-only portfolios: `size` names drawn without replacement, Dirichlet(1) weights. | Sequence[str], int, int -> pd.DataFrame | `ValueError` | as class | see class |
+| `compute_portfolio_forecasts` | Forecast vol at each session and the realised return over the next session for each portfolio (fixed weights, renormalised over names with a return). | pd.DataFrame, Sequence[str], pd.DataFrame -> pd.DataFrame | `LakeError` | as class | see class |
+| `compute_fit` | Cross-sectional fit summary: median and mean R^2 and median adjusted R^2 of the daily regressions (adjusted R^2 compares models with different factor counts). | pd.DataFrame, str, str -> pd.DataFrame | `KeyError` | as class | see class |
+
+### `RiskSnapshot` — `quant_cn.risk.risk_snapshot` (L5)
+- **Purpose:** The model as of one session's close, ready for portfolio arithmetic: X (stocks x factors, country column = 1), F (factors x factors, daily variance) and specific vol. Portfolio variance = h^T X F X^T h + sum h^2 sigma^2.
+- **Base:** none. **Depends on (injected):** none.
+- **Used by:** `risk.RiskModel`, `risk.RiskDecomposer`, `risk.BaseRiskModel`, `risk.RiskModelValidator`, `portfolio.HoldingsRiskBuilder`.
+- **Tests:** `tests/risk/test_risk_snapshot.py` (TC-RSN-001..004).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `build_covered_weights` | Restrict weights to stocks with exposures and specific risk. | pd.Series -> tuple[pd.Series, float] | — | as class | see class |
+| `compute_variance` | Factor and specific variance of a portfolio (daily). | pd.Series -> tuple[float, float] | `QuantCnError` | as class | see class |
+| `compute_exposure_vector` | Portfolio factor exposures b = X^T h. | pd.Series -> pd.Series | — | as class | see class |
+| `compute_stock_cov` | Daily covariance between stocks implied by the model: X F X^T + diag(sigma^2). | list[str] -> pd.DataFrame | `KeyError` | as class | see class |
+| `build_matrix` | Dense K x K matrix from FACTOR_COV rows of one session. | pd.DataFrame, list[str] -> np.ndarray | — | as class | see class |
+
+### `SpecificRiskEstimator` — `quant_cn.risk.specific_risk_estimator` (L5)
+- **Purpose:** Specific (idiosyncratic) volatility forecasts in three steps. (1) Time series: zero-mean EWMA of residual variance (specific_window, specific_half_life) with Newey-West lags (specific_nw_lags), and the residual count h in the window. (2) Per session: blend sigma = g sigma_ts + (1 - g) sigma_str with g = clip((h - min_obs) / (full_obs - min_obs), 0, 1) and sigma_str from StructuralSpecificRisk fitted on stocks with g = 1; then BayesianShrinker toward size-group means. (3) Volatility regime: lambda from the cap-weighted bias of residuals over the previous session's forecast; sigma = lambda x shrunk. method = ewma (g = 1), blended (0 < g < 1) or structural (g = 0).
+- **Base:** none. **Depends on (injected):** RiskModelSettings, StructuralSpecificRisk, BayesianShrinker, VolatilityRegimeAdjuster.
+- **Used by:** `risk.RiskModel`, `risk.RiskModelFactory`.
+- **Tests:** `tests/risk/test_specific_risk_estimator.py` (TC-SRE-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | RiskModelSettings, StructuralSpecificRisk, BayesianShrinker, VolatilityRegimeAdjuster -> None | — | callers of the class | — |
+| `compute_time_series` | EWMA + Newey-West residual vol and residual counts for every session and stock. | pd.DataFrame -> tuple[pd.DataFrame, pd.DataFrame] | — | as class | see class |
+| `compute_session` | Blended and shrunk specific vol of one session (before the regime multiplier). | np.ndarray, np.ndarray, np.ndarray, np.ndarray -> tuple[np.ndarray, np.ndarray] | — | as class | see class |
+| `compute_final` | Apply the specific volatility regime multiplier and build SPECIFIC_RISK. | pd.DataFrame, pd.DataFrame, str \| None -> pd.DataFrame | `SchemaError` | as class | see class |
+
+### `StructuralSpecificRisk` — `quant_cn.risk.structural_specific_risk` (L5)
+- **Purpose:** Predict specific volatility from exposures (USE4 / CNE5 structural model): regress ln(sigma_ts) on the factor exposures (industry dummies and styles) over stocks with a full residual history, weighted by cap, then sigma_str = E0 exp(X b) with E0 = sum w sigma_ts / sum w exp(X b) over the fit set (removes the log-retransformation bias). Used for stocks whose residual history is shorter than `specific_full_obs`.
+- **Base:** none. **Depends on (injected):** int.
+- **Used by:** `risk.SpecificRiskEstimator`, `risk.RiskModelFactory`.
+- **Tests:** `tests/risk/test_structural_specific_risk.py` (TC-SSR-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | int -> None | — | callers of the class | — |
+| `compute` | Structural specific vol for every stock of one session. | np.ndarray, np.ndarray, np.ndarray, np.ndarray -> np.ndarray | — | as class | see class |
+
+### `VolatilityRegimeAdjuster` — `quant_cn.risk.volatility_regime_adjuster` (L5)
+- **Purpose:** Scale risk forecasts by lambda_t so they track the current volatility regime: the cross-sectional bias statistic B_t^2 = weighted mean of (x_t / sigma_{t-1})^2 (factor returns over their forecast vol, equal weights; or specific returns over specific risk, cap weights) is averaged with an exponential kernel (half-life h, window 6 h) and lambda_t = sqrt(of that average). Multiplying variances by lambda_t^2 (vols by lambda_t) removes the bias a slow EWMA has right after a regime change. lambda at t uses B up to t.
+- **Base:** none. **Depends on (injected):** int.
+- **Used by:** `risk.FactorCovarianceEstimator`, `risk.SpecificRiskEstimator`, `risk.RiskModelFactory`.
+- **Tests:** `tests/risk/test_volatility_regime_adjuster.py` (TC-VRA-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | int -> None | — | callers of the class | — |
+| `compute_bias` | B_t^2 per session. | np.ndarray, np.ndarray, np.ndarray \| None -> np.ndarray | — | as class | see class |
+| `compute_lambda` | lambda_t from the B_t^2 series. | pd.Series -> pd.Series | — | as class | see class |
+
+### `StyleSpec` — `quant_cn.core.risk_model_settings` (L1)
+- **Purpose:** One style factor: its descriptors with CNE5 weights and the factors it is orthogonalised against (RISK_FACTOR_LIST §1).
+- **Base:** BaseModel. **Depends on (injected):** none.
+- **Used by:** `core.RiskModelSettings`, `risk.ExposureStandardizer`.
+- **Tests:** `tests/core/test_risk_model_settings.py` (TC-RMS-001..001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `validate_weights` | Refuse non-positive descriptor weights. | — -> StyleSpec | `ValueError` | as class | see class |
+
+### `ExternalSeriesSpec` — `quant_cn.core.risk_model_settings` (L1)
+- **Purpose:** One external daily series behind a partial-beta descriptor (D-128, D-134): where it is in the lake and how its dates map to China sessions.
+- **Base:** BaseModel. **Depends on (injected):** none.
+- **Used by:** `core.RiskModelSettings`, `risk.RiskInputLoader`.
+- **Tests:** `tests/core/test_risk_model_settings.py` (TC-RMS-003..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `ThemeBasketSpec` — `quant_cn.core.risk_model_settings` (L1)
+- **Purpose:** A theme basket behind a partial-beta descriptor (D-130): the circ_mv-weighted return of a concept's current members (excluding the stock itself), from the concept's list date on.
+- **Base:** BaseModel. **Depends on (injected):** none.
+- **Used by:** `core.RiskModelSettings`, `risk.RiskInputLoader`.
+- **Tests:** `tests/core/test_risk_model_settings.py` (TC-RMS-003..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `RiskModelSettings` — `quant_cn.core.risk_model_settings` (L1)
+- **Purpose:** Every tunable of the risk model in one typed object, CNE5 defaults (RISK_MODEL_DESIGN §1): estimation universe, style set, regression weights, covariance and specific-risk half-lives and lags, eigenfactor and volatility-regime adjustments.
+- **Base:** BaseModel. **Depends on (injected):** none.
+- **Used by:** `core.Config`, `risk.ExposureStandardizer`, `risk.FactorCovarianceEstimator`, `risk.SpecificRiskEstimator`, `risk.RiskModelFactory`, `risk.RiskModel`, `pipeline.RiskModelStep`, `pipeline.RiskValidationWriter`.
+- **Tests:** `tests/core/test_risk_model_settings.py` (TC-RMS-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `validate_styles` | Orthogonalisation may only target styles listed earlier; full_obs > min_obs. | — -> RiskModelSettings | `ValueError` | as class | see class |
+| `style_names` | Style factor names in configured order. | — -> list[str] | — | as class | see class |
+
+### `RiskModelStep` — `quant_cn.pipeline.risk_model_step` (L6)
+- **Purpose:** Fit the configured RiskModel from `settings.start` to the last universe session and write one file per year of each frame (derived/risk_exposure, risk_factor_return, risk_specific_return, risk_factor_cov, risk_specific_risk). Stage A per year: inputs (from the session before the year so the first regression has exposures at t-1) -> exposures -> factor returns and residuals. Stage B: factor covariance over the whole factor-return history. Stage C: specific risk from the residual history and each session's exposures (read back from derived.risk_exposure). Then refreshes the views, merges their digests (rebuilds are checked like features), writes the validation report (RiskValidationWriter) and the monitor-style returns (derived/reports/risk_<name>/monitor_returns.parquet, D-130). A full refit; seeded, so reruns are byte-identical.
+- **Base:** BaseStep. **Depends on (injected):** LakeQuery, RiskInputLoader, RiskModel, TradingCalendar, ParquetWriter, DerivedViews, DeriveStep, RiskValidationWriter, RiskModelSettings.
+- **Used by:** `cli.ServiceBuilder`.
+- **Tests:** `tests/pipeline/test_risk_model_step.py` (TC-RMST-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | LakeQuery, RiskInputLoader, RiskModel, TradingCalendar, ParquetWriter, DerivedViews, DeriveStep, RiskValidationWriter, RiskModelSettings -> None | — | callers of the class | — |
+| `name` | Step name. | — -> str | — | as class | see class |
+| `list_units` | Years from the model start to the last universe session. | — -> list[str] | `LakeError` | as class | see class |
+| `run` | Refit the model over every year and write all frames. | str, ProgressHook \| None -> StepReport | `LakeError` | as class | see class |
+
+### `RiskValidationWriter` — `quant_cn.pipeline.risk_validation_writer` (L6)
+- **Purpose:** After a fit, test the stored model over the last `validation_sessions` forecast sessions and write derived/reports/risk_<name>/validation.parquet (RISK_VALIDATION): median / mean R^2 (whole history and window), the bias statistic of every factor, of `validation_portfolios` random long-only portfolios of `validation_names` stocks drawn from the names with a forecast on the first window session, and of each benchmark index (index_weight weights on or before the window start, held fixed), plus the summary rows share_in_band and median_bias over the random portfolios.
+- **Base:** none. **Depends on (injected):** LakeQuery, LakeReader, RiskModelValidator, ParquetWriter, RiskModelSettings.
+- **Used by:** `pipeline.RiskModelStep`, `cli.ServiceBuilder`.
+- **Tests:** `tests/pipeline/test_risk_validation_writer.py` (TC-RVW-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | LakeQuery, LakeReader, RiskModelValidator, ParquetWriter, RiskModelSettings -> None | — | callers of the class | — |
+| `write` | Compute and persist the validation report. | pd.DataFrame, str -> pd.DataFrame | `LakeError` | as class | see class |
+
+### `RiskChart` — `quant_cn.visualization.risk_chart` (L7)
+- **Purpose:** Three views of the risk model (plan 05 phase 5), over frames only: "cumulative" (FACTOR_RETURN) compounded returns of the chosen factors, one line each, labelled at the line end so identity does not rest on colour; "correlation" (FACTOR_COV) the factor correlation matrix of one session as a diverging heatmap (-1..1); "decomposition" (RISK_DECOMP) each factor's contribution to a portfolio's annualised volatility as horizontal bars (specific risk as its own bar), total in the title.
+- **Base:** BaseChart. **Depends on (injected):** ChartTheme, Kind, Sequence[str], str | None, str | None, DateCodec | None, int, int.
+- **Used by:** `research_space/notebooks/20261111_risk_model_validation.ipynb`.
+- **Tests:** `tests/visualization/test_risk_chart.py` (TC-RC-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | ChartTheme, Kind, Sequence[str], str \| None, str \| None, DateCodec \| None, int, int -> None | — | callers of the class | — |
+| `build_figure` | The figure for `kind`. | pd.DataFrame -> go.Figure | `SchemaError`, `ValueError` | as class | see class |
 
 ## C. Abstract base classes / extension points
 
@@ -2624,14 +3135,15 @@ never column lists (those live in section E).
 | `BaseFetchLog` | `quant_cn.core.base_fetch_log` | 1 | Abstract record of which (dataset, key) pairs are fully downloaded. | `read_done_keys`: All keys recorded as done for a dataset.; `mark_done`: Record a finished key, replacing any earlier record for it.; `save`: Make recorded keys durable (e.g. write the parquet mirror). | `FetchLog` | 2026-09-27 |
 | `BaseFetcher` | `quant_cn.core.base_fetcher` | 1 | Download one dataset as a sequence of keys | `list_keys`: All fetch keys for [start, end], ascending.; `build_params`: API parameters for one key. | `SingleCallFetcher`, `EnumFetcher`, `DateSweepFetcher`, `PeriodSweepFetcher`, `DateWindowFetcher` | 2026-09-27 |
 | `BaseRunLog` | `quant_cn.core.base_run_log` | 1 | Abstract append-only log of runs and per-key events | `open_run`: Open a run and return its id.; `record_event`: Append one event (fetched / skipped / empty / failed / blocked).; `close_run`: Close a run with its final status. | `RunLog` | 2026-09-27 |
-| `BaseStep` | `quant_cn.core.base_step` | 1 | Abstract unit of pipeline work: list its units, then run and report. | `name`: Step name shown in progress and reports.; `list_units`: Compute the work units (e.g. keys) just before running.; `run`: Do the work listed by `list_units`. | `CompactStep`, `DeriveStep`, `FetchStep`, `EvaluationStep`, `FeatureStep`, `UniverseStep` | 2026-09-27 |
+| `BaseStep` | `quant_cn.core.base_step` | 1 | Abstract unit of pipeline work: list its units, then run and report. | `name`: Step name shown in progress and reports.; `list_units`: Compute the work units (e.g. keys) just before running.; `run`: Do the work listed by `list_units`. | `CompactStep`, `DeriveStep`, `FetchStep`, `EvaluationStep`, `FeatureStep`, `UniverseStep`, `RiskModelStep` | 2026-09-27 |
 | `BaseStore` | `quant_cn.core.base_store` | 1 | Abstract sink for raw fetch results and curated partitions. | `write_raw`: Persist one fetch key's rows atomically.; `write_curated`: Replace one curated partition atomically after validating its schema. | `ParquetWriter` | 2026-09-27 |
 | `BaseChecker` | `quant_cn.core.docs.base_checker` | 1 | Abstract repository check: inspect the tree, return findings (empty = pass). | `run`: Run the check over the repository. | `ContractChecker`, `IndexChecker`, `NameChecker`, `SizeChecker` | 2026-09-27 |
 | `BaseFactor` | `quant_cn.factor.base_factor` | 5 | Abstract factor: declares which inputs, fundamentals fields and daily_basic columns it needs and how many sessions of price history before the first output date | `compute_raw`: The raw factor value per stock and session. | `EarningsYieldFactor`, `MomentumFactor`, `ProfitGrowthFactor`, `ReversalFactor`, `RoeFactor`, `TurnoverFactor` | 2026-09-27 |
 | `BaseRunner` | `quant_cn.pipeline.runner` | 6 | Extension point for how steps are executed (local now, Prefect later, D-022) | `run`: Execute steps in order under one run id. | `PrefectRunner`, `LocalRunner` | 2026-09-27 |
-| `BaseChart` | `quant_cn.visualization.base_chart` | 7 | Abstract chart: subclasses build a plotly figure from a DataFrame (frames only, never objects from other packages) | `build_figure`: Build the unthemed figure from the input frame. | `FactorChart`, `PriceChart` | 2026-09-27 |
+| `BaseChart` | `quant_cn.visualization.base_chart` | 7 | Abstract chart: subclasses build a plotly figure from a DataFrame (frames only, never objects from other packages) | `build_figure`: Build the unthemed figure from the input frame. | `FactorChart`, `PriceChart`, `RiskChart` | 2026-09-27 |
 | `BaseWebClient` | `quant_cn.data_loading.base_web_client` | 3 | Base for vendor clients that page a public website's JSON API (CNINFO, Eastmoney). | `get_vendor_name`: Short vendor name used in error messages. | `CninfoClient`, `EastmoneyReportClient` | 2026-11-07 |
 | `BaseLlmClient` | `quant_cn.quant_cn.core.base_llm_client` | 1 | Abstract chat-completion client that returns a JSON object: one system prompt, one user message, an optional model override. | `fetch_json`: Ask the model and return its answer parsed as a JSON object. |  | 2026-11-07 |
+| `BaseRiskModel` | `quant_cn.risk.base_risk_model` | 5 | Abstract risk model: produces the RISK_EXPOSURE / FACTOR_RETURN / FACTOR_COV / SPECIFIC_RISK frames for a pipeline step and answers portfolio-risk questions for a session from those frames. | `load_snapshot`: The fitted model as of a session. | `RiskModel` | 2026-11-11 |
 
 ## D. Exceptions
 
@@ -2642,7 +3154,7 @@ never column lists (those live in section E).
 | `SchemaError` | `quant_cn.core.exceptions` | `QuantCnError` | A DataFrame does not satisfy its declared Schema (columns, dtypes, primary key). | `core.Schema.normalize`, `core.Schema.validate` | 2026-09-27 |
 | `DataSourceError` | `quant_cn.core.exceptions` | `QuantCnError` | The external data source failed: API error code, retries exhausted, malformed response. | `data_loading.TushareClient.query`, `core.BaseFetcher.run`, `core.PermissionDeniedError`, `data_loading.AkshareClient`, `data_loading.BaostockClient`, `data_loading.DocumentDownloader`, `data_loading.RequestPacer` | 2026-09-27 |
 | `PermissionDeniedError` | `quant_cn.core.exceptions` | `DataSourceError` | The account lacks permission (points) for an endpoint; the dataset is blocked, not broken. | `data_loading.TushareClient.query`, `pipeline.LocalRunner.run`, `pipeline.PrefectRunner` | 2026-09-27 |
-| `LakeError` | `quant_cn.core.exceptions` | `QuantCnError` | The local lake cannot be read or written: missing dataset, failed atomic write, bad catalog. | `lake.ParquetWriter`, `lake.TradingCalendar`, `lake.LakeQuery.sql`, `cli.QuantCnCli`, `lake.Compactor`, `pipeline.DownloadPipeline`, `lake.FetchLog`, `lake.LakeCatalog`, `lake.RunLog`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `lake.ProjectCatalog`, `lake.QualityViews`, `lake.RebuildAudit`, `lake.LakeReader`, `lake.TickerAliasMap`, `data_loading.DocumentDownloader`, `lake.DocumentViews`, `cli.DocumentCommands` | 2026-09-27 |
+| `LakeError` | `quant_cn.core.exceptions` | `QuantCnError` | The local lake cannot be read or written: missing dataset, failed atomic write, bad catalog. | `lake.ParquetWriter`, `lake.TradingCalendar`, `lake.LakeQuery.sql`, `cli.QuantCnCli`, `lake.Compactor`, `pipeline.DownloadPipeline`, `lake.FetchLog`, `lake.LakeCatalog`, `lake.RunLog`, `pipeline.DeriveStep`, `lake.DerivedViews`, `lake.PitAligner`, `lake.ProjectCatalog`, `lake.QualityViews`, `lake.RebuildAudit`, `lake.LakeReader`, `lake.TickerAliasMap`, `data_loading.DocumentDownloader`, `lake.DocumentViews`, `cli.DocumentCommands`, `portfolio.EtfProxyBuilder` | 2026-09-27 |
 
 ## E. Schemas (DataFrame / typed records)
 
@@ -2663,6 +3175,13 @@ never column lists (those live in section E).
 | `FORWARD_RETURN` | `quant_cn.core.frames` | tradeable forward return per stock, session and horizon | long; key (trade_date, ts_code, horizon) | trade_date (string), ts_code (string), horizon (float64), fwd_return (float64) | key unique and non-null | `statistic.ICCalculator.build_forward_returns` | `statistic.ICCalculator`, `statistic.QuantileReturns` | 2026-09-27 |
 | `QUANTILE_RETURNS` | `quant_cn.core.frames` | mean forward return per factor quantile and date (0 = long-short) | long; key (trade_date, factor, horizon, quantile) | trade_date (string), factor (string), horizon (float64), quantile (float64), ret (float64), n (float64) | key unique and non-null | `statistic.QuantileReturns.compute` | `factor.FactorEvaluator`, `FactorChart` | 2026-09-27 |
 | `EXPOSURE_PANEL` | `quant_cn.core.frames` | industry (Shenwan L1 grouping) and log market cap per universe member and session | long; key (trade_date, ts_code) | trade_date (string), ts_code (string), l1_code (string), industry_backfilled (float64), log_mcap (float64) | key unique and non-null | `lake.ExposureReader.read_exposures` | `factor.FactorPreprocessor` (neutralisation, D-093) | 2026-09-27 |
+| `RISK_EXPOSURE` | `quant_cn.core.frames` | style and industry exposures per stock and session (risk model) | long; key (trade_date, ts_code, factor) | trade_date (string), ts_code (string), factor (string), exposure (float64), exposure_raw (float64), is_filled (float64) | key unique and non-null | `risk.ExposureStandardizer.compute` | `risk.RiskModel`, `pipeline.RiskModelStep`; later `factor` neutralisation | 2026-11-11 |
+| `FACTOR_RETURN` | `quant_cn.core.frames` | daily factor returns of the constrained WLS with t-stat and R^2 | long; key (trade_date, factor) | trade_date (string), factor (string), ret (float64), t_stat (float64), r2 (float64), n_obs (float64) | key unique and non-null | `risk.FactorReturnEstimator.compute` | `risk.FactorCovarianceEstimator`, `risk.RiskModelValidator` | 2026-11-11 |
+| `SPECIFIC_RETURN` | `quant_cn.core.frames` | regression residual and weight per stock and session (D-127) | long; key (trade_date, ts_code) | trade_date (string), ts_code (string), resid (float64), weight (float64) | key unique and non-null | `risk.FactorReturnEstimator.compute` | `risk.SpecificRiskEstimator` via `pipeline.RiskModelStep` | 2026-11-11 |
+| `FACTOR_COV` | `quant_cn.core.frames` | factor covariance forecast per session (daily units; raw and adjusted) | long; key (trade_date, factor_i, factor_j) | trade_date (string), factor_i (string), factor_j (string), cov (float64), cov_raw (float64), horizon_days (float64) | key unique and non-null | `risk.FactorCovarianceEstimator.compute` | `risk.RiskModel.load_snapshot`, `risk.RiskModelValidator`; plan 06 optimiser | 2026-11-11 |
+| `SPECIFIC_RISK` | `quant_cn.core.frames` | specific volatility forecast per stock and session | long; key (trade_date, ts_code) | trade_date (string), ts_code (string), sigma (float64), sigma_raw (float64), method (string) | key unique and non-null | `risk.SpecificRiskEstimator.compute_final` | `risk.RiskModel.load_snapshot`; plan 06 optimiser | 2026-11-11 |
+| `RISK_DECOMP` | `quant_cn.core.frames` | portfolio risk attribution (total, factor, specific, contributions, exposures, active) | long; key (trade_date, portfolio, component) | trade_date (string), portfolio (string), component (string), risk (float64), pct (float64), kind (string) | key unique and non-null | `risk.RiskDecomposer.compute` | notebooks; later `back_testing` | 2026-11-11 |
+| `RISK_VALIDATION` | `quant_cn.core.frames` | bias statistics and fit of the risk model | long; key (trade_date, metric, scope) | trade_date (string), metric (string), scope (string), value (float64), window (string), notes (string) | key unique and non-null | `risk.RiskModelValidator`, `pipeline.RiskValidationWriter` | validation notebook | 2026-11-11 |
 
 ## F. Allowed standalone functions (`core/utils` only, with justification)
 

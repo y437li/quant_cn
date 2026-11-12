@@ -70,6 +70,34 @@ paths:
       responses:
         "200": { description: watchlist, content: { application/json: { schema: { $ref: "#/components/schemas/Watchlist" } } } }
         "500": { $ref: "#/components/responses/Error" }
+  /api/etf-proxy:
+    get:
+      summary: The national-team ETF proxy (国家队 ETF, plan 15 phase 7b, D-126) as written by the Python EtfProxyBuilder
+      description: |
+        Read from etf_proxy.json on every request. Flows and positions (亿元, position at today's price of each
+        index's reference ETF) are computed in Python. No file gives the empty document with empty lists.
+      responses:
+        "200": { description: proxy, content: { application/json: { schema: { $ref: "#/components/schemas/EtfProxy" } } } }
+        "500": { $ref: "#/components/responses/Error" }
+  /api/factor-monitor:
+    get:
+      summary: Daily risk-model factor returns and volatility (因子监控, plan 15 phase 7c, D-132) as written by the Python FactorMonitorBuilder
+      description: |
+        Read from factor_monitor.json on every request. Every number is computed in Python from the stored risk-model
+        frames. No file gives the empty document with empty lists.
+      responses:
+        "200": { description: monitor, content: { application/json: { schema: { $ref: "#/components/schemas/FactorMonitor" } } } }
+        "500": { $ref: "#/components/responses/Error" }
+  /api/holdings-risk:
+    get:
+      summary: The user's book valued at the last risk-model session and its risk decomposition (持仓, plan 15 phase 7d, D-132)
+      description: |
+        Read from holdings_risk.json on every request; written by the Python HoldingsRiskBuilder from
+        config/local.positions.yaml. Vols annualised fractions; contrib = share of portfolio risk. No file gives the
+        empty document.
+      responses:
+        "200": { description: holdings, content: { application/json: { schema: { $ref: "#/components/schemas/HoldingsRisk" } } } }
+        "500": { $ref: "#/components/responses/Error" }
 components:
   responses:
     Error:
@@ -130,6 +158,44 @@ components:
       properties:
         nodes: { type: array, items: { type: object, properties: { code: { type: string }, name: { type: string }, in_sector: { type: boolean } } } }
         edges: { type: array, items: { type: object, properties: { from: { type: string }, to: { type: string }, kind: { type: string }, label: { type: string } } } }
+    EtfProxy:
+      type: object
+      required: [as_of, price_as_of, start, n_members, totals, recent, weekly, yearly, indices]
+      properties:
+        as_of: { type: string, description: "YYYYMMDD of the last fund_share day; empty without a file" }
+        price_as_of: { type: string, description: "YYYYMMDD of the last fund_daily day" }
+        start: { type: string }
+        n_members: { type: integer }
+        totals:
+          type: object
+          description: "keys core (national-team ETFs) and other"
+          additionalProperties:
+            type: object
+            properties:
+              aum: { type: number, nullable: true }
+              position: { type: number, nullable: true }
+              flow_recent: { type: number, nullable: true }
+              flow_ytd: { type: number, nullable: true }
+              peak: { type: object, properties: { date: { type: string }, position: { type: number, nullable: true } } }
+              trough_since_peak: { type: object, properties: { date: { type: string }, position: { type: number, nullable: true } } }
+        recent: { type: array, items: { type: object, properties: { date: { type: string }, core: { type: number, nullable: true }, other: { type: number, nullable: true } } } }
+        weekly: { type: array, items: { type: object, properties: { date: { type: string }, core_flow: { type: number, nullable: true }, other_flow: { type: number, nullable: true }, core_position: { type: number, nullable: true }, other_position: { type: number, nullable: true } } } }
+        yearly: { type: array, items: { type: object, properties: { year: { type: string }, core: { type: number, nullable: true }, other: { type: number, nullable: true } } } }
+        indices:
+          type: array
+          items:
+            type: object
+            required: [name, reference, n_etf, weekly]
+            properties:
+              name: { type: string, example: 沪深300 }
+              reference: { type: string, example: 510300.SH }
+              n_etf: { type: integer }
+              aum: { type: number, nullable: true }
+              position: { type: number, nullable: true }
+              core_position: { type: number, nullable: true }
+              flow_recent: { type: number, nullable: true }
+              flow_ytd: { type: number, nullable: true }
+              weekly: { type: array, items: { type: object, properties: { date: { type: string }, position: { type: number, nullable: true }, flow: { type: number, nullable: true } } } }
     Watchlist:
       type: object
       required: [as_of, near_pct, entries, missing]
@@ -167,3 +233,103 @@ components:
         yield_at_buy: { type: number, nullable: true, description: fraction }
         status: { type: string, enum: [in, near, far] }
         weekly: { type: array, items: { type: object, required: [date, close], properties: { date: { type: string }, close: { type: number } } } }
+    FactorMonitor:
+      type: object
+      required: [as_of, model, n_sessions, dates, factors]
+      properties:
+        as_of: { type: string, description: "YYYYMMDD of the last factor-return session; empty without a file" }
+        model: { type: string, example: cne5_v2_spx }
+        n_sessions: { type: integer }
+        dates: { type: array, items: { type: string }, description: sessions of the daily series }
+        factors: { type: array, items: { $ref: "#/components/schemas/MonitoredFactor" } }
+    MonitoredFactor:
+      type: object
+      required: [factor, label, kind, ret, cum, forecast, realized]
+      properties:
+        factor: { type: string, example: ind_801010.SI }
+        label: { type: string, description: Shenwan L1 name for industries, else the factor name }
+        kind: { type: string, enum: [country, style, industry] }
+        ret:
+          type: object
+          description: compounded returns, fractions; null when the factor has no rows in the window
+          properties:
+            d1: { type: number, nullable: true }
+            w1: { type: number, nullable: true }
+            m1: { type: number, nullable: true }
+            m3: { type: number, nullable: true }
+            ytd: { type: number, nullable: true }
+            y1: { type: number, nullable: true }
+        forecast_vol: { type: number, nullable: true, description: annualised, from the covariance at as_of }
+        realized_vol_21: { type: number, nullable: true, description: annualised sd of the last 21 returns }
+        realized_vol_63: { type: number, nullable: true }
+        vol_ratio: { type: number, nullable: true, description: realized_vol_21 / forecast_vol }
+        sigma_move: { type: number, nullable: true, description: as-of return / forecast daily sd of the previous session }
+        cum: { type: array, items: { type: number, nullable: true }, description: cumulative return since dates[0], aligned with dates }
+        forecast: { type: array, items: { type: number, nullable: true } }
+        realized: { type: array, items: { type: number, nullable: true }, description: 21-session realized vol, annualised }
+    HoldingsRisk:
+      type: object
+      required: [as_of, model, benchmark, cash, value, stock_value, pnl, risk, positions, factors, correlation, missing]
+      properties:
+        as_of: { type: string, description: "YYYYMMDD risk-model session; empty for an empty book" }
+        model: { type: string }
+        benchmark: { type: string, example: 000300.SH }
+        cash: { type: number }
+        value: { type: number, description: stocks + cash, CNY }
+        stock_value: { type: number }
+        pnl: { type: number, description: "sum of shares x (close - cost)" }
+        risk:
+          type: object
+          description: annualised vols; active_* against the benchmark (tracking error)
+          additionalProperties: { type: number, nullable: true }
+        positions:
+          type: array
+          items:
+            type: object
+            required: [code, name]
+            properties:
+              code: { type: string }
+              name: { type: string }
+              shares: { type: number, nullable: true }
+              cost: { type: number, nullable: true }
+              close: { type: number, nullable: true }
+              value: { type: number, nullable: true }
+              weight: { type: number, nullable: true, description: share of stocks + cash }
+              pnl: { type: number, nullable: true }
+              pnl_pct: { type: number, nullable: true }
+              vol: { type: number, nullable: true, description: the stock's own forecast vol, annualised }
+              contrib: { type: number, nullable: true, description: share of portfolio variance (Euler; sums to 1) }
+        factors:
+          type: array
+          items:
+            type: object
+            required: [factor, label, kind]
+            properties:
+              factor: { type: string }
+              label: { type: string }
+              kind: { type: string, enum: [country, style, industry] }
+              exposure: { type: number, nullable: true }
+              active: { type: number, nullable: true, description: exposure minus the benchmark's }
+              contrib: { type: number, nullable: true, description: share of total risk }
+        correlation:
+          type: object
+          required: [codes, matrix]
+          properties:
+            codes: { type: array, items: { type: string } }
+            matrix: { type: array, items: { type: array, items: { type: number } } }
+        stock_exposures:
+          type: object
+          required: [styles, rows]
+          description: each covered stock's style exposures (standard deviations) and Shenwan L1 industry
+          properties:
+            styles: { type: array, items: { type: string } }
+            rows:
+              type: array
+              items:
+                type: object
+                required: [code, industry, values]
+                properties:
+                  code: { type: string }
+                  industry: { type: string }
+                  values: { type: array, items: { type: number, nullable: true }, description: aligned with styles }
+        missing: { type: array, items: { type: string }, description: codes without a close or a risk forecast }

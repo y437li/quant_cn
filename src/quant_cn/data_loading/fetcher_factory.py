@@ -22,6 +22,7 @@ from quant_cn.data_loading.fetchers import (
     PeriodSweepFetcher,
     SingleCallFetcher,
 )
+from quant_cn.data_loading.snapshot_fetcher import SnapshotFetcher
 from quant_cn.lake.lake_query import LakeQuery
 from quant_cn.lake.trading_calendar import TradingCalendar
 
@@ -48,7 +49,7 @@ class FetcherFactory:
         cli.ServiceBuilder         -- injected type or call
 
     Test cases:
-        TC-FF-001  each sweep kind maps to its fetcher class
+        TC-FF-001  each sweep kind maps to its fetcher class (snapshot -> SnapshotFetcher)
         TC-FF-002  enum values resolved from values or values_from; missing list raises ConfigError
         TC-FF-003  values_from_dataset keys resolved from a curated dataset with a filter
         TC-FF-004  source selects the client; an unconfigured source raises ConfigError
@@ -98,6 +99,8 @@ class FetcherFactory:
         if kind == "date_window":
             values = self._list_values(spec) if spec.sweep.value_param else None
             return DateWindowFetcher(spec, *deps, codec=self._codec, values=values)
+        if kind == "snapshot":
+            return SnapshotFetcher(spec, *deps, values=self._list_values(spec))
         if kind in ENUM_KINDS:
             return EnumFetcher(spec, *deps, values=self._list_values(spec))
         if kind in DATE_KINDS:

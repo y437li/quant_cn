@@ -11,7 +11,10 @@ Configuration only, no code. Loaded by `core.Config`; secrets never live here (e
 | File | Purpose | Contains |
 |---|---|---|
 | `README.md` | meaning and precedence of every configuration key |  |
+| `risk_model.yaml` | Barra-style risk model settings (plan 05, D-127): styles with CNE5 descriptor weights, half-lives, lags, adjustments, validation | `RiskModelSettings` |
 | `base.yaml` | lake root default, Tushare paging/retry settings, download order and start dates, enum key lists, watchlist thresholds | `lake`, `tushare`, `download`, `enum_values`, `watchlist` |
+| `etf_proxies.yaml` | national-team ETF proxy: 7 indices (benchmark regex, reference ETF), the 11 core ETFs, start (D-126) | `start`, `recent_days`, `core`, `indices` |
+| `manual_series.yaml` | hand-entered public cycle series (Clarksons newbuild index …) with source URLs; licensed exports go in git-ignored `local.manual_series.yaml` (plan 20, D-139) | `series`, `observations` |
 | `watchlist.example.yaml` | template for the git-ignored `local.watchlist.yaml`: buy targets for the app's 观察账本 page (D-120) | `entries` |
 | `business_models.yaml` | business-model archetypes A1–A12 (formula, drivers, pricing, pass-through, cycle signals, moat types, valuation methods, 68 operating-mode variants) and the SW L3 → archetype default map (D-112; Opus prior, user spot-check) | `archetypes`, `sw_l3` (346) |
 | `datasets.yaml` | one entry per dataset: endpoint, sweep, primary key, known-on column, fields, curated layout | 72 datasets |

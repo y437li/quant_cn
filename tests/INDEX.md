@@ -14,6 +14,7 @@ Mirrors `src/quant_cn`; one `test_<module>.py` per module, one test per TC ID (C
 | [`lake/`](lake/INDEX.md) | tests for `quant_cn.lake` |
 | [`pipeline/`](pipeline/INDEX.md) | tests for `quant_cn.pipeline` |
 | [`portfolio/`](portfolio/INDEX.md) | tests for `quant_cn.portfolio` |
+| [`risk/`](risk/INDEX.md) | tests for `quant_cn.risk` (plan 05) |
 | [`scripts/`](scripts/INDEX.md) | tests for `scripts/` |
 | [`statistic/`](statistic/INDEX.md) | tests for `quant_cn.statistic` |
 | [`visualization/`](visualization/INDEX.md) | tests for `quant_cn.visualization` |

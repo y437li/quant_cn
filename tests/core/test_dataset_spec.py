@@ -92,3 +92,10 @@ def test_tc_ds_009_rename_and_key_field() -> None:
         Sample.build_spec(rename={"x": "not_a_field"})
     with pytest.raises(ValidationError):
         Sample.build_spec(sweep={"kind": "trade_date", "key_field": "not_a_field"})
+
+
+# TC-DS-010
+def test_tc_ds_010_snapshot_needs_values() -> None:
+    with pytest.raises(ValidationError):
+        SweepSpec(kind="snapshot", param_name="country")
+    assert SweepSpec(kind="snapshot", values=["cn"], param_name="country").param == "country"

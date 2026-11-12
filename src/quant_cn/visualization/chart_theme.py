@@ -32,6 +32,7 @@ class ChartTheme:
         visualization.BaseChart   -- applied to every figure
         visualization.PriceChart  -- candle and volume colours
         visualization.FactorChart -- accent, neutral and ink
+        visualization.RiskChart  -- injected type or call
 
     Test cases:
         TC-CT-001  light and dark themes have distinct surfaces and the validated up/down steps

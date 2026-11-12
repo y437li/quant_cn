@@ -25,6 +25,13 @@ Contract:
         QUANTILE_RETURNS  -- key (trade_date, factor, horizon, quantile); ret, n
                              (quantile 0 = long-short)
         EXPOSURE_PANEL    -- key (trade_date, ts_code); Shenwan L1 group, backfilled flag, log mcap
+        RISK_EXPOSURE     -- key (trade_date, ts_code, factor); exposure, exposure_raw, is_filled
+        FACTOR_RETURN     -- key (trade_date, factor); ret, t_stat, r2, n_obs
+        SPECIFIC_RETURN   -- key (trade_date, ts_code); resid, weight (regression; 0 = outside)
+        FACTOR_COV        -- key (trade_date, factor_i, factor_j); cov, cov_raw, horizon_days
+        SPECIFIC_RISK     -- key (trade_date, ts_code); sigma, sigma_raw, method
+        RISK_DECOMP       -- key (trade_date, portfolio, component); risk, pct, kind
+        RISK_VALIDATION   -- key (trade_date, metric, scope); value, window, notes
     Raises:
         (none)
 
@@ -37,6 +44,7 @@ Test cases:
     TC-FR-001  each frame's key and text columns are declared columns; empty frames validate
     TC-FR-002  a frame with a duplicate key fails validation
     TC-FR-005  plan 04 frames (UNIVERSE_PANEL ... EXPOSURE_PANEL) validate a one-row frame
+    TC-FR-006  plan 05 risk frames validate a one-row frame and reject duplicate keys
 """
 
 from __future__ import annotations
@@ -237,4 +245,54 @@ EXPOSURE_PANEL: Final = Schema(
     columns=["trade_date", "ts_code", "l1_code", "industry_backfilled", "log_mcap"],
     text_columns=["trade_date", "ts_code", "l1_code"],
     primary_key=["trade_date", "ts_code"],
+)
+
+# plan 05 risk model (RISK_MODEL_DESIGN §4; SPECIFIC_RETURN added by D-127 for incremental refits)
+RISK_EXPOSURE: Final = Schema(
+    "RISK_EXPOSURE",
+    columns=["trade_date", "ts_code", "factor", "exposure", "exposure_raw", "is_filled"],
+    text_columns=["trade_date", "ts_code", "factor"],
+    primary_key=["trade_date", "ts_code", "factor"],
+)
+
+FACTOR_RETURN: Final = Schema(
+    "FACTOR_RETURN",
+    columns=["trade_date", "factor", "ret", "t_stat", "r2", "n_obs"],
+    text_columns=["trade_date", "factor"],
+    primary_key=["trade_date", "factor"],
+)
+
+SPECIFIC_RETURN: Final = Schema(
+    "SPECIFIC_RETURN",
+    columns=["trade_date", "ts_code", "resid", "weight"],
+    text_columns=["trade_date", "ts_code"],
+    primary_key=["trade_date", "ts_code"],
+)
+
+FACTOR_COV: Final = Schema(
+    "FACTOR_COV",
+    columns=["trade_date", "factor_i", "factor_j", "cov", "cov_raw", "horizon_days"],
+    text_columns=["trade_date", "factor_i", "factor_j"],
+    primary_key=["trade_date", "factor_i", "factor_j"],
+)
+
+SPECIFIC_RISK: Final = Schema(
+    "SPECIFIC_RISK",
+    columns=["trade_date", "ts_code", "sigma", "sigma_raw", "method"],
+    text_columns=["trade_date", "ts_code", "method"],
+    primary_key=["trade_date", "ts_code"],
+)
+
+RISK_DECOMP: Final = Schema(
+    "RISK_DECOMP",
+    columns=["trade_date", "portfolio", "component", "risk", "pct", "kind"],
+    text_columns=["trade_date", "portfolio", "component", "kind"],
+    primary_key=["trade_date", "portfolio", "component"],
+)
+
+RISK_VALIDATION: Final = Schema(
+    "RISK_VALIDATION",
+    columns=["trade_date", "metric", "scope", "value", "window", "notes"],
+    text_columns=["trade_date", "metric", "scope", "window", "notes"],
+    primary_key=["trade_date", "metric", "scope"],
 )

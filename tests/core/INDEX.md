@@ -19,5 +19,6 @@ Tests for `quant_cn.core`. No network, no files outside `tmp_path`.
 | `test_document_source.py` | tests for `document_source`, one function per TC ID |  |
 | `test_exceptions.py` | tests for `exceptions`, one function per TC ID |  |
 | `test_frames.py` | tests for `frames`, one function per TC ID |  |
+| `test_risk_model_settings.py` | tests for `risk_model_settings`, one function per TC ID |  |
 | `test_schema.py` | tests for `schema`, one function per TC ID |  |
 | `test_ticker_normalizer.py` | tests for `ticker_normalizer`, one function per TC ID |  |

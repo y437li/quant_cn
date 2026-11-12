@@ -55,8 +55,9 @@ class StatementVersionReader:
             (none at construction)
 
     Used by:
-        (none yet)  -- pipeline.DiscoveryStep feeds calculation.CompanyCyclePanel (plan 16 ph6);
                        pipeline.GuidanceStep feeds calculation.ForecastTracker (plan 18 ph6)
+        risk.RiskInputLoader  -- injected type or call
+        cli.ServiceBuilder  -- injected type or call
 
     Test cases:
         TC-SVR-001  the latest version known on as_of wins; later announcements are ignored

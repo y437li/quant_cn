@@ -20,4 +20,6 @@ Execution plans, `NN_<slug>.md`, from the `plan` skill template. `ROADMAP.md` is
 | `16_structural_deduction.md` | opportunity discovery and market-implied deduction: cycle panel, priced-in expectations, screens, deep-dive workflow, replay | |
 | `17_peer_groups.md` | peer groups from labeled evidence: pair signals, scoring, held-out evaluation, clustering, wiring into peer comparisons | |
 | `18_guidance_tracking.md` | company guidance tracking: preview tracker, acquisition fixes, Ark guidance extraction, outcome matching, credibility | |
+| `19_app_store_charts.md` | App Store game charts: daily capture per country, publisher link, per-company rank view | |
+| `20_manual_series.md` | Manual and public cycle series (Clarksons newbuild index, TiO2, freight, hog cycle) as PIT rows with sources; feeds position notes, watchlist and morning report | |
 | `ROADMAP.md` | every plan with what it builds, which design it implements, dependencies and status | roadmap table, status vocabulary |

@@ -1,4 +1,4 @@
-// Smoke test (APP_STANDARD §5): open demo companies, sectors and products; click every tab; open the watchlist; fail on console errors.
+// Smoke test (APP_STANDARD §5): open demo companies, sectors and products; click every tab; open the watchlist, factor monitor and holdings pages; fail on console errors.
 import { chromium } from "playwright-core";
 
 const BASE = process.env.APP_URL || "http://127.0.0.1:8787/";
@@ -52,6 +52,11 @@ if (cards.length) {
   await page.waitForSelector(".dossier .head h2");
 }
 console.log(`watchlist: ${cards.length} cards · head "${cards.length ? "ok" : "empty state"}"`);
+// 国家队 ETF panel (plan 15 phase 7b): headline, index table rows
+await page.goto(BASE + "#watchlist");
+await page.waitForSelector(".ep[data-ep]", { timeout: 15000 });
+const ep = await page.$eval(".ep", (e) => [e.getAttribute("data-ep"), e.querySelector(".ep-head")?.textContent ?? "", e.querySelectorAll(".wl-table tbody tr").length]);
+console.log(`etf proxy: ${ep[0]} indices · ${ep[2]} rows · ${String(ep[1]).slice(0, 40)}`);
 await page.goto(BASE + "#watchlist");
 await page.waitForSelector(".wl-page[data-wl]", { timeout: 15000 });
 await page.setViewportSize({ width: 390, height: 800 });
@@ -60,6 +65,32 @@ const overflow = await page.evaluate(() => document.documentElement.scrollWidth 
 if (overflow) errors.push("watchlist overflows horizontally at 390px");
 await page.screenshot({ path: process.env.SHOT_WL || "smoke-watchlist.png", fullPage: true });
 await page.setViewportSize({ width: 1440, height: 900 });
+// 因子监控 (plan 15 phase 7c) and 持仓 (phase 7d): open from the chips, pick a factor, hover a chart; no overflow at 390px
+await page.goto(BASE + "#watchlist");
+await page.click('.pages button[data-page="factors"]');
+await page.waitForSelector(".fm-page, [data-empty=factors]", { timeout: 15000 });
+const fm = await page.$$eval(".fm-table tbody tr", (rs) => rs.length);
+if (fm) {
+  await page.click(".fm-table tbody tr[data-factor]:nth-child(2)");
+  const svg = await page.$(".fm-chart svg rect[fill=transparent]");
+  if (svg) { const b = await svg.boundingBox(); await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2); await page.waitForSelector(".fm-chart .wl-tip"); }
+}
+console.log(`factors: ${fm} rows · ${fm ? "ok" : "empty state"}`);
+await page.click('.pages button[data-page="holdings"]');
+await page.waitForSelector(".hr-page, [data-empty=holdings]", { timeout: 15000 });
+const hr = await page.$$eval(".hr-page .fm-table tbody tr[data-code]", (rs) => rs.length);
+console.log(`holdings: ${hr} positions · ${hr ? "ok" : "empty state"}`);
+for (const [hash, name] of [["#factors", "factors"], ["#holdings", "holdings"]]) {
+  await page.goto(BASE + hash);
+  await page.waitForSelector(".wl-page", { timeout: 15000 });
+  await page.setViewportSize({ width: 390, height: 800 });
+  await page.waitForTimeout(200);
+  if (await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)) errors.push(`${name} overflows horizontally at 390px`);
+  if (process.env.SHOT_DIR) await page.screenshot({ path: `${process.env.SHOT_DIR}/smoke-${name}-390.png`, fullPage: true });
+  await page.setViewportSize({ width: 1440, height: 900 });
+}
+await page.goto(BASE + "#co=002714.SZ");
+await page.waitForSelector(".dossier .head h2");
 await page.screenshot({ path: process.env.SHOT || "smoke.png" });
 await browser.close();
 if (errors.length) { console.error("CONSOLE ERRORS:\n" + errors.join("\n")); process.exit(1); }

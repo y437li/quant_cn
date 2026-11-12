@@ -31,6 +31,8 @@ class TradingCalendar:
         lake.EffectiveDateResolver               -- injected type or call
         lake.LakeReader                          -- injected type or call
         factor.FactorFactory                     -- injected type or call
+        risk.RiskInputLoader  -- injected type or call
+        pipeline.RiskModelStep  -- injected type or call
 
     Test cases:
         TC-TCA-001  sessions returns open days in range, inclusive, ascending

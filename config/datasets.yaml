@@ -480,6 +480,20 @@ fx_daily:
   text_fields: [ts_code, trade_date]
   curated: {path: fx_daily, partition_by: trade_date}
 
+index_global:
+  endpoint: index_global
+  # international index closes (plan 05 phase 7, D-128). trade_date is the local (US) date: the S&P 500
+  # closes at 04:00/05:00 Beijing the next morning, so a row is usable from the next China session
+  sweep: {kind: date_window, window: year, value_param: ts_code, values_from: global_indices,
+          refetch_recent: 14}
+  start: "20150101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  known_on_rule: next_session
+  fields: [ts_code, trade_date, open, close, high, low, pre_close, change, pct_chg, swing, vol]
+  text_fields: [ts_code, trade_date]
+  curated: {path: index_global, partition_by: trade_date}
+
 # --- analysts and events (plan 11 phase 7, D-081) ---
 # Event endpoints publish on weekends too: date sweeps use days: all. Statement-style event data
 # (forecast, express) keeps every version like the statements (D-038).
@@ -592,6 +606,71 @@ disclosure_date:
   fields: [ts_code, ann_date, end_date, pre_date, actual_date]
   text_fields: [ts_code, ann_date, end_date, pre_date, actual_date]
   curated: {path: events/disclosure_date, partition_by: end_date}
+
+top10_floatholders:
+  endpoint: top10_floatholders
+  # top-10 free-float holders per report period (plan 11 ph12, user 2026-11-11 "可以补一下数据");
+  # one period is about 58 k rows (5.8 k companies), paged by TushareClient
+  sweep: {kind: period, refetch_recent: 2}
+  start: "20190101"
+  primary_key: [ts_code, end_date, ann_date, holder_name]
+  key_defaults: {ann_date: ""}
+  known_on: ann_date
+  fields: [ts_code, ann_date, end_date, holder_name, hold_amount, hold_ratio, hold_float_ratio,
+           hold_change, holder_type]
+  text_fields: [ts_code, ann_date, end_date, holder_name, holder_type]
+  curated: {path: events/top10_floatholders, partition_by: end_date}
+
+top10_holders:
+  endpoint: top10_holders
+  # top-10 holders of all shares per report period (concentration, state / strategic holders)
+  sweep: {kind: period, refetch_recent: 2}
+  start: "20190101"
+  primary_key: [ts_code, end_date, ann_date, holder_name]
+  key_defaults: {ann_date: ""}
+  known_on: ann_date
+  fields: [ts_code, ann_date, end_date, holder_name, hold_amount, hold_ratio, hold_float_ratio,
+           hold_change, holder_type]
+  text_fields: [ts_code, ann_date, end_date, holder_name, holder_type]
+  curated: {path: events/top10_holders, partition_by: end_date}
+
+dividend:
+  endpoint: dividend
+  # every stage of a dividend plan (预案 / 股东大会通过 / 实施) is its own row, by announcement day
+  sweep: {kind: ann_date, days: all}
+  start: "20190101"
+  primary_key: [ts_code, end_date, ann_date, div_proc]
+  key_defaults: {ann_date: ""}
+  known_on: ann_date
+  fields: [ts_code, end_date, ann_date, div_proc, stk_div, stk_bo_rate, stk_co_rate, cash_div,
+           cash_div_tax, record_date, ex_date, pay_date, div_listdate, imp_ann_date]
+  text_fields: [ts_code, end_date, ann_date, div_proc, record_date, ex_date, pay_date,
+                div_listdate, imp_ann_date]
+  curated: {path: events/dividend, partition_by: end_date}
+
+stk_managers:
+  endpoint: stk_managers
+  # executives and directors with tenure, full history per stock; refetch with --force after the
+  # annual-report season (a done stock is not fetched again)
+  sweep: {kind: ts_code, values_from_dataset: {dataset: stock_basic, column: ts_code}}
+  primary_key: [ts_code, ann_date, name, title, begin_date]
+  key_defaults: {ann_date: "", title: "", begin_date: ""}
+  known_on: ann_date
+  fields: [ts_code, ann_date, name, gender, lev, title, edu, national, birthday, begin_date, end_date]
+  text_fields: [ts_code, ann_date, name, gender, lev, title, edu, national, birthday, begin_date,
+                end_date]
+  curated: {path: reference/stk_managers}
+
+stk_rewards:
+  endpoint: stk_rewards
+  # pay and shareholding of executives per report year; ts_code is a required parameter
+  sweep: {kind: ts_code, values_from_dataset: {dataset: stock_basic, column: ts_code}}
+  primary_key: [ts_code, end_date, name, title]
+  key_defaults: {title: ""}
+  known_on: ann_date
+  fields: [ts_code, ann_date, end_date, name, title, reward, hold_vol]
+  text_fields: [ts_code, ann_date, end_date, name, title]
+  curated: {path: reference/stk_rewards}
 
 stk_holdernumber:
   endpoint: stk_holdernumber
@@ -928,3 +1007,35 @@ dc_member:
   fields: [trade_date, ts_code, con_code, name]
   text_fields: [trade_date, ts_code, con_code, name]
   curated: {path: concepts/dc_member, partition_by: trade_date}
+
+app_store_charts:
+  endpoint: rss
+  source: apple
+  # D-137: Apple iTunes RSS game charts (genre 6014), top grossing + top free, top 100 per store.
+  # Apple keeps no history: the snapshot sweep captures today only, one key "<date>_<country>".
+  sweep: {kind: snapshot, param_name: country, key_field: capture_date,
+          extra_params: {charts: "topgrossingapplications,topfreeapplications", genre: "6014", limit: "200"},
+          values: [cn, us, jp, kr, tw, hk, sg, th, id, my, ph, vn, in, gb, de, fr, it, es, ca, au, br, mx,
+                   tr, sa, ae, ru]}
+  start: "20261111"
+  primary_key: [capture_date, country, chart, rank]
+  known_on: capture_date
+  known_on_rule: next_session
+  fields: [capture_date, country, chart, rank, app_id, name, artist, artist_id, bundle_id, category_id,
+           release_date, price, currency, captured_at]
+  text_fields: [capture_date, country, chart, app_id, name, artist, artist_id, bundle_id, category_id,
+                release_date, currency, captured_at]
+  curated: {path: alt/app_store_charts, partition_by: capture_date}
+
+manual_series:
+  source: manual
+  endpoint: series
+  # D-139 / plan 20: hand-entered cycle series Tushare lacks (Clarksons newbuild index, TiO2 ...).
+  # Public rows: config/manual_series.yaml (committed); licensed exports: config/local.manual_series.yaml.
+  sweep: {kind: none}
+  refresh: overwrite
+  primary_key: [series, date, published]
+  known_on: published
+  fields: [series, name, unit, freq, kind, date, value, published, source_url, note, licensed, revision]
+  text_fields: [series, name, unit, freq, kind, date, published, source_url, note]
+  curated: {path: alt/manual_series}

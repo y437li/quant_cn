@@ -30,6 +30,7 @@ class BaseChart(ABC):
     Used by:
         visualization.PriceChart   -- subclass
         visualization.FactorChart  -- subclass
+        visualization.RiskChart  -- injected type or call
 
     Test cases:
         TC-BCA-001  render applies surface, ink, grid and size from the theme

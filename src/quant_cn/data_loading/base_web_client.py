@@ -34,6 +34,7 @@ class BaseWebClient(BaseApiClient):
     Used by:
         data_loading.CninfoClient          -- subclass
         data_loading.EastmoneyReportClient -- subclass
+        data_loading.AppStoreClient        -- subclass
 
     Test cases:
         TC-BWC-001  (via CninfoClient) a failing request is retried, then raises DataSourceError

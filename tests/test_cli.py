@@ -153,3 +153,38 @@ def test_tc_qcc_011_watchlist_empty(config: Config, tmp_path: Path) -> None:
     assert QuantCnCli(config, console).run(["watchlist", "--out", str(out)]) == 0
     assert json.loads((out / "watchlist.json").read_text(encoding="utf-8"))["entries"] == []
     assert "0 entries" in console.export_text()
+
+
+# TC-QCC-012
+def test_tc_qcc_012_etf_proxy_empty(config: Config, tmp_path: Path) -> None:
+    LakeCatalog(config.lake.root, config.datasets).close()  # create the catalog file
+    console = Console(record=True, width=200)
+    out = tmp_path / "app_data"
+    out.mkdir()
+    assert QuantCnCli(config, console).run(["etf-proxy", "--out", str(out)]) == 0
+    assert json.loads((out / "etf_proxy.json").read_text(encoding="utf-8"))["indices"] == []
+    assert "0 indices" in console.export_text()
+
+
+# TC-QCC-013
+def test_tc_qcc_013_factor_monitor_without_frames(config: Config, tmp_path: Path) -> None:
+    catalog = LakeCatalog(config.lake.root, config.datasets)
+    catalog.connection.execute("SELECT 1")  # create the catalog file
+    catalog.close()
+    console = Console(record=True, width=200)
+    out = tmp_path / "app_data"
+    out.mkdir()
+    assert QuantCnCli(config, console).run(["factor-monitor", "--out", str(out)]) == 1
+    assert not (out / "factor_monitor.json").exists()
+    assert "risk_factor_return missing" in console.export_text()
+
+
+# TC-QCC-014
+def test_tc_qcc_014_holdings_risk_empty_book(config: Config, tmp_path: Path) -> None:
+    console = Console(record=True, width=200)
+    out = tmp_path / "app_data"
+    out.mkdir()
+    assert QuantCnCli(config, console).run(["holdings-risk", "--out", str(out)]) == 0
+    doc = json.loads((out / "holdings_risk.json").read_text(encoding="utf-8"))
+    assert doc["positions"] == [] and doc["as_of"] == ""
+    assert "0 positions" in console.export_text()

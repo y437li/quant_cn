@@ -14,6 +14,7 @@ The package. A layer imports only its own layer or lower (CODING_STANDARD §2.1)
 | [`lake/`](lake/INDEX.md) | L2 parquet writer, DuckDB catalog, fetch log, compactor, query API, PIT aligner |
 | [`pipeline/`](pipeline/INDEX.md) | L4 resumable steps: download -> compact -> curate -> features |
 | [`portfolio/`](portfolio/INDEX.md) | L5 position sizing, constraints, rebalancing schedules |
+| [`risk/`](risk/INDEX.md) | L5 Barra-style multi-factor risk model (CNE5 family): exposures, factor returns, covariance, specific risk, validation |
 | [`statistic/`](statistic/INDEX.md) | L4 factor stats (IC, quantile returns), descriptive stats, regressions |
 | [`visualization/`](visualization/INDEX.md) | L5 charts for prices, factors, backtest results; plotly, themed, notebook + HTML export |
 

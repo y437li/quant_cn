@@ -19,10 +19,11 @@ SweepKind = Literal[
     "nav_date",
     "period",
     "date_window",
+    "snapshot",
 ]
 DATE_KINDS = ("trade_date", "ann_date", "nav_date")
 ENUM_KINDS = ("list_status", "ts_code", "exchange", "is_new")
-Source = Literal["tushare", "fred", "akshare", "baostock", "cninfo", "eastmoney"]
+Source = Literal["tushare", "fred", "akshare", "baostock", "cninfo", "eastmoney", "apple", "manual"]
 KnownOnRule = Literal["as_is", "next_session", "period_end_lag", "period_start_lag"]
 Days = Literal["sessions", "weekdays", "all"]
 Window = Literal["month", "year"]
@@ -64,8 +65,11 @@ class SweepSpec(BaseModel):
 
     Contract:
         Input:
-            kind:           SweepKind        -- "none" = one call, key "all"
-            values:         list[str] | None -- explicit keys for the enum kinds (ENUM_KINDS)
+            kind:           SweepKind        -- "none" = one call, key "all"; "snapshot" = today
+                                                only, one key "<today>_<value>" per value, never
+                                                backfilled (App Store charts, D-137)
+            values:         list[str] | None -- explicit keys for the enum kinds (ENUM_KINDS) and
+                                                snapshot
             values_from:    str | None       -- name of a list in Config.enum_values instead
             range_params:   bool             -- also pass start_date/end_date to the endpoint
             extra_params:   dict[str, str]   -- constant parameters (e.g. exchange)
@@ -92,6 +96,7 @@ class SweepSpec(BaseModel):
 
     Test cases:
         TC-DS-001  datasets.yaml entries parse into DatasetSpec
+        TC-DS-010  snapshot needs a values source
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -118,6 +123,8 @@ class SweepSpec(BaseModel):
         has_values = bool(self.values or self.values_from or self.values_from_dataset)
         if self.kind == "date_window" and has_values != bool(self.value_param):
             raise ValueError("date_window: sweep.value_param and a values source go together")
+        if self.kind == "snapshot" and not has_values:
+            raise ValueError("sweep kind snapshot needs values, values_from or values_from_dataset")
         if self.days and self.kind not in DATE_KINDS:
             raise ValueError("sweep.days is only valid with a date kind")
         if self.param_name and self.value_param:
@@ -188,7 +195,8 @@ class DatasetSpec(BaseModel):
             fields:      list[str]     -- requested columns, non-empty
             text_fields: list[str]     -- subset stored as text; all other fields are numeric
             start:       str | None    -- dataset-specific download start (YYYYMMDD)
-            source:      "tushare" | "fred" | "akshare" | "baostock" | "cninfo" | "eastmoney"  --
+            source:      "tushare" | "fred" | "akshare" | "baostock" | "cninfo" | "eastmoney" |
+                         "apple" | "manual" (hand-entered series, D-139)  --
                                           API client (D-063, D-096)
             known_on_rule: "as_is" | "next_session" | "period_end_lag" | "period_start_lag"  --
                                           how known_on becomes
@@ -241,6 +249,7 @@ class DatasetSpec(BaseModel):
         TC-DS-007  lag_sessions other than 1 requires known_on_rule next_session
         TC-DS-008  key_defaults only on text primary-key columns
         TC-DS-009  rename targets and sweep.key_field must be declared fields
+        TC-DS-010  snapshot needs a values source
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")

@@ -38,9 +38,12 @@ class DateCodec:
         calculation.ForecastTracker                -- as_of checks, track-record window
         factor.FactorFactory                       -- injected type or call
         portfolio.WatchlistBuilder                 -- window start dates
+        portfolio.EtfProxyBuilder                  -- lookback start, ISO weeks
         cli.ResearchCommands                       -- composition of WatchlistBuilder
         lake.StatementVersionReader                -- validates as_of and start
         calculation.CompanyCyclePanel              -- validates as_of
+        risk.RiskInputLoader  -- injected type or call
+        visualization.RiskChart  -- injected type or call
 
     Test cases:
         TC-DC-001  to_date/to_str round trip

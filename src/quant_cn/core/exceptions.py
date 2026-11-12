@@ -24,6 +24,7 @@ class QuantCnError(Exception):
         core.LakeError            -- subclass
         core.SchemaError          -- subclass
         pipeline.PrefectRunner    -- injected type or call
+        risk.RiskSnapshot  -- injected type or call
 
     Test cases:
         TC-QCE-001  every project exception is a QuantCnError subclass
@@ -54,6 +55,8 @@ class ConfigError(QuantCnError):
         factor.FactorFactory               -- injected type or call
         data_loading.DocumentDownloader  -- unknown document source
         data_loading.DeepSeekClient      -- API key missing
+        core.PositionsBook  -- unreadable or invalid positions book
+        data_loading.ManualSeriesClient  -- invalid or duplicate manual series rows
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError
@@ -103,6 +106,7 @@ class DataSourceError(QuantCnError):
         data_loading.BaostockClient       -- injected type or call
         data_loading.CninfoClient         -- missing date range
         data_loading.EastmoneyReportClient -- unknown report kind
+        data_loading.AppStoreClient        -- missing country or unknown chart
         data_loading.DocumentDownloader  -- failed download recorded
         data_loading.RequestPacer        -- failure after retries
         industry_graph.PdfTextExtractor   -- unreadable or non-PDF file
@@ -160,6 +164,8 @@ class LakeError(QuantCnError):
         lake.TradingCalendar       -- trade_cal not downloaded yet
         lake.LakeQuery.sql         -- DuckDB query error
         cli.QuantCnCli             -- backup target missing
+        portfolio.EtfProxyBuilder  -- no share rows, missing output directory
+        risk.FactorMonitorBuilder  -- risk frames missing, missing output directory
         lake.Compactor             -- injected type or call
         pipeline.DownloadPipeline  -- injected type or call
         lake.FetchLog              -- injected type or call
@@ -178,6 +184,8 @@ class LakeError(QuantCnError):
         cli.DocumentCommands             -- catalog busy when refreshing document views
         portfolio.WatchlistBuilder  -- empty curated.daily, missing output directory
         lake.StatementVersionReader  -- view missing, bad dates
+        risk.RiskModel  -- injected type or call
+        portfolio.HoldingsRiskBuilder  -- no risk session, missing output directory
 
     Test cases:
         TC-QCE-001  subclass of QuantCnError
