@@ -1,0 +1,33 @@
+{
+ "as_of": "20261106",
+ "price_as_of": "20261111",
+ "start": "20220101",
+ "n_members": 161,
+ "totals": {
+  "core": {"aum": 8993.6, "position": 9162.2, "flow_recent": 4268.4, "flow_ytd": -9471.7,
+           "peak": {"date": "20241011", "position": 19250.4},
+           "trough_since_peak": {"date": "20260706", "position": 3236.1}},
+  "other": {"aum": 4120.6, "position": 4184.6, "flow_recent": 882.0, "flow_ytd": -664.5,
+            "peak": {"date": "20250127", "position": 5535.8},
+            "trough_since_peak": {"date": "20260625", "position": 2473.6}}
+ },
+ "recent": [
+  {"date": "20261105", "core": 17.4, "other": 62.4},
+  {"date": "20261106", "core": 33.1, "other": 15.9}
+ ],
+ "weekly": [
+  {"date": "20261030", "core_flow": 1280.0, "other_flow": 250.1, "core_position": 7700.2, "other_position": 3900.0},
+  {"date": "20261106", "core_flow": 1615.0, "other_flow": 373.7, "core_position": 9162.2, "other_position": 4184.6}
+ ],
+ "yearly": [
+  {"year": "2024", "core": 7002.2, "other": 2606.2},
+  {"year": "2026", "core": -9471.7, "other": -664.5}
+ ],
+ "indices": [
+  {"name": "沪深300", "reference": "510300.SH", "n_etf": 25, "aum": 4712.8, "position": 4742.5,
+   "core_position": 4278.5, "flow_recent": 2225.0, "flow_ytd": -7166.8,
+   "weekly": [{"date": "20261030", "position": 4100.0, "flow": 700.0}, {"date": "20261106", "position": 4742.5, "flow": 640.0}]},
+  {"name": "中证A500", "reference": "563360.SH", "n_etf": 38, "aum": 2347.6, "position": 2368.7,
+   "core_position": null, "flow_recent": 496.1, "flow_ytd": -492.2, "weekly": null}
+ ]
+}
