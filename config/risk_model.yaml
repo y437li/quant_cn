@@ -1,0 +1,75 @@
+# Barra-style risk model (plan 05, RISK_MODEL_DESIGN, RISK_FACTOR_LIST, D-127). Loaded into
+# core.RiskModelSettings. CNE5 defaults are noted; change values only with a decision.
+name: cne5_v3                 # CNE5 ten styles + S&P 500, USD sensitivity, cash-flow yield (D-127, D-128, D-131, D-134)
+start: "20190102"            # first exposure date; daily_basic starts 2018-09
+exclude_suffixes: [".BJ"]    # RISK_MODEL_DESIGN §7
+# Partial-beta descriptors on external daily series, China market controlled (D-128).
+# date_shift_days: calendar days added to the vendor date before the overnight alignment.
+external_series:
+  - {descriptor: us_beta, dataset: index_global, code: SPX}            # US date d closes before China d+1
+  # FXCM dates a bar by its open (17:00 New York the evening before): +1 day (D-134)
+  - {descriptor: usd_beta, dataset: fx_daily, code: USDCNH.FXCM, column: bid_close, kind: price, date_shift_days: 1}
+winsor_sd: 3.0               # CNE5 descriptor clip
+min_coverage: 0.5            # style regressed only when half the estimation universe has a raw value
+weight_cap_quantile: 0.95    # sqrt(circ_mv) regression weights capped at the 95th percentile
+
+# Styles in orthogonalisation order. Descriptor weights: CNE5 published (RISK_FACTOR_LIST §1); analyst
+# descriptors (EPFWD, EGRLF, EGRSF) are not built yet, so Earnings Yield and Growth use the renormalised
+# weights of §1 (no_analyst).
+styles:
+  - {name: size, descriptors: {lncap: 1.0}}
+  - {name: beta, descriptors: {beta: 1.0}}
+  - {name: momentum, descriptors: {rstr: 1.0}}
+  - {name: residual_volatility, descriptors: {dastd: 0.74, cmra: 0.16, hsigma: 0.10}, orthogonalize_to: [size, beta]}
+  - {name: non_linear_size, descriptors: {nlsize: 1.0}, orthogonalize_to: [size]}
+  - {name: book_to_price, descriptors: {btop: 1.0}}
+  - {name: liquidity, descriptors: {stom: 0.35, stoq: 0.35, stoa: 0.30}, orthogonalize_to: [size]}
+  - {name: earnings_yield, descriptors: {cetop: 0.66, etop: 0.34}}
+  - {name: growth, descriptors: {egro: 0.34, sgro: 0.66}}
+  - {name: leverage, descriptors: {mlev: 0.38, dtoa: 0.35, blev: 0.27}}
+  # D-128: partial beta on the overnight S&P 500 return (China market controlled); passed the v3 gate
+  - {name: us_sensitivity, descriptors: {us_beta: 1.0}}
+  # D-134: partial beta on USDCNH (exporters vs USD-cost / USD-debt names); passed the gate
+  - {name: usd_sensitivity, descriptors: {usd_beta: 1.0}}
+  # D-131: (TTM OCF - TTM capex) / mcap, orthogonal to earnings yield and value; passed the gate (marginal)
+  - {name: cash_flow_yield, descriptors: {fcfp: 1.0}, orthogonalize_to: [earnings_yield, book_to_price]}
+
+# Theme baskets (D-130): circ_mv-weighted return of a THS concept's current members, excluding the stock,
+# from the concept's list date. Membership is a 2026 snapshot (hindsight before that).
+theme_baskets:
+  - {descriptor: aidc_beta, concept: 885887.TI, start: "20200306"}   # 数据中心(AIDC)
+
+# Monitor styles (D-130): exposures and daily returns reported in derived/reports/risk_<name>/
+# monitor_returns.parquet, but kept out of the regression and the covariance (no effect on risk forecasts).
+# ai_dc_sensitivity passed the gate on fit but raised random-portfolio bias (1.019 -> 1.044), so it is
+# monitored rather than modelled until the USE4 NW-lag fix is evaluated.
+monitor_styles:
+  - {name: ai_dc_sensitivity, descriptors: {aidc_beta: 1.0}}
+
+# Factor covariance (CNE5: vol 90 / correlation 480 half-lives, NW lags 2, 21-day horizon)
+vol_half_life: 90
+corr_half_life: 480
+cov_window: 1260
+cov_nw_lags: 2
+horizon_days: 21
+min_factor_obs: 63
+eigen_sims: 1000             # eigenfactor risk adjustment; 0 disables
+eigen_scale: 1.2             # USE4 a
+eigen_refit_days: 21         # bias profile recomputed monthly, reused by eigen rank in between
+seed: 20260928
+vra_half_life: 42            # volatility regime adjustment; 0 disables
+
+# Specific risk (CNE5: half-life 90, NW lags 5; structural blend for thin histories; shrinkage q 0.1)
+specific_half_life: 90
+specific_window: 252
+specific_nw_lags: 5
+specific_min_obs: 42
+specific_full_obs: 126
+shrink_q: 0.1
+shrink_groups: 10
+
+# Validation (plan 05 ph5): 100 random long-only portfolios of 50 names
+validation_portfolios: 100
+validation_names: 50
+validation_sessions: 252     # the last year of forecasts
+benchmarks: ["000300.SH", "000905.SH", "000852.SH"]   # CSI 300 / 500 / 1000 as test portfolios
