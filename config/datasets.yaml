@@ -757,7 +757,7 @@ cninfo_announcements:
   sweep: {kind: date_window, window: month, value_param: category, refetch_recent: 1,
           values: [category_ndbg_szsh, category_bndbg_szsh, category_yjdbg_szsh, category_sjdbg_szsh,
                    category_sf_szsh, category_zf_szsh]}
-  start: "20231101"
+  start: "20230101"   # D-129: FY2022 annual + 2023 interim reports
   primary_key: [ann_id, sec_code]
   known_on: ann_date
   known_on_rule: next_session

@@ -1051,3 +1051,11 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Consequences: the current FY2025 files stay the source of the chain view; the per-year files become the history that plan 15 ph2 (`GraphExportStep`) and plan 17 / 18 read; the old `applications_full.py` must not be rerun without a title-year filter.
 - Links: D-098, D-118, D-122, plan 12 ph4, plan 13 ph3, plan 17, plan 18
 
+### D-129 CNINFO periodic-report list starts 2023-01-01 (FY2022 annual and 2023 interim reports)
+- Status: accepted (2026-11-11, user "可以" to extending the history; follows D-125 year-by-year backfill).
+- Context: `cninfo_announcements` started 2023-11-01, so the lake holds only ~100 FY2022 annual reports and ~60–120 of each 2023 Q1 / H1 / Q3 report, while FY2023–FY2025 are complete. Three-year comparisons of business mix, business mode and moat need a full 2023 year.
+- Decision: `cninfo_announcements.start` = 2023-01-01. The keyword dataset (`cninfo_keyword_announcements`: IR records, contracts, inquiry replies …) keeps 2023-11-01 for now. PDFs for doc types annual, semiannual, q1, q3 published in 2023 are downloaded after the FY2023 label backfill finishes, then labelled with the same per-year staging as D-125 (period from the title).
+- Alternatives: keep 2023-11 (rejected: no FY2022 / 2023 interim history); extend the keyword dataset too (deferred: larger download, less needed for the year comparison).
+- Consequences: about 20k more PDFs and the CNINFO request load that comes with them; interim-report labelling needs a title-period script like `backfill_annual.py` (applications for semiannual, QuarterlyNoteExtractor for Q1/Q3).
+- Links: D-111, D-125, plan 12 ph2 / ph4
+
