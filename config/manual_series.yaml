@@ -1,0 +1,30 @@
+# Hand-entered public cycle series (plan 20, D-139). Licensed exports (Wind / Choice / iFinD) go
+# in the git-ignored config/local.manual_series.yaml with the same shape.
+# Refresh the lake with `make manual-series` (also part of `make track-daily`).
+#
+# date      = the period the value describes (YYYYMMDD; a week's Friday or a month's last day)
+# published = the day the value became public: the point-in-time date (known_on). When the
+#             article's own date is not shown, use the day it was captured (conservative).
+# A corrected value is a new row with a later `published` and `revision: true`; never edit
+# old rows. Sources that disagree are kept as separate rows with a note.
+
+series:
+  - {id: clarksons_newbuild, name: 克拉克森新造船价格指数, unit: point, freq: weekly, kind: index,
+     links: ["600150.SH", "603268.SH", "600685.SH"]}
+
+observations:
+  - {series: clarksons_newbuild, date: "20260227", value: 182.14, published: "20260309",
+     source_url: "http://finance.sina.com.cn/roll/2026-03-09/doc-inhqkxfr6919949.shtml",
+     note: "2月末，环比 −2.15 点（新浪转载信德海事网《全球造船市场，有价无市！》）"}
+  - {series: clarksons_newbuild, date: "20260904", value: 186.3, published: "20260910",
+     source_url: "https://news.qq.com/rain/a/20260910A04WH500",
+     note: "中信机械周报“本周”，环比持平；周五日期按报道推断"}
+  - {series: clarksons_newbuild, date: "20260930", value: 186.59, published: "20261112",
+     source_url: "https://tw.news.yahoo.com/%E5%85%A8%E7%90%83%E6%96%B0%E8%88%B9%E8%A8%82%E5%96%AE-%E5%96%AE%E6%9C%88%E5%A4%A7%E6%B8%9B%E9%80%BE5%E6%88%90-120100732.html",
+     note: "9月末，引自10月月报对比值；文章日期未显示，published 取采集日"}
+  - {series: clarksons_newbuild, date: "20261023", value: 186.69, published: "20261102",
+     source_url: "https://www.21jingji.com/article/20261102/herald/5db6721c75f1a435a76cbb9f68d205e2.html",
+     note: "截至10月23日，维持历史高位（21经济网）"}
+  - {series: clarksons_newbuild, date: "20261031", value: 187.2, published: "20261112",
+     source_url: "https://tw.news.yahoo.com/%E5%85%A8%E7%90%83%E6%96%B0%E8%88%B9%E8%A8%82%E5%96%AE-%E5%96%AE%E6%9C%88%E5%A4%A7%E6%B8%9B%E9%80%BE5%E6%88%90-120100732.html",
+     note: "10月底，较9月 +0.61 点；文章日期未显示，published 取采集日"}
