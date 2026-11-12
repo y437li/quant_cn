@@ -1,0 +1,15 @@
+{"as_of": "20261111", "model": "cne5_v2_spx", "n_sessions": 1900, "dates": ["20261110", "20261111"],
+ "factors": [
+  {"factor": "country", "label": "country", "kind": "country",
+   "ret": {"d1": 0.0042, "w1": -0.011, "m1": 0.023, "m3": 0.051, "ytd": 0.12, "y1": 0.18},
+   "forecast_vol": 0.182, "realized_vol_21": 0.21, "realized_vol_63": 0.19, "vol_ratio": 1.153846, "sigma_move": 0.37,
+   "cum": [0.1152, 0.12], "forecast": [0.181, 0.182], "realized": [0.208, 0.21]},
+  {"factor": "momentum", "label": "momentum", "kind": "style",
+   "ret": {"d1": -0.0031, "w1": 0.004, "m1": null, "m3": 0.02, "ytd": -0.03, "y1": 0.01},
+   "forecast_vol": 0.041, "realized_vol_21": null, "realized_vol_63": 0.045, "vol_ratio": null, "sigma_move": -1.2,
+   "cum": [null, -0.03], "forecast": [0.04, 0.041], "realized": null},
+  {"factor": "ind_801010.SI", "label": "农林牧渔", "kind": "industry",
+   "ret": {"d1": 0.001, "w1": 0.002, "m1": 0.003, "m3": 0.004, "ytd": 0.005, "y1": 0.006},
+   "forecast_vol": 0.12, "realized_vol_21": 0.1, "realized_vol_63": 0.11, "vol_ratio": 0.833333, "sigma_move": 0.13,
+   "cum": [0.004, 0.005], "forecast": [0.12, 0.12], "realized": [0.1, 0.1]}
+ ]}
