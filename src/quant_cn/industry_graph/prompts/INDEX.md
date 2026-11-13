@@ -12,3 +12,7 @@ LLM prompts as text files, so wording changes need no code change. Changing a pr
 | `pricing_adjudication.txt` | pricing-power and archetype verdict from keyed signals, annual claims and broker summary | system prompt for `PricingAdjudicator` |
 | `quarterly_note_extraction.txt` | Q1/Q3 note reading: orders, customers, capacity, profit drivers, products, verbatim quotes | system prompt for `QuarterlyNoteExtractor` |
 | `valuation_extraction.txt` | broker-report valuation: methods with implied/target multiples and base year, target price, forecasts, comparables, assumptions | system prompt for `ValuationExtractor` |
+| `guidance_annual_plan.txt` | annual-report outlook / 经营计划: numeric targets for future periods, no past actuals or industry forecasts | `GuidanceExtractor` prompt (annual_plan) |
+| `guidance_ir_record.txt` | IR activity record: management's numeric guidance, no investor questions or past facts | `GuidanceExtractor` prompt (ir_record) |
+| `guidance_incentive_plan.txt` | incentive draft 公司层面业绩考核: target value (Am) per year and metric, base year, trigger in condition | `GuidanceExtractor` prompt (incentive_plan) |
+| `contract_extraction.txt` | contract / bid / operating-data announcements: counterparty, amount and unit, status, period order totals | system prompt for `ContractExtractor` |

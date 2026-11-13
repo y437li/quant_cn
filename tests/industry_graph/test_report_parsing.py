@@ -309,6 +309,22 @@ def test_tc_sd_005_find_heading_page() -> None:
     assert SectionDetector().find_heading_page(ReportPages(["正文"]), "counterparties") is None
 
 
+# TC-SD-006
+def test_tc_sd_006_outlook_headings() -> None:
+    def outlook(text: str) -> int | None:
+        pages = ["第三节 管理层讨论与分析\n公司从事的主要业务", "构成变化对公司未来发展的影响",
+                 text, "第四节 公司治理"]  # fmt: skip
+        found = [
+            s for s in SectionDetector().list_sections(ReportPages(pages)) if s.key == "outlook"
+        ]
+        return found[0].page_start if found else None
+
+    assert outlook("十一、公司未来发展的展望\n（二）经营计划") == 3
+    assert outlook("六、公司关于公司未来发展的讨论与分析") == 3
+    assert outlook("四、未来展望\n是否自愿披露 √是") == 3
+    assert outlook("对未来展望保持乐观的表述在正文中") is None
+
+
 # TC-CTP-006
 def test_tc_ctp_006_bse() -> None:
     customers, suppliers = CounterpartyTableParser().parse_tables("\n".join(BSE_PAGES[1:]))

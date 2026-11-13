@@ -1201,3 +1201,20 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Alternatives: filter replies in every reader (rejected: each reader would repeat the rule); delete and re-download (rejected: needless traffic).
 - Consequences: readers that take the latest manifest row per doc_id see the new types; FY2025 labels made from `documents/cninfo/annual/` by folder glob (applications_full.py) include replies and must be re-checked.
 - Links: D-101, D-124, plans/execution/18_*.md ph2
+
+### D-150 Guidance and contract extraction rules (plan 18 ph3 pilot)
+- Status: accepted (2026-11-13, plan 18 ph3; user: "开始第三阶段吧").
+- Context: the pilot needed rules for which LLM items count as guidance or orders. Round-1 hand checks failed on IR records (63%) and 重大合同 / 中标 (61%): undated or present-tense amounts, wrong bid stage, consortium totals, unit prices.
+- Decision:
+  - Guidance items must carry a value, a quote found on a sent page, a kind (target / expectation / commitment) and a period no earlier than the announcement year minus one. Undated items are dropped.
+  - Pages per source: annual reports from the outlook heading (SZSE 未来发展的展望, SSE 未来发展的讨论与分析, BSE 未来展望) to the end of the MD&A chapter; incentive drafts from the 业绩考核 pages plus the next page; IR records all pages.
+  - Contracts: status is the furthest stage reported, and a bare "中标公示" is 预中标. The amount is the company's own share; otherwise the consortium total, tagged 联合体总额. A range is amount..amount_high. A unit price, a total investment, a concession or BOT deal, or a purchase by the company is not an order. Related-party deals are flagged.
+  - Amounts are scaled by the unit word.
+  - Operating-data notices go to the contract extractor only when the title names orders (新签 / 合同 / 订单 / 中标 / 承接); the rest are production and sales data.
+  - Numeric text ("30%") is parsed by `LenientItem` instead of failing the reply.
+  - Periodic-report noise adds 持续督导 | 管理办法.
+- Alternatives:
+  - Keep qualitative statements: rejected, because they cannot be scored against actuals.
+  - Treat "中标公示" as a win: rejected, because a candidate posting can still change.
+- Consequences: yields are low for annual plans (7/50 companies give numeric targets) and IR records (6/50). Incentive drafts and order notices carry most items.
+- Links: D-122, D-124, D-149, plan 18

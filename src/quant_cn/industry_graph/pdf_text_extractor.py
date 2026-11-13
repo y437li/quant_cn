@@ -37,6 +37,7 @@ class ReportPages:
         industry_graph.PdfTextExtractor  -- returned by read_pages
         industry_graph.SectionDetector   -- input of list_sections
         industry_graph.AnnualReportParser -- passed between the steps
+        industry_graph.GuidanceExtractor -- input of list_source_pages
 
     Test cases:
         TC-PTE-001  (via PdfTextExtractor) page count and outline preserved

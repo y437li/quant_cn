@@ -22,7 +22,7 @@ sources:
     # filings ("港股公告：2024年度报告") are noise. Existing rows are fixed by `DocumentRetyper`.
     rules: &cninfo_rules
       - {doc_type: inquiry_reply, include: "问询函|问询的回复|审核问询", exclude: "延期|提示性"}
-      - {doc_type: semiannual, include: "半年度报告", exclude: &noise "摘要|英文|English|更正公告|补充公告|提示性公告|取消|延期|披露的公告|说明|意见|港股公告|H股"}
+      - {doc_type: semiannual, include: "半年度报告", exclude: &noise "摘要|英文|English|更正公告|补充公告|提示性公告|取消|延期|披露的公告|说明|意见|港股公告|H股|持续督导|管理办法"}
       - {doc_type: annual, include: "年度报告", exclude: *noise}
       - {doc_type: q1, include: "第一季度报告|一季度报告", exclude: *noise}
       - {doc_type: q3, include: "第三季度报告|三季度报告", exclude: *noise}

@@ -62,6 +62,8 @@ class BaseLlmClient(ABC):
         industry_graph.ApplicationExtractor  -- injected client
         industry_graph.ValuationExtractor    -- injected client
         industry_graph.QuarterlyNoteExtractor  -- injected client
+        industry_graph.GuidanceExtractor  -- injected client
+        industry_graph.ContractExtractor  -- injected client
         industry_graph.BrokerViewSynthesizer  -- injected client
         industry_graph.BusinessModeExtractor  -- injected client
         industry_graph.PricingAdjudicator  -- injected client

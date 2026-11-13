@@ -116,6 +116,8 @@ class DataSourceError(QuantCnError):
         industry_graph.QuarterlyNoteExtractor  -- reply does not fit the shape
         industry_graph.BrokerViewSynthesizer  -- unknown scope, reply does not fit the shape
         industry_graph.BusinessModeExtractor  -- reply does not fit the shape
+        industry_graph.GuidanceExtractor  -- unknown doc type, reply does not fit the shape
+        industry_graph.ContractExtractor  -- reply does not fit the shape
         industry_graph.PricingAdjudicator  -- reply does not fit the shape, label not allowed
         industry_graph.MoatExtractor  -- reply does not fit the shape
 

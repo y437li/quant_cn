@@ -18,6 +18,9 @@ L4: the A-share industry-chain graph (plan 12, D-099): report parsing now; taxon
 | `quote_checker.py` | the pages an LLM is given and the check that its quotes come from them | `Evidence`, `QuoteChecker` |
 | `section_detector.py` | the chain sections of an annual report, located by heading text (D-102) | `Section`, `SectionDetector` |
 | `valuation_extractor.py` | DeepSeek reads broker valuation pages: method, multiples (implied vs target), target price, assumptions (plan 13) | `ValuationItem`, `ValuationReply`, `ValuationResult`, `ValuationExtractor` |
+| `guidance_extractor.py` | DeepSeek reads company guidance (annual plan outlook, IR record, incentive draft targets) into quote-checked rows (plan 18 ph3) | `GuidanceItem`, `GuidanceReply`, `GuidanceResult`, `GuidanceExtractor` |
+| `contract_extractor.py` | DeepSeek reads 重大合同 / 中标 / 经营数据 announcements into contract and period order rows, amounts scaled (plan 18 ph3) | `ContractItem`, `ContractReply`, `ContractResult`, `ContractExtractor` |
+| `lenient_item.py` | pydantic base for LLM reply items: numeric text ("30%") parsed into float fields | `LenientItem` |
 | `quarterly_note_extractor.py` | DeepSeek reads the Q1/Q3 narrative notes (change reasons, 其他提醒事项): orders, customers, capacity, drivers, products | `QuarterlyNoteItem`, `QuarterlyNoteReply`, `QuarterlyNoteResult`, `QuarterlyNoteExtractor` |
 | `business_mode_extractor.py` | DeepSeek reads 经营模式 text: variant among the archetype's candidates, pricing mode, cost pass-through, price actions, quote-checked (D-118) | `ModeClaim`, `PriceAction`, `BusinessModeReply`, `BusinessModeResult`, `BusinessModeExtractor` |
 | `broker_view_synthesizer.py` | DeepSeek synthesizes many broker reports into one view per product, Shenwan L3 or company; every point cites report refs (citation check) | `ReportDigest`, `ViewPoint`, `BrokerViewReply`, `BrokerView`, `BrokerViewSynthesizer` |

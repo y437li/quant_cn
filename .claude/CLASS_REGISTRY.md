@@ -193,7 +193,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `ReportPages` | `quant_cn.quant_cn.industry_graph.pdf_text_extractor` | 4 | none | The text of one report PDF, page by page, plus its outline (bookmarks) when present. | 1 | `industry_graph.PdfTextExtractor`, `industry_graph.SectionDetector`, `industry_graph.AnnualReportParser` | `tests/industry_graph/test_report_parsing.py` (TC-PTE-001..001) | 2026-11-07 |
 | `PdfTextExtractor` | `quant_cn.quant_cn.industry_graph.pdf_text_extractor` | 4 | none | Read the native text layer of a PDF page by page (no OCR; D-102) and remove the running header and footer: a line with at least four letters or CJK characters that, with digits ignored, appears on at least `header_share` of the pages (e.g. | 2 | `industry_graph.AnnualReportParser` | `tests/industry_graph/test_report_parsing.py` (TC-PTE-001..003) | 2026-11-07 |
 | `Section` | `quant_cn.quant_cn.industry_graph.section_detector` | 4 | none | One located section: its key, the heading-matched start page and the page before the next section (or the chapter end), 1-based, inclusive. | 0 | `industry_graph.SectionDetector`, `industry_graph.ParsedReport` | `tests/industry_graph/test_report_parsing.py` (TC-SD-001..001) | 2026-11-07 |
-| `SectionDetector` | `quant_cn.quant_cn.industry_graph.section_detector` | 4 | none | Locate the MD&A chapter (管理层讨论与分析, 第三节 in the 2021 standard; 第二节/第四节 in older or exchange-specific layouts; 第二章 董事会报告 for A+H; BSE 业务概要 / 第五节 重大事件) and the chain sections inside it by heading text, not by number. | 3 | `industry_graph.AnnualReportParser` | `tests/industry_graph/test_report_parsing.py` (TC-SD-001..005) | 2026-11-07 |
+| `SectionDetector` | `quant_cn.quant_cn.industry_graph.section_detector` | 4 | none | Locate the MD&A chapter (管理层讨论与分析, 第三节 in the 2021 standard; 第二节/第四节 in older or exchange-specific layouts; 第二章 董事会报告 for A+H; BSE 业务概要 / 第五节 重大事件) and the chain sections inside it by heading text, not by number. | 3 | `industry_graph.AnnualReportParser`, `industry_graph.GuidanceExtractor` | `tests/industry_graph/test_report_parsing.py` (TC-SD-001..006) | 2026-11-07 |
 | `CounterpartyRow` | `quant_cn.quant_cn.industry_graph.counterparty_table_parser` | 4 | none | One ranked customer or supplier of a top-5 table. | 1 | `industry_graph.CounterpartyTable`, `industry_graph.CounterpartyTableParser` | `tests/industry_graph/test_report_parsing.py` (TC-CTP-001..001) | 2026-11-07 |
 | `CounterpartyTable` | `quant_cn.quant_cn.industry_graph.counterparty_table_parser` | 4 | none | The top-5 customers or suppliers of one report: stated totals and the ranked rows (empty when only the totals sentence is disclosed, as on the SSE main board). | 1 | `industry_graph.CounterpartyTableParser`, `industry_graph.ParsedReport` | `tests/industry_graph/test_report_parsing.py` (TC-CTP-004..004) | 2026-11-07 |
 | `CounterpartyTableParser` | `quant_cn.quant_cn.industry_graph.counterparty_table_parser` | 4 | none | Parse the "主要销售客户和主要供应商情况" block into a customer and a supplier CounterpartyTable. | 1 | `industry_graph.AnnualReportParser` | `tests/industry_graph/test_report_parsing.py` (TC-CTP-001..010) | 2026-11-07 |
@@ -238,6 +238,15 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `Adjudication` | `quant_cn.quant_cn.industry_graph.pricing_adjudicator` | 4 | none | The validated verdict. | 0 | `industry_graph.PricingAdjudicator` | `tests/industry_graph/test_pricing_adjudicator.py` (TC-PAD-001..003) | 2026-11-07 |
 | `PricingAdjudicator` | `quant_cn.quant_cn.industry_graph.pricing_adjudicator` | 4 | none | For a company whose rule-based pricing-power label is insufficient or whose archetype check is inconsistent (BUSINESS_MODEL_DESIGN §4.5, §4b.7), give the model every measured signal, the annual-report claims and the broker-view summary, each under a key, and ask for one label, a confidence, whether the default archetype holds (or which allowed archetype fits) and the reasons. | 1 | `lake` | `tests/industry_graph/test_pricing_adjudicator.py` (TC-PAD-001..003) | 2026-11-07 |
 | `MoatClaim` | `quant_cn.quant_cn.industry_graph.moat_extractor` | 4 | BaseModel | One claimed advantage: its moat type, a short statement, the figure the company gives (if any) and the evidence. | 0 | `industry_graph.MoatReply`, `industry_graph.MoatExtractor` | `tests/industry_graph/test_moat_extractor.py` (TC-ME-002..002) | 2026-11-07 |
+| `LenientItem` | `quant_cn.quant_cn.industry_graph.lenient_item` | 4 | BaseModel | Pydantic base for LLM reply items: unknown keys ignored, float fields accept numeric text ("30%", "1,234.5万元"). | 0 | `industry_graph.GuidanceItem`, `industry_graph.ContractItem` | `tests/industry_graph/test_lenient_item.py` (TC-LI-001..001) | 2026-11-13 |
+| `GuidanceItem` | `quant_cn.quant_cn.industry_graph.guidance_extractor` | 4 | LenientItem | One guidance statement the LLM found, before the checks. | 0 | `industry_graph.GuidanceReply` | `tests/industry_graph/test_guidance_extractor.py` (TC-GE-003..003) | 2026-11-13 |
+| `GuidanceReply` | `quant_cn.quant_cn.industry_graph.guidance_extractor` | 4 | BaseModel | The LLM reply for one guidance document. | 0 | `industry_graph.GuidanceExtractor` | `tests/industry_graph/test_guidance_extractor.py` (TC-GE-003..003) | 2026-11-13 |
+| `GuidanceResult` | `quant_cn.quant_cn.industry_graph.guidance_extractor` | 4 | none | The checked guidance items of one document. | 0 | `industry_graph.GuidanceExtractor` | `tests/industry_graph/test_guidance_extractor.py` (TC-GE-002..002) | 2026-11-13 |
+| `GuidanceExtractor` | `quant_cn.quant_cn.industry_graph.guidance_extractor` | 4 | none | Quote-checked quantitative guidance rows from an annual plan (outlook section), an IR record or an incentive draft's 业绩考核 pages (plan 18 ph3). | 2 | `lake` | `tests/industry_graph/test_guidance_extractor.py` (TC-GE-001..003) | 2026-11-13 |
+| `ContractItem` | `quant_cn.quant_cn.industry_graph.contract_extractor` | 4 | LenientItem | One contract, bid win or period order total the LLM found, before the checks. | 0 | `industry_graph.ContractReply` | `tests/industry_graph/test_contract_extractor.py` (TC-CEX-002..002) | 2026-11-13 |
+| `ContractReply` | `quant_cn.quant_cn.industry_graph.contract_extractor` | 4 | BaseModel | The LLM reply for one contract announcement. | 0 | `industry_graph.ContractExtractor` | `tests/industry_graph/test_contract_extractor.py` (TC-CEX-002..002) | 2026-11-13 |
+| `ContractResult` | `quant_cn.quant_cn.industry_graph.contract_extractor` | 4 | none | The checked contract rows of one announcement, amounts scaled to currency units. | 0 | `industry_graph.ContractExtractor` | `tests/industry_graph/test_contract_extractor.py` (TC-CEX-001..001) | 2026-11-13 |
+| `ContractExtractor` | `quant_cn.quant_cn.industry_graph.contract_extractor` | 4 | none | Quote-checked contract rows (contract / bid with status, or period order total) from 重大合同 / 中标 / 经营数据 announcements (plan 18 ph3). | 1 | `lake` | `tests/industry_graph/test_contract_extractor.py` (TC-CEX-001..002) | 2026-11-13 |
 | `MoatReply` | `quant_cn.quant_cn.industry_graph.moat_extractor` | 4 | BaseModel | The LLM reply before validation. | 0 | `industry_graph.MoatExtractor` | `tests/industry_graph/test_moat_extractor.py` (TC-ME-003..003) | 2026-11-07 |
 | `MoatResult` | `quant_cn.quant_cn.industry_graph.moat_extractor` | 4 | none | The quote-checked claims of one report. | 0 | `industry_graph.MoatExtractor` | `tests/industry_graph/test_moat_extractor.py` (TC-ME-001..001) | 2026-11-07 |
 | `MoatExtractor` | `quant_cn.quant_cn.industry_graph.moat_extractor` | 4 | none | Read the 核心竞争力分析 pages of one annual report and list the advantages the company claims, each classified as one of MOAT_TYPES (cost, switching costs, intangibles, network effects, efficient scale) with the figure it cites. | 1 | `lake` | `tests/industry_graph/test_moat_extractor.py` (TC-ME-001..003) | 2026-11-07 |
@@ -2291,8 +2300,8 @@ never column lists (those live in section E).
 ### `SectionDetector` — `quant_cn.quant_cn.industry_graph.section_detector` (L4)
 - **Purpose:** Locate the MD&A chapter (管理层讨论与分析, 第三节 in the 2021 standard; 第二节/第四节 in older or exchange-specific layouts) and the chain sections inside it by heading text, not by number, so SSE, SZSE and BSE layouts all work. A chapter heading must stand on its own line (body text often cites "第三节管理层讨论与分析"). A table-of-contents page (dot leaders, or three or more 第X节 headings) never counts as a chapter start. Only these pages go to later steps (D-102); in the prototype the chapter was 12-19% of a report's text.
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `industry_graph.AnnualReportParser`.
-- **Tests:** `tests/industry_graph/test_report_parsing.py` (TC-SD-001..005).
+- **Used by:** `industry_graph.AnnualReportParser`, `industry_graph.GuidanceExtractor` (outlook section, plan 18 ph3).
+- **Tests:** `tests/industry_graph/test_report_parsing.py` (TC-SD-001..006).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
@@ -2782,6 +2791,92 @@ never column lists (those live in section E).
 - **Base:** none. **Depends on (injected):** BaseLlmClient, int, str | None.
 - **Used by:** `lake`.
 - **Tests:** `tests/industry_graph/test_moat_extractor.py` (TC-ME-001..003).
+
+### `LenientItem` — `quant_cn.quant_cn.industry_graph.lenient_item` (L4)
+- **Purpose:** Base for one item of an LLM JSON reply: unknown keys ignored; every float field also accepts text, taking its first number after removing thousands separators; text with no number becomes None.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.GuidanceItem`, `industry_graph.ContractItem`.
+- **Tests:** `tests/industry_graph/test_lenient_item.py` (TC-LI-001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `GuidanceItem` — `quant_cn.quant_cn.industry_graph.guidance_extractor` (L4)
+- **Purpose:** One guidance statement the LLM found (metric, metric_class, segment, period, basis, value_low / value_high, unit, base_period, kind, condition, quote, page), before the checks.
+- **Base:** LenientItem. **Depends on (injected):** —.
+- **Used by:** `industry_graph.GuidanceReply`.
+- **Tests:** `tests/industry_graph/test_guidance_extractor.py` (TC-GE-003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `GuidanceReply` — `quant_cn.quant_cn.industry_graph.guidance_extractor` (L4)
+- **Purpose:** The LLM reply for one guidance document.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.GuidanceExtractor`.
+- **Tests:** `tests/industry_graph/test_guidance_extractor.py` (TC-GE-003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `GuidanceResult` — `quant_cn.quant_cn.industry_graph.guidance_extractor` (L4)
+- **Purpose:** The checked guidance items of one document: period normalized (YYYY, YYYYH1, YYYYQ3, YYYY-YYYY), evidence in place of quote / page.
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.GuidanceExtractor`.
+- **Tests:** `tests/industry_graph/test_guidance_extractor.py` (TC-GE-002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `GuidanceExtractor` — `quant_cn.quant_cn.industry_graph.guidance_extractor` (L4)
+- **Purpose:** Turn a company document into quote-checked quantitative guidance rows, one prompt per doc type (annual_plan: outlook heading to MD&A end; ir_record: all pages; incentive_plan: 业绩考核 pages and the next). Kept only with a found quote, a known kind, a value, and a period not before the announcement year minus one.
+- **Base:** none. **Depends on (injected):** BaseLlmClient, SectionDetector, int, Mapping[str, str] \| None.
+- **Used by:** `lake` meta/runs/guidance_pilot.py.
+- **Tests:** `tests/industry_graph/test_guidance_extractor.py` (TC-GE-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | BaseLlmClient, SectionDetector, int, Mapping[str, str] \| None -> None | — | callers of the class | — |
+| `list_source_pages` | The pages of one document to send, 1-based, in order. | str, ReportPages -> list[tuple[int, str]] | `DataSourceError` | as class | TC-GE-001 |
+| `fetch_guidance` | Ask the model for one document's guidance and check every item against the text. | str, str, str, Sequence[tuple[int, str]] -> GuidanceResult | `DataSourceError` | as class | TC-GE-002, TC-GE-003 |
+
+### `ContractItem` — `quant_cn.quant_cn.industry_graph.contract_extractor` (L4)
+- **Purpose:** One contract, bid win or period order total the LLM found (kind, counterparty, project, amount, unit, currency, share_of_revenue, term, status, segment, period, is_framework, quote, page), before the checks.
+- **Base:** LenientItem. **Depends on (injected):** —.
+- **Used by:** `industry_graph.ContractReply`.
+- **Tests:** `tests/industry_graph/test_contract_extractor.py` (TC-CEX-002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `ContractReply` — `quant_cn.quant_cn.industry_graph.contract_extractor` (L4)
+- **Purpose:** The LLM reply for one announcement.
+- **Base:** BaseModel. **Depends on (injected):** —.
+- **Used by:** `industry_graph.ContractExtractor`.
+- **Tests:** `tests/industry_graph/test_contract_extractor.py` (TC-CEX-002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `ContractResult` — `quant_cn.quant_cn.industry_graph.contract_extractor` (L4)
+- **Purpose:** The checked contract rows of one announcement; amount_value = amount times the unit's multiplier (UNIT_SCALES).
+- **Base:** none. **Depends on (injected):** —.
+- **Used by:** `industry_graph.ContractExtractor`.
+- **Tests:** `tests/industry_graph/test_contract_extractor.py` (TC-CEX-001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+
+### `ContractExtractor` — `quant_cn.quant_cn.industry_graph.contract_extractor` (L4)
+- **Purpose:** Turn a 重大合同 / 中标 / 经营数据 announcement into quote-checked rows: single contracts or bids with status 预中标 / 中标 / 签约 / 进展 / 终止, or period order totals; amounts scaled by the unit word; framework agreements flagged.
+- **Base:** none. **Depends on (injected):** BaseLlmClient, int, str \| None.
+- **Used by:** `lake` meta/runs/guidance_pilot.py.
+- **Tests:** `tests/industry_graph/test_contract_extractor.py` (TC-CEX-001..002).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | BaseLlmClient, int, str \| None -> None | — | callers of the class | — |
+| `fetch_contracts` | Ask the model about one announcement and check every row against the text. | str, str, Sequence[tuple[int, str]] -> ContractResult | `DataSourceError` | as class | TC-CEX-001, TC-CEX-002 |
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|

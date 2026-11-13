@@ -28,6 +28,11 @@ SECTION_PATTERNS: dict[str, str] = {
         r"|前[五5](名|大)(主要)?\s*客\s*户(合计)?的?销售(金)?额"
     ),
     "competition": r"竞争格局|主要竞争对手",
+    # plan 18 ph3: SZSE 未来发展的展望, SSE 关于公司未来发展的讨论与分析, BSE a bare 未来展望 line
+    "outlook": (
+        r"未来发展的?(展望|讨论与分析)|未来发展战略|未来发展规划|发展战略(和|与|及)经营计划"
+        r"|(?m:^\s*(?:[一二三四五六七八九十]+、)?\s*未来展望\s*$)"
+    ),
     "risks": r"可能面对的风险|面临的风险|风险因素",
 }
 
@@ -84,6 +89,7 @@ class SectionDetector:
 
     Used by:
         industry_graph.AnnualReportParser  -- second step
+        industry_graph.GuidanceExtractor   -- outlook pages of an annual report
 
     Test cases:
         TC-SD-001  chapter found after the TOC page; sections in page order, each ending before
@@ -93,6 +99,8 @@ class SectionDetector:
         TC-SD-004  BSE layout (title on the line after 第四节, 业务概要, (3) 主要客户情况, ends
                    at 第五节 重大事件) and A+H 第二章 董事会报告 ending at 第三章 公司治理
         TC-SD-005  find_heading_page: first non-TOC page with the heading, None when absent
+        TC-SD-006  outlook found under the SZSE, SSE and BSE headings; "对公司未来发展的影响"
+                   in body text is not a heading
     """
 
     def find_chapter(self, report: ReportPages) -> tuple[int, int] | None:
