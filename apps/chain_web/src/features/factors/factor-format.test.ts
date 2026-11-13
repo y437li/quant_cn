@@ -20,6 +20,7 @@ describe("factor monitor formatting", () => {
     expect(industries.map((f) => f.label)).toEqual(["农林牧渔"]);
     expect([factorName(styles[0]), factorName(styles[1]), factorName(industries[0]), factorName({ factor: "x", label: "x", kind: "style" })])
       .toEqual(["市场", "动量", "农林牧渔", "x"]);
+    expect(factorName({ factor: "dividend_yield", label: "dividend_yield", kind: "style" })).toBe("股息率");
     expect(toPoints(["a", "b", "c"], [1, null, 3])).toEqual([{ d: "a", v: 1 }, { d: "c", v: 3 }]);
   });
   it("TC-FMW-003 headline", () => {

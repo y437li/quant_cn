@@ -14,6 +14,7 @@ export const STYLE_ZH: Record<string, string> = {
   growth: "成长", leverage: "杠杆", us_sensitivity: "美股敏感度", cash_flow_yield: "现金流收益率",
   usd_sensitivity: "美元敏感度", ai_dc_sensitivity: "AIDC 敏感度", arm_sensitivity: "Arm 敏感度",
   gold_sensitivity: "黄金敏感度", us_rate_sensitivity: "美债利率敏感度", oil_sensitivity: "原油敏感度",
+  dividend_yield: "股息率",
 };
 
 /** Purpose: the shown name of a factor. Contract: styles via STYLE_ZH, industries by their Shenwan label. */
