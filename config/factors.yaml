@@ -7,6 +7,8 @@ factors:
   - {name: momentum_12_1, class: MomentumFactor, params: {window: 252, skip: 21}}
   - {name: reversal_1m, class: ReversalFactor, params: {window: 21}}
   - {name: turnover_60d, class: TurnoverFactor, params: {window: 60, min_obs: 40}}
+  # user 2026-11-12 "测一下股息率的选股能力"; in the score since D-147
+  - {name: dividend_yield, class: DividendYieldFactor}
 
 # Campaign settings (plan 04 phase 5): id for the TrialLog and reports, preprocessing chain, horizons,
 # signal weights (score = weighted mean of the processed z-scores).
@@ -17,5 +19,7 @@ campaign:
   winsorize_k: 5.0          # MAD multiple; null = skip
   standardize: true
   neutralize: true          # Shenwan L1 (l1_grouping) + log market cap (D-093)
-  weights: {ep_ttm: 1.0, roe_ttm: 1.0, profit_growth_ttm: 1.0, momentum_12_1: 1.0, reversal_1m: 1.0, turnover_60d: 1.0}
+  # D-147 (user 2026-11-12 "就股息吧"): dividend_yield replaces ep_ttm in the score (20d ICIR 0.54 vs 0.42, LS Sharpe
+  # 0.72 vs 0.21, Romano-Wolf p 0.049 vs 0.144); ep_ttm stays in the campaign as a single factor
+  weights: {dividend_yield: 1.0, roe_ttm: 1.0, profit_growth_ttm: 1.0, momentum_12_1: 1.0, reversal_1m: 1.0, turnover_60d: 1.0}
   min_factors: 3            # a stock needs this many factors for a score

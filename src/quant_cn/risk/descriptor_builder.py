@@ -31,6 +31,7 @@ DESCRIPTORS = [
     "etop",
     "cetop",
     "fcfp",
+    "dtop",
     "mlev",
     "dtoa",
     "blev",
@@ -46,7 +47,9 @@ class DescriptorBuilder:
         circulating market cap (regression weight base, CNY) and every raw CNE5 descriptor:
         LNCAP = ln(total market cap in CNY), NLSIZE = cube of the cap-weighted standardised
         LNCAP, the price descriptors (PriceDescriptors on the dense return matrix; market =
-        previous-day circ_mv weighted return of all stocks), the value / leverage descriptors and
+        previous-day circ_mv weighted return of all stocks), the value / leverage descriptors,
+        DTOP = trailing 12-month dividend yield (daily_basic dv_ttm / 100; 0 for a stock with a
+        market cap and no dividend, as in CNE5; style dividend_yield, 2026-11-12) and
         the growth descriptors from the latest monthly snapshot on or before the session, and
         one partial beta per configured external series (the foreign return that closed between
         the previous and the current China close, e.g. S&P 500 or USDCNH; D-128, D-134) and per
@@ -77,6 +80,8 @@ class DescriptorBuilder:
                    none in the window = 0; missing foreign data = NaN
         TC-DB-005  theme basket excludes the stock itself, is NaN before the start, and the theme
                    descriptor column appears next to the core descriptors
+        TC-DB-006  dtop = dv_ttm / 100; a missing dv_ttm with a market cap gives 0, without a
+                   market cap NaN
     """
 
     def __init__(
@@ -240,12 +245,17 @@ class DescriptorBuilder:
         fields = inputs.fundamentals.pivot_table(
             index=keys, columns="field", values="value", aggfunc="last"
         )
-        frame = members[keys].merge(inputs.basic[[*keys, "total_mv"]], on=keys, how="left")
+        basic = inputs.basic[[*keys, "total_mv", "dv_ttm"]]
+        frame = members[keys].merge(basic, on=keys, how="left")
         frame = frame.merge(fields.reset_index(), on=keys, how="left")
         for name in (*BALANCE_FIELDS, *TTM_FIELDS):
             if name not in frame:
                 frame[name] = np.nan
-        return self._fundamentals.compute_value_leverage(frame)
+        dtop = frame[keys].assign(
+            dtop=np.where(frame["total_mv"].notna(), frame["dv_ttm"].fillna(0.0) / PERCENT, np.nan)
+        )
+        out = self._fundamentals.compute_value_leverage(frame)
+        return out.merge(dtop, on=keys, how="left")
 
     def _compute_growth_frame(self, inputs: RiskInputs, members: pd.DataFrame) -> pd.DataFrame:
         growth = self._fundamentals.compute_growth(inputs.annual)

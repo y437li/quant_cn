@@ -1,6 +1,6 @@
 # Barra-style risk model (plan 05, RISK_MODEL_DESIGN, RISK_FACTOR_LIST, D-127). Loaded into
 # core.RiskModelSettings. CNE5 defaults are noted; change values only with a decision.
-name: cne5_v3                 # CNE5 ten styles + S&P 500, USD sensitivity, cash-flow yield (D-127, D-128, D-131, D-134)
+name: cne5_v3_dy              # cne5_v3 + dividend_yield (D-148; user "加入股息率"); D-127, D-128, D-131, D-134
 start: "20190102"            # first exposure date; daily_basic starts 2018-09
 exclude_suffixes: [".BJ"]    # RISK_MODEL_DESIGN §7
 # Partial-beta descriptors on external daily series, China market controlled (D-128).
@@ -33,6 +33,8 @@ styles:
   - {name: usd_sensitivity, descriptors: {usd_beta: 1.0}}
   # D-131: (TTM OCF - TTM capex) / mcap, orthogonal to earnings yield and value; passed the gate (marginal)
   - {name: cash_flow_yield, descriptors: {fcfp: 1.0}, orthogonalize_to: [earnings_yield, book_to_price]}
+  # D-148: CNE5 Dividend Yield, DTOP = trailing dv_ttm / 100 (0 for non-payers); passed the gate (DPIBS needs forecasts)
+  - {name: dividend_yield, descriptors: {dtop: 1.0}}
 
 # Theme baskets (D-130): circ_mv-weighted return of a THS concept's current members, excluding the stock,
 # from the concept's list date. Membership is a 2026 snapshot (hindsight before that).

@@ -105,3 +105,21 @@ def test_tc_db_005_theme_basket() -> None:
     frame = build().compute(themed)
     assert "theme_beta" in frame.columns
     assert frame.loc[frame["trade_date"] < market.days[115], "theme_beta"].isna().all()
+
+
+# TC-DB-006
+def test_tc_db_006_dividend_yield() -> None:
+    market = SyntheticFactorMarket(n_stocks=60, n_days=120)
+    inputs = InputsBuilder.build(market, start_index=100)
+    basic = inputs.basic.copy()
+    first = basic["ts_code"] == market.codes[0]
+    basic.loc[first, "dv_ttm"] = 4.0
+    second = basic["ts_code"] == market.codes[1]
+    basic.loc[second, "dv_ttm"] = np.nan
+    basic.loc[second, "total_mv"] = np.nan
+    third = basic["ts_code"] == market.codes[2]
+    basic.loc[third, "dv_ttm"] = np.nan
+    out = build().compute(dataclasses.replace(inputs, basic=basic)).set_index("ts_code")
+    assert out.loc[market.codes[0], "dtop"].to_numpy() == pytest.approx(0.04)
+    assert out.loc[market.codes[1], "dtop"].isna().all()
+    assert out.loc[market.codes[2], "dtop"].to_numpy() == pytest.approx(0.0)

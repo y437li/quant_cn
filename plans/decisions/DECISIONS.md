@@ -1177,3 +1177,19 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Alternatives: hand-rolled tests in numpy (rejected: error-prone critical values); keep using throwaway environments (rejected: not reproducible).
 - Consequences: one more dependency in the shared venv; peers sharing `$HOME/.venvs/quant_cn` see it after `uv sync`.
 - Links: D-005
+
+### D-148 Dividend yield as a risk-model style (cne5_v3_dy)
+- Status: accepted (2026-11-12, user: "加入股息率"; added by session quant-cn-5c while the risk-model owner quant-cn-b5 was offline).
+- Context: the A-share 红利 style was strong 2022–2026 and the user's book holds high-yield names (巨人 4.8%, 徐工 3.7%), but cne5_v3 had no dividend style, so that exposure was absorbed by value, earnings yield and industries.
+- Decision: style `dividend_yield` = DTOP = trailing 12-month yield (`daily_basic.dv_ttm` / 100; 0 for a stock with a market cap and no dividend, NaN without one), not orthogonalised (CNE5); default model renamed `cne5_v3_dy`. Gate vs cne5_v3 (run 7eab5093c5aa): median adj R² 0.2741 vs 0.2733 (last year 0.3013 vs 0.3013), random portfolios 100% in band (median bias 1.031 vs 1.031), CSI 300/500/1000 bias 0.933/1.082/1.047 (unchanged), own bias 1.031. Passes.
+- Alternatives: DPIBS (forecast DPS / price) as well (deferred: needs the consensus step of plan 13 ph6); monitor-only like AIDC (rejected: it passes the gate).
+- Consequences: `RiskInputLoader` reads dv_ttm; `DescriptorBuilder` adds `dtop` (TC-DB-006). Factor return by year (sum): 2019 +0.3%, 2020 −2.2%, 2021 −0.6%, 2022 +2.3%, 2023 +4.2%, 2024 +1.0%, 2025 −2.2%, 2026 YTD +2.3%.
+- Links: D-127, D-131, plans/execution/05_risk_model.md ph8, RISK_FACTOR_LIST §2
+
+### D-147 Dividend yield replaces EP in the factor-campaign score
+- Status: accepted (2026-11-12, user: "就股息吧"; the risk style is D-148, renumbered twice after ID collisions with D-144 research log and D-146 structured conditions).
+- Context: campaign factor_campaign_01 tested DP (`DividendYieldFactor`, dv_ttm / 100, 0 for non-payers), industry- and size-neutralised: 20d IC 0.041 (t 2.58), ICIR 0.54, LS Sharpe 0.72, Romano-Wolf p 0.049; EP 0.038 (t 1.95), 0.42, 0.21, p 0.144. Rank correlation DP–EP 0.59; DP residual on EP keeps a monthly 20d IC of 0.034 (t 5.8). Positive in 2019–21, 2022–24 and 2025–.
+- Decision: score weights use dividend_yield instead of ep_ttm (equal weights otherwise); ep_ttm stays in the campaign as a single factor.
+- Alternatives: DP as a seventh factor next to EP (not chosen by the user; both carry information, to retest later); keep EP (rejected: weaker on every metric).
+- Consequences: `config/factors.yaml` weights changed; `derived.features` score rebuilt; the trial log records the new trial.
+- Links: D-093, D-148, FACTOR_LIBRARY §1, plans/execution/04_*.md ph5

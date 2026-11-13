@@ -88,7 +88,10 @@ class SampleRiskLake:
                 adj.append(key | {"adj_factor": 1.0})
                 mv = cap[i] * close[t, i] / 10
                 turnover = float(rng.uniform(0.5, 5))
-                basic.append(key | {"total_mv": mv, "circ_mv": mv, "turnover_rate_f": turnover})
+                basic.append(
+                    key
+                    | {"total_mv": mv, "circ_mv": mv, "turnover_rate_f": turnover, "dv_ttm": 2.0}
+                )
         SampleFactorLake.write(lake, config, "daily", bars)
         SampleFactorLake.write(lake, config, "adj_factor", adj)
         SampleFactorLake.write(lake, config, "daily_basic", basic)

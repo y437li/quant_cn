@@ -6,6 +6,7 @@ import pytest
 
 from quant_cn.core.frames import PRICE_PANEL
 from quant_cn.factor.base_factor import FactorInputs
+from quant_cn.factor.library.dividend_yield_factor import DividendYieldFactor
 from quant_cn.factor.library.momentum_factor import MomentumFactor
 from quant_cn.factor.library.reversal_factor import ReversalFactor
 from quant_cn.factor.library.turnover_factor import TurnoverFactor
@@ -73,3 +74,24 @@ def test_tc_trn_001_turnover() -> None:
     assert get_value(
         factor.compute(build_inputs(closes, changed), DAYS[0], DAYS[-1]), 200
     ) == get_value(out, 200)
+
+
+# TC-DYF-001
+def test_tc_dyf_001_dividend_yield() -> None:
+    closes = np.full(len(DAYS), 10.0)
+    dv = np.full(len(DAYS), 3.0)
+    dv[50] = np.nan  # no dividend in the last 12 months
+    mv = np.full(len(DAYS), 100.0)
+    basic = pd.DataFrame({"trade_date": DAYS, "ts_code": "A", "dv_ttm": dv, "total_mv": mv})
+    inputs = build_inputs(closes)
+    factor = DividendYieldFactor("dy")
+    out = factor.compute(
+        FactorInputs(prices=inputs.prices, daily_basic=basic.drop(index=60)), DAYS[0], DAYS[-1]
+    )
+    assert get_value(out, 100) == pytest.approx(0.03)
+    assert get_value(out, 50) == pytest.approx(0.0)
+    assert DAYS[60] not in set(out["trade_date"])
+    later = basic.copy()
+    later.loc[101:, "dv_ttm"] = 9.0
+    again = factor.compute(FactorInputs(prices=inputs.prices, daily_basic=later), DAYS[0], DAYS[-1])
+    assert get_value(again, 100) == get_value(out, 100)

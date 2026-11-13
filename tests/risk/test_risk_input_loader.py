@@ -62,7 +62,7 @@ def test_tc_ril_001_load_window(lake: MiniLake, config: Config) -> None:
     assert inputs.prices["trade_date"].min() == days[0]  # all history before start (< 530)
     assert inputs.members["trade_date"].min() == days[100]
     assert set(inputs.members["l1_code"]) == {"800", "801", "802"}
-    assert {"total_mv", "circ_mv", "turnover_rate_f"} <= set(inputs.basic.columns)
+    assert {"total_mv", "circ_mv", "turnover_rate_f", "dv_ttm"} <= set(inputs.basic.columns)
     assert set(inputs.fundamentals["field"]) <= {"total_hldr_eqy_exc_min_int"}
     with pytest.raises(ValueError):
         build_loader(lake, config).load(days[10], days[5])

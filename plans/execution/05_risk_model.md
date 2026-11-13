@@ -64,6 +64,7 @@ None. RISK_MODEL_DESIGN §7 closed with the recommendations: six styles first th
 
 | Date | Phase | Change |
 |---|---|---|
+| 2026-11-12 | 8 | (h) `dividend_yield` (DTOP = dv_ttm / 100, user "加入股息率"; added by quant-cn-5c, b5 offline): passed the gate vs cne5_v3 (adj R² 0.2741 vs 0.2733, bias unchanged, own bias 1.031); default renamed `cne5_v3_dy` (D-148); TC-DB-006 |
 | 2026-11-11 | 8 | User accepted the recommendation ("ok"; AIDC "可以monitor", "单独展示"): default `cne5_v3` = CNE5 ten + us_sensitivity + usd_sensitivity + cash_flow_yield; live run 650d1711f7fe median adj R² 0.2732 (v2_spx 0.2711), random portfolios 100% in band (median 1.018), CSI 300/500/1000 0.934/1.082/1.046; FCFP inside EY rejected (0.2707); `ai_dc_sensitivity` = monitor style (`monitor_returns.parquet`, notebook §6, D-130); scalable digests for the risk tables after an OOM on 115.6 M rows (D-135); decisions D-130, D-131, D-134, D-135 |
 | 2026-11-12 | 8 | (e) gold, (f) US 10y rate, (g) crude oil sensitivities added (user: "还有原油,美国的利率，以及黄金的sensitive"); same gate |
 | 2026-11-12 | 8 | (d) `arm_sensitivity` added to the phase-8 candidates (user: "把arm也加进去吧", meaning Arm share-price sensitivity); runs through the same gate; D-133 proposed |

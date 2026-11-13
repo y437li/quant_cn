@@ -110,7 +110,8 @@ def test_tc_c_011_universe(config: Config) -> None:
 def test_tc_c_012_factors(config: Config, tmp_path: Path) -> None:
     committed = Config.load(REPO, env={"QUANT_CN_LAKE_ROOT": str(tmp_path)})
     names = {f.name: f.class_name for f in committed.factors}
-    assert len(names) == 6 and names["momentum_12_1"] == "MomentumFactor"
+    assert len(names) == 7 and names["momentum_12_1"] == "MomentumFactor"
+    assert names["dividend_yield"] == "DividendYieldFactor"  # D-147
     assert config.factors == []
 
 

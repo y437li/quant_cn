@@ -37,6 +37,7 @@ class FactorInputs:
         factor.BaseFactor                   -- compute input
         factor.FactorFactory                -- build_inputs output
         factor.library.EarningsYieldFactor  -- injected type or call
+        factor.library.DividendYieldFactor  -- injected type or call
         factor.library.MomentumFactor       -- injected type or call
         factor.library.ProfitGrowthFactor   -- injected type or call
         factor.library.ReversalFactor       -- injected type or call
@@ -91,6 +92,7 @@ class BaseFactor(ABC):
         factor.FactorFactory                -- builds registered subclasses
         factor.library.*                    -- subclasses
         factor.library.EarningsYieldFactor  -- subclass
+        factor.library.DividendYieldFactor  -- subclass
         factor.library.MomentumFactor       -- subclass
         factor.library.ProfitGrowthFactor   -- subclass
         factor.library.ReversalFactor       -- subclass

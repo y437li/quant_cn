@@ -27,6 +27,7 @@ class InputsBuilder:
             total_mv=np.tile(market.cap / 1e4, len(days)),
             circ_mv=np.tile(market.cap / 1e4, len(days)),
             turnover_rate_f=1.0,
+            dv_ttm=np.where(np.arange(len(days) * len(codes)) % 5 == 0, np.nan, 2.5),
         )
         inside = days[start_index:]
         members = pd.DataFrame(

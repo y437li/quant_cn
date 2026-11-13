@@ -21,7 +21,7 @@ from quant_cn.risk.fundamental_descriptors import ANNUAL_FIELDS, BALANCE_FIELDS,
 logger = logging.getLogger(__name__)
 
 PRICE_HISTORY = 530  # sessions: RSTR 504 + lag 21 + slack
-BASIC_COLUMNS = ("total_mv", "circ_mv", "turnover_rate_f")
+BASIC_COLUMNS = ("total_mv", "circ_mv", "turnover_rate_f", "dv_ttm")
 CALENDAR_DAYS_PER_SESSION = 1.5
 EXTRA_DAYS = 30
 GROWTH_YEARS = 6  # annual reports read back per snapshot (5 used + one restated)
@@ -41,7 +41,8 @@ class RiskInputs:
         Input:
             start, end:   str        -- YYYYMMDD exposure window
             prices:       DataFrame  -- PRICE_PANEL, dense
-            basic:        DataFrame  -- trade_date, ts_code, total_mv, circ_mv, turnover_rate_f
+            basic:        DataFrame  -- trade_date, ts_code, total_mv, circ_mv, turnover_rate_f,
+                                        dv_ttm (trailing dividend yield, percent)
             members:      DataFrame  -- EXPOSURE_PANEL rows in [start, end]
             fundamentals: DataFrame  -- FUNDAMENTALS_PIT for BALANCE_FIELDS + TTM_FIELDS
             annual:       DataFrame  -- as_of, ts_code, end_date, field, value
