@@ -19,15 +19,11 @@ from quant_cn.core.document_source import DocumentSource
 from quant_cn.core.exceptions import ConfigError, DataSourceError, LakeError
 from quant_cn.core.step_report import StepReport
 from quant_cn.data_loading.document_classifier import DocumentClassifier
+from quant_cn.data_loading.document_manifest_writer import MANIFEST_COLUMNS, DocumentManifestWriter
 from quant_cn.data_loading.http_transport import HttpTransport
 from quant_cn.data_loading.request_pacer import RequestPacer
 from quant_cn.lake.lake_query import LakeQuery
 
-MANIFEST_DIR = Path("meta") / "document_manifest"
-MANIFEST_COLUMNS = [
-    "doc_id", "source", "doc_type", "code", "title", "publish_date", "url", "local_path",
-    "bytes", "sha256", "status", "message", "downloaded_at",
-]  # fmt: skip
 PDF_MAGIC = b"%PDF-"
 logger = logging.getLogger(__name__)
 Progress = Callable[[str, str], None]
@@ -56,6 +52,7 @@ class DocumentDownloader:
             retries:        int >= 0
             timeout_s:      float > 0
             flush_every:    int >= 1      -- manifest rows per part file
+            writer:         DocumentManifestWriter | None  -- default: one over lake_root
         Output:
             instance; `list_candidates`, `list_todo`, `run`
         Raises:
@@ -85,8 +82,10 @@ class DocumentDownloader:
         retries: int = 3,
         timeout_s: float = 120.0,
         flush_every: int = 200,
+        writer: DocumentManifestWriter | None = None,
     ) -> None:
         self._root = lake_root
+        self._writer = writer or DocumentManifestWriter(lake_root)
         self._query = query
         self._sources = sources
         self._clock = clock
@@ -240,12 +239,11 @@ class DocumentDownloader:
         )
 
     def _list_done(self) -> set[str]:
-        folder = self._root / MANIFEST_DIR
-        if not any(folder.glob("part-*.parquet")):
+        if not self._writer.has_parts():
             return set()
         latest = self._query.sql(
             "SELECT doc_id, local_path FROM read_parquet(?) WHERE status = 'ok'",
-            [str(folder / "part-*.parquet")],
+            [self._writer.get_glob()],
         )
         return {
             d
@@ -296,18 +294,6 @@ class DocumentDownloader:
                 self._write_manifest_part()
 
     def _write_manifest_part(self) -> None:
-        if not self._pending:
-            return
-        folder = self._root / MANIFEST_DIR
-        path = folder / f"part-{self._stamp}-{self._parts:05d}.parquet"
-        frame = pd.DataFrame(self._pending, columns=MANIFEST_COLUMNS)
-        frame["bytes"] = frame["bytes"].astype("int64")
-        try:
-            folder.mkdir(parents=True, exist_ok=True)
-            tmp = path.with_name(path.name + ".tmp")
-            frame.to_parquet(tmp, index=False, compression="zstd")
-            os.replace(tmp, path)
-        except OSError as exc:
-            raise LakeError(f"cannot write manifest {path}: {exc}") from exc
-        self._pending = []
-        self._parts += 1
+        if self._writer.write_part(self._pending, f"{self._stamp}-{self._parts:05d}"):
+            self._pending = []
+            self._parts += 1

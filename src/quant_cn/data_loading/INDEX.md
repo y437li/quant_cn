@@ -15,6 +15,8 @@ L3: vendor clients (Tushare, AkShare, BaoStock, CNINFO, Eastmoney), one fetcher 
 | `deep_seek_client.py` | DeepSeek chat completions as a JSON-returning LLM client with response cache, cost and ledger (D-098) | `DeepSeekClient` |
 | `document_classifier.py` | title rules → document type (config/documents.yaml, D-101) | `DocumentClassifier` |
 | `document_downloader.py` | fetch listed PDFs into documents/ with a manifest of hashes (plan 12 phase 2, D-101) | `DocumentDownloader` |
+| `document_manifest_writer.py` | Append-only manifest parts of downloaded documents (D-101, D-149) | `DocumentManifestWriter` |
+| `document_retyper.py` | Re-apply changed title rules to downloaded documents (plan 18 ph2, D-149) | `DocumentRetyper` |
 | `eastmoney_report_client.py` | Eastmoney research-report lists: broker stock and industry reports with PDF links (D-100) | `EastmoneyReportClient` |
 | `fetcher_factory.py` | Map a dataset's sweep kind to its fetcher class; new datasets of a known kind need no code | `FetcherFactory` |
 | `fetchers.py` | One fetcher per sweep pattern (DATA_LOADING_DESIGN §2.2); the endpoint comes from DatasetSpec | `SingleCallFetcher`, `EnumFetcher`, `DateSweepFetcher`, `PeriodSweepFetcher`, `DateWindowFetcher` |

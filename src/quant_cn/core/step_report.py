@@ -30,6 +30,7 @@ class StepReport:
             (none)
 
     Used by:
+        data_loading.DocumentRetyper      -- run report
         core.BaseFetcher.run           -- returned per dataset run
         core.BaseStep.run              -- return type
         lake.Compactor.rebuild         -- returned per dataset compaction

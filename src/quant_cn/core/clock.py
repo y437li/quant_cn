@@ -20,6 +20,7 @@ class Clock:
             (none)
 
     Used by:
+        data_loading.DocumentRetyper      -- manifest time stamp
         data_loading.TushareClient       -- retry and rate-limit sleeps
         core.BaseFetcher.run             -- per-key duration
         lake.RunLog                      -- event timestamps

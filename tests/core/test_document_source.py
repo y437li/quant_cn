@@ -21,7 +21,7 @@ BASE = {
 def test_tc_dsr_001_yaml_loads_and_bad_regex(config: Config) -> None:
     assert {"cninfo", "em_industry", "em_stock"} <= set(config.documents)
     cninfo = config.documents["cninfo"]
-    assert cninfo.a_share_only and cninfo.rules[0].doc_type == "semiannual"
+    assert cninfo.a_share_only and cninfo.rules[0].doc_type == "inquiry_reply"  # D-149
     assert config.documents["em_industry"].folder == "eastmoney"
     with pytest.raises(ValidationError, match="bad regex"):
         DocumentRule(doc_type="x", include="(")

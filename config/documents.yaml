@@ -17,17 +17,22 @@ sources:
     a_share_only: true
     workers: 4
     min_interval_s: 0.25
+    # Rule order matters (first match wins). Plan 18 ph2 (D-149): inquiry replies first, because
+    # "关于2024年年度报告的问询函的回复" also contains 年度报告 and was typed annual; HK / H-share
+    # filings ("港股公告：2024年度报告") are noise. Existing rows are fixed by `DocumentRetyper`.
     rules: &cninfo_rules
-      - {doc_type: semiannual, include: "半年度报告", exclude: &noise "摘要|英文|English|更正公告|补充公告|提示性公告|取消|延期|披露的公告|说明|意见"}
+      - {doc_type: inquiry_reply, include: "问询函|问询的回复|审核问询", exclude: "延期|提示性"}
+      - {doc_type: semiannual, include: "半年度报告", exclude: &noise "摘要|英文|English|更正公告|补充公告|提示性公告|取消|延期|披露的公告|说明|意见|港股公告|H股"}
       - {doc_type: annual, include: "年度报告", exclude: *noise}
       - {doc_type: q1, include: "第一季度报告|一季度报告", exclude: *noise}
       - {doc_type: q3, include: "第三季度报告|三季度报告", exclude: *noise}
       - {doc_type: prospectus, include: "招股说明书", exclude: "摘要|提示性|附录|意见|核查|法律|发行结果|上市公告"}
       - {doc_type: ir_record, include: "投资者关系活动记录|投资者关系管理信息|调研活动"}
-      - {doc_type: inquiry_reply, include: "问询函.*回复|回复.*问询函", exclude: "延期|提示性"}
       - {doc_type: restructuring, include: "重组报告书|重大资产购买|发行股份购买资产.*报告书", exclude: "摘要|提示性"}
       - {doc_type: major_contract, include: "重大合同|中标"}
       - {doc_type: investment, include: "对外投资|投资建设|项目投资|投资项目"}
+      - {doc_type: incentive_plan, include: "(股票期权|限制性股票|股权)激励计划.*草案", exclude: "摘要|法律意见|核查|独立财务顾问"}
+      - {doc_type: operating_data, include: "经营数据|经营情况简报|新签合同|主要经营数据", exclude: "更正"}
   cninfo_kw:
     dataset: cninfo_keyword_announcements
     id_column: ann_id

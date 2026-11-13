@@ -851,7 +851,8 @@ cninfo_keyword_announcements:
   source: cninfo
   # chain-relevant announcements outside the periodic categories, by title keyword and month (D-111)
   sweep: {kind: date_window, window: month, value_param: searchkey, refetch_recent: 1,
-          values: [投资者关系活动记录表, 重大合同, 中标, 问询函, 重组报告书, 对外投资, 可行性研究报告]}
+          values: [投资者关系活动记录表, 重大合同, 中标, 问询函, 重组报告书, 对外投资, 可行性研究报告,
+                   股权激励, 激励计划, 经营数据, 新签合同]}  # last four: plan 18 ph2 (D-149)
   start: "20231101"
   primary_key: [ann_id, sec_code]
   known_on: ann_date

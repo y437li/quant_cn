@@ -30,6 +30,7 @@ class LakeQuery:
             (none at construction)
 
     Used by:
+        data_loading.DocumentRetyper      -- manifest read
         lake.TradingCalendar         -- reads raw.trade_cal
         lake.Compactor.rebuild       -- reads raw files through DuckDB
         cli.QuantCnCli               -- composition root

@@ -79,6 +79,7 @@ class DocumentSource(BaseModel):
             pydantic.ValidationError  -- both or neither of doc_type and rules
 
     Used by:
+        data_loading.DocumentRetyper      -- source rules
         core.Config                      -- field `documents`
         data_loading.DocumentClassifier  -- injected type or call
         data_loading.DocumentDownloader  -- injected type or call

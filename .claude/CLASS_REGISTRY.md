@@ -186,7 +186,9 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `ManualSeriesFile` | `quant_cn.data_loading.manual_series_client` | 3 | BaseModel | Content of one manual-series YAML file: series and observations. | 0 | `data_loading.ManualSeriesClient` | `tests/data_loading/test_manual_series_client.py` (TC-MSC-001) | 2026-11-12 |
 | `SnapshotFetcher` | `quant_cn.data_loading.snapshot_fetcher` | 3 | EnumFetcher | Sweep for sources with no history: keys "<today>_<value>" from the Clock, run range ignored, never backfilled (D-137). | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_snapshot_fetcher.py` (TC-SNF-001..003) | 2026-11-11 |
 | `DocumentClassifier` | `quant_cn.data_loading.document_classifier` | 3 | none | Give each listed document its type: the source's fixed `doc_type`, or the first title rule whose `include` matches and whose `exclude` does not (e.g. | 1 | `data_loading.DocumentDownloader` | `tests/data_loading/test_document_downloader.py` (TC-DCL-001..002) | 2026-11-07 |
-| `DocumentDownloader` | `quant_cn.data_loading.document_downloader` | 3 | none | Download the PDFs listed in a document source's curated metadata (config/documents.yaml) into `documents/<folder>/<doc_type>/<YYYY>/<MM>/<file>` (D-101). | 3 | `cli.DocumentCommands` | `tests/data_loading/test_document_downloader.py` (TC-DD-001..004) | 2026-11-07 |
+| `DocumentDownloader` | `quant_cn.data_loading.document_downloader` | 3 | none | Download the PDFs listed in a document source's curated metadata (config/documents.yaml) into `documents/<folder>/<doc_type>/<YYYY>/<MM>/<file>` (D-101); manifest parts through DocumentManifestWriter. | 3 | `cli.DocumentCommands` | `tests/data_loading/test_document_downloader.py` (TC-DD-001..006) | 2026-11-12 |
+| `DocumentManifestWriter` | `quant_cn.data_loading.document_manifest_writer` | 3 | none | Write one append-only manifest part (MANIFEST_COLUMNS, zstd parquet, tmp + rename) under meta/document_manifest/; later rows per doc_id supersede earlier ones (D-101, D-149) | 3 | `data_loading.DocumentDownloader`, `data_loading.DocumentRetyper` | `tests/data_loading/test_document_retyper.py` (TC-DMW-001) | 2026-11-12 |
+| `DocumentRetyper` | `quant_cn.data_loading.document_retyper` | 3 | none | Re-apply changed title rules to downloaded documents: a new type moves the file and appends a manifest row, no matching rule appends `excluded` (plan 18 ph2, D-149) | 1 | (none yet) | `tests/data_loading/test_document_retyper.py` (TC-DRT-001) | 2026-11-12 |
 | `DocumentCommands` | `quant_cn.cli` | 8 | none | The document-side CLI command `download-docs` (plan 12 phase 2, D-101): for each source, print candidate counts per doc type (`--dry-run`) or download the PDFs not yet in the manifest and print the outcome | 1 | `cli.QuantCnCli` | `tests/test_cli.py` (TC-QCC-010..010) | 2026-11-07 |
 | `ReportPages` | `quant_cn.quant_cn.industry_graph.pdf_text_extractor` | 4 | none | The text of one report PDF, page by page, plus its outline (bookmarks) when present. | 1 | `industry_graph.PdfTextExtractor`, `industry_graph.SectionDetector`, `industry_graph.AnnualReportParser` | `tests/industry_graph/test_report_parsing.py` (TC-PTE-001..001) | 2026-11-07 |
 | `PdfTextExtractor` | `quant_cn.quant_cn.industry_graph.pdf_text_extractor` | 4 | none | Read the native text layer of a PDF page by page (no OCR; D-102) and remove the running header and footer: a line with at least four letters or CJK characters that, with digits ignored, appears on at least `header_share` of the pages (e.g. | 2 | `industry_graph.AnnualReportParser` | `tests/industry_graph/test_report_parsing.py` (TC-PTE-001..003) | 2026-11-07 |
@@ -2442,6 +2444,28 @@ never column lists (those live in section E).
 ### `CounterpartyItem` — `quant_cn.quant_cn.industry_graph.application_extractor` (L4)
 - **Purpose:** One company named in the text, with its role, as returned.
 - **Base:** BaseModel. **Depends on (injected):** —.
+### `DocumentManifestWriter` — `quant_cn.data_loading.document_manifest_writer` (L3)
+- **Purpose:** Write one manifest part file (MANIFEST_COLUMNS, zstd parquet, tmp + rename) under `<lake_root>/meta/document_manifest/`. Rows are never rewritten: a later row for the same doc_id (later `downloaded_at`) supersedes the earlier one for readers.
+- **Base:** none. **Depends on (injected):** Path.
+- **Used by:** `data_loading.DocumentDownloader`, `data_loading.DocumentRetyper`.
+- **Tests:** `tests/data_loading/test_document_retyper.py` (TC-DMW-001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `get_glob` | The glob of every part file, for read_parquet. | — -> str | — | as class | TC-DMW-001 |
+| `has_parts` | Whether any part file exists. | — -> bool | — | as class | TC-DMW-001 |
+| `write_part` | Persist rows as part-<name>.parquet; None when no rows. | Sequence[Mapping], str -> Path \| None | `LakeError` | as class | TC-DMW-001 |
+
+### `DocumentRetyper` — `quant_cn.data_loading.document_retyper` (L3)
+- **Purpose:** After the title rules change, re-classify the latest `ok` manifest row of every document of a source; a new type moves the file to that type's folder and appends a manifest row, a title no rule matches appends `excluded` (file kept); unchanged documents untouched (plan 18 ph2, D-149).
+- **Base:** none. **Depends on (injected):** Path, LakeQuery, Mapping[str, DocumentSource], Clock, DocumentManifestWriter.
+- **Used by:** (none yet).
+- **Tests:** `tests/data_loading/test_document_retyper.py` (TC-DRT-001).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `run` | Re-type every downloaded document of one source. | str -> StepReport | `ConfigError`, `LakeError` | as class | TC-DRT-001 |
+
 - **Used by:** `industry_graph.ApplicationReply`.
 - **Tests:** `tests/industry_graph/test_application_extractor.py` (TC-AE-003..003).
 

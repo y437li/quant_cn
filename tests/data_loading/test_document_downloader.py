@@ -88,11 +88,14 @@ def test_tc_rp_002_spacing(clock: FakeClock) -> None:
 def test_tc_dcl_001_rule_order(config: Config) -> None:
     titles = pd.Series(
         ["2025年半年度报告", "2025年年度报告", "2025年年度报告摘要", "2025年年度报告(英文版)",
-         "2026年第一季度报告", "投资者关系活动记录表", "关于召开股东大会的通知", None]
+         "2026年第一季度报告", "投资者关系活动记录表", "关于召开股东大会的通知", None,
+         "关于2024年年度报告的信息披露监管问询函的回复公告", "港股公告\uff1a2024年度报告",
+         "2026年限制性股票激励计划\uff08草案\uff09", "2026年10月主要经营数据公告"]
     )  # fmt: skip
     out = DocumentClassifier(config.documents["cninfo"]).compute_doc_types(titles)
     assert out.tolist() == [
         "semiannual", "annual", None, None, "q1", "ir_record", None, None,
+        "inquiry_reply", None, "incentive_plan", "operating_data",
     ]  # fmt: skip
 
 

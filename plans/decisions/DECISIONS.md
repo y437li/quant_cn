@@ -1193,3 +1193,11 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Alternatives: DP as a seventh factor next to EP (not chosen by the user; both carry information, to retest later); keep EP (rejected: weaker on every metric).
 - Consequences: `config/factors.yaml` weights changed; `derived.features` score rebuilt; the trial log records the new trial.
 - Links: D-093, D-148, FACTOR_LIBRARY §1, plans/execution/04_*.md ph5
+
+### D-149 CNINFO title rules: inquiry replies first, H-share filings dropped, re-type downloaded files
+- Status: accepted (2026-11-12, plan 18 ph2 approved by the user: "可以").
+- Context: rules are first-match; "关于2024年年度报告的信息披露监管问询函的回复公告" contains 年度报告 and was typed annual (1,240 files incl. 1,190 from the keyword source), and "港股公告：2024年度报告" / "H股公告-…季度报告" were typed periodic. The FY2022–2024 label backfill picked such replies as the company's annual report (found 2026-11-12, plan 12 log).
+- Decision: `inquiry_reply` is the first cninfo rule (问询函 | 问询的回复 | 审核问询); periodic noise adds 港股公告 | H股 (not 港股: port companies 广州港股份 / 天津港股份); new types `incentive_plan`, `operating_data` and keywords 股权激励 / 激励计划 / 经营数据 / 新签合同 (激励计划 added 2026-11-13: draft titles read "…限制性股票激励计划（草案）"). `DocumentRetyper` (new; manifest parts through the new `DocumentManifestWriter`, shared with `DocumentDownloader`) re-applies the rules to downloaded files: changed type = file moved + new manifest row; no rule = `excluded`. Run 2026-11-12: cninfo moved 52, excluded 61 of 85,654; cninfo_kw moved 1,298 of 21,455; 0 inquiry replies left under annual / semiannual / q1 / q3.
+- Alternatives: filter replies in every reader (rejected: each reader would repeat the rule); delete and re-download (rejected: needless traffic).
+- Consequences: readers that take the latest manifest row per doc_id see the new types; FY2025 labels made from `documents/cninfo/annual/` by folder glob (applications_full.py) include replies and must be re-checked.
+- Links: D-101, D-124, plans/execution/18_*.md ph2

@@ -25,6 +25,7 @@ class DocumentClassifier:
             (none)
 
     Used by:
+        data_loading.DocumentRetyper      -- re-classify titles
         data_loading.DocumentDownloader  -- selects candidates
 
     Test cases:

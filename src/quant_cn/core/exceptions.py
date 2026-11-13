@@ -45,6 +45,7 @@ class ConfigError(QuantCnError):
             (none)
 
     Used by:
+        data_loading.DocumentRetyper      -- unknown source
         core.Config.load                   -- bad YAML, unsafe lake root
         core.Config.get_dataset            -- unknown dataset name
         data_loading.TushareClient         -- missing token
@@ -162,6 +163,8 @@ class LakeError(QuantCnError):
     Used by:
         lake.ParquetWriter         -- atomic write failed
         lake.TradingCalendar       -- trade_cal not downloaded yet
+        data_loading.DocumentManifestWriter -- manifest write
+        data_loading.DocumentRetyper      -- file move
         lake.LakeQuery.sql         -- DuckDB query error
         cli.QuantCnCli             -- backup target missing
         portfolio.EtfProxyBuilder  -- no share rows, missing output directory
