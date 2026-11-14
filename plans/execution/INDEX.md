@@ -22,4 +22,5 @@ Execution plans, `NN_<slug>.md`, from the `plan` skill template. `ROADMAP.md` is
 | `18_guidance_tracking.md` | company guidance tracking: preview tracker, acquisition fixes, Ark guidance extraction, outcome matching, credibility | |
 | `19_app_store_charts.md` | App Store game charts: daily capture per country, publisher link, per-company rank view | |
 | `20_manual_series.md` | Manual and public cycle series (Clarksons newbuild index, TiO2, freight, hog cycle) as PIT rows with sources; feeds position notes, watchlist and morning report | |
+| `25_intraday_reversal.md` | intraday high-turnover reversal factor: class, campaign test, score decision | 3 phases, research evidence, class table, risks, open question |
 | `ROADMAP.md` | every plan with what it builds, which design it implements, dependencies and status | roadmap table, status vocabulary |

@@ -1218,3 +1218,20 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
   - Treat "中标公示" as a win: rejected, because a candidate posting can still change.
 - Consequences: yields are low for annual plans (7/50 companies give numeric targets) and IR records (6/50). Incentive drafts and order notices carry most items.
 - Links: D-122, D-124, D-149, plan 18
+
+### D-155 RetailGauge top decile is an avoid flag (散户过热回避标记)
+- Status: accepted (2026-11-13, user: "把第10组回避标记加进 plan 21"), plan 21.
+- Context: plan 21 excluded price signals ("不在乎预测股价"). Research run `20261113_retail_gauge_returns` found that the v5 prediction, known at the quarter-end close, is the strongest holder-based return signal we have. Its 60-day excess rank IC is −0.085, or −0.058 net of size / reversal / turnover / momentum and the last announced change. Over 18 quarters the top decile trails the equal-weight market by 3.75% a quarter (t 3.9, 16/18). The long side (deciles 1–4) adds only +1.1% a quarter, and shorting decile 10 is not feasible.
+- Decision:
+  - A stock whose gauge pct is at or above `retail_gauge.avoid_pct` (default 0.9, in config) carries `avoid = true` in `derived/retail_gauge`.
+  - The flag excludes the stock from the opportunity list. It is shown on the holdings and watchlist pages.
+  - The morning report names any holding that enters the flag.
+  - It is a flag only: no automatic trades, no sizing rule.
+- Alternatives:
+  - Long/short decile portfolio: rejected; the short leg carries three quarters of the effect and cannot be borrowed.
+  - Index-hedged long of deciles 1–4: rejected; t 1.7, worst quarter −17.7%, futures basis not included.
+  - Keep plan 21 free of price use: overridden by the user.
+- Consequences:
+  - `RetailGaugeEvaluator` also reports, each quarter, the flagged names' 60-session excess return against the equal-weight market. This keeps the flag's value checked out of sample.
+  - The flag goes to review if flagged names beat the equal-weight market in four consecutive quarters.
+- Links: plan 21 ph3–5, D-142, research_space/RESEARCH_LOG.md (20261113_retail_gauge_returns, 20261113_holder_count_returns)
