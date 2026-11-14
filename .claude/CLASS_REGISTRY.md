@@ -105,7 +105,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `DateWindowFetcher` | `quant_cn.data_loading.fetchers` | 3 | BaseFetcher | Range-only endpoints swept by calendar window (D-063): one call per month ("YYYYMM" keys) or year ("YYYY" keys) with start_date / end_date clipped to the run range | 2 | `data_loading.FetcherFactory.build` | `tests/data_loading/test_fetchers.py` (TC-DWF-001..004) | 2026-09-27 |
 | `HttpTransport` | `quant_cn.data_loading.http_transport` | 3 | none | Send one HTTP request and return the decoded JSON object or the raw bytes (JSON POST, form POST, GET JSON, GET bytes). | 4 | `data_loading.TushareClient`, `data_loading.CninfoClient`, `data_loading.EastmoneyReportClient`, `data_loading.AppStoreClient`, `data_loading.BaseWebClient`, `data_loading.DocumentDownloader` | `tests/data_loading/test_tushare_client.py`, `test_http_transport.py` (TC-TC-001, TC-HT-001) | 2026-09-27 |
 | `TushareClient` | `quant_cn.data_loading.tushare_client` | 3 | BaseApiClient | Query Tushare Pro: one logical query follows limit/offset paging until a short page and returns all rows | 1 | `cli.ServiceBuilder` | `tests/data_loading/test_tushare_client.py` (TC-TC-001..009) | 2026-09-27 |
-| `FactorInputs` | `quant_cn.factor.base_factor` | 5 | none | The panels a factor may read, loaded once by FactorFactory for all factors of a run | 1 | `factor.BaseFactor`, `factor.FactorFactory`, `factor.library.DividendYieldFactor`, `factor.library.EarningsYieldFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor` | `tests/factor/test_base_factor.py` (TC-FIN-001..001) | 2026-09-27 |
+| `FactorInputs` | `quant_cn.factor.base_factor` | 5 | none | The panels a factor may read, loaded once by FactorFactory for all factors of a run | 1 | `factor.BaseFactor`, `factor.FactorFactory`, `factor.library.DividendYieldFactor`, `factor.library.EarningsYieldFactor`, `factor.library.IntradayReversalFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor` | `tests/factor/test_base_factor.py` (TC-FIN-001..001) | 2026-09-27 |
 | `BaseFactor` | `quant_cn.factor.base_factor` | 5 | ABC | Abstract factor: declares which inputs, fundamentals fields and daily_basic columns it needs and how many sessions of price history before the first output date | 3 | `factor.FactorFactory`, `factor.library.*`, `factor.library.DividendYieldFactor`, `factor.library.EarningsYieldFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor`, `pipeline.FeatureStep` | `tests/factor/test_base_factor.py` (TC-BFA-001..002) | 2026-09-27 |
 | `FactorAcceptance` | `quant_cn.factor.factor_acceptance` | 5 | none | Criteria 1-3 of FACTOR_TESTING_DESIGN §6 per factor at one horizon, from the campaign's IC_TEST: (1) NW t of the full-window mean IC >= t_min (HLZ) and BHY-adjusted p <= alpha | 1 | `research_space/notebooks/20260930_factor_campaign_01.ipynb`, `plan 06 ReportBuilder` | `tests/factor/test_factor_acceptance.py` (TC-FA-001..003) | 2026-09-27 |
 | `FactorReport` | `quant_cn.factor.factor_evaluator` | 5 | none | The evaluation of one campaign: IC series, every test result, quantile ladders. | 0 | `factor.FactorEvaluator` | `tests/factor/test_factor_evaluator.py` (TC-FEV-001..001) | 2026-09-27 |
@@ -115,7 +115,8 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `EarningsYieldFactor` | `quant_cn.factor.library.earnings_yield_factor` | 5 | BaseFactor | Earnings yield EP_TTM = net profit attributable to parent over the trailing twelve months (PIT, D-092) / total market value at the close of t | 1 | (none yet) | `tests/factor/test_fundamental_factors.py` (TC-EYF-001..001) | 2026-09-27 |
 | `MomentumFactor` | `quant_cn.factor.library.momentum_factor` | 5 | BaseFactor | MOM_{12-1} = P_adj(t - skip) / P_adj(t - window) - 1 on the backward-adjusted close (ratios are PIT-safe, FACTOR_TESTING_DESIGN §11), skipping the most recent month to avoid the short-term reversal (Jegadeesh & Titman 1993) | 2 | (none yet) | `tests/factor/test_price_factors.py` (TC-MOM-001..001) | 2026-09-27 |
 | `ProfitGrowthFactor` | `quant_cn.factor.library.profit_growth_factor` | 5 | BaseFactor | Growth = (NI_TTM(P) - NI_TTM(P - 1 year)) / /NI_TTM(P - 1 year)/ for the latest PIT-visible period P, both TTMs from the versions known at the announcement (the lake's `n_income_attr_p_ttm_yoy`, D-092) | 1 | (none yet) | `tests/factor/test_fundamental_factors.py` (TC-PGF-001..001) | 2026-09-27 |
-| `ReversalFactor` | `quant_cn.factor.library.reversal_factor` | 5 | BaseFactor | REV = -(P_adj(t) / P_adj(t - window) - 1): last month's losers tend to rebound, strongly so in China's retail-driven market (Jegadeesh 1990 | 2 | (none yet) | `tests/factor/test_price_factors.py` (TC-REV-001..001) | 2026-09-27 |
+| `IntradayReversalFactor` | `quant_cn.factor.library.intraday_reversal_factor` | 5 | ReversalFactor | IRV = -sum(ln(close / open)) over the `top_k` sessions with the highest free-float turnover among the last `window` grid sessions | 1 | (none yet) | `tests/factor/test_intraday_reversal_factor.py` (TC-IRV-001..005) | 2026-11-14 |
+| `ReversalFactor` | `quant_cn.factor.library.reversal_factor` | 5 | BaseFactor | REV = -(P_adj(t) / P_adj(t - window) - 1): last month's losers tend to rebound, strongly so in China's retail-driven market (Jegadeesh 1990 | 2 | `factor.library.IntradayReversalFactor` | `tests/factor/test_price_factors.py` (TC-REV-001..001) | 2026-09-27 |
 | `RoeFactor` | `quant_cn.factor.library.roe_factor` | 5 | BaseFactor | Return on equity ROE_TTM = net profit attributable to parent over the trailing twelve months / equity attributable to parent in the latest PIT-visible balance sheet (both D-092 PIT) | 1 | (none yet) | `tests/factor/test_fundamental_factors.py` (TC-ROE-001..001) | 2026-09-27 |
 | `DividendYieldFactor` | `quant_cn.factor.library.dividend_yield_factor` | 5 | BaseFactor | DP = trailing 12-month dividend yield (daily_basic dv_ttm / 100); 0 for a stock with a market cap and no dividend; no value without daily_basic (D-148 descriptor as an alpha factor) | 2 | (none yet) | `tests/factor/test_price_factors.py` (TC-DYF-001..001) | 2026-11-12 |
 | `TurnoverFactor` | `quant_cn.factor.library.turnover_factor` | 5 | BaseFactor | TURN = -mean(turnover_rate_f over the last `window` sessions, at least `min_obs` traded): heavily traded stocks underperform, a liquidity / attention effect that is strong in China (Datar, Naik & Radcliffe 1998 | 2 | (none yet) | `tests/factor/test_price_factors.py` (TC-TRN-001..001) | 2026-09-27 |
@@ -1257,7 +1258,7 @@ never column lists (those live in section E).
 ### `FactorInputs` — `quant_cn.factor.base_factor` (L5)
 - **Purpose:** The panels a factor may read, loaded once by FactorFactory for all factors of a run. Everything is already point in time: fundamentals come only as FUNDAMENTALS_PIT (effective the session after announcement, TTM from PIT-visible versions, D-092), prices and daily_basic are dated by their session (known at its close).
 - **Base:** none. **Depends on (injected):** —.
-- **Used by:** `factor.BaseFactor`, `factor.FactorFactory`, `factor.library.DividendYieldFactor`, `factor.library.EarningsYieldFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor`.
+- **Used by:** `factor.BaseFactor`, `factor.FactorFactory`, `factor.library.DividendYieldFactor`, `factor.library.EarningsYieldFactor`, `factor.library.IntradayReversalFactor`, `factor.library.MomentumFactor`, `factor.library.ProfitGrowthFactor`, `factor.library.ReversalFactor`, `factor.library.RoeFactor`, `factor.library.TurnoverFactor`.
 - **Tests:** `tests/factor/test_base_factor.py` (TC-FIN-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
@@ -1368,10 +1369,21 @@ never column lists (those live in section E).
 |---|---|---|---|---|---|
 | `compute_raw` | TTM profit growth per stock and session. | FactorInputs -> pd.DataFrame | — | as class | see class |
 
+### `IntradayReversalFactor` — `quant_cn.factor.library.intraday_reversal_factor` (L5)
+- **Purpose:** IRV = -sum(ln(close / open)) over the `top_k` sessions with the highest free-float turnover among the last `window` grid sessions. The 1-month reversal lives in the intraday leg of busy sessions; the overnight leg is momentum (research run 20261114_reversal_variants: 20-day rank IC 0.076 vs 0.046 for ReversalFactor). Sign flipped so higher values are expected to earn more. Open and close of one session share the adjustment factor, so unadjusted prices are used.
+- **Base:** ReversalFactor. **Depends on (injected):** str, int, int, int.
+- **Used by:** (none yet).
+- **Tests:** `tests/factor/test_intraday_reversal_factor.py` (TC-IRV-001..005).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `__init__` | wire dependencies | str, int, int, int -> None | `ValueError` | callers of the class | TC-IRV-005 |
+| `compute_raw` | Intraday high-turnover reversal per stock and session on the dense session grid. | FactorInputs -> pd.DataFrame | — | as class | TC-IRV-001..004 |
+
 ### `ReversalFactor` — `quant_cn.factor.library.reversal_factor` (L5)
 - **Purpose:** REV = -(P_adj(t) / P_adj(t - window) - 1): last month's losers tend to rebound, strongly so in China's retail-driven market (Jegadeesh 1990; Lehmann 1990). Sign flipped so higher values are expected to earn more. Suspended sessions carry the last close.
 - **Base:** BaseFactor. **Depends on (injected):** str, int.
-- **Used by:** (none yet).
+- **Used by:** `factor.library.IntradayReversalFactor`.
 - **Tests:** `tests/factor/test_price_factors.py` (TC-REV-001..001).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |

@@ -88,6 +88,7 @@ keeps ETOP/CETOP only.
 | 6-1 momentum | return over [T−126, T−21] | | |
 | 1-month reversal (−) | return over last 21 sessions | | strong in A-shares |
 | Short-term reversal (−) | 5-session return | | |
+| Intraday high-turnover reversal (−) | sum of ln(close/open) on the 10 highest-turnover of the last 21 sessions | `prices` open/close, `daily_basic.turnover_rate_f` | plan 25; the overnight leg of the monthly return is momentum, the intraday leg on busy days carries the reversal |
 | Residual momentum | 12-1 momentum of residuals from a market (and later risk-model) regression | `prices_adj`, index return; `FACTOR_RETURN` later | |
 | Momentum consistency | share of positive months in last 12 | | |
 | 52-week high proximity | close / max(high, 252) | | |

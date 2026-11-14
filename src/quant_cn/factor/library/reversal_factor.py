@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+from typing import ClassVar
+
 import pandas as pd
 
-from quant_cn.factor.base_factor import BaseFactor, FactorInputs
+from quant_cn.factor.base_factor import BaseFactor, FactorInputs, Input
 
 
 class ReversalFactor(BaseFactor):
@@ -23,14 +25,14 @@ class ReversalFactor(BaseFactor):
             ValueError  -- window < 1
 
     Used by:
-        (none yet)
+        factor.library.IntradayReversalFactor  -- subclass
 
     Test cases:
         TC-REV-001  known answer with the sign flipped; changing prices after t leaves the value
                     at t unchanged
     """
 
-    inputs = ("prices",)
+    inputs: ClassVar[tuple[Input, ...]] = ("prices",)
 
     def __init__(self, name: str, window: int = 21) -> None:
         super().__init__(name)

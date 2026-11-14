@@ -8,6 +8,7 @@ One BaseFactor subclass per module, registered by class name; listed in config/f
 | `__init__.py` | package marker |  |
 | `dividend_yield_factor.py` | Dividend yield: trailing 12-month dividends over market cap (FACTOR_LIBRARY §1 DP, D-148) | `DividendYieldFactor` |
 | `earnings_yield_factor.py` | EP TTM: trailing net profit over market value (FACTOR_LIBRARY §8) | `EarningsYieldFactor` |
+| `intraday_reversal_factor.py` | Intraday high-turnover reversal: minus intraday returns on the busiest of the last 21 sessions (plan 25) | `IntradayReversalFactor` |
 | `momentum_factor.py` | Momentum 12-1: past-year return skipping the last month (FACTOR_LIBRARY §8) | `MomentumFactor` |
 | `profit_growth_factor.py` | Profit growth: year-on-year change of TTM net profit (FACTOR_LIBRARY §8) | `ProfitGrowthFactor` |
 | `reversal_factor.py` | Short-term reversal: minus the last month's return (FACTOR_LIBRARY §8) | `ReversalFactor` |

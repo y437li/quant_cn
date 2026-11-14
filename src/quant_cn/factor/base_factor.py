@@ -37,6 +37,7 @@ class FactorInputs:
         factor.BaseFactor                   -- compute input
         factor.FactorFactory                -- build_inputs output
         factor.library.EarningsYieldFactor  -- injected type or call
+        factor.library.IntradayReversalFactor -- injected type or call
         factor.library.DividendYieldFactor  -- injected type or call
         factor.library.MomentumFactor       -- injected type or call
         factor.library.ProfitGrowthFactor   -- injected type or call

@@ -6,6 +6,8 @@ factors:
   - {name: profit_growth_ttm, class: ProfitGrowthFactor}
   - {name: momentum_12_1, class: MomentumFactor, params: {window: 252, skip: 21}}
   - {name: reversal_1m, class: ReversalFactor, params: {window: 21}}
+  # plan 25: intraday returns on the 10 busiest of 21 sessions; not in the score weights until D-156
+  - {name: reversal_intraday_1m, class: IntradayReversalFactor, params: {window: 21, top_k: 10, min_obs: 15}}
   - {name: turnover_60d, class: TurnoverFactor, params: {window: 60, min_obs: 40}}
   # user 2026-11-12 "测一下股息率的选股能力"; in the score since D-147
   - {name: dividend_yield, class: DividendYieldFactor}

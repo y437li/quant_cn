@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | approved 2026-11-14 (user: "ok"); not started |
+| Status | doing 2026-11-14 — phase 1 done, phase 2 next |
 | Owner | user (approve) / agent (build) |
 | Created | 2026-11-14 |
 | Notion | pending |
@@ -59,5 +59,6 @@ Evidence (research run `20261114_reversal_variants`):
 
 | Date | Phase | Change |
 |---|---|---|
+| 2026-11-14 | 1 | Done. `IntradayReversalFactor` in `factor/library/intraday_reversal_factor.py`, config `reversal_intraday_1m` (not in the score). Real-lake check: 49 stocks on 20260930 match the research formula to 6e-17. `ReversalFactor.inputs` got a ClassVar annotation so the subclass can widen it (type-only). `test_tc_c_012_factors` now expects 8 factors |
 | 2026-11-14 | all | Approved with the replace default (user: "ok"); waiting for "start phase 1" |
 | 2026-11-14 | all | Drafted, awaiting approval (user: "可以加一下吧" after research run 20261114_reversal_variants) |
