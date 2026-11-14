@@ -12,11 +12,44 @@ from tests.support import FakeClock
 
 
 class FakeResult:
-    def __init__(self, rows: list[dict[str, str]], error_code: str = "0") -> None:
-        self.rows, self.error_code, self.error_msg = rows, error_code, "boom"
+    """Mimics baostock ResultData: rows served page by page through next()/get_row_data().
+
+    `fail_page` sets error_code when that page is requested, like a dropped connection.
+    get_data() raises, as the real one does under pandas 2 for multi-page results.
+    """
+
+    def __init__(
+        self,
+        rows: list[dict[str, str]],
+        error_code: str = "0",
+        page_size: int = 10_000,
+        fail_page: int | None = None,
+    ) -> None:
+        self.error_code, self.error_msg = error_code, "boom"
+        self.fields = list(rows[0]) if rows else []
+        values = [list(r.values()) for r in rows]
+        self.pages = [values[i : i + page_size] for i in range(0, len(values), page_size)]
+        self.fail_page, self.page, self.row = fail_page, 0, -1
+
+    def read_next(self) -> bool:
+        if self.page >= len(self.pages):
+            return False
+        self.row += 1
+        if self.row < len(self.pages[self.page]):
+            return True
+        self.page, self.row = self.page + 1, 0
+        if self.page == self.fail_page:
+            self.error_code = "10002007"
+            return False
+        return self.page < len(self.pages) and bool(self.pages[self.page])
+
+    next = read_next  # baostock's vendor name for the method
+
+    def get_row_data(self) -> list[str]:
+        return self.pages[self.page][self.row]
 
     def get_data(self) -> pd.DataFrame:
-        return pd.DataFrame(self.rows)
+        raise AttributeError("'DataFrame' object has no attribute 'append'")
 
 
 def build_module(results: list[FakeResult], calls: list[dict[str, Any]]) -> Any:
@@ -102,3 +135,29 @@ def test_tc_bsc_004_login_retry(clock: FakeClock) -> None:
         "query_history_k_data_plus", {"ts_code": "600000.SH"}, ["date", "code", "close"]
     )
     assert out["close"].tolist() == [9.16]
+
+
+def build_bars(n: int) -> list[dict[str, str]]:
+    return [{"date": "2026-09-28", "time": str(i), "close": f"{i}.5"} for i in range(n)]
+
+
+# TC-BSC-005
+def test_tc_bsc_005_multi_page(clock: FakeClock) -> None:
+    calls: list[dict[str, Any]] = []
+    module = build_module([FakeResult(build_bars(7), page_size=3)], calls)
+    out = BaostockClient(clock, module=module).query(
+        "query_history_k_data_plus", {"ts_code": "600000.SH"}, ["date", "time", "close"]
+    )
+    assert out["close"].tolist() == [i + 0.5 for i in range(7)]
+    assert list(out.columns) == ["ts_code", "date", "time", "close"] and len(calls) == 1
+
+
+# TC-BSC-006
+def test_tc_bsc_006_page_failure_retried(clock: FakeClock) -> None:
+    calls: list[dict[str, Any]] = []
+    first = FakeResult(build_bars(7), page_size=3, fail_page=1)
+    module = build_module([first, FakeResult(build_bars(7), page_size=3)], calls)
+    out = BaostockClient(clock, retries=1, module=module).query(
+        "query_history_k_data_plus", {"ts_code": "600000.SH"}, ["date", "time", "close"]
+    )
+    assert len(out) == 7 and len(calls) == 2 and module.state["logins"] == 2

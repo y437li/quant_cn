@@ -52,6 +52,8 @@ class BaostockClient(BaseApiClient):
         TC-BSC-002  error codes are retried then raise DataSourceError; login happens once
         TC-BSC-004  a failed login is retried before the query runs
         TC-BSC-003  a Beijing or non-6-digit code (T600018.SH) returns an empty frame, no call
+        TC-BSC-005  a result spanning several pages is returned whole, rows in page order
+        TC-BSC-006  a page that fails mid-result is retried, never returned truncated
     """
 
     def __init__(
@@ -83,7 +85,8 @@ class BaostockClient(BaseApiClient):
             Output:
                 DataFrame  -- BaoStock columns; ts_code column; dates YYYYMMDD; numbers float
             Raises:
-                DataSourceError  -- unknown method, or an error code after retries
+                DataSourceError  -- unknown method, or an error code (on the query or on any
+                                    later page) after retries
         """
         args = dict(params)
         ts_code = args.pop("ts_code", "")
@@ -104,8 +107,9 @@ class BaostockClient(BaseApiClient):
         failures = 0
         while True:
             result = method(code=code, **args)
-            if str(result.error_code) == "0":
-                return pd.DataFrame(result.get_data())
+            frame = self._read_pages(result) if str(result.error_code) == "0" else None
+            if frame is not None:
+                return frame
             failures += 1
             if failures > self._retries:
                 raise DataSourceError(f"{api_name} {code}: {result.error_code} {result.error_msg}")
@@ -131,6 +135,18 @@ class BaostockClient(BaseApiClient):
             with contextlib.suppress(Exception):  # a broken session must be closed before re-login
                 self._module.logout()
         return self._module
+
+    @staticmethod
+    def _read_pages(result: Any) -> pd.DataFrame | None:
+        # Read every page row by row: baostock's own get_data() calls DataFrame.append (removed in
+        # pandas 2) once a result spans more than one 10k-row page. A page that fails mid-way sets
+        # error_code; return None so the caller retries instead of keeping a truncated frame.
+        rows = []
+        while result.next():
+            rows.append(result.get_row_data())
+        if str(result.error_code) != "0":
+            return None
+        return pd.DataFrame(rows, columns=list(result.fields))
 
     @staticmethod
     def _to_code(ts_code: str) -> str | None:
