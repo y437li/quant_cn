@@ -123,3 +123,23 @@ def test_tc_scr_007_entry_rows_order() -> None:
     assert keys[:3] == ["entry_1", "entry_2", "entry_3"]
     assert keys.index("selloff") == keys.index("above_ma") + 1
     assert rows[1]["state"] == "on" and rows[keys.index("selloff")]["state"] == "on"
+
+
+# TC-SCR-008
+def test_tc_scr_008_depth_row() -> None:
+    def depth(speed: float | None, acc: float | None, dd: float | None = -0.27) -> Any:
+        market, vols, flows = _build_frames(ld=0.0, low=0.0, pct=0.5)
+        margin = {"rz": 22083.0, "rz_dd": -0.1, "rz_chg": -0.01, "rz_speed": speed,
+                  "rz_acc": acc, "rz_dd_long": dd}  # fmt: skip
+        market = market.assign(**{k: [None, None, v] for k, v in margin.items()})
+        rows, _ = SmallCapWatchRows(SETTINGS).build(market, vols, flows)
+        return {r["key"]: r for r in rows}.get("margin_depth")
+
+    row = depth(-104.5, -10.8)
+    assert row["value"] == pytest.approx(-0.27) and row["state"] == "info"
+    assert row["note"].startswith("加速下降: 速度 -104 亿/日")
+    assert depth(-104.5, 0.0)["note"].startswith("减速下降")
+    assert depth(-20.0, -5.0)["note"].startswith("走平")  # |speed| at the flat line
+    assert depth(25.0, 1.0)["note"].startswith("回升")
+    assert depth(None, None)["note"].startswith("节奏未知")
+    assert depth(-50.0, 1.0, None) is None

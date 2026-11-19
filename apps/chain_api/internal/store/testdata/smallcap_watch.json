@@ -85,12 +85,20 @@
   {
    "date": "20190104",
    "share": 2.078,
-   "small": 4498.0
+   "small": 4498.0,
+   "rz": 9870.5
   },
   {
    "date": "20261113",
    "share": 2.518,
    "small": null
+  }
+ ],
+ "margin_episodes": [
+  {
+   "name": "2018 熊市",
+   "depth": -0.33,
+   "months": 12
   }
  ]
 }

@@ -45,7 +45,7 @@ L1: base classes, exceptions, Config, Schema, DateCodec, TickerNormalizer, loggi
 | `sector_earnings_signal_settings.py` | windows and thresholds of the earnings events and the 财报季信号 from config/sector_earnings_signal.yaml (plan 35) | `SectorEarningsSignalSettings` |
 | `retail_gauge_settings.py` | RetailGauge windows, model params, thresholds and streak rule from config/retail_gauge.yaml (plan 21) | `RetailGaugeSettings` |
 | `opportunity_settings.py` | daily opportunity list universe, rule thresholds and list sizes from config/discovery_rules.yaml (plan 21 ph4) | `OpportunitySettings` |
-| `small_cap_watch_settings.py` | indices, triggers, windows and ETFs of the 小盘观察 from config/smallcap_watch.yaml plus the local override (plan 30) | `WatchIndex`, `WatchEtf`, `SmallCapWatchSettings` |
+| `small_cap_watch_settings.py` | indices, triggers, windows and ETFs of the 小盘观察 from config/smallcap_watch.yaml plus the local override (plan 30) | `WatchIndex`, `WatchEtf`, `MarginEpisode`, `SmallCapWatchSettings` |
 | `app_publisher_settings.py` | App Store seller accounts → company and listed code from config/app_publishers.yaml (plan 19 ph2) | `AppPublisher`, `AppPublisherSettings` |
 | `sector_monitor_settings.py` | tiers, vol windows, chart lengths and sectors of the 行业监控 from config/sector_monitors.yaml (plan 31) | `MonitoredSecurity`, `MonitoredSector`, `SectorMonitorSettings` |
 | `message_sender.py` | phone alerts by iMessage: recipients from config/local.notify.yaml and the osascript sender (plan 22) | `NotifyRecipient`, `NotifySettings`, `MessageSender`, `IMessageSender` |

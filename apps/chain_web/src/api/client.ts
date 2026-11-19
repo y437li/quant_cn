@@ -138,8 +138,9 @@ export interface SmallCapPoint {
   rz?: number | null; rz_ma?: number | null; rz_circ?: number | null;
 }
 /** 融资余额 / 流通市值 weekly since 2019 (plan 30 ph6): share in %, 中证1000 close. */
-export interface SmallCapSharePoint { date: string; share: number; small: number | null }
-export interface SmallCapWatch { as_of: string; rows: SmallCapRow[]; history: SmallCapPoint[]; triggered: string[]; new_triggered: string[]; missing: string[]; margin_share_long?: SmallCapSharePoint[] }
+export interface SmallCapSharePoint { date: string; share: number; small: number | null; rz?: number | null }
+export interface SmallCapEpisode { name: string; depth: number; months: number }
+export interface SmallCapWatch { as_of: string; rows: SmallCapRow[]; history: SmallCapPoint[]; triggered: string[]; new_triggered: string[]; missing: string[]; margin_share_long?: SmallCapSharePoint[]; margin_episodes?: SmallCapEpisode[] }
 export interface VolatilityMonitor { as_of: string; window: number; lines: VolLine[]; flags: VolFlag[]; new_flags: string[]; missing: string[]; smallcap: SmallCapWatch | null }
 
 /** Factor monitor (因子监控, plan 15 phase 7c, D-132): fractions, computed in Python. */

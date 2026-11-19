@@ -65,6 +65,33 @@ class WatchEtf(BaseModel):
     own_row: bool = False
 
 
+class MarginEpisode(BaseModel):
+    """
+    Purpose:
+        One past 融资余额 去杠杆 episode (month-end high to trough, research
+        20261119_margin_drawdown), shown beside the current depth (plan 30 ph7).
+
+    Contract:
+        Input:
+            name: str; depth: float in (-1, 0) (trough / high - 1); months: int > 0
+        Output:
+            frozen pydantic model
+        Raises:
+            pydantic.ValidationError  -- missing field, extra keys, depth outside (-1, 0)
+
+    Used by:
+        core.SmallCapWatchSettings  -- field margin_episodes
+
+    Test cases:
+        TC-SCS-005  config/smallcap_watch.yaml loads four episodes; depth 0 is refused
+    """
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+    name: str
+    depth: float = Field(gt=-1, lt=0)
+    months: int = Field(gt=0)
+
+
 class SmallCapWatchSettings(BaseModel):
     """
     Purpose:
@@ -89,7 +116,11 @@ class SmallCapWatchSettings(BaseModel):
                 selloff_near_turnover); selloff_turnover, selloff_near_turnover: float > 0;
             turnover_window: int > 0; entry_since: str YYYYMMDD | None -- start of the
                 建仓档 group (None: no group); entry_bought: int in [0, 3] steps bought (ph5);
-            margin_long_start: str YYYYMMDD -- first day of the weekly share chart (ph6)
+            margin_long_start: str YYYYMMDD -- first day of the weekly share chart (ph6);
+            margin_episodes: list[MarginEpisode]; margin_speed_span: int > 0 (EMA span of the
+                daily balance change); margin_acc_days: int > 0 (acceleration = change of the
+                smoothed speed over this many sessions / days); margin_flat_speed: float > 0
+                (亿 per day: |speed| at or below it is 走平) (ph7)
         Output:
             frozen pydantic model; `load(repo_root)`
         Raises:
@@ -97,8 +128,8 @@ class SmallCapWatchSettings(BaseModel):
                                          exit >= entry
 
     Used by:
-        portfolio.SmallCapWatchBuilder  -- windows, indices and ETFs
-        portfolio.SmallCapWatchRows     -- triggers, near rules and row names
+        portfolio.SmallCapWatchBuilder  -- windows, indices, ETFs and margin pace (ph7)
+        portfolio.SmallCapWatchRows     -- triggers, near rules, row names, episodes (ph7)
         portfolio.SmallCapEntryRows     -- 放量大跌 and 建仓档 fields (ph5)
         cli.ReportCommands              -- `smallcap-watch` command
 
@@ -110,6 +141,8 @@ class SmallCapWatchSettings(BaseModel):
                     non-positive level are refused; bad YAML raises ConfigError
         TC-SCS-004  ph5: selloff_near_drop below selloff_drop, a bad entry_since and
                     entry_bought 4 are refused; defaults give no 建仓档 group
+        TC-SCS-005  ph7: config/smallcap_watch.yaml loads four episodes; depth 0 and
+                    margin_flat_speed 0 are refused
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -145,6 +178,10 @@ class SmallCapWatchSettings(BaseModel):
     entry_since: str | None = Field(default=None, pattern=r"^\d{8}$")
     entry_bought: int = Field(default=0, ge=0, le=3)
     margin_long_start: str = Field(default="20190101", pattern=r"^\d{8}$")
+    margin_episodes: list[MarginEpisode] = []
+    margin_speed_span: int = Field(default=10, gt=0)
+    margin_acc_days: int = Field(default=5, gt=0)
+    margin_flat_speed: float = Field(default=20.0, gt=0)
 
     @model_validator(mode="after")
     def _check(self) -> SmallCapWatchSettings:

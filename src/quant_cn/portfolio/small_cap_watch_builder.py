@@ -94,6 +94,10 @@ class SmallCapWatchBuilder:
         their on / near / off / info states come from SmallCapWatchRows; `triggered` lists the
         on rows and `new_triggered` those not on in the previous document. Percentile = share
         of the last `pct_window` values at or below the latest (None under `pct_min_obs`).
+        ph7: the balance's pace (rz_speed = `margin_speed_span` EMA of the daily change in 亿,
+        rz_acc = its `margin_acc_days` change per day) and its depth from the high since
+        `margin_long_start` on the full margin_detail days (rz_dd_long); the document carries
+        the weekly balance in `margin_share_long` and `margin_episodes` from the settings.
 
     Contract:
         Input:
@@ -132,6 +136,9 @@ class SmallCapWatchBuilder:
                     margin_detail days; no margin table lists margin in missing
         TC-SCW-012  ph6: margin_share_long keeps the last full day of each week from
                     margin_long_start, share in %, partial days dropped
+        TC-SCW-013  ph7: rz_speed = EMA of the daily change, rz_acc = its margin_acc_days change
+                    / margin_acc_days; rz_dd_long from the high since margin_long_start (not
+                    the margin_high_days high); weekly points carry rz; episodes in the document
         TC-SCW-011  ph5: small_ret and small_turn (amount / prior turnover_window mean) feed
                     the 放量大跌 row
     """
@@ -162,7 +169,8 @@ class SmallCapWatchBuilder:
                 dict  -- {as_of, rows: [{key, group, name, value, unit, trigger, state, note,
                          date}], history: [{date, small, limit_downs, low_share, gap,
                          gap_pct, rz, rz_ma, rz_circ}], triggered: [key], new_triggered: [key],
-                         missing: [key], margin_share_long: [{date, share, small}] (ph6)};
+                         missing: [key], margin_share_long: [{date, share, small, rz}] (ph6,
+                         rz ph7), margin_episodes: [{name, depth, months}] (ph7)};
                          shares and percentiles as fractions, vol in %, flows in 亿元
             Raises:
                 LakeError  -- curated.daily is empty, or a query fails
@@ -173,7 +181,11 @@ class SmallCapWatchBuilder:
         as_of = str(last)
         sessions = [d for d in self._query.sql(_SESSIONS)["cal_date"].astype(str) if d <= as_of]
         start = sessions[-self._s.history :][0]
+        detail = self._read_detail_long(as_of)
         market = self._read_market(sessions, as_of).join(self._read_margin(sessions, as_of))
+        if not detail.empty:
+            depth = detail["rz"] / detail["rz"].cummax() - 1
+            market = market.join(depth.rename("rz_dd_long"))
         vols = self._compute_vols(as_of)
         flows = self._read_flows(sessions, as_of)
         rows, missing = self._rows.build(market, vols, flows)
@@ -187,7 +199,8 @@ class SmallCapWatchBuilder:
             "triggered": on,
             "new_triggered": [k for k in on if k not in seen],
             "missing": missing,
-            "margin_share_long": self._read_margin_share_long(as_of),
+            "margin_share_long": self._compute_weekly(detail),
+            "margin_episodes": [e.model_dump() for e in self._s.margin_episodes],
         }
 
     def write(self, out_dir: Path) -> Path:
@@ -243,12 +256,15 @@ class SmallCapWatchBuilder:
         rz = raw.loc[raw["n"] == raw["n"].max(), "rz"]  # a day missing an exchange is not a total
         rz.index = rz.index.astype(str)
         share, rank = self._compute_margin_share(rz, sessions, as_of)
+        speed = rz.diff().ewm(span=s.margin_speed_span).mean()
         return pd.DataFrame({
             "rz": rz,
             "rz_dd": rz / rz.rolling(s.margin_high_days, min_periods=1).max() - 1,
             "rz_chg": rz / rz.shift(s.margin_turn_days) - 1,
             "rz_chg_ma": rz / rz.shift(s.margin_ma_days) - 1,
             "rz_ma": rz.rolling(s.margin_ma_days).mean(),
+            "rz_speed": speed,
+            "rz_acc": speed.diff(s.margin_acc_days) / s.margin_acc_days,
             "rz_circ": share,
             "rz_circ_pct": rank,
         })  # fmt: skip
@@ -270,29 +286,41 @@ class SmallCapWatchBuilder:
         rank = self._vols.compute_rank_pct(detail.loc[full, "rz"] / circ)
         return rz / circ.reindex(rz.index), rank.reindex(rz.index)
 
-    def _read_margin_share_long(self, as_of: str) -> list[dict[str, Any]]:
-        """Weekly (last full day of each week) financing / float cap in % and 中证1000 (ph6)."""
+    def _read_detail_long(self, as_of: str) -> pd.DataFrame:
+        """Full margin_detail days from margin_long_start: rz (亿), share (%), 中证1000 close."""
         views = ("curated.daily_basic", "curated.margin_detail")
         if not all(self._query.has_view(v) for v in views):
-            return []
+            return pd.DataFrame()
         start = self._s.margin_long_start
         detail = self._query.sql(_DETAIL, [start, as_of]).set_index("trade_date")
-        circ = self._query.sql(_CIRC, [start, as_of]).set_index("trade_date")["circ"]
         if detail.empty:
-            return []
+            return pd.DataFrame()
+        circ = self._query.sql(_CIRC, [start, as_of]).set_index("trade_date")["circ"]
         detail = detail[detail["n"] >= _FULL_DAY * detail["n"].rolling(20, min_periods=1).median()]
         small = self._query.sql(_SMALL, [self._s.small_index.code, start, as_of])
-        frame = pd.DataFrame({"share": detail["rz"] / circ.reindex(detail.index) * 100})
+        frame = pd.DataFrame(
+            {"rz": detail["rz"], "share": detail["rz"] / circ.reindex(detail.index) * 100}
+        )
         frame["small"] = small.set_index("trade_date")["close"].reindex(frame.index)
         frame = frame.dropna(subset=["share"])
-        frame.index = pd.to_datetime(frame.index.astype(str), format="%Y%m%d")
-        iso = frame.index.isocalendar()
+        frame.index = frame.index.astype(str)
+        return frame
+
+    @staticmethod
+    def _compute_weekly(frame: pd.DataFrame) -> list[dict[str, Any]]:
+        """The last full day of each ISO week: share in %, 中证1000 close, rz in 亿 (ph6, ph7)."""
+        if frame.empty:
+            return []
+        days = pd.DatetimeIndex(pd.to_datetime(frame.index, format="%Y%m%d"))
+        frame = frame.set_axis(days)
+        iso = days.isocalendar()
         weekly = frame.groupby([iso["year"], iso["week"]]).tail(1)
         dates = pd.DatetimeIndex(weekly.index).strftime("%Y%m%d")
         return [
             {"date": d, "share": round(float(sh), 4),
-             "small": None if pd.isna(sm) else float(sm)}
-            for d, sh, sm in zip(dates, weekly["share"], weekly["small"], strict=True)
+             "small": None if pd.isna(sm) else float(sm), "rz": round(float(rz), 1)}
+            for d, sh, sm, rz in zip(dates, weekly["share"], weekly["small"], weekly["rz"],
+                                     strict=True)
         ]  # fmt: skip
 
     def _compute_vols(self, as_of: str) -> pd.DataFrame:

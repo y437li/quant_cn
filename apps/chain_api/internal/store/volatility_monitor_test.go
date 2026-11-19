@@ -44,7 +44,7 @@ func TestTCST026VolatilityAbsent(t *testing.T) {
 	}
 }
 
-// TC-ST-027: smallcap_watch.json is attached as SmallCap (margin history and the ph6 weekly share included); absent → nil; malformed → error.
+// TC-ST-027: smallcap_watch.json is attached as SmallCap (margin history, the ph6 weekly share and the ph7 balance and episodes included); absent → nil; malformed → error.
 func TestTCST027SmallCapWatch(t *testing.T) {
 	m, err := load(t).GetVolatilityMonitor()
 	if err != nil || m.SmallCap == nil {
@@ -62,6 +62,9 @@ func TestTCST027SmallCapWatch(t *testing.T) {
 	}
 	if l := w.MarginShareLong; len(l) != 2 || l[0].Share != 2.078 || *l[0].Small != 4498 || l[1].Small != nil {
 		t.Fatalf("margin share long (ph6): %+v", l)
+	}
+	if l, e := w.MarginShareLong, w.MarginEpisodes; *l[0].Rz != 9870.5 || l[1].Rz != nil || len(e) != 1 || e[0].Depth != -0.33 {
+		t.Fatalf("margin balance and episodes (ph7): %+v %+v", l, e)
 	}
 	dir := dirWithBase(t, "")
 	s, err := NewJSONStore(dir)

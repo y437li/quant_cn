@@ -9,7 +9,12 @@ import pytest
 from pydantic import ValidationError
 
 from quant_cn.core.exceptions import ConfigError
-from quant_cn.core.small_cap_watch_settings import SmallCapWatchSettings, WatchEtf, WatchIndex
+from quant_cn.core.small_cap_watch_settings import (
+    MarginEpisode,
+    SmallCapWatchSettings,
+    WatchEtf,
+    WatchIndex,
+)
 
 REPO = Path(__file__).resolve().parents[2]
 IDX: dict[str, Any] = {
@@ -76,3 +81,14 @@ def test_tc_scs_004_entry_fields() -> None:
         SmallCapWatchSettings(**IDX, entry_bought=4)
     s = SmallCapWatchSettings(**IDX)
     assert s.entry_since is None and s.selloff_drop == -0.03 and s.selloff_turnover == 1.3
+
+
+# TC-SCS-005
+def test_tc_scs_005_margin_episodes() -> None:
+    s = SmallCapWatchSettings.load(REPO)
+    assert [e.depth for e in s.margin_episodes] == [-0.60, -0.33, -0.17, -0.13]
+    assert s.margin_speed_span == 10 and s.margin_flat_speed == 20
+    with pytest.raises(ValidationError):
+        MarginEpisode(name="x", depth=0.0, months=1)
+    with pytest.raises(ValidationError):
+        SmallCapWatchSettings(**IDX, margin_flat_speed=0)

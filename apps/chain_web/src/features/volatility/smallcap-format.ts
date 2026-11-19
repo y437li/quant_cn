@@ -1,4 +1,4 @@
-import type { SmallCapPoint, SmallCapRow, SmallCapSharePoint, SmallCapState, VolPoint } from "../../api/client";
+import type { SmallCapEpisode, SmallCapPoint, SmallCapRow, SmallCapSharePoint, SmallCapState, VolPoint } from "../../api/client";
 
 export const STATE_LABEL: Record<SmallCapState, string> = { on: "已触发", near: "接近", off: "未到", info: "参考" };
 
@@ -50,6 +50,24 @@ export const SHARE_BOTTOM_REFS = [1.94, 2.54];
 /** Purpose: the share chart points (plan 30 ph6): the weekly series since 2019 when present, else the 1-year daily line. Contract: values in %. */
 export const marginShareChartPoints = (w: { history: SmallCapPoint[]; margin_share_long?: SmallCapSharePoint[] }): VolPoint[] =>
   w.margin_share_long && w.margin_share_long.length > 1 ? w.margin_share_long.map((p) => ({ date: p.date, value: p.share })) : marginSharePoints(w.history);
+
+type LongWatch = { history: SmallCapPoint[]; margin_share_long?: SmallCapSharePoint[]; margin_episodes?: SmallCapEpisode[] };
+const longRz = (w: LongWatch): VolPoint[] =>
+  (w.margin_share_long ?? []).filter((p) => p.rz != null).map((p) => ({ date: p.date, value: p.rz as number }));
+
+/** Purpose: the balance chart points (plan 30 ph7): weekly 亿 since 2019 when the long series carries rz, else the 1-year daily line. Contract: values in 亿. */
+export const marginChartPoints = (w: LongWatch): VolPoint[] => {
+  const long = longRz(w);
+  return long.length > 1 ? long : marginPoints(w.history);
+};
+
+/** Purpose: dashed lines on the balance chart: the long high × (1 + each past episode depth) (ph7). Contract: [] without the long series or episodes; ascending. */
+export const marginDepthRefs = (w: LongWatch): number[] => {
+  const long = longRz(w);
+  if (long.length < 2) return [];
+  const high = Math.max(...long.map((p) => p.value));
+  return (w.margin_episodes ?? []).map((e) => high * (1 + e.depth)).sort((a, b) => a - b);
+};
 
 /** Purpose: the watch levels (点 rows' triggers) drawn on the 中证1000 chart. Contract: ascending, no nulls. */
 export const levelRefs = (rows: SmallCapRow[]): number[] =>

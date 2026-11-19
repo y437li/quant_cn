@@ -72,6 +72,7 @@ One folder per ad-hoc analysis, `YYYYMMDD_<topic>/` (topic snake_case, ≤ 4 wor
 | [`20261118_priced_in/`](20261118_priced_in/INDEX.md) | Earnings priced in before disclosure? SUE event study 2019–2026, valuation split |
 | [`20261118_tsmom_now/`](20261118_tsmom_now/INDEX.md) | Current ETF trend scan: which liquid ETFs are in up / down trends (plan-24 blend) |
 | [`20261119_margin_share/`](20261119_margin_share/INDEX.md) | 融资余额 / 流通市值 since 2019 and its level at 中证1000 bottoms |
+| [`20261119_margin_drawdown/`](20261119_margin_drawdown/INDEX.md) | 融资余额 去杠杆 episodes since 2014 and the smoothed pace of the current one (plan 30 ph7) |
 | [`20261119_volume_selloff/`](20261119_volume_selloff/INDEX.md) | 中证1000 ≤ −3% days on ≥ 1.3× 20-day turnover: forward returns (plan 30 ph5 trigger) |
 | [`20261118_linear_pricing_gap/`](20261118_linear_pricing_gap/INDEX.md) | Linear-pricing gap (market cap vs consensus value with fading growth) as a factor |
 | [`20261118_revision_slowdown/`](20261118_revision_slowdown/INDEX.md) | Consensus upgrade slowdown as a signal (FY2 revisions) |

@@ -25,6 +25,9 @@ class SmallCapWatchRows:
         - 杠杆 (ph4): 融资余额 and its share of float market cap with percentile (info), and
           企稳, on when the balance is at least `margin_dd_trigger` below its high and its
           `margin_turn_days` change is >= 0;
+        - 去杠杆深度 (ph7, info): drawdown from the high since `margin_long_start` with the
+          pace (走平 within `margin_flat_speed` 亿/日, 回升, 加速 / 减速下降 by the sign of
+          the acceleration) and the past `margin_episodes` in the note;
         - 建仓档 and 放量大跌 (ph5) from SmallCapEntryRows: 建仓档 rows first, 放量大跌 after
           the panic rows.
 
@@ -52,6 +55,8 @@ class SmallCapWatchRows:
         TC-SCR-006  企稳 on at the drawdown trigger with change >= 0, off at a shallower
                     drawdown or a negative change; no margin columns lists margin in missing
         TC-SCR-007  ph5: 建仓档 rows lead, 放量大跌 follows the panic rows
+        TC-SCR-008  ph7: 去杠杆深度 = last rz_dd_long; pace 走平 at |speed| <= flat, 回升,
+                    加速下降 at acc < 0, 减速下降 at acc >= 0; no rz_dd_long gives no row
     """
 
     def __init__(
@@ -72,7 +77,8 @@ class SmallCapWatchRows:
             Input:
                 market: DataFrame  -- index trade_date; limit_downs, low_share, above_ma and,
                                       when margin data exists, rz, rz_dd, rz_chg, rz_chg_ma,
-                                      rz_ma, rz_circ, rz_circ_pct (亿 / fractions)
+                                      rz_ma, rz_circ, rz_circ_pct (亿 / fractions);
+                                      rz_speed, rz_acc (亿/日), rz_dd_long (ph7)
                 vols:   DataFrame  -- index trade_date; small, small_vol, star_vol, gap, their
                                       `_pct` columns, gap_exit; small_ret, small_turn (ph5)
                 flows:  DataFrame  -- index share date; one column of 亿元 per ETF code
@@ -167,7 +173,8 @@ class SmallCapWatchRows:
             f"距高点 ≤ {s.margin_dd_trigger:.0%} 且 {n} 日变化转正: 历史 12 次,"
             " 中证1000 60 天平均 +7.4% (中位 +4.3%); 2026-08、09 两次失败"
         )
-        return [
+        depth = self._build_depth_row(market, last, date)
+        return ([depth] if depth else []) + [
             self._build_row("margin_balance", "杠杆", "融资余额", self._as_float(last["rz"]),
                             "亿元", None, "info", date, balance),
             self._build_row("margin_level", "杠杆", "融资余额 / 流通市值", share, "%", None,
@@ -175,6 +182,31 @@ class SmallCapWatchRows:
             self._build_row("margin_turn", "杠杆", f"融资余额企稳 ({n} 日变化)", chg, "占比",
                             0.0, state, date, turn),
         ]  # fmt: skip
+
+    def _build_depth_row(self, market: pd.DataFrame, last: pd.Series, date: str) -> Row | None:
+        """去杠杆深度 (ph7): drawdown from the long high, pace, past episodes in the note."""
+        s = self._s
+        long = market["rz_dd_long"].dropna() if "rz_dd_long" in market else pd.Series()
+        if long.empty:
+            return None
+        speed, acc = self._as_float(last.get("rz_speed")), self._as_float(last.get("rz_acc"))
+        pace = self._get_pace(speed, acc)
+        past = "、".join(f"{e.name} {e.depth:.0%} ({e.months} 个月)" for e in s.margin_episodes)
+        note = (f"{pace}: 速度 {speed or 0:+.0f} 亿/日 ({s.margin_speed_span} 日平滑), 加速度"
+                f" {acc or 0:+.1f}; 历次: {past}")  # fmt: skip
+        name = f"去杠杆深度 (距 {s.margin_long_start[:4]} 年以来高点)"
+        return self._build_row("margin_depth", "杠杆", name, float(long.iloc[-1]), "占比", None,
+                               "info", date, note)  # fmt: skip
+
+    def _get_pace(self, speed: float | None, acc: float | None) -> str:
+        """走平 within margin_flat_speed, 回升 above it, else 加速 / 减速下降 by acc's sign."""
+        if speed is None:
+            return "节奏未知"
+        if abs(speed) <= self._s.margin_flat_speed:
+            return "走平"
+        if speed > 0:
+            return "回升"
+        return "加速下降" if (acc or 0) < 0 else "减速下降"
 
     def _build_level_rows(self, ok: pd.DataFrame) -> list[Row]:
         """中证1000 against each user level, and its drawdown from the year high."""

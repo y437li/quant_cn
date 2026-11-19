@@ -29,6 +29,18 @@ margin_turn_days: 5
 margin_high_days: 250
 margin_ma_days: 20         # reference line on the chart (crossing it had no edge)
 margin_long_start: "20190101"  # weekly 融资余额 / 流通市值 chart from here (ph6, research 20261119_margin_share)
+# 去杠杆深度 (plan 30 ph7, research 20261119_margin_drawdown/margin_episodes.py): past month-end
+# episodes of the balance, and its pace: speed = margin_speed_span-day EMA of the daily change
+# (亿 / day), acceleration = its margin_acc_days change / margin_acc_days; |speed| <= margin_flat_speed
+# is 走平.
+margin_episodes:
+  - {name: "2015 股灾", depth: -0.60, months: 12}
+  - {name: "2018 熊市", depth: -0.33, months: 12}
+  - {name: "2022", depth: -0.17, months: 5}
+  - {name: "2024", depth: -0.13, months: 9}
+margin_speed_span: 10
+margin_acc_days: 5
+margin_flat_speed: 20
 # 建仓档 (plan 30 ph5, research 20261119_volume_selloff/selloff_bt.py): 放量大跌 = 中证1000 day
 # return <= selloff_drop on turnover >= selloff_turnover x its prior turnover_window mean (21 events
 # since 2010: 20d +5.9%, hit 86%; 60d +2.9%). Step 2 = panic day, 放量大跌 or the lowest level;

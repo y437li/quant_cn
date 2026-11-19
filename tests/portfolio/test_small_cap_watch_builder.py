@@ -14,7 +14,12 @@ import pytest
 from quant_cn.calculation.realized_vol_calculator import RealizedVolCalculator
 from quant_cn.core.config import Config
 from quant_cn.core.exceptions import LakeError
-from quant_cn.core.small_cap_watch_settings import SmallCapWatchSettings, WatchEtf, WatchIndex
+from quant_cn.core.small_cap_watch_settings import (
+    MarginEpisode,
+    SmallCapWatchSettings,
+    WatchEtf,
+    WatchIndex,
+)
 from quant_cn.lake.derived_views import DerivedViews
 from quant_cn.portfolio.etf_flow_calculator import EtfFlowCalculator
 from quant_cn.portfolio.small_cap_watch_builder import SmallCapWatchBuilder
@@ -246,3 +251,26 @@ def test_tc_scw_012_margin_share_long(lake: MiniLake, config: Config) -> None:
     _build(lake, config, margin_long_start="20260807")  # field accepted
     late = _build(lake, config, margin_long_start="20260807").build(None)["margin_share_long"]
     assert late[0]["date"] == DAYS[4]
+
+
+# TC-SCW-013
+def test_tc_scw_013_margin_depth_and_pace(lake: MiniLake, config: Config) -> None:
+    _write(lake, config)
+    _write_margin(lake, config)
+    episodes = [MarginEpisode(name="2018", depth=-0.33, months=12)]
+    kw = {"margin_high_days": 3, "margin_speed_span": 2, "margin_acc_days": 1}
+    doc = _build(lake, config, margin_episodes=episodes, **kw).build(None)
+    rows = _get_rows(doc)
+    # long high 100 since margin_long_start -> 88 / 100 - 1; the 3-session high is 88 -> 0%
+    assert rows["margin_depth"]["value"] == pytest.approx(-0.12)
+    assert "-0.0%" in rows["margin_balance"]["note"] or "+0.0%" in rows["margin_balance"]["note"]
+    kept = pd.Series([100.0] * 5 + [90.0, 85.0, 80.0, 84.0, 86.0, 88.0])  # DAYS[8] half day
+    speed = kept.diff().ewm(span=2).mean()
+    want = f"速度 {speed.iloc[-1]:+.0f} 亿/日"
+    assert (
+        want in rows["margin_depth"]["note"]
+        and "2018 -33% (12 个月)" in rows["margin_depth"]["note"]
+    )
+    assert speed.iloc[-1] > 0 and rows["margin_depth"]["note"].startswith("走平")  # +1.6 < 20
+    assert doc["margin_share_long"][-1]["rz"] == pytest.approx(88.0)
+    assert doc["margin_episodes"] == [{"name": "2018", "depth": -0.33, "months": 12}]

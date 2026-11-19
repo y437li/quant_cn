@@ -34,7 +34,7 @@ Data access. `JSONStore` reads the chain_view builder output for the demo and `w
 | `task_status_test.go` | TC-ST-032 | — |
 | `sector_monitor.go` | `GetSectorMonitor`: sector_monitor.json as is (missing file = ErrNotFound; plan 31 ph5) | `GetSectorMonitor` |
 | `sector_monitor_test.go` | TC-ST-028 |  |
-| `volatility_monitor.go` | volatility monitor types and `GetVolatilityMonitor` (missing file = empty document; plan 03 ph6), with smallcap_watch.json attached as `SmallCap` (plan 30 ph2) | `VolatilityMonitor`, `VolLine`, `VolPoint`, `VolAlerts`, `VolFlag`, `GetVolatilityMonitor` |
+| `volatility_monitor.go` | volatility monitor types and `GetVolatilityMonitor` (missing file = empty document; plan 03 ph6), with smallcap_watch.json attached as `SmallCap` (plan 30 ph2; weekly share and balance, past 去杠杆 episodes ph6 / ph7) | `VolatilityMonitor`, `VolLine`, `VolPoint`, `VolAlerts`, `VolFlag`, `GetVolatilityMonitor` |
 | `volatility_monitor_test.go` | TC-ST-025..027 |  |
 | `macro_monitor.go` | macro monitor types and `GetMacroMonitor` (missing file = empty document; plan 15 ph7h) | `MacroMonitor`, `MacroSeries`, `MacroPoint`, `GetMacroMonitor` |
 | `macro_monitor_test.go` | TC-ST-021..022 |  |

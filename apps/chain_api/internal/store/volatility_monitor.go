@@ -92,11 +92,19 @@ type SmallCapPoint struct {
 }
 
 // SmallCapSharePoint is one week of the long 融资余额 / 流通市值 chart (plan 30 ph6):
-// share in %, 中证1000 close (nil when missing).
+// share in %, 中证1000 close (nil when missing), balance in 亿 (ph7; nil in older files).
 type SmallCapSharePoint struct {
 	Date  string   `json:"date"`
 	Share float64  `json:"share"`
 	Small *float64 `json:"small"`
+	Rz    *float64 `json:"rz,omitempty"`
+}
+
+// SmallCapEpisode is one past 融资余额 去杠杆 episode (plan 30 ph7): depth = trough / high - 1.
+type SmallCapEpisode struct {
+	Name   string  `json:"name"`
+	Depth  float64 `json:"depth"`
+	Months int     `json:"months"`
 }
 
 // SmallCapWatch is the smallcap_watch.json document written by the Python
@@ -110,6 +118,8 @@ type SmallCapWatch struct {
 	Missing      []string        `json:"missing"`
 	// MarginShareLong is the weekly share since 2019 (ph6); empty in older files.
 	MarginShareLong []SmallCapSharePoint `json:"margin_share_long"`
+	// MarginEpisodes are the past 去杠杆 episodes (ph7); empty in older files.
+	MarginEpisodes []SmallCapEpisode `json:"margin_episodes"`
 }
 
 // GetVolatilityMonitor reads volatility_monitor.json and smallcap_watch.json on every call, so
@@ -157,6 +167,9 @@ func fillSmallCap(w SmallCapWatch) *SmallCapWatch {
 	}
 	if w.MarginShareLong == nil {
 		w.MarginShareLong = []SmallCapSharePoint{}
+	}
+	if w.MarginEpisodes == nil {
+		w.MarginEpisodes = []SmallCapEpisode{}
 	}
 	return &w
 }

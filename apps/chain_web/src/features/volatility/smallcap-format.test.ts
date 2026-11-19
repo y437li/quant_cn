@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { SmallCapWatch, VolatilityMonitor } from "../../api/client";
 import fixture from "./volatility-monitor.fixture.json";
-import { SHARE_BOTTOM_REFS, STATE_LABEL, formatScTrigger, formatScValue, levelRefs, marginPoints, marginShareChartPoints, marginSharePoints, orderRows, smallCapHeadline, smallPoints } from "./smallcap-format";
+import { SHARE_BOTTOM_REFS, STATE_LABEL, formatScTrigger, formatScValue, levelRefs, marginChartPoints, marginDepthRefs, marginPoints, marginShareChartPoints, marginSharePoints, orderRows, smallCapHeadline, smallPoints } from "./smallcap-format";
 
 const w = (fixture as VolatilityMonitor).smallcap as SmallCapWatch;
 
@@ -49,5 +49,16 @@ describe("smallcap-format", () => {
     expect(formatScTrigger({ trigger: -0.03, unit: "涨跌" })).toBe("≤ −3%");
     expect(formatScValue({ value: null, unit: "" })).toBe("—");
     expect(formatScTrigger({ trigger: null, unit: "" })).toBe("");
+  });
+  it("TC-SCF-007 balance chart points and depth lines (plan 30 ph7)", () => {
+    const history = [{ date: "20261117", small: 6100, limit_downs: 1, low_share: 0.3, gap: 20, gap_pct: 0.9, rz: 22171 }, { date: "20261118", small: 6053, limit_downs: 2, low_share: 0.4, gap: 21, gap_pct: 0.9, rz: 22083 }];
+    const long = [{ date: "20190104", share: 2.078, small: 4498, rz: 9000 }, { date: "20260626", share: 2.8, small: 7000, rz: 30000 }, { date: "20261113", share: 2.518, small: null, rz: 22000 }];
+    const margin_episodes = [{ name: "2015", depth: -0.6, months: 12 }, { name: "2024", depth: -0.13, months: 9 }];
+    expect(marginChartPoints({ history, margin_share_long: long }).map((p) => p.value)).toEqual([9000, 30000, 22000]);
+    expect(marginChartPoints({ history, margin_share_long: long.map(({ rz: _, ...p }) => p) })).toHaveLength(2);
+    const refs = marginDepthRefs({ history, margin_share_long: long, margin_episodes });
+    expect(refs[0]).toBeCloseTo(12000);
+    expect(refs[1]).toBeCloseTo(26100);
+    expect(marginDepthRefs({ history, margin_episodes })).toEqual([]);
   });
 });
