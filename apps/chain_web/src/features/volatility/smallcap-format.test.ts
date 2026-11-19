@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { SmallCapWatch, VolatilityMonitor } from "../../api/client";
 import fixture from "./volatility-monitor.fixture.json";
-import { STATE_LABEL, formatScTrigger, formatScValue, levelRefs, marginPoints, marginSharePoints, orderRows, smallCapHeadline, smallPoints } from "./smallcap-format";
+import { SHARE_BOTTOM_REFS, STATE_LABEL, formatScTrigger, formatScValue, levelRefs, marginPoints, marginShareChartPoints, marginSharePoints, orderRows, smallCapHeadline, smallPoints } from "./smallcap-format";
 
 const w = (fixture as VolatilityMonitor).smallcap as SmallCapWatch;
 
@@ -35,5 +35,19 @@ describe("smallcap-format", () => {
     ];
     expect(marginPoints(h)).toEqual([{ date: "20261117", value: 22171 }]);
     expect(marginSharePoints(h)[0].value).toBeCloseTo(2.51);
+  });
+  it("TC-SCF-006 long share chart points (plan 30 ph6)", () => {
+    const history = [{ date: "20261117", small: 6100, limit_downs: 1, low_share: 0.3, gap: 20, gap_pct: 0.9, rz_circ: 0.0251 }, { date: "20261118", small: 6053, limit_downs: 2, low_share: 0.4, gap: 21, gap_pct: 0.9, rz_circ: 0.0253 }];
+    const long = [{ date: "20190104", share: 2.078, small: 4498 }, { date: "20261113", share: 2.518, small: null }];
+    expect(marginShareChartPoints({ history, margin_share_long: long })).toEqual([{ date: "20190104", value: 2.078 }, { date: "20261113", value: 2.518 }]);
+    expect(marginShareChartPoints({ history })[1].value).toBeCloseTo(2.53);
+    expect(marginShareChartPoints({ history, margin_share_long: long.slice(0, 1) })).toHaveLength(2);
+    expect(SHARE_BOTTOM_REFS).toEqual([1.94, 2.54]);
+  });
+  it("TC-SCF-005 涨跌 rows and 建仓档 rows (plan 30 ph5)", () => {
+    expect(formatScValue({ value: -0.0188, unit: "涨跌" })).toBe("−1.9%");
+    expect(formatScTrigger({ trigger: -0.03, unit: "涨跌" })).toBe("≤ −3%");
+    expect(formatScValue({ value: null, unit: "" })).toBe("—");
+    expect(formatScTrigger({ trigger: null, unit: "" })).toBe("");
   });
 });

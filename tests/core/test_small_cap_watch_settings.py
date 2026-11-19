@@ -64,3 +64,15 @@ def test_tc_scs_003_refused(tmp_path: Path) -> None:
     _write(tmp_path, "smallcap_watch.yaml", IDX_YAML + "levels: [1, \n")
     with pytest.raises(ConfigError):
         SmallCapWatchSettings.load(tmp_path)
+
+
+# TC-SCS-004
+def test_tc_scs_004_entry_fields() -> None:
+    with pytest.raises(ValidationError):
+        SmallCapWatchSettings(**IDX, selloff_drop=-0.03, selloff_near_drop=-0.04)
+    with pytest.raises(ValidationError):
+        SmallCapWatchSettings(**IDX, entry_since="2026-11-19")
+    with pytest.raises(ValidationError):
+        SmallCapWatchSettings(**IDX, entry_bought=4)
+    s = SmallCapWatchSettings(**IDX)
+    assert s.entry_since is None and s.selloff_drop == -0.03 and s.selloff_turnover == 1.3

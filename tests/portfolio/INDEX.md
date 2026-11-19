@@ -16,8 +16,9 @@ Tests for `quant_cn.portfolio`. No network, no files outside `tmp_path`.
 | `test_etf_flow_calculator.py` | contract tests for `EtfFlowCalculator` on hand-built frames | TC-EFC-001..005 |
 | `test_etf_style_heat.py` | tests for `etf_style_heat`, one function per TC ID | |
 | `test_etf_proxy_builder.py` | contract tests for `EtfProxyBuilder` on a mini lake | TC-EP-001..007 |
-| `test_small_cap_watch_builder.py` | contract tests for `SmallCapWatchBuilder` on a mini lake | TC-SCW-001..010 |
-| `test_small_cap_watch_rows.py` | contract tests for `SmallCapWatchRows` on hand frames | TC-SCR-001..006 |
+| `test_small_cap_watch_builder.py` | contract tests for `SmallCapWatchBuilder` on a mini lake | TC-SCW-001..012 |
+| `test_small_cap_entry_rows.py` | contract tests for `SmallCapEntryRows` on hand frames | TC-SCE-001..003 |
+| `test_small_cap_watch_rows.py` | contract tests for `SmallCapWatchRows` on hand frames | TC-SCR-001..007 |
 | `test_app_rank_reader.py` | contract tests for `AppRankReader`, one function per TC ID | — |
 | `test_market_signal_reader.py` | contract tests for `MarketSignalReader`, one function per TC ID | — |
 | `test_sector_metric_reader.py` | contract tests for `SectorMetricReader`, one function per TC ID | — |

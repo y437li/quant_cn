@@ -111,3 +111,15 @@ def test_tc_scr_006_margin_rows() -> None:
     assert turn(-0.27, -0.001)["state"] == "off"  # still falling
     rows, missing = SmallCapWatchRows(SETTINGS).build(*_build_frames(ld=0.0, low=0.0, pct=0.5))
     assert "margin" in missing and "margin_turn" not in {r["key"] for r in rows}
+
+
+# TC-SCR-007
+def test_tc_scr_007_entry_rows_order() -> None:
+    market, vols, flows = _build_frames(ld=0.0, low=0.0, pct=0.5)
+    vols["small_ret"], vols["small_turn"] = [0.0, 0.0, -0.035], [1.0, 1.0, 1.4]
+    settings = SETTINGS.model_copy(update={"entry_since": "20261113"})
+    rows, _ = SmallCapWatchRows(settings).build(market, vols, flows)
+    keys = [r["key"] for r in rows]
+    assert keys[:3] == ["entry_1", "entry_2", "entry_3"]
+    assert keys.index("selloff") == keys.index("above_ma") + 1
+    assert rows[1]["state"] == "on" and rows[keys.index("selloff")]["state"] == "on"

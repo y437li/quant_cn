@@ -78,7 +78,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `RetailGaugeSettings` | `quant_cn.core.retail_gauge_settings` | 1 | BaseModel | Feature windows, LightGBM params, label clip, training minimum, avoid / leaving / inflow thresholds, D-167 streak rule, retrain months and model version of the RetailGauge from config/retail_gauge.yaml (plan 21). | 1 | `calculation.RetailGaugeMatrices`, `calculation.RetailGaugeFeatureBuilder`, `calculation.RetailGaugeModel`, `calculation.RetailGaugeNowcaster`, `calculation.RetailGaugeEvaluator`, `cli.GaugeCommands` | `tests/core/test_retail_gauge_settings.py` (TC-RGS-001) | 2026-11-18 |
 | `WatchIndex` | `quant_cn.core.small_cap_watch_settings` | 1 | BaseModel | One index of the small-cap watch: ts_code in curated.index_daily and its name (plan 30). | 0 | `core.SmallCapWatchSettings` | `tests/core/test_small_cap_watch_settings.py` (TC-SCS-001) | 2026-11-17 |
 | `WatchEtf` | `quant_cn.core.small_cap_watch_settings` | 1 | BaseModel | One broad ETF in the small-cap watch flow total; `own_row` also gives it its own row (plan 30). | 0 | `core.SmallCapWatchSettings` | `tests/core/test_small_cap_watch_settings.py` (TC-SCS-001) | 2026-11-17 |
-| `SmallCapWatchSettings` | `quant_cn.core.small_cap_watch_settings` | 1 | BaseModel | Indices, user levels (git-ignored local file overrides), panic / breadth / vol / gap triggers, near rules, windows and ETFs of the 小盘观察, plus the 融资余额 企稳 drawdown trigger and windows (ph4), from config/smallcap_watch.yaml (plan 30). | 1 | `portfolio.SmallCapWatchBuilder`, `portfolio.SmallCapWatchRows`, `cli.ReportCommands` | `tests/core/test_small_cap_watch_settings.py` (TC-SCS-001..003) | 2026-11-18 |
+| `SmallCapWatchSettings` | `quant_cn.core.small_cap_watch_settings` | 1 | BaseModel | Indices, user levels (git-ignored local file overrides), panic / breadth / vol / gap triggers, near rules, windows and ETFs of the 小盘观察, plus the 融资余额 企稳 drawdown trigger and windows (ph4), and the 放量大跌 / 建仓档 fields (selloff_*, turnover_window, entry_since, entry_bought; ph5), margin_long_start (ph6), from config/smallcap_watch.yaml (plan 30). | 1 | `portfolio.SmallCapWatchBuilder`, `portfolio.SmallCapWatchRows`, `portfolio.SmallCapEntryRows`, `cli.ReportCommands` | `tests/core/test_small_cap_watch_settings.py` (TC-SCS-001..004) | 2026-11-19 |
 | `MonitoredSecurity` | `quant_cn.core.sector_monitor_settings` | 1 | BaseModel | One company or index of a monitored sector: ts_code and name (plan 31). | 0 | `core.MonitoredSector` | `tests/core/test_sector_monitor_settings.py` (TC-SMS-001) | 2026-11-17 |
 | `MonitoredSector` | `quant_cn.core.sector_monitor_settings` | 1 | BaseModel | One sector of the monitor: key, name, Shenwan index, companies, chart metric keys (plan 31). | 0 | `core.SectorMonitorSettings`, `portfolio.SectorMonitorBuilder` | `tests/core/test_sector_monitor_settings.py` (TC-SMS-002) | 2026-11-17 |
 | `AppPublisher` | `quant_cn.core.app_publisher_settings` | 1 | BaseModel | One App Store seller account (artist_id) → company and listed code (plan 19 ph2). | 0 | `core.AppPublisherSettings` | `tests/core/test_app_publisher_settings.py` (TC-APS-001) | 2026-11-17 |
@@ -193,14 +193,15 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `WatchlistBuilder` | `quant_cn.portfolio.watchlist_builder` | 5 | none | Join the user's buy targets with the latest lake prices, valuation and broker consensus; compute the gap to the buy price, status and valuation at that price (plan 15 ph7, D-120); entry conditions via ConditionEvaluator (ph7f); ETF entries priced from fund_daily / fund_basic, kind etf (ph7p) | 3 | `cli.AppServiceBuilder` | `tests/portfolio/test_watchlist_builder.py` (TC-WB-001..011) | 2026-11-19 |
 | `EtfFlowCalculator` | `quant_cn.portfolio.etf_flow_calculator` | 5 | none | Pick the ETFs tracking each configured index and compute daily AUM, split- and gap-proof net subscriptions and position at today's price (plan 15 ph7b, D-126). | 2 | `portfolio.EtfProxyBuilder`, `portfolio.EtfStyleHeat`, `portfolio.SmallCapWatchBuilder`, `cli.ResearchCommands`, `cli.ReportCommands` | `tests/portfolio/test_etf_flow_calculator.py` (TC-EFC-001..006) | 2026-11-11 |
 | `EtfProxyBuilder` | `quant_cn.portfolio.etf_proxy_builder` | 5 | none | Sum broad-index ETFs into the national-team proxy (core vs other, per index with its rhythm and 近3月 window, weekly, yearly, recent days) and write `etf_proxy.json` for the chain app (plan 15 ph7b, D-126); style crowding via EtfStyleHeat (ph7g). | 2 | `cli.ResearchCommands` | `tests/portfolio/test_etf_proxy_builder.py` (TC-EP-001..007) | 2026-11-18 |
-| `SmallCapWatchBuilder` | `quant_cn.portfolio.small_cap_watch_builder` | 5 | none | 小盘观察 rows per day: limit-downs, share at a 60-day low / above MA20, 中证1000 vs user levels and drawdown, realised vol of 中证1000 / 科创50 and the 1000−300 gap with percentiles, broad-ETF net flow, market financing balance (curated.margin, complete-exchange days only) with drawdown, changes, mean and share of float cap (ph4); rows and states via SmallCapWatchRows, new_triggered; writes smallcap_watch.json (plan 30). | 2 | `cli.ReportCommands` | `tests/portfolio/test_small_cap_watch_builder.py` (TC-SCW-001..010) | 2026-11-18 |
+| `SmallCapWatchBuilder` | `quant_cn.portfolio.small_cap_watch_builder` | 5 | none | 小盘观察 rows per day: limit-downs, share at a 60-day low / above MA20, 中证1000 vs user levels and drawdown, realised vol of 中证1000 / 科创50 and the 1000−300 gap with percentiles, broad-ETF net flow, market financing balance (curated.margin, complete-exchange days only) with drawdown, changes, mean and share of float cap (ph4), 中证1000 day return and turnover / prior mean (ph5), weekly 融资余额 / 流通市值 since margin_long_start (ph6); rows and states via SmallCapWatchRows, new_triggered; writes smallcap_watch.json (plan 30). | 2 | `cli.ReportCommands` | `tests/portfolio/test_small_cap_watch_builder.py` (TC-SCW-001..012) | 2026-11-19 |
 | `SectorMetricReader` | `quant_cn.portfolio.sector_metric_reader` | 5 | none | Sector-monitor lines (label, period, value): 70-city tier MoM, quarterly contract liabilities / impairment / revenue / selling ratio, dividends, winner rate, closes for vol, game approvals per month (plan 31 ph4). | 8 | `portfolio.SectorMonitorBuilder`, `portfolio.DeveloperSalesReader`, `cli.AppServiceBuilder` | `tests/portfolio/test_sector_metric_reader.py` (TC-SMR-001..004) | 2026-11-17 |
 | `DeveloperSalesReader` | `quant_cn.portfolio.developer_sales_reader` | 5 | none | Developers' monthly contracted sales and 12-month land intensity from the operating_data label set (销售简报, plan 31 ph4, D-168). | 4 | `portfolio.SectorMonitorBuilder`, `cli.AppServiceBuilder` | `tests/portfolio/test_developer_sales_reader.py` (TC-DEV-001..004) | 2026-11-17 |
 | `SectorMonitorBuilder` | `quant_cn.portfolio.sector_monitor_builder` | 5 | none | sector_monitor.json for #sector-monitor: per sector one chart per metric, realised vol of index and companies, company table with latest values, vol percentiles and RetailGauge, App Store rankings for app_rank sectors (plan 31 ph4, plan 19 ph2). | 2 | `cli.AppServiceBuilder` | `tests/portfolio/test_sector_monitor_builder.py` (TC-SMB-001..005) | 2026-11-17 |
 | `SectorEarningsSignalBuilder` | `quant_cn.portfolio.sector_earnings_signal_builder` | 5 | none | 财报季信号 per Shenwan L2 sector and quarter: share reported, best-surprise pre / reaction excess, signal date, prior sector rally, holder change, status firing / provisional / none, past firings with forward excess and the record; writes sector_earnings_signal.json (plan 35, D-172). | 2 | `cli.AppServiceBuilder` | `tests/portfolio/test_sector_earnings_signal_builder.py` (TC-SEB-001..003) | 2026-11-18 |
 | `MarketSignalReader` | `quant_cn.portfolio.market_signal_reader` | 5 | none | Sector market signals: valuation (PB / PE TTM) 5-year percentile lines and latest levels for companies and the Shenwan index, FY1 analyst forecast revision (report_rc), institutional survey days (stk_surv) (plan 33, D-170). | 3 | `portfolio.SectorMonitorBuilder`, `cli.AppServiceBuilder` | `tests/portfolio/test_market_signal_reader.py` (TC-MKS-001..003) | 2026-11-17 |
 | `AppRankReader` | `quant_cn.portfolio.app_rank_reader` | 5 | none | App Store chart ranks per company through the publisher map: best home grossing rank per company and date; leaderboard of the games of the sector companies and every A-share company in the map (home grossing / free, best overseas, markets) and the home top list with companies (plan 19 ph2, D-137 u1). | 2 | `portfolio.SectorMonitorBuilder`, `cli.AppServiceBuilder` | `tests/portfolio/test_app_rank_reader.py` (TC-ARR-001..003) | 2026-11-17 |
-| `SmallCapWatchRows` | `quant_cn.portfolio.small_cap_watch_rows` | 5 | none | 小盘观察 display rows with on / near / off / info states (count share, percentile points, level fraction), 杠杆 rows with the 融资余额 企稳 state (ph4), and the chart history (plan 30). | 2 | `portfolio.SmallCapWatchBuilder`, `cli.ReportCommands` | `tests/portfolio/test_small_cap_watch_rows.py` (TC-SCR-001..006) | 2026-11-18 |
+| `SmallCapWatchRows` | `quant_cn.portfolio.small_cap_watch_rows` | 5 | none | 小盘观察 display rows with on / near / off / info states (count share, percentile points, level fraction), 杠杆 rows with the 融资余额 企稳 state (ph4), 建仓档 and 放量大跌 rows from SmallCapEntryRows (ph5), and the chart history (plan 30). | 2 | `portfolio.SmallCapWatchBuilder`, `cli.ReportCommands` | `tests/portfolio/test_small_cap_watch_rows.py` (TC-SCR-001..007) | 2026-11-19 |
+| `SmallCapEntryRows` | `quant_cn.portfolio.small_cap_entry_rows` | 5 | none | 小盘观察 entry rows (plan 30 ph5): 放量大跌 (中证1000 ≤ selloff_drop on ≥ selloff_turnover × prior mean turnover) and the three 建仓档 steps (buy now; panic / 放量大跌 / lowest level; 融资余额企稳) with first-fire dates since entry_since. | 2 | `portfolio.SmallCapWatchRows` | `tests/portfolio/test_small_cap_entry_rows.py` (TC-SCE-001..003) | 2026-11-19 |
 | `EtfStyleHeat` | `quant_cn.portfolio.etf_style_heat` | 5 | none | Style ETF crowding (银行, 红利): 20-day net flow vs AUM, z vs the previous 250 sessions, 过热 at z ≥ 1.5 until z ≤ 0; never in core / other totals (plan 15 ph7g). | 2 | `portfolio.EtfProxyBuilder` | `tests/portfolio/test_etf_style_heat.py` (TC-ESH-001..003) | 2026-11-13 |
 | `EtfCtaWeights` | `quant_cn.portfolio.etf_cta_weights` | 5 | none | Weekly target weights of the ETF CTA book: equal-risk groups (1 / vol, monthly) at risk_share, A股 trend position, bond sleeve x bond switch; signal summary (plan 27). | 3 | `portfolio.EtfCtaBook` | `tests/portfolio/test_etf_cta_weights.py` (TC-ECW-001..006) | 2026-11-14 |
 | `EtfCtaPaperBook` | `quant_cn.portfolio.etf_cta_paper_book` | 5 | none | Paper account following the weekly targets: drift, per-group 2-point no-trade band, zero target always sold, costs, no-add codes (plan 27). | 1 | `portfolio.EtfCtaBook` | `tests/portfolio/test_etf_cta_paper_book.py` (TC-ECP-001..007) | 2026-11-14 |
@@ -439,7 +440,7 @@ Layers: 1 core, 2 lake, 3 data_loading, 4 pipeline/statistic, 5 back_testing/por
 | `EtfReportSection` | `quant_cn.visualization.etf_report_section` | 7 | ReportSection | The ETF 资金强度 line of the 持仓监测 e-mail from etf_proxy.json styles (plan 15 ph7g). | 2 | `cli.ReportCommands` | `tests/visualization/test_etf_report_section.py` (TC-ERS-001) | 2026-11-13 |
 | `MacroReportSection` | `quant_cn.visualization.macro_report_section` | 7 | ReportSection | The 宏观 block of the 持仓监测 e-mail: daily summary line, full table on a new print (plan 15 ph7h). | 2 | `cli.ReportCommands` | `tests/visualization/test_macro_report_section.py` (TC-MRS-001..002) | 2026-11-13 |
 | `VolatilityReportSection` | `quant_cn.visualization.volatility_report_section` | 7 | ReportSection | The 波动率 block of the 持仓监测 e-mail: daily summary line, table of every line with alerts (plan 03 ph6). | 2 | `cli.ReportCommands` | `tests/visualization/test_volatility_report_section.py` (TC-VRS-001..002) | 2026-11-13 |
-| `SmallCapReportSection` | `quant_cn.visualization.small_cap_report_section` | 7 | ReportSection | The 小盘观察 block of the 持仓监测 e-mail: summary line (triggered, new, near) and a table of every signal with triggered rows first in red (plan 30 ph2). | 2 | `cli.ReportCommands` | `tests/visualization/test_small_cap_report_section.py` (TC-SRS-001..002) | 2026-11-17 |
+| `SmallCapReportSection` | `quant_cn.visualization.small_cap_report_section` | 7 | ReportSection | The 小盘观察 block of the 持仓监测 e-mail: summary line (triggered, new, near) and a table of every signal with triggered rows first in red (plan 30 ph2); 涨跌 unit for 放量大跌 (ph5). | 2 | `cli.ReportCommands` | `tests/visualization/test_small_cap_report_section.py` (TC-SRS-001..003) | 2026-11-19 |
 | `RatesFxReportSection` | `quant_cn.visualization.rates_fx_report_section` | 7 | ReportSection | The 利率汇率 block of the 持仓监测 e-mail: summary line (10Y, USDCNH, alerts with new marked) and a table of the key rows with alerting rows red (plan 34 ph4). | 2 | `cli.ReportCommands` | `tests/visualization/test_rates_fx_report_section.py` (TC-RRS-001..002) | 2026-11-18 |
 | `SectorEarningsReportSection` | `quant_cn.visualization.sector_earnings_report_section` | 7 | ReportSection | The 财报季信号 block of the 持仓监测 e-mail: summary line (season, firing sectors with numbers, new marked, rally record) and a table of firing and provisional sectors (plan 35). | 2 | `cli.ReportCommands` | `tests/visualization/test_sector_earnings_report_section.py` (TC-SER-001..002) | 2026-11-18 |
 | `CardShot` | `quant_cn.visualization.alert_message_builder` | 7 | none | Where an alert's picture is in the app: page hash, card selector, file stem (plan 22). | 0 | `visualization.Alert`, `visualization.AlertMessageBuilder`, `visualization.CardScreenshotter`, `cli.ReportCommands` | `tests/visualization/test_alert_message_builder.py` (TC-AMB-001) | 2026-11-13 |
@@ -2067,15 +2068,17 @@ never column lists (those live in section E).
   - the 1000−300 gap with percentile and its exit line;
   - broad-ETF net flow (1 day, `flow_days`, own rows) via EtfFlowCalculator;
   - market financing balance (Σ curated.margin over exchanges; a day missing an exchange is dropped): drawdown from the `margin_high_days` high, `margin_turn_days` / `margin_ma_days` change, `margin_ma_days` mean, share of float cap (daily_basic) and its percentile (ph4, 2026-11-18).
+  - 中证1000 day return (`small_ret`) and amount / its prior `turnover_window` mean (`small_turn`) for the 放量大跌 and 建仓档 rows (ph5, 2026-11-19);
+  - `margin_share_long`: the last full margin_detail day of each ISO week from `margin_long_start`, Σ rzye / Σ circ_mv in % with the 中证1000 close (ph6, 2026-11-19);
 
   Each row is on / near / off / info. `triggered` and `new_triggered` (vs the previous document); `missing` lists keys without data; chart history. Percentile = share of the last `pct_window` values at or below the latest.
 - **Base:** none. **Depends on (injected):** `SmallCapWatchSettings`, `LakeQuery`, `EtfFlowCalculator`, `SmallCapWatchRows`, `RealizedVolCalculator` (vol and percentiles, plan 31).
 - **Used by:** `cli.ReportCommands` (`smallcap-watch`).
-- **Tests:** `tests/portfolio/test_small_cap_watch_builder.py` (TC-SCW-001..010).
+- **Tests:** `tests/portfolio/test_small_cap_watch_builder.py` (TC-SCW-001..012).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
-| `build` | the watch document as of the last curated.daily session | previous: dict \| None -> dict (as_of, rows, history, triggered, new_triggered, missing) | LakeError | `write` | TC-SCW-001..007, 009, 010 |
+| `build` | the watch document as of the last curated.daily session | previous: dict \| None -> dict (as_of, rows, history, triggered, new_triggered, missing) | LakeError | `write` | TC-SCW-001..007, 009..012 |
 | `write` | build against the previous file and write smallcap_watch.json | out_dir: Path -> Path | LakeError | `cli.ReportCommands._run_smallcap_watch` | TC-SCW-008 |
 
 ### `SmallCapWatchRows` — `quant_cn.portfolio.small_cap_watch_rows` (L5)
@@ -2086,17 +2089,32 @@ never column lists (those live in section E).
   - info: rows without a trigger;
   - 杠杆 (ph4): 融资余额, 融资余额 / 流通市值 with percentile (info), 企稳 on when the drawdown is at or below `margin_dd_trigger` and the `margin_turn_days` change is ≥ 0.
 
-  Rows: panic, leverage, levels and drawdown, vols and gap with exit line, ETF flows (plan 30).
-- **Base:** none. **Depends on (injected):** `SmallCapWatchSettings`.
+  - 建仓档 rows first and 放量大跌 after the panic rows, from `SmallCapEntryRows` (ph5).
+
+  Rows: 建仓档, panic, leverage, levels and drawdown, vols and gap with exit line, ETF flows (plan 30).
+- **Base:** none. **Depends on (injected):** `SmallCapWatchSettings`, optional `SmallCapEntryRows` (built from settings when None).
 - **Used by:** `portfolio.SmallCapWatchBuilder`, `cli.ReportCommands` (wiring).
-- **Tests:** `tests/portfolio/test_small_cap_watch_rows.py` (TC-SCR-001..006).
+- **Tests:** `tests/portfolio/test_small_cap_watch_rows.py` (TC-SCR-001..007).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
-| `build` | all rows in display order and keys without data | market, vols, flows: DataFrame -> (list[dict], list[str]) | — | `portfolio.SmallCapWatchBuilder.build` | TC-SCR-001..004, 006 |
+| `build` | all rows in display order and keys without data | market, vols, flows: DataFrame -> (list[dict], list[str]) | — | `portfolio.SmallCapWatchBuilder.build` | TC-SCR-001..004, 006, 007 |
 | `build_history` | chart rows from a start date | market, vols: DataFrame, start: str -> list[dict] | — | `portfolio.SmallCapWatchBuilder.build` | TC-SCR-005 |
 
 ### `HoldingsRiskBuilder` — `quant_cn.portfolio.holdings_risk_builder` (L5)
+### `SmallCapEntryRows` — `quant_cn.portfolio.small_cap_entry_rows` (L5)
+- **Purpose:** The entry rows of the small-cap watch (plan 30 ph5, research 20261119_volume_selloff):
+  - 放量大跌 (group 恐慌): 中证1000 day return vs `selloff_drop` and turnover / prior `turnover_window` mean vs `selloff_turnover`; near at `selloff_near_drop` / `selloff_near_turnover`; unit 涨跌;
+  - 建仓档 (only with `entry_since`): step 1 buy now; step 2 panic day, 放量大跌 or the lowest level; step 3 融资余额企稳. Bought steps (`entry_bought`) are info; an unbought step is on from its first fire since `entry_since` and stays on, the date in the note.
+- **Base:** none. **Depends on (injected):** `SmallCapWatchSettings`.
+- **Used by:** `portfolio.SmallCapWatchRows`.
+- **Tests:** `tests/portfolio/test_small_cap_entry_rows.py` (TC-SCE-001..003).
+
+| Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
+|---|---|---|---|---|---|
+| `build_selloff_row` | the 放量大跌 row of the last session with data | vols: DataFrame -> dict \| None | — | `portfolio.SmallCapWatchRows.build` | TC-SCE-001 |
+| `build_tranche_rows` | the three 建仓档 rows, [] without entry_since | market, vols: DataFrame -> list[dict] | — | `portfolio.SmallCapWatchRows.build` | TC-SCE-002, 003 |
+
 - **Purpose:** Value the PositionsBook at curated.daily closes of the last risk-model session on or before a date; weights over stocks + cash; RiskDecomposer against the benchmark's latest index_weight (tracking error); exposures with Shenwan L1 labels and shares of risk; per-stock own vol and Euler share of variance and model correlations from `RiskSnapshot.compute_stock_cov`; each stock's style exposures and Shenwan L1 industry (`stock_exposures`); codes without a close or forecast listed in `missing`. Writes `holdings_risk.json` and hands the session to HoldingsHistoryWriter (plan 15 ph7d, D-132).
 - **Base:** none. **Depends on (injected):** `PositionsBook`, `LakeQuery`, `BaseRiskModel`, `RiskDecomposer`, `HoldingsHistoryWriter`; benchmark index_code; optional `PositionReviewer` (ph7f `reviews`).
 - **Used by:** `cli.AppServiceBuilder` (wired for the `holdings-risk` command).
@@ -4947,12 +4965,12 @@ never column lists (those live in section E).
 - **Purpose:** The 小盘观察 block from smallcap_watch.json: summary line naming triggered rows (new ones marked) and rows near their trigger; a table of every signal (group, name, value by unit, 3-year percentile, trigger, state, note) with triggered rows first in red and near rows amber; 数据缺失 without the document.
 - **Base:** ReportSection. **Depends on (injected):** —.
 - **Used by:** `cli.ReportCommands` (passed to `MonitorReportRenderer` as a section).
-- **Tests:** `tests/visualization/test_small_cap_report_section.py` (TC-SRS-001..002).
+- **Tests:** `tests/visualization/test_small_cap_report_section.py` (TC-SRS-001..003).
 
 | Method | Purpose | Input -> Output | Raises | Used by | TC IDs |
 |---|---|---|---|---|---|
 | `build_summary` | one-line summary | doc: dict \| None -> str | — | `visualization.MonitorReportRenderer` | TC-SRS-001 |
-| `build_rows` | every signal, triggered first | doc: dict \| None -> str | — | `visualization.MonitorReportRenderer` | TC-SRS-002 |
+| `build_rows` | every signal, triggered first | doc: dict \| None -> str | — | `visualization.MonitorReportRenderer` | TC-SRS-002, 003 |
 
 ### `RatesFxReportSection` — `quant_cn.visualization.rates_fx_report_section` (L7)
 - **Purpose:** The 利率汇率 block from rates_fx_monitor.json: summary line (10Y and USDCNH with one-week change and 5-year percentile, then alerts with new ones marked, or 没有提醒) and a table of the key rows (10Y, 30Y, term and credit spreads, 股债性价比, USDCNH, fixing gap, EUR/CNH, CNH/JPY, 中美利差) with alerting rows red; 数据缺失 without the document.

@@ -67,7 +67,7 @@ def _write(lake: MiniLake, config: Config, funds: bool = True, daily: bool = Tru
         DerivedViews(lake.catalog, lake.query, config.datasets).refresh()
     large = [100.0 * 1.01**i for i in range(12)]  # constant log return: zero vol
     w(lake, config, "index_daily", [
-        {"ts_code": c, "trade_date": d, "close": v}
+        {"ts_code": c, "trade_date": d, "close": v, "amount": 20.0 if d == LAST else 10.0}
         for c, series in (("000852.SH", SMALL), ("000300.SH", large))
         for d, v in zip(DAYS, series, strict=True)
     ])  # fmt: skip
@@ -221,3 +221,28 @@ def test_tc_scw_010_margin(lake: MiniLake, config: Config) -> None:
     assert rows["margin_level"]["pct"] == pytest.approx(1.0)
     shallow = _build(lake, config, margin_dd_trigger=-0.13, **kw).build(None)
     assert _get_rows(shallow)["margin_turn"]["state"] == "off"
+
+
+# TC-SCW-011
+def test_tc_scw_011_selloff_inputs(lake: MiniLake, config: Config) -> None:
+    _write(lake, config)
+    kw = {"selloff_drop": -0.015, "selloff_near_drop": -0.01, "turnover_window": 3}
+    rows = _get_rows(_build(lake, config, **kw).build(None))
+    assert rows["selloff"]["value"] == pytest.approx(100 / 102 - 1)
+    assert rows["selloff"]["state"] == "on"  # -1.96% on 20 / mean(10, 10, 10) = 2.0x
+    assert "2.00 倍" in rows["selloff"]["note"]
+    assert "entry_1" not in rows  # no entry_since
+
+
+# TC-SCW-012
+def test_tc_scw_012_margin_share_long(lake: MiniLake, config: Config) -> None:
+    _write(lake, config)
+    _write_margin(lake, config)
+    points = _build(lake, config).build(None)["margin_share_long"]
+    assert [p["date"] for p in points] == [DAYS[4], DAYS[9], DAYS[11]]  # last day of each week
+    assert points[0]["share"] == pytest.approx(100 / 4400 * 100, abs=1e-4)
+    assert points[-1]["share"] == pytest.approx(88 / 4400 * 100, abs=1e-4)
+    assert points[-1]["small"] == SMALL[-1]
+    _build(lake, config, margin_long_start="20260807")  # field accepted
+    late = _build(lake, config, margin_long_start="20260807").build(None)["margin_share_long"]
+    assert late[0]["date"] == DAYS[4]

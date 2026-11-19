@@ -44,7 +44,7 @@ func TestTCST026VolatilityAbsent(t *testing.T) {
 	}
 }
 
-// TC-ST-027: smallcap_watch.json is attached as SmallCap (margin history included); absent → nil; malformed → error.
+// TC-ST-027: smallcap_watch.json is attached as SmallCap (margin history and the ph6 weekly share included); absent → nil; malformed → error.
 func TestTCST027SmallCapWatch(t *testing.T) {
 	m, err := load(t).GetVolatilityMonitor()
 	if err != nil || m.SmallCap == nil {
@@ -60,6 +60,9 @@ func TestTCST027SmallCapWatch(t *testing.T) {
 	if h := w.History[0]; *h.Rz != 22572 || *h.RzCirc != 0.0252 || w.History[1].Rz != nil {
 		t.Fatalf("margin history: %+v %+v", h, w.History[1])
 	}
+	if l := w.MarginShareLong; len(l) != 2 || l[0].Share != 2.078 || *l[0].Small != 4498 || l[1].Small != nil {
+		t.Fatalf("margin share long (ph6): %+v", l)
+	}
 	dir := dirWithBase(t, "")
 	s, err := NewJSONStore(dir)
 	if err != nil {
@@ -71,7 +74,7 @@ func TestTCST027SmallCapWatch(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(dir, "smallcap_watch.json"), []byte(`{"as_of":"x","rows":null}`), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	if m, err := s.GetVolatilityMonitor(); err != nil || m.SmallCap == nil || m.SmallCap.Rows == nil || m.SmallCap.History == nil {
+	if m, err := s.GetVolatilityMonitor(); err != nil || m.SmallCap == nil || m.SmallCap.Rows == nil || m.SmallCap.History == nil || m.SmallCap.MarginShareLong == nil {
 		t.Fatalf("null slices: %v %+v", err, m.SmallCap)
 	}
 	if err := os.WriteFile(filepath.Join(dir, "smallcap_watch.json"), []byte("{bad"), 0o600); err != nil {

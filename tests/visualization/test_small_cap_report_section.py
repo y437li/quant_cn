@@ -60,3 +60,10 @@ def test_tc_srs_002_rows() -> None:
     ):
         assert text in html, text
     assert "数据缺失：没有 smallcap_watch.json" in s.build_rows(None)
+
+
+# TC-SRS-003
+def test_tc_srs_003_return_unit() -> None:
+    row = {"key": "selloff", "value": -0.0188, "unit": "涨跌", "trigger": -0.03}
+    assert SmallCapReportSection._format_value(row) == "-1.9%"
+    assert SmallCapReportSection._format_trigger(row) == "≤ -3%"

@@ -28,6 +28,7 @@ L5: position sizing, constraints, rebalancing schedules. May import from: L1–L
 | `opportunity_screen.py` | daily opportunity list: universe, gauge, signal row, earnings, valuation, fit -> derived/opportunity_list (plan 21 ph4) | `OpportunityScreen` |
 | `style_fit_checker.py` | does adding a stock grow the book's largest style exposures (plan 21 ph4) | `StyleFitChecker` |
 | `sector_earnings_signal_builder.py` | sector_earnings_signal.json: 财报季信号 per Shenwan L2 sector (好消息涨不动), history, past firings and record (plan 35) | `SectorEarningsSignalBuilder` |
+| `small_cap_entry_rows.py` | 小盘观察 放量大跌 row and 建仓档 three-step entry rows (plan 30 ph5) | `SmallCapEntryRows` |
 | `small_cap_watch_rows.py` | 小盘观察 display rows with on / near / off states, 杠杆 rows (ph4) and the chart history (plan 30) | `SmallCapWatchRows` |
 | `condition_evaluator.py` | gather metrics and evaluate conditions to met / unmet / unknown; entry status buy / near / wait (plan 15 ph7f) | `ConditionResult`, `ConditionEvaluator` |
 | `position_reviewer.py` | per-position note, chip row, flags (stop, target, weight, review, missing note) and conditions (plan 15 ph7f) | `PositionReviewer` |

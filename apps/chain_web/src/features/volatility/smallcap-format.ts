@@ -1,4 +1,4 @@
-import type { SmallCapPoint, SmallCapRow, SmallCapState, VolPoint } from "../../api/client";
+import type { SmallCapPoint, SmallCapRow, SmallCapSharePoint, SmallCapState, VolPoint } from "../../api/client";
 
 export const STATE_LABEL: Record<SmallCapState, string> = { on: "已触发", near: "接近", off: "未到", info: "参考" };
 
@@ -9,7 +9,7 @@ export function orderRows(rows: SmallCapRow[]): SmallCapRow[] {
 
 const num = (v: number, digits = 0) => v.toLocaleString("en-US", { minimumFractionDigits: digits, maximumFractionDigits: digits });
 
-/** Purpose: a row's latest value by unit: 只 count, 占比 percent, 点 index level, % vol, 亿 signed flow. Contract: null → "—". */
+/** Purpose: a row's latest value by unit: 只 count, 占比 percent, 点 index level, % vol, 亿 signed flow, 涨跌 signed day return (ph5). Contract: null → "—". */
 export function formatScValue(r: Pick<SmallCapRow, "value" | "unit">): string {
   const v = r.value;
   if (v == null) return "—";
@@ -17,6 +17,7 @@ export function formatScValue(r: Pick<SmallCapRow, "value" | "unit">): string {
   if (r.unit === "点") return num(v);
   if (r.unit === "%") return `${v.toFixed(1)}%`;
   if (r.unit === "亿") return `${v < 0 ? "−" : "+"}${num(Math.abs(v), 1)}亿`;
+  if (r.unit === "涨跌") return `${v < 0 ? "−" : "+"}${Math.abs(v * 100).toFixed(1)}%`;
   return `${num(v)}${r.unit}`;
 }
 
@@ -27,6 +28,7 @@ export function formatScTrigger(r: Pick<SmallCapRow, "trigger" | "unit">): strin
   if (r.unit === "%") return `≥ ${Math.round(t * 100)}% 分位`;
   if (r.unit === "点") return `≤ ${num(t)}`;
   if (r.unit === "占比") return `≥ ${Math.round(t * 100)}%`;
+  if (r.unit === "涨跌") return `≤ −${Math.round(Math.abs(t) * 100)}%`;
   return `≥ ${num(t)}${r.unit}`;
 }
 
@@ -41,6 +43,13 @@ export const marginPoints = (h: SmallCapPoint[]): VolPoint[] =>
 /** Purpose: the balance as % of float market cap, as chart points. Contract: fraction × 100; sessions without it are dropped. */
 export const marginSharePoints = (h: SmallCapPoint[]): VolPoint[] =>
   h.filter((p) => p.rz_circ != null).map((p) => ({ date: p.date, value: (p.rz_circ as number) * 100 }));
+
+/** Range of 融资余额 / 流通市值 (%) on the six 中证1000 bottom days since 2019 (research 20261119_margin_share). */
+export const SHARE_BOTTOM_REFS = [1.94, 2.54];
+
+/** Purpose: the share chart points (plan 30 ph6): the weekly series since 2019 when present, else the 1-year daily line. Contract: values in %. */
+export const marginShareChartPoints = (w: { history: SmallCapPoint[]; margin_share_long?: SmallCapSharePoint[] }): VolPoint[] =>
+  w.margin_share_long && w.margin_share_long.length > 1 ? w.margin_share_long.map((p) => ({ date: p.date, value: p.share })) : marginSharePoints(w.history);
 
 /** Purpose: the watch levels (点 rows' triggers) drawn on the 中证1000 chart. Contract: ascending, no nulls. */
 export const levelRefs = (rows: SmallCapRow[]): number[] =>

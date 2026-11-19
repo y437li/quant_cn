@@ -82,7 +82,14 @@ class SmallCapWatchSettings(BaseModel):
             etfs: list[WatchEtf] with unique codes;
             margin_dd_trigger: float in (-1, 0) -- financing balance drawdown from its
                 margin_high_days high at or below which a margin_turn_days change >= 0 is 企稳;
-            margin_turn_days, margin_ma_days: int > 0; margin_high_days: int > 1 (ph4)
+            margin_turn_days, margin_ma_days: int > 0; margin_high_days: int > 1 (ph4);
+            selloff_drop, selloff_near_drop: float in (-1, 0), near above drop -- 中证1000
+                daily return at or below which a day with turnover >= selloff_turnover x its
+                prior turnover_window mean is 放量大跌 (near at selloff_near_drop and
+                selloff_near_turnover); selloff_turnover, selloff_near_turnover: float > 0;
+            turnover_window: int > 0; entry_since: str YYYYMMDD | None -- start of the
+                建仓档 group (None: no group); entry_bought: int in [0, 3] steps bought (ph5);
+            margin_long_start: str YYYYMMDD -- first day of the weekly share chart (ph6)
         Output:
             frozen pydantic model; `load(repo_root)`
         Raises:
@@ -92,6 +99,7 @@ class SmallCapWatchSettings(BaseModel):
     Used by:
         portfolio.SmallCapWatchBuilder  -- windows, indices and ETFs
         portfolio.SmallCapWatchRows     -- triggers, near rules and row names
+        portfolio.SmallCapEntryRows     -- 放量大跌 and 建仓档 fields (ph5)
         cli.ReportCommands              -- `smallcap-watch` command
 
     Test cases:
@@ -100,6 +108,8 @@ class SmallCapWatchSettings(BaseModel):
                     indices have no defaults)
         TC-SCS-003  duplicate ETF codes, gap_exit_pct >= gap_entry_pct, near_share 1.5 and a
                     non-positive level are refused; bad YAML raises ConfigError
+        TC-SCS-004  ph5: selloff_near_drop below selloff_drop, a bad entry_since and
+                    entry_bought 4 are refused; defaults give no 建仓档 group
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -127,6 +137,14 @@ class SmallCapWatchSettings(BaseModel):
     margin_turn_days: int = Field(default=5, gt=0)
     margin_high_days: int = Field(default=250, gt=1)
     margin_ma_days: int = Field(default=20, gt=0)
+    selloff_drop: float = Field(default=-0.03, gt=-1, lt=0)
+    selloff_turnover: float = Field(default=1.3, gt=0)
+    selloff_near_drop: float = Field(default=-0.02, gt=-1, lt=0)
+    selloff_near_turnover: float = Field(default=1.0, gt=0)
+    turnover_window: int = Field(default=20, gt=0)
+    entry_since: str | None = Field(default=None, pattern=r"^\d{8}$")
+    entry_bought: int = Field(default=0, ge=0, le=3)
+    margin_long_start: str = Field(default="20190101", pattern=r"^\d{8}$")
 
     @model_validator(mode="after")
     def _check(self) -> SmallCapWatchSettings:
@@ -137,6 +155,8 @@ class SmallCapWatchSettings(BaseModel):
             raise ValueError("gap_exit_pct must be below gap_entry_pct")
         if any(level <= 0 for level in self.levels):
             raise ValueError(f"levels must be positive: {self.levels}")
+        if self.selloff_near_drop <= self.selloff_drop:
+            raise ValueError("selloff_near_drop must be above selloff_drop")
         return self
 
     @classmethod

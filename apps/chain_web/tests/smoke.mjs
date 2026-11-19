@@ -195,6 +195,11 @@ const scMargin = await page.$$eval('[data-panel="smallcap"] tr[data-row^="margin
 const mgCharts = await page.$$eval('[data-chart^="margin"] svg', (xs) => xs.length);
 if (scMargin.length && (scMargin.length !== 3 || mgCharts !== 2)) errors.push(`smallcap margin: ${scMargin.length} rows, ${mgCharts} charts`);
 console.log(`smallcap margin: ${scMargin.join(", ") || "none"} · ${mgCharts} charts`);
+// plan 30 ph6: the share chart spans 2019 onwards (weekly) when the watch has the long series
+const shareLabel = await page.$eval('[data-chart="margin-share"] svg', (s) => s.getAttribute("aria-label")).catch(() => "");
+const sharePts = Number((shareLabel.match(/近 (\d+) 个/) || [])[1] || 0);
+if (scMargin.length && sharePts < 300) errors.push(`smallcap margin share: ${sharePts} points, expected the weekly series since 2019`);
+console.log(`smallcap margin share: ${sharePts} points`);
 // 行业监控 (plan 31 ph5): page renders; with data the sector switch, table and charts are there.
 await page.click('.side-nav button[data-page="sector-monitor"]');
 await page.waitForSelector(".wl-page[data-page=sector-monitor], [data-empty=sector-monitor]", { timeout: 15000 });

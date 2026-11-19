@@ -24,7 +24,7 @@ _FULL_DAY = 0.9  # a margin_detail day with fewer stocks than this x the 20-day 
 _SESSIONS = "SELECT cal_date FROM curated.trade_cal WHERE is_open = 1 ORDER BY cal_date"
 _LAST = "SELECT max(trade_date) AS d FROM curated.daily"
 _INDEX = """
-SELECT ts_code, trade_date, close FROM curated.index_daily
+SELECT ts_code, trade_date, close, amount FROM curated.index_daily
 WHERE list_contains(?, ts_code) AND trade_date <= ? ORDER BY trade_date
 """
 _LIMIT = """
@@ -60,6 +60,9 @@ _CIRC = """
 SELECT trade_date, sum(circ_mv) / 1e4 AS circ FROM curated.daily_basic
 WHERE trade_date BETWEEN ? AND ? GROUP BY 1
 """
+_SMALL = """
+SELECT trade_date, close FROM curated.index_daily WHERE ts_code = ? AND trade_date BETWEEN ? AND ?
+"""
 _FUND_PX = """
 SELECT ts_code, trade_date, close, pre_close FROM curated.fund_daily
 WHERE list_contains(?, ts_code) AND trade_date BETWEEN ? AND ?
@@ -78,7 +81,9 @@ class SmallCapWatchBuilder:
         share of stocks at a `low_window` low and above their `ma_window` average (adjusted
         closes), 中证1000 close against each user level and its drawdown from the year high,
         realised vol (annualised %, `vol_window`) of 中证1000 and 科创50 with its percentile,
-        the 1000-300 realised-vol gap with its percentile and exit line, and broad-ETF net flow
+        the 1000-300 realised-vol gap with its percentile and exit line, the 中证1000 day
+        return and turnover / its prior `turnover_window` mean (ph5 放量大跌 and 建仓档),
+        and broad-ETF net flow
         (1 day and `flow_days`, total and the `own_row` ETFs, via EtfFlowCalculator), and the
         market financing balance (curated.margin summed over exchanges; a day with fewer
         exchanges than the most in the window is dropped, ph4) with its drawdown from the
@@ -125,6 +130,10 @@ class SmallCapWatchBuilder:
         TC-SCW-010  margin: a day missing an exchange is dropped; balance, drawdown from the
                     window high, turn-days change, share of float cap ranked on full
                     margin_detail days; no margin table lists margin in missing
+        TC-SCW-012  ph6: margin_share_long keeps the last full day of each week from
+                    margin_long_start, share in %, partial days dropped
+        TC-SCW-011  ph5: small_ret and small_turn (amount / prior turnover_window mean) feed
+                    the 放量大跌 row
     """
 
     def __init__(
@@ -153,7 +162,7 @@ class SmallCapWatchBuilder:
                 dict  -- {as_of, rows: [{key, group, name, value, unit, trigger, state, note,
                          date}], history: [{date, small, limit_downs, low_share, gap,
                          gap_pct, rz, rz_ma, rz_circ}], triggered: [key], new_triggered: [key],
-                         missing: [key]};
+                         missing: [key], margin_share_long: [{date, share, small}] (ph6)};
                          shares and percentiles as fractions, vol in %, flows in 亿元
             Raises:
                 LakeError  -- curated.daily is empty, or a query fails
@@ -178,6 +187,7 @@ class SmallCapWatchBuilder:
             "triggered": on,
             "new_triggered": [k for k in on if k not in seen],
             "missing": missing,
+            "margin_share_long": self._read_margin_share_long(as_of),
         }
 
     def write(self, out_dir: Path) -> Path:
@@ -260,6 +270,31 @@ class SmallCapWatchBuilder:
         rank = self._vols.compute_rank_pct(detail.loc[full, "rz"] / circ)
         return rz / circ.reindex(rz.index), rank.reindex(rz.index)
 
+    def _read_margin_share_long(self, as_of: str) -> list[dict[str, Any]]:
+        """Weekly (last full day of each week) financing / float cap in % and 中证1000 (ph6)."""
+        views = ("curated.daily_basic", "curated.margin_detail")
+        if not all(self._query.has_view(v) for v in views):
+            return []
+        start = self._s.margin_long_start
+        detail = self._query.sql(_DETAIL, [start, as_of]).set_index("trade_date")
+        circ = self._query.sql(_CIRC, [start, as_of]).set_index("trade_date")["circ"]
+        if detail.empty:
+            return []
+        detail = detail[detail["n"] >= _FULL_DAY * detail["n"].rolling(20, min_periods=1).median()]
+        small = self._query.sql(_SMALL, [self._s.small_index.code, start, as_of])
+        frame = pd.DataFrame({"share": detail["rz"] / circ.reindex(detail.index) * 100})
+        frame["small"] = small.set_index("trade_date")["close"].reindex(frame.index)
+        frame = frame.dropna(subset=["share"])
+        frame.index = pd.to_datetime(frame.index.astype(str), format="%Y%m%d")
+        iso = frame.index.isocalendar()
+        weekly = frame.groupby([iso["year"], iso["week"]]).tail(1)
+        dates = pd.DatetimeIndex(weekly.index).strftime("%Y%m%d")
+        return [
+            {"date": d, "share": round(float(sh), 4),
+             "small": None if pd.isna(sm) else float(sm)}
+            for d, sh, sm in zip(dates, weekly["share"], weekly["small"], strict=True)
+        ]  # fmt: skip
+
     def _compute_vols(self, as_of: str) -> pd.DataFrame:
         """Index closes, realised vols, the 1000-300 gap and their percentiles per session."""
         s = self._s
@@ -273,6 +308,11 @@ class SmallCapWatchBuilder:
         vol = self._vols.compute_vol(wide, s.vol_window)
         out = pd.DataFrame(index=wide.index)
         out["small"] = wide.get(s.small_index.code)
+        amount = px[px["ts_code"] == s.small_index.code].set_index("trade_date")["amount"]
+        amount.index = amount.index.astype(str)
+        amount = amount.reindex(out.index)
+        out["small_ret"] = out["small"].pct_change(fill_method=None)
+        out["small_turn"] = amount / amount.shift(1).rolling(s.turnover_window).mean()
         out["small_vol"] = vol.get(s.small_index.code)
         out["star_vol"] = vol.get(s.star_index.code)
         out["gap"] = out["small_vol"] - vol.get(s.large_index.code)

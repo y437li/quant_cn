@@ -8,6 +8,7 @@ from typing import Any
 import pandas as pd
 
 from quant_cn.core.small_cap_watch_settings import SmallCapWatchSettings
+from quant_cn.portfolio.small_cap_entry_rows import SmallCapEntryRows
 
 Row = dict[str, Any]
 
@@ -23,11 +24,14 @@ class SmallCapWatchRows:
         - info: rows without a trigger;
         - 杠杆 (ph4): 融资余额 and its share of float market cap with percentile (info), and
           企稳, on when the balance is at least `margin_dd_trigger` below its high and its
-          `margin_turn_days` change is >= 0.
+          `margin_turn_days` change is >= 0;
+        - 建仓档 and 放量大跌 (ph5) from SmallCapEntryRows: 建仓档 rows first, 放量大跌 after
+          the panic rows.
 
     Contract:
         Input:
             settings: SmallCapWatchSettings
+            entry:    SmallCapEntryRows | None  -- None builds one from settings
         Output:
             instance; `build(market, vols, flows)` -> (rows, missing),
             `build_history(market, vols, start)` -> list
@@ -47,18 +51,22 @@ class SmallCapWatchRows:
         TC-SCR-005  history keeps sessions from `start`, NaN as None
         TC-SCR-006  企稳 on at the drawdown trigger with change >= 0, off at a shallower
                     drawdown or a negative change; no margin columns lists margin in missing
+        TC-SCR-007  ph5: 建仓档 rows lead, 放量大跌 follows the panic rows
     """
 
-    def __init__(self, settings: SmallCapWatchSettings) -> None:
+    def __init__(
+        self, settings: SmallCapWatchSettings, entry: SmallCapEntryRows | None = None
+    ) -> None:
         self._s = settings
+        self._entry = entry or SmallCapEntryRows(settings)
 
     def build(
         self, market: pd.DataFrame, vols: pd.DataFrame, flows: pd.DataFrame
     ) -> tuple[list[Row], list[str]]:
         """
         Purpose:
-            All rows in display order (panic, leverage, index, volatility, flows) and the keys
-            without data.
+            All rows in display order (建仓档, panic, leverage, index, volatility, flows) and
+            the keys without data.
 
         Contract:
             Input:
@@ -66,7 +74,7 @@ class SmallCapWatchRows:
                                       when margin data exists, rz, rz_dd, rz_chg, rz_chg_ma,
                                       rz_ma, rz_circ, rz_circ_pct (亿 / fractions)
                 vols:   DataFrame  -- index trade_date; small, small_vol, star_vol, gap, their
-                                      `_pct` columns, gap_exit
+                                      `_pct` columns, gap_exit; small_ret, small_turn (ph5)
                 flows:  DataFrame  -- index share date; one column of 亿元 per ETF code
             Output:
                 (rows, missing)  -- rows: [{key, group, name, value, unit, trigger, state,
@@ -75,7 +83,10 @@ class SmallCapWatchRows:
                 (none)
         """
         missing: list[str] = []
-        rows = self._build_market_rows(market, missing) + self._build_margin_rows(market, missing)
+        selloff = self._entry.build_selloff_row(vols)
+        rows = self._entry.build_tranche_rows(market, vols)
+        rows += self._build_market_rows(market, missing)
+        rows += ([selloff] if selloff else []) + self._build_margin_rows(market, missing)
         ok = vols.dropna(subset=["small"]) if "small" in vols else vols
         if ok.empty:
             missing += ["levels", "small_vol", "star_vol", "gap"]

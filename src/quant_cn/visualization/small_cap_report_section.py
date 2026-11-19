@@ -36,6 +36,7 @@ class SmallCapReportSection(ReportSection):
                     没有触发 when none fired; "" without a document
         TC-SRS-002  rows: triggered rows first and red, near rows amber, values formatted
                     by unit (只, 占比, 点, %, 亿), None value as "—"; 数据缺失 without a document
+        TC-SRS-003  涨跌 rows (ph5 放量大跌): value "-1.9%", trigger "≤ -3%"
     """
 
     DOC: ClassVar[str] = "smallcap_watch"
@@ -105,15 +106,14 @@ class SmallCapReportSection(ReportSection):
         v, unit = r.get("value"), r.get("unit", "")
         if v is None:
             return "—"
-        if unit == "占比":
-            return f"{v * 100:.0f}%"
-        if unit == "点":
-            return f"{v:,.0f}"
-        if unit == "%":
-            return f"{v:.1f}%"
-        if unit == "亿":
-            return f"{v:+,.1f}亿"
-        return f"{v:,.0f}{unit}"
+        by_unit = {
+            "占比": f"{v * 100:.0f}%",
+            "点": f"{v:,.0f}",
+            "%": f"{v:.1f}%",
+            "亿": f"{v:+,.1f}亿",
+            "涨跌": f"{v * 100:+.1f}%",  # day return as a fraction (ph5 放量大跌)
+        }
+        return by_unit.get(unit, f"{v:,.0f}{unit}")
 
     @staticmethod
     def _format_trigger(r: dict[str, Any]) -> str:
@@ -126,4 +126,6 @@ class SmallCapReportSection(ReportSection):
             return f"≤ {t:,.0f}"
         if unit == "占比":
             return f"≥ {t * 100:.0f}%"
+        if unit == "涨跌":
+            return f"≤ {t * 100:.0f}%"
         return f"≥ {t:,.0f}{unit}"
