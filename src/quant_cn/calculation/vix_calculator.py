@@ -39,6 +39,7 @@ class VixCalculator:
             (none at construction)
 
     Used by:
+        calculation.VolatilityMonitorBuilder  -- daily VIX per option underlying (plan 03 ph6)
         research_space/notebooks/20260927_vix_calculation.ipynb  -- every underlying, both clocks
 
     Test cases:

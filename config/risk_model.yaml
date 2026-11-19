@@ -1,6 +1,6 @@
 # Barra-style risk model (plan 05, RISK_MODEL_DESIGN, RISK_FACTOR_LIST, D-127). Loaded into
 # core.RiskModelSettings. CNE5 defaults are noted; change values only with a decision.
-name: cne5_v3_dy              # cne5_v3 + dividend_yield (D-148; user "加入股息率"); D-127, D-128, D-131, D-134
+name: cne5_v4                 # plan 37: cne5_v3_dy + analyst EPFWD / EGRSF / EGRLF (D-180); D-127, D-148
 start: "20190102"            # first exposure date; daily_basic starts 2018-09
 exclude_suffixes: [".BJ"]    # RISK_MODEL_DESIGN §7
 # Partial-beta descriptors on external daily series, China market controlled (D-128).
@@ -12,6 +12,7 @@ external_series:
 winsor_sd: 3.0               # CNE5 descriptor clip
 min_coverage: 0.5            # style regressed only when half the estimation universe has a raw value
 weight_cap_quantile: 0.95    # sqrt(circ_mv) regression weights capped at the 95th percentile
+consensus_days: 90           # plan 37: analyst consensus window for EPFWD / EGRSF / EGRLF (0 = not loaded)
 
 # Styles in orthogonalisation order. Descriptor weights: CNE5 published (RISK_FACTOR_LIST §1); analyst
 # descriptors (EPFWD, EGRLF, EGRSF) are not built yet, so Earnings Yield and Growth use the renormalised
@@ -24,8 +25,8 @@ styles:
   - {name: non_linear_size, descriptors: {nlsize: 1.0}, orthogonalize_to: [size]}
   - {name: book_to_price, descriptors: {btop: 1.0}}
   - {name: liquidity, descriptors: {stom: 0.35, stoq: 0.35, stoa: 0.30}, orthogonalize_to: [size]}
-  - {name: earnings_yield, descriptors: {cetop: 0.66, etop: 0.34}}
-  - {name: growth, descriptors: {egro: 0.34, sgro: 0.66}}
+  - {name: earnings_yield, descriptors: {epfwd: 0.68, cetop: 0.21, etop: 0.11}}   # plan 37: CNE5 weights with EPFWD
+  - {name: growth, descriptors: {egrlf: 0.18, egrsf: 0.11, egro: 0.24, sgro: 0.47}}   # plan 37: CNE5 weights with analyst growth
   - {name: leverage, descriptors: {mlev: 0.38, dtoa: 0.35, blev: 0.27}}
   # D-128: partial beta on the overnight S&P 500 return (China market controlled); passed the v3 gate
   - {name: us_sensitivity, descriptors: {us_beta: 1.0}}

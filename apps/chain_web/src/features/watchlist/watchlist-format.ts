@@ -12,7 +12,13 @@ export const STATUS_ZH: Record<WatchStatus, string> = { in: "区间内", near: "
 export const statusLabel = (s: WatchStatus): string => STATUS_ZH[s] ?? s;
 
 /** Purpose: price with two decimals. Contract: number | null → "11.84" | "—". */
-export const px = (v: number | null | undefined): string => (v == null ? "—" : v.toFixed(2));
+export const px = (v: number | null | undefined, digits = 2): string => (v == null ? "—" : v.toFixed(digits));
+/** Purpose: y-axis tick label. Contract: |t| >= 10 → rounded ("42"); below → up to 2 decimals ("2.45", "2.5"). */
+export const tickText = (t: number): string => (Math.abs(t) >= 10 ? String(Math.round(t)) : String(+t.toFixed(2)));
+/** Purpose: ETF rows (ph7p). Contract: kind "etf" → true; missing kind = stock → false. */
+export const isEtf = (e: Pick<WatchlistEntry, "kind">): boolean => e.kind === "etf";
+/** Purpose: price decimals per row. Contract: ETF 3 (2.463), stock 2. */
+export const digitsOf = (e: Pick<WatchlistEntry, "kind">): number => (isEtf(e) ? 3 : 2);
 /** Purpose: a fraction as a percentage with one decimal. Contract: 0.042 → "4.2%"; null → "—". */
 export const pctOf = (v: number | null | undefined): string => (v == null ? "—" : (v * 100).toFixed(1) + "%");
 /** Purpose: a multiple with one decimal. Contract: 9.07 → "9.1 倍"; null → "—". */
@@ -25,8 +31,10 @@ export const gapText = (gap: number): string => (gap >= 0 ? "已到买入区间"
 /** Purpose: the gap as a bare percentage for tables. Contract: 0 → "0%"; −0.3941 → "39.4%". */
 export const gapPct = (gap: number): string => (gap >= 0 ? "0%" : pctOf(-gap));
 /** Purpose: buy price as a range or a single price. Contract: 9/10 → "9.00–10.00"; 25/25 → "25.00". */
-export const buyText = (e: Pick<WatchlistEntry, "buy_low" | "buy_high">): string =>
-  e.buy_low === e.buy_high ? px(e.buy_high) : `${px(e.buy_low)}–${px(e.buy_high)}`;
+export const buyText = (e: Pick<WatchlistEntry, "buy_low" | "buy_high" | "kind">): string => {
+  const d = digitsOf(e);
+  return e.buy_low === e.buy_high ? px(e.buy_high, d) : `${px(e.buy_low, d)}–${px(e.buy_high, d)}`;
+};
 /** Purpose: broker target range. Contract: both null → "—"; one null → the other; else "low–high". */
 export const targetText = (e: Pick<WatchlistEntry, "target_low" | "target_high">): string => {
   if (e.target_low == null && e.target_high == null) return "—";
@@ -91,3 +99,23 @@ export function niceTicks(lo: number, hi: number, n = 4): number[] {
 
 /** Purpose: YYYYMMDD → epoch ms (UTC) for the time axis. Contract: "20261106" → Date.UTC(2026, 10, 6). */
 export const dayMs = (d: string): number => Date.UTC(+d.slice(0, 4), +d.slice(4, 6) - 1, +d.slice(6, 8));
+
+/**
+ * Purpose: split a free-text reason (理由 / 逻辑 / 要盯) into bullet points.
+ * Contract: breaks after 。；; and 】 and at newlines, but not inside （）or (); drops 【; trims and drops empty pieces;
+ * keeps the text as one point when there is nothing to split.
+ */
+export function splitPoints(text: string | null | undefined): string[] {
+  if (!text) return [];
+  const out: string[] = [];
+  let depth = 0, cur = "";
+  for (const ch of text) {
+    if (ch === "（" || ch === "(") depth += 1;
+    if ((ch === "）" || ch === ")") && depth > 0) depth -= 1;
+    if (ch === "【") continue;
+    if (ch === "\n" || ch === "】" || (depth === 0 && "。；;".includes(ch))) { out.push(cur); cur = ""; continue; }
+    cur += ch;
+  }
+  out.push(cur);
+  return out.map((s) => s.trim()).filter(Boolean);
+}

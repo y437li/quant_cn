@@ -112,6 +112,8 @@ Rules:
 | main notebook | `main.ipynb` | |
 | themed notebook | `notebooks/YYYYMMDD_<topic>.ipynb`, topic `snake_case` ≤ 4 words | `notebooks/20261003_momentum_ic_decay.ipynb` |
 | outputs | `outputs/YYYYMMDD_<topic>/<artifact>.<ext>` (git-ignored) | `outputs/20261003_momentum_ic_decay/ic_series.html` |
+| analysis run | `runs/YYYYMMDD_<topic>/`, topic `snake_case` ≤ 4 words; one row in `RESEARCH_LOG.md` with the same slug (D-144) | `runs/20261113_washout_study/` |
+| analysis outputs | lake `meta/runs/research/YYYYMMDD_<topic>/` (outside git) | `meta/runs/research/20261113_washout_study/summary.csv` |
 
 ## 6. Lake (outside the repo)
 | Thing | Rule | Example |

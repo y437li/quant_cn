@@ -22,5 +22,22 @@ Execution plans, `NN_<slug>.md`, from the `plan` skill template. `ROADMAP.md` is
 | `18_guidance_tracking.md` | company guidance tracking: preview tracker, acquisition fixes, Ark guidance extraction, outcome matching, credibility | |
 | `19_app_store_charts.md` | App Store game charts: daily capture per country, publisher link, per-company rank view | |
 | `20_manual_series.md` | Manual and public cycle series (Clarksons newbuild index, TiO2, freight, hog cycle) as PIT rows with sources; feeds position notes, watchlist and morning report | |
+| `21_retail_nowcast_screen.md` | Retail-participation (shareholder-count) nowcast and weekly opportunity list | |
+| `24_index_trend_position.md` | trend blend + volatility sizing per broad index on the 波动率监测 page, fear × trend context, optional phone line | 3 phases, evidence from research runs, class table, risks, open questions |
 | `25_intraday_reversal.md` | intraday high-turnover reversal factor: class, campaign test, score decision | 3 phases, research evidence, class table, risks, open question |
+| `26_qdii_premium_alert.md` | QDII ETF premium over NAV in the ETF panel and e-mail, buy-threshold flag | 2 phases, research evidence, class table, risks, open questions |
+| `27_etf_cta_book.md` | long-only ETF risk-budget book with A股 / bond timing, weekly weights and paper record | 4 phases, research evidence, class table, risks, open questions |
+| `28_temporal_chain_graph.md` | period-keyed chain graph: company leaves, industry nodes, supplier/buyer and finance/invest edges; parquet label store; every document type labelled | 6 phases, class table, risks, open questions |
+| `29_capital_gains_overhang.md` | capital gains overhang (CGO) chip model: research match and IC test, then factor class and campaign if it passes | 3 phases, model formulas, class table, risks, open questions |
+| `30_smallcap_bottom_watch.md` | daily small-cap bottom watch: panic, index levels, vol gap, broad-ETF flows in the morning e-mail and on #volatility | 3 phases, evidence, class table, risks, open questions |
+| `31_sector_monitor.md` | sector monitor tab for 房地产 and 游戏 with game ↔ company links | 5 phases, class table, risks, open questions |
+| `32_buyback_monitor.md` | market-wide buyback monitor with Ark LLM labels (purpose, funding, amount, price cap) | 4 phases, class table, risks, open questions |
+| `34_bond_monitor.md` | China rates and RMB monitor (国债利率与人民币汇率): curve, spreads, 股债性价比, FX vs majors, fixing, triggers | 4 phases, class table, risks, open questions |
+| `35_sector_earnings_top.md` | Sector earnings-season top signal (好消息涨不动): earnings events with SUE and windows, SW L2 signal, app table and e-mail line | 3 phases, class table, risks |
+| `36_pricing_gap_factor.md` | Linear-pricing gap factor (线性定价差): consensus panel, factor class, campaign, veto in the app | 4 phases, class table, risks |
+| `37_risk_analyst_descriptors.md` | Analyst descriptors (远期 EP, 预期增长) in the risk model with a gate | 3 phases, class table, risks |
+| `38_update_all.md` | Update task ledger and `update-all` (任务表与一键更新): ordered steps, failures recorded, dependents skipped, status panel and e-mail line (plan 38) |
+| `33_sector_signals.md` | 行业监控 signals: sales yoy, 70-city breadth, game launches, valuation percentile, analyst revisions, surveys | 4 phases, class table, risks, log |
+| [`22_phone_alerts.md`](22_phone_alerts.md) | phone alerts by iMessage (plan 22) |
+| [`23_buybacks.md`](23_buybacks.md) | buybacks and shareholder yield (plan 23) |
 | `ROADMAP.md` | every plan with what it builds, which design it implements, dependencies and status | roadmap table, status vocabulary |

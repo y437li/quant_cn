@@ -58,3 +58,26 @@ func TestTCST018HoldingsMalformed(t *testing.T) {
 		t.Fatal("malformed holdings_risk.json must fail")
 	}
 }
+
+// TC-ST-019: reviews keep notes, flags, chip nulls and conditions; null slices and maps of a
+// review become empty, a missing note stays null.
+func TestTCST019HoldingsReviews(t *testing.T) {
+	h, err := load(t).GetHoldingsRisk()
+	if err != nil || len(h.Reviews) != 2 {
+		t.Fatalf("reviews: %v %+v", err, h.Reviews)
+	}
+	r := h.Reviews[h.Positions[0].Code]
+	if r.Note == nil || *r.Note.Stop != 9.5 || r.Note.Reviewed != "20261101" || r.Flags[0].Kind != "target" {
+		t.Fatalf("note / flags: %+v", r)
+	}
+	if *r.Chips["retail_gauge"] != 0.17 || r.Chips["winner_rate"] != nil || *r.Period != "20260930" {
+		t.Fatalf("chips: %+v", r.Chips)
+	}
+	if r.Conditions[0].State != "unknown" || r.Conditions[0].Actual != nil || r.Conditions[0].Value != 0.22 {
+		t.Fatalf("conditions: %+v", r.Conditions)
+	}
+	empty := h.Reviews["000000.SZ"]
+	if empty.Note != nil || empty.Flags == nil || empty.Chips == nil || empty.Conditions == nil {
+		t.Fatalf("empty review: %+v", empty)
+	}
+}

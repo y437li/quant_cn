@@ -18,9 +18,10 @@ Tests for `quant_cn.risk` (plan 05). No network, no files outside `tmp_path`.
 | `test_factor_monitor_builder.py` | tests for `factor_monitor_builder`, one function per TC ID |  |
 | `test_factor_return_estimator.py` | tests for `factor_return_estimator`, one function per TC ID |  |
 | `test_fundamental_descriptors.py` | tests for `fundamental_descriptors`, one function per TC ID |  |
+| `test_analyst_descriptors.py` | tests for `analyst_descriptors`, one function per TC ID |  |
 | `test_price_descriptors.py` | tests for `price_descriptors`, one function per TC ID |  |
 | `test_risk_decomposer.py` | tests for `risk_decomposer`, one function per TC ID |  |
-| `test_risk_input_loader.py` | tests for `risk_input_loader`, one function per TC ID |  |
+| `test_risk_input_loader.py` | tests for `risk_input_loader`, one function per TC ID | `RecordingConsensus` |
 | `test_risk_model.py` | tests for `risk_model`, one function per TC ID |  |
 | `test_risk_model_factory.py` | tests for `risk_model_factory`, one function per TC ID |  |
 | `test_risk_model_validator.py` | tests for `risk_model_validator`, one function per TC ID | `FlatModel` |

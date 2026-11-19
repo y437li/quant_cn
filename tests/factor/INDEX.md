@@ -13,5 +13,7 @@ Tests for `quant_cn.factor`; PIT restatement tests on a mini lake (conftest `rea
 | `test_factor_preprocessor.py` | tests for `factor_preprocessor`, one function per TC ID |  |
 | `test_fundamental_factors.py` | tests for `fundamental_factors`, one function per TC ID |  |
 | `test_intraday_reversal_factor.py` | tests for `intraday_reversal_factor`, one function per TC ID |  |
+| `test_pricing_gap_factor.py` | tests for `pricing_gap_factor`, one function per TC ID |  |
+| `test_retail_gauge_factor.py` | tests for `retail_gauge_factor`, one function per TC ID |  |
 | `test_price_factors.py` | tests for `price_factors`, one function per TC ID |  |
 | `test_signal_combiner.py` | tests for `signal_combiner`, one function per TC ID |  |

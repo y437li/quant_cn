@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type PointerEvent, type RefObject } from "react";
 import type { WatchlistEntry } from "../../api/client";
-import { dayMs, linear, niceTicks, placeLabels, px, ymd, type Label } from "./watchlist-format";
+import { dayMs, digitsOf, tickText, linear, niceTicks, placeLabels, px, ymd, type Label } from "./watchlist-format";
 
 /** Purpose: the pixel width of a box, kept current with a ResizeObserver. Contract: returns at least min. */
 function useBoxWidth(min = 240): [RefObject<HTMLDivElement>, number] {
@@ -24,6 +24,7 @@ const nums = (xs: (number | null)[]) => xs.filter((v): v is number => v != null)
  * Contract: draws only what is present (null 52-week or target values are skipped).
  */
 export function RangeBar({ e }: { e: WatchlistEntry }) {
+  const dg = digitsOf(e);
   const [ref, W] = useBoxWidth();
   const H = 52, y = 18;
   const lo = Math.min(...nums([e.low_52w, e.buy_low, e.price, e.target_low])) * 0.94;
@@ -31,10 +32,10 @@ export function RangeBar({ e }: { e: WatchlistEntry }) {
   const x = linear(lo, hi, 6, W - 6);
   const single = e.buy_low === e.buy_high;
   const labels: Label[] = [
-    { x: x(e.price), text: `现价 ${px(e.price)}`, anchor: "middle" },
-    { x: x(single ? e.buy_high : e.buy_low), text: single ? `买 ${px(e.buy_high)}` : `买 ${px(e.buy_low)}–${px(e.buy_high)}`, anchor: single ? "middle" : "start" },
-    ...(e.high_52w != null ? [{ x: x(e.high_52w), text: `52周高 ${px(e.high_52w)}`, anchor: "end" as const }] : []),
-    ...(e.low_52w != null ? [{ x: x(e.low_52w), text: `52周低 ${px(e.low_52w)}`, anchor: "start" as const }] : []),
+    { x: x(e.price), text: `现价 ${px(e.price, dg)}`, anchor: "middle" },
+    { x: x(single ? e.buy_high : e.buy_low), text: single ? `买 ${px(e.buy_high, dg)}` : `买 ${px(e.buy_low, dg)}–${px(e.buy_high, dg)}`, anchor: single ? "middle" : "start" },
+    ...(e.high_52w != null ? [{ x: x(e.high_52w), text: `52周高 ${px(e.high_52w, dg)}`, anchor: "end" as const }] : []),
+    ...(e.low_52w != null ? [{ x: x(e.low_52w), text: `52周低 ${px(e.low_52w, dg)}`, anchor: "start" as const }] : []),
   ];
   const tl = e.target_low ?? e.target_high, th = e.target_high ?? e.target_low;
   return (
@@ -55,6 +56,7 @@ export function RangeBar({ e }: { e: WatchlistEntry }) {
  * Contract: weekly sorted by date; fewer than two points draws a note instead of a chart.
  */
 export function WeeklyChart({ e }: { e: WatchlistEntry }) {
+  const dg = digitsOf(e);
   const [ref, W] = useBoxWidth();
   const [hover, setHover] = useState<number | null>(null);
   const pts = e.weekly.map((p) => ({ t: dayMs(p.date), v: p.close, d: p.date }));
@@ -62,7 +64,7 @@ export function WeeklyChart({ e }: { e: WatchlistEntry }) {
   const H = 150;
   const yMin = Math.min(...pts.map((p) => p.v), e.buy_low) * 0.95, yMax = Math.max(...pts.map((p) => p.v), e.buy_high) * 1.04;
   const ticks = niceTicks(yMin, yMax, 4);
-  const m = { l: Math.max(...ticks.map((t) => String(Math.round(t)).length)) * 7 + 10, r: 8, t: 8, b: 20 };
+  const m = { l: Math.max(...ticks.map((t) => tickText(t).length)) * 7 + 10, r: 8, t: 8, b: 20 };
   const x = linear(pts[0].t, pts[pts.length - 1].t, m.l, W - m.r);
   const y = linear(yMin, yMax, H - m.b, m.t);
   const nx = Math.max(2, Math.floor(W / 110));
@@ -80,7 +82,7 @@ export function WeeklyChart({ e }: { e: WatchlistEntry }) {
   return (
     <div className="wl-chart" ref={ref}>
       <svg width={W} height={H} role="img" aria-label={`${e.name} 近一年周收盘价`}>
-        {ticks.map((t) => <g key={t}><line x1={m.l} x2={W - m.r} y1={y(t)} y2={y(t)} className="wl-grid" /><text x={m.l - 6} y={y(t) + 4} textAnchor="end" className="wl-ax">{Math.round(t)}</text></g>)}
+        {ticks.map((t) => <g key={t}><line x1={m.l} x2={W - m.r} y1={y(t)} y2={y(t)} className="wl-grid" /><text x={m.l - 6} y={y(t) + 4} textAnchor="end" className="wl-ax">{tickText(t)}</text></g>)}
         {xTicks.map((p, i) => <text key={p.d} x={x(p.t)} y={H - 5} textAnchor={i === 0 ? "start" : i === nx - 1 ? "end" : "middle"} className="wl-ax">{ymd(p.d).slice(0, 7)}</text>)}
         <rect x={m.l} width={W - m.l - m.r} y={band[0] - (e.buy_low === e.buy_high ? 1 : 0)} height={Math.max(2, band[1] - band[0])} className="wl-band" />
         <line x1={m.l} x2={W - m.r} y1={band[0]} y2={band[0]} className="wl-band-top" />
@@ -91,7 +93,7 @@ export function WeeklyChart({ e }: { e: WatchlistEntry }) {
       </svg>
       {h && (
         <div className="wl-tip" style={{ left: x(h.t) + 150 > W ? x(h.t) - 140 : x(h.t) + 10, top: Math.max(0, y(h.v) - 44) }}>
-          <span>周收盘 {ymd(h.d)}</span>{px(h.v)} 元
+          <span>周收盘 {ymd(h.d)}</span>{px(h.v, dg)} 元
         </div>
       )}
     </div>

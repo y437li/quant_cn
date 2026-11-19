@@ -1,0 +1,15 @@
+# 波动率监测 (plan 03 ph6, D-152): US VIX from CBOE and CBOE-method VIX computed from A-share options.
+# kind cboe:   code = index_code in curated.cboe_vix
+# kind option: code = opt_code in curated.opt_basic (the underlying's option family), VIX on the trading clock (D-052)
+# Alerts (any that is set fires): level = value at or above; jump = one-day rise at or above this fraction;
+# pct = value at or above this percentile of the last `window` sessions (needs min_obs sessions).
+window: 250        # sessions in the percentile window and the chart (one year)
+min_obs: 120       # sessions needed before a percentile alert can fire
+min_days: 7        # a term closer than this many days to expiry is skipped (TermSelector)
+lines:
+  - {key: us_vix, name: 美国 VIX, group: 美国, kind: cboe, code: VIX, alert_level: 25, alert_jump: 0.30}
+  - {key: cn_50, name: 50ETF VIX, group: A股, kind: option, code: OP510050.SH}
+  - {key: cn_300, name: 300ETF VIX, group: A股, kind: option, code: OP510300.SH, alert_pct: 0.90}
+  - {key: cn_500, name: 500ETF VIX, group: A股, kind: option, code: OP510500.SH}
+  - {key: cn_1000, name: 中证1000 VIX, group: A股, kind: option, code: OP000852.SH}
+  - {key: cn_star50, name: 科创50 VIX, group: A股, kind: option, code: OP588000.SH, alert_pct: 0.90}

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { api, type HoldingsRisk } from "../../api/client";
 import { factorName, signedPct, volPct } from "../factors/factor-format";
-import { expo, holdingsHeadline, listIndustries, listStyles, pnlClass, share, yuan } from "./holdings-format";
+import { listAlerts } from "../conditions/condition-format";
+import { expo, holdingsHeadline, listIndustries, listStyles, pnlClass, pnlPct, share, yuan } from "./holdings-format";
+import { PositionNotes } from "./position-notes";
 
 /** Purpose: background of an exposure cell, blue for positive and amber for negative, opacity by |v| up to 2. */
 const heat = (v: number | null): string | undefined =>
@@ -29,9 +31,11 @@ export function HoldingsPage() {
   const r = doc.risk;
   const names = Object.fromEntries(doc.positions.map((p) => [p.code, p.name]));
   const rows = [...doc.positions].sort((a, b) => (b.contrib ?? -1) - (a.contrib ?? -1));
+  const alerts = listAlerts(doc.reviews ?? {}, names);
   return (
     <div className="wl-page hr-page" data-page="holdings">
       <div className="wl-head"><h2>持仓</h2><p>{holdingsHeadline(doc)}</p></div>
+      {alerts.length > 0 && <ul className="pn-alerts" data-alerts={alerts.length}>{alerts.map((a) => <li key={a}>{a}</li>)}</ul>}
       <section className="hr-tiles">
         {[["组合波动", r.total], ["因子部分", r.factor], ["个股部分", r.specific], ["跟踪误差", r.active_total]].map(([k, v]) => (
           <div key={k as string} className="wl-card"><span className="wl-k">{k as string}（年化）</span><span className="wl-big">{volPct(v as number | null)}</span></div>
@@ -44,13 +48,14 @@ export function HoldingsPage() {
           <tbody>{rows.map((p) => (
             <tr key={p.code} data-code={p.code}>
               <td>{p.name} <span className="wl-code">{p.code}</span></td><td>{p.shares ?? "—"}</td><td>{p.cost?.toFixed(3) ?? "—"}</td><td>{p.close?.toFixed(2) ?? "—"}</td>
-              <td>{yuan(p.value)}</td><td>{share(p.weight)}</td><td className={pnlClass(p.pnl)}>{yuan(p.pnl)}</td><td className={pnlClass(p.pnl_pct)}>{signedPct(p.pnl_pct, 1)}</td>
+              <td>{yuan(p.value)}</td><td>{share(p.weight)}</td><td className={pnlClass(p.pnl)}>{yuan(p.pnl)}</td><td className={p.cost != null && p.cost <= 0 ? "up" : pnlClass(p.pnl_pct)}>{pnlPct(p)}</td>
               <td>{volPct(p.vol)}</td><td>{share(p.contrib)}</td>
             </tr>))}
           </tbody>
         </table></div>
         {doc.missing.length > 0 && <p className="wl-notes">没有收盘价或模型预测、未计入风险：{doc.missing.join("、")}</p>}
       </section>
+      <PositionNotes positions={rows} reviews={doc.reviews ?? {}} />
       <section className="wl-section">
         <h3>风格敞口 <small className="wl-code">相对 {doc.benchmark}，单位：标准差</small></h3>
         <div className="fm-scroll"><table className="fm-table">

@@ -32,9 +32,11 @@ class BaseWebClient(BaseApiClient):
             TypeError  -- when instantiated directly
 
     Used by:
+        data_loading.CboeClient          -- subclass
         data_loading.CninfoClient          -- subclass
         data_loading.EastmoneyReportClient -- subclass
         data_loading.AppStoreClient        -- subclass
+        data_loading.BaseHtmlListClient    -- subclass
 
     Test cases:
         TC-BWC-001  (via CninfoClient) a failing request is retried, then raises DataSourceError

@@ -94,3 +94,20 @@ def test_tc_efc_005_members() -> None:
         {"ts_code": CORE, "index": "沪深300", "is_core": True},
         {"ts_code": "563360.SH", "index": "中证A500", "is_core": False},
     ]
+
+
+# TC-EFC-006
+def test_tc_efc_006_exclude() -> None:
+    settings = SETTINGS.model_copy(
+        update={
+            "indices": [EtfProxyIndex(name="红利", benchmark="红利", exclude="港股", reference="X")]
+        }
+    )
+    funds = pd.DataFrame(
+        [
+            ("510880.SH", "红利ETF", "上证红利指数\u00d7100%"),
+            ("513690.SH", "港股通红利ETF", "恒生港股通红利指数\u00d7100%"),
+        ],
+        columns=["ts_code", "name", "benchmark"],
+    )
+    assert EtfFlowCalculator(settings).build_members(funds)["ts_code"].tolist() == ["510880.SH"]

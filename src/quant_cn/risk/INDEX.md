@@ -16,6 +16,7 @@ L5: Barra-style (CNE5 family) multi-factor risk model for A-shares (RISK_MODEL_D
 | `factor_monitor_builder.py` | Factor monitor for the chain app: window returns, forecast / realized vol, sigma move and daily series from the stored risk frames (plan 15 ph7c, D-132) | `FactorMonitorBuilder` |
 | `factor_return_estimator.py` | Daily constrained WLS factor returns and residuals | `FactorReturnEstimator` |
 | `fundamental_descriptors.py` | Value, leverage and growth descriptors from PIT statements | `FundamentalDescriptors` |
+| `analyst_descriptors.py` | CNE5 analyst descriptors EPFWD, EGRSF, EGRLF from the consensus panel (plan 37) | `AnalystDescriptors` |
 | `price_descriptors.py` | Beta, momentum, volatility and liquidity descriptors on return matrices | `PriceDescriptors` |
 | `risk_decomposer.py` | Euler risk attribution of a portfolio (and active vs benchmark) | `RiskDecomposer` |
 | `risk_input_loader.py` | PIT panels for one fitting window through the lake readers | `RiskInputs`, `RiskInputLoader` |

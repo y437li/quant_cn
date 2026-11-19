@@ -15,6 +15,6 @@ Application code.
 | File | Purpose | Contains |
 |---|---|---|
 | `main.tsx` | entry |  |
-| `app.tsx` | shell: header (page chips with the watchlist badge), graph stage, resizable dossier, hash navigation (`#co=`, `#dupont=`, `#watchlist`) | `App` |
+| `app.tsx` | shell: left sidebar (`SideNav`), top bar with search, current page from the hash (`readRoute`); chain page toolbar (sector, quick list), graph stage, resizable dossier | `App` |
 | `styles.css` | tokens and layout (light / dark), ported from the prototype |  |
 | `types.d.ts` | module declaration for cytoscape-dagre |  |

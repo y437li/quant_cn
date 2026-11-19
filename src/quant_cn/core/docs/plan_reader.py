@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from quant_cn.core.docs.markdown_table import MarkdownTableReader
+from quant_cn.core.docs.phase_status_parser import PhaseStatusParser
 
 _TITLE = re.compile(r"^#\s+(\d{2})\s+[—-]+\s+(.+)$", re.MULTILINE)
 _DECISION = re.compile(r"D-\d{3}")
@@ -22,6 +23,7 @@ class PhaseRecord:
     Contract:
         Input:
             plan: str; n: str; phase, deliverable, done_criterion, depends_on, status: str
+            state, state_date, commit, note: str  -- `status` split by PhaseStatusParser
         Output:
             frozen dataclass
         Raises:
@@ -33,6 +35,7 @@ class PhaseRecord:
 
     Test cases:
         TC-PR-001  header, decisions and phases are read from a plan file
+        TC-PR-003  each phase carries its status split into state, date, commit and note
     """
 
     plan: str
@@ -42,6 +45,10 @@ class PhaseRecord:
     done_criterion: str
     depends_on: str
     status: str
+    state: str = ""
+    state_date: str = ""
+    commit: str = ""
+    note: str = ""
 
 
 @dataclass(frozen=True)
@@ -82,23 +89,28 @@ class PlanReader:
 
     Contract:
         Input:
-            tables: MarkdownTableReader
+            tables:   MarkdownTableReader
+            statuses: PhaseStatusParser  -- splits each phase's Status cell
         Output:
             instance; `read(path) -> PlanRecord | None`
         Raises:
             (none at construction)
 
     Used by:
-        core.docs.DocTableBuilder  -- plans and phases tables
-        cli.ServiceBuilder         -- injected type or call
+        core.docs.DocTableBuilder    -- plans and phases tables
+        core.docs.PlanStatusChecker  -- phase states
+        core.docs.ContractLinter     -- builds the plans checker
+        cli.ServiceBuilder           -- injected type or call
 
     Test cases:
         TC-PR-001  header, decisions and phases are read from a plan file
         TC-PR-002  a markdown file without a plan title returns None
+        TC-PR-003  each phase carries its status split into state, date, commit and note
     """
 
-    def __init__(self, tables: MarkdownTableReader) -> None:
+    def __init__(self, tables: MarkdownTableReader, statuses: PhaseStatusParser) -> None:
         self._tables = tables
+        self._statuses = statuses
 
     def read(self, path: Path) -> PlanRecord | None:
         """
@@ -124,7 +136,7 @@ class PlanReader:
             if table.header == ("", "") or table.header[:1] == ("",):
                 header.update({row[0]: row[1] for row in table.rows if len(row) > 1})
             elif table.header[: len(_PHASE_COLUMNS)] == _PHASE_COLUMNS:
-                phases += [PhaseRecord(nn, *row[:6]) for row in table.rows]
+                phases += [self._build_phase(nn, row) for row in table.rows]
         return PlanRecord(
             nn=nn,
             title=title.group(2).strip(),
@@ -132,4 +144,21 @@ class PlanReader:
             decisions=tuple(_DECISION.findall(header.get("Decisions", ""))),
             depends_on=header.get("Depends on plans", ""),
             phases=tuple(phases),
+        )
+
+    def _build_phase(self, nn: str, row: tuple[str, ...]) -> PhaseRecord:
+        n, phase, deliverable, done, depends, raw = (list(row[:6]) + [""] * 6)[:6]
+        status = self._statuses.parse(raw)
+        return PhaseRecord(
+            plan=nn,
+            n=n,
+            phase=phase,
+            deliverable=deliverable,
+            done_criterion=done,
+            depends_on=depends,
+            status=raw,
+            state=status.state,
+            state_date=status.state_date,
+            commit=status.commit,
+            note=status.note,
         )

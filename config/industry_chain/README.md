@@ -20,6 +20,7 @@ document evidence). Company → product edges never live here; they come from do
   kind: product                  # products only: product (physical good) | service (default product)
   import_dependence: high        # optional, products/materials: China's reliance on imports (high | medium | low); prior
   aliases: [SiC衬底, 碳化硅单晶衬底] # optional; Chinese and English variants found in filings/reports
+  context_aliases: [板材]          # optional; short (2-char) wordings matched only as an exact whole line of a company in this sector
 ```
 Products and services are both `type: product`; services set `kind: service` (IDC operation, cloud, CRO/CDMO,
 testing and certification, logistics, EPC contracting, brokerage, lending, game publishing, ...). Revenue

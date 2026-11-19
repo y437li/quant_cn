@@ -31,6 +31,7 @@ class ExpiryClock:
             ValueError  -- trading mode without sessions
 
     Used by:
+        calculation.VolatilityMonitorBuilder  -- daily VIX per option underlying (plan 03 ph6)
         calculation.VixCalculator  -- T, N1, N2, N30, N365 per day
 
     Test cases:

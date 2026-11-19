@@ -1,0 +1,31 @@
+# 散户温度计 RetailGauge (plan 21; D-142 model, D-155 avoid flag, D-167 daily reading rules).
+# Feature windows follow the v5 prototype (research_space/prototypes/holder_nowcast).
+start: "20191001"            # first session loaded (1-year turnover mean needs history before the first window)
+first_quarter: "20201231"    # first quarter end; its next quarter is the first feature row
+windows: [5, 20, 60, 120]    # multi-scale sums / means / std (v5)
+halflives: [5, 20, 60]       # EWMA of relative turnover and large-order flow
+trel_window: 250             # turnover relative to its own rolling mean over this many sessions
+trel_min: 120                # ... with at least this many observations
+slope_window: 60             # slope of relative turnover and log margin balance
+edge_sessions: 20            # first / last sessions of the quarter window (acceleration, last-20 sums)
+year_back: 251               # sessions back for the 12-month return and the 1-year high / low
+half_year: 125               # sessions back for the 6-month return
+margin_ffill: 5              # margin balance carried over at most this many sessions
+top_turnover_days: 5         # highest-turnover days in the window (concentration)
+reversal_lag: 5              # 5-session moves used to count reversals ...
+reversal_min: 0.03           # ... when larger than 3%
+big_move: 0.05               # daily return counted as a big up / down day
+limit_move: 0.095            # daily return counted as a limit-up
+min_window_sessions: 15      # fewer sessions in the quarter window -> no feature row
+lagged: [dtov, tov_acc, mchg, ret_q, big_cum, dd_qhigh, lg_cum, tov_rel_60, lg_60]   # previous quarter-end values
+model: {n_estimators: 800, learning_rate: 0.05, num_leaves: 63, min_child_samples: 200,
+        subsample: 0.8, subsample_freq: 1, colsample_bytree: 0.7, reg_lambda: 1.0}   # lgbm_best.json
+label_abs_max: 2.0           # training rows with |ln holder change| >= 2 dropped (splits, data errors)
+min_train_quarters: 4        # fewer labelled quarters -> no model
+avoid_pct: 0.9               # D-155: pct >= 0.9 is 散户过热 (avoid)
+leaving_pct: 0.3             # D-167: pct <= 0.3 at persist_n checkpoints in a row = retail leaving
+inflow_pct: 0.8              # morning report: a holding flipping to >= 0.8 is flagged
+persist_n: 3                 # D-167: checkpoints in a row
+persist_step: 3              # D-167: sessions between checkpoints
+retrain_months: [5, 9, 11]   # retrain on the first session of these months (after each reporting season)
+model_version: retail_gauge_v5

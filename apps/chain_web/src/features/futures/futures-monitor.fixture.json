@@ -1,0 +1,170 @@
+{
+ "as_of": "20261113",
+ "missing": [
+  "ZN.SHF"
+ ],
+ "new_flags": [
+  "curve:CU.SHF"
+ ],
+ "flags": [
+  {
+   "key": "curve:CU.SHF",
+   "kind": "curve",
+   "name": "铜",
+   "message": "近月升水 +3.8%（近月比第4个月），5年 99% 分位"
+  }
+ ],
+ "families": [
+  {
+   "family": "CU.SHF",
+   "name": "铜",
+   "group": "有色",
+   "as_of": "20261113",
+   "contract": "CU2612.SHF",
+   "price": 86500.0,
+   "pct_1y": 0.97,
+   "pct_5y": 0.99,
+   "chg_1w": 0.012,
+   "chg_3m": 0.081,
+   "front_vs_4th": 0.038,
+   "front_vs_4th_pct": 0.99,
+   "front_vs_12m": 0.052,
+   "front_vs_12m_pct": 0.98,
+   "shape": "backwardation",
+   "oi": 803218.0,
+   "oi_chg_5d": 0.03,
+   "oi_z": 0.6,
+   "curve": [
+    {
+     "month": "202612",
+     "price": 86500.0,
+     "oi": 200000.0
+    },
+    {
+     "month": "202701",
+     "price": 85900.0,
+     "oi": 150000.0
+    },
+    {
+     "month": "202702",
+     "price": 85000.0,
+     "oi": 90000.0
+    }
+   ],
+   "price_history": [
+    {
+     "d": "20261111",
+     "v": 86000.0
+    },
+    {
+     "d": "20261112",
+     "v": 86200.0
+    },
+    {
+     "d": "20261113",
+     "v": 86500.0
+    }
+   ],
+   "curve_history": [
+    {
+     "d": "20261106",
+     "v": 0.03
+    },
+    {
+     "d": "20261113",
+     "v": 0.038
+    }
+   ],
+   "broker": {
+    "as_of": "20261113",
+    "net": -9068.0,
+    "gross": 800000.0,
+    "net_share": -0.011,
+    "net_share_chg_5d": 0.0092,
+    "net_share_pct_5y": 0.41
+   }
+  },
+  {
+   "family": "LH.DCE",
+   "name": "生猪",
+   "group": "农产品",
+   "as_of": "20261113",
+   "contract": "LH2701.DCE",
+   "price": 12000.0,
+   "pct_1y": 0.2,
+   "pct_5y": 0.1,
+   "chg_1w": -0.02,
+   "chg_3m": null,
+   "front_vs_4th": -0.05,
+   "front_vs_4th_pct": 0.3,
+   "front_vs_12m": null,
+   "front_vs_12m_pct": null,
+   "shape": "contango",
+   "oi": 600000.0,
+   "oi_chg_5d": null,
+   "oi_z": null,
+   "curve": null,
+   "price_history": [
+    {
+     "d": "20261113",
+     "v": 12000.0
+    }
+   ],
+   "curve_history": null
+  }
+ ],
+ "spreads": [
+  {
+   "key": "hog_corn",
+   "name": "猪粮比",
+   "unit": "倍",
+   "kind": "ratio",
+   "as_of": "20261113",
+   "value": 5.4,
+   "chg_1w": -0.1,
+   "pct_5y": 0.08,
+   "history": [
+    {
+     "d": "20261106",
+     "v": 5.5
+    },
+    {
+     "d": "20261113",
+     "v": 5.4
+    }
+   ]
+  }
+ ],
+ "index_futures": [
+  {
+   "product": "IF",
+   "name": "沪深300",
+   "index": "000300.SH",
+   "as_of": "20261113",
+   "main_contract": "IF2612",
+   "price": 3956.6,
+   "spot": 4016.29,
+   "basis_pct": -1.486,
+   "basis_annualised": -15.5,
+   "basis_pct_5y": 0.029,
+   "net": -25695.0,
+   "net_chg_5d": 3462.0,
+   "net_pct_5y": 0.678,
+   "oi": 320000.0,
+   "oi_chg_5d": 0.02,
+   "regime": "long_liquidation",
+   "history": [
+    {
+     "d": "20261106",
+     "basis": -12.0,
+     "net": -29157.0
+    },
+    {
+     "d": "20261113",
+     "basis": -15.5,
+     "net": -25695.0
+    }
+   ]
+  }
+ ]
+}

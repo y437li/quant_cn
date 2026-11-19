@@ -1,0 +1,7 @@
+# Copy to config/local.mail.yaml (git-ignored) for `make morning-report` (plan 15 ph7e, D-136).
+# The SMTP password is read from the environment variable named in password_env (put it in .env).
+host: smtp.gmail.com
+port: 587
+sender: you@example.com
+recipients: [you@example.com]
+password_env: GMAIL_APP_PASSWORD

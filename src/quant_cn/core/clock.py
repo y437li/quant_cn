@@ -20,6 +20,10 @@ class Clock:
             (none)
 
     Used by:
+        pipeline.UpdateAllRunner  -- step timestamps and durations
+        cli.UpdateCommands        -- wiring
+        data_loading.CboeClient  -- pacing (via BaseWebClient)
+        data_loading.BaseHtmlListClient  -- pacing (via BaseWebClient)
         data_loading.DocumentRetyper      -- manifest time stamp
         data_loading.TushareClient       -- retry and rate-limit sleeps
         core.BaseFetcher.run             -- per-key duration

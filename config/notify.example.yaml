@@ -1,0 +1,9 @@
+# Copy to config/local.notify.yaml (git-ignored) for `make notify` (plan 22, D-153).
+# Alerts go out as iMessage from this Mac's Messages app (signed in to an Apple ID).
+# handle: phone number with country code (+86...) or the recipient's Apple ID e-mail.
+recipients:
+  - {name: 妈妈, handle: "+8613800000000"}
+triggers: [volatility, watchlist, futures, macro]   # which monitors may send alerts
+max_items: 8                                        # most alert lines in one message
+max_images: 3                                       # card pictures per message (deleted after sending)
+volatility_groups: [A股]                            # which volatility lines may alert (not the US VIX)

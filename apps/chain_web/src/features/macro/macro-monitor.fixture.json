@@ -1,0 +1,9 @@
+{"as_of": "202610", "missing": ["cn_m"], "new_prints": ["cpi"],
+ "series": [
+  {"key": "cpi", "name": "CPI 同比", "group": "价格", "unit": "%", "month": "202610", "value": 0.7,
+   "prev_month": "202609", "prev": 0.9, "change": -0.2, "pct_5y": 0.6, "new_print": true,
+   "history": [{"month": "202608", "value": 0.8}, {"month": "202609", "value": 0.9}, {"month": "202610", "value": 0.7}]},
+  {"key": "pmi_mfg", "name": "制造业 PMI", "group": "景气", "unit": "", "month": "202610", "value": 49.3,
+   "prev_month": "", "prev": null, "change": null, "pct_5y": 1.0, "new_print": false,
+   "history": [{"month": "202610", "value": 49.3}]}
+ ]}

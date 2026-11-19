@@ -227,3 +227,200 @@ func TestTCAPI010HoldingsRisk(t *testing.T) {
 		}
 	}
 }
+
+// TC-API-012: /api/macro serves the fixture; a malformed file is a 500.
+func TestTCAPI012Macro(t *testing.T) {
+	code, obj, _ := get(t, newServer(t), "/api/macro")
+	series, _ := obj["series"].([]any)
+	if code != 200 || obj["as_of"] != "202610" || len(series) != 2 {
+		t.Fatalf("present: %d %v", code, obj)
+	}
+	dir := dataDir(t, "")
+	_ = os.WriteFile(filepath.Join(dir, "macro_monitor.json"), []byte("{bad"), 0o600)
+	s, err := store.NewJSONStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if code, _, _ := get(t, NewServer(s, nil), "/api/macro"); code != 500 {
+		t.Fatalf("malformed: %d", code)
+	}
+}
+
+// TC-API-013: /api/futures serves the fixture; a malformed file is a 500.
+func TestTCAPI013Futures(t *testing.T) {
+	code, obj, _ := get(t, newServer(t), "/api/futures")
+	fams, _ := obj["families"].([]any)
+	if code != 200 || obj["as_of"] != "20261113" || len(fams) != 2 {
+		t.Fatalf("present: %d %v", code, obj["as_of"])
+	}
+	dir := dataDir(t, "")
+	_ = os.WriteFile(filepath.Join(dir, "futures_monitor.json"), []byte("{bad"), 0o600)
+	s, err := store.NewJSONStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if code, _, _ := get(t, NewServer(s, nil), "/api/futures"); code != 500 {
+		t.Fatalf("malformed: %d", code)
+	}
+}
+
+// TC-API-014: /api/volatility serves the fixture; a malformed file is a 500.
+func TestTCAPI014Volatility(t *testing.T) {
+	code, obj, _ := get(t, newServer(t), "/api/volatility")
+	lines, _ := obj["lines"].([]any)
+	if code != 200 || obj["as_of"] != "20261113" || len(lines) != 2 {
+		t.Fatalf("present: %d %v", code, obj["as_of"])
+	}
+	dir := dataDir(t, "")
+	_ = os.WriteFile(filepath.Join(dir, "volatility_monitor.json"), []byte("{bad"), 0o600)
+	s, err := store.NewJSONStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if code, _, _ := get(t, NewServer(s, nil), "/api/volatility"); code != 500 {
+		t.Fatalf("malformed: %d", code)
+	}
+}
+
+// TC-API-014: /api/margin/{code} serves the file; unknown code is a 404.
+func TestTCAPI014Margin(t *testing.T) {
+	dir := dataDir(t, "")
+	_ = os.MkdirAll(filepath.Join(dir, "margin"), 0o700)
+	_ = os.WriteFile(filepath.Join(dir, "margin", "301358.SZ.json"), []byte(`{"code":"301358.SZ"}`), 0o600)
+	s, err := store.NewJSONStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if code, obj, _ := get(t, NewServer(s, nil), "/api/margin/301358.SZ"); code != 200 || obj["code"] != "301358.SZ" {
+		t.Fatalf("present: %d %v", code, obj)
+	}
+	if code, _, _ := get(t, NewServer(s, nil), "/api/margin/600000.SH"); code != 404 {
+		t.Fatalf("absent: %d", code)
+	}
+}
+
+// TC-API-015: /api/sector-monitor serves the file; none is a 404; a malformed file is a 500.
+func TestTCAPI015SectorMonitor(t *testing.T) {
+	dir := dataDir(t, "")
+	s, err := store.NewJSONStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if code, _, _ := get(t, NewServer(s, nil), "/api/sector-monitor"); code != 404 {
+		t.Fatalf("absent: %d", code)
+	}
+	_ = os.WriteFile(filepath.Join(dir, "sector_monitor.json"), []byte(`{"as_of":"20261117","sectors":[{"key":"games"}]}`), 0o600)
+	code, obj, _ := get(t, NewServer(s, nil), "/api/sector-monitor")
+	if sectors, _ := obj["sectors"].([]any); code != 200 || len(sectors) != 1 {
+		t.Fatalf("present: %d %v", code, obj)
+	}
+	_ = os.WriteFile(filepath.Join(dir, "sector_monitor.json"), []byte("{bad"), 0o600)
+	if code, _, _ := get(t, NewServer(s, nil), "/api/sector-monitor"); code != 500 {
+		t.Fatalf("malformed: %d", code)
+	}
+}
+
+// TC-API-016: /api/rates-fx serves the file; none is a 404; a malformed file is a 500.
+func TestTCAPI016RatesFx(t *testing.T) {
+	dir := dataDir(t, "")
+	s, err := store.NewJSONStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if code, _, _ := get(t, NewServer(s, nil), "/api/rates-fx"); code != 404 {
+		t.Fatalf("absent: %d", code)
+	}
+	_ = os.WriteFile(filepath.Join(dir, "rates_fx_monitor.json"), []byte(`{"as_of":"20261117","rows":[{"key":"cn_10y"}]}`), 0o600)
+	code, obj, _ := get(t, NewServer(s, nil), "/api/rates-fx")
+	if rows, _ := obj["rows"].([]any); code != 200 || len(rows) != 1 {
+		t.Fatalf("present: %d %v", code, obj)
+	}
+	_ = os.WriteFile(filepath.Join(dir, "rates_fx_monitor.json"), []byte("{bad"), 0o600)
+	if code, _, _ := get(t, NewServer(s, nil), "/api/rates-fx"); code != 500 {
+		t.Fatalf("malformed: %d", code)
+	}
+}
+
+// TC-API-017: /api/buyback serves the file; none is a 404; a malformed file is a 500.
+func TestTCAPI017Buyback(t *testing.T) {
+	dir := dataDir(t, "")
+	s, err := store.NewJSONStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if code, _, _ := get(t, NewServer(s, nil), "/api/buyback"); code != 404 {
+		t.Fatalf("absent: %d", code)
+	}
+	_ = os.WriteFile(filepath.Join(dir, "buyback_monitor.json"), []byte(`{"as_of":"20261117","buyback":{"live":[{"code":"A"}]}}`), 0o600)
+	code, obj, _ := get(t, NewServer(s, nil), "/api/buyback")
+	if bb, _ := obj["buyback"].(map[string]any); code != 200 || len(bb["live"].([]any)) != 1 {
+		t.Fatalf("present: %d %v", code, obj)
+	}
+	_ = os.WriteFile(filepath.Join(dir, "buyback_monitor.json"), []byte("{bad"), 0o600)
+	if code, _, _ := get(t, NewServer(s, nil), "/api/buyback"); code != 500 {
+		t.Fatalf("malformed: %d", code)
+	}
+}
+
+// TC-API-018: /api/sector-earnings serves the file; none is a 404; a malformed file is a 500.
+func TestTCAPI018SectorEarnings(t *testing.T) {
+	dir := dataDir(t, "")
+	s, err := store.NewJSONStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if code, _, _ := get(t, NewServer(s, nil), "/api/sector-earnings"); code != 404 {
+		t.Fatalf("absent: %d", code)
+	}
+	_ = os.WriteFile(filepath.Join(dir, "sector_earnings_signal.json"), []byte(`{"as_of":"20261117","rows":[{"code":"801735.SI"}]}`), 0o600)
+	code, obj, _ := get(t, NewServer(s, nil), "/api/sector-earnings")
+	if rows, _ := obj["rows"].([]any); code != 200 || len(rows) != 1 {
+		t.Fatalf("present: %d %v", code, obj)
+	}
+	_ = os.WriteFile(filepath.Join(dir, "sector_earnings_signal.json"), []byte("{bad"), 0o600)
+	if code, _, _ := get(t, NewServer(s, nil), "/api/sector-earnings"); code != 500 {
+		t.Fatalf("malformed: %d", code)
+	}
+}
+
+// TC-API-019: /api/tasks serves task_status.json; none is a 404; a malformed file is a 500.
+func TestTCAPI019Tasks(t *testing.T) {
+	dir := dataDir(t, "")
+	s, err := store.NewJSONStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if code, _, _ := get(t, NewServer(s, nil), "/api/tasks"); code != 404 {
+		t.Fatalf("absent: %d", code)
+	}
+	_ = os.WriteFile(filepath.Join(dir, "task_status.json"), []byte(`{"last_run":null,"steps":[{"task":"a"}]}`), 0o600)
+	code, obj, _ := get(t, NewServer(s, nil), "/api/tasks")
+	if code != 200 || len(obj["steps"].([]any)) != 1 {
+		t.Fatalf("present: %d %v", code, obj)
+	}
+	_ = os.WriteFile(filepath.Join(dir, "task_status.json"), []byte("{bad"), 0o600)
+	if code, _, _ := get(t, NewServer(s, nil), "/api/tasks"); code != 500 {
+		t.Fatalf("malformed: %d", code)
+	}
+}
+
+// TC-API-020: /api/opportunities serves the file; none is a 404; a malformed file is a 500.
+func TestTCAPI020Opportunities(t *testing.T) {
+	dir := dataDir(t, "")
+	s, err := store.NewJSONStore(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if code, _, _ := get(t, NewServer(s, nil), "/api/opportunities"); code != 404 {
+		t.Fatalf("absent: %d", code)
+	}
+	_ = os.WriteFile(filepath.Join(dir, "opportunities.json"), []byte(`{"as_of":"20261118","rows":[{"code":"605365.SH"}]}`), 0o600)
+	code, obj, _ := get(t, NewServer(s, nil), "/api/opportunities")
+	if code != 200 || obj["as_of"] != "20261118" {
+		t.Fatalf("present: %d %v", code, obj)
+	}
+	_ = os.WriteFile(filepath.Join(dir, "opportunities.json"), []byte("{bad"), 0o600)
+	if code, _, _ := get(t, NewServer(s, nil), "/api/opportunities"); code != 500 {
+		t.Fatalf("malformed: %d", code)
+	}
+}

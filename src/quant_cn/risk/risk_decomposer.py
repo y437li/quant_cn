@@ -29,7 +29,7 @@ class RiskDecomposer:
     Used by:
         research_space/notebooks/20261111_risk_model_validation.ipynb  -- attribution
         portfolio.HoldingsRiskBuilder  -- injected type or call
-        cli.ResearchCommands  -- holdings-risk wiring
+        cli.AppServiceBuilder  -- wires it
 
     Test cases:
         TC-RD-001  factor contributions + specific = total; pct sums to 1; total matches

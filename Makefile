@@ -86,7 +86,7 @@ NODE_BIN ?= /opt/homebrew/opt/node@22/bin
 WEB_BUILD := $(HOME)/.builds/chain_web
 APP_BIN := $(HOME)/.builds/chainapi
 APP_DATA ?= research_space/prototypes/chain_view
-.PHONY: app app-api app-web app-run app-check app-smoke watchlist etf-proxy manual-series app-charts factor-monitor holdings-risk track-daily track-install track-uninstall
+.PHONY: update-all holdings-risk-data retail-gauge opportunity-list app app-api app-web app-run app-check app-smoke watchlist etf-proxy etf-cta manual-series app-charts factor-monitor holdings-risk macro-monitor futures-monitor volatility-monitor smallcap-watch rates-fx-monitor sector-monitor sector-earnings-signal notify market-data margin-panel buyback-events track-daily track-install track-uninstall morning-report report-install report-uninstall
 
 WATCHLIST_DATASETS := daily,daily_basic,report_rc
 watchlist:        ## refresh the last 14 days of prices and forecasts, then write $(APP_DATA)/watchlist.json (D-120)
@@ -111,18 +111,75 @@ app-charts:       ## capture today's App Store game charts (grossing + free, 26 
 factor-monitor:   ## write $(APP_DATA)/factor_monitor.json from the stored risk-model frames (D-132)
 	$(CLI) factor-monitor --out $(APP_DATA)
 
+# every daily market dataset, refreshed by track-daily (user: "我们的数据应该每天都更新")
+MARKET_DATASETS := daily,daily_basic,adj_factor,moneyflow,stk_limit,margin,margin_detail,hk_hold,fund_daily,fund_share,fut_daily,fut_holding,opt_daily,stk_holdertrade,repurchase,cyq_perf,sw_daily,report_rc,stk_surv
+# overwrite / date-window datasets refresh their own recent range: no --start (D-049)
+MARKET_RANGE_DATASETS := index_daily,fut_basic,shibor,fx_daily,cn_bond_yield,cny_fixing,us_treasury_yield,cboe_vix
+market-data:      ## refresh the last 14 days of every daily market dataset (stocks, flows, margin, northbound, ETFs, futures, options, rates, FX)
+	$(CLI) download --datasets $(MARKET_DATASETS) --start $$(date -v-14d +%Y%m%d) --no-progress
+	$(CLI) download --datasets $(MARKET_RANGE_DATASETS) --no-progress
+	$(CLI) compact --datasets $(MARKET_DATASETS),$(MARKET_RANGE_DATASETS)
+
+notify:           ## send the new plain-language alerts by iMessage with card pictures (config/local.notify.yaml; plan 22, D-153). NOTIFY_ARGS=--dry-run to preview
+	rsync -a --delete --exclude node_modules --exclude dist apps/chain_web/ $(WEB_BUILD)/
+	$(CLI) notify --data $(APP_DATA) --node $(NODE_BIN)/node --shot-script $(WEB_BUILD)/tests/shot_cards.mjs --images $(HOME)/Pictures/quant_cn_alerts $(NOTIFY_ARGS)
+
+volatility-monitor:  ## write $(APP_DATA)/volatility_monitor.json: US VIX (CBOE) + A-share VIX from options (config/volatility_monitor.yaml; plan 03 ph6, D-152)
+	$(CLI) volatility-monitor --out $(APP_DATA)
+
+rates-fx-monitor: ## write $(APP_DATA)/rates_fx_monitor.json: 利率与汇率 (中债 curve, spreads, 股债性价比, RMB vs majors, fixing; config/rates_fx_monitor.yaml; plan 34)
+	$(CLI) rates-fx-monitor --out $(APP_DATA)
+
+smallcap-watch:   ## write $(APP_DATA)/smallcap_watch.json: 小盘观察 (limit-downs, 60-day lows, 中证1000 levels, vol gap, broad-ETF flows; config/smallcap_watch.yaml; plan 30)
+	$(CLI) smallcap-watch --out $(APP_DATA)
+retail-gauge:     ## 散户温度计 daily reading for today -> derived/retail_gauge (plan 21, D-142 / D-155 / D-167)
+	$(CLI) retail-gauge
+
+opportunity-list: ## daily opportunity list -> derived/opportunity_list + $(APP_DATA)/opportunities.json (plan 21 ph4-5)
+	$(CLI) opportunity-list --out $(APP_DATA)
+
+sector-earnings-signal: ## write $(APP_DATA)/sector_earnings_signal.json: 财报季信号 per Shenwan L2 sector (好消息涨不动; config/sector_earnings_signal.yaml; plan 35)
+	$(CLI) sector-earnings-signal --out $(APP_DATA)
+
+sector-monitor:   ## write $(APP_DATA)/sector_monitor.json: 行业监控 (70 城房价, 销售简报, 合同负债, 减值, 版号, 获利盘, 实际波动率; config/sector_monitors.yaml; plan 31)
+	$(CLI) sector-monitor --out $(APP_DATA)
+
+buyback-events:   ## write $(APP_DATA)/buybacks.json (large new plans, the book's events; plan 23 ph6) and buyback_monitor.json (market-wide 回购 / 增持; plan 32)
+	$(CLI) buyback-events --out $(APP_DATA)
+
+margin-panel:     ## write $(APP_DATA)/margin/<code>.json: 融资融券 series and forced-liquidation ladder per stock (plan 15 ph7m)
+	$(CLI) margin-panel --out $(APP_DATA)
+
+futures-monitor:  ## write $(APP_DATA)/futures_monitor.json from fut_daily (config/futures_monitor.yaml; plan 15 ph7i, D-145)
+	$(CLI) futures-monitor --out $(APP_DATA)
+
+MACRO_DATASETS :=cn_cpi,cn_ppi,cn_pmi,cn_m,sf_month
+macro-monitor:    ## refresh CPI / PPI / PMI / M1-M2 / 社融 (one call each), then write $(APP_DATA)/macro_monitor.json (plan 15 ph7h, D-143)
+	$(CLI) download --datasets $(MACRO_DATASETS) --no-progress
+	$(CLI) compact --datasets $(MACRO_DATASETS)
+	$(CLI) macro-monitor --out $(APP_DATA)
+
 holdings-risk:    ## value config/local.positions.yaml, decompose its risk, write $(APP_DATA)/holdings_risk.json + lake history (D-132)
 	$(CLI) holdings-risk --out $(APP_DATA)
+	-$(MAKE) notify
 
-track-daily: watchlist etf-proxy app-charts manual-series  ## what the weekday 18:30 launchd job runs; then curate, refit the risk model, factor monitor, holdings
-	$(PREFECT_ENV) $(CLI) curate $(if $(RUNNER),--runner $(RUNNER))
-	$(CLI) risk-model --no-progress
-	$(CLI) factor-monitor --out $(APP_DATA)
+holdings-risk-data: ## holdings-risk without the iMessage notify (update-all step, plan 38)
 	$(CLI) holdings-risk --out $(APP_DATA)
+
+etf-cta:          ## refresh the last 14 days of fund NAVs (premium guard), then write $(APP_DATA)/etf_cta.json from config/etf_cta.yaml (plan 27, D-160); after etf-proxy
+	$(CLI) download --datasets fund_nav --start $$(date -v-14d +%Y%m%d)
+	$(CLI) compact --datasets fund_nav
+	$(CLI) etf-cta --out $(APP_DATA)
+
+update-all:       ## every daily update in order (config/update_all.yaml; plan 38, D-181): continues past a failed step, skips its dependents, records meta/task_log + $(APP_DATA)/task_status.json. ARGS="--only a,b | --from step | --dry-run | --with-report"
+	$(CLI) update-all --out $(APP_DATA) $(ARGS)
+
+track-daily:      ## what the weekday 06:00 launchd job runs: update-all (plan 38)
+	$(CLI) update-all --out $(APP_DATA) --trigger launchd $(ARGS)
 
 TRACK_PLIST := $(HOME)/Library/LaunchAgents/com.quantcn.daily-track.plist
 TRACK_LOG := $(HOME)/Library/Logs/quant_cn-daily-track.log
-track-install:    ## install the weekday 18:30 launchd job that runs make track-daily (log in ~/Library/Logs)
+track-install:    ## install the weekday 06:00 launchd job (after the China close in US Eastern time) that runs make track-daily (log in ~/Library/Logs)
 	sed -e "s|@REPO@|$(CURDIR)|g" -e "s|@PATH@|$(dir $(shell command -v uv)):/opt/homebrew/bin:/usr/bin:/bin|g" -e "s|@LOG@|$(TRACK_LOG)|g" scripts/launchd/daily_track.plist.template > $(TRACK_PLIST)
 	-launchctl bootout gui/$$(id -u) $(TRACK_PLIST) 2>/dev/null
 	launchctl bootstrap gui/$$(id -u) $(TRACK_PLIST)
@@ -131,6 +188,21 @@ track-install:    ## install the weekday 18:30 launchd job that runs make track-
 track-uninstall:  ## unload the launchd job and delete its plist
 	-launchctl bootout gui/$$(id -u) $(TRACK_PLIST) 2>/dev/null
 	/bin/rm -f "$(TRACK_PLIST)"
+
+morning-report:   ## send the 持仓监测 and 机会清单 e-mails (DRY=1 writes the HTML into APP_DATA instead)
+	$(CLI) morning-report --data $(APP_DATA) $(if $(DRY),--dry-run --out $(APP_DATA))
+
+REPORT_PLIST := $(HOME)/Library/LaunchAgents/com.quantcn.morning-report.plist
+REPORT_LOG := $(HOME)/Library/Logs/quant_cn-morning-report.log
+report-install:   ## install the weekday 08:00 launchd job that runs make morning-report (log in ~/Library/Logs)
+	sed -e "s|@REPO@|$(CURDIR)|g" -e "s|@PATH@|$(dir $(shell command -v uv)):/opt/homebrew/bin:/usr/bin:/bin|g" -e "s|@LOG@|$(REPORT_LOG)|g" scripts/launchd/morning_report.plist.template > $(REPORT_PLIST)
+	-launchctl bootout gui/$$(id -u) $(REPORT_PLIST) 2>/dev/null
+	launchctl bootstrap gui/$$(id -u) $(REPORT_PLIST)
+	@echo "installed $(REPORT_PLIST); log $(REPORT_LOG)"
+
+report-uninstall: ## unload the morning-report launchd job (the plist file stays; delete it by hand if wanted)
+	-launchctl bootout gui/$$(id -u) $(REPORT_PLIST) 2>/dev/null
+	@echo "unloaded; plist left at $(REPORT_PLIST)"
 
 app-api:          ## build the Go API binary into ~/.builds (off the exFAT volume)
 	cd apps/chain_api && $(GO) vet ./... && $(GO) build -buildvcs=false -o $(APP_BIN) ./cmd/chainapi

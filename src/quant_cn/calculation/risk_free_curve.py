@@ -26,6 +26,7 @@ class RiskFreeCurve:
             ValueError  -- empty frame or missing tenor columns
 
     Used by:
+        calculation.VolatilityMonitorBuilder  -- daily VIX per option underlying (plan 03 ph6)
         calculation.VixCalculator            -- rate per term
         calculation.GammaExposureCalculator  -- injected type or call
 

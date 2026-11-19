@@ -1,0 +1,47 @@
+# 利率与汇率监测 (plan 34, D-171): China government curve, spreads, 股债性价比, RMB vs majors and the PBOC fixing.
+# Line kinds and their source:
+#   curve  -- curated.cn_bond_yield: `curve` (curve_name) and `field` (y_1y, y_10y, …), percent
+#   us     -- curated.us_treasury_yield: `field` (us_10y, …), percent
+#   shibor -- curated.shibor: `field` (3m, 1y, …), percent
+#   fx     -- curated.fx_daily: `code`, mid of bid / ask close
+#   fixing -- curated.cny_fixing: `field` (usd, eur, …), CNY per one unit (the file quotes per 100)
+#   equity_ep -- earnings yield of index `code` (members from index_weight, Σ mv / pe_ttm ÷ Σ mv), percent
+#   combo  -- from two other lines a and b: op diff (a − b), mul (a × b), div (a ÷ b), gap (a ÷ b − 1)
+# unit: yield (percent level, changes in bp), bp (spread in bp, changes in bp), rate (FX, changes in %),
+#       gap (a fraction, shown in %, changes in percentage points). `show: false` keeps a helper line out of the table.
+# Alerts (each optional): week_move = |1-week change| at or above (bp for yield / bp units, fraction for rate);
+#   week_widen = 1-week rise at or above (bp); extreme = new 1-year high or low; pct_above = 5-year percentile at or
+#   above; abs_above = |value| at or above; below / above = value crosses a level.
+pct_years: 5        # percentile window
+min_obs: 250        # observations needed for a percentile
+history_start: "20210101"
+stale_days: 4       # calendar days behind as_of before a line is flagged stale
+curve: {curve: 中债国债收益率曲线, fields: [y_3m, y_6m, y_1y, y_3y, y_5y, y_7y, y_10y, y_30y]}
+lines:
+  - {key: cn_1y, name: 1年国债, group: 债市, kind: curve, curve: 中债国债收益率曲线, field: y_1y, unit: yield}
+  - {key: cn_3y, name: 3年国债, group: 债市, kind: curve, curve: 中债国债收益率曲线, field: y_3y, unit: yield}
+  - {key: cn_5y, name: 5年国债, group: 债市, kind: curve, curve: 中债国债收益率曲线, field: y_5y, unit: yield}
+  - {key: cn_10y, name: 10年国债, group: 债市, kind: curve, curve: 中债国债收益率曲线, field: y_10y, unit: yield, extreme: true, week_move: 10}
+  - {key: cn_30y, name: 30年国债, group: 债市, kind: curve, curve: 中债国债收益率曲线, field: y_30y, unit: yield, week_move: 10}
+  - {key: term_10_1, name: 期限利差 10Y−1Y, group: 债市, kind: combo, op: diff, a: cn_10y, b: cn_1y, unit: bp}
+  - {key: term_30_10, name: 期限利差 30Y−10Y, group: 债市, kind: combo, op: diff, a: cn_30y, b: cn_10y, unit: bp}
+  - {key: bank_10y, name: AAA银行债 10Y, group: 债市, kind: curve, curve: 中债商业银行普通债收益率曲线(AAA), field: y_10y, unit: yield, show: false}
+  - {key: note_3y, name: AAA中票 3Y, group: 债市, kind: curve, curve: 中债中短期票据收益率曲线(AAA), field: y_3y, unit: yield, show: false}
+  - {key: credit_bank, name: 信用利差 AAA银行债−国债 10Y, group: 债市, kind: combo, op: diff, a: bank_10y, b: cn_10y, unit: bp, week_widen: 10}
+  - {key: credit_note, name: 信用利差 AAA中票−国债 3Y, group: 债市, kind: combo, op: diff, a: note_3y, b: cn_3y, unit: bp, week_widen: 10}
+  - {key: shibor_3m, name: SHIBOR 3M, group: 债市, kind: shibor, field: 3m, unit: yield}
+  - {key: anchor, name: 1年国债−SHIBOR 3M, group: 债市, kind: combo, op: diff, a: cn_1y, b: shibor_3m, unit: bp}
+  - {key: csi300_ep, name: 沪深300 盈利收益率, group: 债市, kind: equity_ep, code: 000300.SH, unit: yield, show: false}
+  - {key: erp, name: 股债性价比 (300 E/P − 10Y), group: 债市, kind: combo, op: diff, a: csi300_ep, b: cn_10y, unit: bp, pct_above: 0.90}
+  - {key: usdcnh, name: 美元/离岸人民币, group: 汇率, kind: fx, code: USDCNH.FXCM, unit: rate, extreme: true, week_move: 0.01}
+  - {key: fix_usd, name: 美元中间价, group: 汇率, kind: fixing, field: usd, unit: rate}
+  - {key: fix_gap, name: 离岸−中间价 偏离, group: 汇率, kind: combo, op: gap, a: usdcnh, b: fix_usd, unit: gap, abs_above: 0.01}
+  - {key: eurusd, name: 欧元/美元, group: 汇率, kind: fx, code: EURUSD.FXCM, unit: rate}
+  - {key: usdjpy, name: 美元/日元, group: 汇率, kind: fx, code: USDJPY.FXCM, unit: rate}
+  - {key: eurcnh, name: 欧元/人民币, group: 汇率, kind: combo, op: mul, a: eurusd, b: usdcnh, unit: rate}
+  - {key: cnhjpy, name: 人民币/日元, group: 汇率, kind: combo, op: div, a: usdjpy, b: usdcnh, unit: rate}
+  - {key: fix_hkd, name: 港元中间价, group: 汇率, kind: fixing, field: hkd, unit: rate}
+  - {key: fix_gbp, name: 英镑中间价, group: 汇率, kind: fixing, field: gbp, unit: rate}
+  - {key: dxy, name: 美元指数 (FXCM), group: 汇率, kind: fx, code: USDOLLAR, unit: rate}
+  - {key: us_10y, name: 美国10年国债, group: 汇率, kind: us, field: us_10y, unit: yield}
+  - {key: cn_us_10y, name: 中美利差 10Y, group: 汇率, kind: combo, op: diff, a: cn_10y, b: us_10y, unit: bp, extreme: true}

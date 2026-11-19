@@ -1,0 +1,17 @@
+{
+ "as_of": "20261113",
+ "window": 250,
+ "lines": [
+  {"key": "us_vix", "name": "美国 VIX", "group": "美国", "kind": "cboe", "code": "VIX", "date": "20261112",
+   "value": 18.7, "chg": 1.21, "chg_pct": 0.0692, "pct": 0.7, "median": 17.2, "low": 13.1, "high": 31.1,
+   "n_obs": 250, "quality_flag": "ok", "alerts": {"level": 25.0, "jump": 0.3, "pct": null},
+   "history": [{"date": "20261110", "value": 19.46}, {"date": "20261111", "value": 17.49}, {"date": "20261112", "value": 18.7}]},
+  {"key": "cn_300", "name": "300ETF VIX", "group": "A股", "kind": "option", "code": "OP510300.SH", "date": "20261113",
+   "value": 17.6, "chg": null, "chg_pct": null, "pct": null, "median": 18.9, "low": 16.0, "high": 22.4,
+   "n_obs": 69, "quality_flag": "ok", "alerts": {"level": null, "jump": null, "pct": 0.9},
+   "history": [{"date": "20261113", "value": 17.6}]}
+ ],
+ "flags": [{"key": "us_vix:level", "kind": "level", "name": "美国 VIX", "message": "美国 VIX 28.2 ≥ 25"}],
+ "new_flags": ["us_vix:level"],
+ "missing": []
+}

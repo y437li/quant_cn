@@ -17,7 +17,11 @@ Tests for `quant_cn.core.docs`; checkers run against throwaway git repos built b
 | `test_index_reader.py` | tests for `index_reader`, one function per TC ID |  |
 | `test_markdown_table.py` | tests for `markdown_table`, one function per TC ID |  |
 | `test_name_checker.py` | tests for `name_checker`, one function per TC ID |  |
+| `test_phase_status_parser.py` | tests for `phase_status_parser`, one function per TC ID |  |
+| `test_plan_status_checker.py` | tests for `plan_status_checker`, one function per TC ID |  |
 | `test_plan_reader.py` | tests for `plan_reader`, one function per TC ID |  |
 | `test_registry_reader.py` | tests for `registry_reader`, one function per TC ID |  |
 | `test_repo_files.py` | tests for `repo_files`, one function per TC ID |  |
+| `test_research_log_checker.py` | tests for `research_log_checker`, one function per TC ID |  |
+| `test_research_log_reader.py` | tests for `research_log_reader`, one function per TC ID |  |
 | `test_size_checker.py` | tests for `size_checker`, one function per TC ID |  |

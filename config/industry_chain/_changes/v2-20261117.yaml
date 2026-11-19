@@ -1,0 +1,1858 @@
+version: v2-20261117
+effective_period: '20251231'
+note: Plan 28 ph3b batch 1 (基础化工, 机械设备, 计算机, 医药生物, 有色金属, 通信, 国防军工, 家用电器), accepted by the user 2026-11-17; 耳机 aliased to PROD_ELEC_TWS instead of a new home-appliance node
+changes:
+- op: upsert
+  kind: alias
+  sector: '220000'
+  node:
+    id: PROD_CHEM_PESTICIDE_FORMULATION
+    type: product
+    name: 农药制剂
+    segment: SEG_CHEM_PESTICIDES
+  reason: “制剂”两字泛别名把医药制剂约290亿拉进农药；农药原药另加段别名
+  drop_aliases:
+  - 制剂
+- op: upsert
+  kind: alias
+  sector: '220000'
+  node:
+    id: SEG_CHEM_PESTICIDES
+    type: segment
+    name: 农药
+    aliases:
+    - 农药原药
+  reason: “制剂”两字泛别名把医药制剂约290亿拉进农药；农药原药另加段别名
+- op: upsert
+  kind: new
+  sector: '220000'
+  node:
+    id: PROD_CHEM_HERBICIDE
+    type: product
+    name: 除草剂
+    segment: SEG_CHEM_PESTICIDES
+    aliases:
+    - 农用除草剂
+    - 除草剂原药
+  reason: 除草剂约200亿只落段级；杀虫剂51亿被误配到卫生杀虫剂，需品类节点
+- op: upsert
+  kind: new
+  sector: '220000'
+  node:
+    id: PROD_CHEM_INSECTICIDE
+    type: product
+    name: 杀虫剂
+    segment: SEG_CHEM_PESTICIDES
+    aliases:
+    - 农用杀虫剂
+    - 杀虫剂原药
+  reason: 除草剂约200亿只落段级；杀虫剂51亿被误配到卫生杀虫剂，需品类节点
+- op: upsert
+  kind: new
+  sector: '220000'
+  node:
+    id: PROD_CHEM_PET_FILAMENT
+    type: product
+    name: 涤纶长丝
+    segment: SEG_CHEM_POLYESTER_FIBER
+    aliases:
+    - 涤纶丝
+    - 差别化涤纶长丝
+  reason: 东方盛虹涤纶丝229亿未匹配；涤纶长丝现只配到无段的材料节点
+- op: upsert
+  kind: new
+  sector: '220000'
+  node:
+    id: PROD_CHEM_OLEOCHEMICAL
+    type: product
+    name: 油脂化学品
+    segment: SEG_CHEM_OTHER_PRODUCTS
+    aliases:
+    - 脂肪醇
+    - 天然脂肪醇
+    - 油脂化工
+    - 硬脂酸
+  reason: 赞宇、嘉化、元利油脂化学品/脂肪醇约120亿未匹配，缺油脂化工节点
+- op: upsert
+  kind: new
+  sector: '220000'
+  node:
+    id: PROD_CHEM_ACTIVATED_CARBON
+    type: product
+    name: 活性炭
+    segment: SEG_CHEM_OTHER_PRODUCTS
+    aliases:
+    - 木质活性炭
+    - 功能性活性炭
+  reason: 活性炭与环保型贵金属选矿剂各约16亿、各2家未匹配
+- op: upsert
+  kind: new
+  sector: '220000'
+  node:
+    id: PROD_CHEM_MINING_REAGENT
+    type: product
+    name: 选矿药剂
+    segment: SEG_CHEM_OTHER_PRODUCTS
+    aliases:
+    - 贵金属选矿剂
+    - 选矿剂
+    - 浮选药剂
+  reason: 活性炭与环保型贵金属选矿剂各约16亿、各2家未匹配
+- op: upsert
+  kind: alias
+  sector: '220000'
+  node:
+    id: PROD_CHEM_PLASTIC_ADDITIVE
+    type: product
+    name: 塑料助剂
+    segment: SEG_CHEM_OTHER_PRODUCTS
+    aliases:
+    - 聚合物添加剂
+    - 聚合物功能性助剂
+    - 热稳定剂
+    - PVC热稳定剂
+    - 抗氧化剂
+  reason: 中化国际、万盛、利安隆等聚合物助剂措辞约94亿未命中
+- op: upsert
+  kind: alias
+  sector: '220000'
+  node:
+    id: PROD_CHEM_PRECIP_SILICA
+    type: product
+    name: 沉淀法白炭黑
+    segment: SEG_CHEM_INORGANIC_SALT
+    aliases:
+    - 二氧化硅
+    - 硅橡胶用二氧化硅
+  reason: 确成、联科的“二氧化硅”为沉淀法白炭黑，现误配为气相白炭黑归有机硅
+- op: upsert
+  kind: alias
+  sector: '220000'
+  node:
+    id: PROD_CHEM_PET_FDY
+    type: product
+    name: 涤纶FDY
+    segment: SEG_CHEM_POLYESTER_FIBER
+    aliases:
+    - 涤纶牵伸丝
+    - 全牵伸丝
+  reason: 桐昆牵伸丝141亿、凯立催化剂19亿等为既有节点的措辞变体
+- op: upsert
+  kind: alias
+  sector: '220000'
+  node:
+    id: PROD_NFM_PM_CATALYST
+    type: product
+    name: 贵金属催化剂
+    segment: SEG_NFM_SILVER_PGM
+    aliases:
+    - 均相催化剂
+    - 多相催化剂
+  reason: 桐昆牵伸丝141亿、凯立催化剂19亿等为既有节点的措辞变体
+- op: upsert
+  kind: alias
+  sector: '220000'
+  node:
+    id: PROD_CHEM_QUARTZ_GLASS
+    type: product
+    name: 石英玻璃制品
+    segment: SEG_CHEM_NONMETALLIC
+    aliases:
+    - 石英玻璃材料
+    - 石英玻璃
+  reason: 桐昆牵伸丝141亿、凯立催化剂19亿等为既有节点的措辞变体
+- op: upsert
+  kind: alias
+  sector: '220000'
+  node:
+    id: PROD_CHEM_PP_FIBER
+    type: product
+    name: 丙纶
+    segment: SEG_CHEM_OTHER_FIBERS
+    aliases:
+    - 丙纶短纤
+  reason: 桐昆牵伸丝141亿、凯立催化剂19亿等为既有节点的措辞变体
+- op: upsert
+  kind: rename
+  sector: '220000'
+  node:
+    id: SEG_CHEM_NEW_MATERIALS
+    type: segment
+    name: 化工新材料产业
+  reason: 段名含“新材料”，各行业裸“新材料”行被吸入；改总称后只留化工新材料行
+- op: upsert
+  kind: rename
+  sector: '220000'
+  node:
+    id: SEG_CHEM_RAW
+    type: segment
+    name: 化学原料产业
+  reason: 父段名为泛词，直接吸入原料药、天然橡胶、电缆厂等收入行；改为总称
+- op: upsert
+  kind: rename
+  sector: '220000'
+  node:
+    id: SEG_CHEM_RUBBER
+    type: segment
+    name: 橡胶产业
+  reason: 父段名为泛词，直接吸入原料药、天然橡胶、电缆厂等收入行；改为总称
+- op: upsert
+  kind: rename
+  sector: '220000'
+  node:
+    id: SEG_CHEM_PLASTICS
+    type: segment
+    name: 塑料产业
+  reason: 父段名为泛词，直接吸入原料药、天然橡胶、电缆厂等收入行；改为总称
+- op: upsert
+  kind: rename
+  sector: '220000'
+  node:
+    id: SEG_CHEM_FIBERS
+    type: segment
+    name: 化学纤维产业
+  reason: 父段名为泛词，直接吸入原料药、天然橡胶、电缆厂等收入行；改为总称
+  drop_aliases:
+  - 化纤
+- op: upsert
+  kind: rename
+  sector: '640000'
+  node:
+    id: SEG_MACH_CONSTRUCTION
+    type: segment
+    name: 工程机械产业
+  reason: 父节点名“工程机械”直接吸走整机厂与零部件厂收入行；改为汇总名，措辞分给整机/器件子段
+- op: upsert
+  kind: rename
+  sector: '640000'
+  node:
+    id: SEG_MACH_CM_WHOLE
+    type: segment
+    name: 工程机械整机
+    aliases:
+    - 工程机械主机
+    - 工程机械产品
+    - 其他工程机械
+    - 工程机械收入
+    - 专用工程机械
+    - 地下工程机械
+  reason: 父节点名“工程机械”直接吸走整机厂与零部件厂收入行；改为汇总名，措辞分给整机/器件子段
+- op: upsert
+  kind: rename
+  sector: '640000'
+  node:
+    id: SEG_MACH_CM_PARTS
+    type: segment
+    name: 工程机械器件
+    aliases:
+    - 工程机械零部件
+    - 工程机械配件
+    - 工程机械与商用车座椅
+  reason: 父节点名“工程机械”直接吸走整机厂与零部件厂收入行；改为汇总名，措辞分给整机/器件子段
+- op: upsert
+  kind: rename
+  sector: '640000'
+  node:
+    id: PROD_MACH_TRACK_MAINT_MACH
+    type: product
+    name: 养路机械
+    segment: SEG_MACH_RAIL_EQUIP
+    aliases:
+    - 铁路工程机械
+  reason: 父节点名“工程机械”直接吸走整机厂与零部件厂收入行；改为汇总名，措辞分给整机/器件子段
+- op: upsert
+  kind: rename
+  sector: '640000'
+  node:
+    id: SEG_MACH_AUTOMATION
+    type: segment
+    name: 自动化设备产业
+  reason: 父节点名“自动化设备”泛匹配吸走24家；改汇总名，通用措辞归其他自动化设备，专用行归光伏/锂电/物流
+- op: upsert
+  kind: rename
+  sector: '640000'
+  node:
+    id: SEG_MACH_OTHER_AUTOMATION
+    type: segment
+    name: 其他自动化设备
+    aliases:
+    - 自动化设备
+    - 工业自动化设备
+  reason: 父节点名“自动化设备”泛匹配吸走24家；改汇总名，通用措辞归其他自动化设备，专用行归光伏/锂电/物流
+- op: upsert
+  kind: rename
+  sector: '640000'
+  node:
+    id: PROD_MACH_MODULE_EQUIP
+    type: product
+    name: 光伏组件设备
+    segment: SEG_MACH_PV_EQUIP
+    aliases:
+    - 光伏组件自动化设备
+  reason: 父节点名“自动化设备”泛匹配吸走24家；改汇总名，通用措辞归其他自动化设备，专用行归光伏/锂电/物流
+- op: upsert
+  kind: rename
+  sector: '640000'
+  node:
+    id: SEG_MACH_LIB_EQUIP
+    type: segment
+    name: 锂电池生产设备
+    aliases:
+    - 锂电激光及自动化设备
+  reason: 父节点名“自动化设备”泛匹配吸走24家；改汇总名，通用措辞归其他自动化设备，专用行归光伏/锂电/物流
+- op: upsert
+  kind: rename
+  sector: '640000'
+  node:
+    id: PROD_MACH_INTRALOGISTICS_SYSTEM
+    type: product
+    name: 智能物流系统
+    segment: SEG_MACH_MATERIAL_HANDLING
+    aliases:
+    - 仓储自动化设备
+  reason: 父节点名“自动化设备”泛匹配吸走24家；改汇总名，通用措辞归其他自动化设备，专用行归光伏/锂电/物流
+- op: upsert
+  kind: rename
+  sector: '640000'
+  node:
+    id: SEG_MACH_SPECIAL
+    type: segment
+    name: 专用设备产业
+  reason: 父节点名“专用设备”吸走半导体/面板设备厂；改汇总名，措辞归半导体设备与面板设备子段
+- op: upsert
+  kind: rename
+  sector: '640000'
+  node:
+    id: SEG_ELEC_SEMI_EQUIPMENT
+    type: segment
+    name: 半导体设备
+    aliases:
+    - 半导体专用设备
+  reason: 父节点名“专用设备”吸走半导体/面板设备厂；改汇总名，措辞归半导体设备与面板设备子段
+- op: upsert
+  kind: rename
+  sector: '640000'
+  node:
+    id: SEG_MACH_DISPLAY_EQUIP
+    type: segment
+    name: 显示面板设备
+    aliases:
+    - 平板显示专用设备
+    - 平板显示模组类设备
+  reason: 父节点名“专用设备”吸走半导体/面板设备厂；改汇总名，措辞归半导体设备与面板设备子段
+- op: upsert
+  kind: rename
+  sector: '640000'
+  node:
+    id: SEG_MACH_GENERAL
+    type: segment
+    name: 通用设备产业
+  reason: 父节点名“通用设备”只吸来统计口径行（四川长虹+377%），改汇总名不再直接收成员
+- op: upsert
+  kind: new
+  sector: '640000'
+  node:
+    id: PROD_MACH_PHARMA_EQUIP
+    type: product
+    name: 制药装备
+    segment: SEG_MACH_FOOD_PHARMA_MACH
+    aliases:
+    - 制药设备
+    - 制药专用设备
+    - 制药装备产品
+  reason: 食品制药机械段只有食品机械产品，制药装备厂（东富龙等）无处可落
+- op: upsert
+  kind: new
+  sector: '640000'
+  node:
+    id: PROD_MACH_COLOR_SORTER
+    type: product
+    name: 色选机
+    segment: SEG_MACH_OTHER_SPECIAL
+    aliases:
+    - 光电分选机
+    - 智能色选机
+  reason: 色选机为独立细分产品（美亚光电、合锻智能），当前无节点
+- op: upsert
+  kind: alias
+  sector: '640000'
+  node:
+    id: PROD_MACH_CM_STRUCTURAL_PART
+    type: product
+    name: 工程机械结构件
+    segment: SEG_MACH_CM_PARTS
+    aliases:
+    - 挖掘机结构件
+  reason: 别名“结构件”泛匹配，把消费电子/电池/汽车结构件厂拉进工程机械器件
+  drop_aliases:
+  - 结构件
+- op: upsert
+  kind: alias
+  sector: '640000'
+  node:
+    id: PROD_MACH_INDUSTRIAL_PUMP
+    type: product
+    name: 工业泵
+    segment: SEG_MACH_PUMP_VALVE
+    aliases:
+    - 通用设备制造业-水泵
+    - 潜水泵
+    - 泵及阀门零件
+  reason: 单字别名“泵”命中发动机油泵、卫浴泵、热泵等，改为具体措辞
+  drop_aliases:
+  - 泵
+- op: upsert
+  kind: alias
+  sector: '640000'
+  node:
+    id: PROD_MACH_INTRALOGISTICS_SYSTEM
+    type: product
+    name: 智能物流系统
+    segment: SEG_MACH_MATERIAL_HANDLING
+    aliases:
+    - 分拣系统
+    - 输送分拣
+    - 智慧物流系统
+    - 智能分拣
+  reason: 分拣/智慧物流与起重搬运收入行未命中物料搬运节点
+- op: upsert
+  kind: alias
+  sector: '640000'
+  node:
+    id: SEG_MACH_MATERIAL_HANDLING
+    type: segment
+    name: 物料搬运设备
+    aliases:
+    - 物料起重搬运装备
+  reason: 分拣/智慧物流与起重搬运收入行未命中物料搬运节点
+- op: upsert
+  kind: alias
+  sector: '640000'
+  node:
+    id: PROD_MACH_METALLURGICAL_EQUIP
+    type: product
+    name: 冶金设备
+    segment: SEG_MACH_ENERGY_HEAVY
+    aliases:
+    - 冶金成套设备
+  reason: 已有产品节点漏掉FY2025收入行措辞（一重、昊志、凌云光、三丰、天奇）
+- op: upsert
+  kind: alias
+  sector: '640000'
+  node:
+    id: PROD_MACH_NUCLEAR_EQUIPMENT
+    type: product
+    name: 核电设备
+    segment: SEG_MACH_ENERGY_HEAVY
+    aliases:
+    - 核能设备
+  reason: 已有产品节点漏掉FY2025收入行措辞（一重、昊志、凌云光、三丰、天奇）
+- op: upsert
+  kind: alias
+  sector: '640000'
+  node:
+    id: PROD_MACH_FORGING
+    type: product
+    name: 锻件
+    segment: SEG_MACH_METAL_PRODUCTS
+    aliases:
+    - 铸锻件
+  reason: 已有产品节点漏掉FY2025收入行措辞（一重、昊志、凌云光、三丰、天奇）
+- op: upsert
+  kind: alias
+  sector: '640000'
+  node:
+    id: PROD_MACH_MOTORIZED_SPINDLE
+    type: product
+    name: 电主轴
+    segment: SEG_MACH_MACHINE_TOOL
+    aliases:
+    - 主轴类产品
+  reason: 已有产品节点漏掉FY2025收入行措辞（一重、昊志、凌云光、三丰、天奇）
+- op: upsert
+  kind: alias
+  sector: '640000'
+  node:
+    id: PROD_MACH_MACHINE_VISION
+    type: product
+    name: 机器视觉系统
+    segment: SEG_MACH_INDUSTRIAL_CONTROL
+    aliases:
+    - 智能视觉装备
+  reason: 已有产品节点漏掉FY2025收入行措辞（一重、昊志、凌云光、三丰、天奇）
+- op: upsert
+  kind: alias
+  sector: '640000'
+  node:
+    id: PROD_MACH_AUTO_BODY_LINE
+    type: product
+    name: 汽车焊装线
+    segment: SEG_MACH_OTHER_AUTOMATION
+    aliases:
+    - 焊装生产线
+    - 焊装智能装备
+    - 汽车智能装备
+  reason: 已有产品节点漏掉FY2025收入行措辞（一重、昊志、凌云光、三丰、天奇）
+- op: upsert
+  kind: alias
+  sector: '640000'
+  node:
+    id: MAT_INDUSTRIAL_GASES
+    type: material
+    name: 工业气体
+    aliases:
+    - 气体销售
+  reason: 机械公司的非机械主业行已有跨行业节点，补别名而非新建重复节点
+- op: upsert
+  kind: alias
+  sector: '640000'
+  node:
+    id: PROD_DEF_AM_PART
+    type: product
+    name: 增材制造零件
+    segment: SEG_DEF_MATERIALS
+    aliases:
+    - 3D打印定制化产品
+  reason: 机械公司的非机械主业行已有跨行业节点，补别名而非新建重复节点
+- op: upsert
+  kind: alias
+  sector: '640000'
+  node:
+    id: PROD_ENV_SANITATION_VEHICLE
+    type: product
+    name: 环卫装备
+    segment: SEG_ENV_SANITATION
+    aliases:
+    - 环卫设备
+  reason: 机械公司的非机械主业行已有跨行业节点，补别名而非新建重复节点
+- op: upsert
+  kind: rename
+  sector: '710000'
+  node:
+    id: SEG_COMP_SOFTWARE
+    type: segment
+    name: 软件产业
+  reason: 伞形段名“软件开发”是营收行措辞，直接吸入67家成员；改为伞名，措辞交给定制软件开发子节点
+- op: upsert
+  kind: new
+  sector: '710000'
+  node:
+    id: PROD_COMP_CUSTOM_SOFTWARE
+    type: product
+    name: 定制软件开发
+    segment: SEG_COMP_INTEGRATION
+    aliases:
+    - 软件开发
+    - 定制软件
+    - 技术开发类
+  reason: 项目制定制软件开发是独立业务，承接原“软件开发”段名匹配的67家及未匹配的定制软件行
+- op: upsert
+  kind: split
+  sector: '710000'
+  node:
+    id: SEG_COMP_FINTECH
+    type: segment
+    name: 金融IT
+    parent: SEG_COMP_VERTICAL_SOFTWARE
+  reason: 金融IT段混入支付收单，规模2714.8亿被支付流水型收入主导，与银行/证券软件业务不同
+  split_from: &id001
+  - SEG_COMP_FINTECH
+- op: upsert
+  kind: split
+  sector: '710000'
+  node:
+    id: SEG_COMP_PAYMENT
+    type: segment
+    name: 支付与收单服务
+    parent: SEG_COMP_IT_SERVICES
+  reason: 金融IT段混入支付收单，规模2714.8亿被支付流水型收入主导，与银行/证券软件业务不同
+  split_from: *id001
+- op: upsert
+  kind: split
+  sector: '710000'
+  node:
+    id: PROD_COMP_PAYMENT
+    type: product
+    name: 第三方支付
+    segment: SEG_COMP_PAYMENT
+  reason: 金融IT段混入支付收单，规模2714.8亿被支付流水型收入主导，与银行/证券软件业务不同
+  split_from: *id001
+- op: upsert
+  kind: new
+  sector: '710000'
+  node:
+    id: PROD_COMP_ICT_INFRA
+    type: product
+    name: ICT基础设施产品
+    segment: SEG_COMP_SERVER
+    aliases:
+    - ICT基础设施与服务
+    - IT基础架构解决方案
+    - 计算产品与智能电子
+    - IT设备
+  reason: 服务器/存储/网络打包披露的硬件营收行约1068亿未匹配，含中科曙光、紫光股份核心业务
+- op: upsert
+  kind: alias
+  sector: '710000'
+  node:
+    id: PROD_COMP_IT_OUTSOURCING
+    type: product
+    name: IT外包服务
+    segment: SEG_COMP_INTEGRATION
+    aliases:
+    - 软件与数字技术服务
+    - 服务外包
+  reason: 软通动力、宝信软件的外包营收行未匹配
+- op: upsert
+  kind: alias
+  sector: '710000'
+  node:
+    id: PROD_COMP_IT_DISTRIBUTION
+    type: product
+    name: IT产品分销
+    segment: SEG_COMP_INTEGRATION
+    aliases:
+    - ICT产品销售
+  reason: 天源迪科ICT产品销售（分销）未匹配
+- op: upsert
+  kind: alias
+  sector: '710000'
+  node:
+    id: PROD_COMP_PRIVATE_CLOUD
+    type: product
+    name: 私有云
+    segment: SEG_COMP_CLOUD
+    aliases:
+    - 云计算及IT基础设施
+    - 云计算大数据
+  reason: 深信服、云赛智联的云业务营收行未匹配
+- op: upsert
+  kind: alias
+  sector: '710000'
+  node:
+    id: PROD_COMP_AI_COMPUTING_SERVICE
+    type: product
+    name: 智算服务
+    segment: SEG_COMP_IDC_COMPUTING
+    aliases:
+    - 智能算力
+  reason: 协创数据智能算力产品及服务未匹配
+- op: upsert
+  kind: alias
+  sector: '710000'
+  node:
+    id: PROD_COMP_CYBERSECURITY
+    type: product
+    name: 网络安全产品
+    segment: SEG_COMP_CYBERSECURITY
+    aliases:
+    - 安全产品
+  reason: 核心网安公司的安全产品营收行未匹配
+- op: upsert
+  kind: alias
+  sector: '710000'
+  node:
+    id: PROD_COMP_POWER_IT
+    type: product
+    name: 电力信息化
+    segment: SEG_COMP_INDUSTRY_IT
+    aliases:
+    - 电力数字化
+  reason: 国网信通电力数字化应用业务未匹配
+- op: upsert
+  kind: alias
+  sector: '710000'
+  node:
+    id: PROD_COMP_E_GOV
+    type: product
+    name: 数字政府
+    segment: SEG_COMP_DIGITAL_GOV
+    aliases:
+    - 党政核心应用
+    - 智慧招采
+  reason: 中国软件党政应用、新点软件公共招采营收行未匹配
+- op: upsert
+  kind: alias
+  sector: '710000'
+  node:
+    id: PROD_COMP_MOTHERBOARD
+    type: product
+    name: 服务器主板
+    segment: SEG_COMP_SERVER
+  reason: 两字别名“主板”匹配PCB厂，造成服务器段误增
+  drop_aliases:
+  - 主板
+- op: upsert
+  kind: alias
+  sector: '710000'
+  node:
+    id: PROD_COMP_SERVER_RACK
+    type: product
+    name: 服务器机柜
+    segment: SEG_COMP_DC_INFRA
+    aliases:
+    - 数据中心机柜
+  reason: 两字别名“机柜”匹配电气柜/设备柜，数据中心基础设施段成员失真
+  drop_aliases:
+  - 机柜
+- op: upsert
+  kind: rename
+  sector: '370000'
+  node:
+    id: SEG_PHAR_MED_DEVICES
+    type: segment
+    name: 医疗器械产业
+  reason: 父段名“医疗器械”直接吸走49家414.8亿，应只作汇总；制造归设备，商贸归器械流通
+- op: upsert
+  kind: rename
+  sector: '370000'
+  node:
+    id: PROD_PHAR_MED_EQUIPMENT
+    type: product
+    name: 医疗设备整机
+    segment: SEG_PHAR_MED_EQUIPMENT
+    aliases:
+    - 医疗器械制造产品
+    - 医疗器械产品
+  reason: 父段名“医疗器械”直接吸走49家414.8亿，应只作汇总；制造归设备，商贸归器械流通
+- op: upsert
+  kind: rename
+  sector: '370000'
+  node:
+    id: PROD_PHAR_DEVICE_DISTRIBUTION
+    type: product
+    name: 医疗器械流通
+    segment: SEG_PHAR_DISTRIBUTION
+    aliases:
+    - 医疗器械类
+    - 医疗器械销售业务
+    - 医疗器械批发
+    - 医疗商贸产品
+  reason: 父段名“医疗器械”直接吸走49家414.8亿，应只作汇总；制造归设备，商贸归器械流通
+- op: upsert
+  kind: rename
+  sector: '370000'
+  node:
+    id: SEG_PHAR_COMMERCE
+    type: segment
+    name: 医药商业产业
+  reason: 父段名“医药商业”吸走制药企业的商业板块984亿，应归药品批发配送
+- op: upsert
+  kind: rename
+  sector: '370000'
+  node:
+    id: PROD_PHAR_DRUG_WHOLESALE
+    type: product
+    name: 药品批发配送
+    segment: SEG_PHAR_DISTRIBUTION
+    aliases:
+    - 医药商业
+    - 医药商业流通
+    - 医药商业配送
+  reason: 父段名“医药商业”吸走制药企业的商业板块984亿，应归药品批发配送
+- op: upsert
+  kind: rename
+  sector: '370000'
+  node:
+    id: SEG_PHAR_MED_SERVICES
+    type: segment
+    name: 医疗服务产业
+  reason: 父段名“医疗服务”直接吸走35家医院运营商，应归综合医院服务
+- op: upsert
+  kind: rename
+  sector: '370000'
+  node:
+    id: PROD_PHAR_GENERAL_HOSPITAL
+    type: product
+    name: 综合医院服务
+    segment: SEG_PHAR_HOSPITALS
+    aliases:
+    - 医疗服务
+    - 医疗服务收入
+    - 医疗业
+  reason: 父段名“医疗服务”直接吸走35家医院运营商，应归综合医院服务
+- op: upsert
+  kind: rename
+  sector: '370000'
+  node:
+    id: SEG_PHAR_TCM
+    type: segment
+    name: 中药产业
+  reason: 父段名“中药”吸走药店与药企裸“中药”行，改汇总名；中药制剂措辞归中成药
+- op: upsert
+  kind: rename
+  sector: '370000'
+  node:
+    id: PROD_PHAR_PATENT_TCM
+    type: product
+    name: 中成药
+    segment: SEG_PHAR_TCM_PATENT
+    aliases:
+    - 现代中药
+    - 全品类中药
+    - 传统中药
+    - 中药生产
+  reason: 父段名“中药”吸走药店与药企裸“中药”行，改汇总名；中药制剂措辞归中成药
+- op: upsert
+  kind: rename
+  sector: '370000'
+  node:
+    id: SEG_PHAR_BIOLOGICS
+    type: segment
+    name: 生物制品产业
+  reason: 父段名“生物制品”吸走胰岛素厂与兽用疫苗厂，改汇总名；胰岛素行归胰岛素
+- op: upsert
+  kind: rename
+  sector: '370000'
+  node:
+    id: PROD_PHAR_INSULIN
+    type: product
+    name: 胰岛素
+    segment: SEG_PHAR_RECOMBINANT_PROTEIN
+    aliases:
+    - 生物制品(原料药及制剂产品)
+  reason: 父段名“生物制品”吸走胰岛素厂与兽用疫苗厂，改汇总名；胰岛素行归胰岛素
+- op: upsert
+  kind: split
+  sector: '370000'
+  node:
+    id: SEG_PHAR_INNOVATIVE_SMALL_MOLECULE
+    type: segment
+    name: 创新小分子药
+    parent: SEG_PHAR_CHEM_FORMULATION
+  reason: 对外授权收入跨抗体/ADC/小分子，FY2025近70亿，误计入小分子段，独立成段
+  split_from: &id002
+  - SEG_PHAR_INNOVATIVE_SMALL_MOLECULE
+- op: upsert
+  kind: split
+  sector: '370000'
+  node:
+    id: SEG_PHAR_DRUG_LICENSING
+    type: segment
+    name: 创新药授权与合作
+  reason: 对外授权收入跨抗体/ADC/小分子，FY2025近70亿，误计入小分子段，独立成段
+  split_from: *id002
+- op: upsert
+  kind: split
+  sector: '370000'
+  node:
+    id: PROD_PHAR_LICENSE_OUT
+    type: product
+    name: 创新药授权许可
+    segment: SEG_PHAR_DRUG_LICENSING
+    aliases:
+    - 授权许可业务
+    - 授权许可及服务
+    - 知识产权收入
+    - 技术授权收入
+    - 技术授权
+  reason: 对外授权收入跨抗体/ADC/小分子，FY2025近70亿，误计入小分子段，独立成段
+  split_from: *id002
+- op: upsert
+  kind: alias
+  sector: '370000'
+  node:
+    id: PROD_PHAR_CLINICAL_TRIAL_SERVICES
+    type: product
+    name: 临床试验运营服务
+    segment: SEG_PHAR_CLINICAL_CRO
+    aliases:
+    - 临床试验技术服务
+    - 临床试验相关服务
+    - 临床研究服务
+  reason: CXO龙头收入行措辞未匹配，落入无产品的父段CXO(856亿)，补别名
+- op: upsert
+  kind: alias
+  sector: '370000'
+  node:
+    id: PROD_PHAR_SMALL_MOLECULE_CDMO
+    type: product
+    name: 小分子CDMO
+    segment: SEG_PHAR_CDMO
+    aliases:
+    - 合同定制类
+    - 创新药研发生产服务
+    - 小分子CDMO服务
+  reason: CXO龙头收入行措辞未匹配，落入无产品的父段CXO(856亿)，补别名
+- op: upsert
+  kind: alias
+  sector: '370000'
+  node:
+    id: PROD_PHAR_DRUG_DISCOVERY
+    type: product
+    name: 药物发现服务
+    segment: SEG_PHAR_PRECLINICAL_CRO
+    aliases:
+    - 实验室服务
+  reason: CXO龙头收入行措辞未匹配，落入无产品的父段CXO(856亿)，补别名
+- op: upsert
+  kind: alias
+  sector: '370000'
+  node:
+    id: PROD_PHAR_BIOLOGICS_CDMO
+    type: product
+    name: 大分子CDMO
+    segment: SEG_PHAR_CDMO
+    aliases:
+    - 大分子和细胞与基因治疗服务
+  reason: CXO龙头收入行措辞未匹配，落入无产品的父段CXO(856亿)，补别名
+- op: upsert
+  kind: alias
+  sector: '370000'
+  node:
+    id: PROD_PHAR_OPHTHALMIC_DRUG
+    type: product
+    name: 眼科药物
+    segment: SEG_PHAR_GENERICS
+    aliases:
+    - 滴眼剂
+  reason: 治疗领域型收入行未匹配既有制剂节点，补别名
+- op: upsert
+  kind: alias
+  sector: '370000'
+  node:
+    id: PROD_PHAR_CONTRAST_AGENT
+    type: product
+    name: 造影剂制剂
+    segment: SEG_PHAR_GENERICS
+    aliases:
+    - 对比剂
+  reason: 治疗领域型收入行未匹配既有制剂节点，补别名
+- op: upsert
+  kind: alias
+  sector: '370000'
+  node:
+    id: PROD_PHAR_ANESTHETIC
+    type: product
+    name: 麻醉镇痛药
+    segment: SEG_PHAR_GENERICS
+    aliases:
+    - 麻醉类
+    - 麻醉及肌松用药
+  reason: 治疗领域型收入行未匹配既有制剂节点，补别名
+- op: upsert
+  kind: alias
+  sector: '370000'
+  node:
+    id: PROD_PHAR_PSYCHIATRIC_DRUG
+    type: product
+    name: 精神神经类药物
+    segment: SEG_PHAR_GENERICS
+    aliases:
+    - 精神类
+    - 神经系统用药
+    - 神经精神系统类
+    - 精神神经系统用药
+  reason: 治疗领域型收入行未匹配既有制剂节点，补别名
+- op: upsert
+  kind: alias
+  sector: '370000'
+  node:
+    id: PROD_PHAR_CARDIOVASCULAR_DRUG
+    type: product
+    name: 心血管化学药
+    segment: SEG_PHAR_GENERICS
+    aliases:
+    - 心血管系统用药
+  reason: 治疗领域型收入行未匹配既有制剂节点，补别名
+- op: upsert
+  kind: alias
+  sector: '370000'
+  node:
+    id: PROD_PHAR_ANESTHESIA_CONSUMABLE
+    type: product
+    name: 麻醉呼吸耗材
+    segment: SEG_PHAR_LOW_VALUE_CONSUMABLES
+    aliases:
+    - 麻醉类耗材
+  reason: 治疗领域型收入行未匹配既有制剂节点，补别名
+- op: upsert
+  kind: alias
+  sector: '370000'
+  node:
+    id: PROD_PHAR_EXCIPIENT
+    type: product
+    name: 药用辅料
+    segment: SEG_PHAR_EXCIPIENT_PACKAGING
+  reason: 二字别名“辅料”泛匹配食品/服饰/电子辅料行，删除
+  drop_aliases:
+  - 辅料
+- op: upsert
+  kind: alias
+  sector: '370000'
+  node:
+    id: PROD_PHAR_TCM_OTC
+    type: product
+    name: 中药OTC
+    segment: SEG_PHAR_TCM_PATENT
+    aliases:
+    - 自我诊疗
+  reason: 大额未匹配收入行为现有节点的改名措辞，补别名
+- op: upsert
+  kind: alias
+  sector: '370000'
+  node:
+    id: PROD_PHAR_CHEM_FORMULATION
+    type: product
+    name: 化学药制剂
+    segment: SEG_PHAR_CHEM_FORMULATION
+    aliases:
+    - 化药科技
+    - 药品制剂
+  reason: 大额未匹配收入行为现有节点的改名措辞，补别名
+- op: upsert
+  kind: alias
+  sector: '370000'
+  node:
+    id: PROD_PHAR_MOLECULAR_REAGENTS
+    type: product
+    name: 分子生物学试剂
+    segment: SEG_PHAR_LIFE_SCI_TOOLS
+    aliases:
+    - 生物试剂
+    - 生命科学试剂
+  reason: 大额未匹配收入行为现有节点的改名措辞，补别名
+- op: upsert
+  kind: rename
+  sector: '240000'
+  node:
+    id: SEG_NFM_ENERGY_METALS
+    type: segment
+    name: 能源金属产业
+  reason: 父节点名'能源金属'直接吸附成员,改为伞形名;措辞交给镍子节点
+- op: upsert
+  kind: rename
+  sector: '240000'
+  node:
+    id: SEG_NFM_NICKEL
+    type: segment
+    name: 镍产业链
+    parent: SEG_NFM_ENERGY_METALS
+    aliases:
+    - 新能源金属
+  reason: 父节点名'能源金属'直接吸附成员,改为伞形名;措辞交给镍子节点
+- op: upsert
+  kind: rename
+  sector: '240000'
+  node:
+    id: SEG_NFM_NEW_MATERIALS
+    type: segment
+    name: 金属新材料产业
+  reason: 父节点名'金属新材料'是泛词,直接吸附他行业公司,改伞形名
+- op: upsert
+  kind: split
+  sector: '240000'
+  node:
+    id: SEG_NFM_SILVER
+    type: segment
+    name: 白银采选冶炼
+    sw_l3:
+    - '240402'
+  reason: 白银矿山冶炼与铂族回收/催化剂/电接触材料是不同业务,应拆分
+  split_from: &id003
+  - SEG_NFM_SILVER_PGM
+- op: upsert
+  kind: split
+  sector: '240000'
+  node:
+    id: SEG_NFM_PRECIOUS_METAL_MATERIALS
+    type: segment
+    name: 铂族与贵金属材料
+    parent: SEG_NFM_NEW_MATERIALS
+    sw_l3:
+    - '240201'
+  reason: 白银矿山冶炼与铂族回收/催化剂/电接触材料是不同业务,应拆分
+  split_from: *id003
+- op: upsert
+  kind: split
+  sector: '240000'
+  node:
+    id: PROD_NFM_SILVER_REFINING
+    type: product
+    name: 白银冶炼
+    segment: SEG_NFM_SILVER
+  reason: 白银矿山冶炼与铂族回收/催化剂/电接触材料是不同业务,应拆分
+  split_from: *id003
+- op: upsert
+  kind: split
+  sector: '240000'
+  node:
+    id: PROD_NFM_PGM_REFINING
+    type: product
+    name: 铂族金属精炼
+    segment: SEG_NFM_PRECIOUS_METAL_MATERIALS
+  reason: 白银矿山冶炼与铂族回收/催化剂/电接触材料是不同业务,应拆分
+  split_from: *id003
+- op: upsert
+  kind: split
+  sector: '240000'
+  node:
+    id: PROD_NFM_PM_CATALYST
+    type: product
+    name: 贵金属催化剂
+    segment: SEG_NFM_PRECIOUS_METAL_MATERIALS
+  reason: 白银矿山冶炼与铂族回收/催化剂/电接触材料是不同业务,应拆分
+  split_from: *id003
+- op: upsert
+  kind: split
+  sector: '240000'
+  node:
+    id: PROD_NFM_SILVER_CONTACT
+    type: product
+    name: 银基电接触材料
+    segment: SEG_NFM_PRECIOUS_METAL_MATERIALS
+  reason: 白银矿山冶炼与铂族回收/催化剂/电接触材料是不同业务,应拆分
+  split_from: *id003
+- op: upsert
+  kind: new
+  sector: '240000'
+  node:
+    id: PROD_NFM_ZIRCONIUM_CHEMICALS
+    type: product
+    name: 锆化工产品
+    segment: SEG_NFM_ZIRCONIUM
+    aliases:
+    - 氧化锆
+    - 硅酸锆
+    - 氧氯化锆
+    - 锆英砂
+    - 复合氧化锆
+  reason: 锆铪段只有核级锆,FY2023/25均无成员;补锆化工产品
+- op: upsert
+  kind: new
+  sector: '240000'
+  node:
+    id: PROD_NFM_PHOSPHOR_COPPER_BALL
+    type: product
+    name: 磷铜球
+    segment: SEG_NFM_COPPER_FABRICATION
+    aliases:
+    - 铜球系列
+    - 磷铜阳极
+    - 高纯铜球
+  reason: PCB电镀用铜球是独立铜加工品,未匹配78.7亿
+- op: upsert
+  kind: alias
+  sector: '240000'
+  node:
+    id: PROD_NFM_REFINED_COPPER
+    type: product
+    name: 精炼铜冶炼
+    segment: SEG_NFM_COPPER_SMELTING
+    aliases:
+    - 阴极铜
+    - 精炼铜
+    - 铜类产品
+  reason: 铜冶炼段只有1家,缺阴极铜/铜类产品措辞
+- op: upsert
+  kind: alias
+  sector: '240000'
+  node:
+    id: PROD_NFM_PRIMARY_ALUMINUM
+    type: product
+    name: 电解铝冶炼
+    segment: SEG_NFM_ALU_UPSTREAM
+    aliases:
+    - 电解铝
+    - 液态铝
+  reason: 电解铝/铝液/铝深加工等措辞未命中,神火股份等离开上游段
+- op: upsert
+  kind: alias
+  sector: '240000'
+  node:
+    id: SEG_NFM_ALU_FABRICATION
+    type: segment
+    name: 铝加工
+    parent: SEG_NFM_ALUMINUM
+    aliases:
+    - 铝深加工
+  reason: 电解铝/铝液/铝深加工等措辞未命中,神火股份等离开上游段
+- op: upsert
+  kind: alias
+  sector: '240000'
+  node:
+    id: PROD_NFM_ALU_EXTRUSION
+    type: product
+    name: 铝型材
+    segment: SEG_NFM_ALU_FABRICATION
+    aliases:
+    - 铝合金挤压
+  reason: 电解铝/铝液/铝深加工等措辞未命中,神火股份等离开上游段
+- op: upsert
+  kind: alias
+  sector: '240000'
+  node:
+    id: PROD_NFM_ALU_PLATE_STRIP
+    type: product
+    name: 铝板带
+    segment: SEG_NFM_ALU_FABRICATION
+    aliases:
+    - 压延铝材
+  reason: 电解铝/铝液/铝深加工等措辞未命中,神火股份等离开上游段
+- op: upsert
+  kind: alias
+  sector: '240000'
+  node:
+    id: PROD_NFM_ZINC_SMELTING
+    type: product
+    name: 锌冶炼
+    segment: SEG_NFM_LEAD_ZINC
+    aliases:
+    - 锌类产品
+    - 锌产品
+  reason: 多金属矿企的'X类产品'措辞未命中
+- op: upsert
+  kind: alias
+  sector: '240000'
+  node:
+    id: PROD_NFM_LEAD_SMELTING
+    type: product
+    name: 铅冶炼
+    segment: SEG_NFM_LEAD_ZINC
+    aliases:
+    - 铅类产品
+  reason: 多金属矿企的'X类产品'措辞未命中
+- op: upsert
+  kind: alias
+  sector: '240000'
+  node:
+    id: PROD_NFM_MO_CONCENTRATE
+    type: product
+    name: 钼精矿
+    segment: SEG_NFM_MOLYBDENUM
+    aliases:
+    - 矿产钼
+  reason: 多金属矿企的'X类产品'措辞未命中
+- op: upsert
+  kind: alias
+  sector: '240000'
+  node:
+    id: PROD_NFM_RE_RECYCLING
+    type: product
+    name: 稀土废料回收
+    segment: SEG_NFM_RARE_EARTH
+    aliases:
+    - 稀土资源综合利用
+  reason: 稀土段缺冶炼/综合利用措辞,盛和资源离开;非晶薄带未命中
+- op: upsert
+  kind: alias
+  sector: '240000'
+  node:
+    id: PROD_NFM_RE_SEPARATION
+    type: product
+    name: 稀土冶炼分离
+    segment: SEG_NFM_RARE_EARTH
+    aliases:
+    - 氯化稀土
+    - 稀土冶炼
+    - 稀土冶炼产品
+  reason: 稀土段缺冶炼/综合利用措辞,盛和资源离开;非晶薄带未命中
+- op: upsert
+  kind: alias
+  sector: '240000'
+  node:
+    id: PROD_NFM_AMORPHOUS_STRIP
+    type: product
+    name: 非晶合金带材
+    segment: SEG_NFM_MAGNETIC
+    aliases:
+    - 非晶合金薄带
+  reason: 稀土段缺冶炼/综合利用措辞,盛和资源离开;非晶薄带未命中
+- op: upsert
+  kind: alias
+  sector: '240000'
+  node:
+    id: PROD_NFM_PGM_REFINING
+    type: product
+    name: 铂族金属精炼
+    segment: SEG_NFM_PRECIOUS_METAL_MATERIALS
+    aliases:
+    - 贵金属再生资源
+    - 贵金属供给
+  reason: 贵研铂业两条主营行未命中
+- op: upsert
+  kind: rename
+  sector: '730000'
+  node:
+    id: SEG_COMM_EQUIPMENT
+    type: segment
+    name: 通信设备产业
+  reason: 泛称父段直接吸入'通信设备/通信服务'类收入行,改为伞形名
+- op: upsert
+  kind: rename
+  sector: '730000'
+  node:
+    id: SEG_COMM_NETWORK_EQUIPMENT
+    type: segment
+    name: 通信网络设备产业
+    parent: SEG_COMM_EQUIPMENT
+  reason: 泛称父段直接吸入'通信设备/通信服务'类收入行,改为伞形名
+- op: upsert
+  kind: rename
+  sector: '730000'
+  node:
+    id: SEG_COMM_SERVICES
+    type: segment
+    name: 通信服务产业
+  reason: 泛称父段直接吸入'通信设备/通信服务'类收入行,改为伞形名
+- op: upsert
+  kind: rename
+  sector: '730000'
+  node:
+    id: SEG_COMM_OPTICAL_CHIP
+    type: segment
+    name: 光芯片与电芯片
+    parent: SEG_COMM_NETWORK_EQUIPMENT
+  reason: 段名'光通信芯片'把光纤厂'光通信'收入行吸入芯片段,改名
+- op: upsert
+  kind: split
+  sector: '730000'
+  node:
+    id: SEG_COMM_CABLE
+    type: segment
+    name: 通信线缆产业
+    parent: SEG_COMM_EQUIPMENT
+  reason: 父段'通信线缆及配套'既是伞又直接挂电缆产品并吸入成员,拆出电缆子段
+  split_from: &id004
+  - SEG_COMM_CABLE
+- op: upsert
+  kind: split
+  sector: '730000'
+  node:
+    id: SEG_COMM_ELECTRIC_CABLE
+    type: segment
+    name: 射频与数据电缆
+    parent: SEG_COMM_CABLE
+    sw_l3:
+    - '730205'
+  reason: 父段'通信线缆及配套'既是伞又直接挂电缆产品并吸入成员,拆出电缆子段
+  split_from: *id004
+- op: upsert
+  kind: split
+  sector: '730000'
+  node:
+    id: PROD_COMM_COAX_CABLE
+    type: product
+    name: 射频同轴电缆
+    segment: SEG_COMM_ELECTRIC_CABLE
+  reason: 父段'通信线缆及配套'既是伞又直接挂电缆产品并吸入成员,拆出电缆子段
+  split_from: *id004
+- op: upsert
+  kind: split
+  sector: '730000'
+  node:
+    id: PROD_COMM_DATA_CABLE
+    type: product
+    name: 数据电缆
+    segment: SEG_COMM_ELECTRIC_CABLE
+    aliases:
+    - 通信电缆
+    - 通信线缆
+  reason: 父段'通信线缆及配套'既是伞又直接挂电缆产品并吸入成员,拆出电缆子段
+  split_from: *id004
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_OPTICAL_MODULE
+    type: product
+    name: 光模块产品
+    segment: SEG_COMM_OPTICAL_MODULE
+    aliases:
+    - 光互联产品
+    - 光通信模块
+    - 点对点光模块
+    - 400G及以上光模块
+    - 400G以下光模块
+    - 高速光模块
+  reason: 新易盛/联特改用新收入行措辞,光模块龙头漏匹配或错入数通
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_OPTICAL_FIBER
+    type: product
+    name: 光纤
+    segment: SEG_COMM_FIBER_CABLE
+    aliases:
+    - 光传输产品
+    - 光纤预制棒及光纤
+  reason: 长飞/中天光纤光缆行改名后错入传输设备与光芯片,补别名
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_DC_CABLING
+    type: product
+    name: 数据中心布线
+    segment: SEG_COMM_FIBER_CABLE
+    aliases:
+    - 光互联组件
+  reason: 长飞/中天光纤光缆行改名后错入传输设备与光芯片,补别名
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_OPTICAL_CABLE
+    type: product
+    name: 光缆
+    segment: SEG_COMM_FIBER_CABLE
+    aliases:
+    - 光通信及网络
+    - 室内光缆
+  reason: 长飞/中天光纤光缆行改名后错入传输设备与光芯片,补别名
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_NETWORK_DESIGN
+    type: product
+    name: 通信网络规划设计
+    segment: SEG_COMM_ENGINEERING
+    aliases:
+    - 通信勘察设计
+    - 通信规划设计
+  reason: '''勘察设计''别名把建筑央企吸入通信工程,删去并补运维措辞'
+  drop_aliases:
+  - 勘察设计
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_NETWORK_OPTIMIZATION
+    type: product
+    name: 网络优化与维护
+    segment: SEG_COMM_ENGINEERING
+    aliases:
+    - 通信网络技术服务
+    - 无线通信服务
+    - 移动通信网络运维
+  reason: '''勘察设计''别名把建筑央企吸入通信工程,删去并补运维措辞'
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_UC_TERMINAL
+    type: product
+    name: 统一通信终端
+    segment: SEG_COMM_TERMINAL
+    aliases:
+    - 会议产品
+    - 桌面通信终端
+    - 云办公终端
+  reason: 亿联/共进终端收入行措辞未覆盖,补终端别名
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_ONT
+    type: product
+    name: 光网络终端
+    segment: SEG_COMM_TERMINAL
+    aliases:
+    - PON系列产品
+    - DSL系列产品
+  reason: 亿联/共进终端收入行措辞未覆盖,补终端别名
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_WLAN_AP
+    type: product
+    name: 企业无线AP
+    segment: SEG_COMM_DATACOM
+    aliases:
+    - AP系列产品
+  reason: 亿联/共进终端收入行措辞未覆盖,补终端别名
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_PASSIVE_RF
+    type: product
+    name: 无源射频器件
+    segment: SEG_COMM_RF_DEVICE
+    aliases:
+    - 双工器
+  reason: 无线/射频厂商的收入行措辞未覆盖,补别名
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_BS_ANTENNA
+    type: product
+    name: 基站天线
+    segment: SEG_COMM_RF_DEVICE
+    aliases:
+    - 天馈设备
+  reason: 无线/射频厂商的收入行措辞未覆盖,补别名
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_SMALL_CELL
+    type: product
+    name: 小基站
+    segment: SEG_COMM_WIRELESS
+    aliases:
+    - 室分设备
+  reason: 无线/射频厂商的收入行措辞未覆盖,补别名
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_MICROWAVE
+    type: product
+    name: 微波传输设备
+    segment: SEG_COMM_TRANSPORT_ACCESS
+    aliases:
+    - 微波天线
+    - 微波通信器件
+  reason: 无线/射频厂商的收入行措辞未覆盖,补别名
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_PROFESSIONAL_RADIO
+    type: product
+    name: 专网通信设备
+    segment: SEG_COMM_TERMINAL
+    aliases:
+    - 宽带移动通信设备
+    - 行业专网设备
+  reason: 无线/射频厂商的收入行措辞未覆盖,补别名
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_OPTICAL_DEVICE
+    type: product
+    name: 光器件产品
+    segment: SEG_COMM_OPTICAL_DEVICE
+    aliases:
+    - 光通讯器件
+    - 光通信器件
+    - 光元器件
+    - 光通信产品
+    - 有源光器件
+    - 无源光器件
+  reason: 光器件/电芯片收入行措辞未覆盖;删2字符别名FA
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_DRIVER_TIA
+    type: product
+    name: 光通信电芯片
+    segment: SEG_COMM_OPTICAL_CHIP
+    aliases:
+    - 收发合一芯片
+  reason: 光器件/电芯片收入行措辞未覆盖;删2字符别名FA
+- op: upsert
+  kind: alias
+  sector: '730000'
+  node:
+    id: PROD_COMM_FAU
+    type: product
+    name: 光纤阵列
+    parent: PROD_COMM_OPTICAL_DEVICE
+    segment: SEG_COMM_OPTICAL_DEVICE
+  reason: 光器件/电芯片收入行措辞未覆盖;删2字符别名FA
+  drop_aliases:
+  - FA
+- op: upsert
+  kind: new
+  sector: '730000'
+  node:
+    id: PROD_COMM_IOT_TERMINAL
+    type: product
+    name: 物联网智能终端
+    segment: SEG_COMM_TERMINAL
+    aliases:
+    - 智能车载终端
+    - 车载物联网终端
+    - 智能支付硬件
+    - 物联网终端
+  reason: 车载/支付等物联网终端整机无节点,模组节点不适用
+- op: upsert
+  kind: rename
+  sector: '650000'
+  node:
+    id: SEG_DEF_MIL_ELECTRONICS
+    type: segment
+    name: 军工电子产业
+  reason: 父段名'军工电子'为泛词,直接吸附公司;改为伞名,措辞交给电源子节点
+- op: upsert
+  kind: rename
+  sector: '650000'
+  node:
+    id: PROD_DEF_POWER_MODULE
+    type: product
+    name: 模块电源
+    segment: SEG_DEF_MIL_COMPONENTS
+    aliases:
+    - 军工电子
+  reason: 父段名'军工电子'为泛词,直接吸附公司;改为伞名,措辞交给电源子节点
+- op: upsert
+  kind: new
+  sector: '650000'
+  node:
+    id: PROD_DEF_MIL_VEHICLE_INTERIOR
+    type: product
+    name: 军用车辆人机环系统
+    segment: SEG_DEF_GROUND
+    aliases:
+    - 人机环系统内饰
+    - 军用车辆内饰
+    - 车辆人机环系统
+  reason: 地面兵装配套的车辆内饰/人机环系统无节点,北方长龙主业落空
+- op: upsert
+  kind: new
+  sector: '650000'
+  node:
+    id: PROD_DEF_TIME_FREQUENCY
+    type: product
+    name: 时间频率设备
+    segment: SEG_DEF_COMMS_NAV
+    aliases:
+    - 时间同步
+    - 时间频率
+    - 时频设备
+    - 原子钟
+  reason: 时频/时间同步设备无节点,天奥电子主营未匹配
+- op: upsert
+  kind: new
+  sector: '650000'
+  node:
+    id: PROD_DEF_MIL_GPU
+    type: product
+    name: 特种图形处理芯片
+    parent: PROD_ELEC_GRAPHICS_GPU
+    segment: SEG_DEF_MIL_IC
+    aliases:
+    - 图形显控
+    - 军用GPU
+    - 图形显控芯片
+  reason: 军用图形显控/GPU无节点,景嘉微主营未匹配
+- op: upsert
+  kind: new
+  sector: '650000'
+  node:
+    id: PROD_DEF_AERO_TOOLING
+    type: product
+    name: 航空工装
+    segment: SEG_DEF_AIRFRAME_PARTS
+    aliases:
+    - 航空工艺装备
+    - 复材工装
+    - 航空工装模具
+  reason: 航空工装是独立配套环节,广联航空主营未匹配
+- op: upsert
+  kind: alias
+  sector: '650000'
+  node:
+    id: PROD_DEF_CMC
+    type: product
+    name: 陶瓷基复合材料
+    segment: SEG_DEF_MATERIALS
+    aliases:
+    - 陶瓷基复材
+    - CMC复合材料
+  reason: CMC在医药CRO中指化学生产控制,误把康龙化成拉入军工材料
+  drop_aliases:
+  - CMC
+- op: upsert
+  kind: alias
+  sector: '650000'
+  node:
+    id: PROD_DEF_MIL_CABLE
+    type: product
+    name: 军用线缆
+    segment: SEG_DEF_MIL_COMPONENTS
+    aliases:
+    - 军用电缆
+    - 航空航天线缆
+    - 宇航线缆
+  reason: '''特种电缆''是民用电缆通用品类,把电缆厂整体拉入军用元器件'
+  drop_aliases:
+  - 特种电缆
+- op: upsert
+  kind: alias
+  sector: '650000'
+  node:
+    id: PROD_DEF_MIL_RADIO
+    type: product
+    name: 军用电台
+    segment: SEG_DEF_COMMS_NAV
+    aliases:
+    - 军用通信装备
+    - 军用通信设备
+    - 短波电台
+  reason: 军用通信装备措辞未被电台节点覆盖
+- op: upsert
+  kind: alias
+  sector: '650000'
+  node:
+    id: PROD_DEF_STEALTH_MATERIAL
+    type: product
+    name: 隐身材料
+    segment: SEG_DEF_MATERIALS
+    aliases:
+    - 特种功能材料
+    - 隐身功能材料
+  reason: 华秦科技隐身材料主营以'特种功能材料'披露
+- op: upsert
+  kind: alias
+  sector: '650000'
+  node:
+    id: PROD_DEF_AERO_ENGINE
+    type: product
+    name: 航空发动机整机
+    segment: SEG_DEF_AERO_ENGINE
+    aliases:
+    - 外贸出口转包
+    - 外贸转包
+    - 航空转包
+  reason: 航发动力外贸转包(发动机零部件出口)未匹配
+- op: upsert
+  kind: alias
+  sector: '650000'
+  node:
+    id: PROD_DEF_MIL_SIMULATOR
+    type: product
+    name: 军事仿真训练系统
+    segment: SEG_DEF_INFO_SYSTEMS
+    aliases:
+    - 机电仿真测试
+    - 仿真应用集成
+    - 目标与场景仿真
+  reason: 仿真与指控信息处理措辞未覆盖,指挥信息段FY2025跌43%
+- op: upsert
+  kind: alias
+  sector: '650000'
+  node:
+    id: PROD_DEF_C4ISR
+    type: product
+    name: 指挥控制系统
+    segment: SEG_DEF_INFO_SYSTEMS
+    aliases:
+    - 指挥控制信息处理
+  reason: 仿真与指控信息处理措辞未覆盖,指挥信息段FY2025跌43%
+- op: upsert
+  kind: alias
+  sector: '650000'
+  node:
+    id: PROD_NFM_COPPER_STRIP
+    type: product
+    name: 铜板带
+    segment: SEG_NFM_COPPER_FABRICATION
+    aliases:
+    - 铜基材料
+  reason: 楚江新材铜加工主业(最大未匹配行)应落到有色铜加工
+- op: upsert
+  kind: new
+  sector: '330000'
+  node:
+    id: PROD_HA_MULTI_CATEGORY
+    type: product
+    name: 全品类智能家电
+    segment: SEG_HA_AIR_CONDITIONER
+    aliases:
+    - 智能家居
+  reason: 美的2025将暖通空调与消费电器合并报为智能家居业务2999亿，被误配到智能家居设备
+- op: upsert
+  kind: new
+  sector: '330000'
+  node:
+    id: PROD_HA_INTERACTIVE_DISPLAY
+    type: product
+    name: 智能交互显示
+    segment: SEG_HA_OTHER_BLACK
+    aliases:
+    - 交互平板
+    - 会议平板
+    - 创新类显示
+  reason: 康冠科技交互平板等显示产品58.6亿无节点，黑电缺商用交互显示品类
+- op: upsert
+  kind: alias
+  sector: '330000'
+  node:
+    id: PROD_ELEC_TWS
+    type: product
+    name: 无线耳机
+    aliases:
+    - 耳机部品
+    - 有线耳机
+  reason: 佳禾智能耳机及部品20.2亿未匹配，其他黑电缺耳机品类
+- op: upsert
+  kind: new
+  sector: '330000'
+  node:
+    id: PROD_HA_APPLIANCE_FILTER
+    type: product
+    name: 家电滤芯滤网
+    segment: SEG_HA_PARTS
+    aliases:
+    - 水滤芯
+    - 滤水器
+    - 空气过滤网
+    - 泳池类滤芯
+  reason: 净水/冰箱滤芯与空调滤网约12.7亿无节点，滤材厂被挤入制冷控制段
+- op: upsert
+  kind: alias
+  sector: '330000'
+  node:
+    id: PROD_HA_ROTARY_COMPRESSOR
+    type: product
+    name: 转子压缩机
+    segment: SEG_HA_COMPRESSOR
+  reason: 别名空调压缩机吸入汽车空调压缩机行项，应归汽车 PROD_AUTO_AC_COMPRESSOR
+  drop_aliases:
+  - 空调压缩机
+- op: upsert
+  kind: alias
+  sector: '330000'
+  node:
+    id: PROD_HA_STRUCTURAL_PARTS
+    type: product
+    name: 家电结构件
+    segment: SEG_HA_PARTS
+    aliases:
+    - 空调风轮
+  reason: 金海高科空调风轮3.5亿未匹配，风轮属家电结构件
+- op: upsert
+  kind: alias
+  sector: '330000'
+  node:
+    id: PROD_HA_OUTDOOR_LIGHTING
+    type: product
+    name: 户外照明
+    segment: SEG_HA_LIGHTING
+    aliases:
+    - 城市照明
+    - 太阳能照明
+  reason: 罗曼股份景观照明改名城市照明板块后离开照明段，补别名
+- op: upsert
+  kind: alias
+  sector: '330000'
+  node:
+    id: PROD_HA_COMMERCIAL_LIGHTING
+    type: product
+    name: 商业照明
+    segment: SEG_HA_LIGHTING
+    aliases:
+    - 工业照明
+    - 特种照明
+    - 工作照明
+  reason: 北交所照明公司工业/特种/工作照明4.8亿未匹配
+- op: upsert
+  kind: alias
+  sector: '330000'
+  node:
+    id: PROD_HA_LIGHTING_FIXTURE
+    type: product
+    name: 照明灯具
+    segment: SEG_HA_LIGHTING
+    aliases:
+    - 场景照明
+  reason: 874565.BJ场景照明4.2亿未匹配，归灯具总节点

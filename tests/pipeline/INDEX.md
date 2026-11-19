@@ -13,4 +13,6 @@ Tests for `quant_cn.pipeline`. No network, no files outside `tmp_path`.
 | `test_risk_model_step.py` | tests for `risk_model_step`, one function per TC ID |  |
 | `test_risk_validation_writer.py` | tests for `risk_validation_writer`, one function per TC ID |  |
 | `test_runner.py` | tests for `runner`, one function per TC ID |  |
+| `test_task_status_builder.py` | tests for `task_status_builder`, one function per TC ID | |
 | `test_universe_step.py` | tests for `universe_step`, one function per TC ID |  |
+| `test_update_all_runner.py` | tests for `update_all_runner` and `make_target_runner`, one function per TC ID | `FakeClock`, `FakeProcess` |

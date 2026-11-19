@@ -1,6 +1,7 @@
 """Project linter entry point.
 
-Usage: `uv run python scripts/lint_contracts.py [--contracts] [--index] [--size] [--names]`.
+Usage: `uv run python scripts/lint_contracts.py [--contracts] [--index] [--size] [--names]
+[--plans]`.
 """
 
 from __future__ import annotations

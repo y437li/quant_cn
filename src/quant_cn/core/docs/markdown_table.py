@@ -56,30 +56,38 @@ class MarkdownTable:
 
 class MarkdownTableReader:
     """
-    Purpose:
-        Extract every pipe table from markdown text, and backticked names from a cell.
+        Purpose:
+            Extract every pipe table from markdown text, and backticked names from a cell.
 
-    Contract:
-        Input:
-            (none)
-        Output:
-            instance; `read`, `list_ticked`
-        Raises:
-            (none)
+        Contract:
+            Input:
+                (none)
+            Output:
+                instance; `read`, `list_ticked`
+            Raises:
+                (none)
 
+        Used by:
+            core.docs.IndexReader       -- parses INDEX.md
+            core.docs.RegistryReader    -- parses CLASS_REGISTRY.md
+            core.docs.ConventionReader  -- parses NAMING_CONVENTION.md
+            core.docs.ContractLinter    -- injected type or call
+            core.docs.DecisionsReader   -- injected type or call
     Used by:
-        core.docs.IndexReader       -- parses INDEX.md
-        core.docs.RegistryReader    -- parses CLASS_REGISTRY.md
-        core.docs.ConventionReader  -- parses NAMING_CONVENTION.md
-        core.docs.ContractLinter    -- injected type or call
-        core.docs.DecisionsReader   -- injected type or call
-        core.docs.PlanReader        -- injected type or call
-        cli.ServiceBuilder          -- injected type or call
+            core.docs.IndexReader       -- parses INDEX.md
+            core.docs.RegistryReader    -- parses CLASS_REGISTRY.md
+            core.docs.ConventionReader  -- parses NAMING_CONVENTION.md
+            core.docs.ContractLinter    -- injected type or call
+            core.docs.DecisionsReader   -- injected type or call
+            core.docs.PlanReader        -- injected type or call
+            core.docs.ResearchLogReader  -- log table
+            cli.ServiceBuilder          -- injected type or call
+            cli.ServiceBuilder          -- injected type or call
 
-    Test cases:
-        TC-MTR-001  tables are read with their headings and cells
-        TC-MTR-002  escaped pipes stay inside a cell; separator rows are skipped
-        TC-MTR-003  list_ticked returns backticked names in order
+        Test cases:
+            TC-MTR-001  tables are read with their headings and cells
+            TC-MTR-002  escaped pipes stay inside a cell; separator rows are skipped
+            TC-MTR-003  list_ticked returns backticked names in order
     """
 
     def read(self, text: str) -> list[MarkdownTable]:

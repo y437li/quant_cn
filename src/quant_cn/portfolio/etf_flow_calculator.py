@@ -28,7 +28,10 @@ class EtfFlowCalculator:
 
     Used by:
         portfolio.EtfProxyBuilder  -- membership and the daily panel
+        portfolio.EtfStyleHeat     -- the same rules over the style groups
+        portfolio.SmallCapWatchBuilder  -- broad-ETF flow rows of the 小盘观察
         cli.ResearchCommands       -- wiring of `etf-proxy`
+        cli.ReportCommands         -- wiring of `smallcap-watch`
 
     Test cases:
         TC-EFC-001  flow = AUM_t - AUM_{t-1} x g_t / g_{t-1}: 0 on a pure price move,
@@ -38,6 +41,7 @@ class EtfFlowCalculator:
                     flow 0; the position carries the last shares forward
         TC-EFC-004  position at today's price does not move with the reference price
         TC-EFC-005  build_members: first matching index wins; feeder, enhanced, non-100% dropped
+        TC-EFC-006  build_members: a benchmark matching the index's `exclude` is skipped
     """
 
     def __init__(self, settings: EtfProxySettings) -> None:
@@ -66,7 +70,15 @@ class EtfFlowCalculator:
                 continue
             if any(word in name for word in s.name_excludes):
                 continue
-            index = next((i.name for i in s.indices if re.search(i.benchmark, bench)), None)
+            index = next(
+                (
+                    i.name
+                    for i in s.indices
+                    if re.search(i.benchmark, bench)
+                    and not (i.exclude and re.search(i.exclude, bench))
+                ),
+                None,
+            )
             if index is not None:
                 rows.append((str(code), index, str(code) in s.core))
         frame = pd.DataFrame(rows, columns=["ts_code", "index", "is_core"])

@@ -64,10 +64,30 @@ func (h *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.handleWatchlist(w)
 	case len(parts) == 1 && parts[0] == "etf-proxy":
 		h.handleEtfProxy(w)
+	case len(parts) == 2 && parts[0] == "margin":
+		h.handleMargin(w, parts[1])
+	case len(parts) == 1 && parts[0] == "futures":
+		h.handleFutures(w)
+	case len(parts) == 1 && parts[0] == "macro":
+		h.handleMacro(w)
+	case len(parts) == 1 && parts[0] == "volatility":
+		h.handleVolatility(w)
 	case len(parts) == 1 && parts[0] == "factor-monitor":
 		h.handleFactorMonitor(w)
 	case len(parts) == 1 && parts[0] == "holdings-risk":
 		h.handleHoldingsRisk(w)
+	case len(parts) == 1 && parts[0] == "sector-monitor":
+		h.handleSectorMonitor(w)
+	case len(parts) == 1 && parts[0] == "rates-fx":
+		h.handleRatesFx(w)
+	case len(parts) == 1 && parts[0] == "sector-earnings":
+		h.handleSectorEarnings(w)
+	case len(parts) == 1 && parts[0] == "buyback":
+		h.handleBuyback(w)
+	case len(parts) == 1 && parts[0] == "tasks":
+		h.handleTasks(w)
+	case len(parts) == 1 && parts[0] == "opportunities":
+		h.handleOpportunities(w)
 	case len(parts) == 3 && parts[0] == "views":
 		h.handleView(w, parts[1], parts[2])
 	default:
@@ -133,6 +153,46 @@ func (h *Server) handleEtfProxy(w http.ResponseWriter) {
 	writeJSON(w, p)
 }
 
+func (h *Server) handleMargin(w http.ResponseWriter, code string) {
+	m, err := h.store.GetMargin(code)
+	if errors.Is(err, store.ErrNotFound) {
+		writeError(w, http.StatusNotFound, "no margin data: "+code)
+		return
+	}
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "margin: "+err.Error())
+		return
+	}
+	writeJSON(w, m)
+}
+
+func (h *Server) handleFutures(w http.ResponseWriter) {
+	m, err := h.store.GetFuturesMonitor()
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "futures monitor: "+err.Error())
+		return
+	}
+	writeJSON(w, m)
+}
+
+func (h *Server) handleMacro(w http.ResponseWriter) {
+	m, err := h.store.GetMacroMonitor()
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "macro monitor: "+err.Error())
+		return
+	}
+	writeJSON(w, m)
+}
+
+func (h *Server) handleVolatility(w http.ResponseWriter) {
+	m, err := h.store.GetVolatilityMonitor()
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "volatility monitor: "+err.Error())
+		return
+	}
+	writeJSON(w, m)
+}
+
 func (h *Server) handleFactorMonitor(w http.ResponseWriter) {
 	m, err := h.store.GetFactorMonitor()
 	if err != nil {
@@ -160,4 +220,94 @@ func writeError(w http.ResponseWriter, status int, msg string) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(status)
 	_ = json.NewEncoder(w).Encode(map[string]string{"error": msg})
+}
+
+// handleBuyback serves buyback_monitor.json (plan 32): 404 before the first
+// `make buyback-events`, 500 when the file is malformed. Test cases: TC-API-017.
+func (h *Server) handleBuyback(w http.ResponseWriter) {
+	m, err := h.store.GetBuybackMonitor()
+	if errors.Is(err, store.ErrNotFound) {
+		writeError(w, http.StatusNotFound, "no buyback monitor yet: run make buyback-events")
+		return
+	}
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "buyback monitor: "+err.Error())
+		return
+	}
+	writeJSON(w, m)
+}
+
+// handleTasks serves task_status.json (plan 38): 404 before the first `make update-all`,
+// 500 when the file is malformed. Test cases: TC-API-019.
+func (h *Server) handleTasks(w http.ResponseWriter) {
+	m, err := h.store.GetTaskStatus()
+	if errors.Is(err, store.ErrNotFound) {
+		writeError(w, http.StatusNotFound, "no task status yet: run make update-all")
+		return
+	}
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "task status: "+err.Error())
+		return
+	}
+	writeJSON(w, m)
+}
+
+// handleOpportunities serves opportunities.json (plan 21 ph5): 404 before the first
+// `make opportunity-list`, 500 when the file is malformed. Test cases: TC-API-020.
+func (h *Server) handleOpportunities(w http.ResponseWriter) {
+	m, err := h.store.GetOpportunities()
+	if errors.Is(err, store.ErrNotFound) {
+		writeError(w, http.StatusNotFound, "no opportunity list yet: run make opportunity-list")
+		return
+	}
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "opportunities: "+err.Error())
+		return
+	}
+	writeJSON(w, m)
+}
+
+// handleSectorEarnings serves sector_earnings_signal.json (plan 35): 404 before the first
+// `make sector-earnings-signal`, 500 when the file is malformed. Test cases: TC-API-018.
+func (h *Server) handleSectorEarnings(w http.ResponseWriter) {
+	m, err := h.store.GetSectorEarningsSignal()
+	if errors.Is(err, store.ErrNotFound) {
+		writeError(w, http.StatusNotFound, "no sector earnings signal yet: run make sector-earnings-signal")
+		return
+	}
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "sector earnings signal: "+err.Error())
+		return
+	}
+	writeJSON(w, m)
+}
+
+// handleRatesFx serves rates_fx_monitor.json (plan 34): 404 before the first
+// `make rates-fx-monitor`, 500 when the file is malformed. Test cases: TC-API-016.
+func (h *Server) handleRatesFx(w http.ResponseWriter) {
+	m, err := h.store.GetRatesFxMonitor()
+	if errors.Is(err, store.ErrNotFound) {
+		writeError(w, http.StatusNotFound, "no rates-fx monitor yet: run make rates-fx-monitor")
+		return
+	}
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "rates-fx monitor: "+err.Error())
+		return
+	}
+	writeJSON(w, m)
+}
+
+// handleSectorMonitor serves sector_monitor.json (plan 31): 404 before the first
+// `make sector-monitor`, 500 when the file is malformed. Test cases: TC-API-015.
+func (h *Server) handleSectorMonitor(w http.ResponseWriter) {
+	m, err := h.store.GetSectorMonitor()
+	if errors.Is(err, store.ErrNotFound) {
+		writeError(w, http.StatusNotFound, "no sector monitor yet: run make sector-monitor")
+		return
+	}
+	if err != nil {
+		writeError(w, http.StatusInternalServerError, "sector monitor: "+err.Error())
+		return
+	}
+	writeJSON(w, m)
 }

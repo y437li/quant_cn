@@ -53,19 +53,20 @@ type StockExposures struct {
 // HoldingsRisk is the holdings_risk.json document written by the Python HoldingsRiskBuilder
 // (plan 15 ph7d, D-132).
 type HoldingsRisk struct {
-	AsOf        string              `json:"as_of"`
-	Model       string              `json:"model"`
-	Benchmark   string              `json:"benchmark"`
-	Cash        float64             `json:"cash"`
-	Value       float64             `json:"value"`
-	StockValue  float64             `json:"stock_value"`
-	Pnl         float64             `json:"pnl"`
-	Risk        map[string]*float64 `json:"risk"`
-	Positions   []HoldingPosition   `json:"positions"`
-	Factors     []HoldingFactor     `json:"factors"`
-	Correlation Correlation         `json:"correlation"`
-	Stocks      StockExposures      `json:"stock_exposures"`
-	Missing     []string            `json:"missing"`
+	AsOf        string                    `json:"as_of"`
+	Model       string                    `json:"model"`
+	Benchmark   string                    `json:"benchmark"`
+	Cash        float64                   `json:"cash"`
+	Value       float64                   `json:"value"`
+	StockValue  float64                   `json:"stock_value"`
+	Pnl         float64                   `json:"pnl"`
+	Risk        map[string]*float64       `json:"risk"`
+	Positions   []HoldingPosition         `json:"positions"`
+	Factors     []HoldingFactor           `json:"factors"`
+	Correlation Correlation               `json:"correlation"`
+	Stocks      StockExposures            `json:"stock_exposures"`
+	Missing     []string                  `json:"missing"`
+	Reviews     map[string]PositionReview `json:"reviews"`
 }
 
 // GetHoldingsRisk reads holdings_risk.json from the data folder on every call.
@@ -110,6 +111,12 @@ func fillHoldings(h HoldingsRisk) HoldingsRisk {
 	}
 	if h.Missing == nil {
 		h.Missing = []string{}
+	}
+	if h.Reviews == nil {
+		h.Reviews = map[string]PositionReview{}
+	}
+	for code, r := range h.Reviews {
+		h.Reviews[code] = fillReview(r)
 	}
 	return h
 }

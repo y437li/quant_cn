@@ -57,10 +57,10 @@ VIEWS = {
           AND EXISTS (SELECT 1 FROM {SCHEMA}.classes c WHERE c.name = m.class AND c.in_registry)
         UNION ALL SELECT 'lint', path || ':' || line, message FROM {SCHEMA}.lint_findings""",
     "todo": f"""
-        SELECT p.plan, pl.title AS plan_title, p.n, p.phase, p.status, p.depends_on,
-               p.done_criterion
+        SELECT p.plan, pl.title AS plan_title, p.n, p.phase, p.state, p.state_date, p.status,
+               p.depends_on, p.done_criterion
         FROM {SCHEMA}.phases p JOIN {SCHEMA}.plans pl ON pl.nn = p.plan
-        WHERE lower(p.status) NOT LIKE 'done%'
+        WHERE p.state <> 'done'
         ORDER BY p.plan, try_cast(p.n AS INTEGER), p.n""",
 }
 

@@ -10,9 +10,11 @@ from quant_cn.core.docs.decisions_reader import DecisionsReader
 from quant_cn.core.docs.index_reader import IndexInfo, IndexReader
 from quant_cn.core.docs.plan_reader import PlanReader
 from quant_cn.core.docs.repo_files import RepoFiles
+from quant_cn.core.docs.research_log_reader import ResearchLogReader
 
 DECISIONS = Path("plans/decisions/DECISIONS.md")
 PLANS = Path("plans/execution")
+RESEARCH_LOG = Path("research_space/RESEARCH_LOG.md")
 COLUMNS = {
     "folders": ["path", "parent", "name", "purpose", "depth", "has_index"],
     "files": [
@@ -28,7 +30,29 @@ COLUMNS = {
     ],
     "decisions": ["id", "date", "title", "status", "applies_to", "context", "decision"],
     "plans": ["nn", "title", "status", "decisions", "depends_on", "path"],
-    "phases": ["plan", "n", "phase", "deliverable", "done_criterion", "depends_on", "status"],
+    "phases": [
+        "plan",
+        "n",
+        "phase",
+        "deliverable",
+        "done_criterion",
+        "depends_on",
+        "status",
+        "state",
+        "state_date",
+        "commit",
+        "note",
+    ],
+    "research_runs": [
+        "date",
+        "slug",
+        "question",
+        "scripts",
+        "outputs",
+        "conclusion",
+        "follow_up",
+        "scripts_exist",
+    ],
 }
 
 
@@ -36,7 +60,7 @@ class DocTableBuilder:
     """
     Purpose:
         Turn the INDEX.md tree, the files on disk, the decision log and the execution plans into
-        the document-side tables of the `project` schema.
+        the document-side tables of the `project` schema, plus the research log.
 
     Contract:
         Input:
@@ -45,6 +69,7 @@ class DocTableBuilder:
             index:     IndexReader
             decisions: DecisionsReader
             plans:     PlanReader
+            research:  ResearchLogReader
         Output:
             instance; `build_tables() -> dict[str, DataFrame]` keyed by table name (COLUMNS)
         Raises:
@@ -57,6 +82,8 @@ class DocTableBuilder:
     Test cases:
         TC-DTB-001  folders and files carry purposes from their indexes; unindexed files flagged
         TC-DTB-002  decisions, plans and phases built from the governance files
+        TC-DTB-003  phases carry state, state_date, commit and note columns
+        TC-DTB-004  research_runs rows come from the log with scripts_exist checked on disk
     """
 
     def __init__(
@@ -66,17 +93,19 @@ class DocTableBuilder:
         index: IndexReader,
         decisions: DecisionsReader,
         plans: PlanReader,
+        research: ResearchLogReader,
     ) -> None:
         self._root = repo_root
         self._files = files
         self._index = index
         self._decisions = decisions
         self._plans = plans
+        self._research = research
 
     def build_tables(self) -> dict[str, pd.DataFrame]:
         """
         Purpose:
-            Build all five document tables.
+            Build all six document tables.
 
         Contract:
             Input:
@@ -90,6 +119,7 @@ class DocTableBuilder:
         tables = self._build_tree()
         tables["decisions"] = self._build_decisions()
         tables.update(self._build_plans())
+        tables["research_runs"] = self._build_research()
         return tables
 
     def _build_tree(self) -> dict[str, pd.DataFrame]:
@@ -169,10 +199,38 @@ class DocTableBuilder:
                 ]
             )
             phase_rows += [
-                [p.plan, p.n, p.phase, p.deliverable, p.done_criterion, p.depends_on, p.status]
+                [
+                    p.plan,
+                    p.n,
+                    p.phase,
+                    p.deliverable,
+                    p.done_criterion,
+                    p.depends_on,
+                    p.status,
+                    p.state,
+                    p.state_date,
+                    p.commit,
+                    p.note,
+                ]
                 for p in plan.phases
             ]
         return {
             "plans": pd.DataFrame(plan_rows, columns=COLUMNS["plans"]),
             "phases": pd.DataFrame(phase_rows, columns=COLUMNS["phases"]),
         }
+
+    def _build_research(self) -> pd.DataFrame:
+        rows = [
+            [
+                r.date,
+                r.slug,
+                r.question,
+                r.scripts,
+                r.outputs,
+                r.conclusion,
+                r.follow_up,
+                bool(r.scripts) and (self._root / r.scripts).exists(),
+            ]
+            for r in self._research.read(self._root / RESEARCH_LOG)
+        ]
+        return pd.DataFrame(rows, columns=COLUMNS["research_runs"])

@@ -13,9 +13,11 @@ from quant_cn.core.docs.doc_table_builder import DocTableBuilder
 from quant_cn.core.docs.docstring_parser import DocstringParser
 from quant_cn.core.docs.index_reader import IndexReader
 from quant_cn.core.docs.markdown_table import MarkdownTableReader
+from quant_cn.core.docs.phase_status_parser import PhaseStatusParser
 from quant_cn.core.docs.plan_reader import PlanReader
 from quant_cn.core.docs.registry_reader import RegistryReader
 from quant_cn.core.docs.repo_files import RepoFiles
+from quant_cn.core.docs.research_log_reader import ResearchLogReader
 from quant_cn.lake.project_catalog import SCHEMA, VIEWS, ProjectCatalog
 from tests.support import MiniLake, SampleRepo
 
@@ -54,7 +56,12 @@ def build_project(lake: MiniLake, config: Config, root: Path) -> ProjectCatalog:
     tables, scanner = MarkdownTableReader(), CodeScanner()
     code = CodeTableBuilder(root, scanner, DocstringParser(), RegistryReader(tables))
     docs = DocTableBuilder(
-        root, RepoFiles(root), IndexReader(tables), DecisionsReader(tables), PlanReader(tables)
+        root,
+        RepoFiles(root),
+        IndexReader(tables),
+        DecisionsReader(tables),
+        PlanReader(tables, PhaseStatusParser()),
+        ResearchLogReader(tables),
     )
     linter = ContractLinter(root)
     return ProjectCatalog(lake.catalog, code, docs, config.datasets, linter, lake.clock)

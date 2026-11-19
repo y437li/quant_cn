@@ -1,0 +1,33 @@
+# update-all (plan 38, D-181): the daily updates in order. `make update-all` runs each step's make target,
+# records one row per step in the lake's meta/task_log/ and writes APP_DATA/task_status.json.
+# A failed step does not stop the run; a step whose `needs` failed or was skipped is skipped.
+# output: the JSON file in APP_DATA whose `as_of` is recorded (optional).
+# timeout_min: per-step limit (default default_timeout_min); retry: extra attempts after a failure.
+default_timeout_min: 30
+tail_lines: 20            # output lines kept in the ledger message of a failed step
+history: 10               # runs per step in task_status.json
+steps:
+  - {name: market-data, target: market-data, timeout_min: 90, retry: 1}
+  - {name: etf-proxy, target: etf-proxy, output: etf_proxy.json, retry: 1}
+  - {name: etf-cta, target: etf-cta, needs: [etf-proxy], output: etf_cta.json}
+  - {name: app-charts, target: app-charts, retry: 1}
+  - {name: manual-series, target: manual-series}
+  - {name: macro-monitor, target: macro-monitor, output: macro_monitor.json}
+  - {name: futures-monitor, target: futures-monitor, needs: [market-data], output: futures_monitor.json}
+  - {name: volatility-monitor, target: volatility-monitor, needs: [market-data], output: volatility_monitor.json}
+  - {name: smallcap-watch, target: smallcap-watch, needs: [market-data], output: smallcap_watch.json}
+  - {name: rates-fx-monitor, target: rates-fx-monitor, needs: [market-data], output: rates_fx_monitor.json}
+  - {name: sector-monitor, target: sector-monitor, needs: [market-data], output: sector_monitor.json}
+  - {name: sector-earnings-signal, target: sector-earnings-signal, needs: [market-data], output: sector_earnings_signal.json}
+  - {name: margin-panel, target: margin-panel, needs: [market-data]}
+  - {name: buyback-events, target: buyback-events, needs: [market-data], output: buyback_monitor.json}
+  - {name: curate, target: curate, needs: [market-data], timeout_min: 120}
+  # plan 21: 散户温度计 daily reading (derived/retail_gauge) before the holdings / opportunity steps read it
+  - {name: retail-gauge, target: retail-gauge, needs: [curate]}
+  # after retail-gauge so the entries' 散户温度计 reading is today's (plan 21 ph5)
+  - {name: watchlist, target: watchlist, needs: [retail-gauge], output: watchlist.json}
+  - {name: risk-model, target: risk-model, needs: [curate], timeout_min: 90}
+  - {name: factor-monitor, target: factor-monitor, needs: [risk-model], output: factor_monitor.json}
+  - {name: holdings-risk, target: holdings-risk-data, needs: [risk-model], output: holdings_risk.json}
+  # plan 21 ph4-5: daily opportunity list (derived/opportunity_list + opportunities.json)
+  - {name: opportunity-list, target: opportunity-list, needs: [retail-gauge, risk-model], output: opportunities.json}

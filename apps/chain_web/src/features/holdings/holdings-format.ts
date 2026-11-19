@@ -1,4 +1,4 @@
-import type { HoldingFactor, HoldingsRisk } from "../../api/client";
+import type { HoldingFactor, HoldingPosition, HoldingsRisk } from "../../api/client";
 import { factorName, signedPct, volPct } from "../factors/factor-format";
 import { ymd } from "../watchlist/watchlist-format";
 
@@ -8,7 +8,7 @@ import { ymd } from "../watchlist/watchlist-format";
  * Contract: CNY and fractions in, strings out; null / undefined → "—".
  */
 
-/** Purpose: CNY without decimals. Contract: 1144171 → "1,144,171"; −191804.9 → "−191,805"; null → "—". */
+/** Purpose: CNY without decimals. Contract: 1234567 → "1,234,567"; −98765.4 → "−98,765"; null → "—". */
 export const yuan = (v: number | null | undefined): string =>
   v == null ? "—" : (v < 0 ? "−" : "") + Math.round(Math.abs(v)).toLocaleString("en-US");
 
@@ -46,5 +46,12 @@ export function holdingsHeadline(doc: HoldingsRisk): string {
 
 /** Purpose: colour class of P&L. Contract: > 0 → "up", < 0 → "down", else "flat". */
 export const pnlClass = (v: number | null | undefined): "up" | "down" | "flat" => (v == null || v === 0 ? "flat" : v > 0 ? "up" : "down");
+
+/**
+ * Purpose: a position's 盈亏%. A diluted cost (摊薄成本, D-166) at or below zero means the position has paid back.
+ * Contract: cost 8, pnl_pct 0.25 → "+25.0%"; cost ≤ 0 → "已回本"; pnl_pct null → "—".
+ */
+export const pnlPct = (p: Pick<HoldingPosition, "cost" | "pnl_pct">): string =>
+  p.cost != null && p.cost <= 0 ? "已回本" : signedPct(p.pnl_pct, 1);
 
 export { signedPct };

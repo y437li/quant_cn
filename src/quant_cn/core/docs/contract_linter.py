@@ -14,19 +14,26 @@ from quant_cn.core.docs.index_checker import IndexChecker
 from quant_cn.core.docs.index_reader import IndexReader
 from quant_cn.core.docs.markdown_table import MarkdownTableReader
 from quant_cn.core.docs.name_checker import NameChecker
+from quant_cn.core.docs.phase_status_parser import PhaseStatusParser
+from quant_cn.core.docs.plan_reader import PlanReader
+from quant_cn.core.docs.plan_status_checker import PlanStatusChecker
 from quant_cn.core.docs.registry_reader import RegistryReader
 from quant_cn.core.docs.repo_files import RepoFiles
+from quant_cn.core.docs.research_log_checker import ResearchLogChecker
+from quant_cn.core.docs.research_log_reader import ResearchLogReader
 from quant_cn.core.docs.size_checker import SizeChecker
+from quant_cn.core.positions_book import PositionsBook
 
-GROUPS = ("contracts", "index", "size", "names")
+GROUPS = ("contracts", "index", "size", "names", "plans", "research")
 CONVENTION = Path("plans/standards/NAMING_CONVENTION.md")
+MIN_COST_DECIMALS = 3  # shorter costs (e.g. 9.7) are too common to flag as private
 
 
 class ContractLinter:
     """
     Purpose:
-        Build the four checkers (contracts, index, size, names) for one repository and run the
-        selected groups, returning all findings sorted.
+        Build the six checkers (contracts, index, size, names, plans, research) for one
+        repository and run the selected groups, returning all findings sorted.
 
     Contract:
         Input:
@@ -84,5 +91,27 @@ class ContractLinter:
             return IndexChecker(root, files, IndexReader(tables), scanner)
         if group == "size":
             return SizeChecker(root, scanner, files.list_files())
+        if group == "plans":
+            return PlanStatusChecker(root, PlanReader(tables, PhaseStatusParser()))
+        if group == "research":
+            return self._build_research_checker(files, tables)
         verbs = ConventionReader(tables).read_verbs(root / CONVENTION)
         return NameChecker(root, scanner, files.list_files(), verbs)
+
+    def _build_research_checker(
+        self, files: RepoFiles, tables: MarkdownTableReader
+    ) -> ResearchLogChecker:
+        book = PositionsBook.load(self.repo_root)
+        costs = [
+            repr(p.cost)
+            for p in book.positions
+            if len(repr(p.cost).partition(".")[2]) >= MIN_COST_DECIMALS
+        ]
+        secrets = [*costs, repr(book.cash)] if book.positions else []
+        return ResearchLogChecker(
+            self.repo_root,
+            ResearchLogReader(tables),
+            files.list_files(),
+            book.list_codes(),
+            secrets,
+        )

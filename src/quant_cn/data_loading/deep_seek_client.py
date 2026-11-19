@@ -6,6 +6,7 @@ import hashlib
 import json
 import logging
 import os
+import threading
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
@@ -255,7 +256,8 @@ class DeepSeekClient(BaseLlmClient):
         path = self._cache_dir / key[:2] / f"{key}.json"
         try:
             path.parent.mkdir(parents=True, exist_ok=True)
-            tmp = path.with_name(path.name + ".tmp")
+            # one temp file per thread: two threads may write the same key at once
+            tmp = path.with_name(f"{path.name}.{os.getpid()}.{threading.get_ident()}.tmp")
             tmp.write_text(
                 json.dumps(
                     {

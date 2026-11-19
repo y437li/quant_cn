@@ -20,6 +20,7 @@ class TermInterpolator:
             (none at construction)
 
     Used by:
+        calculation.VolatilityMonitorBuilder  -- daily VIX per option underlying (plan 03 ph6)
         calculation.VixCalculator  -- the index value per day
 
     Test cases:

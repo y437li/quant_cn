@@ -30,6 +30,23 @@ class LakeQuery:
             (none at construction)
 
     Used by:
+        portfolio.OpportunityScreen  -- injected type or call
+        lake.ValuationHistoryReader  -- injected type or call
+        calculation.HolderCountPanel  -- stk_holdernumber
+        calculation.RetailGaugeFeatureBuilder  -- matrices, chips
+        calculation.RetailGaugeEvaluator  -- forward prices
+        cli.GaugeCommands  -- wires it
+        portfolio.SectorMetricReader  -- sector monitor reads
+        portfolio.AppRankReader  -- App Store chart reads
+        portfolio.BuybackMonitorBuilder  -- listing titles, holder trades, market caps
+        portfolio.MarketSignalReader  -- valuation, forecasts, surveys
+        calculation.VolatilityMonitorBuilder  -- options, shibor, calendar, cboe_vix
+        calculation.RatesFxSeriesReader  -- curves, US yields, shibor, FX, fixing, index EP
+        calculation.RatesFxMonitorBuilder  -- curve snapshot
+        calculation.EarningsEventBuilder  -- statements, previews, flashes, prices (plan 35)
+        calculation.ConsensusPanelBuilder  -- report_rc consensus (plan 36)
+        portfolio.SectorEarningsSignalBuilder  -- members, L2 indices, holder counts (plan 35)
+        portfolio.SmallCapWatchBuilder  -- daily, limits, indices, ETF prices and shares
         data_loading.DocumentRetyper      -- manifest read
         lake.TradingCalendar         -- reads raw.trade_cal
         lake.Compactor.rebuild       -- reads raw files through DuckDB
@@ -62,6 +79,21 @@ class LakeQuery:
         risk.FactorMonitorBuilder  -- injected type or call
         portfolio.HoldingsHistoryWriter  -- injected type or call
         portfolio.HoldingsRiskBuilder  -- injected type or call
+        cli.AppServiceBuilder  -- wires it
+        lake.ChipStructureReader  -- injected type or call
+        lake.FundamentalSignalReader  -- injected type or call
+        cli.ReportCommands  -- last session for `morning-report`
+        calculation.MacroMonitorBuilder  -- curated macro tables
+        calculation.FuturesMonitorBuilder  -- fut_basic and fut_daily
+        calculation.IndexFuturesMonitor  -- derived futures views, index closes
+        calculation.FuturesBrokerNets  -- derived.fut_holding_brokers
+        lake.BuybackLedger  -- curated.repurchase
+        lake.ShareholderYieldReader  -- daily_basic yields
+        lake.MarginSignalReader  -- margin_detail
+        portfolio.MarginPanelBuilder  -- margin_detail, daily, daily_basic
+        portfolio.BuybackEventsBuilder  -- repurchase, stock_basic, daily_basic
+        portfolio.EtfCtaBook  -- fund_daily, fund_nav
+        industry_graph.LegacyLabelImporter  -- public dates of documents
 
     Test cases:
         TC-LQ-001  sql returns a DataFrame with parameters bound

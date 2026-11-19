@@ -23,6 +23,8 @@ One sentence: what exists when this plan is done that does not exist now.
 | 1 | | | | — | todo |
 | 2 | | | | 1 | todo |
 
+Status cell: `<state> <YYYY-MM-DD> (<commit>) — <note>`, state one of todo / doing / blocked / done.
+
 ## Classes
 
 | Class | Action (new / extend / reuse) | Package | Phase |

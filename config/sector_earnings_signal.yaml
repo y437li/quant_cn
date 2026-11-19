@@ -1,0 +1,18 @@
+# 财报季信号 (plan 35, D-172): per Shenwan L2 sector and fiscal quarter, do the best-surprise
+# companies still rise on good news? Research: research_space/runs/20261118_priced_in.
+start: "20190101"        # first disclosure dates from here (forecast_vip starts 2018-12)
+sue_window: 8            # quarters of yoy changes for the SUE std
+sue_min: 4               # fewer prior changes -> no SUE
+top_decile: 8            # best surprise = SUE deciles >= this (0..9) within the fiscal quarter
+min_events: 5            # best-surprise events needed per sector and quarter
+pre_window: 60           # sessions before day 0 (pre = [-pre_window, -1])
+react_window: 1          # reaction = [0, react_window]
+back_window: 120         # sector excess before the signal date (prior rally)
+fwd_windows: [60, 120]   # sector excess after a firing (history)
+report_share: 0.8        # firing only once this share of the sector has disclosed
+pre_min: 15.0            # % excess before disclosure for a firing
+react_max: 1.0           # % excess on the reaction days at or below which good news "no longer lifts"
+rally_min: 20.0          # % prior sector excess that marks a rally
+max_abs_log_return: 0.25 # daily log returns beyond this are dropped (glitches, relistings)
+history_quarters: 8      # quarters shown per sector in the app
+exclude_exchanges: [BJ]  # ts_code suffixes left out (research excluded 北交所)

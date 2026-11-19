@@ -35,6 +35,7 @@ class OptionChainBuilder:
             (none at construction)
 
     Used by:
+        calculation.VolatilityMonitorBuilder  -- daily VIX per option underlying (plan 03 ph6)
         calculation.VixCalculator            -- quotes per term
         calculation.GammaExposureCalculator  -- injected type or call
 

@@ -19,7 +19,11 @@ L1: parsers and checkers over code, docstrings and governance markdown (INDEX, r
 | `index_reader.py` | Read a folder `INDEX.md` (CODING_STANDARD §5.1) into folder and file entries | `IndexEntry`, `IndexInfo`, `IndexReader` |
 | `markdown_table.py` | Read pipe tables out of governance markdown (INDEX.md, CLASS_REGISTRY.md, conventions) | `MarkdownTable`, `MarkdownTableReader` |
 | `name_checker.py` | Naming rules (NAMING_CONVENTION §1-§2, D-029/D-030): paths, verb-first methods, test names | `NameChecker` |
+| `phase_status_parser.py` | Split a plan phase's free-text status into state, date, commits and note (plan 02 ph5, D-144) | `PhaseStatus`, `PhaseStatusParser` |
+| `plan_status_checker.py` | Check that every plan phase status starts with an allowed state (plan 02 ph5) | `PlanStatusChecker` |
 | `plan_reader.py` | Read an execution plan (plans/execution/NN_<slug>.md) into a plan record with its phases | `PhaseRecord`, `PlanRecord`, `PlanReader` |
 | `registry_reader.py` | Read `.claude/CLASS_REGISTRY.md` (CODING_STANDARD §5, D-013) into typed sections | `RegistryInfo`, `RegistryReader` |
 | `repo_files.py` | List the repository's files as git sees them (tracked + untracked, minus ignored) | `RepoFiles` |
+| `research_log_checker.py` | Rules for the research log and committed research runs (plan 02 ph6, D-144) | `ResearchLogChecker` |
+| `research_log_reader.py` | Read research_space/RESEARCH_LOG.md: one row per ad-hoc analysis | `ResearchRun`, `ResearchLogReader` |
 | `size_checker.py` | Hard size limits (CODING_STANDARD §2.6, D-030): files, classes, callables, governance docs | `SizeChecker` |

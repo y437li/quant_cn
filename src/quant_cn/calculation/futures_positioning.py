@@ -36,6 +36,7 @@ class FuturesPositioning:
 
     Used by:
         research_space/notebooks/20260929_positioning_flows.ipynb  -- IF/IM positioning
+        calculation.IndexFuturesMonitor  -- basis and top-20 nets per product (ph7k)
 
     Test cases:
         TC-FP-001  regimes classified from the signs of price and OI changes

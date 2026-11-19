@@ -86,6 +86,20 @@ moneyflow:
   text_fields: [ts_code, trade_date]
   curated: {path: moneyflow, partition_by: trade_date}
 
+cyq_perf:
+  endpoint: cyq_perf
+  # 每日筹码及胜率 (plan 15 ph7n): winner rate and cost bands per stock and session. Cost prices are
+  # forward-adjusted by the vendor to the latest share basis, so compare them only with adjusted
+  # prices across ex-dates; winner_rate is a ratio and needs no adjustment
+  sweep: {kind: trade_date}
+  start: "20210101"
+  primary_key: [ts_code, trade_date]
+  known_on: trade_date
+  fields: [ts_code, trade_date, his_low, his_high, cost_5pct, cost_15pct, cost_50pct, cost_85pct,
+           cost_95pct, weight_avg, winner_rate]
+  text_fields: [ts_code, trade_date]
+  curated: {path: cyq_perf, partition_by: trade_date}
+
 stk_limit:
   endpoint: stk_limit
   sweep: {kind: trade_date}
@@ -162,7 +176,7 @@ opt_basic:
 opt_daily:
   endpoint: opt_daily
   sweep: {kind: trade_date}
-  start: "20260801"
+  start: "20150209"  # D-152 update 2026-11-14: full history (50ETF options list 2015-02-09) for VIX research (plan 24)
   primary_key: [ts_code, trade_date]
   known_on: trade_date
   fields: [ts_code, trade_date, exchange, pre_settle, pre_close, open, high, low, close, settle, vol,
@@ -185,7 +199,7 @@ fund_daily:
   endpoint: fund_daily
   # every exchange-traded fund by date (D-074); the plan-03 per-ETF files moved to external/
   sweep: {kind: trade_date}
-  start: "20190101"
+  start: "20050222"  # D-159: first listed ETF (510050), for long ETF-book backtests
   primary_key: [ts_code, trade_date]
   known_on: trade_date
   fields: [ts_code, trade_date, pre_close, open, high, low, close, change, pct_chg, vol, amount]
@@ -198,7 +212,7 @@ fut_daily:
   endpoint: fut_daily
   # every exchange in one call per date (D-077); CFFEX-only 2025 files replaced
   sweep: {kind: trade_date}
-  start: "20190101"
+  start: "20100104"  # D-159: commodity proxy before the commodity ETFs (2019-12)
   primary_key: [ts_code, trade_date]
   known_on: trade_date
   fields: [ts_code, trade_date, pre_close, pre_settle, open, high, low, close, settle, change1,
@@ -305,7 +319,7 @@ fund_nav:
   endpoint: fund_nav
   # NAV of day T is published that evening: usable from the next session
   sweep: {kind: nav_date, extra_params: {market: E}}
-  start: "20190101"
+  start: "20050222"  # D-159
   primary_key: [ts_code, nav_date]
   known_on: nav_date
   known_on_rule: next_session
@@ -355,7 +369,7 @@ fut_mapping:
   endpoint: fut_mapping
   # continuous code (e.g. AGL.SHF) -> the contract it maps to that day
   sweep: {kind: trade_date}
-  start: "20190101"
+  start: "20100104"  # D-159
   primary_key: [ts_code, trade_date]
   known_on: trade_date
   fields: [ts_code, trade_date, mapping_ts_code]
@@ -376,7 +390,7 @@ sge_basic:
 sge_daily:
   endpoint: sge_daily
   sweep: {kind: trade_date}
-  start: "20190101"
+  start: "20100104"  # D-159
   primary_key: [ts_code, trade_date]
   known_on: trade_date
   fields: [ts_code, trade_date, close, open, high, low, price_avg, change, pct_change, vol, amount,
@@ -423,24 +437,23 @@ cn_ppi:
 cn_pmi:
   endpoint: cn_pmi
   # NBS PMI is released on the last day of the month (09:30): usable from the next session.
-  # The endpoint ignores `fields` and always adds its metadata columns, kept as text.
+  # 2026-11: Tushare switched to lower-case columns and dropped the metadata columns (D-143).
   sweep: {kind: none, extra_params: {start_m: "201501"}}
   refresh: overwrite
-  primary_key: [MONTH]
-  known_on: MONTH
+  primary_key: [month]
+  known_on: month
   known_on_rule: period_end_lag
   release_lag_days: 7  # observed max since 2010 (D-086; was 1)
   release_dates: macro_release_pmi
-  fields: [MONTH, ID, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, PMI010000, PMI010100, PMI010200, PMI010300, PMI010400, PMI010401, PMI010402,
-           PMI010403, PMI010500, PMI010501, PMI010502, PMI010503, PMI010600, PMI010601,
-           PMI010602, PMI010603, PMI010700, PMI010701, PMI010702, PMI010703, PMI010800,
-           PMI010801, PMI010802, PMI010803, PMI010900, PMI011000, PMI011100, PMI011200,
-           PMI011300, PMI011400, PMI011500, PMI011600, PMI011700, PMI011800, PMI011900,
-           PMI012000, PMI020100, PMI020101, PMI020102, PMI020200, PMI020201, PMI020202,
-           PMI020300, PMI020301, PMI020302, PMI020400, PMI020401, PMI020402, PMI020500,
-           PMI020501, PMI020502, PMI020600, PMI020601, PMI020602, PMI020700, PMI020800,
-           PMI020900, PMI021000, PMI030000]
-  text_fields: [MONTH, ID, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME]
+  fields: [month, pmi010000, pmi010100, pmi010200, pmi010300, pmi010400, pmi010401, pmi010402,
+           pmi010403, pmi010500, pmi010501, pmi010502, pmi010503, pmi010600, pmi010601, pmi010602,
+           pmi010603, pmi010700, pmi010701, pmi010702, pmi010703, pmi010800, pmi010801, pmi010802,
+           pmi010803, pmi010900, pmi011000, pmi011100, pmi011200, pmi011300, pmi011400, pmi011500,
+           pmi011600, pmi011700, pmi011800, pmi011900, pmi020100, pmi020101, pmi020102, pmi020200,
+           pmi020201, pmi020202, pmi020300, pmi020301, pmi020302, pmi020400, pmi020401, pmi020402,
+           pmi020500, pmi020501, pmi020502, pmi020600, pmi020601, pmi020602, pmi020700, pmi020800,
+           pmi020900, pmi021000, pmi030000]
+  text_fields: [month]
   curated: {path: macro/cn_pmi}
 
 cn_m:
@@ -455,6 +468,19 @@ cn_m:
   fields: [month, m0, m0_yoy, m0_mom, m1, m1_yoy, m1_mom, m2, m2_yoy, m2_mom]
   text_fields: [month]
   curated: {path: macro/cn_m}
+
+sf_month:
+  endpoint: sf_month
+  # 社会融资规模 (PBOC): monthly increment, cumulative and stock (亿元); plan 15 ph7h, D-143
+  sweep: {kind: none, extra_params: {start_m: "201501"}}
+  refresh: overwrite
+  primary_key: [month]
+  known_on: month
+  known_on_rule: period_end_lag
+  release_lag_days: 20  # same rule as cn_m until a release calendar exists (D-086)
+  fields: [month, inc_month, inc_cumval, stk_endval]
+  text_fields: [month]
+  curated: {path: macro/sf_month}
 
 shibor_lpr:
   endpoint: shibor_lpr
@@ -648,6 +674,18 @@ dividend:
                 div_listdate, imp_ann_date]
   curated: {path: events/dividend, partition_by: end_date}
 
+repurchase:
+  endpoint: repurchase
+  # buyback announcements (plan 23, D-154): one row per stage 预案 / 股东大会通过 / 实施 / 完成 / 停止;
+  # amount = planned (预案) or cumulative executed (实施 / 完成). No unique key: exact duplicates dropped
+  sweep: {kind: ann_date, days: all}
+  start: "20180101"
+  primary_key: []
+  known_on: ann_date
+  fields: [ts_code, ann_date, end_date, proc, exp_date, vol, amount, high_limit, low_limit]
+  text_fields: [ts_code, ann_date, end_date, proc, exp_date]
+  curated: {path: events/repurchase, partition_by: ann_date}
+
 stk_managers:
   endpoint: stk_managers
   # executives and directors with tenure, full history per stock; refetch with --force after the
@@ -699,6 +737,41 @@ cn_bond_yield:
   text_fields: [curve_name, trade_date]
   curated: {path: macro/cn_bond_yield}
 
+cny_fixing:
+  source: akshare
+  endpoint: currency_boc_safe
+  # SAFE RMB central parity (人民币中间价), CNY per 100 units of each currency, full history in one call (plan 34, D-171)
+  sweep: {kind: none}
+  refresh: overwrite
+  primary_key: [trade_date]
+  known_on: trade_date
+  known_on_rule: as_is  # fixing published 09:15 the same day
+  # most quote CNY per 100 units; 林吉特 … 泰铢 (myr, rub, zar, krw, aed, sar, huf, pln, dkk, sek, nok, try, mxn, thb) quote units per 100 CNY
+  rename: {日期: trade_date, 美元: usd, 欧元: eur, 日元: jpy, 港元: hkd, 英镑: gbp, 澳元: aud, 新西兰元: nzd, 新加坡元: sgd,
+           瑞士法郎: chf, 加元: cad, 澳门元: mop, 林吉特: myr, 卢布: rub, 兰特: zar, 韩元: krw, 迪拉姆: aed, 里亚尔: sar,
+           福林: huf, 兹罗提: pln, 丹麦克朗: dkk, 瑞典克朗: sek, 挪威克朗: nok, 里拉: try, 比索: mxn, 泰铢: thb}
+  fields: [trade_date, usd, eur, jpy, hkd, gbp, aud, nzd, sgd, chf, cad, mop, myr, rub, zar, krw, aed, sar, huf, pln,
+           dkk, sek, nok, try, mxn, thb]
+  text_fields: [trade_date]
+  curated: {path: macro/cny_fixing}
+
+us_treasury_yield:
+  source: akshare
+  endpoint: bond_zh_us_rate
+  # US Treasury 2Y / 5Y / 10Y / 30Y yields (Eastmoney), for 中美利差; US date, known before the next China session (plan 34, D-171)
+  sweep: {kind: none, extra_params: {start_date: "20150101"}}
+  refresh: overwrite
+  primary_key: [trade_date]
+  known_on: trade_date
+  known_on_rule: next_session
+  rename: {日期: trade_date, 美国国债收益率2年: us_2y, 美国国债收益率5年: us_5y, 美国国债收益率10年: us_10y, 美国国债收益率30年: us_30y,
+           美国国债收益率10年-2年: us_10y_2y, 美国GDP年增率: us_gdp_yoy, 中国国债收益率2年: cn_2y, 中国国债收益率5年: cn_5y,
+           中国国债收益率10年: cn_10y, 中国国债收益率30年: cn_30y, 中国国债收益率10年-2年: cn_10y_2y, 中国GDP年增率: cn_gdp_yoy}
+  fields: [trade_date, us_2y, us_5y, us_10y, us_30y, us_10y_2y, us_gdp_yoy, cn_2y, cn_5y, cn_10y, cn_30y, cn_10y_2y,
+           cn_gdp_yoy]
+  text_fields: [trade_date]
+  curated: {path: macro/us_treasury_yield}
+
 lme_copper:
   source: akshare
   endpoint: futures_foreign_hist
@@ -712,6 +785,20 @@ lme_copper:
   fields: [trade_date, open, high, low, close, volume, oi, settle]
   text_fields: [trade_date]
   curated: {path: macro/lme_copper}
+
+cboe_vix:
+  source: cboe
+  endpoint: daily_prices
+  # CBOE VIX (S&P 500 30-day implied volatility), full history since 1990 in one public CSV (D-152).
+  # trade_date is the US date; the close is known before the next China session opens
+  sweep: {kind: none, extra_params: {index: VIX}}
+  refresh: overwrite
+  primary_key: [index_code, trade_date]
+  known_on: trade_date
+  known_on_rule: next_session
+  fields: [index_code, trade_date, open, high, low, close]
+  text_fields: [index_code, trade_date]
+  curated: {path: macro/cboe_vix}
 
 # Jin10 macro series carry the actual release date (feed ends 2025-09): used to check the lag rules
 
@@ -852,7 +939,9 @@ cninfo_keyword_announcements:
   # chain-relevant announcements outside the periodic categories, by title keyword and month (D-111)
   sweep: {kind: date_window, window: month, value_param: searchkey, refetch_recent: 1,
           values: [投资者关系活动记录表, 重大合同, 中标, 问询函, 重组报告书, 对外投资, 可行性研究报告,
-                   股权激励, 激励计划, 经营数据, 新签合同]}  # last four: plan 18 ph2 (D-149)
+                   股权激励, 激励计划, 经营数据, 新签合同,   # last four: plan 18 ph2 (D-149)
+                   简报,    # plan 31 ph3: developers' monthly 销售(情况)简报
+                   回购, 增持]}  # plan 32 ph1 (D-169): buyback and 增持 plan announcements
   start: "20231101"
   primary_key: [ann_id, sec_code]
   known_on: ann_date
@@ -922,7 +1011,7 @@ fina_mainbz_p:
   # main-business revenue / cost / profit by product (type P), whole market per period (plan 12).
   # No announcement date: usable from period end + 120 days (annual reports are due by 30 April).
   sweep: {kind: period, extra_params: {type: P}, refetch_recent: 2}
-  start: "20230101"
+  start: "20220101"  # 2022 back-filled 2026-11-14 for FY2022 labels (plan 28 ph1)
   primary_key: [ts_code, end_date, bz_item]
   known_on: end_date
   known_on_rule: period_end_lag
@@ -935,7 +1024,7 @@ fina_mainbz_i:
   endpoint: fina_mainbz_vip
   # the same breakdown by industry (type I)
   sweep: {kind: period, extra_params: {type: I}, refetch_recent: 2}
-  start: "20230101"
+  start: "20220101"  # 2022 back-filled 2026-11-14 for FY2022 labels (plan 28 ph1)
   primary_key: [ts_code, end_date, bz_item]
   known_on: end_date
   known_on_rule: period_end_lag
@@ -1040,3 +1129,33 @@ manual_series:
   fields: [series, name, unit, freq, kind, date, value, published, source_url, note, licensed, revision]
   text_fields: [series, name, unit, freq, kind, date, published, source_url, note]
   curated: {path: alt/manual_series}
+
+house_price_70:
+  endpoint: house_price_70
+  source: nbs
+  # plan 31: 国家统计局 70 个大中城市住宅销售价格指数 (new and second-hand), from the monthly release
+  # pages (data.stats.gov.cn blocks this host). mom / yoy are indices: previous month / same month = 100.
+  sweep: {kind: none, range_params: true}
+  start: "20230101"
+  refresh: overwrite
+  primary_key: [month, city, house_type]
+  known_on: published
+  fields: [month, city, house_type, mom, yoy, published, source_url]
+  text_fields: [month, city, house_type, published, source_url]
+  curated: {path: alt/house_price_70}
+
+game_license:
+  endpoint: game_license
+  source: nppa
+  # plan 31: 国家新闻出版署 网络游戏审批信息 (版号), domestic and imported lists, one row per approval.
+  # known_on = the list's publication date (the approval date is earlier).
+  sweep: {kind: none, range_params: true}
+  start: "20230101"
+  refresh: overwrite
+  primary_key: [approval_no]
+  known_on: published
+  fields: [approval_no, name, category, publisher, operator, isbn, approved_on, published, origin, list_title,
+           source_url]
+  text_fields: [approval_no, name, category, publisher, operator, isbn, approved_on, published, origin,
+                list_title, source_url]
+  curated: {path: alt/game_license}

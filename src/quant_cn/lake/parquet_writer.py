@@ -33,6 +33,11 @@ class ParquetWriter(BaseStore):
             (none at construction)
 
     Used by:
+        lake.DatedTableStore  -- write_derived
+        calculation.RetailGaugeNowcaster  -- backtest table
+        calculation.RetailGaugeEvaluator  -- evaluation table
+        cli.GaugeCommands  -- wires it
+        lake.GraphStore  -- whole-table writes under derived/graph
         cli.QuantCnCli           -- composition root
         cli.ServiceBuilder       -- injected type or call
         pipeline.UniverseStep    -- injected type or call
@@ -41,7 +46,10 @@ class ParquetWriter(BaseStore):
         pipeline.RiskModelStep  -- injected type or call
         pipeline.RiskValidationWriter  -- injected type or call
         portfolio.HoldingsHistoryWriter  -- injected type or call
-        cli.ResearchCommands  -- holdings-risk history writer
+        cli.AppServiceBuilder  -- wires it
+        lake.LabelStore  -- writes derived/labels partitions
+        cli.DocumentCommands  -- wires it
+        cli.ReportCommands  -- wires it for the buyback monitor
 
     Test cases:
         TC-PW-001  raw file lands at raw/<dataset>/<param>=<key>.parquet with coerced dtypes

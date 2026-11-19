@@ -16,7 +16,7 @@ class Finding:
         Input:
             path:    str  -- repo-relative path
             line:    int  -- 1-based line, 0 when the whole file is meant
-            rule:    str  -- short rule id, e.g. "contract", "index", "size", "names"
+            rule:    str  -- short rule id, e.g. "contract", "index", "size", "names", "plans"
             message: str
         Output:
             frozen, ordered dataclass; `to_text`
@@ -29,6 +29,8 @@ class Finding:
         core.docs.IndexChecker     -- produces findings
         core.docs.SizeChecker      -- produces findings
         core.docs.NameChecker      -- produces findings
+        core.docs.PlanStatusChecker  -- produces findings
+        core.docs.ResearchLogChecker  -- produces findings
         core.docs.ContractLinter   -- injected type or call
 
     Test cases:
@@ -74,6 +76,8 @@ class BaseChecker(ABC):
         core.docs.IndexChecker     -- subclass
         core.docs.SizeChecker      -- subclass
         core.docs.NameChecker      -- subclass
+        core.docs.PlanStatusChecker  -- subclass
+        core.docs.ResearchLogChecker  -- subclass
         core.docs.ContractLinter   -- injected type or call
 
     Test cases:

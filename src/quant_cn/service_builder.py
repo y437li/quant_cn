@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from quant_cn.calculation.consensus_panel_builder import ConsensusPanelBuilder
 from quant_cn.core.clock import Clock
 from quant_cn.core.config import Config
 from quant_cn.core.date_codec import DateCodec
@@ -13,22 +14,28 @@ from quant_cn.core.docs.doc_table_builder import DocTableBuilder
 from quant_cn.core.docs.docstring_parser import DocstringParser
 from quant_cn.core.docs.index_reader import IndexReader
 from quant_cn.core.docs.markdown_table import MarkdownTableReader
+from quant_cn.core.docs.phase_status_parser import PhaseStatusParser
 from quant_cn.core.docs.plan_reader import PlanReader
 from quant_cn.core.docs.registry_reader import RegistryReader
 from quant_cn.core.docs.repo_files import RepoFiles
+from quant_cn.core.docs.research_log_reader import ResearchLogReader
 from quant_cn.data_loading.akshare_client import AkshareClient
 from quant_cn.data_loading.app_store_client import AppStoreClient
 from quant_cn.data_loading.baostock_client import BaostockClient
+from quant_cn.data_loading.cboe_client import CboeClient
 from quant_cn.data_loading.cninfo_client import CninfoClient
 from quant_cn.data_loading.eastmoney_report_client import EastmoneyReportClient
 from quant_cn.data_loading.fetcher_factory import FetcherFactory
 from quant_cn.data_loading.manual_series_client import ManualSeriesClient
+from quant_cn.data_loading.nbs_house_price_client import NbsHousePriceClient
+from quant_cn.data_loading.nppa_game_client import NppaGameClient
 from quant_cn.data_loading.tushare_client import TushareClient
 from quant_cn.factor.factor_evaluator import FactorEvaluator
 from quant_cn.factor.factor_factory import FactorFactory
 from quant_cn.factor.factor_preprocessor import FactorPreprocessor
 from quant_cn.factor.signal_combiner import SignalCombiner
 from quant_cn.lake.compactor import Compactor
+from quant_cn.lake.dated_table_store import DatedTableStore
 from quant_cn.lake.derived_views import DerivedViews
 from quant_cn.lake.exposure_reader import ExposureReader
 from quant_cn.lake.fetch_log import FetchLog
@@ -127,6 +134,9 @@ class ServiceBuilder:
                 "cninfo": CninfoClient(clock),
                 "eastmoney": EastmoneyReportClient(clock),
                 "apple": AppStoreClient(clock),
+                "cboe": CboeClient(clock),
+                "nbs": NbsHousePriceClient(clock),
+                "nppa": NppaGameClient(clock),
                 "manual": ManualSeriesClient(config.repo_root),
             },
             query=LakeQuery(catalog),
@@ -196,7 +206,13 @@ class ServiceBuilder:
         return FeatureStep(
             query,
             self.build_reader(config, catalog),
-            FactorFactory(config.factors, TradingCalendar(query), DateCodec()),
+            FactorFactory(
+                config.factors,
+                TradingCalendar(query),
+                DateCodec(),
+                ConsensusPanelBuilder(query, DateCodec()),
+                DatedTableStore(ParquetWriter(config.lake.root)),
+            ),
             ExposureReader(query),
             pre,
             SignalCombiner(weights, Standardizer(), camp.min_factors),
@@ -314,6 +330,8 @@ class ServiceBuilder:
             query,
             settings.external_series,
             settings.theme_baskets,
+            ConsensusPanelBuilder(query, codec),
+            settings.consensus_days,
         )
         model = RiskModelFactory(query).build(settings)
         views = DerivedViews(
@@ -347,6 +365,11 @@ class ServiceBuilder:
         code = CodeTableBuilder(root, scanner, DocstringParser(), RegistryReader(tables))
         files = RepoFiles(root)
         docs = DocTableBuilder(
-            root, files, IndexReader(tables), DecisionsReader(tables), PlanReader(tables)
+            root,
+            files,
+            IndexReader(tables),
+            DecisionsReader(tables),
+            PlanReader(tables, PhaseStatusParser()),
+            ResearchLogReader(tables),
         )
         return ProjectCatalog(catalog, code, docs, config.datasets, ContractLinter(root), Clock())

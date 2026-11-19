@@ -75,6 +75,7 @@ versions and corrections. Keeping full Chinese reports only leaves ≈ 60k PDFs.
 
 | Date | Phase | Change |
 |---|---|---|
+| 2026-11-13 | 4 | H1 2023 / 2024 / 2025 label backfill done (DOC=semiannual; 4,948 / 4,932 / 5,096 reports, failed 5 / 4 / 4; ~14.9k calls). QC (`meta/runs/qc_h1_labels.py` → `applications/qc_h1_20261113.csv`): source documents all correct (title year, 半年, not 摘要 / 问询 / 持续督导, no duplicate code), so no FY2025-style wrong-document rows. Gaps are data, not extraction: no segment rows for 506 / 370 / 379 companies. In 2023–24, ~95% have no `fina_mainbz` H1 rows; in 2025, 367 have only generic items (产品 / 主营业务 / 其他业务, skipped by SKIP). Errors 37 / 20 / 45 are mostly "no business section". Median node overlap with the previous FY 0.60–0.63. The 45 rows below 0.1 (≥ 3 nodes) differ in granularity (PROD vs MKT nodes), not in the document; e.g. 000554 FY2024 mapped 汽油 to MKT_EV, which the H1 run corrects |
 | 2026-11-07 | — | drafted: Tushare `research_report` and `anns_d` denied, `irm_qa_sz` OK, CNINFO query and PDF download verified |
 | 2026-11-07 | 2 | approved; Eastmoney reports added (D-100); storage layout D-101; clients, downloader, CLI, tests built (lint 0, tests pass, 95% cov); metadata sweep running; `irm_qa_*` deferred to after the document lists (Tushare paces it at ~10 s/day) |
 | 2026-11-07 | 2 | user: download all Eastmoney stock reports; downloader releases the catalog after listing so PDF downloads run beside the CNINFO metadata sweep |

@@ -1,0 +1,164 @@
+# 期货监测 (plan 15 ph7i, D-145): contract families to watch and value-chain spreads.
+# Every commodity family with open interest (73; index and bond futures excluded; monthly-average
+# contracts such as L_F excluded) — user: "可以改吧" (2026-11-13).
+# family = "<fut_code>.<suffix>" as in fut_daily (SHF, DCE, ZCE, INE, GFE).
+# Spreads are computed from each leg's most-held (dominant) contract settle, 元/吨 unless noted.
+# Coefficients are industry rules of thumb (to be checked by the user, plan 15 open question):
+#   PTA 加工费   = PTA − 0.655 × PX
+#   甲醇制烯烃利润 = PP − 3 × 甲醇 (about 3 t methanol per t olefin; before other costs)
+#   瓶片加工费   = 瓶片 − 0.855 × PTA − 0.335 × 乙二醇
+#   铝 − 氧化铝 = 铝 − 1.93 × 氧化铝 (before power and anodes: not a full smelter margin)
+#   螺纹 / 热卷利润 = 成材 − 1.6 × 铁矿 − 0.5 × 焦炭 (before conversion cost)
+#   玻璃 − 纯碱 = 玻璃 − 纯碱 (spread, not a cost formula)
+#   多晶硅 − 工业硅 = 多晶硅 − 1.2 × 工业硅
+#   猪粮比 = 生猪 / 玉米 (ratio of 元/吨 prices)
+#   金银比 = 1000 × 黄金 (元/克) / 白银 (元/千克); 金油比 = 31.1035 × 黄金 (元/克) / 原油 (元/桶) = barrels per ounce
+#   铜金比 = 铜 (元/吨) / 黄金 (元/克) = grams of gold one ton of copper buys (same shape as $/lb ÷ $/oz)
+# A ratio is (coef 1 × leg 1) / (coef 2 × leg 2).
+min_oi: 1000          # a contract below this open interest is not a curve point (delivery months)
+flag_low: 0.05        # percentile at or below which a curve or spread is flagged
+flag_high: 0.95
+oi_z: 2.0             # |z| of the 5-day open-interest change vs one year that is flagged
+reversion_z: 2.0      # |z| of a reversion spread vs its one-year mean that is flagged (D-156)
+# 股指期货 (plan 15 ph7k): basis of the most-held contract to its index, annualised to the
+# third-Friday expiry (dividend season May-Aug deepens the discount), and top-20 broker nets.
+index_futures:
+  - {product: IF, name: 沪深300, index: "000300.SH"}
+  - {product: IH, name: 上证50, index: "000016.SH"}
+  - {product: IC, name: 中证500, index: "000905.SH"}
+  - {product: IM, name: 中证1000, index: "000852.SH"}
+families:
+  - {family: CU.SHF, name: 铜, group: 有色}
+  - {family: AL.SHF, name: 铝, group: 有色}
+  - {family: AO.SHF, name: 氧化铝, group: 有色}
+  - {family: ZN.SHF, name: 锌, group: 有色}
+  - {family: NI.SHF, name: 镍, group: 有色}
+  - {family: SN.SHF, name: 锡, group: 有色}
+  - {family: PB.SHF, name: 铅, group: 有色}
+  - {family: SS.SHF, name: 不锈钢, group: 有色}
+  - {family: AD.SHF, name: 铸造铝合金, group: 有色}
+  - {family: BC.INE, name: 国际铜, group: 有色}
+  - {family: AU.SHF, name: 黄金, group: 贵金属}
+  - {family: AG.SHF, name: 白银, group: 贵金属}
+  - {family: PT.GFE, name: 铂, group: 贵金属}
+  - {family: PD.GFE, name: 钯, group: 贵金属}
+  - {family: SC.INE, name: 原油, group: 能化}
+  - {family: FU.SHF, name: 燃料油, group: 能化}
+  - {family: PX.ZCE, name: 对二甲苯, group: 能化}
+  - {family: TA.ZCE, name: PTA, group: 能化}
+  - {family: EG.DCE, name: 乙二醇, group: 能化}
+  - {family: PR.ZCE, name: 瓶片, group: 能化}
+  - {family: MA.ZCE, name: 甲醇, group: 能化}
+  - {family: PP.DCE, name: 聚丙烯, group: 能化}
+  - {family: L.DCE, name: 塑料, group: 能化}
+  - {family: V.DCE, name: PVC, group: 能化}
+  - {family: LU.INE, name: 低硫燃料油, group: 能化}
+  - {family: BU.SHF, name: 沥青, group: 能化}
+  - {family: PG.DCE, name: 液化石油气, group: 能化}
+  - {family: EB.DCE, name: 苯乙烯, group: 能化}
+  - {family: BZ.DCE, name: 纯苯, group: 能化}
+  - {family: PL.ZCE, name: 丙烯, group: 能化}
+  - {family: PF.ZCE, name: 短纤, group: 能化}
+  - {family: SH.ZCE, name: 烧碱, group: 能化}
+  - {family: UR.ZCE, name: 尿素, group: 能化}
+  - {family: RU.SHF, name: 天然橡胶, group: 能化}
+  - {family: NR.INE, name: 20号胶, group: 能化}
+  - {family: BR.SHF, name: 丁二烯橡胶, group: 能化}
+  - {family: RB.SHF, name: 螺纹钢, group: 黑色}
+  - {family: HC.SHF, name: 热卷, group: 黑色}
+  - {family: I.DCE, name: 铁矿石, group: 黑色}
+  - {family: J.DCE, name: 焦炭, group: 黑色}
+  - {family: JM.DCE, name: 焦煤, group: 黑色}
+  - {family: SF.ZCE, name: 硅铁, group: 黑色}
+  - {family: SM.ZCE, name: 锰硅, group: 黑色}
+  - {family: FG.ZCE, name: 玻璃, group: 建材}
+  - {family: SA.ZCE, name: 纯碱, group: 建材}
+  - {family: SI.GFE, name: 工业硅, group: 新能源}
+  - {family: PS.GFE, name: 多晶硅, group: 新能源}
+  - {family: LC.GFE, name: 碳酸锂, group: 新能源}
+  - {family: LH.DCE, name: 生猪, group: 农产品}
+  - {family: C.DCE, name: 玉米, group: 农产品}
+  - {family: M.DCE, name: 豆粕, group: 农产品}
+  - {family: A.DCE, name: 豆一, group: 农产品}
+  - {family: B.DCE, name: 豆二, group: 农产品}
+  - {family: Y.DCE, name: 豆油, group: 农产品}
+  - {family: P.DCE, name: 棕榈油, group: 农产品}
+  - {family: OI.ZCE, name: 菜籽油, group: 农产品}
+  - {family: RM.ZCE, name: 菜粕, group: 农产品}
+  - {family: RS.ZCE, name: 油菜籽, group: 农产品}
+  - {family: SO.ZCE, name: 葵花籽油, group: 农产品}
+  - {family: CS.DCE, name: 玉米淀粉, group: 农产品}
+  - {family: CF.ZCE, name: 棉花, group: 农产品}
+  - {family: CY.ZCE, name: 棉纱, group: 农产品}
+  - {family: SR.ZCE, name: 白糖, group: 农产品}
+  - {family: AP.ZCE, name: 苹果, group: 农产品}
+  - {family: CJ.ZCE, name: 红枣, group: 农产品}
+  - {family: PK.ZCE, name: 花生, group: 农产品}
+  - {family: JD.DCE, name: 鸡蛋, group: 农产品}
+  - {family: RR.DCE, name: 粳米, group: 农产品}
+  - {family: SP.SHF, name: 纸浆, group: 轻工}
+  - {family: OP.SHF, name: 双胶纸, group: 轻工}
+  - {family: LG.DCE, name: 原木, group: 轻工}
+  - {family: FB.DCE, name: 纤维板, group: 轻工}
+  - {family: EC.INE, name: 集运欧线, group: 航运}
+spreads:
+  - key: pta_margin
+    name: PTA 加工费
+    unit: 元/吨
+    legs: [{family: TA.ZCE, coef: 1.0}, {family: PX.ZCE, coef: -0.655}]
+    reversion: true       # out of sample since 2023: z-reversion Sharpe 1.34 (D-156)
+    half_life_d: 12
+  - key: mto_margin
+    name: 甲醇制烯烃利润（PP − 3×甲醇）
+    unit: 元/吨
+    legs: [{family: PP.DCE, coef: 1.0}, {family: MA.ZCE, coef: -3.0}]
+    reversion: true       # out of sample since 2023: z-reversion Sharpe 1.06 (D-156)
+    half_life_d: 94
+  - key: bottle_margin
+    name: 瓶片加工费
+    unit: 元/吨
+    legs: [{family: PR.ZCE, coef: 1.0}, {family: TA.ZCE, coef: -0.855}, {family: EG.DCE, coef: -0.335}]
+  - key: al_ao
+    name: 铝 − 1.93×氧化铝
+    unit: 元/吨
+    legs: [{family: AL.SHF, coef: 1.0}, {family: AO.SHF, coef: -1.93}]
+  - key: rebar_margin
+    name: 螺纹利润（未扣加工）
+    unit: 元/吨
+    legs: [{family: RB.SHF, coef: 1.0}, {family: I.DCE, coef: -1.6}, {family: J.DCE, coef: -0.5}]
+    reversion: true       # user added 2026-11-14; since 2023 Sharpe 1.1 but not stationary (D-156 update)
+    half_life_d: 152
+  - key: hrc_margin
+    name: 热卷利润（未扣加工）
+    unit: 元/吨
+    legs: [{family: HC.SHF, coef: 1.0}, {family: I.DCE, coef: -1.6}, {family: J.DCE, coef: -0.5}]
+    reversion: true       # user added 2026-11-14; since 2023 Sharpe 1.1 but not stationary (D-156 update)
+    half_life_d: 149
+  - key: glass_soda
+    name: 玻璃 − 纯碱
+    unit: 元/吨
+    legs: [{family: FG.ZCE, coef: 1.0}, {family: SA.ZCE, coef: -1.0}]
+  - key: poly_si
+    name: 多晶硅 − 1.2×工业硅
+    unit: 元/吨
+    legs: [{family: PS.GFE, coef: 1.0}, {family: SI.GFE, coef: -1.2}]
+  - key: hog_corn
+    name: 猪粮比
+    unit: 倍
+    kind: ratio
+    legs: [{family: LH.DCE, coef: 1.0}, {family: C.DCE, coef: 1.0}]
+  - key: gold_silver
+    name: 金银比
+    unit: 倍
+    kind: ratio
+    legs: [{family: AU.SHF, coef: 1000.0}, {family: AG.SHF, coef: 1.0}]  # 元/克 x1000 vs 元/千克
+  - key: gold_oil
+    name: 金油比（桶/盎司）
+    unit: 桶
+    kind: ratio
+    legs: [{family: AU.SHF, coef: 31.1035}, {family: SC.INE, coef: 1.0}]  # 元/盎司 vs 元/桶
+  - key: copper_gold
+    name: 铜金比（克金/吨铜）
+    unit: 克/吨
+    kind: ratio
+    legs: [{family: CU.SHF, coef: 1.0}, {family: AU.SHF, coef: 1.0}]  # 元/吨 vs 元/克

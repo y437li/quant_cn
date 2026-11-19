@@ -166,6 +166,15 @@ def test_tc_pb_001_book_loads(tmp_path: Path) -> None:
     assert book.cash == 5 and book.list_codes() == ["A"] and book.positions[0].cost == 2.5
     with pytest.raises(ValueError):
         Position(code="A", shares=0, cost=1)
+    assert Position(code="A", shares=1, cost=-2.5).cost == -2.5
+
+
+# TC-HRB-006
+def test_tc_hrb_006_paid_back_cost(lake: MiniLake, config: Config) -> None:
+    _write(lake, config)
+    book = PositionsBook(as_of=DAY, cash=0.0, positions=[Position(code=A, shares=100, cost=-2.0)])
+    pos = _build_builder(lake, book).build(DAY)["positions"][0]
+    assert pos["pnl"] == pytest.approx(100 * (10 + 2.0)) and pos["pnl_pct"] is None
 
 
 # TC-PB-002
@@ -181,3 +190,56 @@ def test_tc_pb_002_missing_and_invalid(tmp_path: Path) -> None:
     path.write_text("positions: [unclosed\n")
     with pytest.raises(ConfigError):
         PositionsBook.load(tmp_path)
+
+
+# TC-PB-003
+def test_tc_pb_003_notes_and_rules(tmp_path: Path) -> None:
+    (tmp_path / "config").mkdir()
+    path = tmp_path / "config" / "local.positions.yaml"
+    path.write_text(
+        "positions:\n  - {code: A, shares: 1, cost: 1}\n"
+        "realized: [{code: Z, pnl: 3}]\n"
+        "rules: {max_weight: 0.25, weight_exceptions: [A], review_every_days: 14}\n"
+        "notes:\n  A: {thesis: t, stop: 0.9, reviewed: '20261112', conditions:\n"
+        "    [{label: g, kind: statement, metric: gm_q, op: '>=', value: 0.22}]}\n"
+        "closed:\n  Z: {thesis: sold}\n",
+        encoding="utf-8",
+    )
+    book = PositionsBook.load(tmp_path)
+    assert book.rules.max_weight == 0.25 and book.rules.weight_exceptions == ["A"]
+    assert book.notes["A"].stop == 0.9 and book.notes["A"].conditions[0].metric == "gm_q"
+    assert book.closed["Z"].thesis == "sold"
+    path.write_text("positions:\n  - {code: A, shares: 1, cost: 1}\nnotes:\n  Z: {thesis: x}\n")
+    with pytest.raises(ConfigError):
+        PositionsBook.load(tmp_path)
+    path.write_text("positions:\n  - {code: A, shares: 1, cost: 1}\n")
+    assert PositionsBook.load(tmp_path).rules.max_weight == 0.20
+
+
+class FakeReviewer:
+    """Stands in for PositionReviewer: records the priced positions it was given."""
+
+    def __init__(self) -> None:
+        self.seen: list[str] = []
+
+    def build(self, held: pd.DataFrame, as_of: str) -> dict[str, dict[str, str]]:
+        self.seen = list(held["code"])
+        return {c: {"as_of": as_of} for c in held["code"]}
+
+
+# TC-HRB-005
+def test_tc_hrb_005_reviews(lake: MiniLake, config: Config, doc: dict) -> None:
+    assert doc["reviews"] == {}
+    reviewer = FakeReviewer()
+    builder = HoldingsRiskBuilder(
+        BOOK,
+        lake.query,
+        FixedModel("m"),
+        RiskDecomposer(),
+        HoldingsHistoryWriter(lake.query, lake.writer),
+        "000300.SH",
+        reviewer,  # type: ignore[arg-type]
+    )
+    reviews = builder.build("20261112")["reviews"]
+    assert sorted(reviews) == sorted([A, B, C]) and GONE not in reviewer.seen
+    assert reviews[A] == {"as_of": DAY}

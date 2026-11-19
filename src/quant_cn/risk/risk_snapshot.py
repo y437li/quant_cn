@@ -31,6 +31,7 @@ class RiskSnapshot:
             (none)
 
     Used by:
+        portfolio.StyleFitChecker  -- book and candidate exposures
         risk.RiskModel       -- built by load_snapshot
         risk.RiskDecomposer  -- decomposition input
         risk.BaseRiskModel  -- injected type or call

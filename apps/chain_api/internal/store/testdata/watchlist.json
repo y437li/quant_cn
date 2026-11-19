@@ -5,6 +5,7 @@
   {
    "code": "002507.SZ",
    "name": "涪陵榨菜",
+   "kind": "stock",
    "buy_low": 9.0,
    "buy_high": 10.0,
    "added": "20261108",
@@ -236,7 +237,29 @@
      "date": "20261106",
      "close": 11.84
     }
-   ]
+   ],
+   "conditions": [
+    {
+     "label": "大单近 4 周至少 3 周净流入",
+     "kind": "flow",
+     "metric": "lg_weeks_pos_4w",
+     "op": ">=",
+     "value": 3,
+     "actual": 1.0,
+     "state": "unmet"
+    },
+    {
+     "label": "获利盘 ≤ 10%",
+     "kind": "chip",
+     "metric": "winner_rate",
+     "op": "<=",
+     "value": 10,
+     "actual": null,
+     "state": "unknown"
+    }
+   ],
+   "conditions_needed": 2,
+   "condition_status": "wait"
   },
   {
    "code": "002847.SZ",

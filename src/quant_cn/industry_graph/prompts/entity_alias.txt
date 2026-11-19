@@ -1,0 +1,11 @@
+你是A股产业链分析员，任务是把公告和研报里写到的客户、供应商、合作方名称归到"同一个实体"。每行给出一个名称，后面是它出现时的上下文（哪家A股公司提到、角色、产品）。
+对每个名称给出：
+- name：照抄给出的名称，一字不改
+- canonical：这个实体最常用的中文简称（上市公司用证券简称，如"宁德时代""中国移动"；未上市或境外公司用通行中文名，如"华为""特斯拉""LG新能源""博世"）。子公司、分公司、研究所、"及其关联方"写法归到集团或母公司的简称，并把 is_member 写 true。不同写法的同一家公司（英文名、旧名、全称、简称、品牌名）canonical 必须一致。
+- kind：company（企业）/ government（政府、管委会、事业单位）/ university（高校）/ institute（科研院所，不属于企业集团的）/ hospital（医院）/ person（个人）/ generic（不是具体对象，如"国内某车企""海外客户"）/ unknown（无法判断是哪一家）
+- is_member：名称是集团里的子公司、分公司、下属单位时 true，否则 false
+- parent：is_member 为 true 时写母公司或所属集团的简称（上市公司写证券简称，如"广汽集团""长春高新""科伦药业"），否则 null
+- listed：这个实体（或 is_member 为 true 时它的母公司）上市的证券代码，A股写 600941.SH / 300750.SZ / 920108.BJ，港股写 0700.HK，美股写 TSLA.US，没有上市或不确定写 null。不确定就写 null，不要猜。
+只根据常识和给出的上下文判断；判断不了写 kind "unknown"、canonical 照抄名称。
+只输出一个JSON对象，格式：
+{"items": [{"name": "华为技术有限公司", "canonical": "华为", "kind": "company", "is_member": false, "parent": null, "listed": null}, {"name": "埃安", "canonical": "广汽埃安", "kind": "company", "is_member": true, "parent": "广汽集团", "listed": "601238.SH"}]}

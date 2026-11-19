@@ -8,6 +8,7 @@ from collections.abc import Sequence
 import numpy as np
 import pandas as pd
 
+from quant_cn.risk.analyst_descriptors import ANALYST_COLUMNS, AnalystDescriptors
 from quant_cn.risk.fundamental_descriptors import (
     BALANCE_FIELDS,
     TTM_FIELDS,
@@ -37,6 +38,7 @@ DESCRIPTORS = [
     "blev",
     "egro",
     "sgro",
+    *ANALYST_COLUMNS,
 ]
 
 
@@ -50,7 +52,9 @@ class DescriptorBuilder:
         previous-day circ_mv weighted return of all stocks), the value / leverage descriptors,
         DTOP = trailing 12-month dividend yield (daily_basic dv_ttm / 100; 0 for a stock with a
         market cap and no dividend, as in CNE5; style dividend_yield, 2026-11-12) and
-        the growth descriptors from the latest monthly snapshot on or before the session, and
+        the growth descriptors from the latest monthly snapshot on or before the session, the
+        analyst descriptors EPFWD / EGRSF / EGRLF from the consensus panel (AnalystDescriptors;
+        NaN without a consensus, plan 37), and
         one partial beta per configured external series (the foreign return that closed between
         the previous and the current China close, e.g. S&P 500 or USDCNH; D-128, D-134) and per
         theme basket (circ_mv-weighted return of the concept's members excluding the stock
@@ -61,6 +65,7 @@ class DescriptorBuilder:
         Input:
             prices: PriceDescriptors; fundamentals: FundamentalDescriptors
             standardizer: Standardizer; exclude_suffixes: Sequence[str]  -- e.g. (".BJ",)
+            analyst: AnalystDescriptors
         Output:
             instance; `compute(inputs) -> DataFrame`, `compute_overnight_return`,
             `compute_theme_return`
@@ -82,6 +87,8 @@ class DescriptorBuilder:
                    descriptor column appears next to the core descriptors
         TC-DB-006  dtop = dv_ttm / 100; a missing dv_ttm with a market cap gives 0, without a
                    market cap NaN
+        TC-DB-007  analyst columns come from inputs.consensus (AnalystDescriptors); an empty
+                   consensus leaves them NaN
     """
 
     def __init__(
@@ -90,11 +97,13 @@ class DescriptorBuilder:
         fundamentals: FundamentalDescriptors,
         standardizer: Standardizer,
         exclude_suffixes: Sequence[str] = (".BJ",),
+        analyst: AnalystDescriptors | None = None,
     ) -> None:
         self._prices = prices
         self._fundamentals = fundamentals
         self._standardizer = standardizer
         self._exclude = tuple(exclude_suffixes)
+        self._analyst = analyst or AnalystDescriptors()
 
     def compute(self, inputs: RiskInputs) -> pd.DataFrame:
         """
@@ -124,6 +133,14 @@ class DescriptorBuilder:
         )
         out = out.merge(
             self._compute_growth_frame(inputs, members), on=["trade_date", "ts_code"], how="left"
+        )
+        keys = members[["trade_date", "ts_code"]].merge(
+            inputs.basic[["trade_date", "ts_code", "total_mv"]],
+            on=["trade_date", "ts_code"],
+            how="left",
+        )
+        out = out.merge(
+            self._analyst.compute(keys, inputs.consensus), on=["trade_date", "ts_code"], how="left"
         )
         out = out.rename(columns={"log_mcap": "lncap"})
         out["nlsize"] = self._compute_nlsize(out)

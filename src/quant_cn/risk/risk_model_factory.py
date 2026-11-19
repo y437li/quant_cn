@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from quant_cn.core.risk_model_settings import RiskModelSettings
 from quant_cn.lake.lake_query import LakeQuery
+from quant_cn.risk.analyst_descriptors import AnalystDescriptors
 from quant_cn.risk.bayesian_shrinker import BayesianShrinker
 from quant_cn.risk.descriptor_builder import DescriptorBuilder
 from quant_cn.risk.eigenfactor_adjuster import EigenfactorAdjuster
@@ -35,9 +36,10 @@ class RiskModelFactory:
             (none at construction)
 
     Used by:
+        cli.GaugeCommands  -- injected type or call
         cli.ServiceBuilder  -- risk model step
         research_space/notebooks/20261111_risk_model_validation.ipynb  -- variants
-        cli.ResearchCommands  -- holdings-risk wiring
+        cli.AppServiceBuilder  -- wires it
 
     Test cases:
         TC-RMF-001  build returns a RiskModel named after the settings with the configured styles
@@ -62,7 +64,11 @@ class RiskModelFactory:
         standardizer = Standardizer()
         regime = VolatilityRegimeAdjuster(settings.vra_half_life)
         descriptors = DescriptorBuilder(
-            PriceDescriptors(), FundamentalDescriptors(), standardizer, settings.exclude_suffixes
+            PriceDescriptors(),
+            FundamentalDescriptors(),
+            standardizer,
+            settings.exclude_suffixes,
+            AnalystDescriptors(),
         )
         exposures = ExposureStandardizer(settings, standardizer, Neutralizer())
         returns = FactorReturnEstimator(

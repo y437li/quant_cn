@@ -25,6 +25,7 @@ class BaseRiskModel(ABC):
             TypeError  -- when instantiated directly
 
     Used by:
+        portfolio.OpportunityScreen  -- snapshot for the fit rule
         risk.RiskModel  -- subclass
         risk.RiskModelValidator  -- injected type or call
         portfolio.HoldingsRiskBuilder  -- injected type or call

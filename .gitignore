@@ -74,5 +74,19 @@ research_space/prototypes/chain_view/views.json
 # personal watchlist output for the chain app (D-120)
 research_space/prototypes/chain_view/watchlist.json
 research_space/prototypes/chain_view/etf_proxy.json
+research_space/prototypes/chain_view/macro_monitor.json
+research_space/prototypes/chain_view/futures_monitor.json
+research_space/prototypes/chain_view/margin/
+research_space/prototypes/chain_view/buybacks.json
+research_space/prototypes/chain_view/opportunities.json
+research_space/prototypes/chain_view/buyback_monitor.json
+research_space/prototypes/chain_view/task_status.json
+research_space/prototypes/chain_view/volatility_monitor.json
+research_space/prototypes/chain_view/rates_fx_monitor.json
+research_space/prototypes/chain_view/sector_earnings_signal.json
+research_space/prototypes/chain_view/etf_cta.json
+research_space/prototypes/chain_view/smallcap_watch.json
+research_space/prototypes/chain_view/sector_monitor.json
+research_space/prototypes/chain_view/notify_sent.json
 research_space/prototypes/chain_view/factor_monitor.json
 research_space/prototypes/chain_view/holdings_risk.json

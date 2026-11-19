@@ -37,6 +37,8 @@ class MarginLadderEstimator:
 
     Used by:
         research_space/notebooks/20260929_positioning_flows.ipynb  -- market liquidation curve
+        portfolio.MarginPanelBuilder  -- per-stock ladder in the 融资融券 document
+        cli.ReportCommands  -- wires it for `margin-panel`
 
     Test cases:
         TC-MLE-001  FIFO: repayments retire the oldest vintage first; balance reconciles to rzye

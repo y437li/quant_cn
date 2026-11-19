@@ -123,3 +123,29 @@ def test_tc_db_006_dividend_yield() -> None:
     assert out.loc[market.codes[0], "dtop"].to_numpy() == pytest.approx(0.04)
     assert out.loc[market.codes[1], "dtop"].isna().all()
     assert out.loc[market.codes[2], "dtop"].to_numpy() == pytest.approx(0.0)
+
+
+# TC-DB-007
+def test_tc_db_007_analyst_columns() -> None:
+    market = SyntheticFactorMarket(n_stocks=60, n_days=120)
+    inputs = InputsBuilder.build(market, start_index=100)
+    assert build().compute(inputs)[["epfwd", "egrsf", "egrlf"]].isna().all().all()
+    code, day = market.codes[0], inputs.members["trade_date"].min()
+    cons = pd.DataFrame(
+        {
+            "trade_date": [day],
+            "ts_code": [code],
+            "fy1": [int(day[:4]) - 1],
+            "np1": [50.0],
+            "np2": [60.0],
+            "np3": [72.0],
+            "n_brokers": [3],
+        }
+    )
+    out = build().compute(dataclasses.replace(inputs, consensus=cons)).set_index("ts_code")
+    mv = inputs.basic.set_index(["trade_date", "ts_code"]).loc[(day, code), "total_mv"]
+    row = out.loc[code]
+    first = row[row["trade_date"] == day].iloc[0]
+    assert first["egrsf"] == pytest.approx(0.2) and first["egrlf"] == pytest.approx(0.2)
+    assert first["epfwd"] == pytest.approx(60.0 / mv)  # FY1 already ended: FY2 only
+    assert {"epfwd", "egrsf", "egrlf"} <= set(DESCRIPTORS)

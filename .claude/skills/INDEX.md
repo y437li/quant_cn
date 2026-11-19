@@ -11,6 +11,7 @@ Project skills. Each folder holds one `SKILL.md` (frontmatter name + description
 | [`new-class/`](new-class/INDEX.md) | build a class contract-first per the standard |
 | [`plan/`](plan/INDEX.md) | write, update, execute plans; mirror phases to Notion |
 | [`project-query/`](project-query/INDEX.md) | answer repository questions with SQL over schema `project` |
+| [`research-log/`](research-log/INDEX.md) | record ad-hoc analyses in `research_space/RESEARCH_LOG.md` with scripts and lake outputs |
 | [`registry/`](registry/INDEX.md) | look up and maintain `CLASS_REGISTRY.md` |
 | [`standard-review/`](standard-review/INDEX.md) | read-only review against the standard's definition of done |
 | [`test-cases/`](test-cases/INDEX.md) | derive test cases and pytest scaffolds from a contract |

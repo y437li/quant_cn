@@ -9,10 +9,12 @@ from rich.console import Console
 
 from quant_cn.cli import QuantCnCli
 from quant_cn.core.config import Config
+from quant_cn.core.date_codec import DateCodec
 from quant_cn.lake.fetch_log import FetchLog
+from quant_cn.lake.label_store import LabelStore
 from quant_cn.lake.lake_catalog import LakeCatalog
 from quant_cn.lake.parquet_writer import ParquetWriter
-from tests.support import Sample
+from tests.support import MiniLake, Sample
 
 
 # TC-QCC-001
@@ -188,3 +190,86 @@ def test_tc_qcc_014_holdings_risk_empty_book(config: Config, tmp_path: Path) -> 
     doc = json.loads((out / "holdings_risk.json").read_text(encoding="utf-8"))
     assert doc["positions"] == [] and doc["as_of"] == ""
     assert "0 positions" in console.export_text()
+
+
+# TC-QCC-015
+def test_tc_qcc_015_import_labels(config: Config) -> None:
+    runs = config.lake.root / "meta" / "runs"
+    runs.mkdir(parents=True)
+    (runs / "a.jsonl").write_text(
+        json.dumps({"key": "annual:1", "period": "20251231", "code": "600176"}) + "\n"
+    )
+    (runs / "b.jsonl").write_text(json.dumps({"key": "q1:2", "period": "2026Q1", "code": "1"}))
+    (config.repo_root / "config" / "label_sources.yaml").write_text(
+        "sources:\n"
+        "  - {label_set: applications, path: meta/runs/a.jsonl, key_field: key}\n"
+        "  - {label_set: quarterly_notes, path: meta/runs/b.jsonl, key_field: key}\n",
+        encoding="utf-8",
+    )
+    console = Console(record=True, width=200)
+    argv = ["import-labels", "--sets", "applications"]
+    assert QuantCnCli(config, console).run(argv) == 0
+    assert "applications: 1 rows" in console.export_text()
+    labels = config.lake.root / "derived" / "labels"
+    assert [p.name for p in labels.iterdir()] == ["applications"]
+
+
+# TC-QCC-016
+def test_tc_qcc_016_build_graph(config: Config) -> None:
+    payload = {"items": [{"name": "宁德时代", "role": "customer", "evidence": {"quote": "q"}}]}
+    rows = pd.DataFrame([{"ts_code": "603906.SH", "doc_key": "irm:1", "period": "20250630",
+                          "known_on": "20250701", "payload": json.dumps(payload)}])  # fmt: skip
+    LabelStore(ParquetWriter(config.lake.root), config.lake.root, DateCodec()).write(
+        "ir_counterparties", rows
+    )
+    console = Console(record=True, width=200)
+    assert QuantCnCli(config, console).run(["build-graph"]) == 0
+    text = console.export_text()
+    assert "company_edge: 1 rows" in text and "edge_span: 1 rows" in text
+    assert "company_period: 1 rows" in text
+
+
+# TC-QCC-017
+def test_tc_qcc_017_sector_monitor(config: Config, lake: MiniLake, tmp_path: Path) -> None:
+    lake.catalog.close()  # the command opens the (now existing) catalog read-only
+    for name in ("sector_monitors.yaml", "app_publishers.yaml"):
+        source = Path(__file__).resolve().parents[1] / "config" / name
+        (config.repo_root / "config" / name).write_text(
+            source.read_text(encoding="utf-8"), encoding="utf-8"
+        )
+    console = Console(record=True, width=200)
+    out = tmp_path / "app_data"
+    out.mkdir()
+    assert QuantCnCli(config, console).run(["sector-monitor", "--out", str(out)]) == 0
+    doc = json.loads((out / "sector_monitor.json").read_text(encoding="utf-8"))
+    assert [s["key"] for s in doc["sectors"]] == ["real_estate", "games"]
+    assert doc["as_of"] is None  # empty lake: no closes
+    assert "sector monitor" in console.export_text()
+
+
+def test_tc_qcc_018_sector_earnings_signal(config: Config, lake: MiniLake, tmp_path: Path) -> None:
+    lake.catalog.close()
+    console = Console(record=True, width=200)
+    args = ["sector-earnings-signal", "--out", str(tmp_path), "--date", "20250330"]
+    assert QuantCnCli(config, console).run(args) == 0
+    doc = json.loads((tmp_path / "sector_earnings_signal.json").read_text(encoding="utf-8"))
+    assert doc["as_of"] == "20250330" and doc["rows"] == [] and doc["season"] is None
+    assert "sector earnings signal ->" in console.export_text()
+
+
+# TC-QCC-019
+def test_tc_qcc_019_retail_gauge_empty(config: Config, lake: MiniLake) -> None:
+    lake.catalog.close()
+    console = Console(record=True, width=200)
+    assert QuantCnCli(config, console).run(["retail-gauge", "--end", "20250330"]) == 1
+    assert "error" in console.export_text()
+    assert not (config.lake.root / "derived" / "retail_gauge").exists()
+
+
+# TC-QCC-020
+def test_tc_qcc_020_opportunity_list_empty(config: Config, lake: MiniLake) -> None:
+    lake.catalog.close()
+    console = Console(record=True, width=200)
+    assert QuantCnCli(config, console).run(["opportunity-list", "--date", "20250330"]) == 1
+    assert "error" in console.export_text()
+    assert not (config.lake.root / "derived" / "opportunity_list").exists()

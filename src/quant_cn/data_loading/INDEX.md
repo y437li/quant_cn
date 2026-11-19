@@ -11,6 +11,10 @@ L3: vendor clients (Tushare, AkShare, BaoStock, CNINFO, Eastmoney), one fetcher 
 | `base_web_client.py` | shared transport and pacing for clients that page public websites (D-096) | `BaseWebClient` |
 | `manual_series_client.py` | hand-entered cycle series from config/manual_series.yaml (+ local licensed file) as source "manual" (plan 20, D-139) | `ManualSeriesClient`, `ManualSeriesDef`, `ManualObservation`, `ManualSeriesFile` |
 | `app_store_client.py` | Apple App Store top charts from the public iTunes RSS feeds (D-137) | `AppStoreClient` |
+| `base_html_list_client.py` | paging and table reading for government sites that publish monthly HTML tables (plan 31) | `BaseHtmlListClient`, `PageLink` |
+| `nbs_house_price_client.py` | 国家统计局 70-city house price indices from the monthly releases (plan 31) | `NbsHousePriceClient` |
+| `nppa_game_client.py` | 国家新闻出版署 game approvals (版号) from the monthly lists (plan 31) | `NppaGameClient` |
+| `cboe_client.py` | CBOE index history (VIX) from the public daily-price CSV (D-152) | `CboeClient` |
 | `cninfo_client.py` | CNINFO announcement metadata, the industry-chain graph document source (D-096) | `CninfoClient` |
 | `deep_seek_client.py` | DeepSeek chat completions as a JSON-returning LLM client with response cache, cost and ledger (D-098) | `DeepSeekClient` |
 | `document_classifier.py` | title rules → document type (config/documents.yaml, D-101) | `DocumentClassifier` |

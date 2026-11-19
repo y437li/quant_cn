@@ -22,11 +22,11 @@ re-standardised.
 | **Liquidity** | STOM | 0.35 | ln(Σ 21-d share turnover) | `daily_basic.turnover_rate_f` | ok |
 | | STOQ | 0.35 | ln(mean of last 3 monthly STOM exp) | | ok |
 | | STOA | 0.30 | ln(mean of last 12 monthly STOM exp) | | ok |
-| **Earnings Yield** | EPFWD | 0.68 | forecast 12-m earnings / price (analyst consensus) | `report_rc` (tier check) | pending |
+| **Earnings Yield** | EPFWD | 0.68 | forecast 12-m earnings / price (analyst consensus) | `report_rc` consensus panel (plan 37, D-180) | ok |
 | | CETOP | 0.21 | trailing 12-m operating cash flow / price | `cashflow_vip.n_cashflow_act` TTM | ok |
 | | ETOP | 0.11 | trailing 12-m earnings / price | `income_vip.n_income_attr_p` TTM, or `1/pe_ttm` | ok |
-| **Growth** | EGRLF | 0.18 | long-term (3–5 y) forecast earnings growth (analyst) | `report_rc` | pending |
-| | EGRSF | 0.11 | short-term (1 y) forecast earnings growth (analyst) | `report_rc` | pending |
+| **Growth** | EGRLF | 0.18 | long-term (3–5 y) forecast earnings growth (analyst) | `report_rc` consensus panel (plan 37, D-180) | ok |
+| | EGRSF | 0.11 | short-term (1 y) forecast earnings growth (analyst) | `report_rc` consensus panel (plan 37, D-180) | ok |
 | | EGRO | 0.24 | 5-y regression slope of annual EPS / mean |EPS| | `fina_indicator_vip.eps` (annual, PIT) | history-limited (2019+) |
 | | SGRO | 0.47 | 5-y regression slope of annual revenue per share / mean | `income_vip.revenue` (add), `total_share` | field to add |
 | **Leverage** | MLEV | 0.38 | (market cap + preferred + long-term debt) / market cap | `balancesheet_vip.lt_borr` (+ bonds payable, add), `daily_basic` | partial |

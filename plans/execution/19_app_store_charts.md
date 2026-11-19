@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | approved 2026-11-11 (user: "可以track"); ph1 done, ph2 todo |
+| Status | approved 2026-11-11 (user: "可以track"); done (ph1, ph2) |
 | Owner | user (approve) / agent (build) |
 | Created | 2026-11-11 |
 | Notion | pending |
@@ -21,7 +21,7 @@ A daily, point-in-time record in the lake of the Apple App Store game charts (to
 | # | Phase | Deliverable | Done criterion | Depends on | Status |
 |---|---|---|---|---|---|
 | 1 | Daily capture | `AppStoreClient(BaseWebClient)` returns one chart as rows (rank, app_id, name, artist, artist_id, bundle_id, release_date, price, country, chart, captured_at); new sweep kind `snapshot` (`SnapshotFetcher`: one key per capture date from `Clock`, values = country × chart, never backfills) registered in `FetcherFactory`; dataset `app_store_charts` in `config/datasets.yaml` (`primary_key` [capture_date, country, chart, rank], `known_on` capture_date, same-session rule); added to `make track-daily` | TCs for paging-free parse, empty or 404 market skipped and logged, rerun on the same date replaces and does not duplicate, past dates never fetched; first real capture: 26 × 2 charts, ≥ 95% of feeds at 100 rows, 《超自然行动组》 found in cn top grossing; `make check` passes | — | done |
-| 2 | Publisher link + summary | `config/app_publishers.yaml` (artist_id → ts_code, company, listing: A / HK / US; seeded with 巨人, 三七互娱, 吉比特, 完美世界, 世纪华通, 恺英, 腾讯, 网易, 米哈游 marked unlisted, …); `derived.app_chart_company` view: per (date, ts_code, country, chart) best rank, apps in top 10 / 50 / 100, and a per-app rank series with 7- and 30-day mean ranks | Every top-grossing cn app whose publisher is in the map is linked; unmapped publishers above rank 50 listed in the Log for review; the 巨人 tracker (`meta/runs/track_giant.py`) prints cn + overseas ranks with 7 / 30-day means from the view; `make check` passes | 1 | todo |
+| 2 | Publisher link + summary | `config/app_publishers.yaml` (artist_id → company, ts_code or null; 39 accounts: the 6 A-share game companies, 腾讯 / 网易 / 心动 / B站 / 阿里 / 创梦 / 祖龙, unlisted 米哈游 / 莉莉丝 / 乐元素 / 途游 / 多益 / FunPlus / 鹰角 / 叠纸) read by `AppPublisherSettings`; `AppRankReader` (best home grossing rank per company and date; leaderboard per game with home grossing / free, best overseas rank and markets; home top 20 with companies) shown in #sector-monitor 游戏 (D-137 update 1: no derived view) | Every cn top-grossing app of a mapped account is linked; unmapped publishers above rank 50 listed in the Log; 游戏 tab shows the leaderboard; `make check` passes | 1 | done |
 
 ## Classes
 
@@ -31,6 +31,9 @@ A daily, point-in-time record in the lake of the Apple App Store game charts (to
 | `SnapshotFetcher` | new (`BaseFetcher` subclass for "today only" sweeps) | `quant_cn.data_loading.fetchers` | 1 |
 | `FetcherFactory`, `ServiceBuilder` | extend (new kind, new client) | `quant_cn.data_loading`, `quant_cn` | 1 |
 | `DerivedViews` | extend (`app_chart_company`) | `quant_cn.lake` | 2 |
+
+| `AppPublisherSettings`, `AppPublisher` | new (pydantic, like `SectorMonitorSettings`) | `quant_cn.core` | 2 |
+| `AppRankReader` | new | `quant_cn.portfolio` | 2 |
 
 ## Risks
 - Apple may change or retire the legacy RSS endpoint (the newer `rss.applemarketingtools.com` has no grossing chart); the client fails loudly and the Log records the date.
@@ -47,6 +50,8 @@ A daily, point-in-time record in the lake of the Apple App Store game charts (to
 
 | Date | Phase | Change |
 |---|---|---|
+| 2026-11-17 | 2 | all game companies (user: "所有的游戏公司都有吗？"): 申万游戏Ⅱ has 26 listed members. Accounts were added for 恺英 (Shangrao Yuechang, 三国：天下归心), 游族 (YOOZOO SG), 冰川 (9z Games HK, X-Clash), 汤姆猫 (Outfit7 ×2), 电魂 (Electronic Soul), 星辉 (Teamtop) and 宝通 (Efun), plus IGG (HK). There are now 11 A-share companies in the map; 15 members have no charting game. The leaderboard covers every A-share company in the map (`AppPublisherSettings.get_a_share`) |
+| 2026-11-17 | 2 | done (user: "游戏行业应该给我排行榜的信息啊"): `config/app_publishers.yaml` (39 accounts), `AppPublisherSettings` (TC-APS-001..002), `AppRankReader` (TC-ARR-001..002), `SectorMonitorBuilder` app_rank (TC-SMB-004), web leaderboard; D-137 update 1 (no derived view). 20261117 cn grossing: 巨人 《超自然行动组》 #33, 世纪华通 《无尽冬日》 #6, 吉比特 《问道》 #58; 世纪华通 Kingshot in 23 overseas grossing top 100s (best #1 sg). Unmapped cn top-50 publishers (14, review): 深圳市爱的番茄 #12, Hainan Shengchang #14, Beijing Pengqu #16, Shenzhen Zen-Game #17, 游酷盛世 #20, CoolPlus #24, 厦门麟贝互娱 #30, 益世界网络 #32, TYSG Games #37, Gala Sports #38, Dod Joy #41, EVISTA #46, Chengmai Wulin #47, Beijing Wei Wo Le Yuan #48 |
 | 2026-11-12 | 1 | done: first capture 20261112 26 stores × 2 charts = 52 feeds, all at 100 rows (5,200 rows, 0 duplicate keys); 《超自然行动组》 cn grossing #60, cn free #37; 《球球大作战》 cn free #40. Bug found and fixed on the way: the client emitted an empty `capture_date` column, so BaseFetcher (fills key_field only when absent) left it null and compact wrote 0 partitions; the client no longer emits the column (TC-ASC-001 asserts it). Re-captured with `--force`. `make check` green: 639 passed, 96% coverage, lint_contracts 0 |
 | 2026-11-11 | 1 | built: `AppStoreClient` (TC-ASC-001..003), `SnapshotFetcher` (TC-SNF-001..003), sweep kind `snapshot` + source `apple` (TC-DS-010), factory mapping (TC-FF-001), dataset `app_store_charts` (26 stores in `config/datasets.yaml` sweep values; no separate `AppChartSettings`/`config/app_charts.yaml` needed), `make app-charts` in `track-daily`. `make check` green: 639 passed, 96% coverage, lint_contracts 0. First real capture queued behind the risk-model lock |
 | 2026-11-11 | — | approved (user: "可以track"); open questions taken at the defaults: 26 markets, grossing + free only, capture in `track-daily` at 18:30 |

@@ -28,6 +28,8 @@ class HttpTransport:
             (none at construction)
 
     Used by:
+        data_loading.CboeClient  -- fetch_bytes (CSV)
+        data_loading.BaseHtmlListClient  -- fetch_bytes (HTML list and release pages)
         data_loading.TushareClient         -- default transport
         data_loading.CninfoClient          -- default transport
         data_loading.EastmoneyReportClient -- default transport

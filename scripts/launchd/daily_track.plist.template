@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!-- Daily refresh of the 观察账本 and the 国家队 ETF proxy (plan 15 ph7b, D-126).
+<!-- Weekday 06:00 US Eastern (China closed): make track-daily, every daily dataset and app document (plan 15 ph7b, D-126).
      Installed by `make track-install`; @REPO@, @PATH@ and @LOG@ are filled in there. -->
 <plist version="1.0">
 <dict>
   <key>Label</key><string>com.quantcn.daily-track</string>
-  <key>WorkingDirectory</key><string>@REPO@</string>
+  <!-- /bin/zsh is the process macOS privacy (TCC) checks: it needs Full Disk Access to read the external volume (D-165) -->
   <key>ProgramArguments</key>
-  <array><string>/usr/bin/make</string><string>-C</string><string>@REPO@</string><string>track-daily</string></array>
+  <array><string>/bin/zsh</string><string>-c</string><string>cd "@REPO@" &amp;&amp; exec /usr/bin/make track-daily</string></array>
   <key>EnvironmentVariables</key><dict><key>PATH</key><string>@PATH@</string></dict>
   <key>StartCalendarInterval</key>
   <array>
-    <dict><key>Weekday</key><integer>1</integer><key>Hour</key><integer>18</integer><key>Minute</key><integer>30</integer></dict>
-    <dict><key>Weekday</key><integer>2</integer><key>Hour</key><integer>18</integer><key>Minute</key><integer>30</integer></dict>
-    <dict><key>Weekday</key><integer>3</integer><key>Hour</key><integer>18</integer><key>Minute</key><integer>30</integer></dict>
-    <dict><key>Weekday</key><integer>4</integer><key>Hour</key><integer>18</integer><key>Minute</key><integer>30</integer></dict>
-    <dict><key>Weekday</key><integer>5</integer><key>Hour</key><integer>18</integer><key>Minute</key><integer>30</integer></dict>
+    <dict><key>Weekday</key><integer>1</integer><key>Hour</key><integer>6</integer><key>Minute</key><integer>0</integer></dict>
+    <dict><key>Weekday</key><integer>2</integer><key>Hour</key><integer>6</integer><key>Minute</key><integer>0</integer></dict>
+    <dict><key>Weekday</key><integer>3</integer><key>Hour</key><integer>6</integer><key>Minute</key><integer>0</integer></dict>
+    <dict><key>Weekday</key><integer>4</integer><key>Hour</key><integer>6</integer><key>Minute</key><integer>0</integer></dict>
+    <dict><key>Weekday</key><integer>5</integer><key>Hour</key><integer>6</integer><key>Minute</key><integer>0</integer></dict>
   </array>
   <key>StandardOutPath</key><string>@LOG@</string>
   <key>StandardErrorPath</key><string>@LOG@</string>

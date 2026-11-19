@@ -1,0 +1,69 @@
+# Long-only ETF CTA book (plan 27, D-160 update 2026-11-14; user: "可以，就按60/40定", "每周看，2点不动").
+# 60% of capital across the groups at equal risk (1 / 60-day vol, monthly); A股 ETFs scaled weekly by the
+# trend position (blend of 10/21/42/252-session signals x min(1, 20% / 60-day vol), plan 24 rule);
+# 40% in 5-year + 30-year government bonds, scaled weekly by the bond switch (21/63/252); the rest in cash.
+# Decisions on the last session of each week; an ETF is traded only when its target moves 2 points or more.
+groups:
+  - name: 股票
+    members:                # A股 : 港股 = 2 : 1
+      510300.SH: 2
+      510500.SH: 2
+      512100.SH: 2
+      159915.SZ: 2
+      159920.SZ: 1.3333333333
+      513050.SH: 1.3333333333
+      513130.SH: 1.3333333333
+  - name: 黄金
+    members:
+      518880.SH: 1
+  - name: 商品
+    members:                # 有色, 能化, 原油 (易方达 161129, premium guarded)
+      159980.SZ: 1
+      159981.SZ: 1
+      161129.SZ: 1
+risk_share: 0.6
+bonds:
+  511010.SH: 1              # 5-year
+  511090.SH: 1              # 30-year
+bond_share: 0.4
+cash: 511880.SH
+timed: [510300.SH, 510500.SH, 512100.SH, 159915.SZ]
+trend_windows: [10, 21, 42, 252]
+vol_target: 0.20
+switch_windows: [21, 63, 252]
+vol_window: 60
+vol_min_obs: 40
+band: 0.02
+cost: 0.0015
+history_start: "20200401"  # all groups have ETFs from here (159981 listed 2020-01); the 2014– research used futures proxies
+paper_start: "20261113"     # first decision after the user's go-ahead (2026-11-14)
+group_step: 0.05
+premium:
+  codes: [161129.SZ]
+  buy_below: 0.03
+  high: 0.10
+  switch: 0.20
+  alternative:
+    161129.SZ: 501018.SH
+subsets:                    # named sets for views (D-163)
+  A股: [510300.SH, 510500.SH, 512100.SH, 159915.SZ]
+  港股: [159920.SZ, 513050.SH, 513130.SH]
+  5年: [511010.SH]
+  30年: [511090.SH]
+views_file: config/local.etf_cta_views.yaml   # git-ignored; missing = no views (plan 27 ph5)
+names:
+  510300.SH: 沪深300
+  510500.SH: 中证500
+  512100.SH: 中证1000
+  159915.SZ: 创业板
+  159920.SZ: 恒生
+  513050.SH: 中概互联
+  513130.SH: 恒生科技
+  518880.SH: 黄金
+  159980.SZ: 有色期货
+  159981.SZ: 能化期货
+  161129.SZ: 原油LOF
+  511010.SH: 5年国债
+  511090.SH: 30年国债
+  511880.SH: 货币ETF
+  501018.SH: 南方原油

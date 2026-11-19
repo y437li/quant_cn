@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api, type Bootstrap, type Company, type CompanyBrief, type Maker, type Network, type Watchlist } from "./api/client";
 import { ChainGraph, type GraphControl } from "./components/chain-graph";
+import { readRoute, routeHash, type Page } from "./components/app-route";
 import { Ctx, type Selection } from "./components/context";
+import { SideNav } from "./components/side-nav";
 import { Splitter } from "./components/splitter";
 import { CompanyDossier } from "./features/company/company-dossier";
 import { NodeDossier } from "./features/node/node-dossier";
@@ -11,11 +13,20 @@ import { DupontPage } from "./features/dupont/dupont-page";
 import { WatchlistPage } from "./features/watchlist/watchlist-page";
 import { FactorsPage } from "./features/factors/factors-page";
 import { HoldingsPage } from "./features/holdings/holdings-page";
+import { MacroPage } from "./features/macro/macro-page";
+import { VolatilityPage } from "./features/volatility/volatility-page";
+import { SectorMonitorPage } from "./features/sector-monitor/sector-monitor-page";
+import { RatesFxPage } from "./features/rates-fx/rates-fx-page";
+import { BuybackPage } from "./features/buyback/buyback-page";
+import { TasksPage } from "./features/tasks/tasks-page";
+import { OpportunitiesPage } from "./features/opportunities/opportunities-page";
+import { FuturesPage } from "./features/futures/futures-page";
+import { EtfPage } from "./features/etf/etf-page";
 import { badgeCount } from "./features/watchlist/watchlist-format";
 import { buildCompanyElements, buildNetworkElements, buildNodeElements, buildSectorElements, type El } from "./graph/elements";
 import { buildIndex } from "./graph/taxonomy";
 
-/** Purpose: the app shell: header (search, sector, page chips, quick list), graph stage with controls, resizable dossier; the DuPont (#dupont=), watchlist (#watchlist), factor monitor (#factors) and holdings (#holdings) pages replace the stage. URL hash keeps the selection. */
+/** Purpose: the app shell (plan 15 ph7j): left sidebar (市场 / 监测 / 我的), top bar with search, then the current page; the chain page has its own toolbar (sector, quick list), graph stage and resizable dossier. The URL hash holds the page or the chain selection. */
 type Loaded =
   | { kind: "company"; c: Company; related: Record<string, CompanyBrief> }
   | { kind: "node"; id: string; makers: Maker[] }
@@ -37,26 +48,18 @@ export function App() {
   const ctl = useRef<GraphControl | null>(null);
   const stage = useRef<HTMLElement>(null);
   const tx = useMemo(() => (boot ? buildIndex(boot) : null), [boot]);
-  const readDupont = () => { const m = location.hash.match(/^#dupont=?(.*)$/); return m ? m[1].split(",").filter(Boolean).map(decodeURIComponent) : null; };
-  const [dupont, setDupont] = useState<string[] | null>(readDupont());
-  const readWatch = () => location.hash === "#watchlist";
-  const [watch, setWatch] = useState(readWatch());
-  const readFactors = () => location.hash === "#factors";
-  const [factors, setFactors] = useState(readFactors());
-  const readHoldings = () => location.hash === "#holdings";
-  const [holdings, setHoldings] = useState(readHoldings());
+  const [route, setRoute] = useState(readRoute(location.hash));
+  const page = route.page;
   const [wl, setWl] = useState<{ doc: Watchlist | null; error: string | null }>({ doc: null, error: null });
-  useEffect(() => { const f = () => { setDupont(readDupont()); setWatch(readWatch()); setFactors(readFactors()); setHoldings(readHoldings()); }; addEventListener("hashchange", f); return () => removeEventListener("hashchange", f); }, []);
-  useEffect(() => { api.getWatchlist().then((doc) => setWl({ doc, error: null })).catch((e) => setWl({ doc: null, error: e.message })); }, [watch]);
-  const openDupont = (codes: string[]) => { location.hash = "#dupont=" + codes.map(encodeURIComponent).join(","); setWatch(false); setFactors(false); setHoldings(false); setDupont(codes); };
-  const openWatch = () => { location.hash = "#watchlist"; setDupont(null); setFactors(false); setHoldings(false); setWatch(true); };
-  const openFactors = () => { location.hash = "#factors"; setDupont(null); setWatch(false); setHoldings(false); setFactors(true); };
-  const openHoldings = () => { location.hash = "#holdings"; setDupont(null); setWatch(false); setFactors(false); setHoldings(true); };
+  useEffect(() => { const f = () => setRoute(readRoute(location.hash)); addEventListener("hashchange", f); return () => removeEventListener("hashchange", f); }, []);
+  useEffect(() => { api.getWatchlist().then((doc) => setWl({ doc, error: null })).catch((e) => setWl({ doc: null, error: e.message })); }, [page === "watchlist"]);
+  const openDupont = (codes: string[]) => { location.hash = routeHash("dupont", codes); setRoute({ page: "dupont", codes }); };
   const nBadge = badgeCount(wl.doc?.entries);
 
   useEffect(() => { api.getBootstrap().then(setBoot).catch((e) => setError(e.message)); }, []);
   useEffect(() => { const f = () => { const s = parseHash(); if (s) setSel(s); }; addEventListener("hashchange", f); return () => removeEventListener("hashchange", f); }, []);
-  const select = useCallback((s: Selection) => { if (location.hash !== toHash(s)) location.hash = toHash(s); setDupont(null); setWatch(false); setFactors(false); setHoldings(false); setSel(s); }, []);
+  const select = useCallback((s: Selection) => { if (location.hash !== toHash(s)) location.hash = toHash(s); setRoute({ page: "chain", codes: [] }); setSel(s); }, []);
+  const open = (p: Page) => (p === "chain" ? select(sel) : p === "dupont" ? openDupont(route.codes.length ? route.codes : sel.kind === "company" ? [sel.id] : []) : ((location.hash = routeHash(p)), setRoute({ page: p, codes: [] })));
 
   useEffect(() => {
     if (!tx) return;
@@ -89,26 +92,23 @@ export function App() {
   if (!boot || !tx) return <div className="boot">{error ? `数据没有加载出来：${error}` : "正在加载产业链数据…"}</div>;
   return (
     <Ctx.Provider value={{ boot, tx, select }}>
-      <div className="app">
-        <header>
-          <h1>A股产业链图谱<small>全市场 · {boot.n_companies} 家 · 本地 demo</small></h1>
+      <div className="app shell">
+        <SideNav page={page} open={open} badges={{ watchlist: nBadge }} subtitle={`全市场 · ${boot.n_companies} 家`} />
+        <div className="shell-main">
+        <header className="topbar">
           <SearchBox />
+        </header>
+        {page === "macro" ? <MacroPage /> : page === "futures" ? <FuturesPage /> : page === "volatility" ? <VolatilityPage /> : page === "rates" ? <RatesFxPage /> : page === "buyback" ? <BuybackPage /> : page === "tasks" ? <TasksPage /> : page === "opportunities" ? <OpportunitiesPage /> : page === "sector-monitor" ? <SectorMonitorPage /> : page === "etf" ? <EtfPage /> : page === "holdings" ? <HoldingsPage /> : page === "factors" ? <FactorsPage /> : page === "watchlist" ? <WatchlistPage doc={wl.doc} error={wl.error} /> : page === "dupont" ? <DupontPage codes={route.codes} setCodes={openDupont} /> : (
+        <>
+        <div className="chain-bar">
           <label className="sector">按行业看
             <select value={sel.kind === "sector" ? sel.id : ""} onChange={(e) => e.target.value && select({ kind: "sector", id: e.target.value })}>
               <option value="">申万一级行业…</option>
               {Object.entries(boot.sectors).sort().map(([k, v]) => <option key={k} value={k}>{v}</option>)}
             </select>
           </label>
-          <nav className="pages">
-            <button type="button" className={`chip ${dupont || watch || factors || holdings ? "" : "on"}`} onClick={() => select(sel)}>产业链图谱</button>
-            <button type="button" className={`chip ${dupont ? "on" : ""}`} onClick={() => openDupont(dupont || (sel.kind === "company" ? [sel.id] : []))}>杜邦坐标</button>
-            <button type="button" className={`chip ${watch ? "on" : ""}`} onClick={openWatch} data-page="watchlist">观察账本{nBadge > 0 && <span className="badge" title="接近或已到买入区间的股票数">{nBadge}</span>}</button>
-            <button type="button" className={`chip ${factors ? "on" : ""}`} onClick={openFactors} data-page="factors">因子监控</button>
-            <button type="button" className={`chip ${holdings ? "on" : ""}`} onClick={openHoldings} data-page="holdings">持仓</button>
-          </nav>
           <div className="quick">{boot.quick.map((q) => <button type="button" key={q.code} className={`chip ${sel.kind === "company" && sel.id === q.code ? "on" : ""}`} onClick={() => select({ kind: "company", id: q.code })}>{q.name}</button>)}</div>
-        </header>
-        {holdings ? <HoldingsPage /> : factors ? <FactorsPage /> : watch ? <WatchlistPage doc={wl.doc} error={wl.error} /> : dupont ? <DupontPage codes={dupont} setCodes={openDupont} /> : (
+        </div>
         <main className={wide ? "wide" : ""}>
           <section className="stage" ref={stage} aria-label="产业链网络">
             <div className="controls">
@@ -136,7 +136,9 @@ export function App() {
                 : <SectorDossier key={loaded.l1} l1={loaded.l1} companies={loaded.companies} />}
             </section>
           )}
-        </main>)}
+        </main>
+        </>)}
+        </div>
       </div>
     </Ctx.Provider>
   );

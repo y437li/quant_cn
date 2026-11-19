@@ -1,0 +1,1337 @@
+version: v4-20261117
+effective_period: '20251231'
+note: Plan 28 ph3b batch 3 (轻工制造, 纺织服饰, 交通运输, 商贸零售, 社会服务, 传媒, 环保, 美容护理), accepted by the user 2026-11-17; bare 服装 context alias left out of garment OEM
+changes:
+- op: upsert
+  kind: rename
+  sector: '360000'
+  node:
+    id: SEG_LIGHT_PAPER
+    type: segment
+    name: 造纸产业
+  reason: 父段名造纸为通用词直接吸附成员；改为伞名，造纸措辞交给大宗用纸
+- op: upsert
+  kind: rename
+  sector: '360000'
+  node:
+    id: SEG_LIGHT_BULK_PAPER
+    type: segment
+    name: 大宗用纸
+    aliases:
+    - 机制纸
+    context_aliases:
+    - 造纸
+  reason: 父段名造纸为通用词直接吸附成员；改为伞名，造纸措辞交给大宗用纸
+- op: upsert
+  kind: rename
+  sector: '360000'
+  node:
+    id: PROD_LIGHT_CONTAINERBOARD
+    type: product
+    name: 箱板瓦楞纸
+    segment: SEG_LIGHT_BULK_PAPER
+    aliases:
+    - 瓦楞原纸
+    - 箱板原纸
+  reason: 父段名造纸为通用词直接吸附成员；改为伞名，造纸措辞交给大宗用纸
+- op: upsert
+  kind: rename
+  sector: '360000'
+  node:
+    id: SEG_LIGHT_PACKAGING_PRINTING
+    type: segment
+    name: 包装印刷产业
+  reason: 父段包装印刷直接吸附跨行业公司；改伞名，措辞交包装印刷品
+- op: upsert
+  kind: rename
+  sector: '360000'
+  node:
+    id: PROD_LIGHT_PACKAGE_PRINTING
+    type: product
+    name: 包装印刷品
+    segment: SEG_LIGHT_PRINTING
+    aliases:
+    - 包装印刷
+  reason: 父段包装印刷直接吸附跨行业公司；改伞名，措辞交包装印刷品
+- op: upsert
+  kind: rename
+  sector: '360000'
+  node:
+    id: SEG_LIGHT_HOME
+    type: segment
+    name: 家居产业
+  reason: 父段名家居用品为通用词吸附兆新股份；改伞名，措辞交其他家居用品
+- op: upsert
+  kind: rename
+  sector: '360000'
+  node:
+    id: SEG_LIGHT_OTHER_HOME
+    type: segment
+    name: 其他家居用品
+    aliases:
+    - 家居用品
+  reason: 父段名家居用品为通用词吸附兆新股份；改伞名，措辞交其他家居用品
+- op: upsert
+  kind: rename
+  sector: '360000'
+  node:
+    id: SEG_LIGHT_PRINTING
+    type: segment
+    name: 印刷业
+    aliases:
+    - 商业印刷
+    - 说明书
+    context_aliases:
+    - 印刷
+  reason: 段名印刷为两字通用词，吸附五粮液、传媒等外行业；改名并限定为本行业整行匹配
+- op: upsert
+  kind: new
+  sector: '360000'
+  node:
+    id: PROD_LIGHT_DECOR_PANEL
+    type: product
+    name: 装饰板材
+    segment: SEG_LIGHT_CUSTOM_FURNITURE
+    aliases:
+    - 装饰板材
+    - 人造板
+    - 生态板
+    - 细木工板
+    context_aliases:
+    - 装饰材料
+    - 板材
+  reason: 兔宝宝装饰板材为本行业最大未匹配收入行，缺节点
+- op: upsert
+  kind: new
+  sector: '360000'
+  node:
+    id: PROD_LIGHT_HOME_HARDWARE
+    type: product
+    name: 家居五金
+    segment: SEG_LIGHT_OTHER_HOME
+    aliases:
+    - 家居五金
+    - 家具五金
+    - 基础五金
+    - 收纳五金
+    - 厨卫五金
+    - 五金及配件
+  reason: 悍高集团家居五金三条收入行共31.7亿无节点承接
+- op: upsert
+  kind: new
+  sector: '360000'
+  node:
+    id: SEG_LIGHT_GLASS_PACKAGING
+    type: segment
+    name: 玻璃包装
+    parent: SEG_LIGHT_PACKAGING_PRINTING
+  reason: 正川股份药用玻璃瓶无对应包装子段
+- op: upsert
+  kind: new
+  sector: '360000'
+  node:
+    id: PROD_LIGHT_PHARMA_GLASS
+    type: product
+    name: 药用玻璃瓶
+    segment: SEG_LIGHT_GLASS_PACKAGING
+    aliases:
+    - 玻璃管制瓶
+    - 管制瓶
+    - 模制瓶
+    - 药用玻璃
+  reason: 正川股份药用玻璃瓶无对应包装子段
+- op: upsert
+  kind: new
+  sector: '360000'
+  node:
+    id: PROD_LIGHT_DAILY_CERAMICS
+    type: product
+    name: 日用陶瓷
+    segment: SEG_LIGHT_OTHER_HOME
+    aliases:
+    - 日用陶瓷
+    - 艺术陶瓷
+    - 陶瓷餐具
+  reason: 四通股份日用及艺术陶瓷无节点
+- op: upsert
+  kind: alias
+  sector: '360000'
+  node:
+    id: PROD_LIGHT_WOOD_FLOOR
+    type: product
+    name: 木地板
+    segment: SEG_LIGHT_TILE_FLOOR
+    aliases:
+    - 强化复合地板
+    - 实木复合地板
+    context_aliases:
+    - 地板
+  reason: 地板、橱柜、木门、柜类收入行措辞未匹配现有节点
+- op: upsert
+  kind: alias
+  sector: '360000'
+  node:
+    id: PROD_LIGHT_SPC_FLOOR
+    type: product
+    name: 塑料地板
+    segment: SEG_LIGHT_TILE_FLOOR
+    aliases:
+    - 石塑地板
+  reason: 地板、橱柜、木门、柜类收入行措辞未匹配现有节点
+- op: upsert
+  kind: alias
+  sector: '360000'
+  node:
+    id: PROD_LIGHT_CABINET
+    type: product
+    name: 定制橱柜
+    segment: SEG_LIGHT_CUSTOM_FURNITURE
+    aliases:
+    - 整体厨柜
+  reason: 地板、橱柜、木门、柜类收入行措辞未匹配现有节点
+- op: upsert
+  kind: alias
+  sector: '360000'
+  node:
+    id: PROD_LIGHT_WOOD_DOOR
+    type: product
+    name: 木门
+    segment: SEG_LIGHT_CUSTOM_FURNITURE
+    aliases:
+    - 室内木门
+  reason: 地板、橱柜、木门、柜类收入行措辞未匹配现有节点
+- op: upsert
+  kind: alias
+  sector: '360000'
+  node:
+    id: SEG_LIGHT_CUSTOM_FURNITURE
+    type: segment
+    name: 定制家居
+    context_aliases:
+    - 柜类
+  reason: 地板、橱柜、木门、柜类收入行措辞未匹配现有节点
+- op: upsert
+  kind: alias
+  sector: '360000'
+  node:
+    id: PROD_LIGHT_BIODEGRADABLE_PKG
+    type: product
+    name: 可降解包装
+    segment: SEG_LIGHT_PLASTIC_PACKAGING
+    aliases:
+    - 生物全降解
+    - 全降解制品
+    - 植物纤维制品
+  reason: 家联科技降解制品收入行措辞未匹配
+- op: upsert
+  kind: alias
+  sector: '350000'
+  node:
+    id: SEG_TEX_ACCESSORIES
+    type: segment
+    name: 服装辅料
+    context_aliases:
+    - 辅料
+  reason: 2字泛词别名“辅料”吸入食品、制药公司，改为本行业整行匹配
+  drop_aliases:
+  - 辅料
+- op: upsert
+  kind: new
+  sector: '350000'
+  node:
+    id: PROD_TEX_TOPS
+    type: product
+    name: 上装
+    parent: PROD_TEX_BRAND_APPAREL
+    segment: SEG_TEX_NONSPORT_APPAREL
+    aliases:
+    - T恤衫
+    - 茄克衫
+    - 针织衫
+    - 羊毛衫
+    context_aliases:
+    - 衬衫
+    - 上衣
+    - 西服
+    - 外套
+    - 风衣
+    - 茄克
+    - T恤
+    - 毛衫
+  reason: 品牌服装按品类披露上装，约170亿营收行未匹配
+- op: upsert
+  kind: new
+  sector: '350000'
+  node:
+    id: PROD_TEX_BOTTOMS
+    type: product
+    name: 下装
+    parent: PROD_TEX_BRAND_APPAREL
+    segment: SEG_TEX_NONSPORT_APPAREL
+    context_aliases:
+    - 裤子
+    - 裤类
+    - 短裤
+    - 裙类
+    - 裙子
+  reason: 裤子54.8亿为本行业最大未匹配行，需下装品类节点
+- op: upsert
+  kind: alias
+  sector: '350000'
+  node:
+    id: PROD_TEX_UNDERWEAR
+    type: product
+    name: 内衣
+    parent: PROD_TEX_BRAND_APPAREL
+    segment: SEG_TEX_NONSPORT_APPAREL
+    aliases:
+    - 保暖衣
+    - 居家服
+    context_aliases:
+    - 文胸
+    - 内裤
+    - 背心
+  reason: 内衣公司按文胸/内裤/保暖衣披露，约44亿未匹配
+- op: upsert
+  kind: alias
+  sector: '350000'
+  node:
+    id: PROD_TEX_GARMENT_OEM
+    type: product
+    name: 成衣代工
+    segment: SEG_TEX_GARMENT_OEM
+    context_aliases:
+    - 成衣
+  reason: 代工出口企业以“成衣/服装”整行披露，代工段几乎无真实成员
+- op: upsert
+  kind: alias
+  sector: '350000'
+  node:
+    id: PROD_TEX_SHOE_OEM
+    type: product
+    name: 鞋履代工
+    segment: SEG_TEX_FOOTWEAR_MFG
+    aliases:
+    - 成品鞋
+  reason: 鞋类营收行措辞未覆盖，成品鞋53亿、鞋子18.6亿未匹配
+- op: upsert
+  kind: alias
+  sector: '350000'
+  node:
+    id: PROD_TEX_SHOE_MATERIAL
+    type: product
+    name: 鞋材
+    segment: SEG_TEX_FOOTWEAR_MFG
+    aliases:
+    - 鞋材配件
+  reason: 鞋类营收行措辞未覆盖，成品鞋53亿、鞋子18.6亿未匹配
+- op: upsert
+  kind: alias
+  sector: '350000'
+  node:
+    id: PROD_TEX_LEATHER_SHOES
+    type: product
+    name: 皮鞋
+    segment: SEG_TEX_FOOTWEAR_HATS
+    context_aliases:
+    - 鞋子
+  reason: 鞋类营收行措辞未覆盖，成品鞋53亿、鞋子18.6亿未匹配
+- op: upsert
+  kind: alias
+  sector: '350000'
+  node:
+    id: PROD_TEX_WOOL_YARN
+    type: product
+    name: 毛纺纱线
+    segment: SEG_TEX_OTHER_TEXTILE
+    aliases:
+    - 半精纺纱线
+    - 半精纺
+  reason: 半精纺毛混纺纱线未匹配，属毛纺纱线
+- op: upsert
+  kind: alias
+  sector: '350000'
+  node:
+    id: PROD_TEX_SILK
+    type: product
+    name: 丝绸
+    segment: SEG_TEX_OTHER_TEXTILE
+    context_aliases:
+    - 丝类产品
+    - 蚕茧
+  reason: 丝绸企业的丝类/蚕茧行未匹配
+- op: upsert
+  kind: alias
+  sector: '350000'
+  node:
+    id: PROD_TEX_WOMENSWEAR
+    type: product
+    name: 女装
+    parent: PROD_TEX_BRAND_APPAREL
+    segment: SEG_TEX_NONSPORT_APPAREL
+    aliases:
+    - IRO服饰
+    - VGRASS
+  reason: 女装公司按品牌名披露，品牌行未匹配
+- op: upsert
+  kind: rename
+  sector: '420000'
+  node:
+    id: SEG_TRAN_LOGISTICS
+    type: segment
+    name: 物流产业
+  reason: 父段名'物流'为通用词,任意含物流的收入行被直接吸入,改为伞形名
+- op: upsert
+  kind: alias
+  sector: '420000'
+  node:
+    id: PROD_TRAN_PORT_LOGISTICS
+    type: product
+    name: 港口物流
+    segment: SEG_TRAN_PORT
+    aliases:
+    - 港口增值服务
+    - 港口辅助业务
+  reason: 港口物流收入行措辞未匹配港口物流节点,被父段'物流'吸走
+- op: upsert
+  kind: rename
+  sector: '420000'
+  node:
+    id: SEG_TRAN_WAREHOUSE
+    type: segment
+    name: 仓储物流服务
+  reason: 段名'仓储物流'吸入智能仓储设备商;改名并把服务措辞给仓储服务
+- op: upsert
+  kind: rename
+  sector: '420000'
+  node:
+    id: PROD_TRAN_WAREHOUSING
+    type: product
+    name: 仓储服务
+    segment: SEG_TRAN_WAREHOUSE
+    aliases:
+    - 仓储物流业务
+    - 仓储物流基础设施
+    - 仓储综合服务
+    - 仓储运输服务
+  reason: 段名'仓储物流'吸入智能仓储设备商;改名并把服务措辞给仓储服务
+- op: upsert
+  kind: new
+  sector: '420000'
+  node:
+    id: PROD_TRAN_NEW_ENERGY_SCM
+    type: product
+    name: 新能源供应链
+    parent: PROD_TRAN_COMMODITY_SCM
+    segment: SEG_TRAN_RAW_MATERIAL_SCM
+    aliases:
+    - 新能源供应链
+  reason: 大宗供应链商新增新能源(锂电/光伏原料)供应链业务线,无节点
+- op: upsert
+  kind: new
+  sector: '420000'
+  node:
+    id: PROD_TRAN_RECYCLING_SCM
+    type: product
+    name: 再生资源供应链
+    parent: PROD_TRAN_COMMODITY_SCM
+    segment: SEG_TRAN_RAW_MATERIAL_SCM
+    aliases:
+    - 再生资源供应链
+    - 废钢供应链
+  reason: 再生资源(废钢等)供应链成为独立收入行,现有金属/能化/农产品节点不覆盖
+- op: upsert
+  kind: alias
+  sector: '420000'
+  node:
+    id: PROD_TRAN_METAL_SCM
+    type: product
+    name: 金属矿产供应链
+    parent: PROD_TRAN_COMMODITY_SCM
+    segment: SEG_TRAN_RAW_MATERIAL_SCM
+    aliases:
+    - 黑色供应链
+    - 有色供应链
+  reason: 浙商中拓改按'大宗-黑色/有色供应链'披露,金属供应链节点未命中
+- op: upsert
+  kind: alias
+  sector: '420000'
+  node:
+    id: PROD_TRAN_CROSS_BORDER_ECOM
+    type: product
+    name: 跨境电商物流
+    segment: SEG_TRAN_CROSS_BORDER
+    aliases:
+    - 国际专线
+  reason: 三态股份删去'跨境电商物流'汇总行,只剩'国际专线',离开跨境物流段
+- op: upsert
+  kind: alias
+  sector: '420000'
+  node:
+    id: PROD_TRAN_TOLL_ROAD
+    type: product
+    name: 收费公路运营
+    segment: SEG_TRAN_HIGHWAY
+    aliases:
+    - 公路运营
+  reason: 宁波海运收费公路行改名为'公路运营分部',离开高速公路段
+- op: upsert
+  kind: alias
+  sector: '420000'
+  node:
+    id: PROD_TRAN_AIRPORT_AERO
+    type: product
+    name: 机场航空性业务
+    segment: SEG_TRAN_AIRPORT
+    aliases:
+    - 航空服务业
+  reason: 厦门空港把各业务并成一行'航空服务业',离开机场段
+- op: upsert
+  kind: alias
+  sector: '420000'
+  node:
+    id: PROD_TRAN_INTERCITY_COACH
+    type: product
+    name: 道路客运
+    segment: SEG_TRAN_PUBLIC_TRANSIT
+    aliases:
+    - 汽车客运
+  reason: 道路客运公司主营行写作'汽车客运',节点别名未覆盖
+- op: upsert
+  kind: rename
+  sector: '450000'
+  node:
+    id: SEG_RETL_TRADE
+    type: segment
+    name: 贸易及供应链产业
+  reason: 段名“贸易”为通用二字词，任意行业贸易收入行均被拉入
+- op: upsert
+  kind: alias
+  sector: '450000'
+  node:
+    id: PROD_RETL_BULK_COMMODITY_TRADE
+    type: product
+    name: 大宗商品供应链
+    segment: SEG_RETL_TRADE
+    aliases:
+    - 大宗商品贸易
+    context_aliases:
+    - 贸易
+  reason: 段改名后，本板块整行“贸易”收入由大宗供应链子节点承接
+- op: upsert
+  kind: alias
+  sector: '450000'
+  node:
+    id: PROD_RETL_IMPORT_EXPORT
+    type: product
+    name: 进出口贸易
+    segment: SEG_RETL_TRADE
+    aliases:
+    - 进出口业务
+    - 外贸综合服务
+  reason: “外贸”仅二字，任意位置匹配易误拉外行业公司；改用长措辞
+  drop_aliases:
+  - 外贸
+- op: upsert
+  kind: new
+  sector: '450000'
+  node:
+    id: PROD_RETL_MOBILE_DISTRIBUTION
+    type: product
+    name: 手机及通讯产品分销
+    segment: SEG_RETL_SPECIALTY_CHAIN
+    aliases:
+    - 手机分销
+    - 通讯产品分销
+    - 移动终端分销
+  reason: 专业连锁段前两名为手机分销商，现无对应产品节点
+- op: upsert
+  kind: new
+  sector: '450000'
+  node:
+    id: PROD_RETL_MATERNITY_RETAIL
+    type: product
+    name: 母婴零售
+    segment: SEG_RETL_SPECIALTY_CHAIN
+    aliases:
+    - 母婴商品
+    - 母婴连锁
+    - 母婴零售
+  reason: 孩子王、爱婴室母婴连锁无产品节点，仅挂在专业连锁段
+- op: upsert
+  kind: new
+  sector: '450000'
+  node:
+    id: PROD_RETL_AGRI_MACHINERY_RETAIL
+    type: product
+    name: 农机连锁销售
+    segment: SEG_RETL_SPECIALTY_CHAIN
+    aliases:
+    - 农机销售
+    - 农机连锁
+  reason: 吉峰科技农机连锁为专业连锁段第四大成员，无产品节点
+- op: upsert
+  kind: new
+  sector: '450000'
+  node:
+    id: PROD_RETL_B2B_PLATFORM
+    type: product
+    name: 产业互联网B2B平台
+    segment: SEG_RETL_GENERAL_ECOMMERCE
+    aliases:
+    - 产业互联网平台
+    - 工业电子商务
+    - B2B电商平台
+  reason: 国联股份B2B工业品电商与苏宁零售电商业务不同，需单列
+- op: upsert
+  kind: new
+  sector: '450000'
+  node:
+    id: PROD_RETL_BRAND_LICENSING
+    type: product
+    name: 品牌授权服务
+    segment: SEG_RETL_ECOMMERCE_SERVICE
+    aliases:
+    - 品牌综合服务
+    - 品牌授权
+  reason: 南极电商以品牌授权为主，非代运营/直播/SaaS
+- op: upsert
+  kind: alias
+  sector: '450000'
+  node:
+    id: PROD_RETL_CROSS_BORDER_B2C
+    type: product
+    name: 跨境出口电商
+    segment: SEG_RETL_CROSS_BORDER
+    aliases:
+    - 跨境社交电商
+    - 跨境电子商务
+    - 跨境电商业务
+  reason: 跨境卖家收入行措辞多样，现有别名未覆盖
+- op: upsert
+  kind: alias
+  sector: '450000'
+  node:
+    id: PROD_RETL_JEWELRY_RETAIL
+    type: product
+    name: 珠宝零售
+    segment: SEG_RETL_SPECIALTY_CHAIN
+    aliases:
+    - 珠宝时尚
+  reason: 豫园股份最大收入行“珠宝时尚”(老庙/亚一)未挂珠宝零售
+- op: upsert
+  kind: rename
+  sector: '460000'
+  node:
+    id: SEG_SERV_PROFESSIONAL
+    type: segment
+    name: 专业服务产业
+  reason: 父段名“专业服务”过泛，直接吸附杂项成员；改为伞形名
+- op: upsert
+  kind: rename
+  sector: '460000'
+  node:
+    id: SEG_SERV_EDUCATION
+    type: segment
+    name: 教育产业
+  reason: 父段名“教育”2字过泛，吸附科大讯飞等跨行业公司
+- op: upsert
+  kind: rename
+  sector: '460000'
+  node:
+    id: SEG_SERV_HOTEL_DINING
+    type: segment
+    name: 酒店餐饮产业
+  reason: 父段直接吸附“酒店餐饮”收入行，改伞形名，措辞给酒店子段
+- op: upsert
+  kind: rename
+  sector: '460000'
+  node:
+    id: SEG_SERV_HOTEL
+    type: segment
+    name: 酒店住宿
+    aliases:
+    - 酒店餐饮
+    context_aliases:
+    - 酒店
+    - 住宿
+  reason: 段名“酒店”2字处处匹配，吸附农业/地产公司；改名并用上下文别名
+- op: upsert
+  kind: rename
+  sector: '460000'
+  node:
+    id: SEG_SERV_RESTAURANT
+    type: segment
+    name: 餐饮服务
+    context_aliases:
+    - 餐饮
+  reason: 段名“餐饮”2字吸附零售/化工公司附属餐饮行；改名+上下文别名
+- op: upsert
+  kind: alias
+  sector: '460000'
+  node:
+    id: PROD_SERV_CHAIN_RESTAURANT
+    type: product
+    name: 连锁餐饮
+    segment: SEG_SERV_RESTAURANT
+    aliases:
+    - 火锅餐厅
+    - 中式快餐
+    - 餐厅经营
+  reason: 2字别名“火锅/快餐”会命中火锅底料、速冻火锅料等食品行
+  drop_aliases:
+  - 火锅
+  - 快餐
+- op: upsert
+  kind: alias
+  sector: '460000'
+  node:
+    id: PROD_SERV_THEME_PARK
+    type: product
+    name: 主题乐园运营
+    segment: SEG_SERV_THEME_PARK
+    aliases:
+    - 现场演艺
+    - 旅游演艺
+    - 文旅演艺
+  reason: 2字别名“演艺”过泛（传媒演艺经纪等）；换成旅游演艺措辞
+  drop_aliases:
+  - 演艺
+- op: upsert
+  kind: alias
+  sector: '460000'
+  node:
+    id: PROD_SERV_CONSULTING
+    type: product
+    name: 咨询服务
+    segment: SEG_SERV_OTHER_PROFESSIONAL
+    aliases:
+    - 管理咨询服务
+  reason: “工程咨询”属建筑工程咨询段，把中国交建等拉进本行业
+  drop_aliases:
+  - 工程咨询
+- op: upsert
+  kind: new
+  sector: '460000'
+  node:
+    id: PROD_SERV_COMMODITY_DATA
+    type: product
+    name: 大宗商品数据资讯
+    segment: SEG_SERV_OTHER_PROFESSIONAL
+    aliases:
+    - 数据订阅服务
+    - 大宗商品资讯
+    - 商品资讯服务
+  reason: 钢联/卓创的大宗商品数据订阅无节点，卓创被误挂会展
+- op: upsert
+  kind: new
+  sector: '460000'
+  node:
+    id: PROD_SERV_COMMODITY_EMARKET
+    type: product
+    name: 大宗商品电商交易
+    segment: SEG_SERV_OTHER_PROFESSIONAL
+    aliases:
+    - 寄售交易服务
+    - 钢铁电商
+    context_aliases:
+    - 供应链服务业务
+  reason: 上海钢联钢银电商交易681亿为本行业最大未匹配收入
+- op: upsert
+  kind: new
+  sector: '460000'
+  node:
+    id: PROD_SERV_SECURITY_ESCORT
+    type: product
+    name: 安保押运服务
+    segment: SEG_SERV_OTHER_PROFESSIONAL
+    aliases:
+    - 武装押运
+    - 安保服务
+    - 守押服务
+  reason: 安邦护卫为其他专业服务前五，主营押运安保无产品节点
+- op: upsert
+  kind: rename
+  sector: '720000'
+  node:
+    id: SEG_MEDIA_ADVERTISING
+    type: segment
+    name: 广告营销产业
+  reason: 伞形段名“广告营销”是营收行措辞，直接吸入成员；改伞名，措辞交给营销代理
+- op: upsert
+  kind: alias
+  sector: '720000'
+  node:
+    id: SEG_MEDIA_MARKETING_AGENCY
+    type: segment
+    name: 营销代理
+    aliases:
+    - 广告营销
+    - 媒介代理
+    - 互联网营销
+  reason: 广告行业最大营收行措辞未命中产品节点，只靠申万回退落段
+- op: upsert
+  kind: alias
+  sector: '720000'
+  node:
+    id: PROD_MEDIA_OVERSEAS_AD
+    type: product
+    name: 出海营销
+    segment: SEG_MEDIA_MARKETING_AGENCY
+    aliases:
+    - 出海广告
+  reason: 广告行业最大营收行措辞未命中产品节点，只靠申万回退落段
+- op: upsert
+  kind: alias
+  sector: '720000'
+  node:
+    id: PROD_MEDIA_CONTENT_MARKETING
+    type: product
+    name: 内容营销
+    segment: SEG_MEDIA_MARKETING_AGENCY
+    aliases:
+    - 红人营销
+    - 全案推广
+  reason: 广告行业最大营收行措辞未命中产品节点，只靠申万回退落段
+- op: upsert
+  kind: alias
+  sector: '720000'
+  node:
+    id: PROD_MEDIA_ELEVATOR_AD
+    type: product
+    name: 楼宇广告
+    segment: SEG_MEDIA_AD_MEDIA
+    aliases:
+    - 楼宇媒体
+  reason: 广告行业最大营收行措辞未命中产品节点，只靠申万回退落段
+- op: upsert
+  kind: alias
+  sector: '720000'
+  node:
+    id: PROD_MEDIA_OUTDOOR_AD
+    type: product
+    name: 户外广告媒体
+    segment: SEG_MEDIA_AD_MEDIA
+    aliases:
+    - 高铁媒体
+  reason: 广告行业最大营收行措辞未命中产品节点，只靠申万回退落段
+- op: upsert
+  kind: rename
+  sector: '720000'
+  node:
+    id: SEG_MEDIA_PUBLISHING
+    type: segment
+    name: 出版产业
+  reason: 伞形段名“出版”被出版集团营收行直接命中；改伞名，措辞交给教育出版子段
+- op: upsert
+  kind: alias
+  sector: '720000'
+  node:
+    id: SEG_MEDIA_EDU_PUBLISHING
+    type: segment
+    name: 教育出版
+    aliases:
+    - 出版行业
+    - 出版业务
+    context_aliases:
+    - 出版
+  reason: 出版集团大额“出版/发行/图书”行无产品命中；出版收入以教材教辅为主归教育出版
+- op: upsert
+  kind: alias
+  sector: '720000'
+  node:
+    id: PROD_MEDIA_BOOK_DISTRIBUTION
+    type: product
+    name: 图书发行
+    segment: SEG_MEDIA_TRADE_PUBLISHING
+    context_aliases:
+    - 发行
+    - 发行行业
+    - 发行业务
+  reason: 出版集团大额“出版/发行/图书”行无产品命中；出版收入以教材教辅为主归教育出版
+- op: upsert
+  kind: alias
+  sector: '720000'
+  node:
+    id: PROD_MEDIA_TEXTBOOK
+    type: product
+    name: 教材教辅
+    segment: SEG_MEDIA_EDU_PUBLISHING
+    aliases:
+    - 教材图书
+  reason: 出版集团大额“出版/发行/图书”行无产品命中；出版收入以教材教辅为主归教育出版
+- op: upsert
+  kind: alias
+  sector: '720000'
+  node:
+    id: PROD_MEDIA_TRADE_BOOK
+    type: product
+    name: 大众图书
+    segment: SEG_MEDIA_TRADE_PUBLISHING
+    aliases:
+    - 纸质图书
+    - 图书策划
+    - 图书出版物
+    context_aliases:
+    - 图书
+  reason: 出版集团大额“出版/发行/图书”行无产品命中；出版收入以教材教辅为主归教育出版
+- op: upsert
+  kind: rename
+  sector: '720000'
+  node:
+    id: SEG_MEDIA_CINEMA
+    type: segment
+    name: 电影院线
+    aliases:
+    - 影院及院线
+    - 院线发行
+  reason: 段名“院线”两字被医疗器械“院线类产品”命中；改为电影院线并补影院措辞
+- op: upsert
+  kind: alias
+  sector: '720000'
+  node:
+    id: PROD_MEDIA_CINEMA_BOX_OFFICE
+    type: product
+    name: 影院放映
+    segment: SEG_MEDIA_CINEMA
+    aliases:
+    - 电影放映
+    - 放映板块
+    - 观影及餐饮
+  reason: 院线公司放映收入措辞未命中，院线段FY2025销售-51%部分为匹配缺失
+- op: upsert
+  kind: rename
+  sector: '720000'
+  node:
+    id: PROD_MEDIA_GAME_IP
+    type: product
+    name: 文娱IP授权
+    segment: SEG_MEDIA_GAMES
+  reason: 节点名“IP授权”命中芯片公司的半导体IP授权行，造成游戏段误配
+- op: upsert
+  kind: alias
+  sector: '720000'
+  node:
+    id: SEG_MEDIA_FILM_PRODUCTION
+    type: segment
+    name: 影视动漫制作
+    aliases:
+    - 影视剧
+    - 影视娱乐
+  reason: 影视、长视频、数字阅读龙头的主营行措辞未命中节点
+- op: upsert
+  kind: alias
+  sector: '720000'
+  node:
+    id: PROD_MEDIA_FILM_DISTRIBUTION
+    type: product
+    name: 电影发行
+    segment: SEG_MEDIA_FILM_PRODUCTION
+    aliases:
+    - 影视版权
+    context_aliases:
+    - 发行板块
+  reason: 影视、长视频、数字阅读龙头的主营行措辞未命中节点
+- op: upsert
+  kind: alias
+  sector: '720000'
+  node:
+    id: PROD_MEDIA_LONG_VIDEO
+    type: product
+    name: 长视频会员
+    segment: SEG_MEDIA_VIDEO
+    aliases:
+    - 互联网视频
+  reason: 影视、长视频、数字阅读龙头的主营行措辞未命中节点
+- op: upsert
+  kind: alias
+  sector: '720000'
+  node:
+    id: PROD_MEDIA_ONLINE_LITERATURE
+    type: product
+    name: 网络文学
+    segment: SEG_MEDIA_TEXT
+    aliases:
+    - 数字阅读
+  reason: 影视、长视频、数字阅读龙头的主营行措辞未命中节点
+- op: upsert
+  kind: new
+  sector: '720000'
+  node:
+    id: PROD_MEDIA_BROWSER_SEARCH
+    type: product
+    name: 浏览器与搜索
+    segment: SEG_MEDIA_PORTAL
+    aliases:
+    - Opera
+    - 浏览器
+    - 搜索业务
+  reason: 昆仑万维Opera浏览器广告与搜索收入约46亿，无节点承接
+- op: upsert
+  kind: new
+  sector: '720000'
+  node:
+    id: PROD_MEDIA_DIGITAL_EXHIBITION
+    type: product
+    name: 数字展陈与体验空间
+    segment: SEG_MEDIA_OTHER_DIGITAL
+    aliases:
+    - 数字化体验空间
+    - 互动展示
+    - 数字展馆
+    - 数字一体化综合服务
+  reason: 其他数字媒体段主力为数字展馆/体验空间，现有产品均不覆盖
+- op: upsert
+  kind: rename
+  sector: '760000'
+  node:
+    id: SEG_ENV_GOVERNANCE
+    type: segment
+    name: 环保产业
+  reason: 根节点名'环境治理'是泛词直接吸成员;改为伞名环保产业,并把环保设备挂到其下
+- op: upsert
+  kind: rename
+  sector: '760000'
+  node:
+    id: SEG_ENV_EQUIP
+    type: segment
+    name: 环保设备
+    parent: SEG_ENV_GOVERNANCE
+  reason: 根节点名'环境治理'是泛词直接吸成员;改为伞名环保产业,并把环保设备挂到其下
+- op: upsert
+  kind: rename
+  sector: '760000'
+  node:
+    id: SEG_ENV_INTEGRATED
+    type: segment
+    name: 综合环境治理
+    parent: SEG_ENV_GOVERNANCE
+    aliases:
+    - 环境治理
+  reason: 根节点名'环境治理'是泛词直接吸成员;改为伞名环保产业,并把环保设备挂到其下
+- op: upsert
+  kind: new
+  sector: '760000'
+  node:
+    id: PROD_ENV_ENV_EPC
+    type: product
+    name: 环保工程建设
+    segment: SEG_ENV_INTEGRATED
+    aliases:
+    - 环保项目建造
+    - 环保整体解决方案
+    - 环境工程服务
+    - 环保工程
+  reason: 综合环保工程与运营收入行无节点承接,INTEGRATED段FY2025公司数18→10
+- op: upsert
+  kind: new
+  sector: '760000'
+  node:
+    id: PROD_ENV_ENV_OPERATION
+    type: product
+    name: 环保设施运营
+    segment: SEG_ENV_INTEGRATED
+    aliases:
+    - 环保运营
+    - 环境运营服务
+  reason: 综合环保工程与运营收入行无节点承接,INTEGRATED段FY2025公司数18→10
+- op: upsert
+  kind: new
+  sector: '760000'
+  node:
+    id: PROD_ENV_SLAG_REMOVAL
+    type: product
+    name: 锅炉除渣系统
+    segment: SEG_ENV_EQUIP
+    aliases:
+    - 干式除渣
+    - 湿式除渣
+    - 除渣系统
+  reason: 电厂锅炉环保辅机(除渣、烟气余热回收)无节点,青达环保主业全未匹配
+- op: upsert
+  kind: new
+  sector: '760000'
+  node:
+    id: PROD_ENV_FLUE_HEAT_RECOVERY
+    type: product
+    name: 烟气余热回收系统
+    segment: SEG_ENV_EQUIP
+    aliases:
+    - 烟气余热深度回收
+    - 烟气余热回收
+  reason: 电厂锅炉环保辅机(除渣、烟气余热回收)无节点,青达环保主业全未匹配
+- op: upsert
+  kind: alias
+  sector: '760000'
+  node:
+    id: SEG_ENV_SOLID_WASTE
+    type: segment
+    name: 固废治理
+    aliases:
+    - 固废业务
+    - 固废处理
+    - 固体废物处理
+    - 生活类垃圾处理
+  reason: 水务/综合公司的固废板块收入行未匹配,合计约125亿
+- op: upsert
+  kind: alias
+  sector: '760000'
+  node:
+    id: PROD_ENV_WATER_EPC
+    type: product
+    name: 水处理工程EPC
+    segment: SEG_ENV_WATER
+    aliases:
+    - 水务建造
+    - 污水环境工程
+    - 给排水工程
+  reason: 水务公司建造类收入行措辞未匹配水处理工程节点
+- op: upsert
+  kind: alias
+  sector: '760000'
+  node:
+    id: PROD_ENV_WATER_ENVIRONMENT
+    type: product
+    name: 水环境综合治理
+    segment: SEG_ENV_WATER
+    aliases:
+    - 水环境治理综合服务
+  reason: 水治理运营收入行措辞未匹配(节能国祯、瀚蓝、三达膜)
+- op: upsert
+  kind: alias
+  sector: '760000'
+  node:
+    id: PROD_ENV_MUNICIPAL_WASTEWATER
+    type: product
+    name: 市政污水处理
+    segment: SEG_ENV_WATER
+    aliases:
+    - 排水业务
+  reason: 水治理运营收入行措辞未匹配(节能国祯、瀚蓝、三达膜)
+- op: upsert
+  kind: alias
+  sector: '760000'
+  node:
+    id: SEG_ENV_WATER
+    type: segment
+    name: 水务及水治理
+    aliases:
+    - 水务投资运营
+  reason: 水治理运营收入行措辞未匹配(节能国祯、瀚蓝、三达膜)
+- op: upsert
+  kind: alias
+  sector: '760000'
+  node:
+    id: PROD_ENV_HAZARDOUS_WASTE
+    type: product
+    name: 危险废物处置
+    segment: SEG_ENV_HAZARDOUS
+    aliases:
+    - 危废品处理
+  reason: 清新环境危废收入行措辞'危废品处理'未匹配
+- op: upsert
+  kind: alias
+  sector: '760000'
+  node:
+    id: PROD_ENV_E_WASTE
+    type: product
+    name: 废弃电器电子产品拆解
+    segment: SEG_ENV_RECYCLING
+    aliases:
+    - 电子废物
+    - 电子废弃物拆解
+  reason: 电子废弃物拆解收入行措辞未匹配
+- op: upsert
+  kind: alias
+  sector: '760000'
+  node:
+    id: SEG_ENV_AIR
+    type: segment
+    name: 大气治理
+    aliases:
+    - 大气综合治理
+  reason: 大气治理收入行措辞未匹配;2字别名脱硝不生效
+- op: upsert
+  kind: alias
+  sector: '760000'
+  node:
+    id: PROD_ENV_SCR
+    type: product
+    name: 烟气脱硝装置
+    segment: SEG_ENV_AIR
+    aliases:
+    - 脱硝还原剂
+  reason: 大气治理收入行措辞未匹配;2字别名脱硝不生效
+- op: upsert
+  kind: alias
+  sector: '760000'
+  node:
+    id: PROD_ENV_MEMBRANE
+    type: product
+    name: 水处理膜
+    segment: SEG_ENV_EQUIP
+    aliases:
+    - 膜元件
+    - 料液分离
+  reason: 膜元件及工业料液膜分离收入行未匹配
+- op: upsert
+  kind: rename
+  sector: '770000'
+  node:
+    id: SEG_BEAU_COSMETICS
+    type: segment
+    name: 化妆品产业
+  reason: 父段名“化妆品”为泛词，直接吸入12家含片仔癀、哈三联；改伞名，措辞给品牌子段
+- op: upsert
+  kind: rename
+  sector: '770000'
+  node:
+    id: SEG_BEAU_BRAND_COSMETICS
+    type: segment
+    name: 品牌化妆品
+    parent: SEG_BEAU_COSMETICS
+    context_aliases:
+    - 化妆品
+  reason: 父段名“化妆品”为泛词，直接吸入12家含片仔癀、哈三联；改伞名，措辞给品牌子段
+- op: upsert
+  kind: rename
+  sector: '770000'
+  node:
+    id: SEG_BEAU_MED_AESTHETICS
+    type: segment
+    name: 医疗美容产业
+  reason: 父段名“医疗美容”直接吸入3家41.7亿；改伞名，朗姿归服务、昊海归耗材
+- op: upsert
+  kind: rename
+  sector: '770000'
+  node:
+    id: SEG_BEAU_AESTHETIC_SERVICES
+    type: segment
+    name: 医美服务
+    parent: SEG_BEAU_MED_AESTHETICS
+    context_aliases:
+    - 医疗美容
+  reason: 父段名“医疗美容”直接吸入3家41.7亿；改伞名，朗姿归服务、昊海归耗材
+- op: upsert
+  kind: rename
+  sector: '770000'
+  node:
+    id: SEG_BEAU_AESTHETIC_PRODUCTS
+    type: segment
+    name: 医美耗材
+    parent: SEG_BEAU_MED_AESTHETICS
+    aliases:
+    - 医疗美容与创面护理产品
+  reason: 父段名“医疗美容”直接吸入3家41.7亿；改伞名，朗姿归服务、昊海归耗材
+- op: upsert
+  kind: new
+  sector: '770000'
+  node:
+    id: PROD_BEAU_HAIR_DYE_INTERMEDIATE
+    type: product
+    name: 染发剂原料
+    segment: SEG_BEAU_COSMETIC_INGREDIENTS
+    aliases:
+    - 染发剂原料
+    - 染发剂中间体
+    - 染料中间体
+  reason: 鼎龙科技为染发剂原料供应商却落在洗护品牌段，原料段缺此节点
+- op: upsert
+  kind: alias
+  sector: '770000'
+  node:
+    id: PROD_BEAU_AESTHETIC_INJECTABLE
+    type: product
+    name: 医美注射产品
+    segment: SEG_BEAU_AESTHETIC_PRODUCTS
+    aliases:
+    - 溶液类注射产品
+    - 凝胶类注射产品
+  reason: 爱美客收入行为溶液类/凝胶类注射产品，未匹配致医美耗材段归零
+- op: upsert
+  kind: alias
+  sector: '770000'
+  node:
+    id: PROD_BEAU_TISSUE_PARENT_ROLL
+    type: product
+    name: 生活用纸原纸
+    segment: SEG_BEAU_TISSUE
+    aliases:
+    - 生活用纸原纸
+    - 卫生纸原纸
+    - 生活原纸
+  reason: “原纸”泛指箱板/瓦楞原纸，吸入包装纸企业进生活用纸段
+  drop_aliases:
+  - 原纸
+- op: upsert
+  kind: alias
+  sector: '770000'
+  node:
+    id: PROD_BEAU_BABY_DIAPER
+    type: product
+    name: 婴儿纸尿裤
+    segment: SEG_BEAU_HYGIENE
+    aliases:
+    - 婴儿卫生用品
+    - 婴儿护理用品
+  reason: 卫生用品代工企业按“婴儿/成人卫生用品”报收入，现仅2家在卫生护理段
+- op: upsert
+  kind: alias
+  sector: '770000'
+  node:
+    id: PROD_BEAU_ADULT_INCONTINENCE
+    type: product
+    name: 成人失禁用品
+    segment: SEG_BEAU_HYGIENE
+    aliases:
+    - 成人卫生用品
+    - 成人护理用品
+  reason: 卫生用品代工企业按“婴儿/成人卫生用品”报收入，现仅2家在卫生护理段
+- op: upsert
+  kind: alias
+  sector: '770000'
+  node:
+    id: PROD_BEAU_PET_PAD
+    type: product
+    name: 宠物卫生用品
+    segment: SEG_BEAU_HYGIENE
+    aliases:
+    - 宠物卫生护理用品
+  reason: 卫生用品代工企业按“婴儿/成人卫生用品”报收入，现仅2家在卫生护理段
+- op: upsert
+  kind: alias
+  sector: '770000'
+  node:
+    id: PROD_BEAU_BOTANICAL_ACTIVE
+    type: product
+    name: 化妆品植物提取物
+    parent: PROD_BEAU_ACTIVE_INGREDIENT
+    segment: SEG_BEAU_COSMETIC_INGREDIENTS
+    aliases:
+    - 绿色天然原料产品
+    - 天然原料产品
+  reason: 原料商天然原料收入行未匹配
+- op: upsert
+  kind: alias
+  sector: '770000'
+  node:
+    id: PROD_BEAU_LAUNDRY_CARE
+    type: product
+    name: 家居清洁用品
+    segment: SEG_BEAU_WASH_CARE
+    aliases:
+    - 家庭护理产品
+    - 家居护理产品
+  reason: 代工企业家庭护理产品收入行未匹配
+- op: upsert
+  kind: alias
+  sector: '770000'
+  node:
+    id: PROD_BEAU_SKINCARE
+    type: product
+    name: 护肤品
+    segment: SEG_BEAU_BRAND_COSMETICS
+    aliases:
+    - 皮肤科学创新转化
+    - 功能性护肤品
+  reason: 华熙生物护肤业务改称“皮肤科学创新转化业务”，退出品牌化妆品段

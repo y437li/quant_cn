@@ -1,0 +1,20 @@
+"""今世缘 603369.SH quick dossier: holders, chips, price, flows, valuation, fundamentals, top holders, coverage."""
+import duckdb, pandas as pd
+L="/Volumes/Treasury/quant_cn_lake/curated"; C="603369.SH"
+s=lambda t: f"read_parquet('{L}/{t}/**/*.parquet', hive_partitioning=true, union_by_name=true)"
+q=lambda x: duckdb.sql(x).df()
+pd.set_option("display.width",250); pd.set_option("display.max_columns",30); pd.set_option("display.max_rows",80)
+print("== 股东户数 ==");print(q(f"select end_date, arg_max(holder_num,ann_date) n, min(ann_date) ann from {s('events/stk_holdernumber')} where ts_code='{C}' and end_date>='20230101' group by 1 order by 1").assign(chg=lambda d:d.n.pct_change().round(3)).to_string(index=False))
+print("== 月度价格/估值 ==");print(q(f"select substr(trade_date,1,6) m, last(close order by trade_date) cl, last(pe_ttm order by trade_date) pe, last(pb order by trade_date) pb, last(dv_ttm order by trade_date) dv, last(circ_mv order by trade_date)/1e4 cmv, avg(turnover_rate_f) tov from {s('daily_basic')} where ts_code='{C}' and trade_date>='20240101' group by 1 order by 1").round(2).to_string(index=False))
+print("== 近20日 ==");print(q(f"""select b.trade_date, b.close, b.turnover_rate_f tov, (m.buy_lg_amount+m.buy_elg_amount-m.sell_lg_amount-m.sell_elg_amount) lgnet, (m.buy_sm_amount-m.sell_sm_amount) smnet, c.winner_rate, c.cost_15pct, c.cost_50pct, c.cost_85pct, c.cost_95pct
+ from {s('daily_basic')} b left join {s('moneyflow')} m using(ts_code,trade_date) left join {s('cyq_perf')} c using(ts_code,trade_date) where b.ts_code='{C}' and b.trade_date>='20261015' order by 1""").round(2).to_string(index=False))
+print("== 季度财务 ==");print(q(f"select end_date, arg_max(total_revenue,ann_date)/1e8 rev, arg_max(n_income_attr_p,ann_date)/1e8 np from {s('fundamentals/income')} where ts_code='{C}' and end_date>='20220101' group by 1 order by 1").round(2).to_string(index=False))
+print("== fina ==");print(q(f"select end_date, arg_max(roe,ann_date) roe, arg_max(grossprofit_margin,ann_date) gm, arg_max(or_yoy,ann_date) rev_yoy, arg_max(netprofit_yoy,ann_date) np_yoy from {s('fundamentals/fina_indicator')} where ts_code='{C}' and end_date>='20240101' group by 1 order by 1").round(1).to_string(index=False))
+print("== 前十大流通股东 (latest) ==");print(q(f"select end_date, holder_name, hold_amount/1e4 wan, hold_ratio from {s('events/top10_floatholders')} where ts_code='{C}' and end_date=(select max(end_date) from {s('events/top10_floatholders')} where ts_code='{C}') order by hold_amount desc").to_string(index=False))
+print("== 前十大流通 prev ==");print(q(f"select end_date, holder_name, hold_amount/1e4 wan from {s('events/top10_floatholders')} where ts_code='{C}' and end_date='20260630' order by hold_amount desc").to_string(index=False))
+print("== 增减持 ==");print(q(f"select ann_date, holder_name, in_de, change_vol/1e4 wan, avg_price from {s('events/stk_holdertrade')} where ts_code='{C}' and ann_date>='20250101' order by ann_date").to_string(index=False))
+print("== 解禁 ==");print(q(f"select float_date, sum(float_share)/1e4 wan from {s('events/share_float')} where ts_code='{C}' and float_date>='20260101' group by 1 order by 1").to_string(index=False))
+print("== 回购 ==");print(q(f"select ann_date, proc, vol, amount, high_limit from {s('events/repurchase')} where ts_code='{C}' and ann_date>='20250101' order by ann_date").to_string(index=False))
+print("== 分红 ==");print(q(f"select end_date, ann_date, cash_div_tax, div_proc from {s('events/dividend')} where ts_code='{C}' and end_date>='20240101' order by end_date").to_string(index=False))
+print("== 研报 report_rc (2026) ==");print(q(f"select report_date, org_name, quarter, np, eps, pe, rating, max_price from {s('analysts/report_rc')} where ts_code='{C}' and report_date>='20260701' order by report_date desc limit 25").to_string(index=False))
+print("== 融资 ==");print(q(f"select trade_date, rzye/1e8 rzye from {s('margin_detail')} where ts_code='{C}' and trade_date in (select max(trade_date) from {s('margin_detail')} where ts_code='{C}' group by substr(trade_date,1,6)) and trade_date>='20260101' order by 1").round(2).to_string(index=False))

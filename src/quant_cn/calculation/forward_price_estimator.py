@@ -22,6 +22,7 @@ class ForwardPriceEstimator:
             (none at construction)
 
     Used by:
+        calculation.VolatilityMonitorBuilder  -- daily VIX per option underlying (plan 03 ph6)
         calculation.VixCalculator            -- F and K0 per term
         calculation.GammaExposureCalculator  -- injected type or call
 

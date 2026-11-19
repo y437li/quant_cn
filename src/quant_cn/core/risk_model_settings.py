@@ -159,6 +159,8 @@ class RiskModelSettings(BaseModel):
             eigen_refit_days: int >= 1  -- recompute the bias profile every N dates
             seed:            int    -- RNG seed of the simulations (reproducible rebuilds)
             vra_half_life:   int    -- volatility-regime EWMA half-life (42); 0 disables
+            consensus_days:  int >= 0  -- analyst-note window of the consensus panel behind
+                                          EPFWD / EGRSF / EGRLF (plan 37); 0 = not loaded
             specific_half_life, specific_window, specific_nw_lags: int  -- 90 / 252 / 5
             specific_min_obs, specific_full_obs: int  -- blend structural below full_obs
             shrink_q:        float >= 0  -- Bayesian shrinkage intensity (0.1)
@@ -213,6 +215,7 @@ class RiskModelSettings(BaseModel):
     eigen_refit_days: int = Field(default=21, ge=1)
     seed: int = 20260928
     vra_half_life: int = Field(default=42, ge=0)
+    consensus_days: int = Field(default=0, ge=0)
     specific_half_life: int = Field(default=90, ge=1)
     specific_window: int = Field(default=252, ge=21)
     specific_nw_lags: int = Field(default=5, ge=0)

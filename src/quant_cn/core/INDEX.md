@@ -20,9 +20,13 @@ L1: base classes, exceptions, Config, Schema, DateCodec, TickerNormalizer, loggi
 | `base_store.py` | Extension point for where fetched data is written | `BaseStore` |
 | `clock.py` | Injectable time source so sleeps and "today" are controllable in tests (SRC_DESIGN §2.1) | `Clock` |
 | `config.py` | Typed configuration: `config/*.yaml` merged with machine overrides and environment (D-021) | `LakeConfig`, `TushareConfig`, `DownloadConfig`, `FactorSpec`, `CampaignConfig`, `UniverseConfig`, `FuturesCategory`, `TickerAlias`, `LlmConfig`, `Config` |
-| `positions_book.py` | The user's holdings (one combined book) from git-ignored config/local.positions.yaml (plan 15 ph7d) | `PositionsBook`, `Position` |
+| `etf_cta_settings.py` | groups, shares, trend / switch windows, band, costs and premium guard of the ETF CTA book from config/etf_cta.yaml (plan 27, D-160) | `EtfCtaGroup`, `EtfCtaPremium`, `EtfCtaSettings` |
+| `etf_cta_views.py` | the user's views on the ETF CTA book (scale, relative, price condition, A股 floor) from the git-ignored views file (plan 27 ph5, D-163) | `EtfCtaWhen`, `EtfCtaView`, `EtfCtaViews` |
+| `positions_book.py` | The user's holdings (one combined book) from git-ignored config/local.positions.yaml (plan 15 ph7d) | `BookRules`, `Position`, `PositionNote`, `PositionsBook` |
+| `update_all_settings.py` | ordered update-all steps from config/update_all.yaml: needs, outputs, timeouts, retries (plan 38) | `UpdateStep`, `UpdateAllSettings` |
 | `watchlist_entry.py` | the user's watchlist targets and the watchlist page settings (D-120) | `WatchlistEntry`, `WatchlistSettings` |
-| `etf_proxy_settings.py` | members, start and window of the national-team ETF proxy (config/etf_proxies.yaml, D-126) | `EtfProxyIndex`, `EtfProxySettings` |
+| `etf_proxy_settings.py` | members, start and window of the national-team ETF proxy (config/etf_proxies.yaml, D-126) | `EtfProxyIndex`, `EtfProxyStyle`, `EtfProxySettings` |
+| `label_source.py` | one existing label file to import into the parquet label store (config/label_sources.yaml, plan 28, D-161) | `LabelSource` |
 | `dataset_spec.py` | Typed view of one `config/datasets.yaml` entry: endpoint, sweep, keys, curated layout | `ValuesFromDataset`, `SweepSpec`, `CuratedSpec`, `DatasetSpec` |
 | `date_codec.py` | The only place that converts between `YYYYMMDD` strings and dates (D-005) | `DateCodec` |
 | `discovery_settings.py` | settings of the opportunity-discovery pipeline (plan 16, D-121) | `DiscoverySettings` |
@@ -34,3 +38,16 @@ L1: base classes, exceptions, Config, Schema, DateCodec, TickerNormalizer, loggi
 | `schema.py` | DataFrame contract: columns, dtypes and primary key, enforced at lake boundaries | `Schema` |
 | `step_report.py` | Outcome record of one pipeline step or fetcher run | `StepReport` |
 | `ticker_normalizer.py` | The only place that converts other ticker spellings to Tushare `ts_code` (CODING_STANDARD §4) | `TickerNormalizer` |
+| `condition.py` | structured buy / falsifier condition on a watchlist entry or position note; allowed metrics per kind (plan 15 ph7f) | `Condition` |
+| `futures_monitor_settings.py` | families, spreads and flag bounds of the futures monitor from config/futures_monitor.yaml (plan 15 ph7i) | `FuturesFamily`, `FuturesSpreadLeg`, `FuturesSpread`, `IndexFuturesProduct`, `FuturesMonitorSettings` |
+| `volatility_monitor_settings.py` | lines, window and alerts of the volatility monitor from config/volatility_monitor.yaml (plan 03 ph6) | `VolatilityLine`, `VolatilityMonitorSettings` |
+| `rates_fx_monitor_settings.py` | lines, sources, units and alerts of the rates and RMB monitor from config/rates_fx_monitor.yaml (plan 34) | `RatesFxLine`, `RatesFxMonitorSettings` |
+| `sector_earnings_signal_settings.py` | windows and thresholds of the earnings events and the 财报季信号 from config/sector_earnings_signal.yaml (plan 35) | `SectorEarningsSignalSettings` |
+| `retail_gauge_settings.py` | RetailGauge windows, model params, thresholds and streak rule from config/retail_gauge.yaml (plan 21) | `RetailGaugeSettings` |
+| `opportunity_settings.py` | daily opportunity list universe, rule thresholds and list sizes from config/discovery_rules.yaml (plan 21 ph4) | `OpportunitySettings` |
+| `small_cap_watch_settings.py` | indices, triggers, windows and ETFs of the 小盘观察 from config/smallcap_watch.yaml plus the local override (plan 30) | `WatchIndex`, `WatchEtf`, `SmallCapWatchSettings` |
+| `app_publisher_settings.py` | App Store seller accounts → company and listed code from config/app_publishers.yaml (plan 19 ph2) | `AppPublisher`, `AppPublisherSettings` |
+| `sector_monitor_settings.py` | tiers, vol windows, chart lengths and sectors of the 行业监控 from config/sector_monitors.yaml (plan 31) | `MonitoredSecurity`, `MonitoredSector`, `SectorMonitorSettings` |
+| `message_sender.py` | phone alerts by iMessage: recipients from config/local.notify.yaml and the osascript sender (plan 22) | `NotifyRecipient`, `NotifySettings`, `MessageSender`, `IMessageSender` |
+| `sent_alert_log.py` | phone-alert keys already sent and still active, so each alert goes out once per episode (plan 22) | `SentAlertLog` |
+| `mail_sender.py` | mail settings from git-ignored config/local.mail.yaml and an SMTP STARTTLS sender; password only from the environment (plan 15 ph7e) | `MailSettings`, `MailContent`, `MailSender` |

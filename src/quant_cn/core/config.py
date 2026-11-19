@@ -194,7 +194,7 @@ class FactorSpec(BaseModel):
         factor.FactorFactory  -- builds the instances
 
     Test cases:
-        TC-C-012  config/factors.yaml loads six factors with their classes; missing file = []
+        TC-C-012  config/factors.yaml loads nine factors with their classes; missing file = []
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid", populate_by_name=True)
@@ -340,8 +340,7 @@ class Config(BaseModel):
 
     Contract:
         Input:
-            (built by Config.load; direct construction is for tests)
-            repo_root:   Path
+            repo_root:   Path  -- (built by Config.load; direct construction is for tests)
             lake:        LakeConfig
             tushare:     TushareConfig
             download:    DownloadConfig
@@ -366,6 +365,8 @@ class Config(BaseModel):
             ConfigError  -- see load
 
     Used by:
+        cli.UpdateCommands  -- lake root for the task ledger
+        cli.GaugeCommands  -- lake root, repo root
         cli.QuantCnCli               -- composition root
         data_loading.FetcherFactory  -- enum values
         pipeline.DownloadPipeline    -- dataset order, start dates
@@ -375,6 +376,8 @@ class Config(BaseModel):
         cli.DocumentCommands  -- documents sources and lake root
         portfolio.WatchlistBuilder  -- watchlist entries and settings
         portfolio.EtfProxyBuilder   -- etf_proxy settings
+        cli.AppServiceBuilder  -- wires it
+        cli.ReportCommands  -- `morning-report`
 
     Test cases:
         TC-C-001  env > local.yaml > base.yaml precedence for lake.lake_root
@@ -388,7 +391,7 @@ class Config(BaseModel):
         TC-C-009  config/futures_categories.yaml loads; a missing file gives an empty list
         TC-C-010  config/ticker_aliases.yaml loads the three known pairs; missing file = []
         TC-C-011  base.yaml universe section loads; missing section gives the defaults
-        TC-C-012  config/factors.yaml loads six factors with their classes; missing file = []
+        TC-C-012  config/factors.yaml loads nine factors with their classes; missing file = []
         TC-C-013  config/factors.yaml campaign loads; missing section gives the defaults
         TC-C-014  base.yaml llm section loads; key read from env only and hidden from repr
         TC-C-015  config/local.watchlist.yaml loads; missing file = []; buy_high < buy_low refused
@@ -399,7 +402,6 @@ class Config(BaseModel):
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
-
     repo_root: Path
     lake: LakeConfig
     tushare: TushareConfig

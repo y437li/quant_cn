@@ -86,6 +86,7 @@ class FuturesCurve:
 
     Used by:
         plan 16 phase 2 ImpliedExpectations (to come); research checks
+        calculation.FuturesMonitorBuilder  -- today's curve and shape per family
 
     Test cases:
         TC-FCV-001  curve rows: listed months only, expired dropped, settle else close, months

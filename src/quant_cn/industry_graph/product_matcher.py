@@ -51,9 +51,34 @@ BROAD_WORDS = frozenset(
         "检测",
         "设计",
         "开发",
+        "零部件",
+        "部件",
+        "配件",
+        "组件",
+        "分销",
+        "整车",
+        "商用车",
+        "乘用车",
+        "中间体",
+        "功能性",
+        "新材料",
+        "精细化学品",
+        "包装材料",
+        "互联网",
+        "工艺设备",
+        "运营商",
+        "机器人",
+        "光通信",
+        "授权许可",
+        "工程承包",
     ]
 )
 MIN_INSIDE_SHARE = 0.5
+# a label found inside a longer line outside the company's context needs this many characters
+# and this share of the line (零部件业务 of an automaker is not 硅零部件 of a chip supplier)
+MIN_OUTSIDE_CHARS = 3
+MIN_OUTSIDE_SHARE = 0.5
+LATIN = re.compile(r"^[a-z0-9.+-]+$", re.I)
 
 
 @dataclass(frozen=True)
@@ -91,7 +116,10 @@ class ProductMatcher:
         them from the denominator; the name is normalized (parentheses and suffixes such as
         收入/业务/产品 removed; for "A:B:C" the leaf is tried first, then the top level); each
         product, segment or material label scores exact 1.0, contains 0.6-0.9 by length share
-        (a line inside a label only with 3+ characters and half the label), character-bigram
+        (a line inside a label only with 3+ characters and half the label, and only inside the
+        company's context; a label inside a line outside the context only with
+        MIN_OUTSIDE_CHARS+ characters and MIN_OUTSIDE_SHARE of the line; a Latin label only as
+        a whole word, digits may follow), character-bigram
         overlap up to 0.6 (only for labels in the company's context); labels inside the
         company's Shenwan context
         (ProductTaxonomy.list_context_ids) get CONTEXT_BONUS; the best label at or above
@@ -109,6 +137,8 @@ class ProductMatcher:
             (none at construction)
 
     Used by:
+        industry_graph.NodeMemberBuilder  -- maps revenue lines to nodes
+        cli.DocumentCommands  -- `build-graph` wiring
         research_space chain_view build_market_view.py
 
     Test cases:
@@ -120,16 +150,40 @@ class ProductMatcher:
         TC-PM-004  sector fallback only when the Shenwan codes map to one segment
         TC-PM-005  no match for a short line inside a long label, nor for an overlap outside
                    the company's context, nor for a broad word (技术服务) inside a longer label
+        TC-PM-006  outside the context a short or minor label inside a longer line does not
+                   match (焦炭 in 焦炭化工贸易服务), inside it does; a Latin label matches only
+                   as a whole word (CT not in ICT)
+        TC-PM-007  broad words (零部件, 商用车, 分销 …) do not match inside a longer label
+        TC-PM-008  outside the context a line inside a longer label does not match (运营商 vs
+                   电信运营商), inside it does; a Latin label followed by digits matches
+                   (WPS365)
+        TC-PM-009  a context alias matches only as the exact line of a company in the node's
+                   context (how context_exact); a 主营- prefix is ignored;
+                   find_sector_segment gives the fallback root or None
+        TC-PM-010  a label a suffix cut to 2 characters (代理业务 -> 代理) matches a line
+                   exactly only in the company's context; a label written with 2
+                   characters (电煤) still matches anywhere
     """
 
     def __init__(self, taxonomy: ProductTaxonomy) -> None:
         self._taxonomy = taxonomy
+        raw = [(label, node) for node in taxonomy.list_nodes() for label in node.labels]
         self._labels: list[tuple[str, TaxonomyNode]] = [
             (self._normalize(label), node)
-            for node in taxonomy.list_nodes()
-            for label in node.labels
+            for label, node in raw
             if len(self._normalize(label)) >= MIN_LABEL_CHARS
         ]
+        # positions of labels a suffix cut below 3 characters (代理业务 -> 代理)
+        written_short = {self._normalize(r) for r, _ in raw if len(r) < MIN_OUTSIDE_CHARS}
+        self._shrunk = {
+            k for k, (label, _) in enumerate(self._labels)
+            if len(label) < MIN_OUTSIDE_CHARS and label not in written_short
+        }  # fmt: skip
+        # short wordings valid only as the exact line of a company in the node's context
+        self._context_only: dict[str, list[TaxonomyNode]] = {}
+        for node in taxonomy.list_nodes():
+            for label in node.context_aliases:
+                self._context_only.setdefault(self._normalize(label), []).append(node)
         # bigram -> label positions: only labels sharing a bigram with the line are scored
         self._by_bigram: dict[str, set[int]] = {}
         for k, (label, _) in enumerate(self._labels):
@@ -144,6 +198,7 @@ class ProductMatcher:
     @staticmethod
     def _normalize(text: str) -> str:
         text = re.sub(r"[（(].*?[)）]|\s+", "", str(text))
+        text = re.sub(r"^主营[-－:：]?(?=.)", "", text)  # 主营-种子业务 is 种子业务
         while True:
             stripped = SUFFIX.sub("", text)
             if stripped == text or len(stripped) < MIN_LABEL_CHARS:
@@ -165,6 +220,23 @@ class ProductMatcher:
         """
         return bool(GENERIC.match(re.sub(r"\s+", "", item)))
 
+    def find_sector_segment(self, sw_codes: list[str]) -> str | None:
+        """
+        Purpose:
+            The one root segment of the company's Shenwan context, if there is exactly one (the
+            sector fallback of find_matches).
+
+        Contract:
+            Input:
+                sw_codes: list[str]
+            Output:
+                str | None
+            Raises:
+                (none)
+        """
+        found = self._find_fallback(self._get_context(sw_codes))
+        return found[0].node_id if found else None
+
     def find_matches(self, item: str, sw_codes: list[str]) -> list[ProductMatch]:
         """
         Purpose:
@@ -182,10 +254,7 @@ class ProductMatcher:
         """
         if self.is_generic(item):
             return []
-        key = tuple(sw_codes)
-        if key not in self._contexts:
-            self._contexts[key] = self._taxonomy.list_context_ids(sw_codes)
-        context = self._contexts[key]
+        context = self._get_context(sw_codes)
         levels = [p for p in re.split(r"[：:]", item) if p.strip()]
         for name in [levels[-1], *levels[:-1]] if len(levels) > 1 else levels:
             if self.is_generic(name):
@@ -197,6 +266,15 @@ class ProductMatcher:
             best = self._find_best(name, context) or next(iter(found.values()), None)
             if best:
                 return [best]
+        return self._find_fallback(context)
+
+    def _get_context(self, sw_codes: list[str]) -> set[str]:
+        key = tuple(sw_codes)
+        if key not in self._contexts:
+            self._contexts[key] = self._taxonomy.list_context_ids(sw_codes)
+        return self._contexts[key]
+
+    def _find_fallback(self, context: set[str]) -> list[ProductMatch]:
         parents = {
             n.id: n.parent
             for n in (self._taxonomy.get_node(i) for i in context)
@@ -211,6 +289,9 @@ class ProductMatcher:
         target = self._normalize(name)
         if len(target) < MIN_LABEL_CHARS:
             return None
+        for node in self._context_only.get(target, []):
+            if node.id in context:
+                return ProductMatch(node.id, 1.0 + CONTEXT_BONUS, "context_exact")
         best: tuple[float, int, str, str] | None = None
         positions = set().union(
             *(self._by_bigram.get(g, set()) for g in self._list_bigrams(target))
@@ -220,6 +301,12 @@ class ProductMatcher:
             score, how = self._compute_score(target, label)
             if score <= 0 or (how == "overlap" and node.id not in context):
                 continue
+            if how == "contains" and node.id not in context and not self._is_strong(label, target):
+                continue
+            if how == "exact" and k in self._shrunk and node.id not in context:
+                continue  # 代理业务 reduces to 代理: such a label is exact only in context
+            if how == "contains" and not self._is_whole_word(label, target):
+                continue
             score += CONTEXT_BONUS if node.id in context else 0.0
             rank = 1 if node.type == "product" else 0
             if best is None or (score, rank) > (best[0], best[1]):
@@ -227,6 +314,22 @@ class ProductMatcher:
         if best is None or best[0] < MIN_SCORE:
             return None
         return ProductMatch(best[2], round(best[0], 3), best[3])
+
+    @staticmethod
+    def _is_whole_word(label: str, target: str) -> bool:
+        """A Latin label counts only as a whole word: CT is not inside ICT."""
+        if not LATIN.match(label) or label not in target:
+            return True
+        pattern = rf"(?<![a-z0-9]){re.escape(label)}(?![a-z])"  # WPS365 holds WPS
+        return re.search(pattern, target, re.I) is not None
+
+    @staticmethod
+    def _is_strong(label: str, target: str) -> bool:
+        """A label inside a line is enough outside the context only when long and dominant;
+        a line inside a longer label never is (运营商 is not 电信运营商)."""
+        if len(label) >= len(target):
+            return False
+        return len(label) >= MIN_OUTSIDE_CHARS and len(label) / len(target) >= MIN_OUTSIDE_SHARE
 
     @staticmethod
     def _compute_score(target: str, label: str) -> tuple[float, str]:

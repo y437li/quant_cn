@@ -59,7 +59,8 @@ class CompanyCyclePanel:
             ValueError  -- as_of malformed or versions without VERSION_COLUMNS
 
     Used by:
-        (none yet)  -- pipeline.DiscoveryStep (plan 16 ph6), portfolio.IdeaScreener (ph3)
+        portfolio.OpportunityScreen  -- earnings rule (np_yoy, np_qoq)
+        cli.GaugeCommands  -- wires it
 
     Test cases:
         TC-CCP-001  single quarter: Q3 = 9M - H1, Q1 = YTD

@@ -8,8 +8,10 @@ from quant_cn.core.docs.decisions_reader import DecisionsReader
 from quant_cn.core.docs.doc_table_builder import COLUMNS, DocTableBuilder
 from quant_cn.core.docs.index_reader import IndexReader
 from quant_cn.core.docs.markdown_table import MarkdownTableReader
+from quant_cn.core.docs.phase_status_parser import PhaseStatusParser
 from quant_cn.core.docs.plan_reader import PlanReader
 from quant_cn.core.docs.repo_files import RepoFiles
+from quant_cn.core.docs.research_log_reader import ResearchLogReader
 from tests.support import SampleRepo
 
 ROOT_INDEX = """\
@@ -36,19 +38,31 @@ PLAN = """\
 |---|---|---|---|---|---|
 | 1 | a | b | c | — | todo |
 """
+RESEARCH = """\
+| Date | Slug | Question | Scripts | Outputs | Conclusion | Follow-up |
+|---|---|---|---|---|---|---|
+| 2026-11-13 | 20261113_a_run | q | `plans/` | `meta/runs/research/20261113_a_run/` | c | none |
+| 2026-11-13 | 20261113_b_run | q | `research_space/runs/gone/` | o | c | none |
+"""
 FILES = {
     "INDEX.md": ROOT_INDEX,
     "plans/INDEX.md": "# plans/\n\n## Files\n| File | Purpose | Contains |\n|---|---|---|\n",
     "plans/stray.md": "not indexed\n",
     "plans/decisions/DECISIONS.md": DECISIONS,
     "plans/execution/01_x.md": PLAN,
+    "research_space/RESEARCH_LOG.md": RESEARCH,
 }
 
 
 def build_tables(root: Path) -> dict[str, pd.DataFrame]:
     tables = MarkdownTableReader()
     builder = DocTableBuilder(
-        root, RepoFiles(root), IndexReader(tables), DecisionsReader(tables), PlanReader(tables)
+        root,
+        RepoFiles(root),
+        IndexReader(tables),
+        DecisionsReader(tables),
+        PlanReader(tables, PhaseStatusParser()),
+        ResearchLogReader(tables),
     )
     return builder.build_tables()
 
@@ -75,3 +89,19 @@ def test_tc_dtb_002_governance(tmp_path: Path) -> None:
     assert tables["decisions"]["id"].tolist() == ["D-001"]
     assert tables["plans"][["nn", "status"]].values.tolist() == [["01", "doing"]]
     assert tables["phases"][["plan", "n", "status"]].values.tolist() == [["01", "1", "todo"]]
+
+
+# TC-DTB-003
+def test_tc_dtb_003_phase_state(tmp_path: Path) -> None:
+    tables = build_tables(SampleRepo.build_repo(tmp_path / "r", FILES))
+    row = tables["phases"].iloc[0]
+    assert (row["state"], row["state_date"], row["commit"], row["note"]) == ("todo", "", "", "")
+
+
+# TC-DTB-004
+def test_tc_dtb_004_research_runs(tmp_path: Path) -> None:
+    tables = build_tables(SampleRepo.build_repo(tmp_path / "r", FILES))
+    runs = tables["research_runs"].set_index("slug")
+    assert list(runs.index) == ["20261113_a_run", "20261113_b_run"]
+    assert bool(runs.loc["20261113_a_run", "scripts_exist"])
+    assert not bool(runs.loc["20261113_b_run", "scripts_exist"])

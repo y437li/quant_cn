@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from quant_cn.core.condition import Condition
+
 
 class WatchlistEntry(BaseModel):
     """
@@ -18,10 +20,13 @@ class WatchlistEntry(BaseModel):
             added:    str    -- YYYYMMDD the target was set
             thesis:   str    -- why the stock is on the list; "" allowed
             watch:    str    -- signals to follow; "" allowed
+            conditions: list[Condition]  -- besides the price range (plan 15 ph7f); [] allowed
+            conditions_needed: int | None  -- how many must be met to buy; None = all
         Output:
             frozen pydantic model
         Raises:
-            pydantic.ValidationError  -- non-positive price, buy_high < buy_low, extra keys
+            pydantic.ValidationError  -- non-positive price, buy_high < buy_low, bad condition,
+                                     extra keys
 
     Used by:
         core.Config                     -- field `watchlist`
@@ -39,11 +44,15 @@ class WatchlistEntry(BaseModel):
     added: str
     thesis: str = ""
     watch: str = ""
+    conditions: list[Condition] = Field(default_factory=list)
+    conditions_needed: int | None = Field(default=None, gt=0)
 
     @model_validator(mode="after")
     def _check_range(self) -> WatchlistEntry:
         if self.buy_high < self.buy_low:
             raise ValueError(f"{self.code}: buy_high {self.buy_high} < buy_low {self.buy_low}")
+        if self.conditions_needed is not None and self.conditions_needed > len(self.conditions):
+            raise ValueError(f"{self.code}: conditions_needed > {len(self.conditions)} conditions")
         return self
 
 

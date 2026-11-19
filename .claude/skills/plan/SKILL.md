@@ -14,7 +14,7 @@ Never let the two disagree: every phase status change is written to the file fir
 - Name the classes: new / extended / reused (from `.claude/CLASS_REGISTRY.md`). No class, no phase.
 - Decisions go in `plans/decisions/DECISIONS.md` via the `decisions` skill; the plan only links their IDs.
 - No prose that explains why something is obvious. Bullets, tables, imperative verbs.
-- Status vocabulary: `todo` | `doing` | `blocked` | `done`. Nothing else.
+- Status vocabulary: `todo` | `doing` | `blocked` | `done`. Nothing else. Phase Status cells are written `<state> <YYYY-MM-DD> (<commit>) — <note>` (every part after the state optional), e.g. `done 2026-11-13 (a1b2c3d) — make check green`; `make lint` (group `plans`) fails a cell that does not start with a state, and `project.phases` splits it into `state`, `state_date`, `commit`, `note` (D-144).
 
 ## Modes
 

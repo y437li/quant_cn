@@ -21,6 +21,7 @@ class TermSelector:
             (none at construction)
 
     Used by:
+        calculation.VolatilityMonitorBuilder  -- daily VIX per option underlying (plan 03 ph6)
         calculation.VixCalculator  -- near and next term per day
 
     Test cases:

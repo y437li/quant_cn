@@ -1,0 +1,397 @@
+version: v5-20261117
+effective_period: '20251231'
+note: Plan 28 ph3b batch 4 (房地产, 银行, 非银金融, 综合), accepted by the user 2026-11-17; SEG_FIN_DIVERSIFIED also hung under SEG_FIN_NONBANK
+changes:
+- op: upsert
+  kind: rename
+  sector: '430000'
+  node:
+    id: SEG_RE_DEVELOPMENT
+    type: segment
+    name: 房地产开发产业
+  reason: 父段名房地产开发为通用词直接吸附28家成员；改伞名，措辞交给商品住宅开发销售
+- op: upsert
+  kind: rename
+  sector: '430000'
+  node:
+    id: PROD_RE_RESIDENTIAL_SALES
+    type: product
+    name: 商品住宅开发销售
+    segment: SEG_RE_RESIDENTIAL
+    aliases:
+    - 房地产开发
+    - 房地产销售
+    - 房产销售
+    context_aliases:
+    - 房地产
+    - 房地产业
+  reason: 父段名房地产开发为通用词直接吸附28家成员；改伞名，措辞交给商品住宅开发销售
+- op: upsert
+  kind: rename
+  sector: '430000'
+  node:
+    id: SEG_RE_SERVICES
+    type: segment
+    name: 房地产服务产业
+  reason: 父段名房地产服务直接吸附成员；改伞名，措辞交给房地产综合服务
+- op: upsert
+  kind: rename
+  sector: '430000'
+  node:
+    id: SEG_RE_INTEGRATED_SERVICES
+    type: segment
+    name: 房地产综合服务
+    parent: SEG_RE_SERVICES
+    aliases:
+    - 房地产服务
+  reason: 父段名房地产服务直接吸附成员；改伞名，措辞交给房地产综合服务
+- op: upsert
+  kind: new
+  sector: '430000'
+  node:
+    id: PROD_RE_PROPERTY_LEASING
+    type: product
+    name: 物业出租
+    segment: SEG_RE_COMMERCIAL
+    aliases:
+    - 房地产租赁
+    - 房屋租赁
+    - 出租房屋
+    - 物业租赁
+    - 投资性房地产租赁
+  reason: 通用物业/房屋出租收入无节点可挂，新增物业出租产品归商业地产
+- op: upsert
+  kind: alias
+  sector: '430000'
+  node:
+    id: PROD_RE_RESIDENTIAL_PM
+    type: product
+    name: 住宅物业服务
+    segment: SEG_RE_PROPERTY_MGMT
+    aliases:
+    - 物业服务
+    - 物业管理服务
+  reason: 物业服务为最常见收入行措辞，现有别名基础物业服务匹配不到
+- op: upsert
+  kind: alias
+  sector: '430000'
+  node:
+    id: PROD_RE_NONRES_PM
+    type: product
+    name: 非住宅物业服务
+    segment: SEG_RE_PROPERTY_MGMT
+    aliases:
+    - 城市运营
+    - 城市环境服务
+  reason: 玉禾田城市运营（环卫等城市服务）未匹配，归非住宅物业服务
+- op: upsert
+  kind: alias
+  sector: '430000'
+  node:
+    id: SEG_RE_COMMERCIAL
+    type: segment
+    name: 商业地产
+    parent: SEG_RE_DEVELOPMENT
+    aliases:
+    - 商业运营
+    - 商业物业经营
+  reason: 商业运营收入行未匹配，归商业地产
+- op: upsert
+  kind: alias
+  sector: '430000'
+  node:
+    id: PROD_RE_INDUSTRIAL_PARK
+    type: product
+    name: 产业园区开发运营
+    segment: SEG_RE_INDUSTRIAL
+    aliases:
+    - 园区开发
+    - 园区运营
+    - 园区服务
+  reason: 园区类收入行措辞多变，补园区开发/运营别名防止成员漂移
+- op: upsert
+  kind: alias
+  sector: '430000'
+  node:
+    id: PROD_RE_RESIDENTIAL_SALES
+    type: product
+    name: 商品住宅开发销售
+    segment: SEG_RE_RESIDENTIAL
+    aliases:
+    - 车库车位
+    - 车位销售
+  reason: 车库车位销售为开发销售附属收入，未匹配
+- op: upsert
+  kind: alias
+  sector: '480000'
+  node:
+    id: PROD_BANK_PAYMENT_SETTLEMENT
+    type: product
+    name: 支付结算
+    segment: SEG_BANK_BANKING
+    aliases:
+    - 结算与清算
+    - 结算与清算手续费
+    - 代理业务手续费
+    - 委托及代理业务手续费
+    - 代理及委托业务
+    - 代理及托管业务手续费
+    context_aliases:
+    - 代理业务
+    - 代理类业务
+    - 结算业务
+  reason: 代理业务去后缀成“代理”，精确命中外行业代理产品/代理收入行
+  drop_aliases:
+  - 代理业务
+  - 结算业务
+- op: upsert
+  kind: alias
+  sector: '480000'
+  node:
+    id: PROD_BANK_WEALTH_MGMT
+    type: product
+    name: 银行理财
+    segment: SEG_BANK_BANKING
+    aliases:
+    - 理财业务手续费
+    - 财富管理手续费
+    context_aliases:
+    - 财富管理
+    - 理财业务
+  reason: 财富管理为券商通用措辞，拉入华创云信；改为银行专属措辞
+  drop_aliases:
+  - 财富管理
+- op: upsert
+  kind: alias
+  sector: '480000'
+  node:
+    id: PROD_BANK_TREASURY
+    type: product
+    name: 金融市场业务
+    segment: SEG_BANK_BANKING
+    aliases:
+    - 债券及其他投资
+    - 债务工具投资
+    - 债权投资及其他债权投资
+    context_aliases:
+    - 金融投资
+    - 债权投资
+    - 同业业务
+  reason: 银行利息收入“金融投资/债权投资”行无节点；同业业务去后缀仅剩二字
+  drop_aliases:
+  - 同业业务
+- op: upsert
+  kind: alias
+  sector: '480000'
+  node:
+    id: PROD_BANK_CORPORATE_LOAN
+    type: product
+    name: 对公贷款
+    segment: SEG_BANK_BANKING
+    aliases:
+    - 企业贷款
+    - 贸易融资
+    - 一般公司贷款
+  reason: 部分银行以“企业贷款和垫款”列示对公贷款，未命中
+- op: upsert
+  kind: new
+  sector: '480000'
+  node:
+    id: PROD_BANK_RETAIL_LOAN
+    type: product
+    name: 个人贷款
+    segment: SEG_BANK_BANKING
+    aliases:
+    - 零售贷款
+    - 个人贷款和垫款
+    - 个人贷款及垫款
+  reason: 银行最大零售收入行“个人贷款”无节点，应作房贷/消费贷的父节点
+- op: upsert
+  kind: new
+  sector: '480000'
+  node:
+    id: PROD_BANK_CARD
+    type: product
+    name: 银行卡业务
+    segment: SEG_BANK_BANKING
+    aliases:
+    - 银行卡手续费
+    - 银行卡服务手续费
+    - 银行卡及结算业务
+    context_aliases:
+    - 银行卡
+  reason: 银行卡手续费是银行主要中收行，taxonomy缺节点
+- op: upsert
+  kind: new
+  sector: '480000'
+  node:
+    id: PROD_BANK_CUSTODY
+    type: product
+    name: 托管及受托业务
+    segment: SEG_BANK_BANKING
+    aliases:
+    - 托管及其他受托业务
+    - 托管及其他受托业务佣金
+    - 资产托管
+  reason: 托管及受托业务佣金为国有/股份行稳定中收，缺节点
+- op: upsert
+  kind: new
+  sector: '480000'
+  node:
+    id: PROD_BANK_BILL_DISCOUNT
+    type: product
+    name: 票据贴现
+    parent: PROD_BANK_CORPORATE_LOAN
+    segment: SEG_BANK_BANKING
+    aliases:
+    - 票据贴现利息
+    context_aliases:
+    - 贴现
+  reason: 票据贴现为银行普遍列示的对公利息收入行，缺节点
+- op: upsert
+  kind: rename
+  sector: '490000'
+  node:
+    id: SEG_FIN_LEASING
+    type: segment
+    name: 金融租赁业
+    parent: SEG_FIN_DIVERSIFIED
+    aliases:
+    - 金融租赁
+    - 融资租赁业务
+    context_aliases:
+    - 租赁
+  reason: 段名'租赁'任意位置命中各行业租金收入,改伞形名,'租赁'仅作上下文别名
+- op: upsert
+  kind: rename
+  sector: '490000'
+  node:
+    id: PROD_FIN_OPERATING_LEASE
+    type: product
+    name: 飞机经营租赁
+    segment: SEG_FIN_LEASING
+    aliases:
+    - 航空器租赁
+    - 飞机租赁收入
+    context_aliases:
+    - 经营租赁
+  reason: '''经营租赁''是各行业出租资产的通用会计措辞,改为具体业务名,原措辞限本行业整行'
+- op: upsert
+  kind: rename
+  sector: '490000'
+  node:
+    id: SEG_FIN_SECURITIES
+    type: segment
+    name: 证券业
+    parent: SEG_FIN_NONBANK
+    aliases:
+    - 证券业务
+    - 证券公司业务
+    context_aliases:
+    - 证券
+  reason: 段名'证券'为泛词,任意含'证券'的行都被吸入,改伞形名并限整行匹配
+- op: upsert
+  kind: rename
+  sector: '490000'
+  node:
+    id: SEG_FIN_INSURANCE
+    type: segment
+    name: 保险业
+    parent: SEG_FIN_NONBANK
+    aliases:
+    - 保险业务
+    context_aliases:
+    - 保险
+  reason: 段名'保险'为泛词(如设备保险、保险丝类行),改伞形名,'保险'整行留本行业
+- op: upsert
+  kind: rename
+  sector: '490000'
+  node:
+    id: SEG_FIN_FUTURES
+    type: segment
+    name: 期货业
+    parent: SEG_FIN_DIVERSIFIED
+    aliases:
+    - 期货业务
+    - 期货公司业务
+    context_aliases:
+    - 期货
+  reason: '''期货''''信托''两字段名在任意行命中(如期货套保、信托受益权),改伞形名'
+- op: upsert
+  kind: rename
+  sector: '490000'
+  node:
+    id: SEG_FIN_TRUST
+    type: segment
+    name: 信托业
+    parent: SEG_FIN_DIVERSIFIED
+    aliases:
+    - 信托业务
+    context_aliases:
+    - 信托
+  reason: '''期货''''信托''两字段名在任意行命中(如期货套保、信托受益权),改伞形名'
+- op: upsert
+  kind: rename
+  sector: '490000'
+  node:
+    id: SEG_FIN_ASSET_MGMT
+    type: segment
+    name: 资产管理业
+    parent: SEG_FIN_DIVERSIFIED
+    aliases:
+    - 资产管理业务
+    context_aliases:
+    - 资产管理
+  reason: '''资产管理''在地产/制造公司年报中常指物业或资产运营,段名误吸,改伞形名'
+- op: upsert
+  kind: new
+  sector: '490000'
+  node:
+    id: SEG_FIN_NONBANK
+    type: segment
+    name: 非银金融业
+    aliases:
+    - 非银行金融
+  reason: 证券、保险、多元金融三个顶层段无共同父节点,行业兜底失效,加共同根
+- op: upsert
+  kind: alias
+  sector: '490000'
+  node:
+    id: PROD_FIN_FIN_INFO
+    type: product
+    name: 金融信息与投资者服务
+    segment: SEG_FIN_INFO_SERVICE
+    aliases:
+    - 金融资讯及数据
+    - 金融资讯服务
+    - 港股服务系统
+    - 金融数据终端
+  reason: 大智慧金融终端收入行未匹配,补措辞归金融信息服务
+- op: upsert
+  kind: rename
+  sector: '510000'
+  node:
+    id: SEG_CONG_DIVERSIFIED
+    type: segment
+    name: 多元化综合产业
+  reason: 段名“综合”为2字通用词，作别名会吸附综合能源服务等跨行业行；改伞名
+- op: upsert
+  kind: alias
+  sector: '510000'
+  node:
+    id: PROD_RE_INDUSTRIAL_PARK
+    type: product
+    name: 产业园区开发运营
+    segment: SEG_RE_INDUSTRIAL
+    aliases:
+    - 园区运营服务
+  reason: FY2025未匹配行“园区运营服务费”属已有产业园区开发运营节点，补别名
+- op: upsert
+  kind: move
+  sector: '490000'
+  node:
+    id: SEG_FIN_DIVERSIFIED
+    type: segment
+    name: 多元金融
+    parent: SEG_FIN_NONBANK
+  reason: 多元金融也挂到非银金融业下，本行业只有一个根段，兜底恢复

@@ -1,0 +1,163 @@
+{
+ "as_of": "20261113",
+ "window": 250,
+ "lines": [
+  {
+   "key": "us_vix",
+   "name": "美国 VIX",
+   "group": "美国",
+   "kind": "cboe",
+   "code": "VIX",
+   "date": "20261112",
+   "value": 18.7,
+   "chg": 1.21,
+   "chg_pct": 0.0692,
+   "pct": 0.7,
+   "median": 17.2,
+   "low": 13.1,
+   "high": 31.1,
+   "n_obs": 250,
+   "quality_flag": "ok",
+   "alerts": {
+    "level": 25.0,
+    "jump": 0.3,
+    "pct": null
+   },
+   "history": [
+    {
+     "date": "20261110",
+     "value": 19.46
+    },
+    {
+     "date": "20261111",
+     "value": 17.49
+    },
+    {
+     "date": "20261112",
+     "value": 18.7
+    }
+   ]
+  },
+  {
+   "key": "cn_300",
+   "name": "300ETF VIX",
+   "group": "A股",
+   "kind": "option",
+   "code": "OP510300.SH",
+   "date": "20261113",
+   "value": 17.6,
+   "chg": null,
+   "chg_pct": null,
+   "pct": null,
+   "median": 18.9,
+   "low": 16.0,
+   "high": 22.4,
+   "n_obs": 69,
+   "quality_flag": "ok",
+   "alerts": {
+    "level": null,
+    "jump": null,
+    "pct": 0.9
+   },
+   "history": [
+    {
+     "date": "20261113",
+     "value": 17.6
+    }
+   ]
+  }
+ ],
+ "flags": [
+  {
+   "key": "us_vix:level",
+   "kind": "level",
+   "name": "美国 VIX",
+   "message": "美国 VIX 28.2 ≥ 25"
+  }
+ ],
+ "new_flags": [
+  "us_vix:level"
+ ],
+ "missing": [],
+ "smallcap": {
+  "as_of": "20261117",
+  "rows": [
+   {
+    "key": "limit_downs",
+    "group": "恐慌",
+    "name": "跌停家数",
+    "value": 84.0,
+    "unit": "只",
+    "trigger": 500,
+    "state": "off",
+    "note": "≥ 500 只为恐慌日",
+    "date": "20261117"
+   },
+   {
+    "key": "level_6075",
+    "group": "点位",
+    "name": "中证1000 跌到 6,075",
+    "value": 6092.39,
+    "unit": "点",
+    "trigger": 6075.0,
+    "state": "near",
+    "note": "距离 +0.3%",
+    "date": "20261117"
+   },
+   {
+    "key": "gap",
+    "group": "波动",
+    "name": "中证1000 - 沪深300 波动差",
+    "value": 21.91,
+    "unit": "%",
+    "trigger": 0.9,
+    "state": "on",
+    "note": "低于 70% 分位为退出线",
+    "date": "20261117",
+    "pct": 0.972
+   },
+   {
+    "key": "etf_flow_1d",
+    "group": "资金",
+    "name": "11 只宽基 ETF 净申购(1 天)",
+    "value": null,
+    "unit": "亿",
+    "trigger": null,
+    "state": "info",
+    "note": "",
+    "date": "20261116"
+   }
+  ],
+  "history": [
+   {
+    "date": "20261113",
+    "small": 6300.5,
+    "limit_downs": 20.0,
+    "low_share": 0.2,
+    "gap": 18.0,
+    "gap_pct": 0.9
+   },
+   {
+    "date": "20261116",
+    "small": 6150.1,
+    "limit_downs": 68.0,
+    "low_share": 0.27,
+    "gap": 22.2,
+    "gap_pct": 0.97
+   },
+   {
+    "date": "20261117",
+    "small": 6092.39,
+    "limit_downs": 84.0,
+    "low_share": 0.36,
+    "gap": 21.91,
+    "gap_pct": null
+   }
+  ],
+  "triggered": [
+   "gap"
+  ],
+  "new_triggered": [],
+  "missing": []
+ }
+}

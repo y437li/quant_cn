@@ -6,11 +6,15 @@ factors:
   - {name: profit_growth_ttm, class: ProfitGrowthFactor}
   - {name: momentum_12_1, class: MomentumFactor, params: {window: 252, skip: 21}}
   - {name: reversal_1m, class: ReversalFactor, params: {window: 21}}
-  # plan 25: intraday returns on the 10 busiest of 21 sessions; not in the score weights until D-156
+  # plan 25: intraday returns on the 10 busiest of 21 sessions; in the score since D-174 (replaces reversal_1m)
   - {name: reversal_intraday_1m, class: IntradayReversalFactor, params: {window: 21, top_k: 10, min_obs: 15}}
   - {name: turnover_60d, class: TurnoverFactor, params: {window: 60, min_obs: 40}}
   # user 2026-11-12 "测一下股息率的选股能力"; in the score since D-147
   - {name: dividend_yield, class: DividendYieldFactor}
+  # plan 36 (D-173): -log(market value / consensus value with fading growth); higher = cheaper; in the score (user 2026-11-18)
+  - {name: pricing_gap, class: PricingGapFactor, params: {fade: 0.7, fade_years: 7, exit_pe: 15.0, discount: 0.09, window_days: 90}}
+  # plan 21 ph6: minus the latest 散户温度计 reading (higher = retail leaving); from 2022-05; in the score since D-182
+  - {name: retail_gauge, class: RetailGaugeFactor, params: {max_age_days: 45}}
 
 # Campaign settings (plan 04 phase 5): id for the TrialLog and reports, preprocessing chain, horizons,
 # signal weights (score = weighted mean of the processed z-scores).
@@ -23,5 +27,9 @@ campaign:
   neutralize: true          # Shenwan L1 (l1_grouping) + log market cap (D-093)
   # D-147 (user 2026-11-12 "就股息吧"): dividend_yield replaces ep_ttm in the score (20d ICIR 0.54 vs 0.42, LS Sharpe
   # 0.72 vs 0.21, Romano-Wolf p 0.049 vs 0.144); ep_ttm stays in the campaign as a single factor
-  weights: {dividend_yield: 1.0, roe_ttm: 1.0, profit_growth_ttm: 1.0, momentum_12_1: 1.0, reversal_1m: 1.0, turnover_60d: 1.0}
+  # D-173 (user 2026-11-18 "可以，加进综合打分"): pricing_gap joins at weight 1 (score LS Sharpe 0.75 -> 0.98, large caps 0.50 -> 0.71)
+  # D-174 (plan 25 ph3, default approved 2026-11-14 "ok"): reversal_intraday_1m replaces reversal_1m (20d ICIR 0.95 vs 0.57,
+  # LS Sharpe 1.71 vs 1.04, both pass §6; together reversal_1m adds t 0.31); reversal_1m stays in the campaign as a single factor
+  # D-182 (plan 21 ph6, user 2026-11-19 "Add at weight 1"): retail_gauge joins (score IC20 0.0673 -> 0.0751, decile LS Sharpe 1.16 -> 1.29, 2022-06 .. 2026-10)
+  weights: {dividend_yield: 1.0, roe_ttm: 1.0, profit_growth_ttm: 1.0, momentum_12_1: 1.0, reversal_intraday_1m: 1.0, turnover_60d: 1.0, pricing_gap: 1.0, retail_gauge: 1.0}
   min_factors: 3            # a stock needs this many factors for a score

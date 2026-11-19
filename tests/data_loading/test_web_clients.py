@@ -129,6 +129,18 @@ def test_tc_cnc_003_empty_and_missing_date(clock: FakeClock) -> None:
         CninfoClient(clock, FakeWebTransport([])).query("x", {}, [])
 
 
+# TC-CNC-005
+def test_tc_cnc_005_last_page_from_total(clock: FakeClock) -> None:
+    transport = FakeWebTransport(
+        [
+            {"totalpages": 1, "totalAnnouncement": 31, "announcements": [build_announcement("1")]},
+            {"totalpages": 1, "totalAnnouncement": 31, "announcements": [build_announcement("2")]},
+        ]
+    )
+    out = CninfoClient(clock, transport).query("x", {"ann_date": "20260701"}, [])
+    assert sorted(out["ann_id"]) == ["1", "2"]
+
+
 # TC-EMR-001
 def test_tc_emr_001_pages_and_columns(clock: FakeClock) -> None:
     transport = FakeWebTransport(

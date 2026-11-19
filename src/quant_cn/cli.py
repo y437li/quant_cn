@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import json
 import logging
 import os
@@ -13,20 +14,20 @@ import urllib.request
 from collections.abc import Sequence
 from pathlib import Path
 
-import duckdb
 from rich.console import Console
 from rich.logging import RichHandler
 from rich.table import Table
 
+from quant_cn.app_service_builder import AppServiceBuilder
 from quant_cn.core.clock import Clock
 from quant_cn.core.config import Config
 from quant_cn.core.date_codec import DateCodec
 from quant_cn.core.exceptions import LakeError, QuantCnError
 from quant_cn.core.positions_book import PositionsBook
-from quant_cn.data_loading.document_downloader import DocumentDownloader
+from quant_cn.document_commands import DocumentCommands
+from quant_cn.gauge_commands import GaugeCommands
 from quant_cn.lake.compactor import Compactor
 from quant_cn.lake.derived_views import DerivedViews
-from quant_cn.lake.document_views import DocumentViews
 from quant_cn.lake.fetch_log import FetchLog
 from quant_cn.lake.lake_catalog import LakeCatalog
 from quant_cn.lake.lake_query import LakeQuery
@@ -38,13 +39,10 @@ from quant_cn.pipeline.curate_pipeline import DIGEST_FILE
 from quant_cn.pipeline.runner import PipelineReport
 from quant_cn.portfolio.etf_flow_calculator import EtfFlowCalculator
 from quant_cn.portfolio.etf_proxy_builder import EtfProxyBuilder
-from quant_cn.portfolio.holdings_history_writer import HoldingsHistoryWriter
-from quant_cn.portfolio.holdings_risk_builder import HoldingsRiskBuilder
-from quant_cn.portfolio.watchlist_builder import WatchlistBuilder
+from quant_cn.report_commands import ReportCommands
 from quant_cn.risk.factor_monitor_builder import FactorMonitorBuilder
-from quant_cn.risk.risk_decomposer import RiskDecomposer
-from quant_cn.risk.risk_model_factory import RiskModelFactory
 from quant_cn.service_builder import ServiceBuilder
+from quant_cn.update_commands import UpdateCommands
 
 MIN_FREE_GB = 20
 MIN_CALENDAR_DAYS = 90
@@ -69,7 +67,6 @@ class QuantCnCli:
 
     Used by:
         Makefile targets doctor, download, compact, lake-rebuild, lake-backup
-        cli.DocumentCommands            -- parser and dispatch
 
     Test cases:
         TC-QCC-001  doctor reports lake root and token presence without printing the token
@@ -107,11 +104,11 @@ class QuantCnCli:
         try:
             config = self._config or Config.load()
             method = f"_run_{args.command.replace('-', '_')}"
-            handler = (
-                getattr(self, method, None)
-                or getattr(ResearchCommands(self._console), method, None)
-                or getattr(DocumentCommands(self._console), method)
+            groups = (ResearchCommands, ReportCommands, GaugeCommands, UpdateCommands)
+            handler = getattr(self, method, None) or next(
+                (h for g in groups if (h := getattr(g(self._console), method, None))), None
             )
+            handler = handler or getattr(DocumentCommands(self._console), method)
             return int(handler(config, args))
         except QuantCnError as exc:
             self._console.print(f"[red]error:[/red] {exc}")
@@ -145,6 +142,9 @@ class QuantCnCli:
         qy.add_argument("--limit", type=int, default=50)
         ResearchCommands.build_parser(sub)
         DocumentCommands.build_parser(sub)
+        GaugeCommands.build_parser(sub)
+        UpdateCommands.build_parser(sub)
+        ReportCommands.build_parser(sub)
         return parser
 
     def _run_doctor(self, config: Config, _args: argparse.Namespace) -> int:
@@ -356,15 +356,16 @@ class ResearchCommands:
         `release-lags` (D-086), `evaluate` (factor campaign reports and trial log, plan 04
         phase 5), `risk-model` (plan 05, D-127), `watchlist` (the app's 观察账本 data,
         D-120), `etf-proxy` (the 国家队 ETF panel, D-126), `factor-monitor` and `holdings-risk` (the
-        因子监控 and 持仓 pages, D-132). QuantCnCli parses the arguments and dispatches here.
+        因子监控 and 持仓 pages, D-132), `sector-monitor` (the 行业监控 page, plan 31). QuantCnCli
+        parses the arguments and dispatches here.
 
     Contract:
         Input:
             console: Console
         Output:
             instance; `build_parser`, `_run_release_lags`, `_run_evaluate`, `_run_risk_model`,
-            `_run_watchlist`, `_run_etf_proxy`, `_run_factor_monitor`, `_run_holdings_risk`
-            (dispatched by QuantCnCli.run)
+            `_run_watchlist`, `_run_etf_proxy`, `_run_factor_monitor`, `_run_holdings_risk`,
+            `_run_sector_monitor`, `_run_sector_earnings_signal` (dispatched by QuantCnCli.run)
         Raises:
             (none at construction)
 
@@ -378,6 +379,9 @@ class ResearchCommands:
         TC-QCC-012  etf-proxy without configured indices writes an empty etf_proxy.json, exits 0
         TC-QCC-013  factor-monitor without risk-model frames: the LakeError is printed, exit 1
         TC-QCC-014  holdings-risk with an empty book writes an empty holdings_risk.json, exits 0
+        TC-QCC-017  sector-monitor writes sector_monitor.json and exits 0 on an empty lake
+        TC-QCC-018  sector-earnings-signal writes sector_earnings_signal.json (empty lake: no
+                    rows) and exits 0
     """
 
     def __init__(self, console: Console) -> None:
@@ -388,7 +392,7 @@ class ResearchCommands:
         """
         Purpose:
             Add the `release-lags`, `watchlist`, `etf-proxy`, `factor-monitor`, `holdings-risk`,
-            `evaluate` and `risk-model` subcommands.
+            `sector-monitor`, `sector-earnings-signal`, `evaluate` and `risk-model` subcommands.
 
         Contract:
             Input:
@@ -414,6 +418,11 @@ class ResearchCommands:
             "evaluate", help="evaluate the factor campaign; write reports and trials"
         )
         ev.add_argument("--no-progress", action="store_true")
+        sm = sub.add_parser("sector-monitor", help="write sector_monitor.json (plan 31)")
+        sm.add_argument("--out", type=Path, required=True, help="the app's data directory")
+        se = sub.add_parser("sector-earnings-signal", help="write sector_earnings_signal.json")
+        se.add_argument("--out", type=Path, required=True, help="the app's data directory")
+        se.add_argument("--date", default=None, help="YYYYMMDD as of (default: today)")
         rm = sub.add_parser("risk-model", help="fit the risk model (config/risk_model.yaml)")
         rm.add_argument("--no-progress", action="store_true")
 
@@ -446,10 +455,30 @@ class ResearchCommands:
     def _run_watchlist(self, config: Config, args: argparse.Namespace) -> int:
         catalog = LakeCatalog(config.lake.root, config.datasets, read_only=True)
         try:
-            path = WatchlistBuilder(config, LakeQuery(catalog), DateCodec()).write(args.out)
+            path = AppServiceBuilder().build_watchlist(config, catalog).write(args.out)
         finally:
             catalog.close()
         self._console.print(f"watchlist: {len(config.watchlist)} entries -> {path}")
+        return 0
+
+    def _run_sector_monitor(self, config: Config, args: argparse.Namespace) -> int:
+        catalog = LakeCatalog(config.lake.root, config.datasets, read_only=True)
+        try:
+            path = AppServiceBuilder().build_sector_monitor(config, catalog).write(args.out)
+        finally:
+            catalog.close()
+        self._console.print(f"sector monitor -> {path}")
+        return 0
+
+    def _run_sector_earnings_signal(self, config: Config, args: argparse.Namespace) -> int:
+        as_of = args.date or dt.date.today().strftime("%Y%m%d")
+        catalog = LakeCatalog(config.lake.root, config.datasets, read_only=True)
+        try:
+            builder = AppServiceBuilder().build_sector_earnings_signal(config, catalog)
+            path = builder.write(args.out, as_of)
+        finally:
+            catalog.close()
+        self._console.print(f"sector earnings signal -> {path}")
         return 0
 
     def _run_factor_monitor(self, config: Config, args: argparse.Namespace) -> int:
@@ -466,12 +495,9 @@ class ResearchCommands:
         book = PositionsBook.load(config.repo_root)
         catalog = LakeCatalog(config.lake.root, config.datasets)
         try:
-            q = LakeQuery(catalog)
-            model = RiskModelFactory(q).build(config.risk_model)
-            history = HoldingsHistoryWriter(q, ParquetWriter(config.lake.root))
-            builder = HoldingsRiskBuilder(book, q, model, RiskDecomposer(), history, args.benchmark)
+            builder = AppServiceBuilder().build_holdings_risk(config, catalog, book, args.benchmark)
             path = builder.write(args.out, args.date)
-            DerivedViews(catalog, q, config.datasets).refresh_tables()
+            DerivedViews(catalog, LakeQuery(catalog), config.datasets).refresh_tables()
         finally:
             catalog.close()
         self._console.print(f"holdings risk: {len(book.positions)} positions -> {path}")
@@ -504,95 +530,6 @@ class ResearchCommands:
                 f"{step_report.name}: {step_report.fetched} factors, {step_report.rows} test rows"
             )
         return 0
-
-
-class DocumentCommands:
-    """
-    Purpose:
-        The document-side CLI command `download-docs` (plan 12 phase 2, D-101): for each source,
-        list the PDFs not yet in the manifest (counts per doc type), release the catalog, then
-        download them (unless `--dry-run`) and refresh `meta.documents`.
-
-    Contract:
-        Input:
-            console: Console
-        Output:
-            instance; `build_parser`, `_run_download_docs` (dispatched by QuantCnCli.run)
-        Raises:
-            (none at construction)
-
-    Used by:
-        cli.QuantCnCli  -- dispatch fallback
-
-    Test cases:
-        TC-QCC-010  download-docs --dry-run prints counts per type to download and exits 0
-    """
-
-    def __init__(self, console: Console) -> None:
-        self._console = console
-
-    @staticmethod
-    def build_parser(sub: argparse._SubParsersAction) -> None:  # type: ignore[type-arg]
-        """
-        Purpose:
-            Add the `download-docs` subcommand and its options to the CLI parser.
-
-        Contract:
-            Input:
-                sub: argparse subparsers of QuantCnCli
-            Output:
-                None
-            Raises:
-                (none)
-        """
-        dd = sub.add_parser("download-docs", help="download listed PDFs into documents/ (D-101)")
-        dd.add_argument(
-            "--sources", required=True, help="comma-separated config/documents.yaml keys"
-        )
-        dd.add_argument("--types", help="comma-separated doc types (default: all of the source)")
-        dd.add_argument("--start", help="publication date from, YYYYMMDD")
-        dd.add_argument("--end", help="publication date to, YYYYMMDD")
-        dd.add_argument("--limit", type=int, help="at most this many downloads per source")
-        dd.add_argument(
-            "--workers", type=int, help="override the source's workers in documents.yaml"
-        )
-        dd.add_argument("--dry-run", action="store_true", help="count candidates per type only")
-
-    def _run_download_docs(self, config: Config, args: argparse.Namespace) -> int:
-        types = QuantCnCli._parse_list(args.types)
-        sources = QuantCnCli._parse_list(args.sources) or []
-        catalog = LakeCatalog(config.lake.root, config.datasets)
-        downloader = DocumentDownloader(
-            config.lake.root,
-            LakeQuery(catalog),
-            config.documents,
-            Clock(),
-            workers_override=args.workers,
-        )
-        try:
-            todo = {s: downloader.list_todo(s, types, args.start, args.end) for s in sources}
-        finally:
-            catalog.close()  # downloads need no catalog: a metadata sweep may run meanwhile
-        for source, frame in todo.items():
-            counts = frame["doc_type"].value_counts().sort_index()
-            self._console.print(f"{source}: {len(frame)} to download")
-            for doc_type, n in counts.items():
-                self._console.print(f"  {doc_type}: {n}")
-            if not args.dry_run:
-                report = downloader.run(frame, args.limit)
-                self._console.print(f"{report.name}: {report.message}, {report.rows / 1e6:.1f} MB")
-        if not args.dry_run:
-            self._refresh_views(config)
-        return 0
-
-    def _refresh_views(self, config: Config) -> None:
-        catalog = LakeCatalog(config.lake.root, config.datasets)
-        try:
-            DocumentViews(config.lake.root, catalog.connection).refresh()
-        except (LakeError, duckdb.Error) as exc:  # catalog busy: views refresh on the next run
-            self._console.print(f"[yellow]meta.documents not refreshed:[/yellow] {exc}")
-        finally:
-            catalog.close()
 
 
 if __name__ == "__main__":

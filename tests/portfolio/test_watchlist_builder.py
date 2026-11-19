@@ -4,14 +4,17 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
+import pandas as pd
 import pytest
 
+from quant_cn.core.condition import Condition
 from quant_cn.core.config import Config
 from quant_cn.core.date_codec import DateCodec
 from quant_cn.core.exceptions import LakeError
 from quant_cn.core.watchlist_entry import WatchlistEntry
+from quant_cn.portfolio.condition_evaluator import ConditionEvaluator
 from quant_cn.portfolio.watchlist_builder import WatchlistBuilder
 from tests.support import MiniLake, SampleFactorLake
 
@@ -169,3 +172,80 @@ def test_tc_wb_009_empty_daily(lake: MiniLake, config: Config) -> None:
     cfg = _build_config(config, _build_target(FAR, 25, 30))
     with pytest.raises(LakeError):
         _build_builder(lake, cfg).build()
+
+
+class FakeEvaluator:
+    """ConditionEvaluator with fixed metrics per code."""
+
+    METRICS: ClassVar[dict[str, dict[str, float]]] = {
+        IN: {"lg_weeks_pos_4w": 3.0, "gm_q": 0.1, "retail_gauge": 0.95, "gauge_avoid": 1.0},
+        FAR: {"lg_weeks_pos_4w": 4.0, "gm_q": 0.3},
+    }
+
+    def read_metrics(self, closes: dict[str, float], as_of: str, series: list[str]) -> pd.DataFrame:
+        return pd.DataFrame.from_dict(self.METRICS, orient="index")
+
+    compute_results = ConditionEvaluator.compute_results
+    _is_streak_missing = staticmethod(ConditionEvaluator._is_streak_missing)
+
+
+def test_tc_wb_010_conditions(lake: MiniLake, config: Config) -> None:
+    """TC-WB-010"""
+    conds = [
+        Condition(label="大单", kind="flow", metric="lg_weeks_pos_4w", op=">=", value=3),
+        Condition(label="毛利", kind="statement", metric="gm_q", op=">=", value=0.22),
+    ]
+    cfg = _build_config(
+        config,
+        WatchlistEntry(code=IN, buy_low=9, buy_high=9.5, added="20261108", conditions=conds),
+        WatchlistEntry(
+            code=FAR,
+            buy_low=25,
+            buy_high=30,
+            added="20261108",
+            conditions=conds,
+            conditions_needed=1,
+        ),
+        WatchlistEntry(
+            code=NEAR,
+            buy_low=10,
+            buy_high=10.5,
+            added="20261108",
+            conditions=conds,
+            conditions_needed=1,
+        ),
+    )
+    _write_lake(lake, cfg)
+    builder = WatchlistBuilder(cfg, lake.query, DateCodec(), FakeEvaluator())  # type: ignore[arg-type]
+    rows = _build_index(builder.build())
+    assert [c["state"] for c in rows[IN]["conditions"]] == ["met", "unmet"]
+    assert rows[IN]["condition_status"] == "near"  # price in range, one condition unmet
+    assert rows[FAR]["condition_status"] == "wait"  # price above the range
+    assert rows[NEAR]["condition_status"] == "near"  # in range, conditions unknown
+    assert [c["state"] for c in rows[NEAR]["conditions"]] == ["unknown", "unknown"]
+    assert rows[FAR]["conditions_needed"] == 1
+    plain = _build_index(_build_builder(lake, cfg).build())
+    assert plain[IN]["conditions"] == [] and plain[IN]["condition_status"] == "buy"
+    assert rows[IN]["retail"]["retail_gauge"] == 0.95 and rows[IN]["retail"]["gauge_avoid"] == 1.0
+    assert rows[NEAR]["retail"]["retail_gauge"] is None
+
+
+def test_tc_wb_011_etf_entry(lake: MiniLake, config: Config) -> None:
+    """TC-WB-011"""
+    etf = "512100.SH"
+    cfg = _build_config(config, _build_target(FAR, 25, 30), _build_target(etf, 2.24, 2.47))
+    _write_lake(lake, cfg)
+    plain = _build_builder(lake, cfg).build()  # no fund views yet: stocks only
+    assert plain["missing"] == [etf] and plain["entries"][0]["kind"] == "stock"
+    w = SampleFactorLake.write
+    w(lake, cfg, "fund_basic", [{"ts_code": etf, "name": "中证1000ETF", "market": "E"}])
+    closes = [("20261102", 2.60), ("20261104", 2.50), (AS_OF, 2.46)]
+    w(lake, cfg, "fund_daily", [{"ts_code": etf, "trade_date": d, "close": c} for d, c in closes])
+    doc = _build_builder(lake, cfg).build()
+    assert doc["missing"] == [] and [e["code"] for e in doc["entries"]] == [FAR, etf]
+    row = _build_index(doc)[etf]
+    assert (row["name"], row["kind"], row["status"]) == ("中证1000ETF", "etf", "in")
+    assert [row["price"], row["low_52w"], row["high_52w"]] == pytest.approx([2.46, 2.46, 2.60])
+    assert row["pe_ttm"] is None and row["eps_fy"] is None and row["div_yield"] is None
+    assert [p["close"] for p in row["weekly"]] == pytest.approx([2.46])  # one ISO week
+    assert _build_index(doc)[FAR]["kind"] == "stock"

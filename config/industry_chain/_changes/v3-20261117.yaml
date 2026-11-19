@@ -1,0 +1,1244 @@
+version: v3-20261117
+effective_period: '20251231'
+note: Plan 28 ph3b batch 2 (石油石化, 公用事业, 建筑装饰, 建筑材料, 食品饮料, 钢铁, 煤炭, 农林牧渔), accepted by the user 2026-11-17, plus 12 context aliases
+changes:
+- op: upsert
+  kind: new
+  sector: '750000'
+  node:
+    id: PROD_PETRO_BASIC_ORGANICS
+    type: product
+    name: 基础有机化工原料
+    segment: SEG_PETRO_INTEGRATED
+    aliases:
+    - 基础有机化工品
+    - 基础有机化工原料
+  reason: 中国石化基础有机化工品1848亿无节点承接，炼化一体化段无产品
+- op: upsert
+  kind: alias
+  sector: '750000'
+  node:
+    id: SEG_PETRO_INTEGRATED
+    type: segment
+    name: 炼化一体化
+    aliases:
+    - 炼化产品
+    - 石化及化工新材料
+  reason: 民营大炼化收入行写作炼化产品/石化及化工新材料，未匹配
+- op: upsert
+  kind: alias
+  sector: '750000'
+  node:
+    id: SEG_PETRO_REFINING
+    type: segment
+    name: 炼油
+    aliases:
+    - 原油加工及石油制品
+    - 石油制品
+  reason: 华锦股份炼油收入行措辞未匹配
+- op: upsert
+  kind: alias
+  sector: '750000'
+  node:
+    id: SEG_PETRO_AROMATICS
+    type: segment
+    name: 芳烃及聚酯原料
+    aliases:
+    - 合成纤维单体
+    - 聚酯化纤薄膜
+  reason: 合成纤维单体及聚酯化纤收入行未匹配，AROMATICS销售-29%
+- op: upsert
+  kind: new
+  sector: '750000'
+  node:
+    id: PROD_PETRO_SPECIALTY_OIL
+    type: product
+    name: 特种油品
+    segment: SEG_PETRO_REFINING
+    aliases:
+    - 白油产品
+    - 特种油系列
+    - 工业白油
+  reason: 白油/特种油为独立炼油细分，现无节点
+- op: upsert
+  kind: new
+  sector: '750000'
+  node:
+    id: PROD_PETRO_C5_C9
+    type: product
+    name: C5/C9馏分及石油树脂
+    segment: SEG_PETRO_OLEFINS
+    aliases:
+    - C5馏分
+    - C9馏分
+    - 石油树脂
+  reason: 裂解副产C5/C9及石油树脂无节点
+- op: upsert
+  kind: new
+  sector: '750000'
+  node:
+    id: PROD_PETRO_PIA
+    type: product
+    name: 间苯二甲酸
+    segment: SEG_PETRO_AROMATICS
+    aliases:
+    - PIA
+    - 精间苯二甲酸
+  reason: 恒逸石化PIA单列收入，芳烃段缺此产品
+- op: upsert
+  kind: alias
+  sector: '750000'
+  node:
+    id: SEG_PETRO_OILFIELD_SERVICES
+    type: segment
+    name: 油田服务
+    aliases:
+    - 油田技术服务
+    - 油气田技术服务
+  reason: 油服主要收入行措辞未匹配，中海油服/石化油服大额漏配
+- op: upsert
+  kind: alias
+  sector: '750000'
+  node:
+    id: PROD_PETRO_WORKOVER_SVC
+    type: product
+    name: 修井及油田运维
+    segment: SEG_PETRO_OILFIELD_SERVICES
+    aliases:
+    - 井下特种作业
+  reason: 油服主要收入行措辞未匹配，中海油服/石化油服大额漏配
+- op: upsert
+  kind: alias
+  sector: '750000'
+  node:
+    id: PROD_PETRO_DRILLING_SVC
+    type: product
+    name: 钻井服务
+    segment: SEG_PETRO_OILFIELD_SERVICES
+    aliases:
+    - 钻井特种工程
+    - 钻井专项技术服务
+    - 钻井节能技术服务
+    context_aliases:
+    - 钻井
+  reason: 油服主要收入行措辞未匹配，中海油服/石化油服大额漏配
+- op: upsert
+  kind: alias
+  sector: '750000'
+  node:
+    id: PROD_PETRO_LOGGING_SVC
+    type: product
+    name: 测井录井服务
+    segment: SEG_PETRO_OILFIELD_SERVICES
+    aliases:
+    - 测井仪器及服务
+  reason: 油服主要收入行措辞未匹配，中海油服/石化油服大额漏配
+- op: upsert
+  kind: alias
+  sector: '750000'
+  node:
+    id: PROD_PETRO_CHEM_TRADING
+    type: product
+    name: 石化产品贸易
+    segment: SEG_PETRO_TRADING
+    aliases:
+    - 石油化工产品贸易
+  reason: 贸易与管输收入行措辞未匹配
+- op: upsert
+  kind: alias
+  sector: '750000'
+  node:
+    id: SEG_PETRO_GAS_MIDSTREAM
+    type: segment
+    name: 天然气储运与贸易
+    aliases:
+    - 管输业务
+  reason: 贸易与管输收入行措辞未匹配
+- op: upsert
+  kind: alias
+  sector: '750000'
+  node:
+    id: PROD_PETRO_ASPHALT
+    type: product
+    name: 石油沥青
+    segment: SEG_PETRO_REFINING
+    aliases:
+    - 改性沥青
+  reason: 改性沥青收入行未匹配沥青节点
+- op: upsert
+  kind: rename
+  sector: '410000'
+  node:
+    id: SEG_UTIL_POWER
+    type: segment
+    name: 电力产业
+  reason: 父段名“电力”泛匹配，吸走线缆/电子厂与煤企；改名后发电企业按申万三级回落到具体子段
+- op: upsert
+  kind: alias
+  sector: '410000'
+  node:
+    id: PROD_UTIL_POWER_SALES
+    type: product
+    name: 售电服务
+    segment: SEG_UTIL_POWER_SERVICES
+    aliases:
+    - 市场化售电
+    - 购售电服务
+    - 售电业务
+  reason: 两字别名“售电”把发电企业上网电费当成售电零售，电能综合服务虚增54%
+  drop_aliases:
+  - 售电
+- op: upsert
+  kind: alias
+  sector: '410000'
+  node:
+    id: SEG_UTIL_POWER_SERVICES
+    type: segment
+    name: 电能综合服务
+  reason: 段级同样去掉两字别名“售电”，配售电保留，避免发电企业售电收入落入本段
+  drop_aliases:
+  - 售电
+- op: upsert
+  kind: rename
+  sector: '410000'
+  node:
+    id: SEG_UTIL_GAS
+    type: segment
+    name: 燃气产业
+  reason: 父段名“燃气”两字泛匹配，吸入管材/调压设备/工业气体；城燃销售、工程措辞改归子产品
+  drop_aliases:
+  - 城市燃气
+- op: upsert
+  kind: alias
+  sector: '410000'
+  node:
+    id: PROD_UTIL_CITY_GAS
+    type: product
+    name: 城市燃气分销
+    segment: SEG_UTIL_GAS
+    aliases:
+    - 城市燃气
+    - 燃气销售
+    - 燃气供应
+    - 燃气运营业务
+  reason: 燃气段改名后，城燃销售、燃气工程、燃气资源措辞改挂到对应子产品
+- op: upsert
+  kind: alias
+  sector: '410000'
+  node:
+    id: PROD_UTIL_GAS_CONNECTION
+    type: product
+    name: 燃气接驳
+    segment: SEG_UTIL_GAS
+    aliases:
+    - 燃气工程
+    - 燃气初装
+  reason: 燃气段改名后，城燃销售、燃气工程、燃气资源措辞改挂到对应子产品
+- op: upsert
+  kind: alias
+  sector: '410000'
+  node:
+    id: PROD_UTIL_LNG_TRADING
+    type: product
+    name: LNG贸易
+    segment: SEG_UTIL_GAS
+    aliases:
+    - 燃气资源
+  reason: 燃气段改名后，城燃销售、燃气工程、燃气资源措辞改挂到对应子产品
+- op: upsert
+  kind: alias
+  sector: '410000'
+  node:
+    id: SEG_UTIL_HEAT
+    type: segment
+    name: 热力服务
+    aliases:
+    - 热力销售
+    - 热力产品
+    - 热力供应
+    - 供暖收入
+    context_aliases:
+    - 售热
+    - 蒸汽
+  reason: 发电集团售热收入措辞“热力销售/热力产品”未匹配，热力段-22%多为措辞变化
+- op: upsert
+  kind: new
+  sector: '410000'
+  node:
+    id: PROD_UTIL_METHANE_POWER
+    type: product
+    name: 瓦斯及沼气发电
+    segment: SEG_UTIL_OTHER_GEN
+    aliases:
+    - 低浓度瓦斯
+    - 瓦斯发电
+    - 沼气发电
+    - 填埋气发电
+  reason: 低浓度瓦斯/填埋沼气发电有专营公司，现无节点，收入未匹配或落入泛“电力”
+- op: upsert
+  kind: new
+  sector: '410000'
+  node:
+    id: PROD_UTIL_WASTE_HEAT_POWER
+    type: product
+    name: 余热发电
+    segment: SEG_UTIL_OTHER_GEN
+    aliases:
+    - 余热余压发电
+    - 余热发电业务
+  reason: 工业余热发电运营收入未匹配，其他能源发电缺此品类
+- op: upsert
+  kind: alias
+  sector: '410000'
+  node:
+    id: PROD_UTIL_CHARGING_OPERATION
+    type: product
+    name: 充电运营服务
+    segment: SEG_UTIL_POWER_SERVICES
+  reason: “充电网络”是充电桩硬件产品线措辞，把道通科技充电桩收入误作充电运营
+  drop_aliases:
+  - 充电网络
+- op: upsert
+  kind: alias
+  sector: '410000'
+  node:
+    id: PROD_UTIL_INTEGRATED_ENERGY
+    type: product
+    name: 综合能源服务
+    segment: SEG_UTIL_POWER_SERVICES
+    aliases:
+    - 综合能源利用
+  reason: 北交所综合能源公司“综合能源利用”行未匹配
+- op: upsert
+  kind: alias
+  sector: '620000'
+  node:
+    id: PROD_CONS_HIGHWAY
+    type: product
+    name: 公路工程
+    segment: SEG_CONS_INFRA
+    aliases:
+    - 路桥工程
+    - 路桥施工
+  reason: “路桥工程施工”被模糊匹配进园林绿化工程，应归公路工程
+- op: upsert
+  kind: new
+  sector: '620000'
+  node:
+    id: PROD_CONS_ROAD_MAINTENANCE
+    type: product
+    name: 公路养护工程
+    segment: SEG_CONS_INFRA
+    aliases:
+    - 路桥养护
+    - 公路养护
+    - 养护施工
+  reason: 路桥养护约94亿只落基建段级，需独立养护节点
+- op: upsert
+  kind: rename
+  sector: '620000'
+  node:
+    id: SEG_CONS_SPECIALIZED
+    type: segment
+    name: 专业工程板块
+  reason: 父段名“专业工程”直接吸走成员，改为汇总名，措辞归其他专业工程
+- op: upsert
+  kind: rename
+  sector: '620000'
+  node:
+    id: SEG_CONS_OTHER_SPECIALIZED
+    type: segment
+    name: 其他专业工程
+    parent: SEG_CONS_SPECIALIZED
+    aliases:
+    - 专业工程
+  reason: 父段名“专业工程”直接吸走成员，改为汇总名，措辞归其他专业工程
+- op: upsert
+  kind: alias
+  sector: '620000'
+  node:
+    id: SEG_CONS_HOUSING
+    type: segment
+    name: 房屋建设
+    aliases:
+    - 房屋建筑
+    - 房建施工
+  reason: 房建收入行措辞未匹配，部分落入基建段或未匹配
+- op: upsert
+  kind: alias
+  sector: '620000'
+  node:
+    id: SEG_CONS_INFRA
+    type: segment
+    name: 基础建设
+    aliases:
+    - 基础设施建设
+    - 基建工程
+  reason: 基建收入行误落房建段或公建产品，补基建措辞
+- op: upsert
+  kind: alias
+  sector: '620000'
+  node:
+    id: PROD_CONS_MUNICIPAL
+    type: product
+    name: 市政工程
+    segment: SEG_CONS_INFRA
+    aliases:
+    - 城市基础设施
+  reason: 基建收入行误落房建段或公建产品，补基建措辞
+- op: upsert
+  kind: alias
+  sector: '620000'
+  node:
+    id: PROD_CONS_INFRA_INVESTMENT
+    type: product
+    name: 基建投资运营
+    segment: SEG_CONS_INFRA
+    aliases:
+    - 基础设施投资
+  reason: “特许经营”把珠宝、早教加盟费及环保运营拉进基建
+  drop_aliases:
+  - 特许经营
+  - BOT
+- op: upsert
+  kind: alias
+  sector: '620000'
+  node:
+    id: PROD_CONS_CLEANROOM
+    type: product
+    name: 洁净室工程
+    segment: SEG_CONS_OTHER_SPECIALIZED
+    aliases:
+    - 洁净室
+    - 机电工艺系统
+  reason: 深桑达A洁净室约446亿未挂洁净室节点，只落段级
+- op: upsert
+  kind: alias
+  sector: '620000'
+  node:
+    id: PROD_CONS_FOUNDATION
+    type: product
+    name: 地基基础工程
+    segment: SEG_CONS_OTHER_SPECIALIZED
+    aliases:
+    - 地基基础
+    - 地基处理
+    - 岩土工程
+  reason: 地基处理/岩土工程措辞未命中地基基础节点
+- op: upsert
+  kind: new
+  sector: '620000'
+  node:
+    id: PROD_CONS_LIGHTING_ENG
+    type: product
+    name: 照明工程
+    segment: SEG_CONS_OTHER_SPECIALIZED
+    aliases:
+    - 照明工程
+    - 城市照明
+    - 景观照明
+  reason: 景观/城市照明工程有多家专营公司，缺节点
+- op: upsert
+  kind: alias
+  sector: '620000'
+  node:
+    id: SEG_CONS_CONSULTING
+    type: segment
+    name: 工程咨询服务
+    aliases:
+    - 设计咨询
+    - 勘测设计
+  reason: 综合建筑商设计咨询行及北交所咨询措辞未落咨询段
+- op: upsert
+  kind: alias
+  sector: '620000'
+  node:
+    id: PROD_CONS_PLANNING
+    type: product
+    name: 规划设计
+    segment: SEG_CONS_CONSULTING
+    aliases:
+    - 国土空间规划
+    - 规划咨询
+  reason: 综合建筑商设计咨询行及北交所咨询措辞未落咨询段
+- op: upsert
+  kind: alias
+  sector: '620000'
+  node:
+    id: PROD_CONS_WHOLE_PROCESS
+    type: product
+    name: 全过程工程咨询
+    segment: SEG_CONS_CONSULTING
+    aliases:
+    - 全过程咨询
+  reason: 综合建筑商设计咨询行及北交所咨询措辞未落咨询段
+- op: upsert
+  kind: alias
+  sector: '620000'
+  node:
+    id: PROD_CONS_SURVEY
+    type: product
+    name: 工程勘察
+    segment: SEG_CONS_CONSULTING
+    aliases:
+    - 勘察测绘
+  reason: 综合建筑商设计咨询行及北交所咨询措辞未落咨询段
+- op: upsert
+  kind: alias
+  sector: '620000'
+  node:
+    id: PROD_CONS_LANDSCAPE
+    type: product
+    name: 园林绿化工程
+    segment: SEG_CONS_LANDSCAPE
+    aliases:
+    - 园林绿化
+    - 生态景观
+  reason: 园林绿化措辞在综合建筑商中落入房建段
+- op: upsert
+  kind: new
+  sector: '610000'
+  node:
+    id: PROD_BM_MAGNESIA
+    type: product
+    name: 镁质耐火原料
+    parent: PROD_BM_REFRACTORY_RAW
+    segment: SEG_BM_REFRACTORY
+    aliases:
+    - 镁质功能性材料
+    - 菱镁矿石
+    - 电熔镁砂
+    - 重烧镁砂
+    - 轻烧氧化镁
+  reason: 东和新材镁质材料约6.6亿未匹配，镁系是耐火原料主品类需单列
+- op: upsert
+  kind: new
+  sector: '610000'
+  node:
+    id: PROD_BM_BLAST_FURNACE_REFRACTORY
+    type: product
+    name: 高炉用耐火材料
+    segment: SEG_BM_REFRACTORY
+    aliases:
+    - 高炉功能性消耗材料
+    - 高炉本体内衬
+    - 高炉炮泥
+    - 高炉出铁沟
+  reason: 瑞尔竞达高炉内衬与消耗材料约4亿未匹配，现有耐材节点无高炉品类
+- op: upsert
+  kind: new
+  sector: '610000'
+  node:
+    id: PROD_BM_ALU_WINDOW
+    type: product
+    name: 铝合金门窗
+    segment: SEG_BM_DECORATIVE
+    aliases:
+    - 系统门窗
+    - 节能门窗
+  reason: 罗普斯金门窗收入无节点；门窗属装修建材终端品，与铝型材上游分开
+- op: upsert
+  kind: alias
+  sector: '610000'
+  node:
+    id: PROD_NFM_ARCH_ALU_PROFILE
+    type: product
+    name: 建筑铝型材
+    parent: PROD_NFM_ALU_EXTRUSION
+    segment: SEG_NFM_ALU_FABRICATION
+    aliases:
+    - 建筑型材
+  reason: 罗普斯金建筑型材与光伏边框8.3亿未匹配，措辞未覆盖有色铝型材节点
+- op: upsert
+  kind: alias
+  sector: '610000'
+  node:
+    id: PROD_NFM_PV_ALU_FRAME
+    type: product
+    name: 光伏铝边框
+    parent: PROD_NFM_IND_ALU_PROFILE
+    segment: SEG_NFM_ALU_FABRICATION
+    aliases:
+    - 铝合金边框
+    - 光伏铝合金边框
+  reason: 罗普斯金建筑型材与光伏边框8.3亿未匹配，措辞未覆盖有色铝型材节点
+- op: upsert
+  kind: alias
+  sector: '610000'
+  node:
+    id: PROD_BM_PCE
+    type: product
+    name: 聚羧酸减水剂
+    parent: PROD_BM_ADMIXTURE
+    segment: SEG_BM_ADMIXTURE
+    aliases:
+    - 聚羧酸系外加剂
+    - 聚羧酸外加剂
+    - 聚羧酸系减水剂
+  reason: 红墙股份聚羧酸系外加剂6.1亿未匹配，补全聚羧酸措辞
+- op: upsert
+  kind: alias
+  sector: '610000'
+  node:
+    id: PROD_BM_REFRACTORY_SERVICE
+    type: product
+    name: 耐材整体承包
+    segment: SEG_BM_REFRACTORY
+    aliases:
+    - 吨钢结算
+    - 耐材整体承包服务
+  reason: 中钢洛耐吨钢结算模式即耐材总包按吨钢计价，补别名
+- op: upsert
+  kind: alias
+  sector: '610000'
+  node:
+    id: PROD_BM_PROCESSED_GLASS
+    type: product
+    name: 建筑深加工玻璃
+    segment: SEG_BM_GLASS
+    aliases:
+    - 镀釉玻璃
+    - 彩釉玻璃
+  reason: 870512.BJ镀釉玻璃7.6亿未匹配，釉面玻璃属深加工玻璃
+- op: upsert
+  kind: alias
+  sector: '610000'
+  node:
+    id: PROD_BM_CERAMIC_FIBER
+    type: product
+    name: 陶瓷纤维
+    segment: SEG_BM_INSULATION
+    aliases:
+    - 汽车衬垫
+    - 陶瓷纤维过滤
+  reason: 鲁阳节能汽车衬垫为陶瓷纤维制品，补别名
+- op: upsert
+  kind: alias
+  sector: '610000'
+  node:
+    id: PROD_BM_PE_PIPE
+    type: product
+    name: PE管材
+    segment: SEG_BM_PIPES
+    aliases:
+    - PE燃气管
+    - 燃气用PE管
+  reason: 燃气管别名把燃气公司管道业务拉入管材，改为PE燃气管
+  drop_aliases:
+  - 燃气管
+- op: upsert
+  kind: rename
+  sector: '340000'
+  node:
+    id: SEG_FOOD_PROCESSING
+    type: segment
+    name: 食品加工产业
+  reason: 父段名“食品加工”直接吸走家电/养殖公司，应只作汇总
+- op: upsert
+  kind: rename
+  sector: '340000'
+  node:
+    id: SEG_FOOD_SNACKS_SEG
+    type: segment
+    name: 休闲食品产业
+  reason: 父段名“休闲食品”直接吸成员且FY2025跳升1437%，改汇总名
+- op: upsert
+  kind: alias
+  sector: '340000'
+  node:
+    id: PROD_FOOD_SNACK
+    type: product
+    name: 休闲零食
+    segment: SEG_FOOD_SNACKS
+    aliases:
+    - 休闲食品
+  reason: 父段改名后“休闲食品”营收行由休闲零食产品承接
+- op: upsert
+  kind: rename
+  sector: '340000'
+  node:
+    id: SEG_FOOD_OTHER
+    type: segment
+    name: 方便及其他食品
+    parent: SEG_FOOD_PROCESSING
+  reason: 段名“其他食品”为泛词，吸入光明肉业致+98%
+- op: upsert
+  kind: new
+  sector: '340000'
+  node:
+    id: PROD_FOOD_MILK_DRINK
+    type: product
+    name: 含乳饮料
+    parent: PROD_FOOD_DAIRY
+    segment: SEG_FOOD_DAIRY
+    aliases:
+    - 乳饮料
+    - 乳酸菌饮料
+  reason: 含乳饮料为区域乳企主要品类，现无节点承接
+- op: upsert
+  kind: alias
+  sector: '340000'
+  node:
+    id: PROD_FOOD_UHT_MILK
+    type: product
+    name: 常温白奶
+    parent: PROD_FOOD_LIQUID_MILK
+    segment: SEG_FOOD_DAIRY
+    aliases:
+    - 灭菌乳
+    - 调制乳
+  reason: 国标品类名“灭菌乳/调制乳”未被常温奶别名覆盖
+- op: upsert
+  kind: alias
+  sector: '340000'
+  node:
+    id: PROD_FOOD_FRESH_MILK
+    type: product
+    name: 低温鲜奶
+    parent: PROD_FOOD_LIQUID_MILK
+    segment: SEG_FOOD_DAIRY
+    aliases:
+    - 巴氏杀菌乳
+    - 巴氏乳
+  reason: 国标名“巴氏杀菌乳”不含现有别名“巴氏奶”
+- op: upsert
+  kind: new
+  sector: '340000'
+  node:
+    id: PROD_FOOD_SEASONING_OIL
+    type: product
+    name: 调味油
+    segment: SEG_FOOD_CONDIMENTS
+    aliases:
+    - 藤椒油
+    - 花椒油
+    - 辣椒油
+  reason: 藤椒/花椒等调味油为独立调味品类，现无节点
+- op: upsert
+  kind: alias
+  sector: '340000'
+  node:
+    id: PROD_FOOD_INSTANT_NOODLE
+    type: product
+    name: 方便食品
+    segment: SEG_FOOD_OTHER
+    aliases:
+    - 方便粉丝
+    - 方便米制品
+    - 方便米饭
+  reason: 方便粉丝/米制品、魔芋制品措辞未被现有别名覆盖
+- op: upsert
+  kind: alias
+  sector: '340000'
+  node:
+    id: PROD_FOOD_KONJAC_SNACK
+    type: product
+    name: 魔芋零食
+    parent: PROD_FOOD_SNACK
+    segment: SEG_FOOD_SNACKS
+    aliases:
+    - 魔芋制品
+  reason: 方便粉丝/米制品、魔芋制品措辞未被现有别名覆盖
+- op: upsert
+  kind: new
+  sector: '230000'
+  node:
+    id: SEG_STL_TRADING
+    type: segment
+    name: 钢铁贸易流通
+  reason: 钢厂外购钢材转售与钢材供应链贸易无对应节点，常被误配到冶炼/辅料
+- op: upsert
+  kind: new
+  sector: '230000'
+  node:
+    id: PROD_STL_STEEL_TRADING
+    type: product
+    name: 钢材贸易
+    segment: SEG_STL_TRADING
+    aliases:
+    - 外购钢材
+    - 钢铁贸易
+    - 钢材供应链
+  reason: 钢厂外购钢材转售与钢材供应链贸易无对应节点，常被误配到冶炼/辅料
+- op: upsert
+  kind: new
+  sector: '230000'
+  node:
+    id: PROD_STL_SPECIAL_STRIP
+    type: product
+    name: 优特钢带
+    segment: SEG_STL_SPECIAL
+    aliases:
+    - 特钢带材
+    - 合金钢带
+    - 优特钢带材
+  reason: 特钢带材(冷轧/热轧合金钢带)是独立品类，特钢段只有棒线锻材
+- op: upsert
+  kind: new
+  sector: '230000'
+  node:
+    id: PROD_STL_HOT_STRIP
+    type: product
+    name: 热轧带钢
+    parent: PROD_STL_HOT_ROLLED_COIL
+    segment: SEG_STL_FLAT
+    aliases:
+    - 中宽热带
+    - 中宽带钢
+    - 热轧窄带钢
+  reason: 中宽带/窄带钢是热卷之外的独立板带品种，凌钢等单列披露
+- op: upsert
+  kind: alias
+  sector: '230000'
+  node:
+    id: PROD_STL_COLD_ROLLED
+    type: product
+    name: 冷轧板卷
+    segment: SEG_STL_FLAT
+    aliases:
+    - 冷轧薄板
+    - 冷轧卷
+  reason: 鞍钢'冷轧薄板系列产品'、柳钢'冷轧卷'未匹配冷轧节点
+- op: upsert
+  kind: alias
+  sector: '230000'
+  node:
+    id: PROD_STL_HOT_ROLLED_COIL
+    type: product
+    name: 热轧板卷
+    segment: SEG_STL_FLAT
+    aliases:
+    - 热轧薄板
+    - 热轧板带
+  reason: 鞍钢'热轧薄板系列产品'未匹配热卷节点
+- op: upsert
+  kind: alias
+  sector: '230000'
+  node:
+    id: PROD_STL_COLOR_COATED
+    type: product
+    name: 彩涂板
+    segment: SEG_STL_FLAT
+    aliases:
+    - 彩色涂层板
+    - 彩色涂层钢板
+  reason: 华达新材'彩色涂层板'为彩涂板全称，未匹配
+- op: upsert
+  kind: alias
+  sector: '230000'
+  node:
+    id: SEG_STL_LONG
+    type: segment
+    name: 普钢长材
+    aliases:
+    - 棒材及型材
+    - 棒型材
+    context_aliases:
+    - 棒材
+  reason: 河钢'棒材及型材'拆成2字词后均无法匹配，整句挂长材段
+- op: upsert
+  kind: alias
+  sector: '230000'
+  node:
+    id: PROD_STL_DUCTILE_IRON_PIPE
+    type: product
+    name: 球墨铸铁管
+    segment: SEG_STL_PIPE
+    aliases:
+    - 铸管等产品
+    - 铸铁管件
+  reason: 安阳钢铁'铸管等产品'未匹配；'铸管'2字不能作别名
+- op: upsert
+  kind: alias
+  sector: '230000'
+  node:
+    id: SEG_NFM_VANADIUM
+    type: segment
+    name: 钒产业链
+    aliases:
+    - 钒产品
+    - 钒制品
+  reason: 河钢承德钒产品行未匹配；钒节点在有色文件，不在钢铁新建重复节点
+- op: upsert
+  kind: rename
+  sector: '740000'
+  node:
+    id: SEG_COAL_WASHING
+    type: segment
+    name: 煤炭洗选
+    parent: SEG_COAL_COKING_MINING
+  reason: 改挂炼焦煤开采之下:740102两个根段使行业兜底失效,11家焦煤公司煤炭行全未匹配
+- op: upsert
+  kind: rename
+  sector: '740000'
+  node:
+    id: SEG_COAL_BYPRODUCTS
+    type: segment
+    name: 焦化副产品深加工
+    parent: SEG_COAL_COKING
+  reason: 改挂焦化之下(与已有part_of边一致),使740201焦炭Ⅲ公司获得行业兜底
+- op: upsert
+  kind: new
+  sector: '740000'
+  node:
+    id: PROD_COAL_SIZED_COAL
+    type: product
+    name: 洗选块末煤
+    segment: SEG_COAL_THERMAL_MINING
+    aliases:
+    - 洗块煤
+    - 洗末煤
+    - 洗粒煤
+    - 洗混煤
+  reason: 块煤/末煤粒度品种为动力及无烟煤主力销售口径,现有分类缺品种节点
+- op: upsert
+  kind: new
+  sector: '740000'
+  node:
+    id: SEG_COAL_MINE_SERVICES
+    type: segment
+    name: 煤矿托管运营服务
+    parent: SEG_COAL_MINING
+    aliases:
+    - 煤矿托管
+    - 矿井托管
+    - 矿井生产技术服务
+    - 煤矿运营服务
+    - 煤矿生产运营
+  reason: 煤矿托管/生产运营服务是独立商业模式,FY2025约36亿收入无节点
+- op: upsert
+  kind: alias
+  sector: '740000'
+  node:
+    id: SEG_COAL_LOGISTICS
+    type: segment
+    name: 煤炭运销
+    aliases:
+    - 焦炭贸易
+    - 煤焦贸易
+    - 煤炭供应链
+  reason: 煤焦贸易措辞未命中运销段
+- op: upsert
+  kind: alias
+  sector: '740000'
+  node:
+    id: SEG_COAL_LOGISTICS
+    type: segment
+    name: 煤炭运销
+    aliases:
+    - 贸易煤
+  reason: 外购贸易煤被兜底计入动力煤开采,虚增开采约1100亿
+- op: upsert
+  kind: alias
+  sector: '740000'
+  node:
+    id: SEG_COAL_WASHING
+    type: segment
+    name: 煤炭洗选
+    aliases:
+    - 配煤业务
+    - 配煤洗选
+  reason: 配煤(洗选加工配比)措辞未命中洗选段
+- op: upsert
+  kind: alias
+  sector: '740000'
+  node:
+    id: PROD_COAL_TAR_PITCH
+    type: product
+    name: 煤沥青
+    segment: SEG_COAL_BYPRODUCTS
+    aliases:
+    - 改质液体沥青
+    - 改质固体沥青
+  reason: 煤焦油深加工品措辞未命中(别名'改质沥青'非'改质液体沥青'子串)
+- op: upsert
+  kind: alias
+  sector: '740000'
+  node:
+    id: PROD_COAL_INDUSTRIAL_NAPHTHALENE
+    type: product
+    name: 工业萘
+    segment: SEG_COAL_BYPRODUCTS
+    aliases:
+    - 甲基萘油
+  reason: 煤焦油深加工品措辞未命中(别名'改质沥青'非'改质液体沥青'子串)
+- op: upsert
+  kind: new
+  sector: '110000'
+  node:
+    id: PROD_AGRI_MARKET_HOG
+    type: product
+    name: 商品猪
+    segment: SEG_AGRI_HOG_FARMING
+    aliases:
+    - 商品肉猪
+    - 肉猪类
+    - 猪产业
+    - 养猪产品
+    - 生猪销售
+    - 生猪内销
+    - 猪业产品
+    - 育肥猪
+    - 商品肥猪
+    - 牲猪销售
+    - 猪收入
+    context_aliases:
+    - 生猪
+  reason: 生猪段只有种猪/仔猪/代养,缺最大品类商品猪;猪收入落饲料或肉鸡段
+- op: upsert
+  kind: alias
+  sector: '110000'
+  node:
+    id: PROD_AGRI_YELLOW_BROILER
+    type: product
+    name: 黄羽肉鸡
+    segment: SEG_AGRI_BROILER_FARMING
+    aliases:
+    - 肉鸡类
+  reason: 温氏肉鸡收入因SW兜底记在生猪段,补措辞归黄羽肉鸡
+- op: upsert
+  kind: split
+  sector: '110000'
+  node:
+    id: SEG_AGRI_OTHER_LIVESTOCK
+    type: segment
+    name: 其他养殖
+    parent: SEG_AGRI_LIVESTOCK
+  reason: 其他养殖混合肉鸭与牛羊两条周期不同的链,拆为两个子段,鸡蛋留父段
+  split_from: &id001
+  - SEG_AGRI_OTHER_LIVESTOCK
+- op: upsert
+  kind: split
+  sector: '110000'
+  node:
+    id: SEG_AGRI_DUCK_FARMING
+    type: segment
+    name: 肉鸭养殖
+    parent: SEG_AGRI_OTHER_LIVESTOCK
+  reason: 其他养殖混合肉鸭与牛羊两条周期不同的链,拆为两个子段,鸡蛋留父段
+  split_from: *id001
+- op: upsert
+  kind: split
+  sector: '110000'
+  node:
+    id: SEG_AGRI_RUMINANT_FARMING
+    type: segment
+    name: 牛羊养殖
+    parent: SEG_AGRI_OTHER_LIVESTOCK
+  reason: 其他养殖混合肉鸭与牛羊两条周期不同的链,拆为两个子段,鸡蛋留父段
+  split_from: *id001
+- op: upsert
+  kind: split
+  sector: '110000'
+  node:
+    id: PROD_AGRI_DUCK
+    type: product
+    name: 肉鸭
+    segment: SEG_AGRI_DUCK_FARMING
+    aliases:
+    - 鸭产品
+  reason: 其他养殖混合肉鸭与牛羊两条周期不同的链,拆为两个子段,鸡蛋留父段
+  split_from: *id001
+- op: upsert
+  kind: split
+  sector: '110000'
+  node:
+    id: PROD_AGRI_DUCK_BREEDER
+    type: product
+    name: 种鸭
+    parent: PROD_AGRI_DUCK
+    segment: SEG_AGRI_DUCK_FARMING
+    aliases:
+    - 父母代雏鸭
+    - 祖代雏鸭
+    - 曾祖代雏鸭
+    - 父母代种鸭
+  reason: 其他养殖混合肉鸭与牛羊两条周期不同的链,拆为两个子段,鸡蛋留父段
+  split_from: *id001
+- op: upsert
+  kind: split
+  sector: '110000'
+  node:
+    id: PROD_AGRI_BEEF_CATTLE
+    type: product
+    name: 肉牛
+    segment: SEG_AGRI_RUMINANT_FARMING
+  reason: 其他养殖混合肉鸭与牛羊两条周期不同的链,拆为两个子段,鸡蛋留父段
+  split_from: *id001
+- op: upsert
+  kind: split
+  sector: '110000'
+  node:
+    id: PROD_AGRI_SHEEP
+    type: product
+    name: 肉羊
+    segment: SEG_AGRI_RUMINANT_FARMING
+  reason: 其他养殖混合肉鸭与牛羊两条周期不同的链,拆为两个子段,鸡蛋留父段
+  split_from: *id001
+- op: upsert
+  kind: split
+  sector: '110000'
+  node:
+    id: PROD_AGRI_DAIRY_FARMING
+    type: product
+    name: 奶牛养殖
+    segment: SEG_AGRI_RUMINANT_FARMING
+  reason: 其他养殖混合肉鸭与牛羊两条周期不同的链,拆为两个子段,鸡蛋留父段
+  split_from: *id001
+- op: upsert
+  kind: split
+  sector: '110000'
+  node:
+    id: PROD_AGRI_DAIRY_HEIFER
+    type: product
+    name: 进口奶牛与胚胎
+    segment: SEG_AGRI_RUMINANT_FARMING
+  reason: 其他养殖混合肉鸭与牛羊两条周期不同的链,拆为两个子段,鸡蛋留父段
+  split_from: *id001
+- op: upsert
+  kind: rename
+  sector: '110000'
+  node:
+    id: SEG_AGRI_PROCESSING
+    type: segment
+    name: 农产品加工产业
+  reason: 父节点名'农产品加工'直接吸附成员(+508%),改伞形名,措辞交给其他农产品加工
+- op: upsert
+  kind: rename
+  sector: '110000'
+  node:
+    id: SEG_AGRI_OTHER_PROCESSING
+    type: segment
+    name: 其他农产品加工
+    parent: SEG_AGRI_PROCESSING
+    aliases:
+    - 农产品加工
+  reason: 父节点名'农产品加工'直接吸附成员(+508%),改伞形名,措辞交给其他农产品加工
+- op: upsert
+  kind: new
+  sector: '110000'
+  node:
+    id: PROD_AGRI_WOOD_PANEL
+    type: product
+    name: 人造板
+    segment: SEG_AGRI_FORESTRY
+    aliases:
+    - 纤维板
+    - 刨花板
+    - 胶合板
+    - 人造板产品
+  reason: 林业公司主要收入是人造板,现节点只有营林与碳汇,收入未匹配或兜底
+- op: upsert
+  kind: new
+  sector: '110000'
+  node:
+    id: PROD_AGRI_PLANT_PROTEIN
+    type: product
+    name: 植物蛋白
+    segment: SEG_AGRI_GRAIN_OIL_PROCESSING
+    aliases:
+    - 大豆蛋白
+    - 大豆分离蛋白
+    - 大豆浓缩蛋白
+    - 组织化蛋白
+    - 豌豆蛋白
+    - 食用蛋白
+  reason: 大豆/豌豆蛋白是独立深加工品类,约31亿全靠SW兜底
+- op: upsert
+  kind: alias
+  sector: '110000'
+  node:
+    id: PROD_AGRI_SUGAR_REFINING
+    type: product
+    name: 食糖加工
+    segment: SEG_AGRI_OTHER_PROCESSING
+    aliases:
+    - 加工糖
+    - 自产糖
+    - 贸易糖
+  reason: 糖企收入行写作加工糖/自产糖/贸易糖,未命中食糖节点
+- op: upsert
+  kind: alias
+  sector: '110000'
+  node:
+    id: PROD_AGRI_FROZEN_SEAFOOD_PROCESSING
+    type: product
+    name: 水产品加工
+    segment: SEG_AGRI_OTHER_PROCESSING
+    aliases:
+    - 水产食品
+  reason: 国联水产主业是对虾加工食品,不是养殖,兜底误落水产养殖段
+- op: upsert
+  kind: alias
+  sector: '110000'
+  node:
+    id: PROD_AGRI_SOY_CRUSHING
+    type: product
+    name: 大豆压榨
+    segment: SEG_AGRI_GRAIN_OIL_PROCESSING
+    aliases:
+    - 油脂科技
+  reason: 金龙鱼压榨分部924亿全记饲料原料贸易,虚增畜禽饲料;加措辞使复合行拆入压榨
+- op: upsert
+  kind: alias
+  sector: '110000'
+  node:
+    id: PROD_AGRI_FARMED_FISH
+    type: product
+    name: 养殖鱼类
+    segment: SEG_AGRI_AQUACULTURE
+    aliases:
+    - 三文鱼
+  reason: 佳沃食品三文鱼为智利自养,应归水产养殖而非兜底加工
+- op: upsert
+  kind: alias
+  sector: '230000'
+  node:
+    id: SEG_STL_FLAT
+    type: segment
+    name: 普钢板材
+    context_aliases:
+    - 板材
+    - 卷板
+  reason: 行业内短别名(2字)：只对本行业公司的整行精确匹配，收回大额营收行
+- op: upsert
+  kind: alias
+  sector: '230000'
+  node:
+    id: PROD_STL_PLATE
+    type: product
+    name: 中厚板
+    context_aliases:
+    - 中板
+  reason: 行业内短别名(2字)：只对本行业公司的整行精确匹配，收回大额营收行
+- op: upsert
+  kind: alias
+  sector: '610000'
+  node:
+    id: SEG_BM_COATINGS
+    type: segment
+    name: 建筑涂料与辅材
+    context_aliases:
+    - 涂料
+  reason: 行业内短别名(2字)：只对本行业公司的整行精确匹配，收回大额营收行
+- op: upsert
+  kind: alias
+  sector: '740000'
+  node:
+    id: PROD_COAL_STEAM_COAL
+    type: product
+    name: 动力煤商品煤
+    context_aliases:
+    - 末煤
+    - 混煤
+  reason: 行业内短别名(2字)：只对本行业公司的整行精确匹配，收回大额营收行
+- op: upsert
+  kind: alias
+  sector: '750000'
+  node:
+    id: PROD_PETRO_JET_FUEL
+    type: product
+    name: 航空煤油
+    context_aliases:
+    - 煤油
+  reason: 行业内短别名(2字)：只对本行业公司的整行精确匹配，收回大额营收行

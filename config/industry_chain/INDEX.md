@@ -2,6 +2,11 @@
 
 The product taxonomy and chain skeleton (plan 12 phase 1, D-097): Opus-written priors, one YAML per Shenwan L1 sector plus shared nodes. Format in `README.md`.
 
+## Folders
+| Folder | Purpose |
+|---|---|
+| `_changes/` | accepted taxonomy versions applied on top of these v0 files (plan 28 ph3b-4, TaxonomyChangeSet) |
+
 ## Files
 | File | Purpose | Contains |
 |---|---|---|

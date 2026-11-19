@@ -1,0 +1,46 @@
+# Existing label files imported into the parquet label store derived/labels/ (plan 28 ph0, D-161).
+# Order matters: a source with `anchor_set` needs that set's sources listed before it.
+# Paths are relative to the lake root. FY2025 / H1 2026 re-run 2026-11-15 by backfill_annual.py (plan 28 ph1). taxonomy_version "v0-20261113" = the taxonomy those runs used.
+sources:
+  # rule-based parse of annual reports: sections, top-5 customers and suppliers (anchor for code-only sets)
+  - {label_set: report_parse, path: meta/runs/backfill/fy2022/parse.parquet, period: "20221231", doc_type: annual, key_field: ann_id, key_prefix: annual}
+  - {label_set: report_parse, path: meta/runs/backfill/fy2023/parse.parquet, period: "20231231", doc_type: annual, key_field: ann_id, key_prefix: annual}
+  - {label_set: report_parse, path: meta/runs/backfill/fy2024/parse.parquet, period: "20241231", doc_type: annual, key_field: ann_id, key_prefix: annual}
+  - {label_set: report_parse, path: meta/runs/backfill/fy2025/parse.parquet, period: "20251231", doc_type: annual, key_field: ann_id, key_prefix: annual}
+  # revenue lines -> downstream applications, customer types, named counterparties
+  - {label_set: applications, path: meta/runs/backfill/fy2022/applications.jsonl, key_field: key, taxonomy_version: v0-20261113}
+  - {label_set: applications, path: meta/runs/backfill/fy2023/applications.jsonl, key_field: key, taxonomy_version: v0-20261113}
+  - {label_set: applications, path: meta/runs/backfill/fy2024/applications.jsonl, key_field: key, taxonomy_version: v0-20261113}
+  - {label_set: applications, path: meta/runs/backfill/h1_2023/applications.jsonl, key_field: key, taxonomy_version: v0-20261113}
+  - {label_set: applications, path: meta/runs/backfill/h1_2024/applications.jsonl, key_field: key, taxonomy_version: v0-20261113}
+  - {label_set: applications, path: meta/runs/backfill/h1_2025/applications.jsonl, key_field: key, taxonomy_version: v0-20261113}
+  - {label_set: applications, path: meta/runs/backfill/fy2025/applications.jsonl, key_field: key, taxonomy_version: v0-20261113}
+  - {label_set: applications, path: meta/runs/backfill/h1_2026/applications.jsonl, key_field: key, taxonomy_version: v0-20261113}
+  # business mode, pricing, moat claims (annual reports; keyed by company, anchored on the parse row)
+  - {label_set: business_modes, path: meta/runs/backfill/fy2022/business_modes.jsonl, anchor_set: report_parse}
+  - {label_set: business_modes, path: meta/runs/backfill/fy2023/business_modes.jsonl, anchor_set: report_parse}
+  - {label_set: business_modes, path: meta/runs/backfill/fy2024/business_modes.jsonl, anchor_set: report_parse}
+  - {label_set: business_modes, path: meta/runs/backfill/fy2025/business_modes.jsonl, anchor_set: report_parse}
+  - {label_set: moat_claims, path: meta/runs/backfill/fy2022/moat_claims.jsonl, anchor_set: report_parse}
+  - {label_set: moat_claims, path: meta/runs/backfill/fy2023/moat_claims.jsonl, anchor_set: report_parse}
+  - {label_set: moat_claims, path: meta/runs/backfill/fy2024/moat_claims.jsonl, anchor_set: report_parse}
+  - {label_set: moat_claims, path: meta/runs/backfill/fy2025/moat_claims.jsonl, anchor_set: report_parse}
+  - {label_set: pricing_adjudication, path: meta/runs/business/pricing_adjudication.jsonl, period: "20251231", anchor_set: report_parse}
+  # Q1 / Q3 notes
+  # 2026 run chose files by publish-year folder: 113 rows name another period or are H-share copies
+  - {label_set: quarterly_notes, path: meta/runs/quarterly/quarterly_notes.jsonl, key_field: key, exclude_file: meta/runs/quarterly/not_reports_20261115.csv}
+  # 2023Q1-2026Q3 back-fill, reports chosen by title year and quarter (plan 28 ph1)
+  - {label_set: quarterly_notes, path: meta/runs/quarterly/backfill_notes.jsonl, key_field: key}
+  # broker report valuations (one row per report; public on its publish date)
+  - {label_set: broker_valuations, path: meta/runs/valuation/valuations.jsonl, key_field: doc_id, date_field: date, doc_type: stock_report}
+  # plan 28 phase 2/3 full runs (meta/runs/plan28_full.py, D-161 updates 6 and 8): one row per document, items in
+  # the payload with their own period; known_on = publish date (互动问答: date of the chunk's last reply; each
+  # item's own date is dates[page - 1] in the payload)
+  - {label_set: inquiry_counterparties, path: meta/runs/plan28/full/inquiry_reply.jsonl, key_field: doc_id, date_field: publish_date}
+  - {label_set: prospectus_counterparties, path: meta/runs/plan28/full/prospectus.jsonl, key_field: doc_id, date_field: publish_date}
+  - {label_set: ir_counterparties, path: meta/runs/plan28/full/ir_record.jsonl, key_field: doc_id, date_field: publish_date}
+  - {label_set: ir_counterparties, path: meta/runs/plan28/full/irm_qa.jsonl, key_field: doc_id, date_field: publish_date}
+  - {label_set: broker_counterparties, path: meta/runs/plan28/full/stock_report.jsonl, key_field: doc_id, date_field: publish_date}
+  - {label_set: deals, path: meta/runs/plan28/full/investment.jsonl, key_field: doc_id, date_field: publish_date}
+  - {label_set: operating_data, path: meta/runs/plan28/full/operating_data.jsonl, key_field: doc_id, date_field: publish_date}
+  - {label_set: buyback_terms, path: meta/runs/plan32/terms.jsonl, key_field: doc_id, date_field: publish_date}  # plan 32 ph2 (D-169): 回购方案 / 增持计划 terms

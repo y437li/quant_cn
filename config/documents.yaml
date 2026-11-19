@@ -29,10 +29,12 @@ sources:
       - {doc_type: prospectus, include: "招股说明书", exclude: "摘要|提示性|附录|意见|核查|法律|发行结果|上市公告"}
       - {doc_type: ir_record, include: "投资者关系活动记录|投资者关系管理信息|调研活动"}
       - {doc_type: restructuring, include: "重组报告书|重大资产购买|发行股份购买资产.*报告书", exclude: "摘要|提示性"}
+      - {doc_type: buyback_plan, include: "回购.{0,20}(方案|预案|报告书)", exclude: &plan_noise "摘要|法律意见|核查|进展|完成|完毕|首次回购|存续期|结果|届满|过半|终止|调整|变更|更正|补充|延期|提示性|注销.{0,10}限制性"}  # plan 32 (D-169)
+      - {doc_type: holder_increase_plan, include: "增持.{0,20}计划", exclude: *plan_noise}  # plan 32 (D-169)
       - {doc_type: major_contract, include: "重大合同|中标"}
       - {doc_type: investment, include: "对外投资|投资建设|项目投资|投资项目"}
       - {doc_type: incentive_plan, include: "(股票期权|限制性股票|股权)激励计划.*草案", exclude: "摘要|法律意见|核查|独立财务顾问"}
-      - {doc_type: operating_data, include: "经营数据|经营情况简报|新签合同|主要经营数据", exclude: "更正"}
+      - {doc_type: operating_data, include: "经营数据|经营情况简报|新签合同|主要经营数据|销售.{0,16}简报|经营简报", exclude: "更正"}  # 销售…简报 / 经营简报: developers' monthly briefs (plan 31 ph3; 新城控股 titles 经营简报)
   cninfo_kw:
     dataset: cninfo_keyword_announcements
     id_column: ann_id

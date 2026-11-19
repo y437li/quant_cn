@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState, type PointerEvent, type RefObject } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent, type RefObject } from "react";
 import { api, type EtfProxy, type ProxyWeek } from "../../api/client";
-import { flowClass, proxyHeadline, signedYi, yi } from "./etf-proxy-format";
+import { flowClass, flowMatrix, heat, markYi, pctDown, pctRank, proxyHeadline, signedNum, signedYi, windowLine, windowRange, yi, type MatrixRow } from "./etf-proxy-format";
 import { dayMs, linear, niceTicks, ymd } from "./watchlist-format";
 
 const RECENT_SHOWN = 5;
@@ -20,9 +20,9 @@ function useWidth(min = 280): [RefObject<HTMLDivElement>, number] {
 }
 
 /**
- * Purpose: the 国家队 ETF panel at the top of 观察账本 (plan 15 phase 7b, D-126): headline, weekly position of
+ * Purpose: the 国家队 ETF panel of the ETF 监测 page (plan 15 phase 7b, D-126; own page since ph7j): headline, weekly position of
  * the core (national-team) ETFs and of the other ETFs at today's price, weekly core net flow, per-index table,
- * last days' flows. Loads GET /api/etf-proxy itself; every number is from the Python EtfProxyBuilder.
+ * last days' flows, 近3月 percentile and range, and the per-index weekly flow matrix (ph7o). Loads GET /api/etf-proxy itself; every number is from the Python EtfProxyBuilder.
  * Contract: renders nothing until loaded; an error or an empty document shows a one-line note.
  */
 export function EtfProxyPanel() {
@@ -33,10 +33,12 @@ export function EtfProxyPanel() {
   if (!doc) return null;
   if (!doc.as_of) return <section className="wl-section ep" data-ep="0"><p className="note">还没有国家队 ETF 数据：运行 <code>make etf-proxy</code>。</p></section>;
   const recent = doc.recent.slice(-RECENT_SHOWN);
+  const weeks = doc.rhythm_weeks ?? 5;
   return (
     <section className="wl-section ep" data-ep={doc.indices.length}>
       <h3>国家队 ETF 代理</h3>
       <p className="ep-head">{proxyHeadline(doc, doc.recent.length)}</p>
+      {windowLine(doc) && <p className="ep-head" data-ep-window>{windowLine(doc)}</p>}
       <PositionChart weeks={doc.weekly} />
       <FlowBars weeks={doc.weekly} />
       <div className="ep-recent">
@@ -58,16 +60,61 @@ export function EtfProxyPanel() {
           ))}</tbody>
         </table>
       </div>
+      <div className="scrollx">
+        <span className="wl-k">分指数节奏（仓位按现价）</span>
+        <table className="wl-table" data-ep-rhythm={doc.indices.length}>
+          <thead><tr>{["指数", "高点仓位", "高点后低点", "现在", "近3月分位", "近3月区间", "低点以来加仓", `近 ${weeks} 周`, "本周", "最新一日", "今年", "距年内高点"].map((h, i) => <th key={h} className={i ? "num" : ""}>{h}</th>)}</tr></thead>
+          <tbody>{doc.indices.map((x) => (
+            <tr key={x.name}>
+              <td>{x.name}</td><td className="num">{markYi(x.peak)}</td><td className="num">{markYi(x.trough_since_peak)}</td><td className="num">{yi(x.position)}</td>
+              <td className="num">{pctRank(x.window)}</td><td className="num">{windowRange(x.window)}</td>
+              <td className={`num ep-${flowClass(x.since_trough)}`}>{signedYi(x.since_trough)}</td>
+              {[x.flow_weeks, x.flow_week, x.flow_day, x.flow_ytd].map((v, i) => <td key={i} className={`num ep-${flowClass(v)}`}>{signedYi(v)}</td>)}
+              <td className="num">{pctDown(x.drawdown)}</td>
+            </tr>
+          ))}</tbody>
+        </table>
+      </div>
+      <FlowMatrix names={doc.indices.map((x) => x.name)} rows={flowMatrix(doc.indices, doc.matrix_weeks ?? 14)} />
       <details className="wl-notes">
         <summary>口径</summary>
         <dl>
           <dt>范围</dt><dd>{doc.n_members} 只完全跟踪 7 个宽基指数的场内 ETF（不含联接、增强），自 {ymd(doc.start)} 起。核心 = 国家队重仓的 11 只大 ETF；其他 = 同指数的其余 ETF。ETF 份额包含所有持有人，季报前十大持有人可以核对。</dd>
           <dt>净申赎</dt><dd>规模变化减去价格涨跌带来的部分（AUM_t − AUM_t−1 × 当日收益），份额拆分和缺数日不影响。</dd>
+          <dt>分指数节奏</dt><dd>高点 = 该指数全部 ETF 的仓位（按现价）最高的一天，低点 = 高点之后最低的一天；近 {weeks} 周含本周（自然周，截至份额日）；距年内高点用参考 ETF 的收盘价（含分红除息的小幅下跌）。</dd>
+          <dt>近3月分位</dt><dd>今天的仓位（按现价）在最近 {doc.pct_window_days ?? 63} 个交易日每日仓位里的位置：100% = 区间最高，0% = 最低（相同的算在内）；区间 = 这段时间的最低–最高。</dd>
+          <dt>每周净申赎</dt><dd>每个自然周的净申赎合计，最新一周在最上面（本周截至份额日）；蓝色流入、橙色流出，颜色越深金额越大（在这张表内比较，按平方根放大小额，便于看出小的流出）。</dd>
           <dt>仓位（按现价）</dt><dd>规模按每个指数最大 ETF 的价格折回今天的价格水平，所以涨跌不会显示成买卖。</dd>
           <dt>更新</dt><dd>交易日 18:30 自动运行 make etf-proxy。份额数据比价格晚 1–3 天：份额截至 {ymd(doc.as_of)}，价格截至 {ymd(doc.price_as_of)}。</dd>
         </dl>
       </details>
     </section>
+  );
+}
+
+/**
+ * Purpose: per-index weekly net flow, newest week first, cells shaded by size (blue in / orange out), ph7o.
+ * Contract: no rows → nothing; a missing week → "—".
+ */
+function FlowMatrix({ names, rows }: { names: string[]; rows: MatrixRow[] }) {
+  if (!rows.length) return null;
+  return (
+    <div className="scrollx">
+      <span className="wl-k">每周净申赎（亿元，最近 {rows.length} 周）</span>
+      <table className="wl-table ep-matrix" data-ep-matrix={rows.length}>
+        <thead><tr><th>周</th>{names.map((n) => <th key={n} className="num">{n}</th>)}</tr></thead>
+        <tbody>{rows.map((r) => (
+          <tr key={r.date}>
+            <td>{ymd(r.date).slice(5)}</td>
+            {r.flows.map((v, i) => (
+              <td key={names[i]} className={`num ep-cell ep-${flowClass(v)}`} style={{ "--h": heat(v, rows) } as CSSProperties}>
+                {signedNum(v)}
+              </td>
+            ))}
+          </tr>
+        ))}</tbody>
+      </table>
+    </div>
   );
 }
 

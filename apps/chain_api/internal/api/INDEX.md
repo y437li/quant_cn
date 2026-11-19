@@ -5,5 +5,5 @@ HTTP layer: routes /api/* to the Store, everything else to the static front end.
 ## Files
 | File | Purpose | Contains |
 |---|---|---|
-| `handlers.go` | `Server` and its handlers (400 / 404 / 405 / 500 rules), incl. `/api/watchlist` and `/api/etf-proxy` | `Server`, `NewServer` |
-| `handlers_test.go` | TC-API-001..008 |  |
+| `handlers.go` | `Server` and its handlers (400 / 404 / 405 / 500 rules), incl. `/api/watchlist`, `/api/etf-proxy`, `/api/macro`, `/api/futures`, `/api/margin/{code}` and `/api/sector-monitor` | `Server`, `NewServer` |
+| `handlers_test.go` | TC-API-001..015 |  |

@@ -31,6 +31,7 @@ class LenientItem(BaseModel):
     Used by:
         industry_graph.GuidanceItem  -- base
         industry_graph.ContractItem  -- base
+        industry_graph.QuotedItem  -- base
 
     Test cases:
         TC-LI-001  "30%", "1,234.5万元", 12 and None parse; "不适用" becomes None; text fields

@@ -23,6 +23,13 @@ class DateCodec:
             ValueError  -- malformed date string or start > end
 
     Used by:
+        cli.GaugeCommands  -- injected type or call
+        calculation.EarningsEventBuilder  -- price lead window (plan 35)
+        calculation.ConsensusPanelBuilder  -- note window (plan 36)
+        portfolio.AppRankReader  -- new-game window
+        portfolio.MarketSignalReader  -- revision and survey windows
+        industry_graph.NodeMemberBuilder  -- release date fallback
+        industry_graph.GraphQuery  -- date checks
         core.Config.load                           -- validates configured start dates
         data_loading.DateSweepFetcher.list_keys    -- weekdays for ann_date sweeps
         data_loading.PeriodSweepFetcher.list_keys  -- quarter ends for period sweeps
@@ -44,6 +51,16 @@ class DateCodec:
         calculation.CompanyCyclePanel              -- validates as_of
         risk.RiskInputLoader  -- injected type or call
         visualization.RiskChart  -- injected type or call
+        cli.AppServiceBuilder  -- wires it
+        portfolio.EtfCtaBook  -- YYYYMMDD conversions
+        portfolio.EtfCtaRecord  -- YYYYMMDD conversions
+        portfolio.EtfCtaViewTilt  -- view dates
+        core.EtfCtaView  -- expiry check
+        cli.ReportCommands  -- `etf-cta` wiring
+        lake.LabelStore                            -- period / known_on checks
+        cli.DocumentCommands                       -- injected type or call
+        industry_graph.EdgeSpanBuilder  -- as_of check, days since last seen
+        industry_graph.NodeEdgeBuilder  -- as_of check
 
     Test cases:
         TC-DC-001  to_date/to_str round trip

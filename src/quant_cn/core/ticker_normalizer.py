@@ -6,6 +6,7 @@ import re
 
 _TS_CODE = re.compile(r"^\d{6}\.(SH|SZ|BJ)$")
 _CODE_LEN = 6
+_BSE_NEW = "92"  # Beijing exchange codes issued since 2024 (920xxx)
 _PREFIXED = re.compile(r"^(sh|sz|bj)(\d{6})$", re.IGNORECASE)
 
 
@@ -23,13 +24,15 @@ class TickerNormalizer:
             ValueError  -- unrecognised format or a bare code whose exchange cannot be inferred
 
     Used by:
-        (none yet)
+        industry_graph.LegacyLabelImporter  -- label file codes -> ts_code
+        cli.DocumentCommands                -- wires it
 
     Test cases:
         TC-TN-001  ts_code passes through unchanged
         TC-TN-002  exchange-prefixed spellings normalised
-        TC-TN-003  bare codes inferred by leading digits (6/9 SH, 0/2/3 SZ, 4/8 BJ)
+        TC-TN-003  bare codes inferred by leading digits (6/9 SH, 0/2/3 SZ, 4/8/92 BJ)
         TC-TN-004  garbage raises ValueError; is_valid is False for it
+        TC-TN-005  920xxx (BSE codes since 2024) map to .BJ; 900xxx (SH B shares) stay .SH
     """
 
     def normalize(self, code: str) -> str:
@@ -72,6 +75,8 @@ class TickerNormalizer:
 
     def _get_exchange(self, digits: str) -> str:
         head = digits[0]
+        if digits.startswith(_BSE_NEW):
+            return "BJ"
         if head in "69":
             return "SH"
         if head in "023":

@@ -51,4 +51,5 @@ See MACRO_COMMODITY_DESIGN §6 (second source, adjustment method, initial produc
 
 | Date | Phase | Change |
 |---|---|---|
+| 2026-11-13 | 3 | Daily term-structure monitoring (curve shape and percentiles per family, value-chain spreads) is delivered by plan 15 ph7i on top of plan 16's `FuturesCurve` (D-145). `TermStructure` here shrinks to what phase 4 factors need, if this plan is approved |
 | 2026-09-28 | — | Drafted from user request: add oil, gold and other commodity prices, and sectors |

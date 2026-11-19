@@ -26,14 +26,14 @@ func dirWithBase(t *testing.T, wl string) string {
 	return dir
 }
 
-// TC-ST-007: the fixture is served as written (numbers from Python, nulls kept).
+// TC-ST-007: the fixture is served as written (numbers from Python, nulls kept, kind stock | etf).
 func TestTCST007WatchlistPresent(t *testing.T) {
 	w, err := load(t).GetWatchlist()
 	if err != nil || w.AsOf != "20261106" || len(w.Entries) != 2 {
 		t.Fatalf("watchlist: %v %+v", err, w.AsOf)
 	}
 	e := w.Entries[0]
-	if e.Name != "涪陵榨菜" || e.Price != 11.84 || e.GapToBuy != -0.1554 || *e.PeAtBuy != 15.5 || *e.YieldAtBuy != 0.042 || e.Status != "far" {
+	if e.Name != "涪陵榨菜" || e.Kind != "stock" || e.Price != 11.84 || e.GapToBuy != -0.1554 || *e.PeAtBuy != 15.5 || *e.YieldAtBuy != 0.042 || e.Status != "far" {
 		t.Fatalf("entry: %+v", e)
 	}
 	if *e.EpsYear != "2026" || *e.EpsBrokers != 8 || len(e.Weekly) != 52 || w.Missing == nil {
@@ -66,5 +66,24 @@ func TestTCST009WatchlistMalformed(t *testing.T) {
 	}
 	if _, err := s.GetWatchlist(); err == nil {
 		t.Fatal("malformed file must fail")
+	}
+}
+
+// TC-ST-020: entry conditions and their status are served as written; entries without
+// conditions get an empty list and a null conditions_needed.
+func TestTCST020WatchlistConditions(t *testing.T) {
+	w, err := load(t).GetWatchlist()
+	if err != nil {
+		t.Fatal(err)
+	}
+	e := w.Entries[0]
+	if len(e.Conditions) != 2 || e.Conditions[0].State != "unmet" || *e.Conditions[0].Actual != 1.0 || e.Conditions[1].Actual != nil {
+		t.Fatalf("conditions: %+v", e.Conditions)
+	}
+	if *e.ConditionsNeeded != 2 || e.ConditionStatus != "wait" {
+		t.Fatalf("status: %+v", e)
+	}
+	if w.Entries[1].Conditions == nil || w.Entries[1].ConditionsNeeded != nil {
+		t.Fatalf("plain entry: %+v", w.Entries[1])
 	}
 }

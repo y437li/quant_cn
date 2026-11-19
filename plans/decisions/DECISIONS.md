@@ -1133,7 +1133,7 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Links: D-045, D-061, D-071, D-093, plans/execution/05_risk_model.md, RISK_MODEL_DESIGN
 
 ### D-136 Morning e-mail report sent over Gmail SMTP with an app password
-- Status: proposed (2026-11-12, plan 15 ph7e; user: "send a morning report to my gmail for the monitor in chinese desgin the outlay", "用电脑宽度").
+- Status: accepted (2026-11-13; test send OK, layout approved; two e-mails per day: 持仓监测 and 机会清单).
 - Context: the 因子监控 / 持仓 / 观察账本 pages only exist on this Mac. The user wants the same facts in their inbox each morning, in Chinese, laid out for a desktop mail client. No mail connector is available in this environment.
 - Decision: Python `MorningReportBuilder` renders one e-mail-safe HTML (tables + inline styles, no scripts or external images, 960 px desktop layout) from factor_monitor.json, holdings_risk.json and watchlist.json; `MailSender` sends it with `smtplib` over smtp.gmail.com:587 (STARTTLS) using a Gmail app password in `.env` (`GMAIL_APP_PASSWORD`, never committed); sender and recipient addresses in git-ignored `config/local.yaml`. A weekday launchd job sends at a fixed morning time after the evening `track-daily` run; it skips with a log line when the data is older than the last session.
 - Alternatives: a claude.ai artifact or Notion page (rejected: the user asked for Gmail; holdings are personal); Gmail API with OAuth (deferred: more setup for one fixed recipient); macOS Mail via AppleScript (rejected: depends on a configured Mail account and the GUI session).
@@ -1178,6 +1178,39 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Consequences: one more dependency in the shared venv; peers sharing `$HOME/.venvs/quant_cn` see it after `uv sync`.
 - Links: D-005
 
+### D-141 lightgbm and scikit-learn as project dependencies
+- Status: accepted (2026-11-18, plan 21 ph1 started on user "先做计划21"; lightgbm 4.7.0, scikit-learn 1.9.1 added with `uv add`). Peers sync with `uv sync --all-extras` (a plain `uv sync` drops the akshare / baostock / prefect extras).
+- Context: the shareholder-count nowcast was prototyped with LightGBM and scikit-learn in throwaway `uv run --with` environments. Productionising it in plan 21 needs both in the shared venv.
+- Decision: add `lightgbm` and `scikit-learn` to `pyproject.toml` / `uv.lock` when plan 21 phase 1 starts. Library classes that use them go through `new-class`.
+- Alternatives: keep the prototype outside the package (rejected: no daily run, no tests); HistGradientBoosting only (rejected: LightGBM v5 was better and faster).
+- Consequences: peers run `uv sync`; lightgbm ships native wheels for macOS.
+- Links: D-140, plan 21
+
+### D-142 散户温度计 RetailGauge (shareholder-count nowcast): v5 LightGBM on within-quarter ranks, point-in-time walk-forward
+- Status: accepted (2026-11-18, plan 21 build started; user "以V5为准" on 2026-11-12), plan 21.
+- Context: several versions were compared (research_space/prototypes/holder_nowcast): linear IC 0.47, LightGBM v3 0.639, v4 0.646, v5 0.686. Adding national-team ETF flows (v6) and an industry-neutral target gave no gain.
+- Decision:
+  - Target: within-quarter percentile of ln(holders_q / holders_{q-1}).
+  - Features: 83, all as of the prediction date.
+  - Protocol: expanding walk-forward; labels and lags only once announced; medians from training only; calibration table maps deciles to the expected change and IQR.
+  - Order size is not treated as retail identity. Small orders enter only as a model feature.
+- Alternatives:
+  - Use raw small-order flow as "散户资金": rejected, correlation with holder change −0.07.
+  - Sequence models: deferred.
+- Consequences: outputs are directions and ranges, not exact counts. Accuracy is reported every quarter.
+- Links: D-141, D-139, plan 21
+
+### D-143 社融 dataset `sf_month` and a daily macro monitor in the app and morning report
+- Status: proposed (2026-11-13), plan 15 ph7h.
+- Context: the user wants PPI, 社融 and CPI tracked. `cn_cpi`, `cn_ppi`, `cn_m`, `cn_pmi` exist (plan 11 ph5, D-080, lags D-086) but are refreshed only by hand; 社融 is not in the lake.
+- Decision: add Tushare `sf_month` as a monthly dataset with `period_end_lag` and release_lag_days 20 (same conservative rule as `cn_m`); refresh the five macro datasets in `track-daily`; `MacroMonitorBuilder` writes `macro_monitor.json` for a `#macro` page and a 宏观 block in the 持仓监测 e-mail.
+- Alternatives: akshare / PBOC scraping for 社融 (rejected: Tushare covers it with the existing token); a separate plan (rejected: it is one dataset plus one builder on the plan 15 app pattern).
+- Consequences: no consensus data, so no surprise-vs-expectation column; the lag rule may hide a print for a few days until a release calendar is added.
+- Links: D-080, D-086, D-136, plan 15
+
+### D-143 status update
+- Status: accepted (2026-11-13, user: "可以，批了"). Entry above unchanged; DECISIONS.md is append-only.
+
 ### D-148 Dividend yield as a risk-model style (cne5_v3_dy)
 - Status: accepted (2026-11-12, user: "加入股息率"; added by session quant-cn-5c while the risk-model owner quant-cn-b5 was offline).
 - Context: the A-share 红利 style was strong 2022–2026 and the user's book holds high-yield names (巨人 4.8%, 徐工 3.7%), but cne5_v3 had no dividend style, so that exposure was absorbed by value, earnings yield and industries.
@@ -1186,6 +1219,22 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Consequences: `RiskInputLoader` reads dv_ttm; `DescriptorBuilder` adds `dtop` (TC-DB-006). Factor return by year (sum): 2019 +0.3%, 2020 −2.2%, 2021 −0.6%, 2022 +2.3%, 2023 +4.2%, 2024 +1.0%, 2025 −2.2%, 2026 YTD +2.3%.
 - Links: D-127, D-131, plans/execution/05_risk_model.md ph8, RISK_FACTOR_LIST §2
 
+### D-144 Research log: ad-hoc analyses recorded in git, outputs in the lake, queryable in `project`
+- Status: accepted (2026-11-13, user: "可以"), plan 02 ph5–6.
+- Context: the `project` schema covers plans, phases and decisions, but phase status is free text (31 spellings) and ad-hoc analyses (screens, event studies, curves) live only in the session scratchpad and are lost when it ends.
+- Decision: phase status follows `<state> <date> (<commit>) — <note>` with state in todo / doing / blocked / done, parsed into columns. Each ad-hoc analysis is a row in `research_space/RESEARCH_LOG.md`, its scripts in `research_space/runs/<date>_<slug>/` (git), its outputs in the lake `meta/runs/research/<date>_<slug>/`; the catalog loads the log into a `project` table.
+- Alternatives: write the log only into DuckDB (rejected: the catalog is rebuildable from the repo and is never edited by hand, D-017); keep outputs in git (rejected: size, and personal holdings must stay git-ignored, D-120).
+- Consequences: agents must record each analysis; committed scripts read personal data only at runtime.
+- Links: D-017, D-042, D-120, plan 02
+
+### D-145 Daily futures monitor in the app and morning report, built on `FuturesCurve`
+- Status: accepted (2026-11-13, user: "ok"), plan 15 ph7i.
+- Context: the user wants futures tracked systematically. The lake holds all four exchanges' `fut_daily` / `fut_holding`; plan 16 ph2 built `FuturesCurve`; plan 10 ph3 (`TermStructure`) is unapproved and broader (factors, descriptors). Curve and spread checks so far were one-off scripts (research_space/runs/20261113_metal_curves).
+- Decision: a `FuturesMonitorBuilder` reusing `FuturesCurve` writes `futures_monitor.json` daily (price, curve shape, OI change, value-chain spreads from `config/futures_monitor.yaml`, percentile flags) for a `#futures` page and a 期货 block in the 持仓监测 e-mail; `fut_daily` / `fut_holding` join `track-daily`.
+- Alternatives: build plan 10 ph3 first (rejected: unapproved, larger scope); keep one-off scripts (rejected: no daily alerts).
+- Consequences: spread coefficients live in config and must be checked; overseas prices wait for plan 20; plan 10 ph3 keeps only what its factors need.
+- Links: D-121, D-136, D-144, plan 10, plan 16
+
 ### D-147 Dividend yield replaces EP in the factor-campaign score
 - Status: accepted (2026-11-12, user: "就股息吧"; the risk style is D-148, renumbered twice after ID collisions with D-144 research log and D-146 structured conditions).
 - Context: campaign factor_campaign_01 tested DP (`DividendYieldFactor`, dv_ttm / 100, 0 for non-payers), industry- and size-neutralised: 20d IC 0.041 (t 2.58), ICIR 0.54, LS Sharpe 0.72, Romano-Wolf p 0.049; EP 0.038 (t 1.95), 0.42, 0.21, p 0.144. Rank correlation DP–EP 0.59; DP residual on EP keeps a monthly 20d IC of 0.034 (t 5.8). Positive in 2019–21, 2022–24 and 2025–.
@@ -1193,6 +1242,14 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Alternatives: DP as a seventh factor next to EP (not chosen by the user; both carry information, to retest later); keep EP (rejected: weaker on every metric).
 - Consequences: `config/factors.yaml` weights changed; `derived.features` score rebuilt; the trial log records the new trial.
 - Links: D-093, D-148, FACTOR_LIBRARY §1, plans/execution/04_*.md ph5
+
+### D-146 Structured conditions: kinds, unknown-is-not-met, k of n, and the app composition root
+- Status: accepted (2026-11-13), plan 15 ph7f (approved by the user 2026-11-13).
+- Context: buy ranges and position notes carried their real conditions as prose; the user asked for them to be listed and checked. `cli.py` (599 lines) and `ServiceBuilder` (289-line class) were at their size limits.
+- Decision: a `Condition` is `<metric> <op> <value>` of a kind whose metrics are listed in `core.condition.METRICS` (kind `chip` added for winner rate, institutions, northbound, margin, unlocks, insiders). A missing value is `unknown` and never counts as met. Watchlist entries may require k of n conditions (`conditions_needed`). Northbound change compares the last two disclosures because `hk_hold` is quarterly since 2024. Readers stay in `lake`, evaluation in `portfolio`; a new `AppServiceBuilder` wires the app's builders.
+- Alternatives: free-text conditions parsed by an LLM (rejected: not reproducible); counting unknown as met (rejected: hides missing data such as `winner_rate` before plan 21).
+- Consequences: `winner_rate` and `bank_etf_z` conditions show unknown until plan 21 ph1 and plan 15 ph7g; new metrics need a METRICS entry and a reader column.
+- Links: D-120, D-132, D-136, D-142, plan 15, plan 21
 
 ### D-149 CNINFO title rules: inquiry replies first, H-share filings dropped, re-type downloaded files
 - Status: accepted (2026-11-12, plan 18 ph2 approved by the user: "可以").
@@ -1219,6 +1276,46 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
 - Consequences: yields are low for annual plans (7/50 companies give numeric targets) and IR records (6/50). Incentive drafts and order notices carry most items.
 - Links: D-122, D-124, D-149, plan 18
 
+### D-143 status update (2)
+- Status: accepted; implementation note (2026-11-13, plan 15 ph7h). Tushare `cn_pmi` now returns lower-case columns (`month`, `pmi010000`…) without the metadata columns (`ID`, `CREATE_BY`…); the request with the old upper-case field list fails. The `cn_pmi` spec now uses the lower-case fields; primary key and known-on `month`. No code read the old upper-case columns. Entry above unchanged.
+
+### D-151 Daily refresh of every market dataset, scheduled after the China close in local time
+- Status: accepted (2026-11-13, user: "我们的数据应该每天都更新"), plan 15 ph7b / ph7e.
+- Context: the Mac runs on US Eastern time. The data job ran at 18:30 local (07:30 Beijing next day) and refreshed only the watchlist, ETF and macro datasets, so moneyflow, margin, northbound, futures and options lagged by 2–7 sessions; the 08:00 e-mail (21:00 Beijing) went out before that day's China data was fetched.
+- Decision: `make market-data` downloads the last 14 days of every daily market dataset (trade-date sweeps with `--start`; overwrite / date-window datasets without it, D-049) and compacts them; `track-daily` runs it first, then the app documents (watchlist, ETF, macro, futures, risk model, holdings). The launchd data job moves to weekdays 06:00 local (18:00/19:00 Beijing, after the stock and futures day close); the e-mail stays at 08:00.
+- Alternatives: `download` of all datasets (rejected: documents and slow vendors would delay the e-mail); schedule in Beijing time (rejected: launchd uses the Mac's zone).
+- Consequences: the e-mail carries the same-day China close; a catalog lock held by another session at 06:00 fails the job, visible in ~/Library/Logs/quant_cn-daily-track.log.
+- Links: D-049, D-126, D-136, plan 15
+
+### D-152 Daily volatility monitor: CBOE CSV for US VIX, A-share VIX computed on the fly
+- Context: the user wants VIX monitored daily (2026-11-13: "vix也需要监测"). Tushare has no VIX; plan 03's `VixCalculator` exists but its daily `derived/vix/` step (ph4) is not built, and `opt_daily` started 20260801 (too short for a 1-year percentile).
+- Decision: US VIX comes from CBOE's public daily CSV through a new source `cboe` (`CboeClient`, dataset `cboe_vix`, overwrite, refreshed by `make market-data`). The A-share VIX (50 / 300 / 500 ETF, 中证1000, 科创50; trading clock, D-052) is computed by `VolatilityMonitorBuilder` from the lake on each run over a 250-session window; `opt_daily` starts 20250101. Alerts in `config/volatility_monitor.yaml`: US VIX ≥ 25 or +30% in a day; 300ETF and 科创50 VIX ≥ 1-year 90th percentile (after 120 sessions). Shown in the 持仓监测 e-mail (波动率 block) and the app page 波动率监测.
+- Alternatives: wait for plan 03 ph4 partitions (rejected: delays the monitor; the on-the-fly run takes seconds); akshare QVIX feeds (rejected: third-party mirror of the same CBOE-method index, and we already compute it); a fixed-level alert for A-share VIX (rejected: levels differ by underlying, 50ETF ~15 vs 科创50 ~45).
+- Consequences: one more external source (no key, public URL); a CBOE outage leaves the US line stale (the fetch fails visibly in the download table). When plan 03 ph4 lands, the builder can read `derived/vix/` instead of computing.
+- Links: plan 03 ph6, D-052, D-151, plan 15 ph7 (monitor stack)
+
+### D-153 Phone alerts by iMessage from this Mac, plain-language, recipients git-ignored
+- Context: the user wants alerts sent to phones ("可以做个发信息的功能吗？" → 手机信息, first for their mother on an iPhone, "要写大白话一点").
+- Decision: send iMessage through this Mac's Messages app with `osascript` (handle and text passed as argv, never in the script). Recipients, triggers and the line cap live in git-ignored `config/local.notify.yaml`; template `config/notify.example.yaml`. Text is plain Chinese without jargon or English abbreviations, one message per run, each alert once.
+- Alternatives: China SMS platforms (rejected: need a company signature and template approval); Twilio SMS to +86 (rejected: registration, cost, unreliable delivery); WeChat bots (rejected: user chose phone messages); e-mail (already the morning report).
+- Consequences: works only while this Mac is on and signed in to Messages, and the launchd job needs the macOS Automation permission. Phone numbers never enter git. `AlertMessageBuilder` (ph2) owns the plain-language wording.
+- Links: plan 22, D-136 (mail), D-152 (volatility monitor), plan 15 ph7
+
+
+### D-154 Buyback data and shareholder yield
+- Status: proposed (2026-11-13, user: "起草回购数据的计划吧"), plan 23.
+- Context: returns already include cash dividends (adj_factor reinvests them at the ex-date) and buybacks act through the price, but no buyback data is in the lake, so the dividend-yield style (D-148) and the watchlist yield miss companies that return cash by buying back shares; buybacks grew after the 2024 回购增持再贷款 and 市值管理 policies.
+- Decision: add Tushare `repurchase` as a point-in-time event dataset (known on ann_date), group announcements into programmes, and publish a shareholder yield = (cash dividends + executed buybacks over 12 months) ÷ total market cap for display and conditions. Whether it joins or replaces the risk model's dividend style waits for the phase 4 research.
+- Alternatives: scrape buyback amounts from CNINFO announcements (rejected: Tushare has structured progress rows); use planned amounts (rejected: plans are often not executed; only 实施 / 完成 amounts count).
+- Consequences: stage semantics of `amount` (planned vs cumulative executed) must be handled; buyback purpose (cancellation vs employee plans) is unknown, so the yield is gross.
+- Links: D-148, D-151, D-086, plan 23, plan 05, plan 15 ph7f
+
+### D-154 status update
+- Status: accepted (2026-11-13, user: "全部同意，按顺序开工"). Entry above unchanged.
+
+### D-154 status update (2)
+- Status: accepted; outcome of plan 23 phase 4 (2026-11-13). Executed buyback yield adds nothing over the dividend yield (month-end IC 0.011 vs 0.072 at 60 days), so the risk model's dividend style (D-148) stays as it is and shareholder yield is display-only. Buyback plans of at least 2% of total market cap do predict returns (60-day excess +2.0%, t 3.6; +4.6% since 2024), so phase 5 exposes `buyback_plan_pct` (largest live plan as % of market cap) as a condition metric and phase 6 reports new large plans. Entry above unchanged.
+
 ### D-155 RetailGauge top decile is an avoid flag (散户过热回避标记)
 - Status: accepted (2026-11-13, user: "把第10组回避标记加进 plan 21"), plan 21.
 - Context: plan 21 excluded price signals ("不在乎预测股价"). Research run `20261113_retail_gauge_returns` found that the v5 prediction, known at the quarter-end close, is the strongest holder-based return signal we have. Its 60-day excess rank IC is −0.085, or −0.058 net of size / reversal / turnover / momentum and the last announced change. Over 18 quarters the top decile trails the equal-weight market by 3.75% a quarter (t 3.9, 16/18). The long side (deciles 1–4) adds only +1.1% a quarter, and shorting decile 10 is not feasible.
@@ -1235,3 +1332,542 @@ Append-only. Format and rules: `.claude/skills/decisions/SKILL.md`.
   - `RetailGaugeEvaluator` also reports, each quarter, the flagged names' 60-session excess return against the equal-weight market. This keeps the flag's value checked out of sample.
   - The flag goes to review if flagged names beat the equal-weight market in four consecutive quarters.
 - Links: plan 21 ph3–5, D-142, research_space/RESEARCH_LOG.md (20261113_retail_gauge_returns, 20261113_holder_count_returns)
+
+### D-156 Mean-reversion flag only on cost-anchored futures spreads
+- Status: accepted (2026-11-14, user: "把PTA加工费和MTO利润加到监测里"), plan 15 ph7i.
+- Context: research run `20261114_mean_reversion` found that single futures do not keep a stable trend or reversion trait (variance-ratio class formed 2020–22 has rank corr −0.14..+0.08 with 2023–26). Only spreads anchored by a production cost revert out of sample: PTA 加工费 (half-life 12 sessions, ADF p 0.00, z-reversion Sharpe 1.34 since 2023) and PP − 3×甲醇 (94 sessions, p 0.04, Sharpe 1.06).
+- Decision:
+  - A spread in `config/futures_monitor.yaml` may carry `reversion: true` and `half_life_d`. Only PTA 加工费 and the new 甲醇制烯烃利润 (PP − 3×MA) do.
+  - Every spread gets a one-year z (`z_1y`, at least 120 values). A reversion spread with |z| ≥ `reversion_z` (default 2.0) raises a flag of kind "reversion". The phone alert says plainly that it is far from normal and how long it usually takes to return.
+  - It is a flag only: no automatic trades or sizing.
+- Alternatives:
+  - Classify each family as trend or reversion by variance ratio: rejected, the trait is not stable out of sample.
+  - Flag ratios (金银比, 铜金比, 金油比, 铝−氧化铝): rejected, z-reversion lost money on them.
+  - 5-year percentile only: kept as is for every spread, but it is slow for a 12-session half-life.
+- Consequences:
+  - Steel margins (Sharpe 1.1 since 2023 but not stationary) stay without the flag; review after a year of the flag on the two spreads.
+  - Half-lives are measured values from one sample; re-run `research_space/runs/20261114_mean_reversion/` yearly.
+- Links: plan 15 ph7i, plan 22, D-145, D-153, research_space/RESEARCH_LOG.md (20261114_tsmom, 20261114_mean_reversion)
+
+### D-156 status update
+- 2026-11-14, user: "钢厂利润也加进去吧". 螺纹利润 and 热卷利润 also carry `reversion: true` (half-lives 152 / 149 sessions). This overrides the "steel margins stay without the flag" consequence. Their z-reversion Sharpe was 1.1 since 2023 but only 0.31 over the full sample, and the ADF test did not reject a unit root (p 0.16 / 0.24). Read their flags as weaker than the PTA and MTO ones; review after a year.
+
+### D-157 Index trend position: short-trend blend with volatility sizing; fear as context only
+- Status: proposed (2026-11-14), plan 24.
+- Context: research runs 20261114_tsmom_robust and 20261114_vix_vs_trend. The 12-month signal alone exits a median 8 months after a top. Short windows are better on A-share indices but window- and period-sensitive. "Buy when the VIX is high" lowers the result when it is added to the position.
+- Decision:
+  - The suggested position per broad index = share of {10, 21, 42, 252}-session signals that are up × min(1, 20% / 60-day realised volatility).
+  - Fear (A-share VIX percentile, realised volatility where no options exist) is shown next to it, with the historical fear × trend row, and does not change the position.
+  - It is a research signal shown in the monitor: no orders.
+- Alternatives:
+  - Single 21-day window: rejected; similar Sharpe but the neighbours (15, 30 days) are much worse and the best window changed between halves.
+  - 12-month only: rejected; slow exits (median −35% by the exit).
+  - Moving averages (MA200, 50/200): rejected; no better than 12 months.
+  - Add a fear-buy leg: rejected; Sharpe 0.47 → 0.32, drawdown −31% → −46%.
+- Consequences: the parameters live in `config/volatility_monitor.yaml` (`trend`); a 3-month live check before any wider use.
+- Links: plan 24, D-152, D-153, research_space/RESEARCH_LOG.md (20261114_tsmom_robust, 20261114_vix_vs_trend)
+
+### D-152 status update
+- 2026-11-14, user chose "回补期权，算真实VIX": `opt_daily` start moves from 20250101 to 20150209 (first 50ETF option listing) so the A-share VIX can be computed over its full history for plan 24 research. Disk and API cost: about 2,400 extra trading days.
+
+### D-158 QDII premium alert: fund_nav joins the etf-proxy refresh
+- Status: proposed (2026-11-14), plan 26.
+- Context:
+  - User: "加一个QDII溢价提醒".
+  - On 2026-11-05/06 the QDII 纳指 ETFs traded at +20..25% over NAV and the 标普 ETFs at +12..13%.
+  - `fund_nav` is in the lake but not in any daily refresh.
+- Decision:
+  - Add `fund_nav` (market E) to `ETF_PROXY_DATASETS`, refreshed over the last 14 days.
+  - Premium = close / unit_nav − 1 on the latest date where both exist (QDII NAV lags one to two sessions).
+  - 可买 below 3%, 很高 at or above 10%; flag only on a crossing.
+  - Shown in the ETF panel and the morning e-mail. No phone line (plan 22 sends only to 妈妈, A股 focus).
+- Alternatives:
+  - Intraday IOPV premium: rejected; needs real-time quotes.
+  - Phone alert: not by default; only if the user asks.
+- Consequences: one more dataset in the daily job; `EtfPremiumMonitor` and `EtfPremiumSettings` to build.
+- Links: plan 26, plan 15 ph7b, D-126, research_space/RESEARCH_LOG.md (20261114_etf_universe)
+
+### D-159 Backfill ETF, fund NAV, futures and SGE history for long ETF-book backtests
+- Status: accepted (2026-11-14), user: "回溯到最早补齐数据".
+- Context:
+  - The ETF risk-budget book (research `20261114_etf_universe`) can only be tested from 2020: fund_daily, fund_nav, fut_daily, fut_mapping and sge_daily all start in 2019.
+  - The core ETFs list in 2011-2013, so earlier history would cover the 2013 and 2016-17 bond bears, the 2015 crash and 2018.
+- Decision: move the dataset starts back and backfill once, after the opt_daily backfill (D-152 update) has finished (one lake writer).
+  - fund_daily and fund_nav: 20050222 (first listed ETF, 510050).
+  - fut_daily, fut_mapping and sge_daily: 20100104 (same start as index_daily and cn_bond_yield). The commodity group before the commodity ETFs (2019-12) uses a main-contract proxy.
+- Alternatives: proxies only (indices and the bond curve). Rejected: no tracking error, fees or QDII premium, and no gold or commodity series before 2019.
+- Consequences:
+  - Older years add raw and curated partitions.
+  - Daily refreshes are unchanged (they use their own windows).
+  - Research reruns from 2013.
+- Links: research_space/RESEARCH_LOG.md (20261114_etf_universe), D-074, D-077, D-152
+
+### D-160 ETF CTA book: long-only risk budget with A股 trend timing
+- Status: accepted (2026-11-14, user: "每周看，2点不动，开工吧"), plan 27.
+- Context:
+  - The user cannot trade futures and wants a long-only ETF version of a CTA ("只做多的 ETF 版 CTA", "我们自己做").
+  - Research `20261114_etf_universe` compared fixed mixes, risk parity / budgets, vol timing, trend switches and VIX helpers.
+- Decision:
+  - Groups 股票 (A股 + 港股, 2 : 1), 债券, 黄金, 商品 (有色 + 能化 + 原油), each at a 1 / 60-day-vol risk weight. Budget 1:1:1:1, monthly.
+  - A股 ETFs scaled weekly by the plan-24 position (D-157).
+  - Bond trend switch, no 30-year and a 65% bond cap stay options until the 2013– backtest (D-159 data).
+  - Freed weight goes to the money-market ETF 511880.
+  - Update 2026-11-14 (user: "可以，就按60/40定"), after the 2014– backtest and the user's duration concern:
+    - 60% 风险资产: 股票 / 黄金 / 商品 at 1:1:1 risk weights (1 / 60-day vol), monthly.
+    - 40% bonds: 5-year 511010 and 30-year 511090 at equal capital, scaled weekly by the bond trend switch (21/63/252). Replaces the 1:1:1:1 bond budget and the 65% cap.
+    - 原油 = 易方达 161129, with the premium guard: buy or add below 3%, no adds at 10% or more.
+    - Evidence `bond_mix.py` 2014-01..2026-11: +7.6%/y, Sharpe 0.84, max dd −7.5%, no losing year, full-weight duration 4.7.
+- Alternatives:
+  - 40/60 fixed: rejected; Sharpe 0.27 and almost all risk in equities.
+  - Covariance ERC: rejected; Sharpe 1.09 with 75% bonds.
+  - Portfolio vol targeting or VIX helpers: rejected; lower Sharpe.
+  - Trend switches on gold and commodity ETFs: rejected; worse.
+  - Buying CTA funds or DBMF: declined by the user.
+- Consequences:
+  - New `EtfCtaSettings` and `EtfCtaBook`.
+  - Plan 24's trend rule is reused on ETF prices.
+  - QDII / LOF lines use the plan 26 premium guard.
+- Links: plan 27, plan 24, plan 26, D-157, D-159, research_space/RESEARCH_LOG.md (20261114_etf_universe)
+
+### D-161 Temporal chain graph: company leaves, industry nodes, labels in parquet
+- Status: proposed (2026-11-14), plan 28.
+- Context:
+  - The user wants a multi-year graph: "leaf是公司，应该在公司里可以看到自己业务的变化。node是行业，行业带有公司。然后行业间可以通过supplier 和buyer，finance invest的关系连接上".
+  - The user also wants every downloaded document type labelled, with labels stored as local parquet: "把其他的文件也打标，打标的应该都在parquet存在本地".
+  - Labels now exist for FY2022–FY2025 and H1 2023–2026, but sit in jsonl files under `meta/runs/`.
+  - FY2022 product lines are almost empty because `fina_mainbz` starts at 2023-06.
+  - Event documents (contracts, inquiry replies, IR Q&A, prospectuses, deals) are downloaded but not labelled.
+- Decision:
+  - Every graph table carries `period`, or an event date for events.
+  - Companies are leaves with a history page.
+  - Industry nodes hold member companies with revenue weights per period.
+  - Node-to-node edges are of two kinds:
+    - supplier / buyer;
+    - finance / invest: equity stakes, outside investment, M&A, subsidiaries.
+  - Node-to-node edges are aggregated from company evidence per period. Prior edges (D-097) are kept apart.
+  - All labels live in `derived/labels/<label_set>/period=<YYYYMMDD>/` parquet through one `LabelStore`; jsonl stays only as the LLM response cache.
+  - This takes over plan 12 phases 5–6 (EntityResolver, GraphStore, GraphQuery), which are built with periods from the start.
+- Alternatives: keep one-period graph tables and diff jsonl files per year; rejected because it gives no node-level history and no single query surface.
+- Consequences: new `LabelStore`, document-type extractors, `NodeEdgeAggregator`; plan 12 ph5–6 point to plan 28.
+- Links: plan 28, plan 12, D-097, D-102, D-104, D-125, D-129
+
+### D-161 update 1
+- User, 2026-11-14: "公司leaf，应该包括我们打标的各种信息".
+- The company leaf is the per-period CompanyCard (D-104).
+- It carries every label set: applications, top-5 customers and suppliers, business mode and pricing power, moat, quarterly notes, guidance and contracts (plan 18), broker valuation and views (plan 13), sector KPIs, and the new document-type sets.
+- Plan 18's `ContractExtractor` is reused; plan 28 reads its output.
+
+### D-161 update 2
+- User, 2026-11-14: "然后应该是哪找时间线排好的", i.e. everything arranged on a timeline.
+- Each label row carries two dates:
+  - `period`: what the fact describes;
+  - `known_on`: when the fact became public, i.e. the announcement date or Q&A reply date.
+- Contracts and deals also carry an `event_date`.
+- Timelines and `as_of` queries order and filter by `known_on`, so a company "as known on a date" never sees a report filed later (handbook point-in-time rule).
+- Company and industry pages lead with a 时间线 view.
+
+### D-161 update 3
+- User, 2026-11-14:
+  - "我想让opus自己来根据初始行业和打标，来调整";
+  - "未来往前走会有linearage".
+- Opus curates the industry nodes for each period. It starts from the starting taxonomy (D-097, D-107) and reads the labels. It proposes new, split, merge, rename and retire changes, each with reasons citing label rows.
+- Accepted changes create a new taxonomy version and `graph.node_lineage` rows (from_node, to_node, kind, effective_period, share of members moved, reason, evidence).
+- Labels keep the taxonomy version they were made with. They are remapped through lineage, not relabelled.
+- Lineage replaces a fixed node set; D-097 still holds: prior product edges stay priors, and company edges need evidence.
+
+### D-161 status update
+- Accepted. User, 2026-11-14: "可以".
+- Open questions settled with the recommendations:
+  - industry nodes start from taxonomy segments;
+  - finance / invest starts with equity stakes, outside investments, M&A and subsidiaries.
+- Phase 0 implementation notes:
+  - Label partitions are `year=<YYYY>` of the period, not `period=`.
+  - There is one row per (company, document), with the record as JSON.
+
+### D-162 Optuna as a research-only tuning tool, walk-forward only
+- Status: accepted (2026-11-14, user: "1" = 可以，装 Optuna), plan 27.
+- Context:
+  - One-at-a-time parameter sweeps of the plan 27 book all land within ±0.07 Sharpe of base (SE ≈ 0.28). The user asked how Optuna / Bayesian optimisation fits in.
+- Decision:
+  - Add `optuna` to the `dev` dependency group. Import it only under `research_space/`, never in `src/`.
+  - Tuning is walk-forward only: fit on data up to year Y−1, score year Y, roll yearly. Robust objective (mean yearly Sharpe − 0.5 × std, max-drawdown cap). Report the out-of-sample record against fixed base parameters, deflated by the number of trials.
+  - Production parameters stay in `config/etf_cta.yaml`. A change needs a clear out-of-sample gain and the user's approval.
+- Alternatives:
+  - Grid search only: rejected; the grid grows too fast with several parameters at once.
+  - Tune on the full history: rejected; the best in-sample point is mostly noise.
+- Consequences:
+  - Research script `research_space/runs/20261114_etf_tuning/`.
+  - The `statistic` deflated-Sharpe tools (D-060) may be reused for the trial count.
+- Links: plan 27, D-160, D-060, research_space/RESEARCH_LOG.md (20261114_etf_tuning)
+
+### D-161 update 4
+- Plan 28 phase 1, 2026-11-14:
+  - `fina_mainbz_p` / `fina_mainbz_i` start moves from 20230101 to 20220101 (FY2022 labels had revenue lines for 491 companies). 2022 downloaded: 6,597 companies at 20221231, 5,444 at 20220630.
+  - Quarterly reports are chosen by the title's year and quarter (latest real version per company and period), not by the publish-year folder. The folder rule labelled 75 corrected 2025 reports as 2026 Q1/Q3; they are re-read under their own period.
+
+### D-163 ETF CTA views: bounded multipliers in a local file, two tracks
+- Status: accepted (2026-11-14, user: "可以，按1、2、3类做，开工吧"), plan 27 ph5.
+- Context:
+  - The user wants to tilt the book by their own views ("我可以根据我的view来调整他们的weight吗"). They chose the multiplier method and kept A股 timing ("ok").
+- Decision:
+  - Views live in the git-ignored `config/local.etf_cta_views.yaml`. Each view has a group (股票 / 黄金 / 商品 / 债券), a multiplier in 0.5–2, a reason, a start date and an expiry no more than 92 days after the start. Optional settings: the 港股 share and an A股 floor (0–1 of the full A股 weight).
+  - A multiplier scales the group's final weight, after A股 timing and the bond switch. Extra weight comes from cash. If the total passes 100%, all non-cash lines scale down to fit.
+  - Expired views are ignored and flagged.
+  - Two paper tracks, 系统 and 含观点, are always shown side by side.
+- Alternatives:
+  - Black-Litterman: rejected; it needs return views and a covariance prior, and the user's views are about weights.
+  - Views overriding A股 timing: rejected by the user's choice. The optional floor is the only override.
+  - Tilt within the 60% risk sleeve only: open; it keeps the risk level fixed, but scaling every group would then do nothing.
+- Consequences:
+  - New `core.EtfCtaViews` and `portfolio.EtfCtaViewTilt`; `EtfCtaBook` writes both tracks.
+  - Plan 27 ph3 displays both tracks.
+- Links: plan 27, D-160, D-162
+- Update 2026-11-14 (accepted scope): three view kinds.
+  - Scale: a group, a named subset (A股 / 港股 / 5年 / 30年, `subsets` in etf_cta.yaml) or one ETF, × 0.5–2. Inside a group the group total is kept. The combined multiplier per ETF is clipped to 0.5–2.
+  - Relative: move up to 5 points of capital from one set to another, capped by the source. Nothing moves into a set at zero weight, so A股 timing is respected.
+  - Price condition: optional `when` (an ETF close below or above a level). The view waits until the condition is met on a decision date, then stays on until expiry.
+  - The A股 floor stays optional. The 港股 share setting is dropped; use a subset scale instead.
+
+### D-161 update 5
+- Plan 28 phase 1, 2026-11-15:
+  - Each label source file is authoritative for its own rows. A re-import removes the rows it wrote earlier for documents the file no longer holds (`LabelStore.write(replace_source=…)`).
+  - `LabelSource.exclude_file` lists keys of a file that are not imported. The 2026 quarterly file uses it for 104 rows that name another period and 9 H-share copies.
+  - A corrected report and its original stay as two rows, each with its own `known_on`. Readers take the latest known version per company and period as of their date.
+  - The report title filter matches only Hong Kong filings (港股公告, a leading 港股, 港股：), not company names containing 港股份.
+
+### D-164 CGO top decile is an avoid flag (浮盈过高别买标记)
+- Status: proposed (2026-11-15, user: "可以，当一个别买信号"), plan 29 ph4–5.
+- Context: plan 29 ph1 (runs `20261115_cgo_reproduce`, `20261115_cgo_ic`): CGO (turnover-decay mean cost, free-float turnover, a = 1.5) has raw 20d rank IC −0.044 (t −2.6) but none net of reversal; the effect is one-sided, the top decile trails by 0.95% over 20 days and the others are flat. Shorting it nets about 0 after borrow cost and lending is scarce. Dropping the high-CGO 20% from the score top 20% lifts its excess from +2.8% to +3.9% a year (t 1.6 -> 2.1).
+- Decision:
+  - `cgo_pct` (market percentile of CGO on the day, all listed stocks) is a 筹码结构 metric; at or above `chips.cgo_avoid_pct` (default 0.9, base.yaml) a held stock carries the flag 浮盈过高, shown on the holdings page and in the morning report.
+  - It is usable in watchlist and position conditions (`cgo_pct < 0.9`).
+  - A flag only: not in the score, no automatic trade, no sizing rule. Plan 29 ph2–3 (factor class, score) are not built.
+- Alternatives:
+  - Score factor: rejected; no IC net of reversal_1m.
+  - Short the top decile: rejected; +1.0%/yr net (t 0.2), years from −37% to +36%, borrow unavailable since 2024.
+- Consequences: new `ChipSettings`, `CgoReader`; `ChipStructureReader`, `Condition`, `PositionReviewer`, the app's chip columns extended. History of 500 sessions per stock is enough (rank corr 1.000 with the 2010 start).
+
+### D-161 update 6
+- Plan 28 phase 2 scope, 2026-11-15 (user: "可以"):
+  - Incentive plans are labelled in phase 2. Their performance targets come from `GuidanceExtractor` (plan 18): plan 28 reads plan 18 phase 4's output into the LabelStore and does not extract them again. Contracts are handled the same way.
+  - Industry reports (55,428, about industries, not companies) move to phase 3b. There they are labelled against the curated industry nodes (cycle, price trend).
+  - The new extractors (inquiry replies, IR records, prospectuses, deals, operating data, broker named customers) share one base, `BaseQuotedExtractor`: prompt file, reply model, page-tagged text, quote check, kept and dropped counts. Each subclass defines only its item model and its item check. The existing extractors (applications, guidance, contracts, quarterly notes …) are not moved onto it in this plan.
+
+### D-165 launchd jobs start /bin/zsh, which holds Full Disk Access
+- Status: accepted (2026-11-16; user: "处理").
+- Context: the first scheduled runs on 2026-11-16 (06:00 track-daily, 08:00 morning-report) both failed with `make: getcwd: Operation not permitted`. macOS privacy (TCC) blocks a launchd agent from the external volume /Volumes/Treasury unless the program launchd starts has been granted access, and `/usr/bin/make` is an xcode-select shim that is awkward to grant.
+- Decision: both plist templates run `/bin/zsh -c 'cd <repo> && exec /usr/bin/make <target>'` with no `WorkingDirectory`; the user grants Full Disk Access to `/bin/zsh` once in System Settings → Privacy & Security. Reinstall with `make track-install` and `make report-install`.
+- Alternatives: grant access to `/usr/bin/make` (rejected: shim, the real binary path changes with Xcode updates); move the repo to the internal disk (rejected: the lake and repo live on the Treasury volume by design).
+- Consequences: every zsh started by the user also has Full Disk Access; a missed run still needs a manual `make track-daily`.
+- Links: D-126, D-136
+
+### D-166 Partial sells lower the position cost (摊薄成本); a paid-back cost may be negative
+- Status: accepted (2026-11-16; user: "我卖出了赢了的股票，还持有，那么还应该算在浮动盈亏里", "牧原的成本应该降低", "改程序，云意也算进去").
+- Context: `Position.cost` was the buy average and had to be >= 0, so the gain from selling part of a winner (牧原 3,400 shares, +15,358; 云意电气 2,000 shares, +12,234) left the floating P&L although the rest is still held.
+- Decision: `cost` in `config/local.positions.yaml` is the diluted cost = (buys − sell proceeds) / shares still held, the broker's 盈亏成本 view. Only a fully closed position counts as realised. The cost may be zero or negative once the position has paid back; `HoldingsRiskBuilder` then reports pnl = shares × (close − cost) and pnl_pct = null, and the app and the 持仓监测 e-mail show "已回本".
+- Alternatives: keep the buy average and add a per-position realised P&L field (rejected: two numbers for one position, and the broker screens already show the diluted cost); floor the cost at 0 (rejected: understates P&L, 云意 by about 4,900).
+- Consequences: `Position` drops its `ge=0` check; 盈亏% is not shown for a paid-back position. The research-log secret check still hides costs, including negative ones.
+- Links: D-132, plan 15 ph7d
+
+### D-161 update 7
+- Plan 28 phase 4, 2026-11-16 (user: "可以"):
+  - `company_edge` stays one row per observation (period, known_on, share or amount, stage, quote). A new table `edge_span` joins the observations of one company pair and edge kind into a relationship: first_seen and last_seen (known_on), the stage path with the date of each step, ended or denied with the date, share or amount per period, status active / ended / denied / silent.
+  - Silent (not seen for N periods) is not a lost customer: only an end or denial in the text, a top-5 drop or a contract end counts as hard evidence of change (plan 28 risk "text drift").
+  - `edge_span` is rebuilt for an as_of date from the rows known by that date, so it has no look-ahead. The app's customers new / dropped / kept reads it.
+
+
+### D-161 update 8
+- Plan 28 phase 2 counterparty checks, 2026-11-16 (user: "ok"):
+  - New `CounterpartyName` holds the two name rules every customer / supplier / partner row passes. `is_named`: a numbered (客户一, 供应商A, 客商9), hidden (某) or class name (头部车企, 国内无人机厂商) is not a name; a bare letter name (GE, LG) is. `is_in_text`: the name, its alias, the name without its legal suffix or its first 4 characters must occur in the quote.
+  - `BaseQuotedExtractor` gains the hook `is_item_anchored(item, page_text)` (default True). Inquiry replies and prospectuses require the name or alias in the quote. IR Q&A, IR records and broker reports require the name in the quote, or a quote that points back (该公司, 上述, 您所说, 双方) with the name elsewhere on the page (the investor's question); unnamed rows are dropped there. Inquiry rows keep anonymous rows with `is_named` false, because phase 3 may name them from another document.
+  - Inquiry and prospectus rows gain `share_base`: what the share is a percent of (营业收入, 境外收入, 采购总额 …), so a 97% of overseas revenue is not read as 97% of revenue.
+  - The old inquiry anonymity regex took a bare letter name (GE, IBM, LG) as a number; replaced.
+
+### D-165 update 1
+- 2026-11-16 (user chose "做一个小 App"): Full Disk Access on `/bin/zsh` did not take effect (probe from launchd still got `Operation not permitted` reading the Makefile). The jobs now start `~/Applications/QuantCN Runner.app/Contents/MacOS/quantcn-runner <repo> <target>`, a small C program (`scripts/launchd/quantcn_runner.c`, ad-hoc signed, bundle id `local.quantcn.runner`) that runs make as a child via posix_spawn, so make keeps the app as its responsible process. The user grants Full Disk Access to that app instead of zsh, so ordinary shells do not gain it. `make runner-install` builds it; `track-install` and `report-install` depend on it. Rebuilding changes the ad-hoc signature, which may require granting access again.
+
+### D-165 update 2
+- 2026-11-16 (user: "remove the quantcn runner"): the runner app of update 1 is removed (`~/Applications/QuantCN Runner.app`, `scripts/launchd/quantcn_runner.c`, `runner_info.plist`, `make runner-install`). The plist templates are back to the D-165 form (`/bin/zsh -c 'cd <repo> && exec make <target>'`). The jobs still need Full Disk Access on the program they start; until it is granted, a missed run needs a manual `make track-daily` / `make morning-report`.
+
+### D-161 update 9
+- Plan 28 phase 3 name resolution, 2026-11-16 (user: "可以", go for phase 3):
+  - `EntityResolver` resolves by rule, in order: alias map, A-share full name (stock_company), A-share short names current and former (namechange, ST marks removed), the same without a bracketed region, then an A-share short name of at least 4 characters as the name's prefix (marked a group member). Three-character prefixes are not used (史丹利百得 → 史丹利, 新大洲本田 → 新大洲A were wrong). Ambiguous hits do not resolve. Group tails (及其关联方, 子公司4, 分公司) are cut and mark a group member: an edge to a subsidiary of 中国移动 counts as an edge to 中国移动, flagged.
+  - On the full-run names (45k distinct, 117k mentions) the rules resolve 16% of mentions to A-share companies; 84% are unlisted, listed abroad or nicknames (华为, 特斯拉, 小米, LGES).
+  - `EntityAliasExtractor` (DeepSeek, 50 names per call, each with a context line) proposes a canonical short name, kind (company / government / university / institute / hospital / person / generic / unknown), group membership and a security code hint for the names with ≥ 2 mentions that the rules leave unresolved or resolve only by prefix. Its code is never trusted: the canonical name is resolved again by the rules, and an A-share id is kept only when they agree. The alias map is a lake file, rebuilt from the cached replies.
+  - Ids: "a:<ts_code>" for A-share companies, "x:<canonical key>" otherwise; kind generic / unknown names do not become graph nodes.
+
+### D-161 update 10
+- Plan 28 phases 3–4 after the 300-edge review, 2026-11-16 (user: "ok"):
+  - The review found 89.7% correct, below the 90% done criterion. The largest error groups were anonymous placeholders stored as entities, and listed companies or their subsidiaries left as x: ids.
+  - `CounterpartyName.is_named` now also refuses:
+    - numbered or ranked names anywhere in the name (应付账款-供应商7, 内销客户8, 客户（一）, 2019年第1大客户, 第四名供应商, 法人一);
+    - placeholders (无, 不适用, a bare 客户 / 供应商, codes of 5 or more digits, 香港公司 and other place + 公司 forms).
+    - Short numeric brands (360, 1688, 7-11) remain names.
+  - The entity pass now reads its names from `company_edge`, i.e. from every label set: applications, top-5 tables and deals as well as the plan 28 sets. Names the rules leave unresolved or resolve only by prefix go to `EntityAliasExtractor`, as before.
+  - `EntityResolver` gains `member_names`: an alias the model marked as a subsidiary or branch resolves as a group member.
+  - Stages and roles that the prompts get wrong are noted for the next extraction run and are not patched in the data. Examples: a minority stake (参股) tagged holds, a certifier tagged partner, a joint lab tagged volume, 拟 / 同意设立 tagged completed.
+
+### D-161 update 11
+- Plan 28 step 4a, 2026-11-16 (user: "做好计划，继续"):
+  - A group member (a subsidiary, brand or branch the entity pass marks is_member) resolves to an A-share id only through its parent's short name. `EntityAliasExtractor` returns the parent's short name in a new `parent` field, and `EntityResolver` must resolve that name by rule (full or short name). The code the model proposes is not used on its own: on 40 rows it was right only about 80% of the time.
+  - Subsidiaries a company names in its own report now resolve to that company and are dropped as self edges. Company-to-company edges keep only other companies; the company's own subsidiary list belongs in the leaf (`company_period`), not in `edge_span`.
+
+### D-167 RetailGauge daily reading: raw value, 3-in-a-row confirmation
+- Status: accepted (2026-11-17, user: "可以" to plans 21 and 30); plan 21 ph3 and ph5.
+- Context: the user asked whether filtering the gauge improves it ("是否滤波一下散户温度计，可以让预测更好一点？", "有fine tune ema的weight吗？").
+  - Readings were rebuilt every 3 trading days for 2023Q1–2026Q3 (298 dates; research run 20261117_gauge_daily).
+  - Smoothing the value lowers holder IC: raw 0.503; mean of 2 / 3: 0.498 / 0.489; EMA α 0.5 / 0.33: 0.497 / 0.484; median of 3: 0.485.
+  - An EMA α grid tuned on 2023–24 and checked on 2025–26 peaks at α 0.8–0.9, +0.001 IC over raw.
+  - Requiring N readings in a row on the same side improves precision: for N = 2 / 3 / 5, ≤0.3 holders-fell 80 / 81 / 83% (raw 79%), and hot-group 60d excess −4.0 / −4.3 / −4.7% (raw −3.7%). Flag counts fall 19 / 31 / 49%.
+- Decision:
+  - Use the raw daily reading.
+  - Streaks are counted at checkpoints t, t−3, t−6 … sessions.
+  - `retail_leaving` (the watchlist ≤ 0.3 condition) needs 3 checkpoints in a row ≤ 0.3.
+  - `avoid_strong` needs 3 in a row ≥ 0.9. A single reading ≥ 0.9 stays the D-155 warning.
+  - `persist_n` = 3 and `persist_step` = 3 go in config.
+- Alternatives:
+  - EMA or moving mean: rejected; lower IC.
+  - 5 in a row: rejected; most precise, but half the flags are gone and the signal fires 15 sessions late.
+  - Raw threshold only: kept as the D-155 warning.
+- Consequences:
+  - Watchlist names that read ≤ 0.3 once no longer pass that condition until confirmed.
+  - The ≤0.3 group still has no reliable return edge (+0.6..+0.8%, t ≤ 1.5), so it is a holder-trend check, not a buy signal.
+- Links: plan 21, D-155, research_space/RESEARCH_LOG.md (20261116_gauge_filter, 20261117_gauge_daily, 20261117_gauge_ema_grid)
+
+### D-161 update 12
+- Plan 28 step 3b-3, 2026-11-16: the curation dry run found that many anomalies in the node data come from the matcher, not from the taxonomy. Out of the company's Shenwan context, about half of the "contains" matches were cross-sector (e.g. 零部件业务 of 上汽 → semiconductor silicon parts, ICT基础设施 → CT scanners).
+- `ProductMatcher` changes:
+  - A label found inside a longer line counts outside the company's context only when it has at least 3 characters and at least half the line's length.
+  - A Latin label (CT, PVC, BDO) counts only as a whole word.
+  - Inside the context, matching is unchanged.
+- Effect on FY2025: mapped revenue falls from 72% to 68%, which is the removed false matches; cross-sector "contains" falls from 55% to 44%. The remaining cross-sector errors are over-broad aliases in the taxonomy (零部件, 信息服务, 消费电子, 精密零部件). They are handled as alias removals in the curation change list, not in code.
+- The curation change lists (3 sectors, 33 changes) are proposals. A taxonomy version is written only after the user spot-checks them.
+
+### D-161 update 13
+- Plan 28 step 3b-4, 2026-11-17 (user: "可以" to the 33-change list, with the recommendation to keep SEG_AUTO_ROBOT_PARTS):
+  - The taxonomy is versioned. The YAML files of config/industry_chain are v0. Each accepted version is one file under config/industry_chain/_changes/ (`TaxonomyChangeSet`), applied in name order by `ProductTaxonomy(folder, change_sets)`.
+  - A change either upserts a node or retires it. An upsert creates a node or changes its name, segment or parent; aliases are merged, and an alias is removed only when the change lists it under drop_aliases. A retire moves the node's children and products to its successor, and the old id resolves to the successor.
+  - The base files are never edited, so a version can be read, diffed or reverted on its own.
+  - `NodeLineageBuilder` derives `node_lineage` by comparing the taxonomy before and after each change. Kinds: new, split, rename, move, alias, merge / retire. It raises an error for a missing successor or a retire loop.
+  - Labels keep the node ids they were made with. `ProductTaxonomy.get_surviving_id` resolves a retired id through lineage, so no separate NodeRemapper class is needed (deviation from the plan's class list). `node_member` records the taxonomy version used.
+  - v1-20261117 holds 59 changes from the auto, electronics and power-equipment dry run. Left out:
+    - retiring SEG_AUTO_ROBOT_PARTS;
+    - the over-generic aliases 开关 and 电气设备产品.
+  - The over-broad aliases 精密零部件, 导电浆料 and 智能终端SoC are dropped.
+
+### D-161 update 14
+- Plan 28 step 3b, batch 1, 2026-11-17 (user: "ok继续"):
+  - v2-20261117 holds 162 changes from the curation of 8 sectors: 基础化工, 机械设备, 计算机, 医药生物, 有色金属, 通信, 国防军工, 家用电器. The proposals came to 85: 45 alias, 19 new, 17 rename, 4 split. 耳机 becomes an alias of PROD_ELEC_TWS instead of a new home-appliance node.
+  - Most renames turn a generic parent segment (工程机械, 医疗器械, 软件开发, 中药 …) into an umbrella "…产业" and give its wording to a child segment, so a parent no longer collects members directly.
+- Matcher and builder fixes the curators found:
+  - Outside the company's context, a revenue line contained in a longer label no longer matches (运营商 vs 电信运营商, 原油运输 vs 原油运输船).
+  - More broad words: 中间体, 功能性, 新材料, 精细化学品, 包装材料, 互联网, 工艺设备, 运营商, 机器人, 光通信, 授权许可.
+  - A Latin label may be followed by digits (WPS365).
+  - `NodeMemberBuilder` keeps the sub-lines of a wrapper parent line (持续经营业务, 主营业务 …) and drops the parent.
+- Effect on FY2025: cross-sector matches among non-fallback rows fall from 44% to 37.5%; mapped revenue moves from 69% to 67.5% as false matches are removed.
+
+### D-161 update 15
+- Date: 2026-11-17. Batch 2 of the node curation (石油石化, 公用事业, 建筑装饰, 建筑材料, 食品饮料, 钢铁, 煤炭, 农林牧渔) accepted by the user → `config/industry_chain/_changes/v3-20261117.yaml` (105 changes: 76 proposals plus 9 context-alias upserts).
+- New taxonomy field `context_aliases`: 2-character wordings (板材, 卷板, 中板, 棒材, 涂料, 末煤, 混煤, 煤油, 钻井, 售热, 蒸汽, 生猪). They match only an exact whole revenue line of a company whose Shenwan context holds the node (`how = context_exact`); the 3-character floor for ordinary aliases stays.
+- `NodeMemberBuilder`: an exact match on a material node with no segment takes the company's sector segment (`ProductMatcher.find_sector_segment`). Lines are stripped of a "主营-" prefix. 工程承包 is a broad word.
+- Coal: SEG_COAL_WASHING is re-parented under the coking-coal mining segment, and the coking by-products under coking. The coking-coal Shenwan L3 then has one root segment, so the sector fallback works again.
+- Effect on FY2025:
+  - mapped revenue including the sector fallback goes from 86.1% to 87.9%;
+  - context_exact lines total 6,458 亿, all of them in the company's own sector (中国石化 煤油, 牧原 生猪, 华菱 / 首钢 板材).
+
+### D-161 update 16
+- Date: 2026-11-17. Batch 3 accepted by the user → `config/industry_chain/_changes/v4-20261117.yaml` (113 changes from 79 proposals). Sectors: 轻工制造, 纺织服饰, 交通运输, 商贸零售, 社会服务, 传媒, 环保, 美容护理.
+- The bare 服装 context alias was left off garment OEM, so brand apparel lines are not booked as OEM.
+- Generic parent segments were renamed to umbrella names: 造纸, 印刷, 物流, 贸易, 教育, 广告营销, 出版, 化妆品, 医疗美容. The environmental sector now has one root segment, which restores its sector fallback.
+- Effect on FY2025:
+  - mapped revenue including the fallback goes from 87.9% to 88.1%;
+  - context_exact lines total 7,544 亿.
+- Left open:
+  - Shenwan L3 code 350209 still maps to two root segments. A change set cannot remove a sw_l3 entry yet.
+  - 杭钢's steel lines sit in the recycling segment.
+
+### D-161 update 17
+- Date: 2026-11-17. Batch 4 accepted by the user → `config/industry_chain/_changes/v5-20261117.yaml` (30 changes). Sectors: 房地产, 银行, 非银金融, 综合.
+- Non-bank finance gets one root segment (非银金融业) with 证券 / 保险 / 多元金融 under it. Generic 2-character finance names (租赁, 证券, 保险, 期货, 信托, 资产管理, 房地产) become context aliases only.
+- `ProductMatcher` change: a label that suffix stripping cuts below 3 characters (代理业务 → 代理, 同业业务 → 同业) now matches a line exactly only inside the company's context. Labels written with 2 characters (电煤, 生猪) are unchanged. Covered by TC-PM-010.
+- With this, the Opus node curation of all 31 Shenwan sectors is done: v1–v5, 471 changes.
+- Effect on FY2025:
+  - mapped revenue including the fallback is 88.0%;
+  - 中国外运 (570 亿) and 智飞生物 (77 亿) leave the banking segment;
+  - the leasing segment goes from 131 companies to 5.
+
+### D-168 Plan 31 sector monitor: public sources, game links, briefs through operating_data
+- Status: accepted (2026-11-17, user: "可以，一线加二三线平均就行，继续"). Plan 31 ph1–3.
+- Context:
+  - data.stats.gov.cn answers 403 to this host (WAF UrlACL). The 国家统计局 release pages and the 国家新闻出版署 lists are reachable as plain HTML.
+  - Rules alone link 2% of 版号 approvals to listed companies, because the holders are subsidiaries with other names.
+  - Developers' 销售简报 were not in the announcement datasets.
+- Decision:
+  - **70-city prices:** dataset `house_price_70` holds city-level indices from the release pages (`NbsHousePriceClient`). Tier averages are simple means over the 4 tier-1 cities and the 二线 / 三线 lists in config; they are not NBS's weighted tier figures. The user chose 一线 plus 二 / 三线 averages, with no city picker.
+  - **版号:** dataset `game_license` (`NppaGameClient`), domestic and imported lists, known_on = the list's publication date.
+  - **Game ↔ company:** holder names resolve by rule, else through a DeepSeek alias proposal (`game_alias`, lake script) that is checked by rule (`EntityResolver.find_by_alias`). Publishing houses are kept without a company. Unresolved holders go to a review list and are never guessed.
+  - **Sales briefs:** the cninfo keyword sweep gains 简报, and the `operating_data` title rule gains 销售…简报. The existing `OperatingDataExtractor` (plan 18) reads the briefs, so the planned `SalesBriefExtractor` is dropped.
+- Consequences:
+  - The tier averages can differ from NBS's published tier numbers by a few hundredths. October 2026 tier-1 second-hand MoM is +0.20% both ways.
+  - Brief coverage follows what each developer files: 万科 stopped in 2025-01, and 滨江 / 金地 file none.
+
+### D-169 Plan 32: market-wide buyback and 增持 monitor labelled from plan announcements on Ark
+- Status: accepted (2026-11-17, user: "监控所有回购，可以用方舟计划lable", then "分清楚吧，都标记好"). Plan 32.
+- Context: plan 23 shows only the book's buyback events and new plans ≥ 2% of market cap. Tushare `repurchase` has no purpose or funding source, and 增持 plans (often funded by 增持专项贷款 since 2024-10) have no structured plan data. D-154 left buyback purpose open.
+- Decision: CNINFO plan announcements (searchkeys 回购, 增持; doc_types `buyback_plan`, `holder_increase_plan`) are labelled by `BuybackTermsExtractor` on the Ark Coding Plan (D-122) into LabelStore set `buyback_terms`. Fields: kind 回购 / 增持, purpose or holder type, funding, loan, amount range, price cap, period, each with a checked quote. Buybacks and 增持 always stay apart by `kind`. History starts 2024-01; no phone alert.
+- Alternatives: title-only rules (rejected: purpose and funding sit in the body); Tushare `stk_holdertrade` alone for 增持 (rejected: it has execution, not plans).
+- Consequences: two new doc_types in the shared CNINFO config; about 5.8k buyback and several thousand 增持 LLM calls for the backfill, gated by a 100-document pilot.
+
+### D-111 update 1
+- Date: 2026-11-17. Found in plan 31 ph3: `CninfoClient` dropped the last page of every query.
+- Cause: CNINFO's `totalpages` is one short when the total is not a multiple of the page size (84 rows → 2 pages, 1,224 → 40, 57 → 1). The client read pages 1..totalpages, so up to 29 announcements per query were missing from `cninfo_announcements` and `cninfo_keyword_announcements` since D-111. Examples: 招商蛇口's June, July and October 2026 sales briefs.
+- Fix: the page count is max(totalpages, ceil(totalAnnouncement / 30)), still capped at MAX_ROWS. Covered by TC-CNC-005.
+- Both datasets are being re-fetched with `--force` (append; rows are only added).
+- After the re-fetch, `download-docs` and the label runs pick up the recovered documents on their next pass.
+
+### D-137 update 1
+- Date: 2026-11-17. Plan 19 ph2, at the user's request ("游戏行业应该给我排行榜的信息啊").
+- The publisher link is a hand-curated map, `config/app_publishers.yaml`: App Store seller account (artist_id) → company and listed code (A / HK, null when the company is not listed). Accounts were found in the charts. When an account's name doesn't name its company, the YAML comment gives the evidence: the store page copyright, the 版号 holder (game_company), or the title's known owner.
+- Changed from the plan: there is no `derived.app_chart_company` view. `portfolio.AppRankReader` joins the map in Python over `curated.app_store_charts`. A view would need the YAML loaded into DuckDB on every refresh for about 40 rows. The 7- and 30-day mean ranks wait until there is enough history: 5 captures as of 2026-11-17.
+- The results go in the #sector-monitor 游戏 sector (plan 31, D-168):
+  - an `app_rank` chart: each company's best China grossing rank, axis inverted;
+  - a table column;
+  - a leaderboard: the companies' games with China grossing and free ranks, best overseas grossing rank and number of overseas markets, plus the China top 20 with each game's company.
+- Alternatives:
+  - Rejected: link through 版号 titles. Store names rarely match licence titles; 3 of the 6 companies matched.
+  - Rejected: an LLM mapping. Mostly English seller names; small list; wrong links are costly.
+- Consequences: an unmapped account shows no company. The Log lists unmapped China top-50 publishers for review. 完美世界 and 恺英网络 have no game in any market's top 100, so they have no account yet.
+- Same day, after the user asked whether every game company was covered ("所有的游戏公司都有吗？"):
+  - The leaderboard now lists the games of every A-share company in the map, not only the six sector companies. The company table and charts keep the six.
+  - Seven 申万游戏Ⅱ accounts were added: 恺英, 游族, 冰川, 汤姆猫, 电魂, 星辉, 宝通.
+  - 15 of the 26 listed members have no game in any market's top 100. The YAML header names them.
+
+### D-168 update 1
+- Date: 2026-11-17 (plan 31 ph3 check). 新城控股 titles its monthly briefs 经营简报, so the operating_data title rule gains `经营简报`. Across both CNINFO datasets this adds 130 documents, all operating data: 新城 37, 申通 36, 顺丰 36, 华夏幸福 12, 东华科技 8, 滨江 1. Check: 招商蛇口's monthly 签约 for 2026-01..10 sums to 1,587.7亿, against 1,588亿 in its 10月 brief.
+
+### D-170 Plan 33: definitions of the sector-monitor signals
+- Status: accepted (2026-11-17, user: "可以" to the six proposed indicators). Plan 33.
+- Context: the 行业监控 tab (plan 31) shows levels, so turning points are hard to read. The user asked which indicators to add.
+- Decision:
+  - **sales_yoy:** year-on-year change of the 3-month rolling sum of monthly contracted sales, computed from the brief levels, not from the yoy figures the briefs print. The table shows the year-to-date yoy.
+  - **house_price_breadth:** the number of the 70 cities with month-on-month index < 100, for 新房 and 二手.
+  - **New games:** apps released within `new_game_days` (90) that are, at the latest capture, on the home grossing or free top 100, or on any overseas grossing top 100. Every publisher is included; the company is shown when the account is mapped.
+  - **valuation:**
+    - Measure: PB for 房地产, PE TTM for 游戏, set per sector in config.
+    - Source: companies from `daily_basic`, the index from `sw_daily`.
+    - Percentile: over the last 1,250 sessions (about 5 years), with at least 250 observations.
+    - Loss-makers: a PE ≤ 0 or missing PE gives no value.
+  - **Revision:** FY1 is the as-of year from May on, otherwise the year before. For each window, take the median `report_rc` net profit forecast for FY1 over the reports of the trailing 90 days. The revision is the % change of that median against the window ending 90 days earlier, computed only when both windows target the same FY.
+  - **Surveys:** distinct `stk_surv` survey dates per company per month. The table shows the last 90 days.
+- Alternatives:
+  - Rejected: the briefs' printed yoy figures. Not every brief prints them, and the bases differ.
+  - Rejected: a consensus from mean EPS. Share counts change, and medians are robust to stale outliers.
+- Consequences: new metric keys and settings in config/sector_monitors.yaml; a new MarketSignalReader; no new datasets.
+- Update (same day): the revision median takes **one value per broker**, its latest report in the window. Repeated notes from one broker skewed the median: 申万宏源's 8亿 FY2026 note for 招商蛇口 appeared 8 times in 90 days, which made the revision −34%. With one value per broker it is −11.7% (12.71亿 → 11.22亿).
+- Update (same day): no revision is computed when either median is ≤ 0. A % change of a forecast loss is meaningless: 万科 forecasts losses, and near-zero profits gave −700% spikes on the 房地产 chart. The range is now −80% to +45%.
+
+### D-171 Plan 34: rates and RMB monitor sources and definitions
+- Status: accepted (2026-11-18, user: "show in app" after the plan 34 draft; defaults taken for alert levels, currencies and no phone alert). Plan 34.
+- Context: the user asked for a 国债利率 monitor and then for RMB against the dollar and other currencies. `cn_bond_yield` and `fx_daily` were downloaded daily but shown nowhere; the PBOC fixing and US yields were not in the lake.
+- Decision:
+  - **New datasets (AkShare, D-065):** `cny_fixing` from `currency_boc_safe` (SAFE central parity, all 25 currencies, since 1994, known_on as_is: published 09:15 the same day) and `us_treasury_yield` from `bond_zh_us_rate` (US 2Y / 5Y / 10Y / 30Y since 2015, next_session). Both refresh in `make market-data` (MARKET_RANGE_DATASETS).
+  - **Onshore USDCNY close is left out:** no stable daily source was found; the spot−fixing gap uses offshore USDCNH (FXCM mid) instead.
+  - **Lines (config/rates_fx_monitor.yaml):** 中债国债 1Y–30Y; term spreads 10Y−1Y, 30Y−10Y; credit spreads AAA bank 10Y and AAA notes 3Y over govt; 1Y govt − SHIBOR 3M; 股债性价比 = CSI 300 earnings yield − 10Y; USDCNH, USD fixing, USDCNH ÷ fixing − 1, EURUSD, USDJPY, EUR/CNH, CNH/JPY, HKD and GBP fixing, FXCM USDOLLAR, US 10Y, 中美利差 10Y.
+  - **CSI 300 earnings yield:** Σ total_mv / pe_ttm ÷ Σ total_mv over the members of the latest `index_weight` date on or before each day; loss-makers (no pe_ttm) count in market value only, so the yield is slightly understated.
+  - **Statistics:** changes over 5 / 21 / 63 / 250 observations (bp for yields and spreads, % for FX); percentile over the last 5 years with ≥ 250 observations; 1-year range excludes today.
+  - **Alerts:** 10Y extreme (new 1-year low / high) or weekly move ≥ 10bp; 30Y weekly move ≥ 10bp; credit spreads widening ≥ 10bp in a week; 股债性价比 ≥ 90th percentile; USDCNH extreme or weekly move ≥ 1%; |USDCNH ÷ fixing − 1| ≥ 1%; 中美利差 extreme. App and e-mail only, no phone alert.
+- Alternatives:
+  - Rejected: FXCM 10USNOTE for the US 10Y. It is a price, not a yield.
+  - Rejected: index_dailybasic for the CSI 300 PE. It is not in the lake.
+- Consequences: two new datasets, config/rates_fx_monitor.yaml, `make rates-fx-monitor` in track-daily, `#rates` tab, 利率汇率 block in the 持仓监测 e-mail.
+
+### D-172 Plan 35: sector earnings-season top signal definitions
+- Status: accepted (2026-11-18, user: "可以" to plan 35). Plan 35. Implementation note: a preview dated before its quarter end counts as the first disclosure; deciles, share and the signal date use the events with a SUE and a pre window (the research basis).
+- Context: research runs 20261118_priced_in / _tech / sector_peak_signal showed A-share earnings news is mostly priced before disclosure (52% of the top–bottom spread pre60, post20 ≈ 0), and that a rallied sector whose best-surprise companies no longer rise on the news underperforms (fwd60 −6.1% vs +0.3%, t −2.9, n 25).
+- Decision:
+  - **Event:** one per (ts_code, end_date), dated at the first of forecast_vip / express_vip / income_vip (report_type 1) ann_date; first trading day on or after it is day 0.
+  - **Surprise:** SUE = (single-quarter parent net profit − same quarter a year earlier) ÷ std of the prior 8 such changes (≥ 4); deciles within end_date.
+  - **Excess:** log return minus the equal-weight mean of all A shares (BJ excluded; |daily log return| ≥ 0.25 dropped); windows pre60 [-60,-1], react [0,+1], post20 [+2,+21].
+  - **Sector:** SW L2, membership point in time at end_date; best-surprise = global deciles 8–9, ≥ 5 events; firing = pre60 ≥ 15% and react ≤ 1% once ≥ 80% of the sector's events are out; rally = 120-session sector-index excess vs the mean L2 index ≥ 20%.
+  - **Output:** app and e-mail only, no phone alert.
+- Alternatives:
+  - Rejected: consensus surprise from report_rc. Coverage is too thin outside large caps.
+  - Rejected: shareholder-count crowding as a trigger. Rally sectors with holders ≥ +10% went on to fwd60 +1.8%. It is shown as context only.
+- Consequences: `derived/earnings_events`, config/sector_earnings_signal.yaml, `make earnings-events` and `make sector-earnings-signal`, a 财报季信号 table in `#sector-monitor`.
+
+### D-173 Plan 36: linear-pricing gap factor definition
+- Status: accepted (2026-11-18, user: "可以"; score inclusion "可以，加进综合打分", kept after the campaign with "放进去吧，当个指标看一看"). Plan 36. Campaign result: pricing_gap fails FACTOR_TESTING_DESIGN §6 criteria 1–2 (20-day NW t 1.55, sub-periods 0.61 / 1.80 / 0.98); the score with it is unchanged within noise (IC 0.0679 → 0.0691, LS Sharpe 1.20 → 1.19). Kept at weight 1 as an indicator to watch, against the agent's revert recommendation; revisit at the next campaign.
+- Context: research run 20261118_linear_pricing_gap. The gap between the market cap and a consensus-based value with fading growth predicts 20-day returns: IC −0.053, net FM t −3.7. On equal weight with industry + size neutralisation, the long-short earns 10.4% a year net, Sharpe 0.86. The edge is in small and mid caps; for large caps only avoiding the dear end works.
+- Decision:
+  - **Consensus:** report_rc, report_date in (t − 90 days, t], latest note per broker and fiscal year, median np. FY1 = the as-of year from May, else the year before. FY1 and FY2 must be > 0; a missing FY3 = FY2 × FY2/FY1.
+  - **Value:** FY1–FY3 discounted at 9% from each fiscal year end (FY1 end floored at 0.1 years). Then growth starts at FY2→FY3 (clipped to [−0.3, 1.0]) and fades ×0.7 a year for 7 years. Exit at PE 15.
+  - **Factor:** `pricing_gap` = log(total_mv ÷ value), sign −. Campaign standard: winsorise, standardise, Shenwan L1 + log mcap neutral (D-093), equal-weight deciles.
+  - **Use:** in the composite score at weight 1 (amended 2026-11-18, user: "可以，加进综合打分"). Run 20261118_pricing_gap_complement: score + pricing_gap 20-day IC 0.051 → 0.054, decile LS Sharpe 0.75 → 0.98 (large caps 0.50 → 0.71). The veto was dropped: inside the score's top quintile it adds 0.12%/yr.
+  - **Fixed in advance:** the parameters were set before the first test, with one sensitivity run (fade 0.5, PE 20: net t −3.57). They are not tuned on returns.
+- Alternatives:
+  - Rejected: buy signals on the cheap side for large caps (−0.12% a month).
+  - Rejected: cap weighting as the evaluation basis (Sharpe 0.42). The user chose equal weight.
+  - Rejected: a revision filter on the cheap leg. It added nothing (14.6% vs 14.9%).
+- Consequences: a consensus panel in FactorInputs (also enables forward EP later); a new factor line; a `pricing_gap_pct` condition metric.
+
+### D-174 Plan 25: intraday reversal replaces reversal_1m in the score
+- Status: accepted (2026-11-18; the plan 25 default approved 2026-11-14, user: "ok"; run on "先做计划25"). Plan 25 named this decision D-156, a number already used for the futures-spread flag.
+- Context: the plan 04 campaign (run 5f65090ede53) tested reversal_intraday_1m (minus intraday returns on the 10 highest-turnover of the last 21 sessions).
+  - reversal_intraday_1m passes FACTOR_TESTING_DESIGN §6 criteria 1–3: 20-day IC 0.0664, NW t 8.17, sub-period t 4.72 / 5.97 / 3.39, ICIR 0.95 (CI 0.79–1.14), quintile LS Sharpe 1.71.
+  - reversal_1m: IC 0.0515, t 4.91, ICIR 0.57, LS Sharpe 1.04.
+  - The two factors have rank correlation 0.67. In a joint Fama-MacBeth, reversal_1m adds t 0.31.
+  - Raw month-end IC 0.0761 reproduces the research (0.076). The TrialLog holds 79 trials, including the 7 research variants.
+- Decision: in config/factors.yaml campaign.weights, reversal_intraday_1m replaces reversal_1m at weight 1. reversal_1m stays in the campaign as a single factor, as ep_ttm did under D-147.
+- Alternatives:
+  - Rejected: keeping both, which doubles the reversal weight (correlation 0.67).
+  - Rejected: keeping reversal_1m, which is weaker on every horizon from 5 to 60 days.
+- Consequences: derived/features rebuilt and the campaign rerun with the new score. The score's factors are not shown by name in the app, so no app change is needed. Result:
+  - 20 days: score IC 0.0691 → 0.0718, ICIR 0.770 → 0.788; LS Sharpe 1.19 → 1.18 (unchanged).
+  - 60 days: IC 0.0847 → 0.0921, ICIR 0.98 → 1.07, LS Sharpe 0.94 → 1.04.
+
+### D-180 Plan 37: analyst descriptors adopted in the risk model (cne5_v4)
+- Status: accepted (2026-11-18, user: "新版"). Plan 37 phase 2 gate.
+- Context: cne5_v3_dy (D-148) had trailing-only Earnings Yield (CETOP, ETOP) and Growth (EGRO, SGRO). Plan 37 added the CNE5 analyst descriptors from the plan 36 consensus panel. Gate run f39696bd936d against cne5_v3_dy on the same dates (report research_space/runs/20261118_risk_v4_gate):
+  - adj R² 0.2745 → 0.2744 (last year 0.3039 → 0.3038);
+  - 100 random portfolios: in band 100% both, median bias 1.026 → 1.026;
+  - CSI 300 / 500 / 1000 bias 0.927 / 1.087 / 1.051 → 0.926 / 1.086 / 1.050;
+  - factor bias: Earnings Yield 1.032 → 1.062, Growth 1.007 → 1.000;
+  - |t| > 2 on 43% (Earnings Yield) and 44% (Growth) of days.
+- Decision: config/risk_model.yaml becomes cne5_v4 with consensus_days 90; Earnings Yield = EPFWD 0.68, CETOP 0.21, ETOP 0.11; Growth = EGRLF 0.18, EGRSF 0.11, EGRO 0.24, SGRO 0.47 (CNE5 weights; a stock without consensus renormalises over the descriptors it has). EPFWD blends FY1 / FY2 by months left in FY1; EGRSF = FY2/FY1 − 1; EGRLF = (FY3/FY1)^(1/2) − 1.
+- Alternatives:
+  - Rejected: keeping cne5_v3_dy. The gate is neutral; v4 completes the CNE5 design and the exposures follow market expectations.
+- Consequences: the risk model depends on report_rc; a stale consensus mislabels Earnings Yield exposure until brokers revise. Exposures move at month ends. The Earnings Yield factor bias (1.06) is within the band and is watched at the next refit. Style names are unchanged, so the app and morning report need no change.
+
+
+### D-181 Plan 38: update task ledger as append-only parquet parts, not RunLog
+- Status: accepted (2026-11-18, user: "ok"). Plan 38.
+- Context: the user asked for a parquet record of every update task and one command that runs all updates in order. `make track-daily` stops at the first failure and records nothing per step. RunLog (D-022) writes `meta.run_log` in DuckDB, which needs the single catalog writer lock that download, compact, curate and risk-model take themselves.
+- Decision: `update-all` runs the make targets listed in config/update_all.yaml as subprocesses. After each step it writes one zstd parquet part to `meta/task_log/` (tmp + rename, as for the document manifest, D-101). It refreshes a view `meta.task_log` once at the end. A failed step does not stop the run; steps whose `needs` failed are skipped. `track-daily` delegates to `update-all`.
+- Alternatives:
+  - Rejected: RunLog rows, because the orchestrator would hold or fight for the catalog lock between every step.
+  - Rejected: a Prefect flow over all steps. Prefect is optional (extra `flows`) and adds a server dependency for a sequential list.
+  - Rejected: `make -k`, which continues past failures but records nothing and cannot skip dependents.
+- Consequences: the Makefile stays the single source of each step's commands; the YAML holds only order, dependencies and timeouts. The ledger survives a crash mid-run, with the rows written so far.
+
+
+### D-182 Plan 21 ph6: RetailGauge stays out of the risk model and joins the score
+- Status: accepted (2026-11-19, user: "Add at weight 1 (Recommended)"). Plan 21 phase 6.
+- Context: phase 6 tested the 散户温度计 (derived.retail_gauge, daily from 2022-05) two ways (research run 20261118_gauge_risk_style).
+  - Risk style `retail_crowding`: pct orthogonalised to size and standardised like the other styles, added to the model's own constrained WLS on the stored cne5_v4 exposures (FactorReturnEstimator.compute_monitor; the base R² matched the fitted model on all 19 check dates), 2022-06 → 2026-11, 1,083 sessions. |t| > 2 on 50% of days (styles 23–78%); factor vol 1.8%/yr (styles 0.9–7.3%); mean return −5.8%/yr, t −6.7, negative every year; R² gain +0.001; cap-weighted correlation with every style ≤ 0.2 in absolute value. The score's style-residual IC20 is 0.0189 without the style and 0.0192 with it (large caps 0.0092 → 0.0102).
+  - Score input: factor `retail_gauge` (RetailGaugeFactor, −pct, industry + size neutral) in the campaign, run 09f20ffab055. 20-day IC 0.041, NW t 3.79, BHY p 0.0015 (criterion 1 passes); sub-periods 2022–24 t 4.06, 2025– t 1.91, 2019–21 empty (criterion 2 fails on the missing period only); ICIR CI 0.53–0.87 (criterion 3 passes). Month ends 2022-06 → 2026-10: score IC20 0.0673 → 0.0751 with the gauge at weight 1 (t 5.14 → 5.65), IC60 0.0865 → 0.0966, decile long-short Sharpe 1.16 → 1.29; large caps IC20 0.0671 → 0.0720, Sharpe 0.84 → 0.83.
+- Decision:
+  - Risk model: no `retail_crowding` style. It explains almost no return variance; its steady negative return is alpha, which a risk-neutral optimisation against a model containing it would remove.
+  - Score: `retail_gauge` joins the campaign weights at 1.0 (config/factors.yaml).
+- Alternatives:
+  - Monitor style (D-130) for exposure reporting only: not needed; the daily gauge and its avoid flags already show crowding per stock.
+  - Score weight 0.5: not tested; the equal-weight convention of the other seven inputs is kept.
+- Result after adoption (campaign run e19de0698424, 2019–2026 daily): score 20d IC 0.0718 → 0.0755, NW t 3.97 → 4.12; 60d IC 0.0963; LS Sharpe 1.22.
+- Consequences: the score depends on the daily retail-gauge run (step after the market-data downloads) and starts 2022-05; earlier months keep 7 inputs (SignalCombiner averages what is present, min_factors 3).
+
+### D-161 update 18
+- Date: 2026-11-19. Plan 28 ph4d: `node_edge` design.
+- Grain: one row per year (period YYYY1231), supplier **segment** → buyer segment, kind `sales` (customer / supplier rows) or `invests` (holds / invests_in). Segments, not products: every mapped node_member line has a segment, products often do not, and the app's industry pages are segment pages.
+- Evidence: only company_edge rows where both ends are A-share companies (other counterparties have no node_member). One observation per (year, src, dst, kind) however many documents state it, so weight = Σ over company pairs of w_src × w_dst (each side's segment weights from node_member: annual of the year, else interim, else latest earlier, else earliest later). The year is the edge period's year, or the known_on year when the period lies after known_on (forecast contract periods).
+- Prior: taxonomy edges `upstream_of`, `component_of`, `used_in` (subject supplies object) and `uses_material` (object supplies subject), mapped to the segments of both ends; ends without a segment (most materials) and same-segment pairs dropped. Prior-only pairs get a weight-0 `prior` row in every year with members; pairs with both are `both`.
+- Point in time: `--as-of` drops edges and node_member rows known after the date. Without it the table is "as known now" (a 2023 edge may use FY2024 members when FY2023 has none).
+- Alternatives: product-level node edges (rejected: sparse, products missing for sector-fallback members); counting every observation in the weight (rejected: one customer named in five documents would count five times).

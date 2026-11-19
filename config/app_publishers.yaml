@@ -1,0 +1,67 @@
+# App Store developer accounts -> companies (plan 19 ph2, D-137 update): read by core.AppPublisherSettings.
+# One row per App Store artist_id (the seller account); code is the listed ts_code (A or HK), null when the
+# company is not listed. Evidence in the comment when the account name does not say it.
+# Accounts are found from the charts themselves (plan 19 Log) by name and by 版号 title (game_company); an unmapped
+# account is shown without a company. Every A-share company here is on the 游戏 leaderboard of #sector-monitor.
+# 申万游戏Ⅱ members without a charting account on 2026-11-17: 完美世界, 掌趣, 姚记, 神州泰岳, 昆仑万维, 凯撒文化, 富春,
+# 中青宝 (only 出版单位 of 凉屋's 元气骑士), 盛天, 浙数文化, 名臣健康, 迅游, 顺网, 大晟, 文投.
+publishers:
+  # --- A shares (the 游戏 sector of config/sector_monitors.yaml)
+  - {artist_id: "542097913", artist: 巨人网络科技有限公司, company: 巨人网络, code: "002558.SZ"}
+  - {artist_id: "1055231096", artist: "BUILDING-BLOCKS NETWORK TECHNOLOGY CO.,LIMITED", company: 三七互娱,
+     code: "002555.SZ"}  # Puzzles & Survival, store page © 37GAMES
+  - {artist_id: "1842081265", artist: "Fun Journey Network Technology Co., Limited", company: 三七互娱,
+     code: "002555.SZ"}  # 生存33天, 版号 出版单位 三七互娱（上海）
+  - {artist_id: "1031897588", artist: 雷霆游戏, company: 吉比特, code: "603444.SH"}
+  - {artist_id: "696521940", artist: "Xiamen Leiting Interactive Network Co., Ltd.", company: 吉比特,
+     code: "603444.SH"}
+  - {artist_id: "1512565013", artist: LTGAMES GLOBAL, company: 吉比特, code: "603444.SH"}  # 杖剑传说 overseas
+  - {artist_id: "1540548141", artist: Century Games Pte. Ltd., company: 世纪华通, code: "002602.SZ"}  # 点点互动
+  - {artist_id: "1876134518", artist: Century Games Innovation Pte. Ltd., company: 世纪华通, code: "002602.SZ"}
+  - {artist_id: "495598783", artist: DianDian Interactive Holding, company: 世纪华通, code: "002602.SZ"}
+  - {artist_id: "1839022330", artist: "Fuzhou Dian Dian Song He Technology Co., Ltd", company: 世纪华通,
+     code: "002602.SZ"}  # 奔奔王国 = Kingshot China
+  - {artist_id: "1733003236", artist: Shanghai Qingdi Technology Company Limited, company: 世纪华通,
+     code: "002602.SZ"}  # 无尽冬日 = Whiteout Survival China (点点互动 title)
+  - {artist_id: "1842278877", artist: "Shangrao Yuechang Network Technology Co., Ltd", company: 恺英网络,
+     code: "002517.SZ"}  # 三国：天下归心, 版号 出版单位 上海恺英网络
+  - {artist_id: "1436268048", artist: YOOZOO (SINGAPORE) PTE. LTD., company: 游族网络, code: "002174.SZ"}
+  - {artist_id: "1605575568", artist: 9z Games(HK), company: 冰川网络, code: "300533.SZ"}  # X-Clash (冰川网络 title)
+  - {artist_id: "351110111", artist: Outfit7 Limited, company: 汤姆猫, code: "300459.SZ"}
+  - {artist_id: "1625738018", artist: "Outfit7 Network Technology Co., Ltd", company: 汤姆猫, code: "300459.SZ"}
+  - {artist_id: "1159555040", artist: Electronic Soul, company: 电魂网络, code: "603258.SH"}
+  - {artist_id: "685885017", artist: "Guangdong Xinghui Teamtop Interactive Entertainment Co., Ltd.", company: 星辉娱乐,
+     code: "300043.SZ"}  # 天拓 (Teamtop)
+  - {artist_id: "1575878641", artist: Efun Global Company Limited, company: 宝通科技, code: "300031.SZ"}  # 易幻网络
+  # --- Hong Kong
+  - {artist_id: "1586101358", artist: Shenzhen Tencent Tianyou Technology Ltd, company: 腾讯, code: "00700.HK"}
+  - {artist_id: "446324237", artist: Tencent Mobile Games, company: 腾讯, code: "00700.HK"}
+  - {artist_id: "504515421", artist: Tencent Mobile International Limited, company: 腾讯, code: "00700.HK"}
+  - {artist_id: "292374531", artist: Tencent Technology (Shenzhen) Company Limited, company: 腾讯, code: "00700.HK"}
+  - {artist_id: "1220872289", artist: "Tencent Technology (Chengdu) Co., Ltd.", company: 腾讯, code: "00700.HK"}
+  - {artist_id: "656116440", artist: 网易移动游戏, company: 网易, code: "09999.HK"}
+  - {artist_id: "1243986796", artist: 网易移动游戏(MC), company: 网易, code: "09999.HK"}
+  - {artist_id: "874255382", artist: NetEase Games, company: 网易, code: "09999.HK"}
+  - {artist_id: "1485225410", artist: NETEASE INTERACTIVE ENTERTAINMENT PTE. LTD, company: 网易, code: "09999.HK"}
+  - {artist_id: "735778224", artist: Guangzhou NetEase Computer System Co.Ltd, company: 网易, code: "09999.HK"}
+  - {artist_id: "6829639244", artist: XD (HK) Limited, company: 心动公司, code: "02400.HK"}
+  - {artist_id: "1810952934", artist: "XD Entertainment Co., Ltd.", company: 心动公司, code: "02400.HK"}
+  - {artist_id: "1382536367", artist: BILIBILI HK LIMITED, company: 哔哩哔哩, code: "09626.HK"}
+  - {artist_id: "928380301", artist: "Shanghai Hode Information Technology Co.,Ltd.", company: 哔哩哔哩,
+     code: "09626.HK"}  # 上海幻电
+  - {artist_id: "1014466415", artist: Lingxi Games Inc., company: 阿里巴巴, code: "09988.HK"}  # 灵犀互娱
+  - {artist_id: "358371036", artist: iDreamSky Technology Limited, company: 创梦天地, code: "01119.HK"}
+  - {artist_id: "1303288190", artist: IGG SINGAPORE PTE. LTD., company: IGG, code: "00799.HK"}
+  - {artist_id: "1028315277", artist: 祖龙游戏, company: 祖龙娱乐, code: "09990.HK"}
+  # --- not listed
+  - {artist_id: "1467190250", artist: miHoYo Games, company: 米哈游, code: null}
+  - {artist_id: "982119759", artist: Lilith Games, company: 莉莉丝, code: null}
+  - {artist_id: "1478872809", artist: LILITH TECHNOLOGY HONG KONG LIMITED, company: 莉莉丝, code: null}
+  - {artist_id: "1696267009", artist: 上海莉莉丝计算机, company: 莉莉丝, code: null}
+  - {artist_id: "791491181", artist: 乐元素, company: 乐元素, code: null}
+  - {artist_id: "1021847690", artist: Tuyoo Online HK Limited, company: 途游, code: null}
+  - {artist_id: "412411824", artist: "Guangzhou Duoyi Network Co., Ltd.", company: 多益网络, code: null}
+  - {artist_id: "1343106322", artist: FunPlus International AG, company: FunPlus, code: null}
+  - {artist_id: "1304907587", artist: "Shanghai Hypergryph Network Technology Co., Ltd.", company: 鹰角网络,
+     code: null}
+  - {artist_id: "946033492", artist: Paper Games, company: 叠纸, code: null}

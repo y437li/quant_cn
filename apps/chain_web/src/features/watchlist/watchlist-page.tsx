@@ -1,9 +1,11 @@
 import type { ReactNode } from "react";
 import type { Watchlist, WatchlistEntry } from "../../api/client";
 import { useApp } from "../../components/context";
-import { EtfProxyPanel } from "./etf-proxy-panel";
+import { ConditionChips } from "../conditions/condition-chips";
+import { conditionCount, conditionStatusLabel, gaugeBadge, gaugeBand, gaugeStreak } from "../conditions/condition-format";
 import { RangeBar, WeeklyChart } from "./watchlist-charts";
-import { buyText, epsYearOf, gapPct, gapText, nearestEntry, pctOf, px, statusLabel, targetText, times, ymd } from "./watchlist-format";
+import { Points } from "./point-list";
+import { buyText, digitsOf, epsYearOf, gapPct, gapText, isEtf, nearestEntry, pctOf, px, statusLabel, targetText, times, ymd } from "./watchlist-format";
 
 /**
  * Purpose: the 观察账本 page (#watchlist, plan 15 phase 7): a headline with the stock nearest its buy price,
@@ -20,18 +22,17 @@ export function WatchlistPage({ doc, error }: { doc: Watchlist | null; error: st
       <header className="wl-head">
         <h2>目标价观察账本</h2>
         {n ? (
-          <p>离买入价最近的是 <b>{n.name}</b>，{n.gap_to_buy >= 0 ? <>已在买入区间内</> : <>还要再跌 <b>{gapPct(n.gap_to_buy)}</b>（到 {px(n.buy_high)}）</>}。价格截至 <b>{ymd(doc.as_of)}</b> 收盘。</p>
+          <p>离买入价最近的是 <b>{n.name}</b>，{n.gap_to_buy >= 0 ? <>已在买入区间内</> : <>还要再跌 <b>{gapPct(n.gap_to_buy)}</b>（到 {px(n.buy_high, digitsOf(n))}）</>}。价格截至 <b>{ymd(doc.as_of)}</b> 收盘。</p>
         ) : (
           <p>还没有观察的股票。</p>
         )}
       </header>
-      <EtfProxyPanel />
       {doc.entries.length === 0 && <EmptyState />}
       {doc.missing.length > 0 && <p className="note">这些代码在数据湖里没有价格，没有显示：{doc.missing.join("、")}</p>}
       {doc.entries.length > 0 && (
         <>
           <div className="wl-cards">{doc.entries.map((e) => <EntryCard key={e.code} e={e} />)}</div>
-          <ValuationTable entries={doc.entries} />
+          <ValuationTable entries={doc.entries.filter((e) => !isEtf(e))} />
           <details className="wl-notes">
             <summary>数据来源和口径</summary>
             <dl>
@@ -60,33 +61,62 @@ function Kv({ k, children }: { k: string; children: ReactNode }) {
   return <div><span className="wl-k">{k}</span><span className="wl-v">{children}</span></div>;
 }
 
+/** Purpose: the 散户温度计 reading with its colour band, 散户过热 badge and D-167 streak. Contract: no reading → "—". */
+function GaugeCell({ chips }: { chips: Record<string, number | null> }) {
+  const v = chips.retail_gauge ?? null;
+  if (v == null) return <>—</>;
+  const [cls, label] = gaugeBand(v);
+  const badge = gaugeBadge(chips), streak = gaugeStreak(chips);
+  return (
+    <span className={`rg ${cls}`} title={`散户温度计：${label}`}>
+      {v.toFixed(2)}
+      {badge && <span className={`rg-badge ${badge.cls}`}>{badge.label}</span>}
+      {streak && <small className="rg-streak">{streak}</small>}
+    </span>);
+}
+
 function EntryCard({ e }: { e: WatchlistEntry }) {
   const { select } = useApp();
   return (
     <article className="wl-card" data-code={e.code}>
       <div className="wl-row">
         <div>
-          <button type="button" className="link wl-name" onClick={() => select({ kind: "company", id: e.code })}>{e.name}</button>
+          {isEtf(e)
+            ? <span className="wl-name">{e.name}</span>
+            : <button type="button" className="link wl-name" onClick={() => select({ kind: "company", id: e.code })}>{e.name}</button>}
           <span className="wl-code">{e.code}</span>
+          {isEtf(e) && <span className="wl-tag">ETF</span>}
         </div>
         <span className={`wl-pill ${e.status}`}>{statusLabel(e.status)}</span>
       </div>
       <div className="wl-row">
-        <span className="wl-big num">{px(e.price)}</span>
+        <span className="wl-big num">{px(e.price, digitsOf(e))}</span>
         <span className={`wl-gap ${e.status}`}>{gapText(e.gap_to_buy)}</span>
       </div>
       <div className="wl-kv">
         <Kv k="买入价">{buyText(e)}</Kv>
+        {!isEtf(e) && <>
         <Kv k="买入价对应 PE">{times(e.pe_at_buy)}</Kv>
         <Kv k="买入价对应股息率">{pctOf(e.yield_at_buy)}</Kv>
         <Kv k="现在 PE（TTM）">{times(e.pe_ttm)}</Kv>
         <Kv k="股息率">{pctOf(e.div_yield)}</Kv>
+        <Kv k="股东回报率（含回购）">{pctOf(e.shareholder_yield ?? null)}</Kv>
+        <Kv k="回购计划（占市值）">{e.buyback_plan_pct == null ? "—" : `${e.buyback_plan_pct.toFixed(1)}%`}</Kv>
+        <Kv k="散户温度计"><GaugeCell chips={e.retail ?? {}} /></Kv>
         <Kv k="券商目标价">{targetText(e)}</Kv>
+        </>}
       </div>
+      {(e.conditions ?? []).length > 0 && (
+        <div className="cd-box" data-condition-status={e.condition_status}>
+          <div className="wl-row"><span className="wl-k">买入条件 · {conditionCount(e.conditions, e.conditions_needed)}</span>
+            <span className={`wl-pill cd-${e.condition_status}`}>{conditionStatusLabel(e.condition_status)}</span></div>
+          <ConditionChips items={e.conditions} />
+        </div>
+      )}
       <RangeBar e={e} />
       <WeeklyChart e={e} />
-      {e.thesis && <p className="note"><strong>理由：</strong>{e.thesis}</p>}
-      {e.watch && <p className="note"><strong>要盯的信号：</strong>{e.watch}</p>}
+      <Points title="理由" text={e.thesis} />
+      <Points title="要盯的信号" text={e.watch} />
     </article>
   );
 }

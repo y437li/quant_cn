@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { Watchlist, WatchlistEntry } from "../../api/client";
 import sample from "./watchlist.fixture.json";
 import {
+  splitPoints, isEtf, digitsOf, tickText,
   badgeCount, buyText, epsYearOf, gapPct, gapText, linear, nearestEntry, niceTicks, pctOf, placeLabels, px, statusLabel, targetText, textWidth, times, ymd,
 } from "./watchlist-format";
 
@@ -59,5 +60,26 @@ describe("watchlist chart helpers", () => {
     expect(linear(3, 3, 0, 100)(3)).toBe(50);
     expect(niceTicks(9.1, 14.2, 4)).toEqual([10, 12, 14]);
     expect(niceTicks(5, 5)).toEqual([5]);
+  });
+});
+
+describe("reason bullets", () => {
+  it("TC-WL-009 splits after 。；; and newlines, not inside brackets", () => {
+    expect(splitPoints("估值低。分红稳定；现金流好（经营现金流；自由现金流）。")).toEqual(["估值低", "分红稳定", "现金流好（经营现金流；自由现金流）"]);
+    expect(splitPoints("一句话")).toEqual(["一句话"]);
+    expect(splitPoints("【上调：第一档 10.8；第二档 9】龙头")).toEqual(["上调：第一档 10.8", "第二档 9", "龙头"]);
+    expect(splitPoints("a\nb;")).toEqual(["a", "b"]);
+    expect(splitPoints(null)).toEqual([]);
+  });
+});
+
+describe("ETF rows", () => {
+  it("TC-WL-010 ETF kind, 3-decimal prices and small-price ticks", () => {
+    expect(isEtf({ kind: "etf" })).toBe(true);
+    expect(isEtf({})).toBe(false);
+    expect(digitsOf({ kind: "etf" })).toBe(3);
+    expect(buyText({ kind: "etf", buy_low: 2.24, buy_high: 2.47 })).toBe("2.240–2.470");
+    expect(buyText({ buy_low: 25, buy_high: 25 })).toBe("25.00");
+    expect([tickText(2.45), tickText(2.5), tickText(42.4)]).toEqual(["2.45", "2.5", "42"]);
   });
 });

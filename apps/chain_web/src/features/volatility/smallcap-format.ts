@@ -1,0 +1,54 @@
+import type { SmallCapPoint, SmallCapRow, SmallCapState, VolPoint } from "../../api/client";
+
+export const STATE_LABEL: Record<SmallCapState, string> = { on: "已触发", near: "接近", off: "未到", info: "参考" };
+
+/** Purpose: rows for the table: triggered first, the rest in document order. Contract: no row is lost or repeated. */
+export function orderRows(rows: SmallCapRow[]): SmallCapRow[] {
+  return [...rows.filter((r) => r.state === "on"), ...rows.filter((r) => r.state !== "on")];
+}
+
+const num = (v: number, digits = 0) => v.toLocaleString("en-US", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+
+/** Purpose: a row's latest value by unit: 只 count, 占比 percent, 点 index level, % vol, 亿 signed flow. Contract: null → "—". */
+export function formatScValue(r: Pick<SmallCapRow, "value" | "unit">): string {
+  const v = r.value;
+  if (v == null) return "—";
+  if (r.unit === "占比") return `${Math.round(v * 100)}%`;
+  if (r.unit === "点") return num(v);
+  if (r.unit === "%") return `${v.toFixed(1)}%`;
+  if (r.unit === "亿") return `${v < 0 ? "−" : "+"}${num(Math.abs(v), 1)}亿`;
+  return `${num(v)}${r.unit}`;
+}
+
+/** Purpose: a row's trigger: % (vol) rows are percentile triggers "≥ 90% 分位", levels "≤ 6,075", shares "≥ 70%", counts "≥ 500只". Contract: none → "". */
+export function formatScTrigger(r: Pick<SmallCapRow, "trigger" | "unit">): string {
+  const t = r.trigger;
+  if (t == null) return "";
+  if (r.unit === "%") return `≥ ${Math.round(t * 100)}% 分位`;
+  if (r.unit === "点") return `≤ ${num(t)}`;
+  if (r.unit === "占比") return `≥ ${Math.round(t * 100)}%`;
+  return `≥ ${num(t)}${r.unit}`;
+}
+
+/** Purpose: the 中证1000 closes of the history as chart points. Contract: sessions without a close are dropped. */
+export const smallPoints = (h: SmallCapPoint[]): VolPoint[] =>
+  h.filter((p) => p.small != null).map((p) => ({ date: p.date, value: p.small as number }));
+
+/** Purpose: the financing balance (亿) of the history as chart points (plan 30 ph4). Contract: sessions without it are dropped. */
+export const marginPoints = (h: SmallCapPoint[]): VolPoint[] =>
+  h.filter((p) => p.rz != null).map((p) => ({ date: p.date, value: p.rz as number }));
+
+/** Purpose: the balance as % of float market cap, as chart points. Contract: fraction × 100; sessions without it are dropped. */
+export const marginSharePoints = (h: SmallCapPoint[]): VolPoint[] =>
+  h.filter((p) => p.rz_circ != null).map((p) => ({ date: p.date, value: (p.rz_circ as number) * 100 }));
+
+/** Purpose: the watch levels (点 rows' triggers) drawn on the 中证1000 chart. Contract: ascending, no nulls. */
+export const levelRefs = (rows: SmallCapRow[]): number[] =>
+  rows.filter((r) => r.unit === "点" && r.trigger != null).map((r) => r.trigger as number).sort((a, b) => a - b);
+
+/** Purpose: the panel headline. Contract: triggered names (new ones marked), then near ones; "没有触发" when none fired. */
+export function smallCapHeadline(rows: SmallCapRow[], fresh: string[]): string {
+  const on = rows.filter((r) => r.state === "on").map((r) => r.name + (fresh.includes(r.key) ? "（新）" : ""));
+  const near = rows.filter((r) => r.state === "near").map((r) => `${r.name} ${formatScValue(r)}`);
+  return (on.length ? `已触发 ${on.join("、")}` : "没有触发") + (near.length ? `；接近：${near.join("、")}` : "") + "。";
+}

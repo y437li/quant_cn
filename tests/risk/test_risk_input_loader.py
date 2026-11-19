@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
+
+import pandas as pd
 import pytest
 
+from quant_cn.calculation.consensus_panel_builder import ConsensusPanelBuilder
 from quant_cn.core.config import Config
 from quant_cn.core.date_codec import DateCodec
 from quant_cn.core.risk_model_settings import (
@@ -44,14 +48,17 @@ def build_loader(
     config: Config,
     external: tuple[ExternalSeriesSpec, ...] = (),
     themes: tuple[ThemeBasketSpec, ...] = (),
+    consensus: ConsensusPanelBuilder | None = None,
+    consensus_days: int = 0,
 ) -> RiskInputLoader:
     reader = ServiceBuilder().build_reader(config, lake.catalog)
     calendar, codec = TradingCalendar(lake.query), DateCodec()
     versions = StatementVersionReader(lake.query, TickerAliasMap(lake.catalog, lake.query), codec)
     exposures = ExposureReader(lake.query)
     return RiskInputLoader(
-        reader, exposures, versions, calendar, codec, lake.query, external, themes
-    )
+        reader, exposures, versions, calendar, codec, lake.query, external, themes, consensus,
+        consensus_days,
+    )  # fmt: skip
 
 
 # TC-RIL-001
@@ -112,3 +119,31 @@ def test_tc_ril_003_external_series_and_themes(lake: MiniLake, config: Config) -
     assert fxr["pct_chg"].iloc[0] == pytest.approx((7.01 / 7.00 - 1) * 100)
     assert inputs.themes["aidc_beta"] == (tuple(SampleRiskLake.CODES[:5]), "20251001")
     assert build_loader(lake, config).load(days[100], days[110]).external == {}
+
+
+class RecordingConsensus(ConsensusPanelBuilder):
+    """Records the dates and window it is asked for."""
+
+    def __init__(self) -> None:
+        self.calls: list[tuple[list[str], int]] = []
+
+    def build(self, dates: Sequence[str], window_days: int) -> pd.DataFrame:
+        self.calls.append((list(dates), window_days))
+        return pd.DataFrame({"trade_date": [dates[-1]], "ts_code": ["X"]})
+
+
+# TC-RIL-004
+def test_tc_ril_004_consensus(lake: MiniLake, config: Config) -> None:
+    SampleRiskLake.write(lake, config)
+    days = SampleRiskLake.DAYS
+    plain = build_loader(lake, config)
+    assert plain.load(days[100], days[110]).consensus.empty
+    spy = RecordingConsensus()
+    loader = build_loader(lake, config, consensus=spy, consensus_days=90)
+    inputs = loader.load(days[100], days[110])
+    dates, window = spy.calls[0]
+    assert window == 90 and dates[-1] == days[110]
+    assert set(dates) == {*loader.list_snapshot_dates(days[100], days[110]), days[110]}
+    assert not inputs.consensus.empty
+    build_loader(lake, config, consensus=spy, consensus_days=0).load(days[100], days[110])
+    assert len(spy.calls) == 1

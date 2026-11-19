@@ -1,0 +1,50 @@
+# Sector monitor (plan 31, D-168): per sector the companies and the charts of the #sector-monitor tab.
+# Metric keys are read by portfolio.SectorMetricReader; unknown keys are refused at load.
+# Tier averages of the 70-city index are simple means over the cities below (二线: 4 直辖市 / 省会 /
+# 计划单列 cities as NBS groups them; 三线: every other city of the 70).
+tiers:
+  一线: [北京, 上海, 广州, 深圳]
+  二线: [天津, 石家庄, 太原, 呼和浩特, 沈阳, 大连, 长春, 哈尔滨, 南京, 杭州, 宁波, 合肥, 福州, 厦门, 南昌,
+        济南, 青岛, 郑州, 武汉, 长沙, 南宁, 海口, 重庆, 成都, 贵阳, 昆明, 西安, 兰州, 西宁, 银川, 乌鲁木齐]
+vol_windows: [20, 60]     # realised vol, sessions
+pct_window: 750           # ~3 years of sessions for the vol percentile
+pct_min_obs: 250
+history_sessions: 250     # daily chart length (the vol percentile still uses pct_window)
+history_quarters: 12      # quarterly chart length
+history_months: 36        # monthly chart length
+app_country: cn           # App Store home market of the app_rank chart and leaderboard (plan 19 charts)
+app_top: 20               # home top-grossing list length
+new_game_days: 90         # plan 33 (D-170): a game released within this many days counts as new
+val_window: 1250          # ~5 years of sessions for the valuation percentile
+val_min_obs: 250
+revision_days: 90         # analyst forecast window; revision = change against the window before
+survey_days: 90           # institutional surveys counted in the table
+
+sectors:
+  - key: real_estate
+    name: 房地产
+    index: {code: "801180.SI", name: 申万房地产}
+    companies:
+      - {code: "600048.SH", name: 保利发展}
+      - {code: "001979.SZ", name: 招商蛇口}
+      - {code: "000002.SZ", name: 万科A}
+      - {code: "002244.SZ", name: 滨江集团}
+      - {code: "600383.SH", name: 金地集团}
+      - {code: "601155.SH", name: 新城控股}
+    metrics: [house_price_second_hand, house_price_new, house_price_breadth, contracted_sales, sales_yoy,
+              land_intensity, contract_liab, impairment, valuation, revision, surveys, dividend, winner_rate,
+              realized_vol]
+    valuation: pb
+  - key: games
+    name: 游戏
+    index: {code: "801764.SI", name: 申万游戏Ⅱ}
+    companies:
+      - {code: "002558.SZ", name: 巨人网络}
+      - {code: "002555.SZ", name: 三七互娱}
+      - {code: "603444.SH", name: 吉比特}
+      - {code: "002624.SZ", name: 完美世界}
+      - {code: "002602.SZ", name: 世纪华通}
+      - {code: "002517.SZ", name: 恺英网络}
+    metrics: [app_rank, game_approvals, revenue_q, selling_ratio, contract_liab, valuation, revision, surveys,
+              dividend, winner_rate, realized_vol]
+    valuation: pe_ttm

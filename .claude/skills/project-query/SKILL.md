@@ -33,7 +33,8 @@ curate or project-catalog): wait for it to finish and retry. Never open the file
 | `contracts` | class/method docstring | `class`, `method`, `purpose`, `input`, `output`, `raises`, `test_cases` |
 | `test_cases` | TC ID | `tc_id`, `class`, `description`, `test_function`, `test_file` |
 | `decisions` | decision | `id`, `date`, `title`, `status`, `applies_to`, `context`, `decision` |
-| `plans` / `phases` | plan / phase | `nn`, `title`, `status`, `decisions`; `plan`, `n`, `phase`, `done_criterion`, `status` |
+| `plans` / `phases` | plan / phase | `nn`, `title`, `status`, `decisions`; `plan`, `n`, `phase`, `done_criterion`, `status` (raw), `state` (todo/doing/blocked/done), `state_date`, `commit`, `note` |
+| `research_runs` | logged ad-hoc analysis | `date`, `slug`, `question`, `scripts`, `outputs`, `conclusion`, `follow_up`, `scripts_exist` |
 | `datasets` | dataset | `name`, `endpoint`, `sweep_kind`, `primary_key`, `known_on`, `partition_curated` |
 | `lint_findings` | linter finding | `check`, `path`, `line`, `message`, `run_at` |
 
@@ -59,7 +60,13 @@ SELECT name, purpose, input_output FROM project.methods WHERE class = 'PitAligne
 ```
 **5. What is not done**
 ```sql
-SELECT plan, n, phase, status FROM project.todo;
+SELECT plan, n, phase, state, state_date FROM project.todo;
+-- by state across all plans
+SELECT state, count(*) FROM project.phases GROUP BY 1;
+```
+**5b. What have we researched**
+```sql
+SELECT date, slug, question, conclusion, follow_up FROM project.research_runs ORDER BY date DESC;
 ```
 **6. Decisions touching an area**
 ```sql

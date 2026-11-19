@@ -23,7 +23,10 @@ SweepKind = Literal[
 ]
 DATE_KINDS = ("trade_date", "ann_date", "nav_date")
 ENUM_KINDS = ("list_status", "ts_code", "exchange", "is_new")
-Source = Literal["tushare", "fred", "akshare", "baostock", "cninfo", "eastmoney", "apple", "manual"]
+Source = Literal[
+    "tushare", "fred", "akshare", "baostock", "cninfo", "eastmoney", "apple", "manual", "cboe",
+    "nbs", "nppa",
+]  # fmt: skip
 KnownOnRule = Literal["as_is", "next_session", "period_end_lag", "period_start_lag"]
 Days = Literal["sessions", "weekdays", "all"]
 Window = Literal["month", "year"]
@@ -196,7 +199,8 @@ class DatasetSpec(BaseModel):
             text_fields: list[str]     -- subset stored as text; all other fields are numeric
             start:       str | None    -- dataset-specific download start (YYYYMMDD)
             source:      "tushare" | "fred" | "akshare" | "baostock" | "cninfo" | "eastmoney" |
-                         "apple" | "manual" (hand-entered series, D-139)  --
+                         "apple" | "manual" (hand-entered series, D-139) | "cboe" (D-152) |
+                         "nbs" | "nppa" (plan 31)  --
                                           API client (D-063, D-096)
             known_on_rule: "as_is" | "next_session" | "period_end_lag" | "period_start_lag"  --
                                           how known_on becomes

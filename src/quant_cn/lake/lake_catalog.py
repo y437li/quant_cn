@@ -12,6 +12,7 @@ import duckdb
 from quant_cn.core.dataset_spec import DatasetSpec
 from quant_cn.core.exceptions import LakeError
 from quant_cn.lake.document_views import DocumentViews
+from quant_cn.lake.task_log import TaskLog
 
 ZONES = ("raw", "curated", "documents", "meta", "external")
 DB_NAME = "quant_cn.duckdb"
@@ -49,6 +50,8 @@ class LakeCatalog:
             LakeError  -- DuckDB file cannot be opened
 
     Used by:
+        cli.UpdateCommands  -- meta.task_log view refresh
+        cli.GaugeCommands  -- read-write catalog
         lake.FetchLog                  -- shares the connection
         lake.RunLog                    -- shares the connection
         lake.LakeQuery                 -- shares the connection
@@ -66,6 +69,8 @@ class LakeCatalog:
         lake.TickerAliasMap            -- injected type or call
         cli.ResearchCommands           -- injected type or call
         cli.DocumentCommands  -- injected type or call
+        cli.AppServiceBuilder  -- wires it
+        cli.ReportCommands  -- last session for `morning-report`
 
     Test cases:
         TC-LC-001  raw and curated views exist after refresh and return the written rows
@@ -176,7 +181,7 @@ class LakeCatalog:
     def refresh_views(self) -> None:
         """
         Purpose:
-            refresh_view for every configured dataset.
+            refresh_view for every configured dataset, then the document and task-log views.
 
         Contract:
             Input:
@@ -189,6 +194,7 @@ class LakeCatalog:
         for spec in self.datasets.values():
             self.refresh_view(spec)
         DocumentViews(self.lake_root, self.connection).refresh()
+        TaskLog(self.lake_root).refresh_view(self.connection)
 
     def rebuild(self) -> None:
         """

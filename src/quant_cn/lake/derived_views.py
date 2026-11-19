@@ -38,6 +38,12 @@ _TABLES = {
     # plan 15 ph7d: the user's book per session (HoldingsRiskBuilder, D-132)
     "holdings_positions": "trade_date, code, shares, cost, close, value, pnl, weight",
     "holdings_risk": "trade_date, component, value",
+    # plan 21: RetailGauge feature rows (RetailGaugeFeatureBuilder), wide
+    "retail_gauge_features": "*",
+    "retail_gauge": "ts_code, as_of, q, pct, exp_change, iqr_lo, iqr_hi, avoid, lo_streak, "
+    "hi_streak, retail_leaving, avoid_strong, model_version",
+    # plan 21 ph4: the daily opportunity list (OpportunityScreen), wide
+    "opportunity_list": "*",
 }
 # statements only: event datasets are period-swept too (forecast_vip, disclosure_date; D-081)
 FUNDAMENTALS_PREFIX = "fundamentals/"
@@ -200,6 +206,7 @@ class DerivedViews:
             (none at construction)
 
     Used by:
+        cli.GaugeCommands  -- refresh_tables after writes
         pipeline.CuratePipeline  -- after compaction
         pipeline.DeriveStep      -- injected type or call
         cli.ServiceBuilder       -- injected type or call
@@ -301,8 +308,8 @@ class DerivedViews:
                 (none)
             Output:
                 list[str]  -- views created: derived.universe / derived.features /
-                              derived.risk_* / derived.holdings_* when their year files
-                              exist; dropped otherwise
+                              derived.risk_* / derived.holdings_* / derived.retail_gauge*
+                              when their year files exist; dropped otherwise
             Raises:
                 LakeError  -- DuckDB rejects a view
         """

@@ -16,6 +16,7 @@ from quant_cn.core.exceptions import LakeError
 from quant_cn.core.positions_book import PositionsBook
 from quant_cn.lake.lake_query import LakeQuery
 from quant_cn.portfolio.holdings_history_writer import HoldingsHistoryWriter
+from quant_cn.portfolio.position_reviewer import PositionReviewer
 from quant_cn.risk.base_risk_model import BaseRiskModel
 from quant_cn.risk.risk_decomposer import RiskDecomposer
 from quant_cn.risk.risk_snapshot import RiskSnapshot
@@ -54,13 +55,14 @@ class HoldingsRiskBuilder:
             decomposer: RiskDecomposer
             history:    HoldingsHistoryWriter  -- appends the session to the lake
             benchmark:  str             -- index_code of the benchmark, e.g. "000300.SH"
+            reviewer:   PositionReviewer | None  -- notes, flags, chips, conditions (ph7f)
         Output:
             instance; `build(trade_date)` -> dict, `write(out_dir, trade_date)` -> Path
         Raises:
             (none at construction)
 
     Used by:
-        cli.ResearchCommands  -- `holdings-risk` command
+        cli.AppServiceBuilder  -- wires it
 
     Test cases:
         TC-HRB-001  weights = shares x close / (stock value + cash); P&L = shares x (close - cost);
@@ -71,6 +73,9 @@ class HoldingsRiskBuilder:
         TC-HRB-003  write stores the session through the history writer (see TC-HHW-001)
         TC-HRB-004  empty book -> empty document without reading the model; no risk session
                     -> LakeError; write to a missing directory -> LakeError
+        TC-HRB-005  with a reviewer, `reviews` holds one row per priced position; without, {}
+        TC-HRB-006  cost <= 0 (diluted cost, paid back): pnl = shares x (close - cost), pnl_pct
+                    None (D-166)
     """
 
     def __init__(
@@ -81,6 +86,7 @@ class HoldingsRiskBuilder:
         decomposer: RiskDecomposer,
         history: HoldingsHistoryWriter,
         benchmark: str,
+        reviewer: PositionReviewer | None = None,
     ) -> None:
         self._book = book
         self._query = query
@@ -88,6 +94,7 @@ class HoldingsRiskBuilder:
         self._decomposer = decomposer
         self._history = history
         self._benchmark = benchmark
+        self._reviewer = reviewer
 
     def build(self, trade_date: str) -> dict[str, Any]:
         """
@@ -101,10 +108,11 @@ class HoldingsRiskBuilder:
                 dict  -- {as_of, model, benchmark, cash, value, stock_value, pnl, risk: {total,
                          factor, specific, active_total, active_factor, active_specific},
                          positions: [{code, name, shares, cost, close, value, weight, pnl,
-                         pnl_pct, vol, contrib}], factors: [{factor, label, kind, exposure,
-                         active, contrib}], correlation: {codes, matrix}, stock_exposures:
-                         {styles: [factor], rows: [{code, industry, values: [..]}]},
-                         missing: [code]};
+                         pnl_pct (None when cost <= 0), vol, contrib}], factors: [{factor,
+                         label, kind, exposure, active, contrib}], correlation: {codes,
+                         matrix}, stock_exposures: {styles: [factor], rows: [{code,
+                         industry, values: [..]}]},
+                         missing: [code], reviews: {code: PositionReviewer.build row}};
                          vols annualised fractions; empty lists and "" as_of for an empty book
             Raises:
                 LakeError  -- no risk-model session on or before trade_date
@@ -136,6 +144,7 @@ class HoldingsRiskBuilder:
             "correlation": self._build_correlation(snap, list(stocks.index)),
             "stock_exposures": self._build_stock_exposures(snap, list(stocks.index)),
             "missing": missing,
+            "reviews": self._build_reviews(held, session),
         }
 
     def write(self, out_dir: Path, trade_date: str) -> Path:
@@ -171,7 +180,7 @@ class HoldingsRiskBuilder:
         book["close"] = book["code"].map(closes)
         book["value"] = book["shares"] * book["close"]
         book["pnl"] = book["shares"] * (book["close"] - book["cost"])
-        book["pnl_pct"] = book["close"] / book["cost"] - 1
+        book["pnl_pct"] = (book["close"] / book["cost"] - 1).where(book["cost"] > 0)
         return book
 
     def _build_risk(self, snap: RiskSnapshot, weights: pd.Series, session: str) -> dict[str, Any]:
@@ -242,6 +251,12 @@ class HoldingsRiskBuilder:
             )
         return {"styles": styles, "rows": rows}
 
+    def _build_reviews(self, held: pd.DataFrame, session: str) -> dict[str, Any]:
+        if self._reviewer is None:
+            return {}
+        priced = held.dropna(subset=["close"])[["code", "close", "weight"]]
+        return self._reviewer.build(priced, session)
+
     def _read_labels(self) -> dict[str, str]:
         if not self._query.has_view("derived.industry_l1"):
             return {}
@@ -279,6 +294,7 @@ class HoldingsRiskBuilder:
             "correlation": {"codes": [], "matrix": []},
             "stock_exposures": {"styles": [], "rows": []},
             "missing": [],
+            "reviews": {},
         }
 
     @staticmethod

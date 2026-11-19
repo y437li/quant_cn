@@ -166,6 +166,7 @@ svg.dupont.big .yr { font-size: 120px; }
 .wl-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
 .wl-name { font-size: 16px; font-weight: 600; }
 .wl-code { color: var(--muted); font-size: 12px; margin-left: 6px; font-family: var(--mono); }
+.wl-tag { font-size: 11px; margin-left: 6px; padding: 0 5px; border: 1px solid var(--muted); border-radius: 3px; color: var(--muted); }
 .wl-pill { font-size: 12px; padding: 1px 8px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
 .wl-pill.in, .wl-gap.in { color: var(--c2); }
 .wl-pill.near, .wl-gap.near { color: var(--c3); }
@@ -208,6 +209,9 @@ svg.dupont.big .yr { font-size: 120px; }
 .ep-line { fill: none; stroke-width: 2; stroke-linejoin: round; }
 .ep-bar.ep-in { fill: var(--c1); } .ep-bar.ep-out { fill: var(--c3); } .ep-bar.ep-flat { fill: var(--prior); }
 .ep-recent { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; font-size: 12px; }
+.ep-matrix td.ep-cell { font-family: var(--mono); }
+.ep-matrix td.ep-in { background: color-mix(in srgb, var(--c1) calc(var(--h, 0) * 0.55%), transparent); }
+.ep-matrix td.ep-out { background: color-mix(in srgb, var(--c3) calc(var(--h, 0) * 0.55%), transparent); }
 .ep-day { display: inline-flex; gap: 4px; align-items: baseline; font-family: var(--mono); }
 .ep code { font-family: var(--mono); background: var(--soft); padding: 0 4px; border-radius: 3px; }
 @media (max-width: 520px) { .wl-kv { grid-template-columns: repeat(2, minmax(0, 1fr)); } .wl-notes dl { grid-template-columns: 1fr; } }
@@ -249,3 +253,214 @@ svg.dupont.big .yr { font-size: 120px; }
 .hr-bar i.neg { background: var(--c3); }
 .hr-corr td { text-align: center; }
 .hr-expo td { text-align: center; }
+/* Structured conditions and position notes (plan 15 ph7f) */
+.cd-box { margin: 8px 0; }
+.cd-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; padding: 0; list-style: none; }
+.cd-chip { padding: 2px 8px; border-radius: 999px; font-size: 12px; border: 1px solid var(--line, #ccc); color: var(--muted, #666); }
+.cd-chip.met { border-color: var(--c2); color: var(--c2); }
+.cd-chip.unmet { border-color: var(--c5); color: var(--c5); }
+.cd-chip.unknown { border-style: dashed; }
+.wl-pill.cd-buy { color: var(--c2); } .wl-pill.cd-near { color: var(--c3); } .wl-pill.cd-wait { color: var(--muted, #666); }
+.pn-alerts { margin: 8px 0 12px; padding: 8px 12px 8px 28px; border-left: 3px solid var(--c5); background: color-mix(in srgb, var(--c5) 8%, transparent); }
+.pn-flag { display: inline-block; margin: 1px 4px 1px 0; padding: 0 6px; border-radius: 4px; font-size: 12px; white-space: nowrap; }
+.pn-flag.stop { background: color-mix(in srgb, var(--c5) 18%, transparent); }
+.pn-flag.target { background: color-mix(in srgb, var(--c2) 18%, transparent); }
+.pn-flag.weight, .pn-flag.review, .pn-flag.note { background: color-mix(in srgb, var(--c3) 18%, transparent); }
+.pn-note { margin: 6px 0; } .pn-note dl { margin: 4px 0 0; } .pn-note dt { font-weight: 600; } .pn-note dd { margin: 0 0 6px; }
+
+/* macro monitor (#macro, plan 15 ph7h) */
+.mc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 10px; }
+.mc-card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px 6px; min-width: 0; }
+.mc-card.new { border-color: color-mix(in srgb, var(--c3) 60%, var(--line)); }
+.mc-card header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.mc-name { font-weight: 600; }
+.mc-month { color: var(--muted); font-family: var(--mono); font-size: 12px; }
+.mc-new { margin-left: 6px; font-size: 11px; font-weight: 500; color: var(--panel); background: var(--c3); border-radius: 4px; padding: 0 5px; }
+.mc-figs { display: flex; align-items: baseline; gap: 12px; margin: 4px 0 2px; font-family: var(--mono); font-size: 13px; }
+.mc-figs b { font-size: 20px; }
+.mc-figs .up { color: var(--risk); } .mc-figs .down { color: var(--market); }
+.mc-pct { color: var(--muted); margin-left: auto; font-size: 12px; }
+.mc-pct.ext { color: var(--c3); font-weight: 600; }
+.mc-chart { position: relative; width: 100%; }
+.mc-chart.note { color: var(--muted); font-size: 12px; padding: 20px 0; }
+.mc-line { fill: none; stroke: var(--c1); stroke-width: 1.6; }
+.mc-dot { fill: var(--c1); stroke: var(--panel); stroke-width: 1.5; }
+.mc-ref { stroke: var(--muted); stroke-dasharray: 4 3; stroke-width: 1; }
+
+/* 小盘观察 panel on #volatility (plan 30 ph2) */
+.sc-head { margin: 0 0 8px; color: var(--ink); }
+.sc-body { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr); gap: 10px; align-items: start; }
+.sc-table-wrap { overflow-x: auto; min-width: 0; }
+.sc-table td.sc-note { font-family: var(--body); color: var(--muted); text-align: left; white-space: normal; min-width: 160px; }
+.sc-table td.sc-state { font-family: var(--body); }
+.sc-group { color: var(--muted); font-size: 11px; margin-right: 6px; }
+.sc-table tbody tr { cursor: default; }
+.sc-table tr.sc-on td:not(.sc-note) { color: var(--risk); font-weight: 600; }
+.sc-table tr.sc-on td:first-child { box-shadow: inset 3px 0 0 var(--risk); }
+.sc-table tr.sc-near td:not(.sc-note) { color: var(--c3); }
+.sc-table tr.sc-off td:not(.sc-note):not(:first-child), .sc-table tr.sc-info td:not(.sc-note):not(:first-child) { color: var(--ink); }
+/* 利率汇率 (plan 34) */
+.rf-table tr.rf-alert td:first-child { color: var(--risk); }
+.rf-table td.rf-ext { color: var(--c3); font-weight: 600; }
+.rf-table td.rf-stale { color: var(--muted); }
+.rf-curve { max-width: 640px; }
+.rf-curve .rf-line { fill: none; stroke-width: 2; }
+.rf-curve .rf-now .rf-line { stroke: var(--c1); }
+.rf-curve .rf-m1 .rf-line { stroke: var(--c3); stroke-dasharray: 4 3; }
+.rf-curve .rf-y1 .rf-line { stroke: var(--prior); stroke-dasharray: 2 3; }
+.rf-legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); margin-top: 4px; }
+.rf-legend i { display: inline-block; width: 18px; height: 0; margin-right: 6px; vertical-align: middle; border-top: 2px solid var(--c1); }
+.rf-legend .rf-m1 i { border-top: 2px dashed var(--c3); }
+.rf-legend .rf-y1 i { border-top: 2px dotted var(--prior); }
+/* 行业监控 #sector-monitor (plan 31 ph5) */
+.sm-switch { display: flex; gap: 6px; margin-top: 6px; }
+.sm-switch button { border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 6px; padding: 3px 12px; cursor: pointer; font: inherit; }
+.sm-switch button.on { background: var(--accent); color: var(--panel); border-color: var(--accent); }
+.sm-grid { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+.sm-line { fill: none; stroke-width: 1.5; }
+.sm-legend { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 11px; color: var(--muted); padding: 2px 0 4px; }
+.sm-legend i { display: inline-block; width: 10px; height: 2px; margin-right: 4px; vertical-align: middle; }
+.sm-legend button { border: 0; background: none; color: inherit; font: inherit; padding: 0; cursor: pointer; }
+.sm-legend button.on { color: var(--ink); font-weight: 600; }
+.sm-line.faded { opacity: 0.15; }
+.sm-line.focus { stroke-width: 2.4; }
+.sm-tip div { white-space: nowrap; }
+.sm-table-wrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+.sm-table tr.sm-index td { color: var(--muted); }
+.sm-table td.ext { color: var(--c3); font-weight: 600; }
+.sm-table td.hot { color: var(--risk); font-weight: 600; }
+.sm-table td.cool { color: var(--market); font-weight: 600; }
+.sm-rank { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 12px; }
+.sm-rank-wide { grid-column: 1 / -1; }
+.sm-rank .sm-table td.txt, .sm-rank .sm-table th.txt { text-align: left; }
+.sm-rank h4 { margin: 0 0 6px; font-size: 13px; } .sm-rank h4 small { color: var(--muted); font-weight: 400; }
+@media (max-width: 720px) { .sm-rank { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 900px) { .sc-body { grid-template-columns: 1fr; } }
+
+/* reason bullets (理由 / 逻辑 / 要盯) */
+.pt-block { display: block; }
+.pt-block > strong { display: block; margin-bottom: 2px; }
+.pt-list { margin: 2px 0 0; padding-left: 18px; }
+.pt-list li { margin: 2px 0; line-height: 1.5; }
+
+/* app shell: left sidebar + main column (plan 15 ph7j) */
+.app.shell { display: grid; grid-template-columns: 188px minmax(0, 1fr); grid-template-rows: 1fr; padding: 0; gap: 0; }
+.side-nav { background: var(--panel); border-right: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; overflow: auto; }
+.sn-brand { padding: 16px 16px 12px; border-bottom: 1px solid var(--soft); display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
+.sn-title { font-family: var(--display); font-weight: 900; font-size: 18px; letter-spacing: .02em; }
+.sn-brand small { color: var(--muted); font-size: 11px; flex-basis: 100%; }
+.sn-menu { display: none; margin-left: auto; font: inherit; font-size: 12px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 6px; padding: 3px 10px; cursor: pointer; }
+.sn-group { padding: 10px 8px 4px; }
+.sn-group-title { color: var(--muted); font-size: 11px; letter-spacing: .12em; padding: 0 8px 4px; }
+.sn-item { display: flex; align-items: center; justify-content: space-between; width: 100%; border: 0; background: none; color: var(--ink); font: inherit; font-size: 13px; text-align: left; padding: 7px 10px; border-radius: 6px; cursor: pointer; }
+.sn-item:hover { background: var(--soft); }
+.sn-item.on { background: var(--company); color: var(--panel); font-weight: 600; }
+.sn-item.on .badge { background: var(--panel); color: var(--company); }
+.shell-main { display: grid; grid-template-rows: auto auto 1fr; gap: 10px; min-height: 0; min-width: 0; padding: 12px max(16px, env(safe-area-inset-right, 0px)) 12px 16px; box-sizing: border-box; height: 100%; }
+.shell-main:has(> .wl-page), .shell-main:has(> .dupont-page) { grid-template-rows: auto 1fr; }
+.topbar { display: flex; align-items: center; gap: 12px; }
+.topbar .search { flex: 1; max-width: 560px; }
+.chain-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+@media (max-width: 760px) {
+  .app.shell { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; height: auto; }
+  .side-nav { border-right: 0; border-bottom: 1px solid var(--line); overflow: visible; }
+  .sn-brand { border-bottom: 0; padding: 10px 16px; align-items: center; }
+  .sn-brand small { flex-basis: auto; }
+  .sn-menu { display: inline-block; }
+  .side-nav nav { display: none; padding-bottom: 8px; }
+  .side-nav.shown nav { display: block; }
+  .shell-main { height: auto; }
+}
+.sn-item .badge { min-width: 18px; padding: 0 6px; border-radius: 999px; background: var(--c3); color: var(--panel); font-size: 11px; font-weight: 600; text-align: center; line-height: 18px; }
+
+/* futures monitor (#futures, plan 15 ph7i) */
+.fu-flags { padding: 8px 14px; background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--c3); border-radius: 8px; font-size: 13px; }
+.fu-flags summary { cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; list-style: none; }
+.fu-flags summary::-webkit-details-marker { display: none; }
+.fu-flags summary::before { content: "▸"; color: var(--muted); transition: transform .15s; }
+.fu-flags[open] summary::before { transform: rotate(90deg); }
+.fu-toggle { margin-left: auto; color: var(--muted); font-weight: 400; font-size: 12px; }
+.fu-flags ul { list-style: none; margin: 8px 0 2px; padding: 0; display: grid; gap: 4px; }
+.fu-flags li.new b { color: var(--c3); }
+.fu-table tr.fu-group td { background: var(--soft); color: var(--muted); font-size: 11px; letter-spacing: .1em; padding: 4px 8px; cursor: default; }
+.fu-table td.ext, .fu-spreads td.ext { color: var(--c3); font-weight: 600; }
+.fu-table td small { color: var(--muted); margin-left: 4px; }
+.fu-table td.up, .fu-spreads td.up { color: var(--risk); } .fu-table td.down, .fu-spreads td.down { color: var(--market); }
+.fu-charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.fu-charts figure, .fu-spreads figure { margin: 0; min-width: 0; }
+.fu-charts figcaption, .fu-spreads figcaption { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+.fu-spreads { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.fu-spreads tr { cursor: pointer; } .fu-spreads tr.on td { background: var(--soft); }
+@media (max-width: 860px) { .fu-spreads { grid-template-columns: minmax(0, 1fr); } }
+
+/* style ETF crowding (#etf, plan 15 ph7g) */
+.es-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.es-card { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: var(--panel); min-width: 0; }
+.es-card.hot { border-color: color-mix(in srgb, var(--risk) 55%, var(--line)); }
+.es-card header { display: flex; justify-content: space-between; align-items: center; }
+.es-status { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--soft); color: var(--muted); }
+.es-status.hot { background: var(--risk); color: var(--panel); } .es-status.cooled { background: var(--market); color: var(--panel); }
+.es-line { margin: 6px 0 2px; font-family: var(--mono); font-size: 13px; }
+
+/* RetailGauge colour bands (散户温度计): hot = retail buying in, cold = retail leaving */
+.rg-hot { background: color-mix(in srgb, var(--risk) 26%, transparent); color: var(--risk); font-weight: 600; }
+.rg-warm { background: color-mix(in srgb, var(--c3) 22%, transparent); }
+.rg-cool { background: color-mix(in srgb, var(--market) 14%, transparent); }
+.rg-cold { background: color-mix(in srgb, var(--market) 30%, transparent); color: var(--market); font-weight: 600; }
+.rg-legend { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 12px; color: var(--muted); margin: 6px 0 0; }
+.rg-legend .rg { padding: 1px 8px; border-radius: 4px; border: 1px solid var(--line); }
+/* 散户过热 badges (D-155 avoid, D-167 avoid_strong) and the streak note */
+.rg-badge { display: inline-block; margin-left: 6px; padding: 0 6px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.rg-avoid { border: 1px solid var(--risk); color: var(--risk); }
+.rg-avoid-strong { background: var(--risk); color: var(--panel); }
+.rg-streak { display: block; font-size: 11px; color: var(--muted); font-weight: 400; }
+/* 机会清单 page rows */
+.op-table tr.op-new td:first-child { color: var(--risk); font-weight: 600; }
+.op-table tr.op-near td { color: var(--muted); }
+.op-table tr.op-near td a { color: inherit; }
+
+.cd-req { display: inline-block; font-size: 10px; line-height: 14px; padding: 0 3px; margin-right: 3px; border-radius: 3px; background: var(--company); color: var(--panel); }
+
+/* 融资融券 tab (plan 15 ph7m) */
+.mg-tab figure { margin: 8px 0; } .mg-tab figcaption { color: var(--muted); font-size: 12px; }
+.mg-head { margin: 4px 0 8px; } .mg-warn { margin: 2px 0; color: var(--risk); font-size: 13px; }
+.mg-ladder tr.hit td { color: var(--risk); }
+/* 回购增持 (plan 32) */
+.bb-table td, .bb-table th { white-space: nowrap; }
+.bb-code, .bb-muted { color: var(--muted); font-size: 11px; }
+.bb-table td.bb-loan { color: var(--c4); }
+.bb-table td.bb-done { color: var(--c2); font-weight: 600; }
+.bb-ev.new { color: var(--c1); font-weight: 600; }
+.bb-ev.completed { color: var(--c2); }
+.bb-ev.stopped, .bb-ev.expired, .bb-ev.ended { color: var(--muted); }
+.bb-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); align-items: start; }
+.bb-filters { flex-wrap: wrap; }
+.bb-months { max-width: 760px; }
+.bb-bar { fill: color-mix(in srgb, var(--c1) 45%, transparent); }
+.bb-bar.loan { fill: var(--c4); }
+.bb-key { display: inline-block; width: 12px; height: 10px; margin-right: 6px; vertical-align: middle; border: 0 !important; background: color-mix(in srgb, var(--c1) 45%, transparent); }
+.bb-key.loan { background: var(--c4); }
+.bb-table td:nth-child(-n+5), .bb-table th:nth-child(-n+5) { text-align: left; }
+.bb-table[data-event] td:nth-child(6), .bb-table[data-event] th:nth-child(6) { text-align: left; }
+.bb-totals td:first-child, .bb-totals th:first-child { text-align: left; }
+.rf-legend i.bb-key { width: 12px; height: 10px; }
+
+/* 财报季信号 (plan 35) */
+.se-summary { margin: 0 0 8px; font-size: 13px; }
+.se-table tr.se-fire td { color: var(--risk); font-weight: 600; }
+.se-table tr.se-prov td { color: var(--ink); background: var(--soft); }
+.se-table td.se-rally { font-weight: 600; }
+.se-new { margin-left: 4px; font-size: 10px; padding: 0 4px; border-radius: 3px; background: var(--risk); color: #fff; }
+.se-actions { display: flex; gap: 8px; margin: 8px 0; }
+.se-actions button { font-size: 12px; padding: 2px 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); border-radius: 4px; cursor: pointer; }
+
+/* 更新状态 (plan 38) */
+.tk-table td:first-child { font-family: ui-monospace, monospace; text-align: left; }
+.tk-state.ok { color: var(--market); }
+.tk-state.failed { color: var(--risk); font-weight: 600; }
+.tk-state.skipped, .tk-state.none { color: var(--muted); }
+.tk-dots { white-space: nowrap; }
+.tk-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 3px; background: var(--muted); }
+.tk-dot.ok { background: var(--market); }
+.tk-dot.failed { background: var(--risk); }
+.tk-note { max-width: 360px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; color: var(--muted); }

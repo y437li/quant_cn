@@ -33,6 +33,7 @@ class TradingCalendar:
         factor.FactorFactory                     -- injected type or call
         risk.RiskInputLoader  -- injected type or call
         pipeline.RiskModelStep  -- injected type or call
+        cli.ReportCommands  -- last session for `morning-report`
 
     Test cases:
         TC-TCA-001  sessions returns open days in range, inclusive, ascending

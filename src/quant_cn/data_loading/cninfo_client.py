@@ -70,6 +70,8 @@ class CninfoClient(BaseWebClient):
         TC-CNC-002  duplicates across pages dropped; <em> tags stripped; time in Beijing
         TC-CNC-003  an empty day returns zero rows with COLUMNS; a missing date raises
         TC-CNC-004  a range above MAX_ROWS is split into halves; a single day by board
+        TC-CNC-005  pages follow totalAnnouncement when totalpages is one short (31 rows,
+                    totalpages 1 -> two pages read)
     """
 
     def __init__(
@@ -145,7 +147,10 @@ class CninfoClient(BaseWebClient):
                 "cninfo %s %s %s: %s rows, only %s reachable", start, plate, params, total, MAX_ROWS
             )
         rows: list[dict[str, Any]] = list(first.get("announcements") or [])
-        pages = min(int(first.get("totalpages") or 0), MAX_ROWS // PAGE_SIZE)
+        # CNINFO's totalpages is one short when the total is not a multiple of the page size
+        # (84 rows -> 2), so the page count comes from the row total (plan 31 ph3)
+        listed = max(int(first.get("totalpages") or 0), -(-total // PAGE_SIZE))
+        pages = min(listed, MAX_ROWS // PAGE_SIZE)
         for page in range(2, pages + 1):
             form = {**form, "pageNum": str(page)}
             reply = self._pacer.run(

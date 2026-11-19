@@ -10,13 +10,13 @@ import pytest
 
 from quant_cn.core.config import Config
 from quant_cn.core.date_codec import DateCodec
-from quant_cn.core.etf_proxy_settings import EtfProxyIndex, EtfProxySettings
+from quant_cn.core.etf_proxy_settings import EtfProxyIndex, EtfProxySettings, EtfProxyStyle
 from quant_cn.core.exceptions import LakeError
 from quant_cn.portfolio.etf_flow_calculator import EtfFlowCalculator
 from quant_cn.portfolio.etf_proxy_builder import EtfProxyBuilder
 from tests.support import MiniLake, SampleFactorLake
 
-CORE, OTHER, BOND = "510300.SH", "159925.SZ", "511010.SH"
+CORE, OTHER, BOND, BANK_ETF = "510300.SH", "159925.SZ", "511010.SH", "512800.SH"
 D1, D2, D3, D4 = "20260105", "20260106", "20260107", "20260112"  # D4 in the next ISO week
 SETTINGS = EtfProxySettings(
     start=D1,
@@ -31,13 +31,13 @@ def _build_builder(lake: MiniLake, config: Config, settings: EtfProxySettings) -
     return EtfProxyBuilder(cfg, lake.query, DateCodec(), EtfFlowCalculator(settings))
 
 
-def _write_lake(lake: MiniLake, config: Config) -> None:
+def _write_lake(lake: MiniLake, config: Config, bank: bool = False) -> None:
     w = SampleFactorLake.write
     funds = [
         (CORE, "华泰柏瑞沪深300ETF", "沪深300指数\u00d7100%"),
         (OTHER, "嘉实沪深300ETF", "沪深300指数\u00d7100%"),
         (BOND, "国债ETF", "上证5年期国债指数\u00d7100%"),
-    ]
+    ] + ([(BANK_ETF, "银行ETF", "中证银行指数\u00d7100%")] if bank else [])
     w(
         lake,
         config,
@@ -51,11 +51,13 @@ def _write_lake(lake: MiniLake, config: Config) -> None:
         "fund_daily",
         [
             {"ts_code": c, "trade_date": d, "close": v, "pre_close": p}
-            for c in (CORE, OTHER)
+            for c in (CORE, OTHER, *((BANK_ETF,) if bank else ()))
             for d, v, p in px
         ],
     )
     shares = {CORE: [1e6, 1e6, 5e5, 6e5], OTHER: [1e5, 1e5, 1e5, 2e5]}  # 万份 (100 亿份 = 1e6)
+    if bank:
+        shares[BANK_ETF] = [1e5, 1e5, 1e5, 3e5]
     w(
         lake,
         config,
@@ -90,8 +92,8 @@ def test_tc_ep_001_core_and_other(built: dict[str, Any]) -> None:
     assert built["as_of"] == D4 and built["price_as_of"] == "20260113" and built["n_members"] == 2
     core, other = built["totals"]["core"], built["totals"]["other"]
     # core: AUM 400 -> 440 (price) -> 220 (redeem 50 亿份 at 4.4) -> 264 (+10 亿份);
-    # peak 400 亿 at D1 is 440 at today's price (x1.1)
-    assert core == _to_approx(
+    # peak 400 亿 at D1 is 440 at today's price (x1.1); window / flow_weeks: TC-EP-007
+    assert {k: v for k, v in core.items() if k not in ("window", "flow_weeks")} == _to_approx(
         {
             "aum": 264.0,
             "position": 264.0,
@@ -174,3 +176,61 @@ def test_tc_ep_004_no_share_rows(lake: MiniLake, config: Config) -> None:
     )
     with pytest.raises(LakeError):
         _build_builder(lake, config, SETTINGS).build()
+
+
+def test_tc_ep_005_styles_apart(lake: MiniLake, config: Config) -> None:
+    """TC-EP-005"""
+    _write_lake(lake, config, bank=True)
+    style = EtfProxyStyle(key="bank", name="银行", benchmark="^中证银行指数", reference=BANK_ETF)
+    with_style = SETTINGS.model_copy(update={"styles": [style], "style_window": 1})
+    plain = _build_builder(lake, config, SETTINGS).build()
+    doc = _build_builder(lake, config, with_style).build()
+    assert doc["totals"] == plain["totals"] and doc["n_members"] == plain["n_members"] == 2
+    assert plain["styles"] == []
+    bank = doc["styles"][0]
+    assert (bank["key"], bank["n_etf"], bank["flow_1d"]) == ("bank", 1, 88.0)  # 2e5 万份 x 4.4
+
+
+# TC-EP-006
+def test_tc_ep_006_index_rhythm(lake: MiniLake, config: Config) -> None:
+    _write_lake(lake, config)
+    built = _build_builder(lake, config, SETTINGS).build()
+    index = built["indices"][0]
+    # index position at today's price: D1 484 (peak), D3 264 (trough), D4 352 (+88 since)
+    assert {k: index[k] for k in ("peak", "trough_since_peak", "since_trough")} == _to_approx(
+        {
+            "peak": {"date": D1, "position": 484.0},
+            "trough_since_peak": {"date": D3, "position": 264.0},
+            "since_trough": 88.0,
+        }
+    )
+    # two ISO weeks (-220, +88); the reference closes 4.0 -> 4.4 and stays at its high
+    assert [index[k] for k in ("flow_weeks", "flow_week", "flow_day", "drawdown")] == (
+        _to_approx([-132.0, 88.0, 88.0, 0.0])
+    )
+    one_week = SETTINGS.model_copy(update={"rhythm_weeks": 1})
+    assert _build_builder(lake, config, one_week).build()["indices"][0]["flow_weeks"] == (
+        pytest.approx(88.0)
+    )
+
+
+# TC-EP-007
+def test_tc_ep_007_three_month_window(lake: MiniLake, config: Config) -> None:
+    _write_lake(lake, config)
+    built = _build_builder(lake, config, SETTINGS).build()
+    # positions at today's price: index 484, 484, 264, 352; core 440, 440, 220, 264;
+    # other 44, 44, 44, 88. Only 4 sessions exist, so the 63-session window uses 4.
+    assert built["indices"][0]["window"] == _to_approx(
+        {"pct": 50.0, "low": 264.0, "high": 484.0, "days": 4}
+    )
+    assert built["totals"]["core"]["window"] == _to_approx(
+        {"pct": 50.0, "low": 220.0, "high": 440.0, "days": 4}
+    )
+    assert built["totals"]["other"]["window"]["pct"] == pytest.approx(100.0)  # ties count
+    # both ISO weeks fall inside rhythm_weeks = 5, so flow_weeks = the whole weekly sum
+    weekly_core = sum(r["core_flow"] for r in built["weekly"])
+    assert built["totals"]["core"]["flow_weeks"] == pytest.approx(weekly_core)
+    assert (built["rhythm_weeks"], built["pct_window_days"], built["matrix_weeks"]) == (5, 63, 14)
+    short = SETTINGS.model_copy(update={"pct_window_days": 2})
+    window = _build_builder(lake, config, short).build()["indices"][0]["window"]
+    assert window == _to_approx({"pct": 100.0, "low": 264.0, "high": 352.0, "days": 2})

@@ -42,3 +42,10 @@ def test_tc_tn_004_garbage(tn: TickerNormalizer, bad: str) -> None:
     with pytest.raises(ValueError):
         tn.normalize(bad)
     assert not tn.is_valid(bad)
+
+
+# TC-TN-005
+def test_tc_tn_005_new_beijing_codes() -> None:
+    normalizer = TickerNormalizer()
+    assert normalizer.normalize("920819") == "920819.BJ"
+    assert normalizer.normalize("900901") == "900901.SH"

@@ -110,9 +110,14 @@ def test_tc_c_011_universe(config: Config) -> None:
 def test_tc_c_012_factors(config: Config, tmp_path: Path) -> None:
     committed = Config.load(REPO, env={"QUANT_CN_LAKE_ROOT": str(tmp_path)})
     names = {f.name: f.class_name for f in committed.factors}
-    assert len(names) == 8 and names["momentum_12_1"] == "MomentumFactor"
+    assert (
+        len(names) == 10
+        and names["retail_gauge"] == "RetailGaugeFactor"
+        and names["momentum_12_1"] == "MomentumFactor"
+    )
     assert names["dividend_yield"] == "DividendYieldFactor"  # D-147
     assert names["reversal_intraday_1m"] == "IntradayReversalFactor"  # plan 25
+    assert names["pricing_gap"] == "PricingGapFactor"  # plan 36
     assert config.factors == []
 
 
@@ -126,7 +131,10 @@ def test_tc_c_013_campaign(config: Config, tmp_path: Path) -> None:
         20,
         60,
     ]
-    assert len(committed.campaign.weights) == 6
+    assert len(committed.campaign.weights) == 8
+    assert committed.campaign.weights["pricing_gap"] == 1.0  # D-173
+    assert committed.campaign.weights["retail_gauge"] == 1.0  # D-182
+    assert "reversal_1m" not in committed.campaign.weights  # D-174: intraday reversal instead
     assert config.campaign.weights == {}  # fixture repo has no factors.yaml: defaults
 
 
@@ -226,5 +234,24 @@ def test_tc_c_020_etf_proxy_settings(repo: Path, tmp_path: Path) -> None:
     assert settings.indices[0].name == "中证A500" and "510300.SH" in settings.core
     assert (settings.start, settings.benchmark_contains) == ("20220101", "\u00d7100%")
     path.write_text("indices:\n  - {name: X, benchmark: '(', reference: A}\n", encoding="utf-8")
+    with pytest.raises(ConfigError):
+        Config.load(repo_root=repo, env=env)
+
+
+# TC-C-021
+def test_tc_c_021_etf_styles(repo: Path, tmp_path: Path) -> None:
+    env = {"QUANT_CN_LAKE_ROOT": str(tmp_path / "lake")}
+    path = repo / "config" / "etf_proxies.yaml"
+    path.write_text(
+        (REPO / "config" / "etf_proxies.yaml").read_text(encoding="utf-8"), encoding="utf-8"
+    )
+    settings = Config.load(repo_root=repo, env=env).etf_proxy
+    assert [s.key for s in settings.styles] == ["bank", "dividend"]
+    assert settings.styles[1].exclude and settings.style_hot_z == 1.5
+    assert not {s.reference for s in settings.styles} & set(settings.core)
+    assert (settings.rhythm_weeks, settings.pct_window_days, settings.matrix_weeks) == (4, 63, 14)
+    path.write_text(
+        "styles:\n  - {key: Bank, name: X, benchmark: x, reference: A}\n", encoding="utf-8"
+    )
     with pytest.raises(ConfigError):
         Config.load(repo_root=repo, env=env)

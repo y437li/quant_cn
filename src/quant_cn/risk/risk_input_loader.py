@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 
 import pandas as pd
 
+from quant_cn.calculation.consensus_panel_builder import ConsensusPanelBuilder
 from quant_cn.core.date_codec import DateCodec
 from quant_cn.core.risk_model_settings import ExternalSeriesSpec, ThemeBasketSpec
 from quant_cn.lake.exposure_reader import ExposureReader
@@ -50,6 +51,8 @@ class RiskInputs:
                                                    the spec's shift), pct_chg (percent)
             themes:       dict[str, tuple[tuple[str, ...], str]]  -- descriptor -> (member codes,
                                                                      first session) (D-130)
+            consensus:    DataFrame  -- CONSENSUS_COLUMNS on month-end sessions from the month
+                                        before start, and end (plan 37); empty when not loaded
         Output:
             frozen dataclass
         Raises:
@@ -73,6 +76,7 @@ class RiskInputs:
     annual: pd.DataFrame
     external: dict[str, pd.DataFrame] = field(default_factory=dict)
     themes: dict[str, tuple[tuple[str, ...], str]] = field(default_factory=dict)
+    consensus: pd.DataFrame = field(default_factory=pd.DataFrame)
 
 
 class RiskInputLoader:
@@ -90,6 +94,8 @@ class RiskInputLoader:
             calendar: TradingCalendar; codec: DateCodec
             query: LakeQuery  -- theme members (curated.ths_member, a current snapshot)
             external: Sequence[ExternalSeriesSpec]; themes: Sequence[ThemeBasketSpec]
+            consensus: ConsensusPanelBuilder | None; consensus_days: int >= 0  -- the analyst
+                       consensus is read only with a builder and consensus_days > 0 (plan 37)
         Output:
             instance; `load(start, end) -> RiskInputs`
         Raises:
@@ -105,6 +111,8 @@ class RiskInputLoader:
                     the month before start
         TC-RIL-003  external series are read from before the price history, prices turned into
                     percent changes and dates shifted; theme members come from ths_member
+        TC-RIL-004  the consensus is read on the snapshot dates and end with consensus_days, and
+                    not read without a builder or with consensus_days 0
     """
 
     def __init__(
@@ -117,6 +125,8 @@ class RiskInputLoader:
         query: LakeQuery,
         external: Sequence[ExternalSeriesSpec] = (),
         themes: Sequence[ThemeBasketSpec] = (),
+        consensus: ConsensusPanelBuilder | None = None,
+        consensus_days: int = 0,
     ) -> None:
         self._reader = reader
         self._exposures = exposures
@@ -126,6 +136,8 @@ class RiskInputLoader:
         self._query = query
         self._external = list(external)
         self._themes = list(themes)
+        self._consensus = consensus
+        self._consensus_days = consensus_days
 
     def load(self, start: str, end: str) -> RiskInputs:
         """
@@ -155,8 +167,12 @@ class RiskInputLoader:
         logger.info(
             "risk inputs %s..%s: %d members, %d prices", start, end, len(members), len(prices)
         )
+        consensus = pd.DataFrame()
+        if self._consensus is not None and self._consensus_days > 0:
+            dates = sorted({*self.list_snapshot_dates(start, end), end})
+            consensus = self._consensus.build(dates, self._consensus_days)
         return RiskInputs(
-            start, end, prices, basic, members, fundamentals, annual, external, themes
+            start, end, prices, basic, members, fundamentals, annual, external, themes, consensus
         )
 
     def _read_external(self, spec: ExternalSeriesSpec, start: str, end: str) -> pd.DataFrame:

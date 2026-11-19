@@ -5,6 +5,11 @@
 # positions so price moves do not read as trading.
 start: "20220101"
 recent_days: 20
+# Per-index rhythm and the 近3月 view (ph7o): weeks summed into 近N周, sessions in the
+# 近3月 percentile / range, weeks in the weekly flow matrix.
+rhythm_weeks: 4
+pct_window_days: 63
+matrix_weeks: 14
 # The ETFs the national team (汇金 / 证金) holds in size, from the 2024–2025 holder disclosures.
 core: ["510300.SH", "510310.SH", "510330.SH", "159919.SZ", "510050.SH", "510500.SH",
        "512100.SH", "159845.SZ", "159915.SZ", "588000.SH", "588080.SH"]
@@ -16,3 +21,9 @@ indices:
   - {name: "中证1000", benchmark: "^中证1000", reference: "512100.SH"}
   - {name: "创业板指", benchmark: "^创业板指数", reference: "159915.SZ"}
   - {name: "科创50", benchmark: "^上证科创板50成份", reference: "588000.SH"}
+# Style groups watched for crowding (plan 15 ph7g): never part of the core / other totals above.
+# z = 20-day net flow as % of AUM against the previous 250 sessions; 过热 at z >= 1.5 (in
+# 2022-08..2026-11 the bank index returned -3.0% over the next 60 days after it, +2.7% otherwise).
+styles:
+  - {key: bank, name: "银行", benchmark: "^中证(800)?银行指数", reference: "512800.SH"}
+  - {key: dividend, name: "红利", benchmark: "红利", exclude: "港股|恒生|港元|香港", reference: "510880.SH"}

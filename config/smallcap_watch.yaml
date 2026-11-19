@@ -1,0 +1,42 @@
+# 小盘观察 (plan 30): the daily small-cap bottom watch in the 持仓监测 e-mail and on #volatility.
+# Evidence: research_space/runs/20261116_market_regime (bottom_signals_bt, breadth_thrust_bt),
+# 20261116_vix_divergence (exit_rules, realized_gap_horizons). Personal index levels go in the git-ignored
+# config/local.smallcap_watch.yaml (key `levels`), which overrides this file key by key.
+small_index: {code: "000852.SH", name: 中证1000}
+large_index: {code: "000300.SH", name: 沪深300}
+star_index: {code: "000688.SH", name: 科创50}
+levels: []                 # 中证1000 levels to watch, e.g. [6075, 5500]; set in the local file
+panic_limit_downs: 500     # limit-down count that marks a panic day (20d return 7/7 positive)
+low_window: 60             # sessions for the "at a 60-day low" breadth row
+low_share_trigger: 0.70    # share of stocks at a 60-day low that counts as capitulation
+ma_window: 20              # sessions for the share-above-MA row (context only)
+vol_window: 20             # sessions of realised volatility (annualised, %)
+pct_window: 750            # sessions in the percentile window (about 3 years)
+pct_min_obs: 250           # sessions needed before a percentile is shown
+vol_pct_trigger: 0.90      # 中证1000 / 科创50 realised vol percentile that counts as high
+gap_entry_pct: 0.90        # 1000−300 realised-vol gap percentile: entry state
+gap_exit_pct: 0.70         # below this percentile the entry state ends (exit rule)
+near_share: 0.8            # a count / share row is 接近 at this share of its trigger
+near_pct: 0.05             # a percentile row is 接近 within this many points of its trigger
+near_level: 0.03           # an index level row is 接近 within this fraction above the level
+history: 250               # sessions in the chart history
+flow_days: 5               # sessions in the multi-day ETF flow row
+# 杠杆资金 (plan 30 ph4, research 20261118_marginal_trader/margin_turn_bt.py): 融资余额 企稳 =
+# balance at least 10% below its 250-session high and its 5-session change turning >= 0
+# (12 events since 2019: 中证1000 60d mean +7.4%, median +4.3%; failed 2026-08 and 2026-09).
+margin_dd_trigger: -0.10
+margin_turn_days: 5
+margin_high_days: 250
+margin_ma_days: 20         # reference line on the chart (crossing it had no edge)
+etfs:                      # broad ETFs in the flow total (research 2026-11-16); own rows marked
+  - {code: "510300.SH", name: 沪深300ETF华泰}
+  - {code: "510310.SH", name: 沪深300ETF易方达}
+  - {code: "510330.SH", name: 沪深300ETF华夏}
+  - {code: "159919.SZ", name: 沪深300ETF嘉实}
+  - {code: "510050.SH", name: 上证50ETF}
+  - {code: "510500.SH", name: 中证500ETF}
+  - {code: "512100.SH", name: 中证1000ETF, own_row: true}
+  - {code: "159845.SZ", name: 中证1000ETF华夏}
+  - {code: "588000.SH", name: 科创50ETF, own_row: true}
+  - {code: "588080.SH", name: 科创50ETF易方达}
+  - {code: "159915.SZ", name: 创业板ETF}

@@ -11,7 +11,7 @@ import pandas as pd
 
 from quant_cn.core.frames import FACTOR_PANEL
 
-Input = Literal["prices", "fundamentals", "daily_basic"]
+Input = Literal["prices", "fundamentals", "daily_basic", "consensus", "retail_gauge"]
 
 
 @dataclass(frozen=True)
@@ -28,6 +28,10 @@ class FactorInputs:
             prices:       DataFrame  -- PRICE_PANEL, dense (every session inside each stock's span)
             fundamentals: DataFrame  -- FUNDAMENTALS_PIT (possibly empty)
             daily_basic:  DataFrame  -- curated daily_basic columns (possibly empty)
+            consensus:    DataFrame  -- CONSENSUS_COLUMNS on month-end sessions and the last
+                                        session (ConsensusPanelBuilder; possibly empty, plan 36)
+            retail_gauge: DataFrame  -- derived.retail_gauge readings (as_of, ts_code, pct) from
+                                        GAUGE_LEAD_DAYS before the start (possibly empty, plan 21)
         Output:
             frozen dataclass
         Raises:
@@ -44,6 +48,8 @@ class FactorInputs:
         factor.library.ReversalFactor       -- injected type or call
         factor.library.RoeFactor            -- injected type or call
         factor.library.TurnoverFactor       -- injected type or call
+        factor.library.PricingGapFactor     -- injected type or call
+        factor.library.RetailGaugeFactor    -- injected type or call
 
     Test cases:
         TC-FIN-001  compute_field pivots one fundamentals field onto (trade_date, ts_code)
@@ -52,6 +58,8 @@ class FactorInputs:
     prices: pd.DataFrame
     fundamentals: pd.DataFrame = field(default_factory=pd.DataFrame)
     daily_basic: pd.DataFrame = field(default_factory=pd.DataFrame)
+    consensus: pd.DataFrame = field(default_factory=pd.DataFrame)
+    retail_gauge: pd.DataFrame = field(default_factory=pd.DataFrame)
 
     def compute_field(self, name: str) -> pd.DataFrame:
         """
@@ -76,7 +84,8 @@ class BaseFactor(ABC):
     """
     Purpose:
         Abstract factor: declares which inputs, fundamentals fields and daily_basic columns it
-        needs and how many sessions of price history before the first output date; `compute`
+        needs, how many sessions of price history before the first output date and, for the
+        `consensus` input, the analyst-note window in days (`consensus_days`); `compute`
         turns FactorInputs into FACTOR_PANEL rows for [start, end]. Contract (FACTOR_TESTING_DESIGN
         §11): the value at t uses only data known by the close of t; fundamentals only through
         FUNDAMENTALS_PIT. Subclasses register themselves by class name for FactorFactory.
@@ -99,6 +108,8 @@ class BaseFactor(ABC):
         factor.library.ReversalFactor       -- subclass
         factor.library.RoeFactor            -- subclass
         factor.library.TurnoverFactor       -- subclass
+        factor.library.PricingGapFactor     -- subclass
+        factor.library.RetailGaugeFactor    -- subclass
         pipeline.FeatureStep                -- injected type or call
 
     Test cases:
@@ -124,6 +135,22 @@ class BaseFactor(ABC):
         """
         Purpose:
             Sessions of history needed before the first output date (0 = none).
+
+        Contract:
+            Input:
+                (none)
+            Output:
+                int
+            Raises:
+                (none)
+        """
+        return 0
+
+    @property
+    def consensus_days(self) -> int:
+        """
+        Purpose:
+            Analyst-note window (calendar days) of the `consensus` input (0 = not needed).
 
         Contract:
             Input:

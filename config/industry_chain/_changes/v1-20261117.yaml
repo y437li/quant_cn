@@ -1,0 +1,778 @@
+version: v1-20261117
+effective_period: '20251231'
+note: 'Plan 28 ph3b-3 Opus curation dry run (auto, electronics, power equipment), accepted by the user 2026-11-17 except retiring SEG_AUTO_ROBOT_PARTS; generic aliases 开关 / 电气设备产品 left out (D-161 update
+  13); review after the first rebuild: 分销业务 dropped (matched 上海医药 / 怡亚通), 商用车 / 乘用车 aliases added to the vehicle segments'
+changes:
+- op: upsert
+  kind: new
+  sector: '280000'
+  node:
+    id: PROD_AUTO_OCCUPANT_SAFETY_SYSTEM
+    type: product
+    name: 汽车被动安全系统
+    segment: SEG_AUTO_PASSIVE_SAFETY
+    aliases:
+    - 汽车安全系统
+    - 被动安全系统
+    - 乘员安全系统
+  reason: 均胜电子汽车安全系统384.6亿未匹配，被动安全段仅41.5亿，需总成级节点（气囊/安全带/方向盘之父）
+- op: upsert
+  kind: split
+  sector: '280000'
+  node:
+    id: SEG_AUTO_BODY
+    type: segment
+    name: 车身附件及饰件
+  reason: 车身段54家3002亿过宽；座椅及头枕扶手骨架未匹配约188亿，独立成座椅系统段
+  split_from: &id001
+  - SEG_AUTO_BODY
+- op: upsert
+  kind: split
+  sector: '280000'
+  node:
+    id: SEG_AUTO_SEATING
+    type: segment
+    name: 汽车座椅系统
+    sw_l3:
+    - '280202'
+  reason: 车身段54家3002亿过宽；座椅及头枕扶手骨架未匹配约188亿，独立成座椅系统段
+  split_from: *id001
+- op: upsert
+  kind: split
+  sector: '280000'
+  node:
+    id: PROD_AUTO_SEAT
+    type: product
+    name: 汽车座椅
+    segment: SEG_AUTO_SEATING
+    aliases:
+    - 座椅总成
+    - 座椅
+    - 乘用车座椅
+  reason: 车身段54家3002亿过宽；座椅及头枕扶手骨架未匹配约188亿，独立成座椅系统段
+  split_from: *id001
+- op: upsert
+  kind: split
+  sector: '280000'
+  node:
+    id: PROD_AUTO_CV_SEAT
+    type: product
+    name: 商用车座椅
+    parent: PROD_AUTO_SEAT
+    segment: SEG_AUTO_SEATING
+    aliases:
+    - 重卡座椅
+    - 客车座椅
+  reason: 车身段54家3002亿过宽；座椅及头枕扶手骨架未匹配约188亿，独立成座椅系统段
+  split_from: *id001
+- op: upsert
+  kind: split
+  sector: '280000'
+  node:
+    id: PROD_AUTO_HEADREST
+    type: product
+    name: 汽车头枕
+    segment: SEG_AUTO_SEATING
+    aliases:
+    - 头枕
+  reason: 车身段54家3002亿过宽；座椅及头枕扶手骨架未匹配约188亿，独立成座椅系统段
+  split_from: *id001
+- op: upsert
+  kind: split
+  sector: '280000'
+  node:
+    id: PROD_AUTO_ARMREST
+    type: product
+    name: 座椅扶手
+    segment: SEG_AUTO_SEATING
+    aliases:
+    - 中央扶手
+    - 扶手
+  reason: 车身段54家3002亿过宽；座椅及头枕扶手骨架未匹配约188亿，独立成座椅系统段
+  split_from: *id001
+- op: upsert
+  kind: split
+  sector: '280000'
+  node:
+    id: PROD_AUTO_SEAT_FRAME
+    type: product
+    name: 座椅骨架
+    segment: SEG_AUTO_SEATING
+    aliases:
+    - 座椅滑轨
+    - 调角器
+    - 骨架总成
+  reason: 车身段54家3002亿过宽；座椅及头枕扶手骨架未匹配约188亿，独立成座椅系统段
+  split_from: *id001
+- op: upsert
+  kind: split
+  sector: '280000'
+  node:
+    id: PROD_AUTO_SEAT_COMFORT
+    type: product
+    name: 座椅舒适系统
+    segment: SEG_AUTO_SEATING
+    aliases:
+    - 座椅通风
+    - 座椅加热
+    - 座椅按摩
+  reason: 车身段54家3002亿过宽；座椅及头枕扶手骨架未匹配约188亿，独立成座椅系统段
+  split_from: *id001
+- op: upsert
+  kind: split
+  sector: '280000'
+  node:
+    id: PROD_AUTO_SEAT_FOAM
+    type: product
+    name: 座椅面套与发泡
+    segment: SEG_AUTO_SEATING
+    aliases:
+    - 座椅面套
+    - 汽车皮革
+  reason: 车身段54家3002亿过宽；座椅及头枕扶手骨架未匹配约188亿，独立成座椅系统段
+  split_from: *id001
+- op: upsert
+  kind: new
+  sector: '280000'
+  node:
+    id: PROD_AUTO_SUN_VISOR
+    type: product
+    name: 汽车遮阳板
+    segment: SEG_AUTO_BODY
+    aliases:
+    - 遮阳板
+  reason: 岱美股份遮阳板40.3亿为全球龙头主业，现无对应产品节点
+- op: upsert
+  kind: new
+  sector: '280000'
+  node:
+    id: PROD_AUTO_CONNECTED_VEHICLE
+    type: product
+    name: 智能网联系统
+    segment: SEG_AUTO_INTELLIGENT_DRIVING
+    aliases:
+    - 智能网联
+    - 智能网联产品
+    - 网联服务
+    - 车联网系统
+  reason: 智能网联类收入约60亿/5家未匹配，智驾段仅13.8亿，需网联系统节点
+- op: upsert
+  kind: new
+  sector: '280000'
+  node:
+    id: PROD_AUTO_RUBBER_SEAL
+    type: product
+    name: 汽车橡胶密封件
+    parent: PROD_CHEM_RUBBER_SEAL
+    segment: SEG_AUTO_OTHER_PARTS
+    aliases:
+    - 密封系统
+    - 汽车密封件
+    - 油封
+  reason: 中鼎股份密封系统38.8亿未匹配；非门框密封条，需汽车橡胶密封件节点
+- op: upsert
+  kind: alias
+  sector: '280000'
+  node:
+    id: PROD_AUTO_CYLINDER_BLOCK
+    type: product
+    name: 缸体缸盖
+    segment: SEG_AUTO_ENGINE
+    aliases:
+    - 气缸体
+    - 气缸盖
+    - 缸体
+    - 缸盖
+  reason: 缸体/缸盖单列披露未命中“气缸体/气缸盖”别名
+- op: upsert
+  kind: alias
+  sector: '280000'
+  node:
+    id: PROD_AUTO_NVH_RUBBER
+    type: product
+    name: 汽车橡胶减振件
+    segment: SEG_AUTO_CHASSIS
+    aliases:
+    - 悬置
+    - 衬套
+    - NVH减震件
+    - 减震系统
+  reason: 拓普减震系统、保隆智能悬架为底盘既有产品的措辞变体
+- op: upsert
+  kind: alias
+  sector: '280000'
+  node:
+    id: PROD_AUTO_AIR_SUSPENSION
+    type: product
+    name: 空气悬架系统
+    parent: PROD_AUTO_SUSPENSION_SYSTEM
+    segment: SEG_AUTO_CHASSIS
+    aliases:
+    - 空气悬架
+    - 空悬
+    - 智能悬架
+  reason: 拓普减震系统、保隆智能悬架为底盘既有产品的措辞变体
+- op: upsert
+  kind: alias
+  sector: '280000'
+  node:
+    id: PROD_AUTO_E_AXLE
+    type: product
+    name: 电驱动总成
+    segment: SEG_AUTO_E_DRIVE
+    aliases:
+    - 三合一电驱
+    - 多合一电驱
+    - 电驱桥
+    - e-Axle
+    - 电驱总成
+    - 电驱系统
+  reason: 英搏尔、威迈斯电驱/电源总成措辞未命中现有别名
+- op: upsert
+  kind: alias
+  sector: '280000'
+  node:
+    id: PROD_AUTO_POWER_INTEGRATED
+    type: product
+    name: 车载电源集成总成
+    segment: SEG_AUTO_E_DRIVE
+    aliases:
+    - 二合一电源
+    - 三合一电源
+    - 电源总成
+  reason: 英搏尔、威迈斯电驱/电源总成措辞未命中现有别名
+- op: upsert
+  kind: alias
+  sector: '280000'
+  node:
+    id: PROD_AUTO_ABS_ESC
+    type: product
+    name: 车身电子稳定系统
+    segment: SEG_AUTO_CHASSIS
+    aliases:
+    - 防抱死制动系统
+    - 主动安全系统
+    - 机动车主动安全系统
+  reason: 瑞立科密“机动车主动安全系统”即商用车ABS/EBS
+- op: upsert
+  kind: alias
+  sector: '280000'
+  node:
+    id: PROD_AUTO_WIPER
+    type: product
+    name: 雨刮系统
+    segment: SEG_AUTO_BODY
+    aliases:
+    - 雨刮器
+    - 刮水器
+  reason: 五个既有产品的披露措辞变体（刮水器/双联屏/门槛梁/模检具/密封部件）
+- op: upsert
+  kind: alias
+  sector: '280000'
+  node:
+    id: PROD_AUTO_INSTRUMENT_CLUSTER
+    type: product
+    name: 全液晶仪表
+    segment: SEG_AUTO_SMART_COCKPIT
+    aliases:
+    - 液晶仪表
+    - 组合仪表
+    - 双联屏仪表
+  reason: 五个既有产品的披露措辞变体（刮水器/双联屏/门槛梁/模检具/密封部件）
+- op: upsert
+  kind: alias
+  sector: '280000'
+  node:
+    id: PROD_AUTO_AL_EXTRUSION
+    type: product
+    name: 汽车铝挤压件
+    segment: SEG_AUTO_LIGHTWEIGHT
+    aliases:
+    - 防撞梁
+    - 铝型材结构件
+    - 门槛梁
+  reason: 五个既有产品的披露措辞变体（刮水器/双联屏/门槛梁/模检具/密封部件）
+- op: upsert
+  kind: alias
+  sector: '280000'
+  node:
+    id: PROD_AUTO_MOLD
+    type: product
+    name: 汽车模具
+    segment: SEG_AUTO_OTHER_PARTS
+    aliases:
+    - 汽车覆盖件模具
+    - 模检具
+  reason: 五个既有产品的披露措辞变体（刮水器/双联屏/门槛梁/模检具/密封部件）
+- op: upsert
+  kind: alias
+  sector: '280000'
+  node:
+    id: PROD_AUTO_SEALING_STRIP
+    type: product
+    name: 汽车密封条
+    segment: SEG_AUTO_BODY
+    aliases:
+    - 门框密封条
+    - 汽车密封部件
+  reason: 五个既有产品的披露措辞变体（刮水器/双联屏/门槛梁/模检具/密封部件）
+- op: upsert
+  kind: new
+  sector: '270000'
+  node:
+    id: SEG_ELEC_DISTRIBUTION
+    type: segment
+    name: 电子元器件分销
+    parent: SEG_ELEC_COMPONENTS
+  reason: 分销商被误归为芯片/被动件设计商,需独立分销节点
+- op: upsert
+  kind: new
+  sector: '270000'
+  node:
+    id: PROD_ELEC_COMPONENT_DISTRIBUTION
+    type: product
+    name: 电子元器件分销服务
+    segment: SEG_ELEC_DISTRIBUTION
+    aliases:
+    - 电子产品分销
+    - 电子元器件分销
+    - 授权分销
+    - 主动件类产品
+    - 被动件类产品
+    - 元器件分销
+  reason: 分销商被误归为芯片/被动件设计商,需独立分销节点
+- op: upsert
+  kind: new
+  sector: '270000'
+  node:
+    id: PROD_ELEC_DISPLAY_TERMINAL
+    type: product
+    name: 智能显示终端
+    segment: SEG_ELEC_BRAND_CONSUMER
+    aliases:
+    - 显示器整机
+    - 智能显示终端
+    - 商用显示终端
+    - 交互智能平板
+    - 物联网创新业务
+    - PC显示器
+  reason: 显示器/交互屏整机营收被计入面板或SoC,需独立整机节点
+- op: upsert
+  kind: split
+  sector: '270000'
+  node:
+    id: PROD_ELEC_AIOT_SOC
+    type: product
+    name: AIoT SoC
+    parent: PROD_ELEC_SOC
+    segment: SEG_ELEC_SOC_CHIP
+    aliases:
+    - 智能家居SoC
+    - 机顶盒芯片
+    - 视觉处理SoC
+    - 智能安防芯片
+    - AIoT芯片
+  reason: AIoT SoC别名吸入整机/终端营收,芯片与终端拆开
+  drop_aliases:
+  - 智能终端SoC
+  split_from: &id002
+  - PROD_ELEC_AIOT_SOC
+- op: upsert
+  kind: split
+  sector: '270000'
+  node:
+    id: PROD_ELEC_AIOT_DEVICE
+    type: product
+    name: AIoT智能终端
+    segment: SEG_ELEC_BRAND_CONSUMER
+    aliases:
+    - AIoT产品
+    - 智能终端产品
+    - IoT终端
+    - 智能硬件终端
+  reason: AIoT SoC别名吸入整机/终端营收,芯片与终端拆开
+  split_from: *id002
+- op: upsert
+  kind: split
+  sector: '270000'
+  node:
+    id: PROD_ELEC_CONDUCTIVE_PASTE
+    type: product
+    name: 电子浆料
+    segment: SEG_ELEC_ELECTRONIC_CHEMICALS
+    aliases:
+    - MLCC内电极浆料
+    - 电子元件浆料
+    - 厚膜浆料
+    - LTCC浆料
+  reason: 光伏银浆厂经'导电浆料'别名混入电子化学品,应归光伏辅材
+  drop_aliases:
+  - 导电浆料
+  split_from: &id003
+  - PROD_ELEC_CONDUCTIVE_PASTE
+- op: upsert
+  kind: split
+  sector: '270000'
+  node:
+    id: PROD_PWR_SILVER_PASTE
+    type: product
+    name: 光伏银浆
+    segment: SEG_PWR_SOLAR_AUX
+    aliases:
+    - 正银浆料
+    - 导电银浆
+    - 光伏导电浆料
+    - 光伏导电银浆
+  reason: 光伏银浆厂经'导电浆料'别名混入电子化学品,应归光伏辅材
+  split_from: *id003
+- op: upsert
+  kind: new
+  sector: '270000'
+  node:
+    id: PROD_ELEC_INDUSTRIAL_EMS
+    type: product
+    name: 通信与工业电子制造服务
+    parent: PROD_ELEC_EMS_SERVICE
+    segment: SEG_ELEC_EMS
+    aliases:
+    - 通讯类产品
+    - 工业类产品
+    - 汽车电子类产品
+    - 电子装联
+    - 工控EMS
+  reason: EMS营收翻近四倍且非消费类代工比重大,需与消费ODM区分
+- op: upsert
+  kind: alias
+  sector: '270000'
+  node:
+    id: PROD_ELEC_EQUIP_PARTS
+    type: product
+    name: 半导体设备零部件产品
+    segment: SEG_ELEC_EQUIP_PARTS
+    aliases:
+    - 半导体设备零部件
+    - 半导体零部件
+    - 泛半导体设备零部件
+    - 半导体精密零部件
+  reason: 删除过宽别名'精密零部件',清除车企/风电误配
+  drop_aliases:
+  - 精密零部件
+- op: upsert
+  kind: alias
+  sector: '270000'
+  node:
+    id: PROD_ELEC_DISPLAY_PANEL
+    type: product
+    name: 显示面板
+    segment: SEG_ELEC_DISPLAY_PANEL
+    aliases:
+    - 显示器件业务
+    - 显示器件
+    - 半导体显示业务
+  reason: 京东方主营行改名'显示器件业务'未被匹配
+- op: upsert
+  kind: alias
+  sector: '270000'
+  node:
+    id: PROD_ELEC_PCB
+    type: product
+    name: 印制电路板产品
+    segment: SEG_ELEC_PCB
+    aliases:
+    - 硬板
+    - 刚性板
+    - 印制线路板
+  reason: PCB厂按层数/软硬命名的营收行未匹配
+- op: upsert
+  kind: alias
+  sector: '270000'
+  node:
+    id: PROD_ELEC_MULTILAYER_PCB
+    type: product
+    name: 多层板
+    parent: PROD_ELEC_PCB
+    segment: SEG_ELEC_PCB
+    aliases:
+    - 四层板及以上板
+    - 四层及以上板
+    - 多层线路板
+  reason: PCB厂按层数/软硬命名的营收行未匹配
+- op: upsert
+  kind: alias
+  sector: '270000'
+  node:
+    id: PROD_COMP_SERVER_ODM
+    type: product
+    name: 服务器ODM
+    segment: SEG_COMP_SERVER
+    aliases:
+    - 云端及存储类产品
+    - 算力服务器制造
+    - 服务器代工
+  reason: 电子厂的云端/算力代工营收应挂已有服务器ODM节点
+- op: upsert
+  kind: alias
+  sector: '270000'
+  node:
+    id: SEG_ELEC_STORAGE_MODULE
+    type: segment
+    name: 存储模组
+    aliases:
+    - 存储产品
+    - 存储模组产品
+    - 存储器产品
+  reason: 佰维存储营收行改为'存储产品'后掉出存储模组
+- op: upsert
+  kind: alias
+  sector: '270000'
+  node:
+    id: PROD_ELEC_ODM
+    type: product
+    name: 消费电子ODM
+    parent: PROD_ELEC_EMS_SERVICE
+    segment: SEG_ELEC_EMS
+    aliases:
+    - 智能声学整机
+    - 智能硬件ODM
+  reason: 歌尔整机代工与同兴达摄像模组营收行措辞未覆盖
+- op: upsert
+  kind: alias
+  sector: '270000'
+  node:
+    id: PROD_ELEC_CAMERA_MODULE
+    type: product
+    name: 摄像头模组
+    segment: SEG_ELEC_OPTICAL_COMPONENT
+    aliases:
+    - 摄像类产品
+    - 摄像头模组产品
+  reason: 歌尔整机代工与同兴达摄像模组营收行措辞未覆盖
+- op: upsert
+  kind: rename
+  sector: '630000'
+  node:
+    id: SEG_PWR_SOLAR
+    type: segment
+    name: 光伏产业
+    aliases:
+    - 光伏产业链
+  reason: 父节点名“光伏设备”吸走设备厂收入行，应只作汇总；设备行归光伏加工设备
+- op: upsert
+  kind: rename
+  sector: '630000'
+  node:
+    id: SEG_PWR_SOLAR_EQUIP
+    type: segment
+    name: 光伏加工设备
+    aliases:
+    - 光伏设备
+    - 光伏专用设备
+  reason: 父节点名“光伏设备”吸走设备厂收入行，应只作汇总；设备行归光伏加工设备
+- op: upsert
+  kind: rename
+  sector: '630000'
+  node:
+    id: SEG_PWR_BATTERY
+    type: segment
+    name: 电池产业
+  reason: 父节点名“电池”泛匹配，把光伏电池与锂电混入；改名后成员归具体子段
+- op: upsert
+  kind: rename
+  sector: '630000'
+  node:
+    id: SEG_PWR_SOLAR_CELL_MODULE
+    type: segment
+    name: 光伏电池组件
+    aliases:
+    - 组件及电池
+    - 太阳能电池及组件
+  reason: 父节点名“电池”泛匹配，把光伏电池与锂电混入；改名后成员归具体子段
+- op: upsert
+  kind: rename
+  sector: '630000'
+  node:
+    id: SEG_PWR_LI_BATTERY
+    type: segment
+    name: 锂电池
+    aliases:
+    - 锂离子电池
+    - 动力电池系统
+    - 储能电池系统
+    - 消费类电池
+    - 电动汽车电池
+  reason: 父节点名“电池”泛匹配，把光伏电池与锂电混入；改名后成员归具体子段
+- op: upsert
+  kind: rename
+  sector: '630000'
+  node:
+    id: SEG_PWR_WIND
+    type: segment
+    name: 风电产业
+  reason: 父节点“风电设备”收纳塔筒/铸件厂，应归风电零部件
+- op: upsert
+  kind: rename
+  sector: '630000'
+  node:
+    id: SEG_PWR_WIND_PARTS
+    type: segment
+    name: 风电零部件
+    aliases:
+    - 风电设备
+  reason: 父节点“风电设备”收纳塔筒/铸件厂，应归风电零部件
+- op: upsert
+  kind: rename
+  sector: '630000'
+  node:
+    id: SEG_PWR_GRID
+    type: segment
+    name: 电网产业
+  reason: 父节点“电网设备”只收长园集团一家，其主业为继保/智能电网，归自动化
+- op: upsert
+  kind: rename
+  sector: '630000'
+  node:
+    id: SEG_PWR_GRID_AUTOMATION
+    type: segment
+    name: 电网自动化设备
+    aliases:
+    - 电力二次设备
+    - 电力信息化
+    - 智能电网设备
+  reason: 父节点“电网设备”只收长园集团一家，其主业为继保/智能电网，归自动化
+- op: upsert
+  kind: new
+  sector: '630000'
+  node:
+    id: PROD_PWR_HV_SWITCHGEAR
+    type: product
+    name: 高压开关设备
+    segment: SEG_PWR_TRANSMISSION
+    aliases:
+    - 高压开关
+    - 开关类业务
+    - 高压开关设备
+  reason: 缺高压开关总类节点，西电/思源开关收入近180亿未匹配；GIS/断路器/隔离开关挂其下
+- op: retire
+  kind: merge
+  id: SEG_PWR_FUEL_CELL
+  successor: SEG_PWR_HYDROGEN
+  reason: 氢能段名已含燃料电池，两段合计仅3.4亿，同属L3 630704，合并为一个市场
+- op: upsert
+  kind: merge
+  sector: '630000'
+  node:
+    id: SEG_PWR_HYDROGEN
+    type: segment
+    name: 氢能与燃料电池
+    aliases:
+    - 燃料电池
+    - 氢能
+  reason: 氢能段名已含燃料电池，两段合计仅3.4亿，同属L3 630704，合并为一个市场
+- op: upsert
+  kind: alias
+  sector: '630000'
+  node:
+    id: PROD_PWR_MV_SWITCHGEAR
+    type: product
+    name: 中压开关柜
+    segment: SEG_PWR_DISTRIBUTION
+    aliases:
+    - 高压开关柜
+    - KYN柜
+    - 成套开关设备
+  reason: 白云电器、特变电工收入行改名后未匹配，补别名
+- op: upsert
+  kind: alias
+  sector: '630000'
+  node:
+    id: PROD_PWR_TRANSFORMER
+    type: product
+    name: 变压器
+    segment: SEG_PWR_TRANSMISSION
+    aliases: []
+  reason: 白云电器、特变电工收入行改名后未匹配，补别名
+- op: upsert
+  kind: alias
+  sector: '630000'
+  node:
+    id: PROD_PWR_LI_COPPER_FOIL
+    type: product
+    name: 锂电铜箔
+    segment: SEG_PWR_COLLECTOR
+    aliases:
+    - 锂电池铜箔
+    - 铜箔产品
+    - 电解铜箔
+  reason: 诺德股份“铜箔产品”67.5亿未匹配锂电铜箔
+- op: upsert
+  kind: alias
+  sector: '630000'
+  node:
+    id: PROD_PWR_ESS
+    type: product
+    name: 储能系统集成
+    segment: SEG_PWR_ENERGY_STORAGE
+    aliases:
+    - ESS
+    - 储能系统产品
+    - 储能产品
+    - 储能产品及系统
+    - 光储充产品及系统
+  reason: 储能收入行措辞变体未匹配，补别名
+- op: upsert
+  kind: alias
+  sector: '630000'
+  node:
+    id: PROD_PWR_LI_EQUIP
+    type: product
+    name: 锂电生产设备
+    segment: SEG_PWR_LI_EQUIP
+    aliases:
+    - 新能源自动化装备与服务
+    - 锂电智能装备
+  reason: 璞泰来设备业务改名“新能源自动化装备与服务”，致其退出锂电设备段
+- op: upsert
+  kind: alias
+  sector: '630000'
+  node:
+    id: PROD_UTIL_PLANT_TRANSFER
+    type: product
+    name: 电站开发转让
+    segment: SEG_UTIL_SOLAR
+    aliases:
+    - 电站转让
+    - 新能源投资开发
+    - 新能源建设开发
+  reason: 设备厂的电站开发与输变电工程收入未匹配；概念已在公用事业/建筑定义，只补别名
+- op: upsert
+  kind: alias
+  sector: '630000'
+  node:
+    id: PROD_CONS_POWER_EPC
+    type: product
+    name: 电力工程承包
+    segment: SEG_CONS_INFRA
+    aliases:
+    - 电网工程
+    - 输变电成套工程
+  reason: 设备厂的电站开发与输变电工程收入未匹配；概念已在公用事业/建筑定义，只补别名
+- op: upsert
+  kind: alias
+  sector: '280000'
+  node:
+    id: SEG_AUTO_COMMERCIAL_VEHICLE
+    type: segment
+    name: 商用车整车
+    aliases:
+    - 商用车
+  reason: 一汽解放/江淮“商用车”收入行被商用车座椅吸走，补整车别名（复核 2026-11-17）
+- op: upsert
+  kind: alias
+  sector: '280000'
+  node:
+    id: SEG_AUTO_PASSENGER_VEHICLE
+    type: segment
+    name: 乘用车整车
+    aliases:
+    - 乘用车
+  reason: 同上，乘用车收入行归整车（复核 2026-11-17）

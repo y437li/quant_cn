@@ -60,6 +60,7 @@ class QuoteChecker:
         industry_graph.MoatExtractor  -- checks moat claims
         industry_graph.GuidanceExtractor  -- checks guidance items
         industry_graph.ContractExtractor  -- checks contract rows
+        industry_graph.BaseQuotedExtractor  -- checks the items of every plan 28 extractor
 
     Test cases:
         TC-QC-001  quote on the claimed page kept; on another page kept with that page; absent

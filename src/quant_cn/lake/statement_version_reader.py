@@ -55,9 +55,13 @@ class StatementVersionReader:
             (none at construction)
 
     Used by:
+        portfolio.OpportunityScreen  -- versions for CompanyCyclePanel
+        cli.GaugeCommands  -- wires it
                        pipeline.GuidanceStep feeds calculation.ForecastTracker (plan 18 ph6)
         risk.RiskInputLoader  -- injected type or call
         cli.ServiceBuilder  -- injected type or call
+        cli.AppServiceBuilder  -- wires it
+        lake.FundamentalSignalReader  -- statement versions
 
     Test cases:
         TC-SVR-001  the latest version known on as_of wins; later announcements are ignored

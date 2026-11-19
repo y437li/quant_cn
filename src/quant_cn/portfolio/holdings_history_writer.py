@@ -37,7 +37,7 @@ class HoldingsHistoryWriter:
 
     Used by:
         portfolio.HoldingsRiskBuilder  -- after the JSON is written
-        cli.ResearchCommands           -- `holdings-risk` command wiring
+        cli.AppServiceBuilder  -- wires it
 
     Test cases:
         TC-HHW-001  both tables written with a CASH row; rerunning the session replaces its

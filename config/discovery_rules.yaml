@@ -1,0 +1,17 @@
+# Idea and opportunity rules. Shared by plan 21 ph4 (daily opportunity list, section `opportunity`)
+# and plan 16 ph3 (idea screens, later sections). Read by core.OpportunitySettings.
+
+opportunity:                  # plan 21 ph4 (D-155, D-167)
+  min_circ_mv: 50             # free-float cap floor, 亿 (the avoid flag ranks the whole market)
+  exclude_st: true            # drop ST / *ST names
+  gauge_max_age_days: 45      # latest RetailGauge reading must be this recent (none in a quarter's first 14 sessions)
+  inflow_weeks: 3             # large-order (20-100万) net inflow in >= this many of the last 4 weeks
+  np_yoy_min: 0.2             # earnings inflection: single-quarter net profit YoY >= 20%
+  np_qoq_min: 0.0             # ... confirmed by QoQ >= 0 (plan 16: inflection with QoQ confirmation)
+  valuation_field: pb         # pb | pe_ttm; below its own median over valuation_years (pb: stable through an earnings turn)
+  valuation_years: 5
+  fit_weight: 0.05            # the candidate is added at this weight to the book
+  fit_styles: 2               # the book's largest absolute style exposures that must not grow
+  required: [retail_leaving]  # a near-miss never misses these
+  top_n: 10                   # listed: every rule hit, ranked by gauge pct (lowest first)
+  near_n: 5                   # near-misses: one non-required rule missing

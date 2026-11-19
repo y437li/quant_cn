@@ -49,6 +49,7 @@ download:
     - adj_factor
     - daily_basic
     - moneyflow
+    - cyq_perf
     - stk_limit
     - fina_indicator_vip
     - income_vip
@@ -78,6 +79,7 @@ download:
     - cn_ppi
     - cn_pmi
     - cn_m
+    - sf_month
     - shibor_lpr
     - fx_daily
     - index_global
@@ -90,6 +92,7 @@ download:
     - top10_floatholders
     - top10_holders
     - dividend
+    - repurchase
     - stk_managers
     - stk_rewards
     - stk_surv
@@ -97,7 +100,10 @@ download:
     - broker_recommend
     - report_rc
     - cn_bond_yield
+    - cny_fixing
+    - us_treasury_yield
     - lme_copper
+    - cboe_vix
     - macro_release_cpi
     - macro_release_ppi
     - macro_release_pmi
@@ -123,7 +129,7 @@ universe:                        # plan 04 phase 3 (FACTOR_TESTING_DESIGN §11)
   exchanges: ["SH", "SZ"]        # BJ excluded by default (D-054)
 
 enum_values:
-  indices: ["000001.SH", "000016.SH", "000300.SH", "000852.SH", "000905.SH", "399001.SZ", "399006.SZ"]
+  indices: ["000001.SH", "000016.SH", "000300.SH", "000688.SH", "000852.SH", "000905.SH", "399001.SZ", "399006.SZ"]
   # fx_daily instruments (plan 11 phase 5): CNH, dollar index, majors, metals, oil, copper, US rates, indices
   fx_codes: ["USDCNH.FXCM", "USDOLLAR", "EURUSD.FXCM", "USDJPY.FXCM", "XAUUSD.FXCM", "XAGUSD.FXCM",
              "UKOIL", "USOIL", "COPPER", "10USNOTE", "SPX500", "NAS100", "HKG33", "CHN50"]

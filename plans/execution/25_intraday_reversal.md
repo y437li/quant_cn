@@ -2,11 +2,11 @@
 
 | | |
 |---|---|
-| Status | doing 2026-11-14 — phase 1 done, phase 2 next |
+| Status | done 2026-11-18 (phases 1–3) |
 | Owner | user (approve) / agent (build) |
 | Created | 2026-11-14 |
 | Notion | pending |
-| Decisions | D-060, D-093, D-095, D-147 (precedent); D-156 (to be written in ph3) |
+| Decisions | D-060, D-093, D-095, D-147 (precedent); D-174 (written in ph3; the draft's D-156 was already taken) |
 | Depends on plans | 04 (factor library and campaign, done) |
 
 ## Goal
@@ -33,9 +33,9 @@ Evidence (research run `20261114_reversal_variants`):
 
 | # | Phase | Deliverable | Done criterion | Depends on | Status |
 |---|---|---|---|---|---|
-| 1 | Factor class | `IntradayReversalFactor(name, window=21, top_k=10, min_obs=15)` subclasses `ReversalFactor` (reuses the window check and `lookback`). It reads `prices` (open, close) and `daily_basic.turnover_rate_f`. value_raw = −Σ ln(close/open) over the `top_k` highest-turnover traded sessions in the window; NaN if fewer than `min_obs` traded sessions. Config line `reversal_intraday_1m` in `config/factors.yaml`, not yet in the score weights | Tests derived with `test-cases`: known answer on a 21-session fixture; ties in turnover broken by date; suspended sessions skipped; `min_obs` boundary; changing prices or turnover after t leaves t unchanged (PIT). Registry row and block, `factor/library/INDEX.md`; `make check` passes | — | todo |
-| 2 | Campaign evaluation | Campaign run with the 8 factors. TrialLog records the new factor plus the 7 other research variants as trials. Report: IC / ICIR / NW t per horizon, sub-periods, Romano-Wolf, LS Sharpe, decay, correlation with `reversal_1m`, IC net of `reversal_1m` | Criteria 1–3 of FACTOR_TESTING_DESIGN §6 evaluated and logged with the run id. The raw-signal 20-day IC agrees with the research run within ±0.01 before preprocessing; any larger gap is explained | 1 | todo |
-| 3 | Score decision and rebuild | Decision D-156 records the score outcome. If the new factor passes and beats `reversal_1m` on ICIR and LS Sharpe, it replaces `reversal_1m` in the weights; `reversal_1m` stays in the campaign as a single factor, as `ep_ttm` did under D-147. Otherwise the weights are unchanged. `derived/features` is rebuilt | The new score's 20-day ICIR and LS Sharpe are reported against the old score. The app shows the factor's name in Chinese, as done for dividend_yield. `make check` passes; plan 04 log has a line pointing here | 2 | todo |
+| 1 | Factor class | `IntradayReversalFactor(name, window=21, top_k=10, min_obs=15)` subclasses `ReversalFactor` (reuses the window check and `lookback`). It reads `prices` (open, close) and `daily_basic.turnover_rate_f`. value_raw = −Σ ln(close/open) over the `top_k` highest-turnover traded sessions in the window; NaN if fewer than `min_obs` traded sessions. Config line `reversal_intraday_1m` in `config/factors.yaml`, not yet in the score weights | Tests derived with `test-cases`: known answer on a 21-session fixture; ties in turnover broken by date; suspended sessions skipped; `min_obs` boundary; changing prices or turnover after t leaves t unchanged (PIT). Registry row and block, `factor/library/INDEX.md`; `make check` passes | — | done 2026-11-14 |
+| 2 | Campaign evaluation | Campaign run with the 8 factors. TrialLog records the new factor plus the 7 other research variants as trials. Report: IC / ICIR / NW t per horizon, sub-periods, Romano-Wolf, LS Sharpe, decay, correlation with `reversal_1m`, IC net of `reversal_1m` | Criteria 1–3 of FACTOR_TESTING_DESIGN §6 evaluated and logged with the run id. The raw-signal 20-day IC agrees with the research run within ±0.01 before preprocessing; any larger gap is explained | 1 | done 2026-11-18 — run 5f65090ede53: 20d IC 0.0664, NW t 8.17, sub-periods 4.72 / 5.97 / 3.39, ICIR 0.95, LS Sharpe 1.71 (reversal_1m 0.0515 / 4.91 / 0.57 / 1.04); passes criteria 1–3; raw month-end IC 0.0761 vs research 0.076; rank corr with reversal_1m 0.67, joint FM reversal_1m t 0.31; TrialLog 72 → 79 |
+| 3 | Score decision and rebuild | Decision D-174 records the score outcome. If the new factor passes and beats `reversal_1m` on ICIR and LS Sharpe, it replaces `reversal_1m` in the weights; `reversal_1m` stays in the campaign as a single factor, as `ep_ttm` did under D-147. Otherwise the weights are unchanged. `derived/features` is rebuilt | The new score's 20-day ICIR and LS Sharpe are reported against the old score. The app shows the factor's name in Chinese, as done for dividend_yield. `make check` passes; plan 04 log has a line pointing here | 2 | done 2026-11-18 — D-174; features and campaign rebuilt: score 20d IC 0.0691 → 0.0718, ICIR 0.770 → 0.788, LS Sharpe 1.19 → 1.18; 60d IC 0.0847 → 0.0921, ICIR 0.98 → 1.07, LS Sharpe 0.94 → 1.04; still passes §6 |
 
 ## Classes
 
@@ -59,6 +59,8 @@ Evidence (research run `20261114_reversal_variants`):
 
 | Date | Phase | Change |
 |---|---|---|
+| 2026-11-18 | 3 | done: score with reversal_intraday_1m (see table); 20-day long-short unchanged, 60-day better |
+| 2026-11-18 | 2–3 | ph2 done (see table); ph3: D-174 written, weights swapped, features and campaign being rebuilt. The Chinese factor name in the app is not needed: score factors are not shown by name |
 | 2026-11-14 | 1 | Done. `IntradayReversalFactor` in `factor/library/intraday_reversal_factor.py`, config `reversal_intraday_1m` (not in the score). Real-lake check: 49 stocks on 20260930 match the research formula to 6e-17. `ReversalFactor.inputs` got a ClassVar annotation so the subclass can widen it (type-only). `test_tc_c_012_factors` now expects 8 factors |
 | 2026-11-14 | all | Approved with the replace default (user: "ok"); waiting for "start phase 1" |
 | 2026-11-14 | all | Drafted, awaiting approval (user: "可以加一下吧" after research run 20261114_reversal_variants) |

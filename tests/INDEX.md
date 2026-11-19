@@ -27,3 +27,6 @@ Mirrors `src/quant_cn`; one `test_<module>.py` per module, one test per TC ID (C
 | `support.py` | Test doubles and frame builders shared by all test modules (no network, no real lake) | `FakeClock`, `FakeTushareClient`, `MiniLake`, `Sample`, `SampleRepo`, `SampleLake`, `SampleOptions`, `ScriptStep`, `SampleFactorLake`, `SampleMarket` |
 | `test_cli.py` | tests for `cli`, one function per TC ID |  |
 | `test_contracts.py` | the whole repository passes lint_contracts (every group) |  |
+| `test_app_service_builder.py` | tests for `app_service_builder`, one function per TC ID |  |
+| `test_report_commands.py` | tests for `report_commands`, one function per TC ID | `FakeSender` |
+| `test_update_commands.py` | tests for `update_commands`, one function per TC ID | |
