@@ -19,6 +19,7 @@ type HoldingPosition struct {
 	PnlPct  *float64 `json:"pnl_pct"`
 	Vol     *float64 `json:"vol"`
 	Contrib *float64 `json:"contrib"`
+	Kind    string   `json:"kind,omitempty"` // "stock" | "etf" (ph7q)
 }
 
 // HoldingFactor is the book's exposure to one risk-model factor and its share of risk.

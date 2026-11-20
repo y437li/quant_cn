@@ -17,13 +17,14 @@ func holdingsDir(t *testing.T, body string) string {
 	return dir
 }
 
-// TC-ST-016: the fixture is served as written; a position without a close keeps nil numbers.
+// TC-ST-016: the fixture is served as written; a position without a close keeps nil numbers;
+// kind passes through (ph7q).
 func TestTCST016HoldingsPresent(t *testing.T) {
 	h, err := load(t).GetHoldingsRisk()
 	if err != nil || h.AsOf != "20261111" || len(h.Positions) != 3 || len(h.Factors) != 3 {
 		t.Fatalf("holdings: %v %+v", err, h.AsOf)
 	}
-	if *h.Risk["active_total"] != 0.151 || h.Positions[2].Close != nil || h.Missing[0] != "000000.SZ" {
+	if *h.Risk["active_total"] != 0.151 || h.Positions[2].Close != nil || h.Missing[0] != "000000.SZ" || h.Positions[0].Kind != "stock" {
 		t.Fatalf("risk / missing: %+v", h.Risk)
 	}
 	if len(h.Stocks.Styles) != 2 || h.Stocks.Rows[1].Values[1] != nil || *h.Stocks.Rows[0].Values[0] != 1.38 {

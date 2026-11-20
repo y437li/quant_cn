@@ -154,7 +154,7 @@ export interface FactorMonitor { as_of: string; model: string; n_sessions: numbe
 /** Holdings risk (持仓, plan 15 phase 7d, D-132): CNY values, fractions for weights / vols / shares of risk. */
 export interface HoldingPosition {
   code: string; name: string; shares: number | null; cost: number | null; close: number | null; value: number | null; weight: number | null;
-  pnl: number | null; pnl_pct: number | null; vol: number | null; contrib: number | null;
+  pnl: number | null; pnl_pct: number | null; vol: number | null; contrib: number | null; kind?: "stock" | "etf";
 }
 export interface HoldingFactor { factor: string; label: string; kind: "country" | "style" | "industry"; exposure: number | null; active: number | null; contrib: number | null }
 export interface HoldingsRisk {

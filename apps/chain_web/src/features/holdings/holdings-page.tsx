@@ -47,7 +47,7 @@ export function HoldingsPage() {
           <thead><tr><th>股票</th><th>股数</th><th>成本</th><th>收盘</th><th>市值</th><th>仓位</th><th>盈亏</th><th>盈亏%</th><th>自身波动</th><th>风险贡献</th></tr></thead>
           <tbody>{rows.map((p) => (
             <tr key={p.code} data-code={p.code}>
-              <td>{p.name} <span className="wl-code">{p.code}</span></td><td>{p.shares ?? "—"}</td><td>{p.cost?.toFixed(3) ?? "—"}</td><td>{p.close?.toFixed(2) ?? "—"}</td>
+              <td>{p.name}{p.kind === "etf" && <span className="wl-tag">ETF</span>} <span className="wl-code">{p.code}</span></td><td>{p.shares ?? "—"}</td><td>{p.cost?.toFixed(3) ?? "—"}</td><td>{p.close?.toFixed(2) ?? "—"}</td>
               <td>{yuan(p.value)}</td><td>{share(p.weight)}</td><td className={pnlClass(p.pnl)}>{yuan(p.pnl)}</td><td className={p.cost != null && p.cost <= 0 ? "up" : pnlClass(p.pnl_pct)}>{pnlPct(p)}</td>
               <td>{volPct(p.vol)}</td><td>{share(p.contrib)}</td>
             </tr>))}

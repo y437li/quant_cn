@@ -16,6 +16,7 @@ from quant_cn.core.exceptions import LakeError
 from quant_cn.core.positions_book import PositionsBook
 from quant_cn.lake.lake_query import LakeQuery
 from quant_cn.portfolio.holdings_history_writer import HoldingsHistoryWriter
+from quant_cn.portfolio.look_through_weights import LookThroughWeights
 from quant_cn.portfolio.position_reviewer import PositionReviewer
 from quant_cn.risk.base_risk_model import BaseRiskModel
 from quant_cn.risk.risk_decomposer import RiskDecomposer
@@ -27,7 +28,12 @@ FILE_NAME = "holdings_risk.json"
 ANNUAL = math.sqrt(252)
 _SESSION = "SELECT max(trade_date) FROM derived.risk_specific_risk WHERE trade_date <= ?"
 _CLOSES = (
-    "SELECT ts_code, close FROM curated.daily WHERE trade_date = ? AND list_contains(?, ts_code)"
+    "SELECT ts_code, close, 'stock' AS kind FROM curated.daily "
+    "WHERE trade_date = ? AND list_contains(?, ts_code)"
+)
+_FUND_CLOSES = (
+    " UNION ALL SELECT ts_code, close, 'etf' AS kind FROM curated.fund_daily "
+    "WHERE trade_date = ? AND list_contains(?, ts_code)"
 )
 _BENCH = """
 SELECT con_code AS ts_code, weight FROM curated.index_weight
@@ -45,17 +51,21 @@ class HoldingsRiskBuilder:
         forecast risk: total / factor / specific vol and the same against a benchmark index
         (tracking error), style and industry exposures with each factor's share of risk, each
         stock's weight, P&L, own vol and share of portfolio risk, pairwise correlations. Write
-        `holdings_risk.json` and hand the session to HoldingsHistoryWriter for the lake.
+        `holdings_risk.json` and hand the session to HoldingsHistoryWriter for the lake. An
+        ETF (priced from fund_daily) enters the model through its index constituents
+        (LookThroughWeights, ph7q): portfolio risk uses the look-through stock weights,
+        per-position vol / contribution / correlation use L Σ Lᵀ.
 
     Contract:
         Input:
             book:       PositionsBook   -- shares, cost, cash
-            query:      LakeQuery       -- curated.daily, curated.index_weight, risk views
+            query:      LakeQuery       -- curated.daily, fund_daily, index_weight, risk views
             model:      BaseRiskModel   -- `load_snapshot`
             decomposer: RiskDecomposer
             history:    HoldingsHistoryWriter  -- appends the session to the lake
             benchmark:  str             -- index_code of the benchmark, e.g. "000300.SH"
             reviewer:   PositionReviewer | None  -- notes, flags, chips, conditions (ph7f)
+            look_through: LookThroughWeights | None  -- ETF baskets; None = stocks only
         Output:
             instance; `build(trade_date)` -> dict, `write(out_dir, trade_date)` -> Path
         Raises:
@@ -76,6 +86,10 @@ class HoldingsRiskBuilder:
         TC-HRB-005  with a reviewer, `reviews` holds one row per priced position; without, {}
         TC-HRB-006  cost <= 0 (diluted cost, paid back): pnl = shares x (close - cost), pnl_pct
                     None (D-166)
+        TC-HRB-007  an ETF with `tracks` is priced from fund_daily (kind etf), risk equals the
+                    look-through stock weights' variance, contributions still sum to 1, its
+                    exposures row is the basket average with industry "ETF"; the reviewer
+                    sees stocks only; an ETF without `tracks` is in `missing`
     """
 
     def __init__(
@@ -87,6 +101,7 @@ class HoldingsRiskBuilder:
         history: HoldingsHistoryWriter,
         benchmark: str,
         reviewer: PositionReviewer | None = None,
+        look_through: LookThroughWeights | None = None,
     ) -> None:
         self._book = book
         self._query = query
@@ -95,6 +110,7 @@ class HoldingsRiskBuilder:
         self._history = history
         self._benchmark = benchmark
         self._reviewer = reviewer
+        self._look_through = look_through or LookThroughWeights(query)
 
     def build(self, trade_date: str) -> dict[str, Any]:
         """
@@ -108,7 +124,7 @@ class HoldingsRiskBuilder:
                 dict  -- {as_of, model, benchmark, cash, value, stock_value, pnl, risk: {total,
                          factor, specific, active_total, active_factor, active_specific},
                          positions: [{code, name, shares, cost, close, value, weight, pnl,
-                         pnl_pct (None when cost <= 0), vol, contrib}], factors: [{factor,
+                         pnl_pct (None when cost <= 0), vol, contrib, kind}], factors: [{factor,
                          label, kind, exposure, active, contrib}], correlation: {codes,
                          matrix}, stock_exposures: {styles: [factor], rows: [{code,
                          industry, values: [..]}]},
@@ -125,10 +141,10 @@ class HoldingsRiskBuilder:
         snap = self._model.load_snapshot(session)
         held = self._read_positions(session)
         value = float(held["value"].sum()) + self._book.cash
-        weights = held.set_index("code")["value"].dropna() / value
-        covered, _ = snap.build_covered_weights(weights)
-        missing = sorted(set(held["code"]) - set(covered[covered != 0].index))
-        stocks = self._compute_stock_risk(snap, covered[covered != 0])
+        pw, lt = self._build_look_through(snap, held, value, session)
+        missing = sorted(set(held["code"]) - set(pw.index))
+        pos_cov = lt @ snap.compute_stock_cov(list(lt.columns)) @ lt.T
+        stocks = self._compute_stock_risk(pos_cov, pw)
         held = held.join(stocks, on="code")
         held["weight"] = held["value"] / value
         return {
@@ -139,10 +155,10 @@ class HoldingsRiskBuilder:
             "value": round(value, 2),
             "stock_value": round(float(held["value"].sum()), 2),
             "pnl": round(float(held["pnl"].sum()), 2),
-            **self._build_risk(snap, weights, session),
+            **self._build_risk(snap, lt.T @ pw, session),
             "positions": [self._to_record(r) for r in held.to_dict("records")],
-            "correlation": self._build_correlation(snap, list(stocks.index)),
-            "stock_exposures": self._build_stock_exposures(snap, list(stocks.index)),
+            "correlation": self._build_correlation(pos_cov),
+            "stock_exposures": self._build_stock_exposures(snap, lt, held),
             "missing": missing,
             "reviews": self._build_reviews(held, session),
         }
@@ -172,12 +188,24 @@ class HoldingsRiskBuilder:
         )
         return path
 
+    def _build_look_through(
+        self, snap: RiskSnapshot, held: pd.DataFrame, value: float, session: str
+    ) -> tuple[pd.Series, pd.DataFrame]:
+        universe = snap.build_covered_weights(pd.Series(dtype=float))[0].index
+        lt = self._look_through.build(self._book.positions, session, universe)
+        priced = held.set_index("code")["value"].dropna() / value
+        pw = priced[priced.index.isin(lt.index) & (priced != 0)]
+        return pw, lt.loc[pw.index, (lt.loc[pw.index] != 0).any(axis=0)]
+
     def _read_positions(self, session: str) -> pd.DataFrame:
         book = pd.DataFrame([p.model_dump() for p in self._book.positions])
-        closes = self._query.sql(_CLOSES, [session, book["code"].tolist()]).set_index("ts_code")[
-            "close"
-        ]
-        book["close"] = book["code"].map(closes)
+        codes = book["code"].tolist()
+        funds = self._query.has_view("curated.fund_daily")
+        sql = _CLOSES + (_FUND_CLOSES if funds else "")
+        params = [session, codes] * (2 if funds else 1)
+        closes = self._query.sql(sql, params).drop_duplicates("ts_code").set_index("ts_code")
+        book["close"] = book["code"].map(closes["close"])
+        book["kind"] = book["code"].map(closes["kind"]).fillna("stock")
         book["value"] = book["shares"] * book["close"]
         book["pnl"] = book["shares"] * (book["close"] - book["cost"])
         book["pnl_pct"] = (book["close"] / book["cost"] - 1).where(book["cost"] > 0)
@@ -219,8 +247,8 @@ class HoldingsRiskBuilder:
         return "industry" if factor.startswith("ind_") else "style"
 
     @staticmethod
-    def _compute_stock_risk(snap: RiskSnapshot, h: pd.Series) -> pd.DataFrame:
-        cov = snap.compute_stock_cov(list(h.index)).to_numpy(float)
+    def _compute_stock_risk(pos_cov: pd.DataFrame, h: pd.Series) -> pd.DataFrame:
+        cov = pos_cov.to_numpy(float)
         w = h.to_numpy(float)
         variance = float(w @ cov @ w)
         contrib = w * (cov @ w) / variance if variance > 0 else np.zeros(len(w))
@@ -228,17 +256,22 @@ class HoldingsRiskBuilder:
         return pd.DataFrame({"vol": vol, "contrib": contrib}, index=h.index)
 
     @staticmethod
-    def _build_correlation(snap: RiskSnapshot, codes: list[str]) -> dict[str, Any]:
+    def _build_correlation(pos_cov: pd.DataFrame) -> dict[str, Any]:
+        codes = [str(c) for c in pos_cov.index]
         if not codes:
             return {"codes": [], "matrix": []}
-        cov = snap.compute_stock_cov(codes).to_numpy(float)
+        cov = pos_cov.to_numpy(float)
         sd = np.sqrt(np.diag(cov))
         corr = cov / np.outer(sd, sd)
         return {"codes": codes, "matrix": [[round(float(v), 3) for v in row] for row in corr]}
 
-    def _build_stock_exposures(self, snap: RiskSnapshot, codes: list[str]) -> dict[str, Any]:
+    def _build_stock_exposures(
+        self, snap: RiskSnapshot, lt: pd.DataFrame, held: pd.DataFrame
+    ) -> dict[str, Any]:
         styles = [f for f in snap.exposures.columns if self._get_kind(f) == "style"]
-        labels, x = self._read_labels(), snap.exposures.loc[codes]
+        codes = [str(c) for c in lt.index]
+        labels, x = self._read_labels(), lt @ snap.exposures.loc[list(lt.columns)]
+        etfs = set(held.loc[held["kind"] == "etf", "code"])
         columns = [str(c) for c in x.columns]
         industries = [f for f in columns if f.startswith("ind_")]
         rows = []
@@ -246,15 +279,15 @@ class HoldingsRiskBuilder:
             row = dict(zip(columns, values_row.tolist(), strict=True))
             industry = next((f for f in industries if row[f] > 0), "")
             values = [self._to_number(row[f]) for f in styles]
-            rows.append(
-                {"code": code, "industry": labels.get(industry[4:], industry), "values": values}
-            )
+            label = "ETF" if code in etfs else labels.get(industry[4:], industry)
+            rows.append({"code": code, "industry": label, "values": values})
         return {"styles": styles, "rows": rows}
 
     def _build_reviews(self, held: pd.DataFrame, session: str) -> dict[str, Any]:
         if self._reviewer is None:
             return {}
-        priced = held.dropna(subset=["close"])[["code", "close", "weight"]]
+        stocks = held[held["kind"] == "stock"]
+        priced = stocks.dropna(subset=["close"])[["code", "close", "weight"]]
         return self._reviewer.build(priced, session)
 
     def _read_labels(self) -> dict[str, str]:
@@ -277,7 +310,8 @@ class HoldingsRiskBuilder:
             "vol",
             "contrib",
         )
-        return {k: row[k] if k in ("code", "name") else self._to_number(row.get(k)) for k in keys}
+        record = {k: row[k] if k in ("code", "name") else self._to_number(row.get(k)) for k in keys}
+        return record | {"kind": str(row.get("kind") or "stock")}
 
     def _build_empty(self) -> dict[str, Any]:
         return {

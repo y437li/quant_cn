@@ -27,6 +27,8 @@ class Position(BaseModel):
             name:   str    -- display name; "" allowed
             shares: float  -- > 0
             cost:   float  -- cost per share (CNY), diluted; <= 0 allowed (paid back)
+            tracks: str | None  -- index_code an ETF follows (e.g. "000852.SH"); the risk model
+                                   then looks through to the index constituents (ph7q)
         Output:
             frozen pydantic model
         Raises:
@@ -34,10 +36,12 @@ class Position(BaseModel):
 
     Used by:
         core.PositionsBook  -- rows of the book
+        portfolio.LookThroughWeights  -- `tracks` maps an ETF to its index basket
 
     Test cases:
         TC-PB-001  the book loads; snapshot fields ignored; bad shares refused; negative cost
                    accepted
+        TC-PB-004  `tracks` is optional (None) and kept when given
     """
 
     model_config = ConfigDict(frozen=True, extra="ignore")
@@ -46,6 +50,7 @@ class Position(BaseModel):
     name: str = ""
     shares: float = Field(gt=0)
     cost: float
+    tracks: str | None = None
 
 
 class PositionNote(BaseModel):

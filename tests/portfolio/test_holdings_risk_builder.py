@@ -243,3 +243,69 @@ def test_tc_hrb_005_reviews(lake: MiniLake, config: Config, doc: dict) -> None:
     reviews = builder.build("20261112")["reviews"]
     assert sorted(reviews) == sorted([A, B, C]) and GONE not in reviewer.seen
     assert reviews[A] == {"as_of": DAY}
+
+
+ETF, LOOSE = "512100.SH", "510300.SH"
+
+
+def _write_funds(lake: MiniLake, config: Config) -> None:
+    w = SampleFactorLake.write
+    closes = [(ETF, 2.0), (LOOSE, 4.0)]
+    w(
+        lake,
+        config,
+        "fund_daily",
+        [{"ts_code": c, "trade_date": DAY, "close": v} for c, v in closes],
+    )
+    bench = [("000300.SH", A, 50.0), ("000300.SH", B, 50.0)]
+    basket = [("000852.SH", B, 30.0), ("000852.SH", C, 10.0), ("000852.SH", GONE, 20.0)]
+    rows = [
+        {"index_code": i, "con_code": c, "trade_date": DAY, "weight": v}
+        for i, c, v in bench + basket
+    ]
+    w(lake, config, "index_weight", rows)
+
+
+# TC-HRB-007
+def test_tc_hrb_007_etf_look_through(lake: MiniLake, config: Config) -> None:
+    etf, loose = ETF, LOOSE
+    _write(lake, config)
+    _write_funds(lake, config)
+    book = PositionsBook(
+        as_of=DAY,
+        cash=1000.0,
+        positions=[
+            Position(code=A, shares=100, cost=8.0),
+            Position(code=etf, shares=500, cost=2.1, tracks="000852.SH"),
+            Position(code=loose, shares=10, cost=4.0),
+        ],
+    )
+    reviewer = FakeReviewer()
+    doc = HoldingsRiskBuilder(
+        book,
+        lake.query,
+        FixedModel("m"),
+        RiskDecomposer(),
+        HoldingsHistoryWriter(lake.query, lake.writer),
+        "000300.SH",
+        reviewer,  # type: ignore[arg-type]
+    ).build(DAY)
+    value = 1000 + 1000 + 40 + 1000.0
+    pos = {p["code"]: p for p in doc["positions"]}
+    assert (pos[etf]["kind"], pos[etf]["close"], pos[A]["kind"]) == ("etf", 2.0, "stock")
+    assert pos[etf]["pnl"] == pytest.approx(500 * (2.0 - 2.1))
+    h = pd.Series({A: 1000 / value, B: 0.75 * 1000 / value, C: 0.25 * 1000 / value})
+    factor, spec = RiskSnapshot(DAY, X, COV, SPEC).compute_variance(h)
+    assert doc["risk"]["total"] == pytest.approx(math.sqrt((factor + spec) * 252), abs=1e-6)
+    assert pos[A]["contrib"] + pos[etf]["contrib"] == pytest.approx(1.0, abs=1e-5)
+    assert doc["missing"] == [loose] and doc["correlation"]["codes"] == [A, etf]
+    rows = {r["code"]: r for r in doc["stock_exposures"]["rows"]}
+    assert rows[etf]["industry"] == "ETF"
+    assert rows[etf]["values"] == pytest.approx([-0.75])
+    assert etf not in reviewer.seen and A in reviewer.seen
+
+
+# TC-PB-004
+def test_tc_pb_004_tracks_optional() -> None:
+    assert Position(code="A", shares=1, cost=1).tracks is None
+    assert Position(code="E", shares=1, cost=1, tracks="000852.SH").tracks == "000852.SH"

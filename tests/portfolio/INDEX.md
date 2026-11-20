@@ -12,6 +12,7 @@ Tests for `quant_cn.portfolio`. No network, no files outside `tmp_path`.
 | `test_etf_cta_weights.py` | tests for `etf_cta_weights`, one function per TC ID |  |
 | `test_holdings_history_writer.py` | tests for `holdings_history_writer`, one function per TC ID |  |
 | `test_holdings_risk_builder.py` | tests for `holdings_risk_builder` and `core.positions_book`, one function per TC ID | `FakeReviewer`, `FixedModel` |
+| `test_look_through_weights.py` | tests for `look_through_weights`, one function per TC ID (TC-LTW-001..003) |  |
 | `test_watchlist_builder.py` | contract tests for `WatchlistBuilder` on a mini lake | `FakeEvaluator` |
 | `test_etf_flow_calculator.py` | contract tests for `EtfFlowCalculator` on hand-built frames | TC-EFC-001..005 |
 | `test_etf_style_heat.py` | tests for `etf_style_heat`, one function per TC ID | |

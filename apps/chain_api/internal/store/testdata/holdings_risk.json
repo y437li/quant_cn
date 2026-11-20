@@ -26,7 +26,8 @@
    "pnl": 50000.0,
    "pnl_pct": 0.1,
    "vol": 0.31,
-   "contrib": 0.268
+   "contrib": 0.268,
+   "kind": "stock"
   },
   {
    "code": "000001.SZ",

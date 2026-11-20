@@ -30,6 +30,7 @@ from quant_cn.portfolio.condition_evaluator import ConditionEvaluator
 from quant_cn.portfolio.developer_sales_reader import DeveloperSalesReader
 from quant_cn.portfolio.holdings_history_writer import HoldingsHistoryWriter
 from quant_cn.portfolio.holdings_risk_builder import HoldingsRiskBuilder
+from quant_cn.portfolio.look_through_weights import LookThroughWeights
 from quant_cn.portfolio.market_signal_reader import MarketSignalReader
 from quant_cn.portfolio.position_reviewer import PositionReviewer
 from quant_cn.portfolio.sector_earnings_signal_builder import SectorEarningsSignalBuilder
@@ -188,7 +189,10 @@ class AppServiceBuilder:
         history = HoldingsHistoryWriter(query, ParquetWriter(config.lake.root))
         reviewer = PositionReviewer(book, self.build_evaluator(config, catalog))
         decomposer = RiskDecomposer()
-        return HoldingsRiskBuilder(book, query, model, decomposer, history, benchmark, reviewer)
+        look_through = LookThroughWeights(query)
+        return HoldingsRiskBuilder(
+            book, query, model, decomposer, history, benchmark, reviewer, look_through
+        )
 
     @staticmethod
     def _read_heat(path: Path) -> dict[str, float]:

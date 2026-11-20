@@ -12,7 +12,8 @@ L5: position sizing, constraints, rebalancing schedules. May import from: L1–L
 | `etf_cta_view_tilt.py` | Apply the user's views to the system targets: the 含观点 track (plan 27 ph5, D-163) | `EtfCtaViewTilt` |
 | `etf_cta_weights.py` | Weekly target weights: equal-risk groups (monthly), A股 trend position, bond switch (plan 27) | `EtfCtaWeights` |
 | `holdings_history_writer.py` | Daily history of the user's book in the lake (derived/holdings_positions, holdings_risk; plan 15 ph7d) | `HoldingsHistoryWriter` |
-| `holdings_risk_builder.py` | The user's book valued at the last risk session and its risk decomposition for the 持仓 page (plan 15 ph7d, D-132) | `HoldingsRiskBuilder` |
+| `holdings_risk_builder.py` | The user's book valued at the last risk session and its risk decomposition for the 持仓 page (plan 15 ph7d, D-132); ETFs looked through (ph7q) | `HoldingsRiskBuilder` |
+| `look_through_weights.py` | position x stock look-through matrix: ETFs as their index constituents for the holdings risk model (plan 15 ph7q) | `LookThroughWeights` |
 | `watchlist_builder.py` | the chain app's watchlist document: gap to buy price, status, valuation at the buy price (plan 15 ph7, D-120); ETF rows from fund_daily (ph7p) | `WatchlistBuilder` |
 | `etf_flow_calculator.py` | ETF membership per index, split-proof daily net flows, position at today's price (plan 15 ph7b, D-126) | `EtfFlowCalculator` |
 | `etf_style_heat.py` | style ETF crowding (银行, 红利): 20-day flow vs AUM, z, 过热 / 降温 status (plan 15 ph7g) | `EtfStyleHeat` |

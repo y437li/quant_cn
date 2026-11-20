@@ -70,6 +70,7 @@ class LakeQuery:
         data_loading.DocumentDownloader  -- metadata and manifest reads
         portfolio.WatchlistBuilder       -- prices, valuation and consensus for the watchlist
         portfolio.EtfProxyBuilder        -- ETF basics, shares and prices for the proxy
+        portfolio.LookThroughWeights     -- index weights for ETF baskets in the holdings risk
         lake.StatementVersionReader      -- statement versions known on a date
         risk.RiskModel  -- injected type or call
         risk.RiskModelFactory  -- injected type or call
